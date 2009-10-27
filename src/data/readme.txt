@@ -1,3 +1,3 @@
 data
 ====
-Data classes used thoughout pelican.
+Data classes used throughout pelican.

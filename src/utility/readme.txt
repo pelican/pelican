@@ -1,6 +1,6 @@
 Utility
 =======
-Utility classes used thoughout pelican. For example:
+Utility classes used throughout pelican. For example:
 - Configuration.
 - Logging.
-- Trasnport mechanisms for the data client & server.
+- Transport mechanisms for the data client & server.
