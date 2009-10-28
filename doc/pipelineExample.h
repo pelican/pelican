@@ -54,7 +54,8 @@ int main (argc, argv) {
  */
 void Pipeline::start()
 {
-	while (!end of Universe) {
+	while (!end of universe) {
+        getData(); // maybe? - if we can move it from the run() as it has to happen.
 		run();
 	}
 }
