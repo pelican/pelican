@@ -1,0 +1,6 @@
+add_subdirectory(server)
+add_subdirectory(utility)
+add_subdirectory(pipelines)
+add_subdirectory(core)
+add_subdirectory(adpaters)
+add_subdirectory(data)
