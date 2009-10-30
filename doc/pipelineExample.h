@@ -55,7 +55,7 @@ int main (argc, argv) {
 void Pipeline::start()
 {
 	while (!end of universe) {
-        getData(); // maybe? - if we can move it from the run() as it has to happen.
+        getData();
 		run();
 	}
 }
@@ -86,10 +86,10 @@ public:
 void LofarPipeline::initialise()
 {
 	/* create modules */	
-	Module *flag = pipe->createModule(“utility::flagging”);
-	Module *dft = pipe->createModule(“imager::dft”);
-	Module *clean = pipe->createModule(“imager::clean”);
-	Converter *fitsConverter = pipe->createConverter(“converter::FITS”);
+	Module *flag = pipe->createModule("utility::flagging");
+	Module *dft = pipe->createModule("imager::dft");
+	Module *clean = pipe->createModule("imager::clean");
+	Converter *fitsConverter = pipe->createConverter("converter::FITS");
     return;
 }
 
@@ -102,12 +102,6 @@ void LofarPipeline::initialise()
  */
 void LofarPipeline::run() 
 {
-	/* Grab a hash to data required for the pipeline */	
-    // NOTE: the arguments of this may be changed if its possible to 
-    // constuct the method parameters (list of data blobs) from 
-    // instantiating the modules.
-	QHash data = pipe->getData(“stream::telescope”, “service::flagging”);
-
 	/* Define the pipeline and run it! */	
 	flag->run(data);
 	dft->run(data);
@@ -116,8 +110,8 @@ void LofarPipeline::run()
 	/* Dump some output to the data store - the 2 versions of the 
      * pipeline base class record method are shown here.
      */
-	pipe->record(fitsConverter, data, “image::dft”);
-    fitsConverter->setData(data[“image::clean”]);
+	pipe->record(fitsConverter, data, "image::dft");
+    fitsConverter->setData(data["image::clean"]);
 	pipe->record(fitsConverter);
     return;
 }
