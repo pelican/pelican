@@ -39,6 +39,7 @@ my $headtext="";
 my $cpptext="";
 my $includes="";
 my $cppincludes="";
+my $cppincludesNamespace="";
 my $constructSig="";
 my $constructHeadSig="";
 my $indents=4; # default tab size indents
@@ -62,7 +63,7 @@ while ( $ARGV[0] =~/^-(.+)/ )
         my $template = shift;
         if ( $template eq "cppunit" ) {
             $includes = "#include <cppunit/extensions/HelperMacros.h>\n";
-            $cppincludes='CPPUNIT_TEST_SUITE_REGISTRATION( ${classname} );';
+            $cppincludesNamespace='CPPUNIT_TEST_SUITE_REGISTRATION( ${classname} );';
             $baseclass = "CppUnit::TestFixture";
             $headtext = '${i}public:'."\n".
                         '${i}${i}'.'CPPUNIT_TEST_SUITE( ${classname} );'."\n".
@@ -152,6 +153,7 @@ if ( $verbose ) {
     no strict 'refs';
     $cpptext =~ s/(\$\{\w+\})/$1/eeg; 
     $cppincludes =~ s/(\$\{\w+\})/$1/eeg; 
+    $cppincludesNamespace =~ s/(\$\{\w+\})/$1/eeg; 
 }
 if ( ! -f $src_file ) {
     if ( $verbose ) {
@@ -161,6 +163,7 @@ if ( ! -f $src_file ) {
     print $fh "#include \"", $short_header_file, "\"\n\n";
     print $fh $cppincludes, "\n";
     print $fh "namespace $namespace {\n\n", if ( defined $namespace );
+    print $fh $cppincludesNamespace, "\n", if ( defined $namespace );
     print $fh "// class $classname \n";
     print $fh $classname,"::", $classname, "($constructSig)\n",
               (( $baseclass ne "")?"    : ".$baseclass."()\n":"" ),
@@ -191,11 +194,11 @@ if ( ! -f $header_file ) {
         (my $bclass = $baseclass)=~s/::/\//g;
         print $fh "#include \"$bclass.h\"\n\n";
     }
-    print $fh "/* Class      : $classname\n",
-              " * Revision   : \$Rev\$ \n",
-              " * Description:\n",
-              " * \n",
-              " */\n\n";
+    print $fh "/** Class      : $classname\n",
+              "  *  \n",
+              "  * Description:\n",
+              "  * \n",
+              "  */\n\n";
     print $fh "namespace $namespace {\n\n", if ( defined $namespace );
     print $fh "class $classname", (($baseclass eq "")?"":" : public $baseclass");
     print $fh  "\n{\n",

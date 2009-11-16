@@ -1,7 +1,8 @@
 SUBPACKAGE(utilityTest utility)
 set(
    utilityTest_src
-src/utilityTest.cpp
+   src/utilityTest.cpp
+   src/memoryTracerTest.cpp
 )
 add_executable(utilityTest ${utilityTest_src} )
 target_link_libraries(utilityTest ${SUBPACKAGE_LIBRARIES} ${CPPUNIT_LIBRARIES} )
