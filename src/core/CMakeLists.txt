@@ -1,9 +1,15 @@
+INCLUDE_DIRECTORIES(${QT_INCLUDES})
 SUBPACKAGE(core)
 set( core_src
+     src/AbstractPipeline.cpp
+     src/DataRequirements.cpp
+     src/ModuleFactory.cpp
+     src/PipelineDriver.cpp
 )
 add_library(core ${core_src} )
 target_link_libraries(core ${SUBPACKAGE_LIBRARIES} )
 install(TARGETS core DESTINATION ${LIBRARY_INSTALL_DIR} )
-SUBPACKAGE_ADD_LIBRARIES(core)
+
+SUBPACKAGE_ADD_LIBRARIES(core ${QT_QTCORE_LIBRARY})
 
 add_subdirectory(test)

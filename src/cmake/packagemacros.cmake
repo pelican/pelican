@@ -50,7 +50,7 @@ MACRO( PACKAGE_DEPENDENCIES )
     FOREACH(pack ${ARGN})
         #message( "Looking for Package ${pack}" )
         string(TOUPPER ${pack} packvar)
-        FIND_PACKAGE(${pack})
+        FIND_PACKAGE(${pack} REQUIRED)
         IF(${packvar}_FOUND)
             FILE(APPEND ${config_in_file}
                 "#define HAVE_${packvar} 1\n"
