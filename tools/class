@@ -194,11 +194,17 @@ if ( ! -f $header_file ) {
         (my $bclass = $baseclass)=~s/::/\//g;
         print $fh "#include \"$bclass.h\"\n\n";
     }
-    print $fh "/** Class      : $classname\n",
-              "  *  \n",
-              "  * Description:\n",
-              "  * \n",
-              "  */\n\n";
+    print $fh "/**\n",
+              " * \@file $short_header_file\n",
+              " */\n\n";
+    print $fh "/**\n",
+              " * \@class $classname\n",
+              " *  \n",
+              " * \@brief\n",
+              " * \n",
+              " * \@details\n",
+              " * \n",
+              " */\n\n";
     print $fh "namespace $namespace {\n\n", if ( defined $namespace );
     print $fh "class $classname", (($baseclass eq "")?"":" : public $baseclass");
     print $fh  "\n{\n",
