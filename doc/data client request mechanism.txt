@@ -1,0 +1,4 @@
+Data client sends a requst to the server with a priority list of data blob types which is worked out when creating the pipelines in the pipline driver.
+
+The data sent by the server is based on the priority list and what is availiable.
+
