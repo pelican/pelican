@@ -1,5 +1,6 @@
 SUBPACKAGE(utility)
 set( utility_src
+    src/memoryTracer.cpp
 )
 add_library(utility ${utility_src} )
 target_link_libraries(utility ${SUBPACKAGE_LIBRARIES} )
