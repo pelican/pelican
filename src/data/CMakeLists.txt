@@ -1,5 +1,6 @@
 SUBPACKAGE(data)
 set( data_src
+     src/DataBlob.cpp
 )
 add_library(data ${data_src} )
 target_link_libraries(data ${SUBPACKAGE_LIBRARIES} )

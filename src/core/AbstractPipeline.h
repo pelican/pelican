@@ -1,6 +1,8 @@
 #ifndef ABSTRACTPIPELINE_H
 #define ABSTRACTPIPELINE_H
 
+#include "DataRequirements.h"
+
 /**
  * @file AbstractPipeline.h
  */
@@ -16,8 +18,6 @@
 
 namespace pelican {
 
-class DataRequirements;
-
 class AbstractPipeline
 {
     public:
@@ -25,13 +25,17 @@ class AbstractPipeline
         ~AbstractPipeline();
 
         /// Return the data requirements for the pipeline.
-        DataRequirements& dataRequired() const;
+        const DataRequirements& dataRequired() const;
 
         /// Initialises the pipeline.
         virtual void init() = 0;
 
         /// Runs the pipeline.
         virtual void run() = 0;
+
+    protected:
+        DataRequirements _data;
+
     private:
 };
 

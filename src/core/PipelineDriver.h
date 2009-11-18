@@ -1,6 +1,9 @@
 #ifndef PIPELINEDRIVER_H
 #define PIPELINEDRIVER_H
 
+#include "DataRequirements.h"
+#include <QMultiHash>
+
 /**
  * @file PipelineDriver.h
  */
@@ -14,23 +17,27 @@
  * This class controls the data flow through the pipelines.
  * It is also responsible for the initialisation of the pipeline module
  * factories.
+ * This class takes ownership of the pipelines and is responsible for
+ * deleting them.
  */
 
 namespace pelican {
 
 class AbstractPipeline;
 class ModuleFactory;
+class DataClient;
 
 class PipelineDriver
 {
     public:
         /// Constructs a new pipeline driver.
-        PipelineDriver(int argc, char** argv);
+        PipelineDriver();
 
         /// Destroys the pipeline driver.
         ~PipelineDriver();
 
         /// Registers the pipeline with the driver.
+        /// Registered pipelines will be deleted when the class is destroyed.
         void registerPipeline(AbstractPipeline *pipeline);
     
         /// Returns a reference to the module factory.
@@ -38,7 +45,20 @@ class PipelineDriver
     
         /// Starts the data flow through the pipelines.
         void start();
+
+        /// Stops the data flow through the pipelines.
+        void stop() {_run = false;}
+
+        /// Sets the data client.
+        void setDataClient(const QString& clientName);
+
+    private: /* Methods */
+
     private:
+        DataClient *_dataClient;
+        DataRequirements _requiredData;
+        QMultiHash<DataRequirements, AbstractPipeline*> _pipelines;
+        bool _run;
 };
 
 } // namespace pelican

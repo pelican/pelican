@@ -22,8 +22,9 @@ AbstractPipeline::~AbstractPipeline()
  * @details
  * Return the data requirements for the pipeline.
  */
-DataRequirements& AbstractPipeline::dataRequired() const
+const DataRequirements& AbstractPipeline::dataRequired() const
 {
+    return _data;
 }
 
 } // namespace pelican

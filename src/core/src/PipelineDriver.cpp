@@ -1,12 +1,19 @@
 #include "PipelineDriver.h"
+#include "DataRequirements.h"
+#include "AbstractPipeline.h"
+#include "DataClient.h"
+#include "data/DataBlob.h"
+
+#include <QString>
 
 namespace pelican {
 
 /**
  * @details
- * PipelineDriver constructor.
+ * PipelineDriver constructor, which takes the command line arguments
+ * for initialisation.
  */
-PipelineDriver::PipelineDriver(int argc, char** argv)
+PipelineDriver::PipelineDriver()
 {
 }
 
@@ -16,6 +23,9 @@ PipelineDriver::PipelineDriver(int argc, char** argv)
  */
 PipelineDriver::~PipelineDriver()
 {
+    foreach (AbstractPipeline* pipeline, _pipelines) {
+        delete pipeline;
+    }
 }
 
 /**
@@ -24,6 +34,12 @@ PipelineDriver::~PipelineDriver()
  */
 void PipelineDriver::registerPipeline(AbstractPipeline *pipeline)
 {
+    if (pipeline->dataRequired() == DataRequirements()) {
+        delete pipeline;
+        throw QString("Empty pipelines are not supported.");
+    }
+    _pipelines.insert(pipeline->dataRequired(), pipeline);
+    _requiredData = _requiredData + pipeline->dataRequired();
 }
 
 /**
@@ -39,6 +55,30 @@ ModuleFactory& PipelineDriver::moduleFactory() const
  * Starts the data flow through the pipelines.
  */
 void PipelineDriver::start()
+{
+    if (_pipelines.isEmpty()) {
+        throw QString("No pipelines.");
+    }
+
+    _run = true;
+    while (_run) {
+        // Get the data from the client.
+        QHash<QString, DataBlob*> data = _dataClient->getData(_requiredData);
+        DataRequirements returnedData;
+        returnedData.setStreamData(data.keys());
+
+        QList<AbstractPipeline*> list = _pipelines.values(returnedData);
+        foreach (AbstractPipeline* pipeline, list) {
+            pipeline->run();
+        }
+    }
+}
+
+/**
+ * @details
+ * Sets the data client.
+ */
+void PipelineDriver::setDataClient(const QString& clientName)
 {
 }
 

@@ -18,6 +18,8 @@
 
 namespace pelican {
 
+class PipelineDriver;
+
 class PipelineDriverTest : public CppUnit::TestFixture
 {
     public:
@@ -43,6 +45,7 @@ class PipelineDriverTest : public CppUnit::TestFixture
         ~PipelineDriverTest();
 
     private:
+        PipelineDriver *pipelineDriver;
 };
 
 } // namespace pelican
