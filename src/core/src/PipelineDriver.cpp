@@ -17,6 +17,7 @@ namespace pelican {
  */
 PipelineDriver::PipelineDriver()
 {
+    _dataClient = NULL;
 }
 
 /**
@@ -58,14 +59,19 @@ ModuleFactory& PipelineDriver::moduleFactory() const
  */
 void PipelineDriver::start()
 {
+    /* Check for at least one pipeline */
     if (_pipelines.isEmpty()) {
         throw QString("No pipelines.");
     }
 
+    /* Start the pipeline driver */
     _run = true;
     while (_run) {
-        // Get the data from the client.
+        /* Get the data from the client */
         QHash<QString, DataBlob*> data = _dataClient->getData(_requiredData);
+        if (data.isEmpty()) {
+            throw QString("No data returned from client.");
+        }
         DataRequirements returnedData;
         returnedData.setStreamData(data.keys());
 
@@ -74,6 +80,16 @@ void PipelineDriver::start()
             pipeline->run();
         }
     }
+}
+
+/**
+ * @details
+ * Stops the pipeline driver.
+ * This method should be called by a running pipeline.
+ */
+void PipelineDriver::stop()
+{
+    _run = false;
 }
 
 /**
