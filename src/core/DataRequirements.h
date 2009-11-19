@@ -21,6 +21,8 @@
 
 namespace pelican {
 
+class DataBlob;
+
 class DataRequirements
 {
     public:
@@ -51,6 +53,9 @@ class DataRequirements
         /// Test for equality with another object.
         bool operator==(const DataRequirements&) const;
 
+        /// Test for compatibility with a data blob hash.
+        bool isCompatible(const QHash<QString, DataBlob*>& d) const;
+
         /// Merge another requirements object with this one.
         DataRequirements& operator+=(const DataRequirements&);
 
@@ -62,6 +67,9 @@ class DataRequirements
         QSet<QString> _streamData;
         QSet<QString> _serviceData;
 };
+
+/// Test for compatibility with a data blob hash.
+bool operator==(const DataRequirements&, const QHash<QString, DataBlob*>&);
 
 /// Compute a hash value for use with QHash (uses the hash member function).
 uint qHash(const DataRequirements& key);

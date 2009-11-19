@@ -89,7 +89,7 @@ void PipelineDriver::start()
 
         /* Run each of the matching pipelines */
         foreach (AbstractPipeline* pipeline, list) {
-            pipeline->run();
+            pipeline->run(data);
         }
     }
 }

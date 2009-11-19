@@ -86,6 +86,7 @@ void PipelineDriverTest::test_singlePipeline()
     CPPUNIT_ASSERT_EQUAL(0, pipeline->count());
     CPPUNIT_ASSERT_NO_THROW(pipelineDriver->start());
     CPPUNIT_ASSERT_EQUAL(num, pipeline->count());
+    CPPUNIT_ASSERT_EQUAL(pipeline->count(), pipeline->matchedCounter());
 }
 
 void PipelineDriverTest::test_multiPipeline()

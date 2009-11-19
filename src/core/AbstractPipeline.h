@@ -18,6 +18,8 @@
 
 namespace pelican {
 
+class DataBlob;
+
 class AbstractPipeline
 {
     public:
@@ -31,7 +33,7 @@ class AbstractPipeline
         virtual void init() = 0;
 
         /// Runs the pipeline.
-        virtual void run() = 0;
+        virtual void run(QHash<QString, DataBlob*>& dataHash) = 0;
 
     protected:
         DataRequirements _data;

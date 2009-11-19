@@ -6,6 +6,7 @@ set( core_src
      src/DataClient.cpp
      src/DataRequirements.cpp
      src/ModuleFactory.cpp
+     src/PipelineApplication.cpp
      src/PipelineDriver.cpp
 )
 add_library(core ${core_src} )

@@ -28,9 +28,14 @@ void TestPipeline::init()
 {
 }
 
-void TestPipeline::run()
+void TestPipeline::run(QHash<QString, DataBlob*>& dataHash)
 {
 //    std::cout << "Running test pipeline\n";
+
+    if (_data == dataHash) {
+        ++_matchedCounter;
+    }
+
     if (++_counter >= _iterations) {
         if (_driver) {
             _driver->stop();
@@ -42,6 +47,7 @@ void TestPipeline::_setDefaults()
 {
     _driver = NULL;
     _counter = 0;
+    _matchedCounter = 0;
     _iterations = 10; // by default
 }
 

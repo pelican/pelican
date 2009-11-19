@@ -104,6 +104,26 @@ bool DataRequirements::operator==(const DataRequirements& d) const
 
 /**
  * @details
+ * Tests if this requirements object is the same as the other one.
+ */
+bool DataRequirements::isCompatible(const QHash<QString, DataBlob*>& d) const
+{
+    DataRequirements r;
+    r.setStreamData(d.keys().toSet());
+    return hash() == r.hash();
+}
+
+
+/**
+ * @details
+ */
+bool operator==(const DataRequirements& r, const QHash<QString, DataBlob*>& hash)
+{
+    return r.isCompatible(hash);
+}
+
+/**
+ * @details
  * Provides a hash value for the DataRequirements object for use with QHash.
  */
 uint qHash(const DataRequirements& key)

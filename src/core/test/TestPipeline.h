@@ -1,8 +1,8 @@
 #ifndef TESTPIPELINE_H
 #define TESTPIPELINE_H
 
-
 #include "AbstractPipeline.h"
+#include "utility/memCheck.h"
 
 /**
  * @file TestPipeline.h
@@ -32,10 +32,13 @@ class TestPipeline : public AbstractPipeline
         virtual void init();
 
         /// Runs the pipeline.
-        virtual void run();
+        virtual void run(QHash<QString, DataBlob*>& dataHash);
 
         /// Reads counter.
         int count() {return _counter;}
+
+        /// Reads counter used to check that the data passed is the same as the expected data.
+        int matchedCounter() {return _matchedCounter;}
 
         void setDriver(PipelineDriver *driver) {_driver = driver;}
         void setIterations(int number) {_iterations = number;}
@@ -46,6 +49,7 @@ class TestPipeline : public AbstractPipeline
         PipelineDriver* _driver;
         int _iterations;
         int _counter;
+        int _matchedCounter;
 };
 
 } // namespace pelican
