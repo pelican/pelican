@@ -27,8 +27,7 @@ DataRequirements::~DataRequirements()
  */
 void DataRequirements::setStreamData(const QString& string)
 {
-    _streamData.clear();
-    _streamData.append(string);
+    setStreamData(QStringList(string));
 }
 
 /**
@@ -37,8 +36,7 @@ void DataRequirements::setStreamData(const QString& string)
  */
 void DataRequirements::setServiceData(const QString& string)
 {
-    _serviceData.clear();
-    _serviceData.append(string);
+    setServiceData(QStringList(string));
 }
 
 /**
@@ -47,6 +45,7 @@ void DataRequirements::setServiceData(const QString& string)
  */
 void DataRequirements::setStreamData(const QStringList& list)
 {
+    _hash = 0; // Invalidate the current hash.
     _streamData = list;
 }
 
@@ -56,33 +55,31 @@ void DataRequirements::setStreamData(const QStringList& list)
  */
 void DataRequirements::setServiceData(const QStringList& list)
 {
+    _hash = 0; // Invalidate the current hash.
     _serviceData = list;
 }
 
-
 /**
  * @details
+ * Computes a hash of the requirements lists for use as a key with QHash.
  */
 uint DataRequirements::hash() const
 {
     if (_hash == 0) {
-        QString stringKey;
-        foreach (QString string, _streamData) {
-            stringKey += string;
-        }
-        foreach (QString string, _serviceData) {
-            stringKey += string;
-        }
-        _hash = qHash(stringKey);
+        /* Sort the requirements lists before recomputing the hash */
+        QStringList streamCopy = _streamData;
+        QStringList serviceCopy = _serviceData;
+        streamCopy.sort();
+        serviceCopy.sort();
+        _hash = qHash(streamCopy.join(QString()) + serviceCopy.join(QString()));
     }
     return _hash;
 }
 
 /**
  * @details
- * Operator += for DataRequirements. Merges the given data
- * requirements with those already known to this class, removing any
- * duplicates.
+ * Merges the given data requirements with those already known to this
+ * class, removing any duplicates.
  */
 DataRequirements& DataRequirements::operator+=(const DataRequirements& d)
 {
@@ -95,11 +92,11 @@ DataRequirements& DataRequirements::operator+=(const DataRequirements& d)
 
 /**
  * @details
- * Operator == for DataRequirements.
+ * Tests if this requirements object is the same as the other one.
  */
 bool DataRequirements::operator==(const DataRequirements& d) const
 {
-    return (hash() == d.hash());
+    return hash() == d.hash();
 }
 
 /**
@@ -110,6 +107,5 @@ uint qHash(const DataRequirements& key)
 {
     return key.hash();
 }
-
 
 } // namespace pelican

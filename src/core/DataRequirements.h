@@ -25,7 +25,7 @@ class DataRequirements
 {
     public:
         /// Constructs the data requirements object.
-        DataRequirements(  );
+        DataRequirements();
 
         /// Destroys the data requirements object.
         ~DataRequirements();
@@ -51,7 +51,7 @@ class DataRequirements
         /// Test for equality with another object.
         bool operator==(const DataRequirements&) const;
 
-        /// Merge another object with this one.
+        /// Merge another requirements object with this one.
         DataRequirements& operator+=(const DataRequirements&);
 
         /// Compute a hash value for use with QHash.
