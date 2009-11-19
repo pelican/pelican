@@ -1,4 +1,5 @@
 #include "ModuleFactory.h"
+#include "utility/memCheck.h"
 
 namespace pelican {
 

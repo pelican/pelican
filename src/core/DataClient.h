@@ -12,9 +12,11 @@
  * @class DataClient
  *  
  * @brief
+ * This class is the data client for the pipeline driver.
  * 
  * @details
- * 
+ * A pointer to a DataClient class is passed to the pipeline driver, which
+ * uses it to fetch data from the data server.
  */
 
 namespace pelican {
@@ -25,11 +27,14 @@ class DataRequirements;
 class DataClient
 {
     public:
+        /// Data client constructor.
         DataClient(  );
+
+        /// Data client destructor.
         ~DataClient();
 
-        /// Gets the requested data from the server.
-        QHash<QString, DataBlob*> getData(const DataRequirements&);
+        /// Gets the requested data from the data server.
+        virtual QHash<QString, DataBlob*> getData(const DataRequirements&);
 
     private:
 };

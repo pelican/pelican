@@ -47,10 +47,10 @@ class PipelineDriver
         void start();
 
         /// Stops the data flow through the pipelines.
-        void stop() {_run = false;}
+        void stop();
 
         /// Sets the data client.
-        void setDataClient(const QString& clientName);
+        void setDataClient(DataClient *client);
 
     private: /* Methods */
 

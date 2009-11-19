@@ -1,4 +1,5 @@
 #include "CoreOptions.h"
+#include "utility/memCheck.h"
 
 
 namespace pelican {

@@ -1,4 +1,5 @@
 #include "PipelineApplication.h"
+#include "utility/memCheck.h"
 
 #include "TestDataClient.h"
 

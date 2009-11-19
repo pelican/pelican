@@ -2,6 +2,7 @@
 #include <QHash>
 #include <QtGlobal>
 #include <QStringList>
+#include "utility/memCheck.h"
 
 namespace pelican {
 

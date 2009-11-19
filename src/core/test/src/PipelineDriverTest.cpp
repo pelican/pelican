@@ -1,6 +1,7 @@
 #include "PipelineDriverTest.h"
 #include "PipelineDriver.h"
 #include "TestPipeline.h"
+#include "TestDataClient.h"
 #include "DataRequirements.h"
 #include "utility/memCheck.h"
 
@@ -50,13 +51,33 @@ void PipelineDriverTest::test_emptyPipeline()
     CPPUNIT_ASSERT_THROW(pipelineDriver->start(), QString);
 }
 
+void PipelineDriverTest::test_singlePipelineInvalidData()
+{
+    // Use Case:
+    // Attempt to run a pipeline which has been set up
+    // but the data returned by getData() does not match any of the pipelines.
+    // Expected to throw an exception with a message.
+    DataRequirements req;
+    req.setStreamData("wibble");
+    CPPUNIT_ASSERT_NO_THROW(pipelineDriver->registerPipeline(new TestPipeline(req)));
+    CPPUNIT_ASSERT_THROW(pipelineDriver->start(), QString);
+}
+
 void PipelineDriverTest::test_singlePipeline()
 {
     // Use Case:
     // Attempt to run a single registered pipeline.
-    // Expected to work with no exceptions.
+    // Expect run method to be called with appropriate data on the test pipeline (repeatedly).
+
+    QString wibble("wibble");
+    TestDataClient client;
+    QSet<QString> set;
+    set.insert(wibble);
+    client.setSubset(set);
+    pipelineDriver->setDataClient(&client);
+
     DataRequirements req;
-    req.setStreamData("wibble");
+    req.setStreamData(wibble);
     TestPipeline *pipeline = new TestPipeline(req);
     pipeline->setDriver(pipelineDriver);
     CPPUNIT_ASSERT_NO_THROW(pipelineDriver->registerPipeline(pipeline));

@@ -1,5 +1,6 @@
 #include "DataRequirementsTest.h"
 #include "DataRequirements.h"
+#include "utility/memCheck.h"
 #include <QSet>
 #include <QStringList>
 

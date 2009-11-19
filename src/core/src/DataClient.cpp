@@ -1,5 +1,6 @@
 #include "DataClient.h"
 #include "DataRequirements.h"
+#include "utility/memCheck.h"
 
 
 namespace pelican {

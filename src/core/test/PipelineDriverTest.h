@@ -27,7 +27,8 @@ class PipelineDriverTest : public CppUnit::TestFixture
         CPPUNIT_TEST( test_registerPipeline );
         CPPUNIT_TEST( test_emptyPipeline );
         CPPUNIT_TEST( test_singlePipeline );
-        CPPUNIT_TEST( test_multiPipeline );
+//        CPPUNIT_TEST( test_multiPipeline );
+//        CPPUNIT_TEST( test_singlePipelineInvalidData );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -39,6 +40,7 @@ class PipelineDriverTest : public CppUnit::TestFixture
         void test_emptyPipeline();
         void test_singlePipeline();
         void test_multiPipeline();
+        void test_singlePipelineInvalidData();
 
     public:
         PipelineDriverTest(  );

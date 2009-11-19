@@ -1,12 +1,14 @@
+#include <QString>
+#include <QtGlobal>
+#include <QtDebug>
+#include "utility/memCheck.h"
 #include "PipelineDriver.h"
 #include "DataRequirements.h"
 #include "AbstractPipeline.h"
 #include "DataClient.h"
 #include "data/DataBlob.h"
 
-#include <QString>
-#include <QtGlobal>
-#include <QtDebug>
+
 
 namespace pelican {
 
@@ -65,17 +67,27 @@ void PipelineDriver::start()
     }
 
     /* Start the pipeline driver */
+    if (_dataClient == NULL)
+        throw QString("No data client set.");
+
     _run = true;
     while (_run) {
         /* Get the data from the client */
         QHash<QString, DataBlob*> data = _dataClient->getData(_requiredData);
+
+        /* Check for empty data */
         if (data.isEmpty()) {
             throw QString("No data returned from client.");
         }
         DataRequirements returnedData;
         returnedData.setStreamData(data.keys().toSet());
 
+        /* Get the list of pipelines that match the returned data
+         * and check that at least one pipeline is present */
         QList<AbstractPipeline*> list = _pipelines.values(returnedData);
+        Q_ASSERT(list.size() > 0);
+
+        /* Run each of the matching pipelines */
         foreach (AbstractPipeline* pipeline, list) {
             pipeline->run();
         }
@@ -96,8 +108,9 @@ void PipelineDriver::stop()
  * @details
  * Sets the data client.
  */
-void PipelineDriver::setDataClient(const QString& clientName)
+void PipelineDriver::setDataClient(DataClient *client)
 {
+    _dataClient = client;
 }
 
 } // namespace pelican

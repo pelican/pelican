@@ -1,4 +1,5 @@
 #include "AbstractPipeline.h"
+#include "utility/memCheck.h"
 
 namespace pelican {
 

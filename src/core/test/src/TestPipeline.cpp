@@ -1,6 +1,7 @@
 #include "TestPipeline.h"
 #include "PipelineDriver.h"
-
+#include "utility/memCheck.h"
+#include <iostream>
 
 namespace pelican {
 
@@ -29,7 +30,8 @@ void TestPipeline::init()
 
 void TestPipeline::run()
 {
-    if (++_counter > _iterations) {
+//    std::cout << "Running test pipeline\n";
+    if (++_counter >= _iterations) {
         if (_driver) {
             _driver->stop();
         }
