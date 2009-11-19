@@ -5,6 +5,8 @@
 #include "data/DataBlob.h"
 
 #include <QString>
+#include <QtGlobal>
+#include <QtDebug>
 
 namespace pelican {
 
@@ -39,7 +41,7 @@ void PipelineDriver::registerPipeline(AbstractPipeline *pipeline)
         throw QString("Empty pipelines are not supported.");
     }
     _pipelines.insert(pipeline->dataRequired(), pipeline);
-    _requiredData = _requiredData + pipeline->dataRequired();
+    _requiredData += pipeline->dataRequired();
 }
 
 /**

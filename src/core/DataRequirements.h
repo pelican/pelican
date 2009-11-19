@@ -42,8 +42,19 @@ class DataRequirements
         /// Sets the required service data string list.
         void setServiceData(const QStringList& list);
 
+        /// Returns the stream data.
+        const QStringList streamData() const {return _streamData;}
+
+        /// Returns the service data.
+        const QStringList serviceData() const {return _serviceData;}
+
+        /// Test for equality with another object.
         bool operator==(const DataRequirements&) const;
-        DataRequirements& operator+(const DataRequirements&);
+
+        /// Merge another object with this one.
+        DataRequirements& operator+=(const DataRequirements&);
+
+        /// Compute a hash value for use with QHash.
         inline uint hash() const;
 
     private:
@@ -52,6 +63,7 @@ class DataRequirements
         QStringList _serviceData;
 };
 
+/// Compute a hash value for use with QHash (uses the hash member function).
 uint qHash(const DataRequirements& key);
 
 } // namespace pelican

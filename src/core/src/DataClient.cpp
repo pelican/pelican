@@ -16,6 +16,8 @@ DataClient::~DataClient()
 
 QHash<QString, DataBlob*> DataClient::getData(const DataRequirements&)
 {
+    QHash<QString, DataBlob*> dataHash;
+    return dataHash;
 }
 
 } // namespace pelican

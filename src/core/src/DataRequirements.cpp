@@ -1,5 +1,6 @@
 #include "DataRequirements.h"
 #include <QHash>
+#include <QtGlobal>
 
 namespace pelican {
 
@@ -79,12 +80,16 @@ uint DataRequirements::hash() const
 
 /**
  * @details
- * Operator + for DataRequirements. Merges the given data
- * requirements with those already known to this class.
+ * Operator += for DataRequirements. Merges the given data
+ * requirements with those already known to this class, removing any
+ * duplicates.
  */
-DataRequirements& DataRequirements::operator+(const DataRequirements& d)
+DataRequirements& DataRequirements::operator+=(const DataRequirements& d)
 {
-    
+    _streamData += d.streamData();
+    _streamData.removeDuplicates();
+    _serviceData += d.serviceData();
+    _serviceData.removeDuplicates();
     return *this;
 }
 
