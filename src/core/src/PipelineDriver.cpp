@@ -73,7 +73,7 @@ void PipelineDriver::start()
             throw QString("No data returned from client.");
         }
         DataRequirements returnedData;
-        returnedData.setStreamData(data.keys());
+        returnedData.setStreamData(data.keys().toSet());
 
         QList<AbstractPipeline*> list = _pipelines.values(returnedData);
         foreach (AbstractPipeline* pipeline, list) {

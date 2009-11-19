@@ -1,5 +1,7 @@
 #include "DataRequirementsTest.h"
 #include "DataRequirements.h"
+#include <QSet>
+#include <QStringList>
 
 namespace pelican {
 
@@ -46,12 +48,12 @@ void DataRequirementsTest::test_hash()
     // Ensure different ordering returns the same hash.
     {
         DataRequirements d1;
-        QStringList list1;
+        QSet<QString> list1;
         list1 << "one" << "two";
         d1.setStreamData(list1);
 
         DataRequirements d2;
-        QStringList list2;
+        QSet<QString> list2;
         list2 << "two" << "one";
         d2.setStreamData(list2);
         CPPUNIT_ASSERT(d1.hash() == d2.hash());
@@ -79,7 +81,7 @@ void DataRequirementsTest::test_operators()
 
         d1.setStreamData(req.at(0));
         d2.setStreamData(req.at(1));
-        d3.setStreamData(req);
+        d3.setStreamData(req.toSet());
         d1 += d2;
         CPPUNIT_ASSERT(d1 == d3);
     }
@@ -93,7 +95,7 @@ void DataRequirementsTest::test_operators()
 
         d1.setStreamData(req.at(0));
         d2.setStreamData(req.at(1));
-        d3.setStreamData(req);
+        d3.setStreamData(req.toSet());
         d2 += d1;
         CPPUNIT_ASSERT(d2 == d3);
     }
@@ -102,7 +104,7 @@ void DataRequirementsTest::test_operators()
     // Test for merging two requirements objects, removing duplicates.
     {
         DataRequirements d, d1, d2;
-        QStringList req, req1, req2;
+        QSet<QString> req, req1, req2;
         req  << "one" << "two" << "three";
         req1 << "one" << "two";
         req2 << "two" << "three";

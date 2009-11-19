@@ -1,7 +1,7 @@
 #ifndef DATAREQUIREMENTS_H
 #define DATAREQUIREMENTS_H
 
-#include <QStringList>
+#include <QSet>
 #include <QString>
 
 /**
@@ -37,16 +37,16 @@ class DataRequirements
         void setServiceData(const QString& string);
 
         /// Sets the required stream data string list.
-        void setStreamData(const QStringList& list);
+        void setStreamData(const QSet<QString>& list);
 
         /// Sets the required service data string list.
-        void setServiceData(const QStringList& list);
+        void setServiceData(const QSet<QString>& list);
 
         /// Returns the stream data.
-        const QStringList streamData() const {return _streamData;}
+        const QSet<QString> streamData() const {return _streamData;}
 
         /// Returns the service data.
-        const QStringList serviceData() const {return _serviceData;}
+        const QSet<QString> serviceData() const {return _serviceData;}
 
         /// Test for equality with another object.
         bool operator==(const DataRequirements&) const;
@@ -59,8 +59,8 @@ class DataRequirements
 
     private:
         mutable uint _hash;
-        QStringList _streamData;
-        QStringList _serviceData;
+        QSet<QString> _streamData;
+        QSet<QString> _serviceData;
 };
 
 /// Compute a hash value for use with QHash (uses the hash member function).
