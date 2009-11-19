@@ -1,6 +1,7 @@
 #include "DataRequirements.h"
 #include <QHash>
 #include <QtGlobal>
+#include <QStringList>
 
 namespace pelican {
 
@@ -27,7 +28,8 @@ DataRequirements::~DataRequirements()
  */
 void DataRequirements::setStreamData(const QString& string)
 {
-    setStreamData(QStringList(string));
+    _hash = 0; // mark to regenerate hash
+    _streamData.insert(string);
 }
 
 /**
@@ -36,14 +38,15 @@ void DataRequirements::setStreamData(const QString& string)
  */
 void DataRequirements::setServiceData(const QString& string)
 {
-    setServiceData(QStringList(string));
+    _hash = 0; // mark to regenerate hash
+    _serviceData.insert(string);
 }
 
 /**
  * @details
  * Sets the required stream data string list.
  */
-void DataRequirements::setStreamData(const QStringList& list)
+void DataRequirements::setStreamData(const QSet<QString>& list)
 {
     _hash = 0; // Invalidate the current hash.
     _streamData = list;
@@ -53,7 +56,7 @@ void DataRequirements::setStreamData(const QStringList& list)
  * @details
  * Sets the required service data string list.
  */
-void DataRequirements::setServiceData(const QStringList& list)
+void DataRequirements::setServiceData(const QSet<QString>& list)
 {
     _hash = 0; // Invalidate the current hash.
     _serviceData = list;
@@ -67,10 +70,10 @@ uint DataRequirements::hash() const
 {
     if (_hash == 0) {
         /* Sort the requirements lists before recomputing the hash */
-        QStringList streamCopy = _streamData;
-        QStringList serviceCopy = _serviceData;
-        streamCopy.sort();
-        serviceCopy.sort();
+        QStringList streamCopy = _streamData.values();
+        QStringList serviceCopy = _serviceData.values();
+        qSort(streamCopy.begin(), streamCopy.end() );
+        qSort(serviceCopy.begin(), serviceCopy.end() );
         _hash = qHash(streamCopy.join(QString()) + serviceCopy.join(QString()));
     }
     return _hash;
@@ -83,10 +86,9 @@ uint DataRequirements::hash() const
  */
 DataRequirements& DataRequirements::operator+=(const DataRequirements& d)
 {
-    _streamData += d.streamData();
-    _streamData.removeDuplicates();
-    _serviceData += d.serviceData();
-    _serviceData.removeDuplicates();
+    _streamData.unite(d.streamData());
+    _serviceData.unite(d.serviceData());
+    _hash = 0; // mark for rehashing
     return *this;
 }
 

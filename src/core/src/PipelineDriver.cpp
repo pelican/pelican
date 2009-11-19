@@ -67,7 +67,7 @@ void PipelineDriver::start()
         // Get the data from the client.
         QHash<QString, DataBlob*> data = _dataClient->getData(_requiredData);
         DataRequirements returnedData;
-        returnedData.setStreamData(data.keys());
+        returnedData.setStreamData(data.keys().toSet());
 
         QList<AbstractPipeline*> list = _pipelines.values(returnedData);
         foreach (AbstractPipeline* pipeline, list) {
