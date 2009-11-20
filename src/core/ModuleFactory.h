@@ -27,7 +27,10 @@ class Config;
 class ModuleFactory
 {
     public:
-        ModuleFactory(  );
+        /// Module factory constructor.
+        ModuleFactory(Config *config);
+
+        /// Module factory destructor.
         ~ModuleFactory();
 
         /// Creates a new module.
@@ -39,6 +42,9 @@ class ModuleFactory
 
         /// Creates a new module.
         void _createModule(const QString& name, const Config& config);
+
+    private:
+        Config* _config; ///< Pointer to the configuration object.
 };
 
 } // namespace pelican

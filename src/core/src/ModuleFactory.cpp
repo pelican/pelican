@@ -7,8 +7,9 @@ namespace pelican {
  * @details
  * ModuleFactory constructor.
  */
-ModuleFactory::ModuleFactory()
+ModuleFactory::ModuleFactory(Config *config)
 {
+    _config = config;
 }
 
 /**
