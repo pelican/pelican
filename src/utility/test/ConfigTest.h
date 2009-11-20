@@ -27,9 +27,9 @@ class ConfigTest : public CppUnit::TestFixture
 {
     public:
         CPPUNIT_TEST_SUITE( ConfigTest );
-        CPPUNIT_TEST( test_noConfigFile );
-        CPPUNIT_TEST( test_emptyConfigFile );
-//        CPPUNIT_TEST( test_invalidConfigFile );
+        CPPUNIT_TEST( test_emptyFileName );
+        CPPUNIT_TEST( test_fileDoesntExist );
+//        CPPUNIT_TEST( test_invalidDocType );
 //        CPPUNIT_TEST( test_readConfigFile );
 //        CPPUNIT_TEST( test_getModuleConfig() );
 //        CPPUNIT_TEST( test_getServerConfig() );
@@ -40,9 +40,13 @@ class ConfigTest : public CppUnit::TestFixture
         void tearDown();
 
         // Test Methods
-        void test_noConfigFile();
-        void test_emptyConfigFile();
-        void test_invalidConfigFile();
+        /// Test for an empty configuration file name string.
+        void test_emptyFileName();
+        /// Test for a configuration file that doesn't exist.
+        void test_fileDoesntExist();
+        /// Test for an invalid configuration file.
+        void test_invalidDocType();
+
         void test_readConfigFile();
         void test_getModuleConfig();
         void test_getServerConfig();

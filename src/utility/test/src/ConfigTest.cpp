@@ -31,32 +31,39 @@ void ConfigTest::tearDown()
 
 /**
  * @details
- * Test for empty configuration file string
+ * Test for empty configuration file name string.
  */
-void ConfigTest::test_noConfigFile()
+void ConfigTest::test_emptyFileName()
 {
     // Use case
     // Constructs a configuration with a blank file name string.
-    // Expected to throw an exception.
-    CPPUNIT_ASSERT_THROW(Config config(""), QString);
+    // Expected not to throw an exception.
+    CPPUNIT_ASSERT_NO_THROW(Config config(""));
 }
 
 
 /**
  * @details
- * Test for configuration file that doesn't exist
+ * Test for configuration file that doesn't exist.
  */
-void ConfigTest::test_emptyConfigFile()
+void ConfigTest::test_fileDoesntExist()
 {
     // Use case
     // Constructs a configuration file with a filename that doesn't exist
     // Expect to throw an exception
-    CPPUNIT_ASSERT_THROW(Config config("wibble"), QString);
+     CPPUNIT_ASSERT_THROW(Config config("wibble"), QString);
 }
 
 
-void ConfigTest::test_invalidConfigFile()
+/**
+ * @details
+ * Test for invalid configuration file doc type.
+ */
+void ConfigTest::test_invalidDocType()
 {
+    /// Use case
+    // Constructs a configuration file with an invalid doc type
+    // Expect to throw an exception
 }
 
 void ConfigTest::test_readConfigFile()

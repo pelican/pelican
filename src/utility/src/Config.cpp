@@ -12,11 +12,7 @@ namespace pelican {
 Config::Config(const QString &fileName)
 {
     _fileName = fileName;
-
-    if (checkFile()) {
-        read();
-    }
-
+    read();
 } /* Config() */
 
 
@@ -32,54 +28,26 @@ Config::~Config()
 /**
  * @details
  */
-bool Config::getConfiguration(QStringList address, QDomNode *config)
+QDomNode* Config::getConfiguration(QStringList address)
 {
-    //    if (!_moduleList.contains(moduleId)) return false;
-    //    *config = _modules.at(_moduleList[moduleId]);
-    return true;
+    QDomNode *config;
+    // work out from the address which node to return....
+
+//    if (!_moduleList.contains(moduleId)) {
+//        throw QString("Requested unknown configuration");
+//    }
+//    *config = _modules.at(_moduleList[moduleId]);
+    return config;
 }
 
 
 /**
  * @details
  */
-void Config::setConfigurationOption(QStringList address)
+void Config::setConfigurationOption()
 {
 
 }
-
-/**
- * @details
- */
-bool Config::checkFile()
-{
-    // Check if the configuration file name is empty
-    try {
-        if (_fileName.isEmpty()) {
-            throw QString("Empty configuration file name string.");
-        }
-    }
-    catch (QString e) {
-        std::cout << e.toStdString() << std::endl;
-        throw e;
-        return false;
-    }
-
-    // Check if the configuration file exists
-    try {
-        if (!QFile(_fileName).exists()) {
-            throw QString("Configuration file does not exist.");
-        }
-    }
-    catch (QString e) {
-        std::cout << e.toStdString() << std::endl;
-        throw e;
-        return false;
-    }
-
-    return true;
-}
-
 
 /**
  * @details
@@ -87,45 +55,30 @@ bool Config::checkFile()
 void Config::read()
 {
     QFile file(_fileName);
+
+    if (_fileName.isEmpty()) return;
+
+    if (!file.exists()) {
+        QString err = "Configuration file \"" + _fileName + "\" does not exist";
+        throw err;
+    }
+
     if (!file.open(QFile::ReadOnly | QFile::Text)) return;
 
     /* Read the XML configuration file into the QDomdocument */
-    try {
-        QString error;
-        int line, column;
-        if (!_domDocument.setContent(&file, true, &error, &line, &column)) {
-            QString errorMsg = "Parse error (" + QString::number(line)
-            + QString::number(column) + "): " + error;
-            throw errorMsg;
-        }
-    }
-    catch (QString e) {
-        std::cout << e.toStdString() << std::endl;
-        throw e;
-        return;
+    QString error; int line, column;
+    if (!_domDocument.setContent(&file, true, &error, &line, &column)) {
+        QString errorMsg = "Parse error (" + QString::number(line)
+        + QString::number(column) + "): " + error;
+        throw errorMsg;
     }
 
-    checkDocType();
+    if (_domDocument.doctype().name() != "pelican") {
+        throw QString("Configuration file is not a pelican configuration document");
+    }
+
     parseServerConfig();
     parseModuleConfig();
-}
-
-
-
-/**
- * @details
- */
-void Config::checkDocType()
-{
-    try {
-        if (_domDocument.doctype().name() != "pelican") {
-            throw QString("Configuration file is not a pelican configuration document");
-        }
-    }
-    catch (QString e) {
-        std::cout << e.toStdString() << std::endl;
-        throw e;
-    }
 }
 
 
@@ -144,7 +97,6 @@ void Config::parseServerConfig()
         _serverList[id] = i;
     }
 }
-
 
 /**
  * @details

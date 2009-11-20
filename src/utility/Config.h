@@ -26,22 +26,16 @@ class Config
         /// Destroys the configuration object.
         ~Config();
 
-        /// Returns an XML configuration node for the specified address tree.
-        bool getConfiguration(QStringList address, QDomNode *config);
+        /// Returns a pointer to the specified configuration node.
+        QDomNode* getConfiguration(QStringList address);
 
-        /// Set a configuration option for the specifed address tree.
-        void setConfigurationOption(QStringList address);
+        /// Sets a configuration option
+        void setConfigurationOption();
 
     private:
 
-        /// Checks the configuration file
-        bool checkFile();
-
         /// Reads and parses the configuration file.
         void read();
-
-        /// Check the document type to ensure its a pelican XML file
-        void checkDocType();
 
         /// Parse the server configuration and populate a QHash lookup
         void parseServerConfig();
