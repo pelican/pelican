@@ -60,7 +60,7 @@ class DataRequirements
         DataRequirements& operator+=(const DataRequirements&);
 
         /// Compute a hash value for use with QHash.
-        inline uint hash() const;
+        uint hash() const;
 
     private:
         mutable uint _hash;
