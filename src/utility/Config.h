@@ -3,16 +3,16 @@
 
 #include <QDomDocument>
 #include <QString>
+#include <QStringList>
 #include <QHash>
 
 /**
  * @class Config
  *
  * @brief
- * Test class to read a pelican config XML file using Qt's DOM based XML API.
+ * Handles reading and parsing of options for modules and server configuration.
  * 
  * @details
- * Configuration file handling.
  */
 
 namespace pelican {
@@ -20,17 +20,34 @@ namespace pelican {
 class Config
 {
     public:
-        /// Constructs the configuration object.
-        Config(QString fileName);
+        /// Constructs the configuration object reading the specified configuration file
+        Config(const QString &fileName);
 
         /// Destroys the configuration object.
         ~Config();
 
-        /// Reads and parses the configuration file.
-        bool read();
+        /// Returns an XML configuration node for the specified address tree.
+        bool getConfiguration(QStringList address, QDomNode *config);
 
-        /// Returns the XML configuration node for the specified module
-        bool getModuleConfiguration(QString moduleId, QDomNode *config);
+        /// Set a configuration option for the specifed address tree.
+        void setConfigurationOption(QStringList address);
+
+    private:
+
+        /// Checks the configuration file
+        bool checkFile();
+
+        /// Reads and parses the configuration file.
+        void read();
+
+        /// Check the document type to ensure its a pelican XML file
+        void checkDocType();
+
+        /// Parse the server configuration and populate a QHash lookup
+        void parseServerConfig();
+
+        /// Parse the server configuration and populate a QHash lookup
+        void parseModuleConfig();
 
     private:
         QString _fileName;
