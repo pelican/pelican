@@ -10,7 +10,7 @@ set( core_src
      src/PipelineDriver.cpp
 )
 add_library(core ${core_src} )
-target_link_libraries(core ${SUBPACKAGE_LIBRARIES} )
+target_link_libraries(core ${SUBPACKAGE_LIBRARIES} ${Boost_PROGRAM_OPTIONS_LIBRARY})
 install(TARGETS core DESTINATION ${LIBRARY_INSTALL_DIR} )
 
 SUBPACKAGE_ADD_LIBRARIES(core ${QT_QTCORE_LIBRARY})

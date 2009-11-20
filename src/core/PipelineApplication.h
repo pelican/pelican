@@ -22,8 +22,13 @@ namespace pelican {
 class PipelineApplication
 {
     public:
+        /// Constructor.
         PipelineApplication(int argc, char** argv);
+
+        /// Destructor.
         ~PipelineApplication();
+
+
 };
 
 } // namespace pelican
