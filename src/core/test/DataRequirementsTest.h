@@ -26,6 +26,7 @@ class DataRequirementsTest : public CppUnit::TestFixture
         CPPUNIT_TEST_SUITE( DataRequirementsTest );
         CPPUNIT_TEST( test_hash );
         CPPUNIT_TEST( test_operators );
+        CPPUNIT_TEST( test_isCompatible );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -35,6 +36,7 @@ class DataRequirementsTest : public CppUnit::TestFixture
         // Test Methods
         void test_hash();
         void test_operators();
+        void test_isCompatible();
 
     public:
         DataRequirementsTest(  );

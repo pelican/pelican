@@ -46,9 +46,14 @@ void TestPipeline::run(QHash<QString, DataBlob*>& dataHash)
 void TestPipeline::_setDefaults()
 {
     _driver = NULL;
+    _iterations = 10; // by default
+    reset();
+}
+
+void TestPipeline::reset()
+{
     _counter = 0;
     _matchedCounter = 0;
-    _iterations = 10; // by default
 }
 
 } // namespace pelican

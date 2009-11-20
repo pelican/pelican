@@ -91,6 +91,59 @@ void PipelineDriverTest::test_singlePipeline()
 
 void PipelineDriverTest::test_multiPipeline()
 {
+    // Use Case:
+    // Attempt to run multiple registered pipelines requiring different data.
+    // Expect run method to be called with appropriate data on the test pipelines (repeatedly).
+
+    QString reqData1("wibble1");
+    QString reqData2("wibble2");
+    TestDataClient client;
+    QSet<QString> set;
+    set.insert(reqData1);
+    set.insert(reqData2);
+    client.setSubset(set);
+    pipelineDriver->setDataClient(&client);
+
+    DataRequirements req1;
+    DataRequirements req2;
+    req1.setStreamData(reqData1);
+    req2.setStreamData(reqData2);
+    TestPipeline *pipeline1 = new TestPipeline(req1);
+    TestPipeline *pipeline2 = new TestPipeline(req2);
+    pipeline1->setDriver(pipelineDriver);
+    pipeline2->setDriver(pipelineDriver);
+    CPPUNIT_ASSERT_NO_THROW(pipelineDriver->registerPipeline(pipeline1));
+    CPPUNIT_ASSERT_NO_THROW(pipelineDriver->registerPipeline(pipeline2));
+    int num = 10;
+    pipeline1->setIterations(num);
+    pipeline2->setIterations(num);
+    CPPUNIT_ASSERT_EQUAL(0, pipeline1->count());
+    CPPUNIT_ASSERT_EQUAL(0, pipeline2->count());
+
+    // Use Case:
+    // Data returned matches both pipelines.
+    CPPUNIT_ASSERT_NO_THROW(pipelineDriver->start());
+    CPPUNIT_ASSERT_EQUAL(num, pipeline1->count());
+    CPPUNIT_ASSERT_EQUAL(num, pipeline2->count());
+    CPPUNIT_ASSERT_EQUAL(pipeline1->count(), pipeline1->matchedCounter());
+    CPPUNIT_ASSERT_EQUAL(pipeline2->count(), pipeline2->matchedCounter());
+
+    return;
+    // Reset pipeline counters.
+    pipeline1->reset();
+    pipeline2->reset();
+
+    // Use Case:
+    // Data returned matches a single pipeline.
+    QSet<QString> monoSet;
+    monoSet.insert(reqData1);
+    client.setSubset(monoSet);
+    CPPUNIT_ASSERT_NO_THROW(pipelineDriver->start());
+    CPPUNIT_ASSERT_EQUAL(num, pipeline1->count());
+    CPPUNIT_ASSERT_EQUAL(num, pipeline2->count());
+    CPPUNIT_ASSERT_EQUAL(pipeline1->count(), pipeline1->matchedCounter());
+    CPPUNIT_ASSERT_EQUAL(pipeline2->count(), pipeline2->matchedCounter());
+
 }
 
 } // namespace pelican

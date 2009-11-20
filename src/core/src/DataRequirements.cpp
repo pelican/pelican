@@ -108,9 +108,10 @@ bool DataRequirements::operator==(const DataRequirements& d) const
  */
 bool DataRequirements::isCompatible(const QHash<QString, DataBlob*>& d) const
 {
-    DataRequirements r;
-    r.setStreamData(d.keys().toSet());
-    return hash() == r.hash();
+    QSet<QString> temp(_streamData);
+    temp.unite(_serviceData);
+    temp.subtract(d.keys().toSet());
+    return (temp.size() == 0);
 }
 
 

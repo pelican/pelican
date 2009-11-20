@@ -37,6 +37,9 @@ class TestPipeline : public AbstractPipeline
         /// Reads counter.
         int count() {return _counter;}
 
+        /// Reset method (reset counters).
+        void reset();
+
         /// Reads counter used to check that the data passed is the same as the expected data.
         int matchedCounter() {return _matchedCounter;}
 

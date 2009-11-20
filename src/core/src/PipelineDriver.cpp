@@ -82,14 +82,11 @@ void PipelineDriver::start()
         DataRequirements returnedData;
         returnedData.setStreamData(data.keys().toSet());
 
-        /* Get the list of pipelines that match the returned data
-         * and check that at least one pipeline is present */
-        QList<AbstractPipeline*> list = _pipelines.values(returnedData);
-        Q_ASSERT(list.size() > 0);
-
-        /* Run each of the matching pipelines */
-        foreach (AbstractPipeline* pipeline, list) {
-            pipeline->run(data);
+        QMultiHash<DataRequirements, AbstractPipeline*>::iterator i = _pipelines.begin();
+        while (i != _pipelines.end()) {
+            if (i.key().isCompatible(data))
+                i.value()->run(data);
+            ++i;
         }
     }
 }

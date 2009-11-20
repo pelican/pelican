@@ -118,4 +118,46 @@ void DataRequirementsTest::test_operators()
     }
 }
 
+void DataRequirementsTest::test_isCompatible()
+{
+    // Use Case:
+    // DataRequirements matches the data hash
+    // expect true
+    {
+        DataRequirements req;
+        req.setServiceData("wibble1");
+        QHash<QString, DataBlob*> hashData;
+        hashData.insert("wibble1", NULL);
+        CPPUNIT_ASSERT_EQUAL(true, req.isCompatible(hashData));
+    }
+
+    // Use Case:
+    // DataRequirements contains a subset of the data hash
+    // expect true
+    {
+        DataRequirements req;
+        req.setServiceData("wibble1");
+        QHash<QString, DataBlob*> hashData;
+        hashData.insert("wibble1", NULL);
+        hashData.insert("wibble2", NULL);
+        CPPUNIT_ASSERT_EQUAL(true, req.isCompatible(hashData));
+    }
+
+    // Use Case:
+    // DataRequirements contains some elements of the data, but is not compatible with it.
+    // The data requirements have an additional data type which is not in the hash.
+    // expect false
+    {
+        DataRequirements req;
+        QSet<QString> dataTypes;
+        dataTypes << "wibble1" << "other";
+        req.setServiceData(dataTypes);
+        QHash<QString, DataBlob*> hashData;
+        hashData.insert("wibble1", NULL);
+        hashData.insert("wibble2", NULL);
+        CPPUNIT_ASSERT_EQUAL(false, req.isCompatible(hashData));
+    }
+
+}
+
 } // namespace pelican
