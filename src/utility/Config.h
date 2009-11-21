@@ -26,6 +26,9 @@ class Config
         /// Destroys the configuration object.
         ~Config();
 
+        /// Returns the configuration file name
+        QString getFileName() const { return _fileName; }
+
         /// Returns a pointer to the specified configuration node.
         QDomNode* getConfiguration(QStringList address);
 
