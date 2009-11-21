@@ -14,7 +14,8 @@
  * Class to test the configuration object.
  * 
  * @details
- * QApplication exists for Qt garbage collection from QFile.
+ *
+ * @note Created as a QCoreApplication for Qt garbage collection.
  */
 
 class QCoreApplication;
@@ -29,10 +30,10 @@ class ConfigTest : public CppUnit::TestFixture
         CPPUNIT_TEST_SUITE( ConfigTest );
         CPPUNIT_TEST( test_emptyFileName );
         CPPUNIT_TEST( test_fileDoesntExist );
-//        CPPUNIT_TEST( test_invalidDocType );
-//        CPPUNIT_TEST( test_readConfigFile );
-//        CPPUNIT_TEST( test_getModuleConfig() );
-//        CPPUNIT_TEST( test_getServerConfig() );
+        //        CPPUNIT_TEST( test_invalidDocType );
+        //        CPPUNIT_TEST( test_readConfigFile );
+        //        CPPUNIT_TEST( test_getModuleConfig() );
+        //        CPPUNIT_TEST( test_getServerConfig() );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -60,4 +61,5 @@ class ConfigTest : public CppUnit::TestFixture
 };
 
 } // namespace pelican
+
 #endif // CONFIGTEST_H 

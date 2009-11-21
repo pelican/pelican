@@ -13,7 +13,7 @@ Config::Config(const QString &fileName)
 {
     _fileName = fileName;
     read();
-} /* Config() */
+}
 
 
 /**
@@ -22,7 +22,7 @@ Config::Config(const QString &fileName)
  */
 Config::~Config()
 {
-} /* ~Config() */
+}
 
 
 /**
@@ -33,10 +33,10 @@ QDomNode* Config::getConfiguration(QStringList address)
     QDomNode *config;
     // work out from the address which node to return....
 
-//    if (!_moduleList.contains(moduleId)) {
-//        throw QString("Requested unknown configuration");
-//    }
-//    *config = _modules.at(_moduleList[moduleId]);
+    //    if (!_moduleList.contains(moduleId)) {
+    //        throw QString("Requested unknown configuration");
+    //    }
+    //    *config = _modules.at(_moduleList[moduleId]);
     return config;
 }
 
@@ -46,8 +46,8 @@ QDomNode* Config::getConfiguration(QStringList address)
  */
 void Config::setConfigurationOption()
 {
-
 }
+
 
 /**
  * @details
@@ -98,6 +98,7 @@ void Config::parseServerConfig()
     }
 }
 
+
 /**
  * @details
  * Store a QHash lookup table for module configuration
@@ -113,7 +114,5 @@ void Config::parseModuleConfig()
         _moduleList[id] = i;
     }
 }
-
-
 
 } /* namespace pelican */
