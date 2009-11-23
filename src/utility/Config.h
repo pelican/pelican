@@ -6,6 +6,8 @@
 #include <QStringList>
 #include <QHash>
 
+namespace pelican {
+
 /**
  * @class Config
  *
@@ -14,8 +16,6 @@
  * 
  * @details
  */
-
-namespace pelican {
 
 class Config
 {
@@ -54,6 +54,8 @@ class Config
         QDomNodeList _servers;
         QHash<QString, int> _serverList;
 };
+
+
 
 
 } /* namespace pelican */

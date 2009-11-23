@@ -52,3 +52,11 @@ ENDIF(APPLE)
 
 # -- sub modules
 include(modules.cmake)
+
+# -- doxygen documentation target
+include(UseDoxygen)
+if(NOT DOXYFILE_OUTPUT_DIR )
+    set( DOXYFILE_OUTPUT_DIR "${PELICAN_INSTALL_DIR}/doc" )
+endif(NOT DOXYFILE_OUTPUT_DIR )
+set( DOXYFILE_LATEX "")
+
