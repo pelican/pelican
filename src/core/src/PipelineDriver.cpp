@@ -6,6 +6,7 @@
 #include "DataRequirements.h"
 #include "AbstractPipeline.h"
 #include "DataClient.h"
+#include "ModuleFactory.h"
 #include "data/DataBlob.h"
 
 

@@ -4,6 +4,7 @@
 #include <QString>
 #include <string>
 #include <iostream>
+#include "ModuleFactory.h"
 #include "utility/Config.h"
 #include "utility/memCheck.h"
 
@@ -46,7 +47,7 @@ PipelineApplication::PipelineApplication(int argc, char** argv)
     _config = new Config(QString::fromStdString(vm["config"].as<std::string>()));
 
     /* Construct the module factory */
-    _factory = new ModuleFactory;
+    _factory = new ModuleFactory(_config);
 }
 
 /**
