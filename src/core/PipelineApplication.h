@@ -3,6 +3,7 @@
 
 #include "PipelineDriver.h"
 
+class QCoreApplication;
 /**
  * @file PipelineApplication.h
  */

@@ -1,12 +1,14 @@
+#include <QString>
+#include <QCoreApplication>
 #include "PipelineApplication.h"
 #include "CoreOptions.h"
 #include "boost/program_options.hpp"
-#include <QString>
 #include <string>
 #include <iostream>
+
+#include "utility/memCheck.h"
 #include "ModuleFactory.h"
 #include "utility/Config.h"
-#include "utility/memCheck.h"
 
 namespace pelican {
 
@@ -19,6 +21,18 @@ namespace po = boost::program_options;
  */
 PipelineApplication::PipelineApplication(int argc, char** argv)
 {
+
+    /* We need a QCoreApplication object for the
+     * Qt framework classes to function correctly
+     * There can only be one instance of this, 
+     * and we leave it to the user of the class to
+     * instantiate it beforehand.
+     */
+    QCoreApplication* app = QCoreApplication::instance();
+    if( ! app ) {
+        throw QString("you must instantiate a QApplication or QCoreApplication object before PipelineApplication");
+    }
+
     /* Parse the command line arguments */
     // Declare the supported options.
     po::options_description desc("Allowed options");
