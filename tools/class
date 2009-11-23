@@ -197,6 +197,7 @@ if ( ! -f $header_file ) {
     print $fh "/**\n",
               " * \@file $short_header_file\n",
               " */\n\n";
+    print $fh "namespace $namespace {\n\n", if ( defined $namespace );
     print $fh "/**\n",
               " * \@class $classname\n",
               " *  \n",
@@ -205,7 +206,6 @@ if ( ! -f $header_file ) {
               " * \@details\n",
               " * \n",
               " */\n\n";
-    print $fh "namespace $namespace {\n\n", if ( defined $namespace );
     print $fh "class $classname", (($baseclass eq "")?"":" : public $baseclass");
     print $fh  "\n{\n",
                $headtext,
