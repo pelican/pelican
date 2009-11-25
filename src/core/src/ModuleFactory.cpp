@@ -13,6 +13,7 @@ namespace pelican {
 ModuleFactory::ModuleFactory(Config *config)
 {
     _config = config;
+    _moduleAddress.append("modules");
 }
 
 /**
@@ -36,8 +37,7 @@ ModuleFactory::~ModuleFactory()
  */
 AbstractModule* ModuleFactory::createModule(const QString& name)
 {
-    QStringList moduletree;
-    moduletree.append("modules");
+    QStringList moduletree = _moduleAddress;
     moduletree.append(name);
     QDomNode* node = _config->getConfiguration(moduletree);
     return _createModule(name, *node );

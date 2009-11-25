@@ -43,8 +43,10 @@ void ModuleFactoryTest::test_createTestModule()
     // Ask for a module with a configuration
     {
         Config testconfig;
-        testconfig.setConfigurationOption();
         ModuleFactory m(&testconfig);
+        QStringList moduleconfig = m.moduleConfigTree();
+        testconfig.setConfigurationOption(moduleconfig, "testvalue");
+
         AbstractModule* module = 0;
         CPPUNIT_ASSERT_NO_THROW( module = m.createModule("Test") );
         CPPUNIT_ASSERT(module != 0);
