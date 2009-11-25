@@ -21,6 +21,8 @@ namespace po = boost::program_options;
  */
 PipelineApplication::PipelineApplication(int argc, char** argv)
 {
+    _factory = 0;
+    _config = 0;
 
     /* We need a QCoreApplication object for the
      * Qt framework classes to function correctly
@@ -30,7 +32,7 @@ PipelineApplication::PipelineApplication(int argc, char** argv)
      */
     QCoreApplication* app = QCoreApplication::instance();
     if( ! app ) {
-        throw QString("you must instantiate a QApplication or QCoreApplication object before PipelineApplication");
+        throw QString("You must instantiate a QApplication or QCoreApplication object before PipelineApplication.");
     }
 
     /* Parse the command line arguments */
@@ -50,15 +52,18 @@ PipelineApplication::PipelineApplication(int argc, char** argv)
         exit(0);
     }
 
+    std::string config = "";
+
     if (vm.count("config")) {
         std::cout << "Configuration file was set to "
         << vm["config"].as<std::string>() << ".\n";
+        config = vm["config"].as<std::string>();
     } else {
         std::cout << "Configuration file was not set.\n";
     }
 
     /* Construct the configuration object */
-    _config = new Config(QString::fromStdString(vm["config"].as<std::string>()));
+    _config = new Config(QString::fromStdString(config));
 
     /* Construct the module factory */
     _factory = new ModuleFactory(_config);
@@ -70,6 +75,8 @@ PipelineApplication::PipelineApplication(int argc, char** argv)
  */
 PipelineApplication::~PipelineApplication()
 {
+    delete _config;
+    delete _factory;
 }
 
 /**
