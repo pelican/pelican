@@ -44,6 +44,20 @@ void PipelineDriver::registerPipeline(AbstractPipeline *pipeline)
         delete pipeline;
         throw QString("Empty pipelines are not supported.");
     }
+
+    /* Check that the stream data required for this pipeline is different
+     * from all the others.
+     * Data is not currently copied, so this ensures that two pipelines do not
+     * try to modify the same data. */
+    QMultiHash<DataRequirements, AbstractPipeline*>::iterator i = _pipelines.begin();
+    while (i != _pipelines.end()) {
+        if (i.key().streamData() == pipeline->dataRequired().streamData()) {
+            delete pipeline;
+            throw QString("Multiple pipelines requiring the same stream data are not currently supported.");
+        }
+        ++i;
+    }
+
     _pipelines.insert(pipeline->dataRequired(), pipeline);
     _requiredData += pipeline->dataRequired();
 }
@@ -80,9 +94,8 @@ void PipelineDriver::start()
         if (data.isEmpty()) {
             throw QString("No data returned from client.");
         }
-        DataRequirements returnedData;
-        returnedData.setStreamData(data.keys().toSet());
 
+        /* Run all the pipelines compatible with this data hash */
         QMultiHash<DataRequirements, AbstractPipeline*>::iterator i = _pipelines.begin();
         while (i != _pipelines.end()) {
             if (i.key().isCompatible(data))

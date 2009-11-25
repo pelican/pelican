@@ -41,6 +41,14 @@ void PipelineDriverTest::test_registerPipeline()
     DataRequirements req;
     req.setStreamData("wibble");
     CPPUNIT_ASSERT_NO_THROW(pipelineDriver->registerPipeline(new TestPipeline(req)));
+
+    // Use Case:
+    // Try to register two pipelines requiring the same stream data.
+    // Expect an exception to be thrown.
+    DataRequirements req1;
+    req1.setStreamData("wibble");
+    CPPUNIT_ASSERT_THROW(pipelineDriver->registerPipeline(new TestPipeline(req1)), QString);
+
 }
 
 void PipelineDriverTest::test_emptyPipeline()
