@@ -1,6 +1,7 @@
 SUBPACKAGE(coreTest core utility)
 set( coreTest_src
      src/coreTest.cpp
+     src/ModuleFactoryTest.cpp
      src/PipelineApplicationTest.cpp
      src/PipelineDriverTest.cpp
      src/DataRequirementsTest.cpp

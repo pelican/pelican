@@ -1,5 +1,5 @@
 INCLUDE_DIRECTORIES(${QT_INCLUDES})
-SUBPACKAGE(core data)
+SUBPACKAGE(core data modules)
 set( core_src
      src/AbstractPipeline.cpp
      src/CoreOptions.cpp

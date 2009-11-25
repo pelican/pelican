@@ -21,7 +21,7 @@ class Config
 {
     public:
         /// Constructs the configuration object reading the specified configuration file
-        Config(const QString &fileName);
+        Config(const QString &fileName = "");
 
         /// Destroys the configuration object.
         ~Config();

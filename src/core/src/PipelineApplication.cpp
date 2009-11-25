@@ -6,9 +6,9 @@
 #include <string>
 #include <iostream>
 
-#include "utility/memCheck.h"
 #include "ModuleFactory.h"
 #include "utility/Config.h"
+#include "utility/memCheck.h"
 
 namespace pelican {
 

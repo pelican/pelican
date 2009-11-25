@@ -3,6 +3,8 @@
 
 #include <QString>
 #include <QHash>
+#include <QVector>
+class QDomNode;
 
 /**
  * @file ModuleFactory.h
@@ -17,7 +19,10 @@
  * @details
  * Instantiates module objects and configures them with details taken
  * from the appropriate configuration file and/or command line.
+ * The modules are owned by the factory and will be destroyed with
+ * the factory.
  */
+
 
 namespace pelican {
 
@@ -41,10 +46,11 @@ class ModuleFactory
         QHash<QString, AbstractModule*> modules;
 
         /// Creates a new module.
-        void _createModule(const QString& name, const Config& config);
+        AbstractModule* _createModule(const QString& name, const QDomNode& config);
 
     private:
         Config* _config; ///< Pointer to the configuration object.
+        QVector<AbstractModule*> _modules; // 
 };
 
 } // namespace pelican
