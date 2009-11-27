@@ -1,5 +1,5 @@
-#add_subdirectory(server)
 add_subdirectory(utility)
+add_subdirectory(server)
 add_subdirectory(modules)
 #add_subdirectory(pipelines)
 add_subdirectory(core)
