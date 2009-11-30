@@ -30,23 +30,41 @@ Config::~Config()
  */
 QDomElement& Config::getConfiguration(const QList< QPair<QString, QString> > &address) const
 {
-//    QDomElement *config;
+
+
+
+
+    QDomElement element;
+
+
+    //    QDomElement *config;
     // work out from the address which node to return....
 
     //    if (!_moduleList.contains(moduleId)) {
     //        throw QString("Requested unknown configuration");
     //    }
     //    *config = _modules.at(_moduleList[moduleId]);
-    QDomElement a;
-    return a;
+    return element;
 }
 
 
 /**
  * @details
+ *
+ * @param
+ *
+ * @return
  */
 QDomElement& Config::setConfiguration(const QList< QPair<QString, QString> > &address)
 {
+    for (int i = 0; i < address.size(); i++) {
+        std::cout << address.at(i).first.toStdString()
+                  << " "
+                  << address.at(i).second.toStdString()
+                  << std::endl;
+    }
+    QDomElement a;
+    return a;
 }
 
 
@@ -76,7 +94,9 @@ void Config::read()
         throw err;
     }
 
-    if (!file.open(QFile::ReadOnly | QFile::Text)) return;
+    if (!file.open(QFile::ReadOnly | QFile::Text)) {
+        return;
+    }
 
     /* Read the XML configuration file into the QDomdocument */
     QString error; int line, column;

@@ -66,17 +66,19 @@ void ConfigTest::test_invalidDocType()
     // Expect to throw an exception
 }
 
-void ConfigTest::test_readConfigFile()
-{
-}
 
-void ConfigTest::test_getModuleConfig()
+/**
+ * @details
+ * Test for creating a module element within the DomDocument
+ */
+void ConfigTest::test_createModuleConfig()
 {
+    Config config("");
+    QList<QPair<QString, QString> > address;
+    address << QPair<QString, QString>("modules", "")
+            << QPair<QString, QString>("module", "test");
+    address.append(qMakePair(QString("param"), QString("a")));
+    QDomElement e = config.setConfiguration(address);
 }
-
-void ConfigTest::test_getServerConfig()
-{
-}
-
 
 } // namespace pelican
