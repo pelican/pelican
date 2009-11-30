@@ -11,5 +11,5 @@ int main(int argc, char *argv[])
     QCoreApplication app(argc, argv);
     pelican::PelicanServer s;
     s.start();
-    while(1) {}
+    return app.exec();
 }
