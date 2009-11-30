@@ -30,10 +30,17 @@ class Config
         QString getFileName() const { return _fileName; }
 
         /// Returns a pointer to the specified configuration node.
-        QDomNode* getConfiguration(QStringList address);
+        QDomElement& getConfiguration(const QList< QPair<QString, QString> > &address) const;
 
-        /// Sets a configuration option
-        void setConfigurationOption();
+        /// Creates and returns a configuration option at the specified address.
+        QDomElement& setConfiguration(const QList< QPair<QString, QString> > &address);
+
+        /// Sets a configuration option attribute at the specified address.
+        void setConfigurationAttribute(
+                const QList< QPair<QString, QString> > &address,
+                const QString &key,
+                const QString &value
+        );
 
     private:
 

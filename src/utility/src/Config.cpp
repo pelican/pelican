@@ -28,24 +28,37 @@ Config::~Config()
 /**
  * @details
  */
-QDomNode* Config::getConfiguration(QStringList address)
+QDomElement& Config::getConfiguration(const QList< QPair<QString, QString> > &address) const
 {
-    QDomNode *config;
+//    QDomElement *config;
     // work out from the address which node to return....
 
     //    if (!_moduleList.contains(moduleId)) {
     //        throw QString("Requested unknown configuration");
     //    }
     //    *config = _modules.at(_moduleList[moduleId]);
-    return config;
+    QDomElement a;
+    return a;
 }
 
 
 /**
  * @details
  */
-void Config::setConfigurationOption()
+QDomElement& Config::setConfiguration(const QList< QPair<QString, QString> > &address)
 {
+}
+
+
+/**
+ * @details
+ */
+void Config::setConfigurationAttribute(
+        const QList< QPair<QString, QString> > &address,
+        const QString &key,
+        const QString &value
+){
+
 }
 
 
