@@ -1,4 +1,5 @@
 #include <QStringList>
+#include <QtGlobal>
 #include "ModuleFactory.h"
 #include "modules/TestModule.h"
 #include "utility/Config.h"
@@ -13,7 +14,6 @@ namespace pelican {
 ModuleFactory::ModuleFactory(Config *config)
 {
     _config = config;
-    _moduleAddress.append("modules");
 }
 
 /**
@@ -37,17 +37,22 @@ ModuleFactory::~ModuleFactory()
  */
 AbstractModule* ModuleFactory::createModule(const QString& name)
 {
-    QStringList moduletree = _moduleAddress;
-    moduletree.append(name);
-    QDomNode* node = _config->getConfiguration(moduletree);
-    return _createModule(name, *node );
+    /* Create an index into the configuration file and get the configuration */
+    Config::TreeAddress_t address;
+    address.append(QPair<QString, QString>("modules", ""));
+    address.append(QPair<QString, QString>("module", name));
+    QDomElement element = _config->getConfiguration(address);
+
+    /* Create the module */
+    return _createModule(name, element);
 }
 
 /**
  * @details
  * Creates a new module.
+ * Called by the public function createModule.
  */
-AbstractModule* ModuleFactory::_createModule(const QString& type, const QDomNode& config)
+AbstractModule* ModuleFactory::_createModule(const QString& type, const QDomElement& config)
 {
     AbstractModule* module = 0;
     if( type == "Test" ) {

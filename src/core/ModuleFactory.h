@@ -2,10 +2,11 @@
 #define MODULEFACTORY_H
 
 #include <QString>
-#include <QHash>
 #include <QVector>
 #include <QStringList>
-class QDomNode;
+#include "utility/Config.h"
+
+class QDomElement;
 
 /**
  * @file ModuleFactory.h
@@ -24,11 +25,9 @@ class QDomNode;
  * the factory.
  */
 
-
 namespace pelican {
 
 class AbstractModule;
-class Config;
 
 class ModuleFactory
 {
@@ -42,21 +41,19 @@ class ModuleFactory
         /// Creates a new module.
         AbstractModule* createModule(const QString& name);
 
-        /// returns the tree node address that marks the start
-        //  of the module configuration block
-        QStringList moduleConfigTree() const { return _moduleAddress; }
+        /// Returns the tree node address that marks the start
+        /// of the module configuration block.
+
+        Config::TreeAddress_t moduleConfigTree() const { return _moduleAddress; }
 
     private:
-        /// Holds pointers to the created modules.
-        QHash<QString, AbstractModule*> modules;
-
         /// Creates a new module.
-        AbstractModule* _createModule(const QString& name, const QDomNode& config);
+        AbstractModule* _createModule(const QString& name, const QDomElement& config);
 
     private:
         Config* _config; ///< Pointer to the configuration object.
-        QStringList _moduleAddress;
-        QVector<AbstractModule*> _modules; // 
+        Config::TreeAddress_t _moduleAddress;
+        QVector<AbstractModule*> _modules; ///< Holds pointers to the created modules.
 };
 
 } // namespace pelican
