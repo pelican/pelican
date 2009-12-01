@@ -78,7 +78,10 @@ void ConfigTest::test_createModuleConfig()
     address << QPair<QString, QString>("modules", "")
             << QPair<QString, QString>("module", "test");
     address.append(qMakePair(QString("param"), QString("a")));
-    QDomElement e = config.setConfiguration(address);
+    QDomElement e_in = config.setConfiguration(address);
+
+    QDomElement e_out = config.getConfiguration(address);
+
 }
 
 } // namespace pelican

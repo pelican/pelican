@@ -27,36 +27,6 @@ Config::~Config()
 
 /**
  * @details
- */
-QDomElement& Config::getConfiguration(
-        const QList< QPair<QString, QString> > &address) const
-{
-    QDomElement element;
-    std::cout << "- Get config.\n";
-
-    for (int i = 0; i < address.size(); i++) {
-
-        QString tag  = address.at(i).first;
-        QString name = address.at(i).second;
-
-        /* Populate a node list with elements specified tag name */
-        QDomNodeList nodes = _document.elementsByTagName(tag);
-
-        /* no node exists of the specified tag */
-        if (nodes.isEmpty()) {
-            throw QString("No nodes found\n");
-        }
-
-        for (int n = 0; n < nodes.size(); n++) {
-            QDomElement e = nodes.at(i).toElement();
-        }
-    }
-    return element;
-}
-
-
-/**
- * @details
  *
  * @param[in]   address The address of the configuration node element to be set.
  *
@@ -65,34 +35,104 @@ QDomElement& Config::getConfiguration(
 QDomElement& Config::setConfiguration(
         const QList< QPair<QString, QString> > &address
 ){
-    std::cout << std::endl;
+    std::cout << "\n= Set Configuration\n";
+
+    QDomElement parent = _document.documentElement();
+
+    if (parent.isNull()) {
+        QDomElement e = _document.createElement(QString("config"));
+        _document.appendChild(e);
+        parent = e;
+    }
+
     for (int i = 0; i < address.size(); i++) {
 
-        QDomNodeList nodes = _document.elementsByTagName(address.at(i).first);
+        QString tag  = address.at(i).first;
+        QString name = address.at(i).second;
 
-        /* no node exists of the specified tag */
+        QDomNodeList nodes = parent.elementsByTagName(tag);
+
+        /* No node exists of the specified tag - create one...*/
         if (nodes.isEmpty()) {
-            std::cout << "No nodes of tag " << address.at(i).first.toStdString()
-                      << " exist. Creating...\n";
-            _document.createElement(address.at(i).first);
+            QDomElement e = _document.createElement(tag);
+            e.setAttribute(QString("name"), name);
+            parent.appendChild(e);
+            parent = e;
         }
-        /* find if the tag already exists with the name */
+
+        /* Find if the tag already exists with the name */
         else {
-            std::cout << "Searching for a tag " << address.at(i).first.toStdString()
-                      << " with name " << address.at(i).second.toStdString()
+            std::cout << "Searching for a tag " << tag.toStdString()
+                      << " with name " << name.toStdString()
                       << "\n";
             for (int n = 0; n < nodes.size(); n++) {
 
             }
         }
-//        std::cout << address.at(i).first.toStdString()
-//                  << " "
-//                  << address.at(i).second.toStdString()
-//                  << std::endl;
+    }
+    std::cout << "= Done.\n\n";
+
+    return parent;
+}
+
+
+/**
+ * @details
+ */
+QDomElement& Config::getConfiguration(
+        const QList< QPair<QString, QString> > &address) const
+{
+    std::cout << "- Get config.\n";
+    QDomElement parent = _document.documentElement();
+
+    if (parent.isNull()) {
+        std::cout << "eeek\n";
+        throw QString("Empty configuration");
     }
 
-    QDomElement a;
-    return a;
+    for (int i = 0; i < address.size(); i++) {
+
+        QString tag  = address.at(i).first;
+        QString name = address.at(i).second;
+
+        std::cout << "looking for tag \""
+                  << tag.toStdString()
+                  << "\",name = \""
+                  << name.toStdString()
+                  << "\"\n";
+
+        /* Populate a node list with elements specified tag name */
+        QDomNodeList nodes = parent.elementsByTagName(tag);
+
+        /* No node exists of the specified tag */
+        if (nodes.isEmpty()) {
+            std::cout << "No nodes found :(\n";
+            throw QString("No nodes found\n");
+        }
+
+        /* Handle unique elements - ie ones with no name */
+        if (name.isEmpty()) {
+            if (nodes.size() != 1) {
+                throw QString("Expecting unique element as no name");
+            }
+            else {
+                parent = nodes.at(0).toElement();
+                std::cout << "** Yay found unique element\n";
+                continue;
+            }
+        }
+
+        /* Loop over nodes to find one with the specified name */
+        for (int n = 0; n < nodes.size(); n++) {
+            QDomElement element = nodes.at(n).toElement();
+            std::cout << "tag = " << element.tagName().toStdString() << std::endl;
+            if (element.attribute(QString("name")) == name) {
+                std::cout << "** Yay found named element\n";
+                parent = element;
+            }
+        }
+    }
+    throw QString("Configuration not found");
 }
 
 

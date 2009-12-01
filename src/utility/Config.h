@@ -20,6 +20,10 @@ namespace pelican {
 class Config
 {
     public:
+        typedef QList< QPair<QString, QString> > TreeAddress_t;
+
+    public:
+
         /// Constructs the configuration object reading the specified configuration file
         Config(const QString &fileName = "");
 
@@ -29,15 +33,15 @@ class Config
         /// Returns the configuration file name
         QString getFileName() const { return _fileName; }
 
-        /// Returns a pointer to the specified configuration node.
-        QDomElement& getConfiguration(const QList< QPair<QString, QString> > &address) const;
-
         /// Creates and returns a configuration option at the specified address.
-        QDomElement& setConfiguration(const QList< QPair<QString, QString> > &address);
+        QDomElement& setConfiguration(const TreeAddress_t &address);
+
+        /// Returns a pointer to the specified configuration node.
+        QDomElement& getConfiguration(const TreeAddress_t &address) const;
 
         /// Sets a configuration option attribute at the specified address.
         void setConfigurationAttribute(
-                const QList< QPair<QString, QString> > &address,
+                const TreeAddress_t &address,
                 const QString &key,
                 const QString &value
         );
