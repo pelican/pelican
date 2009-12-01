@@ -50,19 +50,9 @@ class Config
         /// Reads and parses the configuration file.
         void read();
 
-        /// Parse the server configuration and populate a QHash lookup
-        void parseServerConfig();
-
-        /// Parse the server configuration and populate a QHash lookup
-        void parseModuleConfig();
-
     private:
         QString _fileName;
         QDomDocument _document;
-        QDomNodeList _modules;
-        QDomNodeList _servers;
-        QHash<QString, int> _moduleList;
-        QHash<QString, int> _serverList;
 };
 
 

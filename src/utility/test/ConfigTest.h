@@ -32,6 +32,7 @@ class ConfigTest : public CppUnit::TestFixture
         CPPUNIT_TEST( test_fileDoesntExist );
         //        CPPUNIT_TEST( test_invalidDocType );
         CPPUNIT_TEST( test_createModuleConfig );
+        CPPUNIT_TEST( test_createModuleConfig2 );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -47,6 +48,8 @@ class ConfigTest : public CppUnit::TestFixture
         void test_invalidDocType();
 
         void test_createModuleConfig();
+
+        void test_createModuleConfig2();
 
     public:
         ConfigTest();

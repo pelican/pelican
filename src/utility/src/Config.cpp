@@ -32,9 +32,8 @@ Config::~Config()
  *
  * @return
  */
-QDomElement& Config::setConfiguration(
-        const QList< QPair<QString, QString> > &address
-){
+QDomElement& Config::setConfiguration(const TreeAddress_t &address)
+{
     std::cout << "\n= Set Configuration\n";
 
     QDomElement parent = _document.documentElement();
@@ -79,8 +78,7 @@ QDomElement& Config::setConfiguration(
 /**
  * @details
  */
-QDomElement& Config::getConfiguration(
-        const QList< QPair<QString, QString> > &address) const
+QDomElement& Config::getConfiguration(const TreeAddress_t &address) const
 {
     std::cout << "- Get config.\n";
     QDomElement parent = _document.documentElement();
@@ -122,17 +120,20 @@ QDomElement& Config::getConfiguration(
             }
         }
 
-        /* Loop over nodes to find one with the specified name */
+        /* Handle named elements to find the correct element node  */
         for (int n = 0; n < nodes.size(); n++) {
             QDomElement element = nodes.at(n).toElement();
             std::cout << "tag = " << element.tagName().toStdString() << std::endl;
-            if (element.attribute(QString("name")) == name) {
+            if (!element.hasAttribute(QString("name"))) {
+                throw QString("Expecting a name attribute to identify the tag");
+            }
+            else if (element.attribute(QString("name")) == name) {
                 std::cout << "** Yay found named element\n";
                 parent = element;
             }
         }
     }
-    throw QString("Configuration not found");
+    return parent;
 }
 
 
@@ -140,7 +141,7 @@ QDomElement& Config::getConfiguration(
  * @details
  */
 void Config::setConfigurationAttribute(
-        const QList< QPair<QString, QString> > &address,
+        const TreeAddress_t &address,
         const QString &key,
         const QString &value
 ){
@@ -177,43 +178,7 @@ void Config::read()
     if (_document.doctype().name() != "pelican") {
         throw QString("Configuration file is not a pelican configuration document");
     }
-
-    parseServerConfig();
-    parseModuleConfig();
 }
 
-
-/**
- * @details
- * Store a QHash lookup table for server configuration
- */
-void Config::parseServerConfig()
-{
-    _servers = _document.elementsByTagName("server");
-    for (int i = 0; i < _servers.size(); i++) {
-        QDomElement e = _servers.at(i).toElement();
-        QString type = e.attribute("type");
-        QString name = e.attribute("name");
-        QString id = type + "::" + name;
-        _serverList[id] = i;
-    }
-}
-
-
-/**
- * @details
- * Store a QHash lookup table for module configuration
- */
-void Config::parseModuleConfig()
-{
-    _modules = _document.elementsByTagName("module");
-    for (int i = 0; i < _modules.size(); i++) {
-        QDomElement e = _modules.at(i).toElement();
-        QString type = e.attribute("type");
-        QString name = e.attribute("name");
-        QString id = type + "::" + name;
-        _moduleList[id] = i;
-    }
-}
 
 } /* namespace pelican */

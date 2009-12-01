@@ -78,10 +78,35 @@ void ConfigTest::test_createModuleConfig()
     address << QPair<QString, QString>("modules", "")
             << QPair<QString, QString>("module", "test");
     address.append(qMakePair(QString("param"), QString("a")));
+
     QDomElement e_in = config.setConfiguration(address);
 
     QDomElement e_out = config.getConfiguration(address);
 
 }
+
+/**
+ * @details
+ * Test for creating a module element within the DomDocument
+ */
+void ConfigTest::test_createModuleConfig2()
+{
+    Config config("");
+    QList<QPair<QString, QString> > address;
+    address << QPair<QString, QString>("modules", "")
+            << QPair<QString, QString>("module", "test");
+
+    QDomElement e_in = config.setConfiguration(address);
+
+    QDomElement e;
+    e.setTagName(QString("wibble"));
+    e.setAttribute(QString("value"), QString("wobble"));
+    e_in.appendChild(e);
+
+    address << QPair<QString, QString>("wibble", "value");
+    QDomElement e_out = config.getConfiguration(address);
+
+}
+
 
 } // namespace pelican
