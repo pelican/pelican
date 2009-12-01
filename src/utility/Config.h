@@ -43,7 +43,6 @@ class Config
         );
 
     private:
-
         /// Reads and parses the configuration file.
         void read();
 
@@ -55,10 +54,10 @@ class Config
 
     private:
         QString _fileName;
-        QDomDocument _domDocument;
+        QDomDocument _document;
         QDomNodeList _modules;
-        QHash<QString, int> _moduleList;
         QDomNodeList _servers;
+        QHash<QString, int> _moduleList;
         QHash<QString, int> _serverList;
 };
 

@@ -28,22 +28,29 @@ Config::~Config()
 /**
  * @details
  */
-QDomElement& Config::getConfiguration(const QList< QPair<QString, QString> > &address) const
+QDomElement& Config::getConfiguration(
+        const QList< QPair<QString, QString> > &address) const
 {
-
-
-
-
     QDomElement element;
+    std::cout << "- Get config.\n";
 
+    for (int i = 0; i < address.size(); i++) {
 
-    //    QDomElement *config;
-    // work out from the address which node to return....
+        QString tag  = address.at(i).first;
+        QString name = address.at(i).second;
 
-    //    if (!_moduleList.contains(moduleId)) {
-    //        throw QString("Requested unknown configuration");
-    //    }
-    //    *config = _modules.at(_moduleList[moduleId]);
+        /* Populate a node list with elements specified tag name */
+        QDomNodeList nodes = _document.elementsByTagName(tag);
+
+        /* no node exists of the specified tag */
+        if (nodes.isEmpty()) {
+            throw QString("No nodes found\n");
+        }
+
+        for (int n = 0; n < nodes.size(); n++) {
+            QDomElement e = nodes.at(i).toElement();
+        }
+    }
     return element;
 }
 
@@ -51,18 +58,39 @@ QDomElement& Config::getConfiguration(const QList< QPair<QString, QString> > &ad
 /**
  * @details
  *
- * @param
+ * @param[in]   address The address of the configuration node element to be set.
  *
  * @return
  */
-QDomElement& Config::setConfiguration(const QList< QPair<QString, QString> > &address)
-{
+QDomElement& Config::setConfiguration(
+        const QList< QPair<QString, QString> > &address
+){
+    std::cout << std::endl;
     for (int i = 0; i < address.size(); i++) {
-        std::cout << address.at(i).first.toStdString()
-                  << " "
-                  << address.at(i).second.toStdString()
-                  << std::endl;
+
+        QDomNodeList nodes = _document.elementsByTagName(address.at(i).first);
+
+        /* no node exists of the specified tag */
+        if (nodes.isEmpty()) {
+            std::cout << "No nodes of tag " << address.at(i).first.toStdString()
+                      << " exist. Creating...\n";
+            _document.createElement(address.at(i).first);
+        }
+        /* find if the tag already exists with the name */
+        else {
+            std::cout << "Searching for a tag " << address.at(i).first.toStdString()
+                      << " with name " << address.at(i).second.toStdString()
+                      << "\n";
+            for (int n = 0; n < nodes.size(); n++) {
+
+            }
+        }
+//        std::cout << address.at(i).first.toStdString()
+//                  << " "
+//                  << address.at(i).second.toStdString()
+//                  << std::endl;
     }
+
     QDomElement a;
     return a;
 }
@@ -100,13 +128,13 @@ void Config::read()
 
     /* Read the XML configuration file into the QDomdocument */
     QString error; int line, column;
-    if (!_domDocument.setContent(&file, true, &error, &line, &column)) {
+    if (!_document.setContent(&file, true, &error, &line, &column)) {
         QString errorMsg = "Parse error (" + QString::number(line)
         + QString::number(column) + "): " + error;
         throw errorMsg;
     }
 
-    if (_domDocument.doctype().name() != "pelican") {
+    if (_document.doctype().name() != "pelican") {
         throw QString("Configuration file is not a pelican configuration document");
     }
 
@@ -121,7 +149,7 @@ void Config::read()
  */
 void Config::parseServerConfig()
 {
-    _servers = _domDocument.elementsByTagName("server");
+    _servers = _document.elementsByTagName("server");
     for (int i = 0; i < _servers.size(); i++) {
         QDomElement e = _servers.at(i).toElement();
         QString type = e.attribute("type");
@@ -138,7 +166,7 @@ void Config::parseServerConfig()
  */
 void Config::parseModuleConfig()
 {
-    _modules = _domDocument.elementsByTagName("module");
+    _modules = _document.elementsByTagName("module");
     for (int i = 0; i < _modules.size(); i++) {
         QDomElement e = _modules.at(i).toElement();
         QString type = e.attribute("type");
