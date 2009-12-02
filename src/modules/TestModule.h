@@ -22,7 +22,7 @@ namespace pelican {
 class TestModule : public AbstractModule
 {
     public:
-        TestModule(const QDomNode& config );
+        TestModule(const QDomElement& config );
         ~TestModule();
 
     private:

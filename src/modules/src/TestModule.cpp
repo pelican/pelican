@@ -6,7 +6,7 @@ namespace pelican {
 
 
 // class TestModule 
-TestModule::TestModule(const QDomNode& config)
+TestModule::TestModule(const QDomElement& config)
     : AbstractModule(config)
 {
 }

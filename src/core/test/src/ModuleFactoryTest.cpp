@@ -43,9 +43,8 @@ void ModuleFactoryTest::test_createTestModule()
     {
         Config config;
         ModuleFactory factory(&config);
-        Config::TreeAddress_t address;
-        address.append(QPair<QString, QString>("modules", ""));
-        address.append(QPair<QString, QString>("module", "Test"));
+        Config::TreeAddress_t address = factory.configRoot();
+        address.append(Config::NodeId_t("module", "Test"));
         config.set(address);
 
         AbstractModule* module = 0;

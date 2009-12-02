@@ -3,7 +3,6 @@
 
 #include <QString>
 #include <QVector>
-#include <QStringList>
 #include "utility/Config.h"
 
 class QDomElement;
@@ -43,8 +42,7 @@ class ModuleFactory
 
         /// Returns the tree node address that marks the start
         /// of the module configuration block.
-
-        Config::TreeAddress_t moduleConfigTree() const { return _moduleAddress; }
+        Config::TreeAddress_t configRoot() const { return _configRoot; }
 
     private:
         /// Creates a new module.
@@ -52,7 +50,7 @@ class ModuleFactory
 
     private:
         Config* _config; ///< Pointer to the configuration object.
-        Config::TreeAddress_t _moduleAddress;
+        Config::TreeAddress_t _configRoot;
         QVector<AbstractModule*> _modules; ///< Holds pointers to the created modules.
 };
 
