@@ -41,7 +41,7 @@ AbstractModule* ModuleFactory::createModule(const QString& name)
     Config::TreeAddress_t address;
     address.append(QPair<QString, QString>("modules", ""));
     address.append(QPair<QString, QString>("module", name));
-    QDomElement element = _config->getConfiguration(address);
+    QDomElement element = _config->get(address);
 
     /* Create the module */
     return _createModule(name, element);

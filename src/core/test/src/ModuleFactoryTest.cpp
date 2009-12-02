@@ -46,7 +46,7 @@ void ModuleFactoryTest::test_createTestModule()
         Config::TreeAddress_t address;
         address.append(QPair<QString, QString>("modules", ""));
         address.append(QPair<QString, QString>("module", "Test"));
-        config.setConfiguration(address);
+        config.set(address);
 
         AbstractModule* module = 0;
         CPPUNIT_ASSERT_NO_THROW( module = factory.createModule("Test") );

@@ -73,17 +73,17 @@ void ConfigTest::test_invalidDocType()
  */
 void ConfigTest::test_createModuleConfig()
 {
-    Config config("");
-    QList<QPair<QString, QString> > address;
-    address << QPair<QString, QString>("modules", "")
-            << QPair<QString, QString>("module", "test");
-    address.append(qMakePair(QString("param"), QString("a")));
-
-    QDomElement e_in = config.setConfiguration(address);
-
-    QDomElement e_out = config.getConfiguration(address);
-
+//    Config config("");
+//    QList<QPair<QString, QString> > address;
+//    address << QPair<QString, QString>("modules", "")
+//            << QPair<QString, QString>("module", "test");
+//    address.append(qMakePair(QString("param"), QString("a")));
+//
+//    QDomElement e_in = config.setConfig(address);
+//
+//    QDomElement e_out = config.getConfig(address);
 }
+
 
 /**
  * @details
@@ -91,21 +91,57 @@ void ConfigTest::test_createModuleConfig()
  */
 void ConfigTest::test_createModuleConfig2()
 {
-    Config config("");
-    QList<QPair<QString, QString> > address;
-    address << QPair<QString, QString>("modules", "")
-            << QPair<QString, QString>("module", "test");
+    std::cout << std::endl;
+    std::cout << QString(50, QChar('%')).toStdString() << std::endl;
 
-    QDomElement e_in = config.setConfiguration(address);
+    Config config;
+    Config::TreeAddress_t address1;
+    address1 << Config::NodeId_t("modules", "")
+             << Config::NodeId_t("module", "test1")
+             << Config::NodeId_t("param", "a")
+             << Config::NodeId_t("param", "b");
+    config.set(address1);
 
-    QDomElement e;
-    e.setTagName(QString("wibble"));
-    e.setAttribute(QString("value"), QString("wobble"));
-    e_in.appendChild(e);
+    config.summary(10);
 
-    address << QPair<QString, QString>("wibble", "value");
-    QDomElement e_out = config.getConfiguration(address);
+    Config::TreeAddress_t address2;
+    address2 << Config::NodeId_t("modules", "")
+             << Config::NodeId_t("module", "test2")
+             << Config::NodeId_t("param", "a");
+    config.set(address2);
 
+    config.summary(10);
+
+    Config::TreeAddress_t address3;
+    address3 << Config::NodeId_t("modules", "")
+             << Config::NodeId_t("module", "test3")
+             << Config::NodeId_t("param", "a")
+             << Config::NodeId_t("param", "b");
+    config.set(address3);
+
+    config.summary(10);
+
+    if (config.exists(address1)) {
+        std::cout << "Config found\n\n";
+    }
+    else {
+        std::cout << "Config not found\n\n";
+    }
+
+//    std::cout << "Returned config for:\n";
+//    std::cout << " Tag  = " << e_in.tagName().toStdString() << std::endl;
+//    std::cout << " name = " << e_in.attribute(QString("name")).toStdString() << std::endl;
+//    std::cout << "  parent = " << e_in.parentNode().toElement().tagName().toStdString() << std::endl;
+//    std::cout << "  name = " << e_in.parentNode().toElement().attribute(QString("name")).toStdString() << std::endl;
+//
+//    QDomElement e;
+//    e.setTagName(QString("wibble"));
+//    e.setAttribute(QString("name"), QString("wobble"));
+//    if (e_in.isNull()) std::cout << "Doh!\n";
+//    e_in.appendChild(e);
+//
+//    address << QPair<QString, QString>("wibble", "wobble");
+//    config.getConfiguration(address);
 }
 
 

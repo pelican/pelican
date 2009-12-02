@@ -20,7 +20,8 @@ namespace pelican {
 class Config
 {
     public:
-        typedef QList< QPair<QString, QString> > TreeAddress_t;
+        typedef QPair<QString, QString> NodeId_t;
+        typedef QList<NodeId_t> TreeAddress_t;
 
     public:
 
@@ -33,29 +34,40 @@ class Config
         /// Returns the configuration file name
         QString getFileName() const { return _fileName; }
 
+        /// Returns true if the configuration address exists
+        bool exists(const TreeAddress_t &address) const;
+
         /// Creates and returns a configuration option at the specified address.
-        QDomElement& setConfiguration(const TreeAddress_t &address);
+        QDomElement& set(const TreeAddress_t &address);
 
         /// Returns a pointer to the specified configuration node.
-        QDomElement& getConfiguration(const TreeAddress_t &address) const;
+        QDomElement& get(const TreeAddress_t &address) const;
 
         /// Sets a configuration option attribute at the specified address.
-        void setConfigurationAttribute(
+        void setAttribute(
                 const TreeAddress_t &address,
                 const QString &key,
                 const QString &value
         );
 
+        /// Prints a summary of the configuration to specified tree depth
+        void summary(const unsigned int depth = 2) const;
+
     private:
         /// Reads and parses the configuration file.
-        void read();
+        void _read();
+
+        /// Creates a child configuration node
+        void _createChildNode(QDomElement &parent, const QString& tag, const QString& name);
+
+        /// Prints children of a element node
+        void _printChildren(const QDomElement& element, const int depth, const int maxDepth = 4) const;
+
 
     private:
         QString _fileName;
         QDomDocument _document;
 };
-
-
 
 
 } /* namespace pelican */
