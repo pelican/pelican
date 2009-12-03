@@ -1,6 +1,7 @@
 #include "ConfigTest.h"
 #include "Config.h"
 #include <QCoreApplication>
+#include <QTextStream>
 #include <iostream>
 #include "utility/memCheck.h"
 
@@ -73,15 +74,23 @@ void ConfigTest::test_invalidDocType()
  */
 void ConfigTest::test_createModuleConfig()
 {
-//    Config config("");
-//    QList<QPair<QString, QString> > address;
-//    address << QPair<QString, QString>("modules", "")
-//            << QPair<QString, QString>("module", "test");
-//    address.append(qMakePair(QString("param"), QString("a")));
-//
-//    QDomElement e_in = config.setConfig(address);
-//
-//    QDomElement e_out = config.getConfig(address);
+    Config config;
+    Config::TreeAddress_t address1;
+    address1 << Config::NodeId_t("modules", "")
+             << Config::NodeId_t("module", "test1")
+             << Config::NodeId_t("param", "a");
+    QDomElement in1 = config.set(address1);
+    Config::TreeAddress_t address2;
+    address2 << Config::NodeId_t("modules", "")
+             << Config::NodeId_t("module", "test2")
+             << Config::NodeId_t("param", "a");
+    QDomElement in2 = config.set(address2);
+
+    QDomElement out1 = config.get(address1);
+    QDomElement out2 = config.get(address1);
+
+    CPPUNIT_ASSERT_ASSERTION_PASS(in1 == out1);
+    CPPUNIT_ASSERT_ASSERTION_PASS(in2 == out2);
 }
 
 
@@ -92,7 +101,7 @@ void ConfigTest::test_createModuleConfig()
 void ConfigTest::test_createModuleConfig2()
 {
     std::cout << std::endl;
-    std::cout << QString(50, QChar('%')).toStdString() << std::endl;
+    std::cout << QString(50, QChar('#')).toStdString() << "\n";
 
     Config config;
     Config::TreeAddress_t address1;
@@ -102,46 +111,43 @@ void ConfigTest::test_createModuleConfig2()
              << Config::NodeId_t("param", "b");
     config.set(address1);
 
-    config.summary(10);
-
     Config::TreeAddress_t address2;
     address2 << Config::NodeId_t("modules", "")
-             << Config::NodeId_t("module", "test2")
-             << Config::NodeId_t("param", "a");
+             << Config::NodeId_t("module", "test1")
+             << Config::NodeId_t("wibble", "a")
+             << Config::NodeId_t("param", "");
     config.set(address2);
-
-    config.summary(10);
+    config.setAttribute(address2, "stuff", "ok");
 
     Config::TreeAddress_t address3;
     address3 << Config::NodeId_t("modules", "")
-             << Config::NodeId_t("module", "test3")
-             << Config::NodeId_t("param", "a")
+             << Config::NodeId_t("module", "test1")
              << Config::NodeId_t("param", "b");
     config.set(address3);
 
-    config.summary(10);
+    Config::TreeAddress_t address4;
+    address4 << Config::NodeId_t("servers", "")
+             << Config::NodeId_t("server", "test")
+             << Config::NodeId_t("ip", "");
+    QDomElement e = config.set(address4);
 
-    if (config.exists(address1)) {
-        std::cout << "Config found\n\n";
-    }
-    else {
-        std::cout << "Config not found\n\n";
-    }
+    QDomElement myElement = e.toDocument().createElement("yey");
+    e.appendChild(myElement);
+    e.setAttribute("address", "123.4.56.78");
 
-//    std::cout << "Returned config for:\n";
-//    std::cout << " Tag  = " << e_in.tagName().toStdString() << std::endl;
-//    std::cout << " name = " << e_in.attribute(QString("name")).toStdString() << std::endl;
-//    std::cout << "  parent = " << e_in.parentNode().toElement().tagName().toStdString() << std::endl;
-//    std::cout << "  name = " << e_in.parentNode().toElement().attribute(QString("name")).toStdString() << std::endl;
-//
-//    QDomElement e;
-//    e.setTagName(QString("wibble"));
-//    e.setAttribute(QString("name"), QString("wobble"));
-//    if (e_in.isNull()) std::cout << "Doh!\n";
-//    e_in.appendChild(e);
-//
-//    address << QPair<QString, QString>("wibble", "wobble");
-//    config.getConfiguration(address);
+    config.summary();
+
+    Config::TreeAddress_t address5;
+    address5 << Config::NodeId_t("modules", "")
+             << Config::NodeId_t("module", "test1");
+    std::cout << QString(50, QChar('#')).toStdString() << "\n";
+
+    QDomElement out = config.get(address5);
+
+    std::cout << out.firstChild().toElement().tagName().toStdString() << "\n";
+    std::cout << out.firstChild().toElement().attribute("name").toStdString() << "\n";
+
+
 }
 
 

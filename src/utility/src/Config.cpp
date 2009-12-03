@@ -24,67 +24,6 @@ Config::~Config()
 {
 }
 
-
-/**
- * @details
- */
-bool Config::exists(const TreeAddress_t &address) const
-        {
-    std::cout << "Checking address:\n";
-
-    for (int i = 0; i < address.size(); i++) {
-        QString tag  = address.at(i).first;
-        QString name = address.at(i).second;
-        std::cout << "[" << i << "] tag  = " << tag.toStdString() << "\n";
-        std::cout << "[" << i << "] name = " << name.toStdString() << "\n";
-    }
-
-
-    QDomElement parent = _document.documentElement();
-
-    if (parent.isNull()) {
-        return false;
-    }
-
-    for (int i = 0; i < address.size(); i++) {
-
-        QString tag  = address.at(i).first;
-        QString name = address.at(i).second;
-
-        /* Populate a node list with elements specified tag name */
-        QDomNodeList nodes = parent.elementsByTagName(tag);
-
-        /* No node exists of the specified tag */
-        if (nodes.isEmpty()) {
-            return false;
-        }
-
-        /* Handle unique elements - ie ones with no name */
-        if (name.isEmpty()) {
-            if (nodes.size() != 1) {
-                return false;
-            }
-            else {
-                parent = nodes.at(0).toElement();
-                continue;
-            }
-        }
-
-        /* Handle named elements to find the correct element node  */
-        for (int n = 0; n < nodes.size(); n++) {
-            QDomElement element = nodes.at(n).toElement();
-            if (!element.hasAttribute(QString("name"))) {
-                return false;
-            }
-            else if (element.attribute(QString("name")) == name) {
-                return true;
-            }
-        }
-    }
-    return true;
-        }
-
-
 /**
  * @details
  *
@@ -92,7 +31,7 @@ bool Config::exists(const TreeAddress_t &address) const
  *
  * @return
  */
-QDomElement& Config::set(const TreeAddress_t &address)
+QDomElement Config::set(const TreeAddress_t &address)
 {
     QDomElement parent = _document.documentElement();
 
@@ -101,15 +40,20 @@ QDomElement& Config::set(const TreeAddress_t &address)
         _document.appendChild(e);
         parent = e;
     }
-    else {
-        parent = parent.lastChild().toElement();
-    }
 
     for (int i = 0; i < address.size(); i++) {
 
         QString tag  = address.at(i).first;
         QString name = address.at(i).second;
-        QDomNodeList nodes = parent.elementsByTagName(tag);
+
+        /* Find child nodes of the specified tag type */
+        QDomNodeList children = parent.childNodes();
+        QList<QDomNode> nodes;
+        for (int i = 0; i < children.size(); i++) {
+            if (children.at(i).toElement().tagName() == tag) {
+                nodes << children.at(i);
+            }
+        }
 
         /* No node exists of the specified tag - create one...*/
         if (nodes.isEmpty()) {
@@ -117,16 +61,28 @@ QDomElement& Config::set(const TreeAddress_t &address)
             parent = parent.lastChild().toElement();
         }
 
-        /* Find if the tag already exists with the name */
-        bool exists = false;
-        for (int n = 0; n < nodes.size(); n++) {
-            QString nodeName = nodes.at(n).toElement().attribute(QString("name"));
-            if (nodeName == name) {
-                exists = true;
+        /* Nodes exist of the specified tag - do we need a new one? */
+        else {
+
+            /* Find if the tag already exists with the name */
+            int iNode = -1;
+            for (int n = 0; n < nodes.size(); n++) {
+                QString nodeName = nodes.at(n).toElement().attribute(QString("name"));
+                if (nodeName == name) {
+                    iNode = n;
+                }
             }
-        }
-        if (!exists) {
-            _createChildNode(parent, tag, name);
+
+            /* No tag exists with the unique name - append one to the end */
+            if (iNode == -1) {
+                _createChildNode(parent, tag, name);
+                parent = parent.lastChild().toElement();
+            }
+
+            /* Tag exists - move the parent pointer */
+            else {
+                parent = nodes.at(iNode).toElement();
+            }
         }
     }
 
@@ -137,61 +93,61 @@ QDomElement& Config::set(const TreeAddress_t &address)
 /**
  * @details
  */
-QDomElement& Config::get(const TreeAddress_t &address) const
-        {
+const QDomElement Config::get(const TreeAddress_t &address) const
+{
     QDomElement parent = _document.documentElement();
 
+    /* Empty configuraiton return null element */
     if (parent.isNull()) {
-        std::cout << "Config empty\n";
-        return parent;
+        throw QString("Empty configuration");
     }
 
-    std::cout << std::endl << QString(50, QChar('-')).toStdString() << std::endl;
     for (int i = 0; i < address.size(); i++) {
 
         QString tag  = address.at(i).first;
         QString name = address.at(i).second;
 
-        std::cout << "Parent Tag = " << parent.tagName().toStdString() << "\n";
-        std::cout << " Tag  = " << tag.toStdString() << "\n";
-        std::cout << " Name = " << name.toStdString() << "\n";
-        std::cout << std::endl;
-
-        /* Populate a node list with elements specified tag name */
-        QDomNodeList nodes = parent.elementsByTagName(tag);
+        /* Find child nodes of the specified tag type */
+        QDomNodeList children = parent.childNodes();
+        QList<QDomNode> nodes;
+        for (int i = 0; i < children.size(); i++) {
+            if (children.at(i).toElement().tagName() == tag) {
+                nodes << children.at(i);
+            }
+        }
 
         /* No node exists of the specified tag */
         if (nodes.isEmpty()) {
-            std::cout << "No nodes found of tag \"" << tag.toStdString() << "\"\n";
-            throw QString("No nodes found\n");
+            throw QString("No nodes found of specified tag\n");
         }
 
-        /* Handle unique elements - ie ones with no name */
-        if (name.isEmpty()) {
-            if (nodes.size() != 1) {
-                std::cout << "Expecting unique element as no name\n";
-                throw QString("Expecting unique element as no name");
+        /* Nodes exist of the specified tag - find the right one to return */
+        else {
+
+            /* Find if the tag already exists with the name */
+            int iNode = -1;
+            for (int n = 0; n < nodes.size(); n++) {
+                QString nodeName = nodes.at(n).toElement().attribute(QString("name"));
+                if (nodeName == name) {
+                    iNode = n;
+                }
             }
+
+            /* No tag exists with the name */
+            if (iNode == -1) {
+                throw QString("No node found with specified tag and name");
+            }
+
+            /* Tag exists - move the parent pointer */
             else {
-                parent = nodes.at(0).toElement();
-                continue;
-            }
-        }
-
-        /* Handle named elements to find the correct element node  */
-        for (int n = 0; n < nodes.size(); n++) {
-            QDomElement element = nodes.at(n).toElement();
-            if (!element.hasAttribute(QString("name"))) {
-                std::cout << "Expecting a name attribute to identify the tag\n";
-                throw QString("Expecting a name attribute to identify the tag");
-            }
-            else if (element.attribute(QString("name")) == name) {
-                parent = element;
+                parent = nodes.at(iNode).toElement();
             }
         }
     }
+
+
     return parent;
-        }
+}
 
 
 /**
@@ -202,19 +158,21 @@ void Config::setAttribute(
         const QString &key,
         const QString &value
 ){
+    QDomElement e = set(address);
+    e.setAttribute(key, value);
 }
 
 
 /**
  * @details
  */
-void Config::summary(const unsigned int depth) const
+void Config::summary() const
 {
-    std::cout << QString(50, QChar('-')).toStdString() << std::endl;
-    std::cout << "Config summary (to depth = " << depth << "):\n";
-    QDomElement parent = _document.documentElement();
-    _printChildren(parent, 0, depth);
-    std::cout << QString(50, QChar('-')).toStdString() << std::endl;
+    std::cout << std::endl;
+    std::cout << QString(70, QChar('-')).toStdString() << std::endl;
+    std::cout << _document.toString(4).toStdString();
+    std::cout << QString(70, QChar('-')).toStdString() << std::endl;
+    std::cout << std::endl;
 }
 
 
@@ -263,43 +221,14 @@ void Config::_createChildNode(QDomElement &parent, const QString& tag, const QSt
 //    if (parent.isNull()) {
 //        return;
 //    }
-    std::cout << "Creating Child node: \"" << tag.toStdString() << "\", \""
-              << name.toStdString() <<"\"\n";
+//    std::cout << "Creating Child node: \"" << tag.toStdString() << "\", \""
+//              << name.toStdString() <<"\"\n";
+
     QDomElement e = _document.createElement(tag);
     if (!name.isEmpty()) {
         e.setAttribute(QString("name"), name);
     }
     parent.appendChild(e);
 }
-
-
-/**
- * @details
- * Prints Children of specified element.
- */
-void Config::_printChildren(const QDomElement& element, const int depth, const int maxDepth) const
-{
-    QDomNodeList children = element.childNodes();
-    QString indent(depth * 2, QChar(' '));
-    for (int i = 0; i < children.size(); i++) {
-        QDomElement c = children.at(i).toElement();
-        std::cout << indent.toStdString();
-        std::cout << "<" << c.tagName().toStdString();
-        QString name = c.attribute(QString("name"));
-        int nAttributes = c.attributes().count();
-        if (!name.isEmpty()) {
-            std::cout << " name=\"" << name.toStdString() << "\"";
-            nAttributes--;
-        }
-        if (nAttributes > 0) {
-            std::cout << " ...";
-        }
-        std::cout << ">\n";
-        if (depth + 1 < maxDepth) {
-            _printChildren(c, depth + 1, maxDepth);
-        }
-    }
-}
-
 
 } /* namespace pelican */
