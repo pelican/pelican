@@ -34,14 +34,11 @@ class Config
         /// Returns the configuration file name
         QString getFileName() const { return _fileName; }
 
-        /// Returns true if the configuration address exists
-        bool exists(const TreeAddress_t &address) const;
-
         /// Creates and returns a configuration option at the specified address.
-        QDomElement& set(const TreeAddress_t &address);
+        QDomElement set(const TreeAddress_t &address);
 
         /// Returns a pointer to the specified configuration node.
-        QDomElement& get(const TreeAddress_t &address) const;
+        const QDomElement get(const TreeAddress_t &address) const;
 
         /// Sets a configuration option attribute at the specified address.
         void setAttribute(
@@ -51,7 +48,7 @@ class Config
         );
 
         /// Prints a summary of the configuration to specified tree depth
-        void summary(const unsigned int depth = 2) const;
+        void summary() const;
 
     private:
         /// Reads and parses the configuration file.
@@ -60,7 +57,7 @@ class Config
         /// Creates a child configuration node
         void _createChildNode(QDomElement &parent, const QString& tag, const QString& name);
 
-        /// Prints children of a element node
+        /// Prints children of a element node recursively up to the max depth.
         void _printChildren(const QDomElement& element, const int depth, const int maxDepth = 4) const;
 
 

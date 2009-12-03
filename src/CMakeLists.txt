@@ -43,6 +43,7 @@ PACKAGE_DEPENDENCIES( ${dependencies} )
 # -- compiler defaults
 SET(CPP_PLATFORM_LIBS ${CMAKE_THREAD_LIBS_INIT})
 if(CMAKE_COMPILER_IS_GNUCC)
+    add_definitions(-Wall)
     add_definitions(-Wno-deprecated -Wno-unknown-pragmas)
     list(APPEND CPP_PLATFORM_LIBS util dl)
 endif(CMAKE_COMPILER_IS_GNUCC)

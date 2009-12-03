@@ -79,8 +79,8 @@ void Tracer::remove (void * p)
     iterator it = _map.find (p);
     if (it != _map.end ())
     {
-        char const * file = it->second.file ();
-        int line = it->second.line ();
+//        char const * file = it->second.file ();
+//        int line = it->second.line ();
         _map.erase (it);
     }
 }
