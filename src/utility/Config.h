@@ -24,7 +24,6 @@ class Config
         typedef QList<NodeId_t> TreeAddress_t;
 
     public:
-
         /// Constructs the configuration object reading the specified configuration file
         Config(const QString &fileName = "");
 
@@ -47,8 +46,16 @@ class Config
                 const QString &value
         );
 
+        /// Returns the attribute at specified address and key.
+        QString getAttribute(
+                const TreeAddress_t& address,
+                const QString& key) const;
+
         /// Prints a summary of the configuration to specified tree depth
         void summary() const;
+
+        /// Saves the configuration to the specified file name
+        void save(const QString& fileName) const;
 
     private:
         /// Reads and parses the configuration file.
@@ -56,10 +63,6 @@ class Config
 
         /// Creates a child configuration node
         void _createChildNode(QDomElement &parent, const QString& tag, const QString& name);
-
-        /// Prints children of a element node recursively up to the max depth.
-        void _printChildren(const QDomElement& element, const int depth, const int maxDepth = 4) const;
-
 
     private:
         QString _fileName;
