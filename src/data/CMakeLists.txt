@@ -2,6 +2,7 @@ INCLUDE_DIRECTORIES(${QT_INCLUDES})
 SUBPACKAGE(data)
 set( data_src
      src/DataBlob.cpp
+     src/TestDataBlob.cpp
 )
 add_library(data ${data_src} )
 target_link_libraries(data ${SUBPACKAGE_LIBRARIES} )
