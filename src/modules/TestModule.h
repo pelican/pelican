@@ -1,6 +1,7 @@
 #ifndef TESTMODULE_H
 #define TESTMODULE_H
 
+class QDomElement;
 
 #include "AbstractModule.h"
 
