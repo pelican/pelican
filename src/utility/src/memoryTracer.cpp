@@ -24,9 +24,9 @@ void* operator new(std::size_t size, char const * file, int line)
 
 void operator delete(void * p, char const * file, int line)
 {
+    //std::cout << "delete() :" << file << " line: " << line << std::endl;
     if (Tracer::ready)
         boost::details::pool::singleton_default<Tracer>::instance().remove (p);
-    //std::cout << "delete() :" << file << " line: " << line << std::endl;
     free(p);
 }
 
@@ -40,8 +40,9 @@ void* operator new(std::size_t size) throw (std::bad_alloc)
 
 void operator delete(void* p) throw()
 {
+    //std::cout << "delete(" << p << ")" << std::endl;
     if (Tracer::ready)
-        boost::details::pool::singleton_default<Tracer>::instance().remove(p);
+       boost::details::pool::singleton_default<Tracer>::instance().remove(p);
     free(p);
 }
 

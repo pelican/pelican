@@ -7,6 +7,7 @@
 #define DEBUGNEW_H
 #pragma warning (disable:4786)
 #include <cstdlib>
+#include <string>
 #include <new>
 #include <boost/pool/detail/singleton.hpp>
 
@@ -24,13 +25,13 @@ private:
     {
         public:
             Entry (char const * file, int line)
-                : _file (file), _line (line) {}
+                : _file(file), _line (line) {}
             Entry ()
-                : _file (0), _line (0) {}
-            char const * file() const { return _file; }
+                :  _line (0) {}
+            char const * file() const { return _file.c_str(); }
             int line() const { return _line; }
         private:
-            char const * _file;
+            std::string _file;
             int _line;
     };
     class Lock

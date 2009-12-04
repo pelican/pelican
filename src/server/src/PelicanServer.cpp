@@ -1,32 +1,48 @@
+#include <boost/shared_ptr.hpp>
+#include <QTcpSocket>
 #include "PelicanServer.h"
-#include "Session.h"
-
+#include "AbstractProtocol.h"
+#include "PelicanProtocol.h"
+#include "PelicanPortServer.h"
+#include "utility/memCheck.h"
 
 namespace pelican {
 
-
 // class PelicanServer 
 PelicanServer::PelicanServer(QObject* parent)
-    : QTcpServer(parent)
+    : QThread(parent)
 {
 }
 
 PelicanServer::~PelicanServer()
 {
+    terminate();
+    wait();
+    foreach(AbstractProtocol* p, _protocolPortMap)
+        delete p;
 }
 
-void PelicanServer::incomingConnection(int socketDescriptor)
+void PelicanServer::addProtocol(AbstractProtocol* proto, quint16 port)
 {
-    Session *thread = new Session(socketDescriptor, this);
-    connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
-    thread->start();
-}
-
-void PelicanServer::start()
-{
-    if (!listen()) {
-        throw QString("Unable to start pelicanServer");
+    if( _protocolPortMap.contains(port) ) {
+        delete proto;
+        throw QString("Cannot map multiple protocols to the same port (" + QString().setNum(port));
     }
+    _protocolPortMap[port] = proto;
+}
+
+void PelicanServer::run()
+{
+    QVector<boost::shared_ptr<PelicanPortServer> > servers;
+    QList<quint16> ports = _protocolPortMap.keys();
+    for (int i = 0; i < ports.size(); ++i) {
+        boost::shared_ptr<PelicanPortServer> server( new PelicanPortServer(_protocolPortMap[ports[i]]) );
+        servers.append(server);
+        if ( !server->listen(QHostAddress::Any, ports[i] )) {
+            throw QString(QString("Unable to start pelicanServer on port='") + QString().setNum(ports[i])+ QString("'"));
+        }
+    }
+    exec();
 }
 
 } // namespace pelican

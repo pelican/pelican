@@ -1,0 +1,41 @@
+#include "TestProtocol.h"
+#include "utility/ServerRequest.h"
+
+#include <iostream>
+#include "utility/memCheck.h"
+
+namespace pelican {
+
+// class TestProtocol 
+TestProtocol::TestProtocol(const QString& id)
+    : AbstractProtocol(), _id(id)
+{
+}
+
+TestProtocol::~TestProtocol()
+{
+}
+
+ServerRequest TestProtocol::request(QTcpSocket& socket)
+{
+    QStringList tokens;
+    tokens.append("ACK");
+    tokens.append(_id);
+    return ServerRequest(tokens);
+}
+
+void TestProtocol::send( QDataStream& stream, const QString& msg )
+{
+    stream << _id;
+}
+
+void TestProtocol::send( QDataStream& stream, const QList<DataBlob>& )
+{
+}
+
+void TestProtocol::sendError( QDataStream& stream, const QString& msg)
+{
+    stream << "ERROR" << msg << "\n";
+}
+
+} // namespace pelican
