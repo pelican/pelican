@@ -1,14 +1,19 @@
 #ifndef PELICANSERVER_H
 #define PELICANSERVER_H
 
+#include <QObject>
 #include <QTcpServer>
-#include "utility/memCheck.h"
+#include <QMap>
+#include <QThread>
 
 /**
  * @file PelicanServer.h
  */
 
 namespace pelican {
+
+class AbstractProtocol;
+class PelicanPortServer;
 
 /**
  * @class PelicanServer
@@ -22,19 +27,25 @@ namespace pelican {
  * object is spawned in another thread
  */
 
-class PelicanServer : public QTcpServer
+class PelicanServer : public QThread
 {
     Q_OBJECT
 
     public:
         PelicanServer(QObject* parent=0);
         ~PelicanServer();
-        void start();
+
+        /// Assosiate an incoming port with a particular
+        //  protocol. Ownership of AbstractProtocol is
+        //  transferred to this class.
+        void addProtocol(AbstractProtocol*, quint16 port);
 
     protected:
-        void incomingConnection(int socketDescriptor);
+        // code to be executed in the thread (via start() )
+        void run();
 
     private:
+        QMap<quint16,AbstractProtocol* > _protocolPortMap;
 };
 
 } // namespace pelican

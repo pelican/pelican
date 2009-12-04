@@ -2,12 +2,16 @@
 #define SESSION_H
 
 #include <QThread>
+class QTcpSocket;
 
 /**
  * @file Session.h
  */
 
 namespace pelican {
+
+class ServerRequest;
+class AbstractProtocol;
 
 /**
  * @class Session
@@ -23,10 +27,14 @@ class Session : public QThread
     Q_OBJECT
 
     public:
-        Session(int socketDescriptor,QObject* parent=0 );
+        Session(int socketDescriptor, AbstractProtocol* proto, QObject* parent=0 );
         ~Session();
+        void run();
+        void processRequest(const ServerRequest&, QDataStream& );
 
     private:
+        int _socketDescriptor;
+        AbstractProtocol* _proto;
 };
 
 } // namespace pelican

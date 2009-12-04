@@ -2,12 +2,16 @@ INCLUDE_DIRECTORIES(${QT_INCLUDES})
 SUBPACKAGE(server utility)
 # files requireing mpp preprocessing (i.e. QObjects)
 set( server_moc_headers
+     PelicanPortServer.h
      PelicanServer.h
      Session.h
    )
 set( server_src
+     src/AbstractProtocol.cpp
      src/PelicanServer.cpp
+     src/PelicanPortServer.cpp
      src/Session.cpp
+     src/PelicanProtocol.cpp
 )
 set( serverExe_src
      src/main.cpp
