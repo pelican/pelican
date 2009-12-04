@@ -1,7 +1,7 @@
 #ifndef ABSTRACTMODULE_H
 #define ABSTRACTMODULE_H
 
-class QDomNode;
+class QDomElement;
 
 /**
  * @file AbstractModule.h
@@ -21,7 +21,7 @@ namespace pelican {
 class AbstractModule
 {
     public:
-        AbstractModule( const QDomNode& config  );
+        AbstractModule( const QDomElement& config  );
         ~AbstractModule();
 
     private:

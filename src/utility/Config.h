@@ -20,6 +20,10 @@ namespace pelican {
 class Config
 {
     public:
+        typedef QPair<QString, QString> NodeId_t;
+        typedef QList<NodeId_t> TreeAddress_t;
+
+    public:
         /// Constructs the configuration object reading the specified configuration file
         Config(const QString &fileName = "");
 
@@ -29,33 +33,41 @@ class Config
         /// Returns the configuration file name
         QString getFileName() const { return _fileName; }
 
-        /// Returns a pointer to the specified configuration node.
-        QDomNode* getConfiguration(QStringList address);
+        /// Creates and returns a configuration option at the specified address.
+        QDomElement set(const TreeAddress_t &address);
 
-        /// Sets a configuration option
-        void setConfigurationOption();
+        /// Returns a pointer to the specified configuration node.
+        const QDomElement get(const TreeAddress_t &address) const;
+
+        /// Sets a configuration option attribute at the specified address.
+        void setAttribute(
+                const TreeAddress_t &address,
+                const QString &key,
+                const QString &value
+        );
+
+        /// Returns the attribute at specified address and key.
+        QString getAttribute(
+                const TreeAddress_t& address,
+                const QString& key) const;
+
+        /// Prints a summary of the configuration to specified tree depth
+        void summary() const;
+
+        /// Saves the configuration to the specified file name
+        void save(const QString& fileName) const;
 
     private:
-
         /// Reads and parses the configuration file.
-        void read();
+        void _read();
 
-        /// Parse the server configuration and populate a QHash lookup
-        void parseServerConfig();
-
-        /// Parse the server configuration and populate a QHash lookup
-        void parseModuleConfig();
+        /// Creates a child configuration node
+        void _createChildNode(QDomElement &parent, const QString& tag, const QString& name);
 
     private:
         QString _fileName;
-        QDomDocument _domDocument;
-        QDomNodeList _modules;
-        QHash<QString, int> _moduleList;
-        QDomNodeList _servers;
-        QHash<QString, int> _serverList;
+        QDomDocument _document;
 };
-
-
 
 
 } /* namespace pelican */

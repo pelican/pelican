@@ -30,10 +30,9 @@ class ConfigTest : public CppUnit::TestFixture
         CPPUNIT_TEST_SUITE( ConfigTest );
         CPPUNIT_TEST( test_emptyFileName );
         CPPUNIT_TEST( test_fileDoesntExist );
-        //        CPPUNIT_TEST( test_invalidDocType );
-        //        CPPUNIT_TEST( test_readConfigFile );
-        //        CPPUNIT_TEST( test_getModuleConfig() );
-        //        CPPUNIT_TEST( test_getServerConfig() );
+        CPPUNIT_TEST( test_invalidDocType );
+        CPPUNIT_TEST( test_setConfiguration );
+        CPPUNIT_TEST( test_getConfiguration );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -47,10 +46,10 @@ class ConfigTest : public CppUnit::TestFixture
         void test_fileDoesntExist();
         /// Test for an invalid configuration file.
         void test_invalidDocType();
-
-        void test_readConfigFile();
-        void test_getModuleConfig();
-        void test_getServerConfig();
+        /// Test for setting configuration options.
+        void test_setConfiguration();
+        /// Test for returning configuration options
+        void test_getConfiguration();
 
     public:
         ConfigTest();

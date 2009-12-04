@@ -5,7 +5,7 @@ namespace pelican {
 
 
 // class AbstractModule 
-AbstractModule::AbstractModule(const QDomNode&)
+AbstractModule::AbstractModule(const QDomElement&)
 {
 }
 

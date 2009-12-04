@@ -4,7 +4,6 @@
 #include "utility/Config.h"
 #include "utility/memCheck.h"
 
-
 namespace pelican {
 
 CPPUNIT_TEST_SUITE_REGISTRATION( ModuleFactoryTest );
@@ -33,22 +32,23 @@ void ModuleFactoryTest::test_createTestModule()
     // Expect to be given a basic object
     {
         Config emptyConfig;
-        ModuleFactory m(&emptyConfig);
+        ModuleFactory factory(&emptyConfig);
         AbstractModule* module = 0;
-        CPPUNIT_ASSERT_NO_THROW( module = m.createModule("Test") );
+        CPPUNIT_ASSERT_NO_THROW( module = factory.createModule("Test") );
         CPPUNIT_ASSERT(module != 0);
     }
 
     // Use Case:
     // Ask for a module with a configuration
     {
-        Config testconfig;
-        ModuleFactory m(&testconfig);
-        QStringList moduleconfig = m.moduleConfigTree();
-        testconfig.setConfigurationOption(moduleconfig, "testvalue");
+        Config config;
+        ModuleFactory factory(&config);
+        Config::TreeAddress_t address = factory.configRoot();
+        address.append(Config::NodeId_t("module", "Test"));
+        config.set(address);
 
         AbstractModule* module = 0;
-        CPPUNIT_ASSERT_NO_THROW( module = m.createModule("Test") );
+        CPPUNIT_ASSERT_NO_THROW( module = factory.createModule("Test") );
         CPPUNIT_ASSERT(module != 0);
     }
 }

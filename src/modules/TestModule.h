@@ -1,6 +1,7 @@
 #ifndef TESTMODULE_H
 #define TESTMODULE_H
 
+class QDomElement;
 
 #include "AbstractModule.h"
 
@@ -22,7 +23,7 @@ namespace pelican {
 class TestModule : public AbstractModule
 {
     public:
-        TestModule(const QDomNode& config );
+        TestModule(const QDomElement& config );
         ~TestModule();
 
     private:
