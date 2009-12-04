@@ -8,11 +8,12 @@
 
 namespace pelican {
 
-
 // class Session 
 Session::Session(int socketDescriptor, AbstractProtocol* proto, QObject* parent)
-    : QThread(parent), _proto(proto), _socketDescriptor(socketDescriptor)
+    : QThread(parent)
 {
+    _proto = proto;
+    _socketDescriptor = socketDescriptor;
 }
 
 void Session::run()
