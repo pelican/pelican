@@ -1,5 +1,6 @@
 #include "Config.h"
 #include <iostream>
+#include <QTextStream>
 #include <QFile>
 #include "utility/memCheck.h"
 
@@ -24,12 +25,14 @@ Config::~Config()
 {
 }
 
+
 /**
  * @details
+ * Sets and creates the specified address in the configuration document.
  *
  * @param[in]   address The address of the configuration node element to be set.
  *
- * @return
+ * @return QDomElement at the address specified in the argument.
  */
 QDomElement Config::set(const TreeAddress_t &address)
 {
@@ -92,6 +95,8 @@ QDomElement Config::set(const TreeAddress_t &address)
 
 /**
  * @details
+ * Returns a QDomElement at the specified address. The element returned is
+ * null the address dosn't exist.
  */
 const QDomElement Config::get(const TreeAddress_t &address) const
 {
@@ -99,7 +104,7 @@ const QDomElement Config::get(const TreeAddress_t &address) const
 
     /* Empty configuraiton return null element */
     if (parent.isNull()) {
-        throw QString("Empty configuration");
+        return QDomElement();
     }
 
     for (int i = 0; i < address.size(); i++) {
@@ -118,7 +123,7 @@ const QDomElement Config::get(const TreeAddress_t &address) const
 
         /* No node exists of the specified tag */
         if (nodes.isEmpty()) {
-            throw QString("No nodes found of specified tag\n");
+            return QDomElement();
         }
 
         /* Nodes exist of the specified tag - find the right one to return */
@@ -135,7 +140,7 @@ const QDomElement Config::get(const TreeAddress_t &address) const
 
             /* No tag exists with the name */
             if (iNode == -1) {
-                throw QString("No node found with specified tag and name");
+                return QDomElement();
             }
 
             /* Tag exists - move the parent pointer */
@@ -144,14 +149,13 @@ const QDomElement Config::get(const TreeAddress_t &address) const
             }
         }
     }
-
-
     return parent;
 }
 
 
 /**
  * @details
+ * Set the the attribute at the specified address to the key, value.
  */
 void Config::setAttribute(
         const TreeAddress_t &address,
@@ -165,6 +169,24 @@ void Config::setAttribute(
 
 /**
  * @details
+ * Returns the attribute at the address with the specified key. An empty string
+ * is returned if the address or key doesn't exist.
+ */
+QString Config::getAttribute(const TreeAddress_t& address, const QString& key) const
+{
+    QDomElement e = get(address);
+    if (e.isNull()) {
+        return QString();
+    }
+    else {
+        return e.attribute(key);
+    }
+}
+
+
+/**
+ * @details
+ * Prints a summary of the configuration tree to STDOUT.
  */
 void Config::summary() const
 {
@@ -178,6 +200,26 @@ void Config::summary() const
 
 /**
  * @details
+ * Save the Configuration to specified file name
+ */
+void Config::save(const QString& fileName) const
+{
+    if (fileName.isEmpty()) {
+        return;
+    }
+
+    QFile file(fileName);
+
+    if (!file.open(QFile::WriteOnly | QFile::Truncate)) {
+        return;
+    }
+    QTextStream out(&file);
+    out << _document.toByteArray(4);
+}
+
+
+/**
+ * @details
  * Read a configuration from the Pelican XML file specified when the
  * configuration object is instantiated.
  */
@@ -186,6 +228,7 @@ void Config::_read()
     QFile file(_fileName);
 
     if (_fileName.isEmpty()) {
+        _document = QDomDocument("pelican");
         return;
     }
 
@@ -215,15 +258,13 @@ void Config::_read()
 
 /**
  * @details
+ * Create a child node under the parent with the tag and name attribute.
  */
 void Config::_createChildNode(QDomElement &parent, const QString& tag, const QString& name)
 {
-//    if (parent.isNull()) {
-//        return;
-//    }
-//    std::cout << "Creating Child node: \"" << tag.toStdString() << "\", \""
-//              << name.toStdString() <<"\"\n";
-
+    if (parent.isNull()) {
+        throw QString("Unable to create child node on null parent");
+    }
     QDomElement e = _document.createElement(tag);
     if (!name.isEmpty()) {
         e.setAttribute(QString("name"), name);

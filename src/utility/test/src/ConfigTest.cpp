@@ -62,7 +62,7 @@ void ConfigTest::test_fileDoesntExist()
  */
 void ConfigTest::test_invalidDocType()
 {
-    /// Use case
+    // Use case
     // Constructs a configuration file with an invalid doc type
     // Expect to throw an exception
 }
@@ -70,85 +70,79 @@ void ConfigTest::test_invalidDocType()
 
 /**
  * @details
- * Test for creating a module element within the DomDocument
+ * Test for setting configuration options
  */
-void ConfigTest::test_createModuleConfig()
+void ConfigTest::test_setConfiguration()
 {
     Config config;
-    Config::TreeAddress_t address1;
-    address1 << Config::NodeId_t("modules", "")
-             << Config::NodeId_t("module", "test1")
-             << Config::NodeId_t("param", "a");
-    QDomElement in1 = config.set(address1);
-    Config::TreeAddress_t address2;
-    address2 << Config::NodeId_t("modules", "")
-             << Config::NodeId_t("module", "test2")
-             << Config::NodeId_t("param", "a");
-    QDomElement in2 = config.set(address2);
 
-    QDomElement out1 = config.get(address1);
-    QDomElement out2 = config.get(address1);
+    // Use case
+    // Sets a configuration.
+    // Expect that it exists.
+    {
+        Config::TreeAddress_t address;
+        address << Config::NodeId_t("modules", "");
+        address << Config::NodeId_t("module", "test1");
+        QDomElement e = config.set(address);
+        CPPUNIT_ASSERT(e.parentNode().toElement().tagName() == "modules");
+        CPPUNIT_ASSERT(e.tagName() == "module");
+        CPPUNIT_ASSERT(e.attribute("name") == "test1");
+    }
 
-    CPPUNIT_ASSERT_ASSERTION_PASS(in1 == out1);
-    CPPUNIT_ASSERT_ASSERTION_PASS(in2 == out2);
+    /// Use case
+    /// Sets a configuration by address and attribute
+    /// Expects that it exists
+    {
+        Config::TreeAddress_t address;
+        address << Config::NodeId_t("servers", "");
+        address << Config::NodeId_t("server", "test");
+        QString ip = "123.456.789.10";
+        config.setAttribute(address, "ip", ip);
+        CPPUNIT_ASSERT(config.getAttribute(address, "ip") == ip);
+    }
+
 }
 
 
 /**
  * @details
- * Test for creating a module element within the DomDocument
+ * Test for setting configuration options
  */
-void ConfigTest::test_createModuleConfig2()
+void ConfigTest::test_getConfiguration()
 {
-    std::cout << std::endl;
-    std::cout << QString(50, QChar('#')).toStdString() << "\n";
-
     Config config;
-    Config::TreeAddress_t address1;
-    address1 << Config::NodeId_t("modules", "")
-             << Config::NodeId_t("module", "test1")
-             << Config::NodeId_t("param", "a")
-             << Config::NodeId_t("param", "b");
-    config.set(address1);
 
-    Config::TreeAddress_t address2;
-    address2 << Config::NodeId_t("modules", "")
-             << Config::NodeId_t("module", "test1")
-             << Config::NodeId_t("wibble", "a")
-             << Config::NodeId_t("param", "");
-    config.set(address2);
-    config.setAttribute(address2, "stuff", "ok");
+    // Use case
+    // Ask for an address that doesn't exist.
+    // Expect that a null element is returned.
+    {
+        Config::TreeAddress_t address;
+        address << Config::NodeId_t("wibble", "wobble");
+        QDomElement e = config.get(address);
+        CPPUNIT_ASSERT(e.isNull());
+    }
 
-    Config::TreeAddress_t address3;
-    address3 << Config::NodeId_t("modules", "")
-             << Config::NodeId_t("module", "test1")
-             << Config::NodeId_t("param", "b");
-    config.set(address3);
+    // Use case
+    // Ask for an attribute that doesn't exist (both address and key).
+    // Expect that an empty string is returned
+    {
+        Config::TreeAddress_t address;
+        address << Config::NodeId_t("wibble", "wobble");
+        QString a = config.getAttribute(address, "flop");
+        CPPUNIT_ASSERT(a.isEmpty());
+    }
 
-    Config::TreeAddress_t address4;
-    address4 << Config::NodeId_t("servers", "")
-             << Config::NodeId_t("server", "test")
-             << Config::NodeId_t("ip", "");
-    QDomElement e = config.set(address4);
-
-    QDomElement myElement = e.toDocument().createElement("yey");
-    e.appendChild(myElement);
-    e.setAttribute("address", "123.4.56.78");
-
-    config.summary();
-
-    Config::TreeAddress_t address5;
-    address5 << Config::NodeId_t("modules", "")
-             << Config::NodeId_t("module", "test1");
-    std::cout << QString(50, QChar('#')).toStdString() << "\n";
-
-    QDomElement out = config.get(address5);
-
-    std::cout << out.firstChild().toElement().tagName().toStdString() << "\n";
-    std::cout << out.firstChild().toElement().attribute("name").toStdString() << "\n";
-
+    // Use case
+    // Ask for an attribute with a key that doesn't exist at a valid address.
+    // Expect that an empty string is returned
+    {
+        Config::TreeAddress_t address;
+        address << Config::NodeId_t("wibble", "wobble");
+        config.setAttribute(address, "flip", "true");
+        QString a = config.getAttribute(address, "flop");
+        CPPUNIT_ASSERT(a.isEmpty());
+    }
 
 }
-
 
 } // namespace pelican
