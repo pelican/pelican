@@ -8,13 +8,14 @@
 #pragma warning (disable:4786)
 #include <cstdlib>
 #include <string>
+#include <QMutex>
 #include <new>
 #include <boost/pool/detail/singleton.hpp>
 
 void* operator new(std::size_t size, char const * file, int line);
 void  operator delete(void * p, char const * file, int line);
-void* operator new(std::size_t size) throw (std::bad_alloc);
-void  operator delete(void * p) throw();
+extern void* operator new(std::size_t size) throw (std::bad_alloc);
+extern void  operator delete(void * p) throw();
 
 #include <map>
 
@@ -34,23 +35,7 @@ private:
             std::string _file;
             int _line;
     };
-    class Lock
-    {
-        public:
-            Lock (Tracer & tracer)
-                : _tracer (tracer)
-            {
-                _tracer.lock ();
-            }
-            ~Lock ()
-            {
-                _tracer.unlock ();
-            }
-        private:
-            Tracer & _tracer;
-    };
     typedef std::map<void *, Entry>::iterator iterator;
-    friend class Lock;
 public:
     Tracer();
     ~Tracer();
@@ -61,12 +46,8 @@ public:
 
     static bool ready;
 private:
-    void lock() { _lockCount++; }
-    void unlock() { _lockCount--; }
-private:
-
+    QMutex _mutex;
     std::map<void*, Entry> _map;
-    int _lockCount;
 };
 
 
