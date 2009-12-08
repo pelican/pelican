@@ -48,6 +48,7 @@ void operator delete(void* p) throw()
 }
 
 Tracer::Tracer () 
+    : _lockCount(0)
 {
     ready = true;
 }
@@ -64,13 +65,18 @@ bool Tracer::entry( void* p ) const {
 
 void Tracer::add (void* p, char const * file, int line)
 {
-    QMutexLocker locker(&_mutex);
+    if (_lockCount > 0)
+           return;
+    Tracer::Lock lock (*this);
     _map [p] = Entry (file, line);
 }
 
 void Tracer::remove (void * p)
 {
-    QMutexLocker locker(&_mutex);
+    //QMutexLocker locker(&_mutex);
+    if (_lockCount > 0)
+           return;
+    Tracer::Lock lock (*this);
 
     iterator it = _map.find (p);
     if (it != _map.end ())
@@ -83,7 +89,6 @@ void Tracer::remove (void * p)
 
 void Tracer::dump ()
 {
-    QMutexLocker locker(&_mutex);
     if (_map.size () != 0)
     {
         std::cerr << ("*** Memory leak(s):\n");

@@ -29,13 +29,29 @@ private:
                 : _file(file), _line (line) {}
             Entry ()
                 :  _line (0) {}
-            char const * file() const { return _file.c_str(); }
+            char const * file() const { return _file; }
             int line() const { return _line; }
         private:
-            std::string _file;
+            const char * _file;
             int _line;
     };
+    class Lock
+    {
+        public:
+            Lock (Tracer & tracer)
+                : _tracer (tracer)
+            {
+                _tracer.lock ();
+            }
+            ~Lock ()
+            {
+                _tracer.unlock ();
+            }
+        private:
+            Tracer & _tracer;
+    };
     typedef std::map<void *, Entry>::iterator iterator;
+    friend class Lock;
 public:
     Tracer();
     ~Tracer();
@@ -45,9 +61,15 @@ public:
     bool entry(void* p) const;
 
     static bool ready;
+
+private:
+    void lock() { _lockCount++; }
+    void unlock() { _lockCount--; }
+
 private:
     QMutex _mutex;
     std::map<void*, Entry> _map;
+    int _lockCount;
 };
 
 
