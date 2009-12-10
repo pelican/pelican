@@ -1,4 +1,4 @@
-SUBPACKAGE(modules)
+SUBPACKAGE(modules utility)
 set( modules_src
      src/AbstractModule.cpp
      src/TestModule.cpp

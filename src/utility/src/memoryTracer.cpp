@@ -4,6 +4,7 @@
  * http://www.relisoft.com/book/tech/9new.html
  */
 
+#include <QMutexLocker>
 #include "memoryTracer.h"
 #include <sstream>
 #include <iostream>
@@ -22,7 +23,7 @@ void* operator new(std::size_t size, char const * file, int line)
     return p;
 }
 
-void operator delete(void * p, char const * file, int line)
+extern void operator delete(void * p, char const * file, int line)
 {
     //std::cout << "delete() :" << file << " line: " << line << std::endl;
     if (Tracer::ready)
@@ -30,7 +31,7 @@ void operator delete(void * p, char const * file, int line)
     free(p);
 }
 
-void* operator new(std::size_t size) throw (std::bad_alloc)
+extern void* operator new(std::size_t size) throw (std::bad_alloc)
 {
     void * p = malloc (size);
     if (Tracer::ready)
@@ -47,7 +48,7 @@ void operator delete(void* p) throw()
 }
 
 Tracer::Tracer () 
-: _lockCount (0) 
+    : _lockCount(0)
 {
     ready = true;
 }
@@ -65,16 +66,16 @@ bool Tracer::entry( void* p ) const {
 void Tracer::add (void* p, char const * file, int line)
 {
     if (_lockCount > 0)
-        return;
+           return;
     Tracer::Lock lock (*this);
     _map [p] = Entry (file, line);
 }
 
 void Tracer::remove (void * p)
 {
+    //QMutexLocker locker(&_mutex);
     if (_lockCount > 0)
-        return;
-
+           return;
     Tracer::Lock lock (*this);
 
     iterator it = _map.find (p);
