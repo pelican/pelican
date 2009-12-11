@@ -1,6 +1,7 @@
 #include "SessionTest.h"
 #include "Session.h"
-#include "utility/ServerRequest.h"
+#include "data/ServerRequest.h"
+#include "data/StreamDataRequest.h"
 #include "TestProtocol.h"
 #include <QByteArray>
 #include <QDataStream>
@@ -43,7 +44,7 @@ void SessionTest::test_processRequest()
         // Use Case:
         // Request an acknowledgement
         // Expect the id to be returned
-        ServerRequest request("ACK");
+        ServerRequest request(ServerRequest::Acknowledge);
 
         QByteArray block;
         QDataStream out(&block,QIODevice::WriteOnly);
@@ -52,7 +53,21 @@ void SessionTest::test_processRequest()
         CPPUNIT_ASSERT_EQUAL( 0, block.size() );
         session.processRequest(request, out);
         CPPUNIT_ASSERT( block.size() != 0 );
-        
+    }
+    {
+        // Use Case:
+        // Request StreamData for a stream that does not exist
+        // Expect error
+        StreamDataRequest request;
+        //request.addDataOption();
+
+        QByteArray block;
+        QDataStream out(&block,QIODevice::WriteOnly);
+        out.setVersion(QDataStream::Qt_4_0);
+
+        CPPUNIT_ASSERT_EQUAL( 0, block.size() );
+        session.processRequest(request, out);
+        CPPUNIT_ASSERT( block.size() != 0 );
     }
 }
 

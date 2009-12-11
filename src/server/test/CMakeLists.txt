@@ -8,7 +8,7 @@ set(
    serverTest_src
    src/serverTest.cpp
    src/SessionTest.cpp
-   src/PelicanServerTest.cpp
+   #   src/PelicanServerTest.cpp
 )
 
 add_library( serverTestUtilities ${serverTestlib_src} )

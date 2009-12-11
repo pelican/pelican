@@ -1,5 +1,5 @@
 #include "TestDataClient.h"
-#include "DataRequirements.h"
+#include "data/DataRequirements.h"
 #include "data/DataBlob.h"
 #include "utility/memCheck.h"
 #include <QtGlobal>

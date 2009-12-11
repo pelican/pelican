@@ -1,7 +1,7 @@
 #ifndef ABSTRACTPIPELINE_H
 #define ABSTRACTPIPELINE_H
 
-#include "DataRequirements.h"
+#include "data/DataRequirements.h"
 
 /**
  * @file AbstractPipeline.h

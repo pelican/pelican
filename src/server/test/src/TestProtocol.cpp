@@ -1,5 +1,5 @@
 #include "TestProtocol.h"
-#include "utility/ServerRequest.h"
+#include "data/ServerRequest.h"
 
 #include <iostream>
 #include "utility/memCheck.h"
@@ -19,9 +19,8 @@ TestProtocol::~TestProtocol()
 ServerRequest TestProtocol::request(QTcpSocket& socket)
 {
     QStringList tokens;
-    tokens.append("ACK");
     tokens.append(_id);
-    return ServerRequest(tokens);
+    return ServerRequest(ServerRequest::Acknowledge);
 }
 
 void TestProtocol::send( QDataStream& stream, const QString& msg )

@@ -1,6 +1,8 @@
 # CMake Build File
 project(Pelican CXX C)
 
+set(CMAKE_BUILD_TYPE DEBUG)
+
 # -- cmake setup info
 cmake_minimum_required(VERSION 2.6)
 list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_SOURCE_DIR}/cmake)
