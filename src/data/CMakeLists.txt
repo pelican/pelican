@@ -4,6 +4,7 @@ set( data_src
      src/DataBlob.cpp
      src/DataRequirements.cpp
      src/ServerRequest.cpp
+     src/ServiceDataRequest.cpp
      src/StreamDataRequest.cpp
 )
 add_library(data ${data_src} )

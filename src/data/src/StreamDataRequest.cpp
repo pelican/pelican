@@ -21,4 +21,9 @@ void StreamDataRequest::addDataOption(const DataRequirements& data)
     _dataOptions.append(data);
 }
 
+StreamDataRequest::DataRequirementsIterator StreamDataRequest::begin() const
+{
+    return _dataOptions.begin();
+}
+
 } // namespace pelican
