@@ -1,4 +1,5 @@
 #include <boost/shared_ptr.hpp>
+#include <QtGlobal>
 #include <QTcpSocket>
 #include "PelicanServer.h"
 #include "AbstractProtocol.h"
