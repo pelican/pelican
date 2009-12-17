@@ -2,7 +2,7 @@
 #include <QStringList>
 #include <QString>
 #include "PelicanProtocol.h"
-#include "utility/ServerRequest.h"
+#include "data/ServerRequest.h"
 #include "utility/memCheck.h"
 
 namespace pelican {
@@ -20,13 +20,20 @@ PelicanProtocol::~PelicanProtocol()
 
 ServerRequest PelicanProtocol::request(QTcpSocket& socket) 
 {
+    ServerRequest::Request_t type = ServerRequest::Error;
     if ( socket.waitForReadyRead(1000) ) {
         QStringList tokens =
             QString(socket.readLine()).split(QRegExp("[ \r\n][ \r\n]*"));
-        ServerRequest r(tokens);
-        return r;
+        if( ! tokens.isEmpty() )
+                        type = (ServerRequest::Request_t)tokens.first().toInt() ;
     }
+    else {
+        return ServerRequest(type, "Timeout waiting for client");
+    }
+    ServerRequest r(type);
+    return r;
 }
+
 void PelicanProtocol::send(QDataStream& stream, const QList<DataBlob>& ) 
 {
 }

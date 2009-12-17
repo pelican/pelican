@@ -1,8 +1,12 @@
 INCLUDE_DIRECTORIES(${QT_INCLUDES})
-SUBPACKAGE(data)
+SUBPACKAGE(data utility)
 set( data_src
      src/DataBlob.cpp
      src/TestDataBlob.cpp
+     src/DataRequirements.cpp
+     src/ServerRequest.cpp
+     src/ServiceDataRequest.cpp
+     src/StreamDataRequest.cpp
 )
 add_library(data ${data_src} )
 target_link_libraries(data ${SUBPACKAGE_LIBRARIES} )

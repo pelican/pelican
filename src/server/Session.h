@@ -12,6 +12,7 @@ namespace pelican {
 
 class ServerRequest;
 class AbstractProtocol;
+class DataManager;
 
 /**
  * @class Session
@@ -27,13 +28,14 @@ class Session : public QThread
     Q_OBJECT
 
     public:
-        Session(int socketDescriptor, AbstractProtocol* proto, QObject* parent=0 );
+        Session(int socketDescriptor, AbstractProtocol* proto, DataManager* data, QObject* parent=0 );
         ~Session();
         void run();
         void processRequest(const ServerRequest&, QDataStream& );
 
     private:
         int _socketDescriptor;
+        DataManager* _data;
         AbstractProtocol* _proto;
 };
 

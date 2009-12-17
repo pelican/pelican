@@ -1,6 +1,7 @@
 #include "Session.h"
 #include "AbstractProtocol.h"
-#include "utility/ServerRequest.h"
+#include "DataManager.h"
+#include "data/ServerRequest.h"
 #include <QTcpSocket>
 #include <QString>
 #include <iostream>
@@ -9,8 +10,8 @@
 namespace pelican {
 
 // class Session 
-Session::Session(int socketDescriptor, AbstractProtocol* proto, QObject* parent)
-    : QThread(parent)
+Session::Session(int socketDescriptor, AbstractProtocol* proto, DataManager* data, QObject* parent)
+    : QThread(parent), _data(data)
 {
     _proto = proto;
     _socketDescriptor = socketDescriptor;
@@ -42,14 +43,18 @@ void Session::run()
 
 void Session::processRequest(const ServerRequest& req, QDataStream& out)
 {
-    if( ! req.error() ) {
-        _proto->send(out,"ACK");
+    switch(req.type()) {
+        case ServerRequest::DataSupport:
+            _proto->send(out,"ACK");
+            break;
+        case ServerRequest::StreamData:
         //QList<DataBlob> datablobs;
         //_proto->send( out, datablobs  );
-    }
-    else {
-        // Process Error
-        _proto->sendError( out, req.errorMessage() );
+            break;
+        case ServerRequest::ServiceData:
+            break;
+        default:
+            _proto->sendError( out, req.message());
     }
 }
 

@@ -1,7 +1,7 @@
 #ifndef PIPELINEDRIVER_H
 #define PIPELINEDRIVER_H
 
-#include "DataRequirements.h"
+#include "data/DataRequirements.h"
 #include <QMultiHash>
 
 /**

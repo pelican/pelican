@@ -1,5 +1,5 @@
 INCLUDE_DIRECTORIES(${QT_INCLUDES})
-SUBPACKAGE(server utility)
+SUBPACKAGE(server data utility)
 # files requireing mpp preprocessing (i.e. QObjects)
 set( server_moc_headers
      PelicanPortServer.h
@@ -8,6 +8,8 @@ set( server_moc_headers
    )
 set( server_src
      src/AbstractProtocol.cpp
+     src/Data.cpp
+     src/DataManager.cpp
      src/PelicanServer.cpp
      src/PelicanPortServer.cpp
      src/Session.cpp

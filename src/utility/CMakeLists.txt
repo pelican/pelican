@@ -3,7 +3,6 @@ SUBPACKAGE(utility)
 set( utility_src
     src/memoryTracer.cpp
     src/Config.cpp
-    src/ServerRequest.cpp
 )
 add_library(pelicanutility ${utility_src} )
 target_link_libraries(pelicanutility ${SUBPACKAGE_LIBRARIES})

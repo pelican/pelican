@@ -3,7 +3,6 @@
 #include <QtDebug>
 #include "utility/memCheck.h"
 #include "PipelineDriver.h"
-#include "DataRequirements.h"
 #include "AbstractPipeline.h"
 #include "DataClient.h"
 #include "ModuleFactory.h"
