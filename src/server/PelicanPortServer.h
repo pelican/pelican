@@ -10,6 +10,7 @@
 
 namespace pelican {
 class AbstractProtocol;
+class DataManager;
 
 /**
  * @class PelicanPortServer
@@ -29,7 +30,7 @@ class PelicanPortServer : public QTcpServer
     Q_OBJECT
 
     public:
-        PelicanPortServer(AbstractProtocol* proto, QObject* parent=0 );
+        PelicanPortServer(AbstractProtocol* proto, DataManager* data, QObject* parent=0 );
         ~PelicanPortServer();
 
     protected:
@@ -37,6 +38,7 @@ class PelicanPortServer : public QTcpServer
 
     private:
         AbstractProtocol* _proto;
+        DataManager* _data;
 };
 
 } // namespace pelican

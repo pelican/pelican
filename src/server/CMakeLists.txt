@@ -8,6 +8,8 @@ set( server_moc_headers
    )
 set( server_src
      src/AbstractProtocol.cpp
+     src/Data.cpp
+     src/DataManager.cpp
      src/PelicanServer.cpp
      src/PelicanPortServer.cpp
      src/Session.cpp

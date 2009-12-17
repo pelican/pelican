@@ -1,8 +1,10 @@
 #ifndef SESSIONTEST_H
 #define SESSIONTEST_H
 
-#include <cppunit/extensions/HelperMacros.h>
+#include <QByteArray>
 class QCoreApplication;
+//class QDataStream;
+#include <cppunit/extensions/HelperMacros.h>
 
 /**
  * @file SessionTest.h
@@ -10,11 +12,15 @@ class QCoreApplication;
 
 namespace pelican {
 
+class TestProtocol;
+class Session;
+class DataManager;
+
 /**
  * @class SessionTest
  *  
  * @brief
- * 
+ *   Unit Test for the Session class
  * @details
  * 
  */
@@ -24,6 +30,9 @@ class SessionTest : public CppUnit::TestFixture
     public:
         CPPUNIT_TEST_SUITE( SessionTest );
         CPPUNIT_TEST( test_processRequest );
+        CPPUNIT_TEST( test_dataReport );
+        CPPUNIT_TEST( test_streamData );
+        CPPUNIT_TEST( test_streamData );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -32,13 +41,21 @@ class SessionTest : public CppUnit::TestFixture
 
         // Test Methods
         void test_processRequest();
+        void test_streamData();
+        void test_serviceData();
+        void test_dataReport();
 
     public:
-        SessionTest(  );
+        SessionTest();
         ~SessionTest();
 
     private:
         QCoreApplication* _app;
+        QDataStream* _out;
+        Session* _session;
+        QByteArray _block;
+        TestProtocol* _proto;
+        DataManager* _data;
 };
 
 } // namespace pelican

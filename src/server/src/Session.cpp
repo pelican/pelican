@@ -1,5 +1,6 @@
 #include "Session.h"
 #include "AbstractProtocol.h"
+#include "DataManager.h"
 #include "data/ServerRequest.h"
 #include <QTcpSocket>
 #include <QString>
@@ -9,8 +10,8 @@
 namespace pelican {
 
 // class Session 
-Session::Session(int socketDescriptor, AbstractProtocol* proto, QObject* parent)
-    : QThread(parent)
+Session::Session(int socketDescriptor, AbstractProtocol* proto, DataManager* data, QObject* parent)
+    : QThread(parent), _data(data)
 {
     _proto = proto;
     _socketDescriptor = socketDescriptor;
