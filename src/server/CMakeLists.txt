@@ -9,10 +9,15 @@ set( server_moc_headers
 set( server_src
      src/AbstractProtocol.cpp
      src/Data.cpp
+     src/LockedData.cpp
      src/DataManager.cpp
+     src/DataBuffer.cpp
      src/PelicanServer.cpp
      src/PelicanPortServer.cpp
      src/Session.cpp
+     src/StreamData.cpp
+     src/StreamDataBuffer.cpp
+     src/ServiceDataBuffer.cpp
      src/PelicanProtocol.cpp
 )
 set( serverExe_src

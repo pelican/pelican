@@ -1,6 +1,7 @@
 #ifndef DATA_H
 #define DATA_H
 
+#include <QMutex>
 #include <cstring>
 
 /**
@@ -25,10 +26,16 @@ class Data
         ~Data();
         size_t size() const;
         char* operator*();
+        void lock();
+        void unlock();
+
+    protected:
+        QMutex _mutex;
 
     private:
         char* _data;
         size_t _size;
+        int _lock;
 };
 
 } // namespace pelican

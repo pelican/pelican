@@ -3,7 +3,9 @@
 
 #include <QString>
 #include <QHash>
-//#include "DataBuffer.h"
+#include "StreamDataBuffer.h"
+#include "ServiceDataBuffer.h"
+#include "LockedData.h"
 /**
  * @file DataManager.h
  */
@@ -11,6 +13,7 @@
 namespace pelican {
 
 class Data;
+class StreamData;
 
 /**
  * @class DataManager
@@ -28,17 +31,29 @@ class DataManager
         DataManager(  );
         ~DataManager();
 
-        /// getNextStreamData
-        //  return the next unlocked data block from Stream Data
-        Data getNextStreamData(const QString& type);
+        /// streams
+        //  return a list of streams that the dataManager can
+        //  provide. This does NOT reflect if this data is
+        //  actually available within thoses streams.
+        QList<QString> streams() const;
 
-        /// getStreamData
+        /// serviceData
+        //  return a list of service data that the dataManager can
+        //  provide. This does NOT reflect if this data is
+        //  actually available.
+        QList<QString> serviceData() const;
+
+        /// getNext
+        //  return the next unlocked data block from Stream Data
+        LockedData getNext(const QString& type);
+
+        /// getServiceData
         //  return the requested Service Data
-        Data getServiceData(const QString& data);
+        LockedData getServiceData(const QString& type, const QString& version);
 
     private:
-        //QHash<DataBuffer> _streams;
-        //QHash<DataBuffer> _service;
+        QHash<QString,StreamDataBuffer> _streams;
+        QHash<QString,ServiceDataBuffer> _service;
 
 };
 
