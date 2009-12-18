@@ -26,4 +26,9 @@ StreamDataRequest::DataRequirementsIterator StreamDataRequest::begin() const
     return _dataOptions.begin();
 }
 
+StreamDataRequest::DataRequirementsIterator StreamDataRequest::end() const
+{
+    return _dataOptions.end();
+}
+
 } // namespace pelican

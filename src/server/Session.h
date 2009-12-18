@@ -11,6 +11,8 @@ class QTcpSocket;
 namespace pelican {
 
 class ServerRequest;
+class ServiceDataRequest;
+class StreamDataRequest;
 class AbstractProtocol;
 class DataManager;
 
@@ -32,6 +34,7 @@ class Session : public QThread
         ~Session();
         void run();
         void processRequest(const ServerRequest&, QDataStream& );
+        void processStreamDataRequest(const StreamDataRequest& req );
 
     private:
         int _socketDescriptor;

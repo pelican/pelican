@@ -22,12 +22,13 @@ namespace pelican {
 class Data
 {
     public:
-        Data(char* data, size_t size);
+        Data(char* data=0, size_t size=0);
         ~Data();
         size_t size() const;
         char* operator*();
         void lock();
         void unlock();
+        bool isValid() const;
 
     protected:
         QMutex _mutex;

@@ -42,9 +42,16 @@ class StreamDataRequest : public ServerRequest
         //  sequence
         DataRequirementsIterator begin() const;
 
+        /// end
+        //  returns an iterator at the end of the
+        //  DataRequirements options
+        DataRequirementsIterator end() const;
+
     private:
         QVector<DataRequirements> _dataOptions;
 };
+
+typedef StreamDataRequest::DataRequirementsIterator DataRequirementsIterator;
 
 } // namespace pelican
 #endif // STREAMDATAREQUEST_H 

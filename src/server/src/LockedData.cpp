@@ -19,4 +19,9 @@ LockedData::~LockedData()
     _data->unlock();
 }
 
+bool LockedData::isValid() const
+{
+    _data->isValid();
+}
+
 } // namespace pelican

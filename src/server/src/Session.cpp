@@ -1,9 +1,12 @@
 #include "Session.h"
 #include "AbstractProtocol.h"
 #include "DataManager.h"
+#include "LockedData.h"
 #include "data/ServerRequest.h"
+#include "data/StreamDataRequest.h"
 #include <QTcpSocket>
 #include <QString>
+#include <QHash>
 #include <iostream>
 #include "utility/memCheck.h"
 
@@ -15,6 +18,10 @@ Session::Session(int socketDescriptor, AbstractProtocol* proto, DataManager* dat
 {
     _proto = proto;
     _socketDescriptor = socketDescriptor;
+}
+
+Session::~Session()
+{
 }
 
 void Session::run()
@@ -58,8 +65,22 @@ void Session::processRequest(const ServerRequest& req, QDataStream& out)
     }
 }
 
-Session::~Session()
+void Session::processStreamDataRequest(const StreamDataRequest& req )
 {
+    QList<QString> streams = _data->streams();
+    QList<QString> serviceData = _data->serviceData();
+    DataRequirementsIterator it=req.begin();
+    while( it != req.end() )
+    {
+        // attempt to get the required stream data
+        //QSet<QString> streams =req->streams();
+        //{
+         //   LockedData d = _data->getNext(stream);
+         //   if( ! d.isValid() ) {
+         //       break;
+         //   }
+       // }
+    }
 }
 
 } // namespace pelican

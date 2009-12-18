@@ -27,6 +27,11 @@ void Data::unlock()
     --_lock;
 }
 
+bool Data::isValid() const 
+{
+    return _data == 0 || _size == 0;
+}
+
 char* Data::operator*()
 {
     return _data;

@@ -25,6 +25,7 @@ class LockedData
     public:
         LockedData(Data* data );
         ~LockedData();
+        bool isValid() const;
 
     private:
         Data* _data;
