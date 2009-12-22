@@ -1,6 +1,6 @@
 #include "Data.h"
 #include <QMutexLocker>
-#include "utility/memCheck.h"
+//#include "utility/memCheck.h"
 
 namespace pelican {
 

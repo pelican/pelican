@@ -26,7 +26,7 @@ class PelicanProtocol : public AbstractProtocol
         PelicanProtocol(  );
         ~PelicanProtocol();
         virtual ServerRequest request(QTcpSocket& socket);
-        virtual void send(QDataStream& stream, const QList<DataBlob>& );
+        virtual void send(QDataStream& stream, LockedData& );
         virtual void send(QDataStream& stream, const QString& );
         virtual void sendError(QDataStream& stream, const QString&);
 

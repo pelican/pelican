@@ -32,6 +32,7 @@ class ServerRequest
         ~ServerRequest();
         Request_t type() const;
 
+        void error(const QString& msg);
         QString message() const;
 
     private:

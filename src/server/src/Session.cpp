@@ -2,6 +2,7 @@
 #include "AbstractProtocol.h"
 #include "DataManager.h"
 #include "LockedData.h"
+#include "StreamData.h"
 #include "data/ServerRequest.h"
 #include "data/StreamDataRequest.h"
 #include <QTcpSocket>
@@ -48,39 +49,65 @@ void Session::run()
     socket.waitForDisconnected();
 }
 
+/*
+ * @details
+ * this routine processes a general ServerRequest, calling the appropriate
+ * working and then passes this on to the protocol to be returned to the client
+ */
 void Session::processRequest(const ServerRequest& req, QDataStream& out)
 {
-    switch(req.type()) {
-        case ServerRequest::DataSupport:
-            _proto->send(out,"ACK");
-            break;
-        case ServerRequest::StreamData:
-        //QList<DataBlob> datablobs;
-        //_proto->send( out, datablobs  );
-            break;
-        case ServerRequest::ServiceData:
-            break;
-        default:
-            _proto->sendError( out, req.message());
+    try {
+        switch(req.type()) {
+            case ServerRequest::DataSupport:
+                _proto->send(out,"ACK");
+                break;
+            case ServerRequest::StreamData:
+                {
+                    LockedData d = processStreamDataRequest(static_cast<const StreamDataRequest&>(req) );
+                    if( d.isValid() )
+                        _proto->send( out, d );
+                }
+                break;
+            case ServerRequest::ServiceData:
+                break;
+            default:
+                _proto->sendError( out, req.message());
+        }
+    }
+    catch( const QString& e )
+    {
+        _proto->sendError( out, e );
     }
 }
 
-void Session::processStreamDataRequest(const StreamDataRequest& req )
+/*
+ * @details
+ * iterates over the list of data options provided in the request
+ * It will take the first dataset that matches and that has data.
+ * The data will be returned as a locked container to ensure access
+ * by other threads will be blocked.
+ */
+LockedData Session::processStreamDataRequest(const StreamDataRequest& req )
 {
-    QList<QString> streams = _data->streams();
-    QList<QString> serviceData = _data->serviceData();
     DataRequirementsIterator it=req.begin();
     while( it != req.end() )
     {
+        LockedData data;
+        if( ! it->isCompatible( _data->dataSpec() ) )
+            throw QString("data requested not supported by server");
         // attempt to get the required stream data
-        //QSet<QString> streams =req->streams();
-        //{
-         //   LockedData d = _data->getNext(stream);
-         //   if( ! d.isValid() ) {
-         //       break;
-         //   }
-       // }
+        foreach (QString stream, it->streamData() )
+        {
+            //std::cout << "stream: " << stream.toStdString() << std::endl;
+            LockedData d = _data->getNext(stream);
+            data.addData(d); // need to add it here to ensure data is invalidated
+            if( ! d.isValid() )
+                break;
+        }
+        if( data.isValid() ) return data;
+        ++it;
     }
+    return LockedData(0);
 }
 
 } // namespace pelican

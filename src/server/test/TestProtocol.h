@@ -25,7 +25,7 @@ class TestProtocol : public AbstractProtocol
         TestProtocol(const QString& id);
         ~TestProtocol();
         virtual ServerRequest request(QTcpSocket& socket);
-        virtual void send( QDataStream& stream, const QList<DataBlob>& );
+        virtual void send( QDataStream& stream, LockedData& );
         virtual void send( QDataStream& stream, const QString& message );
         virtual void sendError( QDataStream& stream, const QString&);
 

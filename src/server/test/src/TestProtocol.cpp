@@ -28,7 +28,7 @@ void TestProtocol::send( QDataStream& stream, const QString& msg )
     stream << _id;
 }
 
-void TestProtocol::send( QDataStream& stream, const QList<DataBlob>& )
+void TestProtocol::send( QDataStream& stream, LockedData& )
 {
 }
 

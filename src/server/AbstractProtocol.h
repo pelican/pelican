@@ -12,7 +12,7 @@ class QTcpSocket;
 namespace pelican {
 
 class ServerRequest;
-class DataBlob;
+class LockedData;
 
 /**
  * @class AbstractProtocol
@@ -23,7 +23,7 @@ class DataBlob;
  * @details
  *      The protocol interprets the requests of a particular client type into 
  *      the ServerRequest Objects.
- *      Conversely it converts the internal tyeps tpo be returned into the
+ *      Conversely it converts the internal types to be returned into the
  *      format expected by the client.
  *
  */
@@ -34,7 +34,7 @@ class AbstractProtocol
         AbstractProtocol();
         virtual ~AbstractProtocol();
         virtual ServerRequest request(QTcpSocket& socket) = 0;
-        virtual void send(QDataStream& stream, const QList<DataBlob>& ) = 0;
+        virtual void send(QDataStream& stream, LockedData& ) = 0;
         virtual void send( QDataStream& stream, const QString& message ) = 0;
         virtual void sendError(QDataStream& stream, const QString&) = 0;
 

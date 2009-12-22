@@ -9,19 +9,39 @@ namespace pelican {
 
 // class LockedData 
 LockedData::LockedData( Data* data )
-    : _data(data)
 {
-    _data->lock();
+    addData(data);
 }
 
 LockedData::~LockedData()
 {
-    _data->unlock();
+    foreach (Data* data, _data ) {
+        data->unlock();
+    }
+}
+
+void LockedData::addData(const LockedData& data)
+{
+    foreach (Data* d, data._data ) {
+        addData(d);
+    }
+}
+
+void LockedData::addData(Data* data)
+{
+    if( data) {
+        data->lock();
+        _data.append(data);
+    }
 }
 
 bool LockedData::isValid() const
 {
-    _data->isValid();
+    bool rv=false;
+    foreach (Data* data, _data ) {
+        rv = rv && data->isValid();
+    }
+    return rv;
 }
 
 } // namespace pelican

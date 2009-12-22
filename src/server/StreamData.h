@@ -16,7 +16,7 @@ namespace pelican {
  * @class StreamData
  *  
  * @brief
- *     Contains Data Releveant to stream data
+ *     Contains Pointers to Chunked Stream and a manifest of associated data
  * @details
  *     As well as a pointer to and the size of the data this class
  *     also contains linking information to the service data
@@ -25,8 +25,11 @@ namespace pelican {
 class StreamData : public Data
 {
     public:
-        StreamData(char*, size_t );
+        StreamData(char* = 0, size_t  = 0);
         ~StreamData();
+
+    private:
+        StreamData(const StreamData&);
 
     private:
         QHash<QString,Data> _serviceData;

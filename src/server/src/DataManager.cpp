@@ -15,14 +15,21 @@ DataManager::~DataManager()
 {
 }
 
-QList<QString> DataManager::streams() const 
+const DataRequirements& DataManager::dataSpec() const 
 {
-    return _streams.keys();
+    return _specs;
 }
 
-QList<QString> DataManager::serviceData() const 
+void DataManager::streamDataBuffer(const QString& name, const StreamDataBuffer& buffer)
 {
-    return _service.keys();
+    _specs.setStreamData(name);
+    _streams[name]=buffer;
+}
+
+void DataManager::serviceDataBuffer(const QString& name, const ServiceDataBuffer& buffer )
+{
+    _specs.setServiceData(name);
+    _service[name]=buffer;
 }
 
 LockedData DataManager::getNext(const QString& type)

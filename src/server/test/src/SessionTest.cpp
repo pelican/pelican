@@ -4,6 +4,7 @@
 #include <QCoreApplication>
 #include "Session.h"
 #include "DataManager.h"
+#include "StreamData.h"
 #include "data/DataRequirements.h"
 #include "data/ServerRequest.h"
 #include "data/ServiceDataRequest.h"
@@ -86,29 +87,35 @@ void SessionTest::test_streamData()
     {
         // Use Case:
         // Request StreamData that has no data options
-        // Expect error message to be returned
+        // Expect request to be silently ignored and invalid data
+        // returned
         StreamDataRequest request;
-        _session->processRequest(request, *_out);
-
+        LockedData data = _session->processStreamDataRequest(request);
+        CPPUNIT_ASSERT( ! data.isValid() );
     }
+    QString stream1("Stream1");
+    StreamDataBuffer streambuffer;
+    _data->streamDataBuffer( stream1, streambuffer );
     {
         // Use Case:
         // Request StreamData for a stream that is not supported by the server
         // Expect error message to be returned
         DataRequirements req;
+        req.setStreamData("NotSupported");
         StreamDataRequest request;
         request.addDataOption(req);
-        _session->processRequest(request, *_out);
-
+        CPPUNIT_ASSERT_THROW( _session->processStreamDataRequest(request), QString );
     }
     {
         // Use Case:
         // Request StreamData for a stream that is supported but for which no data exists
         // Expect to return with no data
         DataRequirements req;
+        req.setStreamData(stream1);
         StreamDataRequest request;
         request.addDataOption(req);
-        _session->processRequest(request, *_out);
+        LockedData data = _session->processStreamDataRequest(request);
+        CPPUNIT_ASSERT( ! data.isValid() );
     }
     {
         // Use Case:
@@ -118,7 +125,8 @@ void SessionTest::test_streamData()
         DataRequirements req;
         StreamDataRequest request;
         request.addDataOption(req);
-        _session->processRequest(request, *_out);
+        LockedData data = _session->processStreamDataRequest(request);
+        CPPUNIT_ASSERT( data.isValid() );
     }
     {
         // Use Case:
@@ -128,7 +136,8 @@ void SessionTest::test_streamData()
         DataRequirements req;
         StreamDataRequest request;
         request.addDataOption(req);
-        _session->processRequest(request, *_out);
+        LockedData data = _session->processStreamDataRequest(request);
+        CPPUNIT_ASSERT( ! data.isValid() );
     }
     {
         // Use Case:
@@ -138,7 +147,8 @@ void SessionTest::test_streamData()
         DataRequirements req;
         StreamDataRequest request;
         request.addDataOption(req);
-        _session->processRequest(request, *_out);
+        LockedData data = _session->processStreamDataRequest(request);
+        CPPUNIT_ASSERT( data.isValid() );
     }
 }
 

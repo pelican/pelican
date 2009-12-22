@@ -1,6 +1,7 @@
 #ifndef LOCKEDDATA_H
 #define LOCKEDDATA_H
 
+#include <QList>
 
 /**
  * @file LockedData.h
@@ -14,21 +15,25 @@ class Data;
  * @class LockedData
  *  
  * @brief
- *    A container that automatically locks and unlocks the data object
- *    to mark it as being used
+ *    A container that automatically locks and unlocks any data object
+ *    added to it
  * @details
+ *    On addition to this container, the Data will be locked. On destruction
+ *    the Data will be unlocked.
  * 
  */
 
 class LockedData
 {
     public:
-        LockedData(Data* data );
+        LockedData(Data* data = 0 );
         ~LockedData();
         bool isValid() const;
+        void addData(Data*);
+        void addData(const LockedData&);
 
     private:
-        Data* _data;
+        QList<Data*> _data;
 };
 
 } // namespace pelican

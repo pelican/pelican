@@ -1,8 +1,8 @@
 #ifndef DATA_H
 #define DATA_H
 
-#include <QMutex>
 #include <cstring>
+#include <QMutex>
 
 /**
  * @file Data.h
@@ -32,6 +32,9 @@ class Data
 
     protected:
         QMutex _mutex;
+
+    private:
+        Data(const Data&); // disallow the copy constructor
 
     private:
         char* _data;

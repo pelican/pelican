@@ -6,6 +6,7 @@
 #include "StreamDataBuffer.h"
 #include "ServiceDataBuffer.h"
 #include "LockedData.h"
+#include "data/DataRequirements.h"
 /**
  * @file DataManager.h
  */
@@ -31,17 +32,8 @@ class DataManager
         DataManager(  );
         ~DataManager();
 
-        /// streams
-        //  return a list of streams that the dataManager can
-        //  provide. This does NOT reflect if this data is
-        //  actually available within thoses streams.
-        QList<QString> streams() const;
-
-        /// serviceData
-        //  return a list of service data that the dataManager can
-        //  provide. This does NOT reflect if this data is
-        //  actually available.
-        QList<QString> serviceData() const;
+        /// returns the data types handled by this manager
+        const DataRequirements& dataSpec() const;
 
         /// getNext
         //  return the next unlocked data block from Stream Data
@@ -51,9 +43,18 @@ class DataManager
         //  return the requested Service Data
         LockedData getServiceData(const QString& type, const QString& version);
 
+        /// serviceDataBuffer
+        //  add a service data type to be managed
+        void serviceDataBuffer(const QString& name, const ServiceDataBuffer& buffer);
+
+        /// streamDataBuffer
+        //  add a stream data type to be managed
+        void streamDataBuffer(const QString& name, const StreamDataBuffer& buffer);
+
     private:
         QHash<QString,StreamDataBuffer> _streams;
         QHash<QString,ServiceDataBuffer> _service;
+        DataRequirements _specs;
 
 };
 

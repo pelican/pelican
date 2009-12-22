@@ -34,7 +34,7 @@ ServerRequest PelicanProtocol::request(QTcpSocket& socket)
     return r;
 }
 
-void PelicanProtocol::send(QDataStream& stream, const QList<DataBlob>& ) 
+void PelicanProtocol::send(QDataStream& stream, LockedData& ) 
 {
 }
 
