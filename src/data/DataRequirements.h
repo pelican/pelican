@@ -32,10 +32,10 @@ class DataRequirements
         /// Destroys the data requirements object.
         ~DataRequirements();
 
-        /// Sets the required stream data string list.
+        /// adds the required stream data as a requirement.
         void setStreamData(const QString& string);
 
-        /// Sets the required service data string list.
+        /// adds the required service data as a requirement.
         void setServiceData(const QString& string);
 
         /// Sets the required stream data string list.
@@ -52,6 +52,9 @@ class DataRequirements
 
         /// Test for equality with another object.
         bool operator==(const DataRequirements&) const;
+
+        /// Test for compatibility with another DataRequirements.
+        bool isCompatible(const DataRequirements& d) const;
 
         /// Test for compatibility with a data blob hash.
         bool isCompatible(const QHash<QString, DataBlob*>& d) const;

@@ -129,6 +129,10 @@ void DataRequirementsTest::test_isCompatible()
         QHash<QString, DataBlob*> hashData;
         hashData.insert("wibble1", NULL);
         CPPUNIT_ASSERT_EQUAL(true, req.isCompatible(hashData));
+
+        DataRequirements reqdata;
+        reqdata.setServiceData("wibble1");
+        CPPUNIT_ASSERT_EQUAL(true, req.isCompatible(reqdata));
     }
 
     // Use Case:
@@ -141,6 +145,11 @@ void DataRequirementsTest::test_isCompatible()
         hashData.insert("wibble1", NULL);
         hashData.insert("wibble2", NULL);
         CPPUNIT_ASSERT_EQUAL(true, req.isCompatible(hashData));
+
+        DataRequirements reqdata;
+        reqdata.setServiceData("wibble1");
+        reqdata.setServiceData("wibble2");
+        CPPUNIT_ASSERT_EQUAL(true, req.isCompatible(reqdata));
     }
 
     // Use Case:
@@ -156,6 +165,11 @@ void DataRequirementsTest::test_isCompatible()
         hashData.insert("wibble1", NULL);
         hashData.insert("wibble2", NULL);
         CPPUNIT_ASSERT_EQUAL(false, req.isCompatible(hashData));
+
+        DataRequirements reqdata;
+        reqdata.setServiceData("wibble1");
+        reqdata.setServiceData("wibble2");
+        CPPUNIT_ASSERT_EQUAL(false, req.isCompatible(reqdata));
     }
 
 }

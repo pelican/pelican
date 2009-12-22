@@ -104,7 +104,22 @@ bool DataRequirements::operator==(const DataRequirements& d) const
 
 /**
  * @details
- * Tests if this requirements object is the same as the other one.
+ * Tests if this requirements object is the same as or is a subset of another.
+ */
+bool DataRequirements::isCompatible(const DataRequirements& d) const
+{
+    QSet<QString> temp(_streamData);
+    temp.unite(_serviceData);
+    QSet<QString> tempd(d._streamData);
+    tempd.unite(d._serviceData);
+    temp.subtract(tempd);
+    return (temp.size() == 0);
+}
+
+/**
+ * @details
+ * Tests if data specified in this requirements object is
+ * contained within the passed hash
  */
 bool DataRequirements::isCompatible(const QHash<QString, DataBlob*>& d) const
 {
