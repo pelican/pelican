@@ -95,7 +95,7 @@ void SessionTest::test_streamData()
     }
     QString stream1("Stream1");
     StreamDataBuffer streambuffer;
-    _data->streamDataBuffer( stream1, streambuffer );
+    _data->streamDataBuffer( stream1, &streambuffer );
     {
         // Use Case:
         // Request StreamData for a stream that is not supported by the server

@@ -2,6 +2,9 @@ INCLUDE_DIRECTORIES(${QT_INCLUDES})
 SUBPACKAGE(server data utility)
 # files requireing mpp preprocessing (i.e. QObjects)
 set( server_moc_headers
+     Data.h
+     DataBuffer.h
+     StreamDataBuffer.h
      PelicanPortServer.h
      PelicanServer.h
      Session.h
@@ -19,10 +22,12 @@ set( server_src
      src/StreamDataBuffer.cpp
      src/ServiceDataBuffer.cpp
      src/PelicanProtocol.cpp
+     src/WritableData.cpp
 )
 set( serverExe_src
      src/main.cpp
 )
+
 QT4_WRAP_CPP(
     server_moc_sources
     ${server_moc_headers} )

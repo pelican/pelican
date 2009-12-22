@@ -44,4 +44,14 @@ bool LockedData::isValid() const
     return rv;
 }
 
+size_t LockedData::size() const
+{
+    size_t s = 0;
+    foreach( Data* data , _data )
+    {
+        s += data->size();
+    }
+    return s;
+}
+
 } // namespace pelican

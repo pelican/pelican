@@ -31,6 +31,7 @@ class LockedData
         bool isValid() const;
         void addData(Data*);
         void addData(const LockedData&);
+        size_t size() const;
 
     private:
         QList<Data*> _data;

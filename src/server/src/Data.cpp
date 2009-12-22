@@ -1,13 +1,13 @@
 #include "Data.h"
 #include <QMutexLocker>
-//#include "utility/memCheck.h"
+#include "utility/memCheck.h"
 
 namespace pelican {
 
 
 // class Data 
-Data::Data(char* data, size_t size)
-    : _data(data), _size(size), _lock(0)
+Data::Data(void* data, size_t size, QObject* parent)
+    : QObject(parent), _data(data), _size(size), _lock(0)
 {
 }
 
@@ -25,16 +25,24 @@ void Data::unlock()
 {
     QMutexLocker locker(&_mutex);
     --_lock;
+    if( ! _lock ) {
+        emit unlocked(this);
+    }
 }
 
 bool Data::isValid() const 
 {
-    return _data == 0 || _size == 0;
+    return !( _data == 0 || _size == 0);
 }
 
-char* Data::operator*()
+void* Data::operator*()
 {
     return _data;
+}
+
+void Data::setSize(size_t s)
+{
+    _size = s;
 }
 
 size_t Data::size() const

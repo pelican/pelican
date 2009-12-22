@@ -20,13 +20,13 @@ const DataRequirements& DataManager::dataSpec() const
     return _specs;
 }
 
-void DataManager::streamDataBuffer(const QString& name, const StreamDataBuffer& buffer)
+void DataManager::streamDataBuffer(const QString& name, StreamDataBuffer* buffer)
 {
     _specs.setStreamData(name);
     _streams[name]=buffer;
 }
 
-void DataManager::serviceDataBuffer(const QString& name, const ServiceDataBuffer& buffer )
+void DataManager::serviceDataBuffer(const QString& name, ServiceDataBuffer* buffer )
 {
     _specs.setServiceData(name);
     _service[name]=buffer;
@@ -37,7 +37,7 @@ LockedData DataManager::getNext(const QString& type)
     // we make the assumption that this method
     // will not be called with an invalid type
     // No checking in order to speed things up
-    return _streams[type].getNext();
+    return _streams[type]->getNext();
 }
 
 LockedData DataManager::getServiceData(const QString& type, const QString& version)
@@ -45,7 +45,7 @@ LockedData DataManager::getServiceData(const QString& type, const QString& versi
     // we make the assumption that this method
     // will not be called with an invalid type
     // No checking in order to speed things up
-    return _service[type].getData(version);
+    return _service[type]->getData(version);
 }
 
 } // namespace pelican

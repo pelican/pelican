@@ -7,7 +7,10 @@ set(
 set(
    serverTest_src
    src/serverTest.cpp
+   src/DataTest.cpp
+   src/DataManagerTest.cpp
    src/SessionTest.cpp
+   src/StreamDataBufferTest.cpp
    #   src/PelicanServerTest.cpp
 )
 

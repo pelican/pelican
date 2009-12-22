@@ -45,15 +45,15 @@ class DataManager
 
         /// serviceDataBuffer
         //  add a service data type to be managed
-        void serviceDataBuffer(const QString& name, const ServiceDataBuffer& buffer);
+        void serviceDataBuffer(const QString& name, ServiceDataBuffer* buffer);
 
         /// streamDataBuffer
         //  add a stream data type to be managed
-        void streamDataBuffer(const QString& name, const StreamDataBuffer& buffer);
+        void streamDataBuffer(const QString& name, StreamDataBuffer* buffer);
 
     private:
-        QHash<QString,StreamDataBuffer> _streams;
-        QHash<QString,ServiceDataBuffer> _service;
+        QHash<QString,StreamDataBuffer*> _streams;
+        QHash<QString,ServiceDataBuffer*> _service;
         DataRequirements _specs;
 
 };

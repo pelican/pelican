@@ -4,6 +4,7 @@
 #include "DataBuffer.h"
 #include <QMutex>
 #include <QQueue>
+#include <QObject>
 
 /**
  * @file StreamDataBuffer.h
@@ -12,7 +13,9 @@
 namespace pelican {
 
 class StreamData;
+class Data;
 class LockedData;
+class WritableData;
 
 /**
  * @class StreamDataBuffer
@@ -26,16 +29,34 @@ class LockedData;
 
 class StreamDataBuffer : public DataBuffer
 {
+    Q_OBJECT
+
     public:
-        StreamDataBuffer();
+        StreamDataBuffer(QObject* parent=0);
         ~StreamDataBuffer();
         LockedData getNext();
+        WritableData getWritable(size_t size);
+        void _newData();
+
+    protected slots:
+        void activateData(Data*);
 
     protected:
-//        QMutex _mutex;
+        void activateData(StreamData*);
+
+    protected:
+        QMutex _mutex;
 
     private:
+        StreamDataBuffer(const StreamDataBuffer&); // disallow copying
+
+    private:
+        size_t _max;
+        size_t _maxChunkSize;
+        size_t _space;
+        QList<StreamData*> _data;
         QQueue<StreamData*> _serveQueue;
+        QQueue<StreamData*> _emptyQueue;
 };
 
 } // namespace pelican

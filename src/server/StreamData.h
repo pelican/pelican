@@ -25,7 +25,7 @@ namespace pelican {
 class StreamData : public Data
 {
     public:
-        StreamData(char* = 0, size_t  = 0);
+        StreamData(void* = 0, size_t  = 0);
         ~StreamData();
 
     private:

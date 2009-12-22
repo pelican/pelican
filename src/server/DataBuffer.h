@@ -1,5 +1,6 @@
 #ifndef DATABUFFER_H
 #define DATABUFFER_H
+#include <QObject>
 
 
 /**
@@ -17,10 +18,12 @@ namespace pelican {
  * 
  */
 
-class DataBuffer
+class DataBuffer : public QObject
 {
+    Q_OBJECT
+
     public:
-        DataBuffer(  );
+        DataBuffer(QObject* parent=0);
         ~DataBuffer();
 
     private:

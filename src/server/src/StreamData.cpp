@@ -7,7 +7,7 @@ namespace pelican {
 
 
 // class StreamData 
-StreamData::StreamData(char* data, size_t size)
+StreamData::StreamData(void* data, size_t size)
     : Data(data,size)
 {
 }
