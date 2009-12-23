@@ -37,7 +37,7 @@ void LockedData::addData(Data* data)
 
 bool LockedData::isValid() const
 {
-    bool rv=false;
+    bool rv=( _data.isEmpty())?false:true;
     foreach (Data* data, _data ) {
         rv = rv && data->isValid();
     }
@@ -49,7 +49,8 @@ size_t LockedData::size() const
     size_t s = 0;
     foreach( Data* data , _data )
     {
-        s += data->size();
+        if( data->isValid() )
+            s += data->size();
     }
     return s;
 }

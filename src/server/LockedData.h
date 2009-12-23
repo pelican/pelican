@@ -32,6 +32,7 @@ class LockedData
         void addData(Data*);
         void addData(const LockedData&);
         size_t size() const;
+        QList<Data*> data() { return _data; };
 
     private:
         QList<Data*> _data;
