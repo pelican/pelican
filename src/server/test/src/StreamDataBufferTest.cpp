@@ -50,8 +50,12 @@ void StreamDataBufferTest::test_getNext()
         b.getWritable(100);
         _app->processEvents();
         LockedData data = b.getNext();
-        std::cout << data.size() << std::endl;
         CPPUNIT_ASSERT( data.isValid() );
+        // Use Case:
+        // Make a second call to getNext() whilst data exists but locked
+        // Expect to return an invalid object
+        LockedData data2 = b.getNext();
+        CPPUNIT_ASSERT( ! data2.isValid() );
     }
 }
 

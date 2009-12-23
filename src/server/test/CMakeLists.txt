@@ -9,6 +9,7 @@ set(
    src/serverTest.cpp
    src/DataTest.cpp
    src/DataManagerTest.cpp
+   src/LockedDataTest.cpp
    src/SessionTest.cpp
    src/StreamDataBufferTest.cpp
    #   src/PelicanServerTest.cpp
