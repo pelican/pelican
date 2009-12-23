@@ -1,6 +1,7 @@
 #ifndef DATABUFFER_H
 #define DATABUFFER_H
 #include <QObject>
+#include <QMutex>
 
 
 /**
@@ -8,6 +9,8 @@
  */
 
 namespace pelican {
+
+class WritableData;
 
 /**
  * @class DataBuffer
@@ -25,6 +28,10 @@ class DataBuffer : public QObject
     public:
         DataBuffer(QObject* parent=0);
         ~DataBuffer();
+        WritableData getWritable(size_t size);
+
+    protected:
+        QMutex _mutex;
 
     private:
 };

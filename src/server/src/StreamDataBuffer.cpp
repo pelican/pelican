@@ -32,7 +32,6 @@ LockedData StreamDataBuffer::getNext()
     QMutexLocker locker(&_mutex);
     if( ! _serveQueue.isEmpty() )
         return LockedData(_serveQueue.dequeue());
-       // std::cout << "HERE" << std::endl;
     return LockedData(0);
 }
 

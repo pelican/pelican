@@ -5,6 +5,8 @@
 #include "Session.h"
 #include "DataManager.h"
 #include "StreamData.h"
+#include "WritableData.h"
+#include "StreamDataBuffer.h"
 #include "data/DataRequirements.h"
 #include "data/ServerRequest.h"
 #include "data/ServiceDataRequest.h"
@@ -93,6 +95,7 @@ void SessionTest::test_streamData()
         LockedData data = _session->processStreamDataRequest(request);
         CPPUNIT_ASSERT( ! data.isValid() );
     }
+    // Set up stream data for remaining tests
     QString stream1("Stream1");
     StreamDataBuffer streambuffer;
     _data->streamDataBuffer( stream1, &streambuffer );
@@ -123,19 +126,28 @@ void SessionTest::test_streamData()
         // no service data
         // Expect to return the data
         DataRequirements req;
+        req.setStreamData(stream1);
         StreamDataRequest request;
         request.addDataOption(req);
+        _injectData(&streambuffer);
         LockedData data = _session->processStreamDataRequest(request);
         CPPUNIT_ASSERT( data.isValid() );
     }
+    // Set up service data stream for remaining tests
+    QString service1("service1");
+    ServiceDataBuffer servicebuffer;
+    _data->serviceDataBuffer( service1, &servicebuffer );
     {
         // Use Case:
         // Request StreamData for a stream that is supported and the data exists
         // service data requested, but not available
         // Expect to return no data
         DataRequirements req;
+        req.setStreamData(stream1);
+        req.setServiceData(service1);
         StreamDataRequest request;
         request.addDataOption(req);
+        _injectData(&streambuffer);
         LockedData data = _session->processStreamDataRequest(request);
         CPPUNIT_ASSERT( ! data.isValid() );
     }
@@ -147,9 +159,17 @@ void SessionTest::test_streamData()
         DataRequirements req;
         StreamDataRequest request;
         request.addDataOption(req);
+        _injectData(&streambuffer);
+        //_injectData(&servicebuffer);
         LockedData data = _session->processStreamDataRequest(request);
         CPPUNIT_ASSERT( data.isValid() );
     }
+}
+
+void SessionTest::_injectData(StreamDataBuffer* buffer)
+{
+    buffer->getWritable(10);
+    _app->processEvents();
 }
 
 } // namespace pelican
