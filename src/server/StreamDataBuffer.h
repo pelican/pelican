@@ -2,7 +2,6 @@
 #define STREAMDATABUFFER_H
 
 #include "DataBuffer.h"
-#include <QMutex>
 #include <QQueue>
 #include <QObject>
 
@@ -43,9 +42,6 @@ class StreamDataBuffer : public DataBuffer
 
     protected:
         void activateData(StreamData*);
-
-    protected:
-        QMutex _mutex;
 
     private:
         StreamDataBuffer(const StreamDataBuffer&); // disallow copying
