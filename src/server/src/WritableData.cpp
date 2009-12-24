@@ -26,7 +26,9 @@ Data* WritableData::data()
 
 bool WritableData::isValid() const
 {
-    return ( ! _data) || _data->isValid();
+    if( _data )
+        return  _data->isValid();
+    return false;
 }
 
 } // namespace pelican
