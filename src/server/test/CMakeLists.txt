@@ -13,6 +13,7 @@ set(
    src/SessionTest.cpp
    src/ServiceDataBufferTest.cpp
    src/StreamDataBufferTest.cpp
+   src/WritableDataTest.cpp
    #   src/PelicanServerTest.cpp
 )
 
