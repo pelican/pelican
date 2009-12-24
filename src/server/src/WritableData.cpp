@@ -1,7 +1,6 @@
 #include "WritableData.h"
 #include "Data.h"
 
-
 #include "utility/memCheck.h"
 
 namespace pelican {
@@ -11,18 +10,23 @@ WritableData::WritableData(Data* data)
     : _data(data)
 {
     if( _data )
-        _data->lock();
+        _data->writeLock();
 }
 
 WritableData::~WritableData()
 {
     if( _data )
-        _data->unlock();
+        _data->writeUnlock();
 }
 
 Data* WritableData::data()
 {
     return _data;
+}
+
+bool WritableData::isValid() const
+{
+    return ( ! _data) || _data->isValid();
 }
 
 } // namespace pelican

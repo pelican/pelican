@@ -10,11 +10,13 @@ class QCoreApplication;
 
 namespace pelican {
 
+class DataManager;
+
 /**
  * @class StreamDataBufferTest
  *  
  * @brief
- * 
+ *   Unit test for StreamDataBuffer
  * @details
  * 
  */
@@ -24,6 +26,7 @@ class StreamDataBufferTest : public CppUnit::TestFixture
     public:
         CPPUNIT_TEST_SUITE( StreamDataBufferTest );
         CPPUNIT_TEST( test_getNext );
+        CPPUNIT_TEST( test_getWritable );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -32,6 +35,7 @@ class StreamDataBufferTest : public CppUnit::TestFixture
 
         // Test Methods
         void test_getNext();
+        void test_getWritable();
 
     public:
         StreamDataBufferTest(  );
@@ -39,6 +43,7 @@ class StreamDataBufferTest : public CppUnit::TestFixture
 
     private:
         QCoreApplication* _app;
+        DataManager* _dataManager;
 };
 
 } // namespace pelican

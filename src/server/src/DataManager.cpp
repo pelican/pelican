@@ -1,6 +1,7 @@
 #include "DataManager.h"
 
 #include "Data.h"
+#include "StreamData.h"
 #include "utility/memCheck.h"
 
 namespace pelican {
@@ -23,6 +24,7 @@ const DataRequirements& DataManager::dataSpec() const
 void DataManager::streamDataBuffer(const QString& name, StreamDataBuffer* buffer)
 {
     _specs.setStreamData(name);
+    buffer->setDataManager(this);
     _streams[name]=buffer;
 }
 
@@ -46,6 +48,16 @@ LockedData DataManager::getServiceData(const QString& type, const QString& versi
     // will not be called with an invalid type
     // No checking in order to speed things up
     return _service[type]->getData(version);
+}
+
+void DataManager::associateServiceData(StreamData* data)
+{
+    foreach(ServiceDataBuffer* service, _service)
+    {
+        LockedData d = service->getCurrent();
+        if( d.isValid() ) 
+            data->addAssociatedData(d);
+    }
 }
 
 } // namespace pelican

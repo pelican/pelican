@@ -1,3 +1,4 @@
+#include "DataManager.h"
 #include "StreamDataBuffer.h"
 #include "StreamData.h"
 #include "LockedData.h"
@@ -11,8 +12,8 @@ namespace pelican {
 
 
 // class StreamDataBuffer 
-StreamDataBuffer::StreamDataBuffer(QObject* parent)
-    : DataBuffer(parent)
+StreamDataBuffer::StreamDataBuffer(DataManager* manager, QObject* parent)
+    : DataBuffer(parent),_manager(manager)
 {
     _max = 10000; //TODO make configurable
     _maxChunkSize = _max;
@@ -27,6 +28,11 @@ StreamDataBuffer::~StreamDataBuffer()
     }
 }
 
+void StreamDataBuffer::setDataManager(DataManager* manager)
+{
+    _manager = manager;
+}
+
 LockedData StreamDataBuffer::getNext()
 {
     QMutexLocker locker(&_mutex);
@@ -38,6 +44,19 @@ LockedData StreamDataBuffer::getNext()
 WritableData StreamDataBuffer::getWritable(size_t size)
 {
     QMutexLocker locker(&_mutex);
+    StreamData* d = _getWritable(size);
+
+    // prepare the object for use
+    // - add Service Data info
+    if( d ) {
+        d->reset();
+        _manager->associateServiceData(d);
+    }
+    return WritableData( d );
+}
+
+StreamData* StreamDataBuffer::_getWritable(size_t size)
+{
     if( ! _emptyQueue.isEmpty() )
     {
         // iterate through until we find a container big enough
@@ -46,7 +65,7 @@ WritableData StreamDataBuffer::getWritable(size_t size)
             StreamData* d = temp.dequeue();
             if( sizeof(*d) >= size ) {
                 // we found one - so our work is done
-                return WritableData( d );
+                return d;
             }
         }
         while( ! temp.isEmpty() );
@@ -60,11 +79,11 @@ WritableData StreamDataBuffer::getWritable(size_t size)
             _space -= size;
             StreamData* s = new StreamData(d, size);
             _data.append(s);
-            Q_ASSERT(connect( s, SIGNAL(unlocked(Data*)), this, SLOT(activateData(Data*) ) ));
-            return WritableData( s );
+            Q_ASSERT(connect( s, SIGNAL(unlockedWrite(Data*)), this, SLOT(activateData(Data*) ) ));
+            return s;
         }
     }
-    return WritableData(0); // no free containers so we return an invalid
+    return 0; // no free containers so we return an invalid
 }
 
 void StreamDataBuffer::activateData(Data* data)

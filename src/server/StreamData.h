@@ -1,8 +1,7 @@
 #ifndef STREAMDATA_H
 #define STREAMDATA_H
 
-
-#include <QHash>
+#include <QList>
 #include <QString>
 #include "Data.h"
 
@@ -11,6 +10,8 @@
  */
 
 namespace pelican {
+
+class LockedData;
 
 /**
  * @class StreamData
@@ -27,12 +28,15 @@ class StreamData : public Data
     public:
         StreamData(void* = 0, size_t  = 0);
         ~StreamData();
+        void reset();
+        void addAssociatedData(LockedData);
+        QList<LockedData>& associateData();
 
     private:
         StreamData(const StreamData&);
 
     private:
-        QHash<QString,Data> _serviceData;
+        QList<LockedData> _serviceData;
 };
 
 } // namespace pelican

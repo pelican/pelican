@@ -11,6 +11,7 @@ set(
    src/DataManagerTest.cpp
    src/LockedDataTest.cpp
    src/SessionTest.cpp
+   src/ServiceDataBufferTest.cpp
    src/StreamDataBufferTest.cpp
    #   src/PelicanServerTest.cpp
 )

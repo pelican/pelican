@@ -43,6 +43,9 @@ class DataManager
         //  return the requested Service Data
         LockedData getServiceData(const QString& type, const QString& version);
 
+        /// associateServiceData
+        void associateServiceData(StreamData* data);
+
         /// serviceDataBuffer
         //  add a service data type to be managed
         void serviceDataBuffer(const QString& name, ServiceDataBuffer* buffer);

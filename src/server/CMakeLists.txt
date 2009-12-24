@@ -4,6 +4,7 @@ SUBPACKAGE(server data utility)
 set( server_moc_headers
      Data.h
      DataBuffer.h
+     ServiceDataBuffer.h
      StreamDataBuffer.h
      PelicanPortServer.h
      PelicanServer.h

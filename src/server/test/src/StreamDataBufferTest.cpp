@@ -59,6 +59,9 @@ void StreamDataBufferTest::test_getWritable()
         CPPUNIT_ASSERT( data.isValid() );
         CPPUNIT_ASSERT_EQUAL(0, static_cast<StreamData*>(data.data())->associateData().size() );
     }
+    // inject some data into the service buffer for remaining tests
+    serveBuffer.getWritable(1);
+    _app->processEvents();
     {
         // Use case:
         // getWritable() called with service data supported, with data

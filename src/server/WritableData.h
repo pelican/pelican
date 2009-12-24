@@ -27,6 +27,8 @@ class WritableData
         WritableData(Data* d);
         ~WritableData();
         Data* data();
+        /// returns true if there is a valid Data object
+        bool isValid() const;
 
     private:
         Data* _data;

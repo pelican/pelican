@@ -34,15 +34,34 @@ class Data : public QObject
         void setSize(size_t);
         /// returns a pointer to the beginning of the memory block
         void* operator*();
+
+
         /// marks the data as locked (increases count on unlimited semaphore)
         void lock();
+
         /// marks the data as unlocked (decreases count on semaphore)
+        //  emits the unlocked signal when count returns to 0
         void unlock();
+
+        /// marks the data as locked (increases count on unlimited semaphore)
+        void writeLock();
+
+        /// marks the data as unlocked (decreases count on semaphore)
+        //  emits the unlockedWrite signal when count returns to 0
+        void writeUnlock();
+
         /// indicates if there is any usable data
         bool isValid() const;
 
+        /// return the data id 
+        QString id() const { return _id; };
+
+        /// sets the id 
+        void setId(const QString& id) { _id = id; }
+
     signals:
         void unlocked(Data*);
+        void unlockedWrite(Data*);
 
     protected:
         QMutex _mutex;
@@ -51,9 +70,11 @@ class Data : public QObject
         Data(const Data&); // disallow the copy constructor
 
     private:
+        QString _id;
         void* _data;
         size_t _size;
         int _lock;
+        int _wlock;
 };
 
 } // namespace pelican

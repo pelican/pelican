@@ -15,6 +15,21 @@ Data::~Data()
 {
 }
 
+void Data::writeLock()
+{
+    QMutexLocker locker(&_mutex);
+    ++_wlock;
+}
+
+void Data::writeUnlock()
+{
+    QMutexLocker locker(&_mutex);
+    --_wlock;
+    if( ! _wlock ) {
+        emit unlockedWrite(this);
+    }
+}
+
 void Data::lock()
 {
     QMutexLocker locker(&_mutex);
