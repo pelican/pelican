@@ -7,7 +7,7 @@ namespace pelican {
 
 // class Data 
 Data::Data(void* data, size_t size, QObject* parent)
-    : QObject(parent), _data(data), _size(size), _lock(0)
+    : QObject(parent), _data(data), _size(size), _lock(0), _wlock(0)
 {
 }
 

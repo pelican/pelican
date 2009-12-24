@@ -2,6 +2,7 @@
 #define SERVICEDATABUFFERTEST_H
 
 #include <cppunit/extensions/HelperMacros.h>
+class QCoreApplication;
 
 /**
  * @file ServiceDataBufferTest.h
@@ -37,6 +38,7 @@ class ServiceDataBufferTest : public CppUnit::TestFixture
         ~ServiceDataBufferTest();
 
     private:
+        QCoreApplication* _app;
 };
 
 } // namespace pelican

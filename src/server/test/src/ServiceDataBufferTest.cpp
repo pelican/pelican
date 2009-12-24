@@ -2,6 +2,7 @@
 #include "ServiceDataBuffer.h"
 #include "WritableData.h"
 #include "LockedData.h"
+#include <QCoreApplication>
 
 
 #include "utility/memCheck.h"
@@ -13,10 +14,13 @@ CPPUNIT_TEST_SUITE_REGISTRATION( ServiceDataBufferTest );
 ServiceDataBufferTest::ServiceDataBufferTest()
     : CppUnit::TestFixture()
 {
+    int ac = 0;
+    _app = new QCoreApplication(ac, NULL);
 }
 
 ServiceDataBufferTest::~ServiceDataBufferTest()
 {
+    delete _app;
 }
 
 void ServiceDataBufferTest::setUp()
@@ -45,9 +49,13 @@ void ServiceDataBufferTest::test_getWritable()
         // This should also release the lock allowing a second call
         // to getWritable() to return a valid object
         ServiceDataBuffer b;
-        Data* d;
-        d = b.getWritable(1).data();
-        //CPPUNIT_ASSERT( b.getCurrent().data() == d );
+        {
+            Data* d = 0;
+            d = b.getWritable(1).data();
+            CPPUNIT_ASSERT( d != 0 );
+            //CPPUNIT_ASSERT( b.getCurrent().data()[0] == d );
+        }
+        _app->processEvents();
         WritableData wd = b.getWritable(1);
         CPPUNIT_ASSERT( wd.isValid() );
     }
