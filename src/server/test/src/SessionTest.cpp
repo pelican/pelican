@@ -141,7 +141,7 @@ void SessionTest::test_streamData()
         // Use Case:
         // Request StreamData for a stream that is supported and the data exists
         // service data requested, but not available
-        // Expect to return no data
+        // Expect to return invalid data
         DataRequirements req;
         req.setStreamData(stream1);
         req.setServiceData(service1);
@@ -160,13 +160,13 @@ void SessionTest::test_streamData()
         StreamDataRequest request;
         request.addDataOption(req);
         _injectData(&streambuffer);
-        //_injectData(&servicebuffer);
+        _injectData(&servicebuffer);
         LockedData data = _session->processStreamDataRequest(request);
         CPPUNIT_ASSERT( data.isValid() );
     }
 }
 
-void SessionTest::_injectData(StreamDataBuffer* buffer)
+void SessionTest::_injectData(DataBuffer* buffer)
 {
     buffer->getWritable(10);
     _app->processEvents();

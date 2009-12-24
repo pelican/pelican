@@ -29,6 +29,7 @@ class StreamData : public Data
         StreamData(void* = 0, size_t  = 0);
         ~StreamData();
         void reset();
+        bool isValid() const;
         void addAssociatedData(LockedData);
         QList<LockedData>& associateData();
 

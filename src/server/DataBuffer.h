@@ -28,7 +28,8 @@ class DataBuffer : public QObject
     public:
         DataBuffer(QObject* parent=0);
         ~DataBuffer();
-        WritableData getWritable(size_t size);
+        
+        virtual WritableData getWritable(size_t size) = 0;
 
     protected:
         QMutex _mutex;

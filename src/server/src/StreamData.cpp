@@ -31,4 +31,14 @@ void StreamData::reset()
     _serviceData.clear();
 }
 
+bool StreamData::isValid() const
+{
+    bool rv = Data::isValid();
+    foreach(LockedData data, _serviceData )
+    {
+        rv = rv && data.isValid();
+    } 
+    return rv;
+}
+
 } // namespace pelican

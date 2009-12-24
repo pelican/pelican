@@ -15,7 +15,7 @@ namespace pelican {
 class TestProtocol;
 class Session;
 class DataManager;
-class StreamDataBuffer;
+class DataBuffer;
 
 /**
  * @class SessionTest
@@ -51,7 +51,7 @@ class SessionTest : public CppUnit::TestFixture
         ~SessionTest();
 
     protected:
-        void _injectData(StreamDataBuffer* stream);
+        void _injectData(DataBuffer* stream);
 
     private:
         QCoreApplication* _app;
