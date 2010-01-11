@@ -63,12 +63,17 @@ WritableData ServiceDataBuffer::getWritable(size_t size)
                 _space -= size;
                 _newData = new Data(d, size);
                 // we set up an id in the data as our reference
-                Q_ASSERT(connect( _newData, SIGNAL(unlockedWrite(Data*)), this, SLOT(activateData(Data*) ) ));
+                Q_ASSERT(connect( _newData, SIGNAL(unlockedWrite()), this, SLOT(activateData() ) ));
                 return WritableData( _newData );
             }
         }
     }
     return WritableData(0); // no free containers so we return an invalid
+}
+
+void ServiceDataBuffer::activateData()
+{
+    activateData( static_cast<Data*>( sender() ) );
 }
 
 void ServiceDataBuffer::activateData(Data* data)

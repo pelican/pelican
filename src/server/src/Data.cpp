@@ -1,5 +1,6 @@
 #include "Data.h"
 #include <QMutexLocker>
+#include <iostream>
 #include "utility/memCheck.h"
 
 namespace pelican {
@@ -26,8 +27,13 @@ void Data::writeUnlock()
     QMutexLocker locker(&_mutex);
     --_wlock;
     if( ! _wlock ) {
-        emit unlockedWrite(this);
+        emit unlockedWrite();
     }
+}
+
+bool Data::isLocked() const
+{
+    return (bool)(_lock || _wlock);
 }
 
 void Data::lock()
@@ -40,8 +46,8 @@ void Data::unlock()
 {
     QMutexLocker locker(&_mutex);
     --_lock;
-    if( ! _lock ) {
-        emit unlocked(this);
+    if( _lock <= 0 ) {
+       emit unlocked();
     }
 }
 

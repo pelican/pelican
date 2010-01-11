@@ -45,7 +45,7 @@ class StreamDataBuffer : public DataBuffer
         void setDataManager(DataManager* manager);
 
     protected slots:
-        void activateData(Data*);
+        void activateData();
 
     protected:
         void activateData(StreamData*);

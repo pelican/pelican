@@ -1,7 +1,6 @@
 #include "LockedData.h"
 #include "Data.h"
 
-
 #include "utility/memCheck.h"
 
 namespace pelican {
@@ -18,6 +17,11 @@ LockedData::~LockedData()
     foreach (Data* data, _data ) {
         data->unlock();
     }
+}
+
+LockedData::LockedData( const LockedData& data )
+{
+    addData(data);
 }
 
 void LockedData::addData(const LockedData& data)

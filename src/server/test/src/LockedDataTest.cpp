@@ -1,6 +1,7 @@
 #include "LockedDataTest.h"
 #include "LockedData.h"
 #include "Data.h"
+#include "StreamData.h"
 
 
 #include "utility/memCheck.h"
@@ -67,6 +68,91 @@ void LockedDataTest::test_isValid()
         ld.addData(&d2);
         CPPUNIT_ASSERT( d2.isValid() );
         CPPUNIT_ASSERT( ld.isValid() );
+    }
+}
+
+void LockedDataTest::test_lock()
+{
+    {
+        // Use Case:
+        // A valid lockeddata object is copied
+        // Expect no unlock until last object is destroyed
+        Data d((void*)1000,100);
+        CPPUNIT_ASSERT( d.isValid() ); // sanity check
+        CPPUNIT_ASSERT( ! d.isLocked() );
+        {
+            // create the first lock
+            LockedData ld(&d);
+            CPPUNIT_ASSERT(d.isLocked());
+            {
+                // create the second lock by copying
+                LockedData ld2(ld);
+                CPPUNIT_ASSERT(d.isLocked());
+            }
+            CPPUNIT_ASSERT(d.isLocked());
+        }
+        CPPUNIT_ASSERT( ! d.isLocked());
+    }
+    {
+        // Use Case:
+        // An invalid lockeddata object is copied
+        // Expect no unlock until last object is destroyed
+        Data d((void*)0,100);
+        CPPUNIT_ASSERT( ! d.isValid() ); // sanity check
+        CPPUNIT_ASSERT( ! d.isLocked() );
+        {
+            // create the first lock
+            LockedData ld(&d);
+            CPPUNIT_ASSERT(d.isLocked());
+            {
+                // create the second lock by copying
+                LockedData ld2(ld);
+                CPPUNIT_ASSERT(d.isLocked());
+            }
+            CPPUNIT_ASSERT(d.isLocked());
+        }
+        CPPUNIT_ASSERT( ! d.isLocked());
+    }
+    {
+        // Use Case:
+        // A valid lockeddata object is copied but the lockeddata
+        // are destroyed in the reverse order in which they are created
+        // Expect no unlock until last object is destroyed
+        Data d((void*)1000,100);
+        CPPUNIT_ASSERT( d.isValid() ); // sanity check
+        CPPUNIT_ASSERT( ! d.isLocked() );
+        {
+            // create the first lock
+            LockedData* ld = new LockedData(&d);
+            CPPUNIT_ASSERT(d.isLocked());
+            LockedData* ld2 = new LockedData(*ld);
+            CPPUNIT_ASSERT(d.isLocked());
+            delete ld;
+            CPPUNIT_ASSERT(d.isLocked());
+            delete ld2;
+            CPPUNIT_ASSERT( ! d.isLocked());
+        }
+    }
+    {
+        // Use Case:
+        // An invalid lockeddata object is copied but the lockeddata
+        // are destroyed in the reverse order in which they are created
+        // The data object is a derived type
+        // Expect no unlock until last object is destroyed
+        StreamData d((void*)0,100);
+        CPPUNIT_ASSERT( ! d.isValid() ); // sanity check
+        CPPUNIT_ASSERT( ! d.isLocked() );
+        {
+            // create the first lock
+            LockedData* ld = new LockedData(&d);
+            CPPUNIT_ASSERT(d.isLocked());
+            LockedData* ld2 = new LockedData(*ld);
+            CPPUNIT_ASSERT(d.isLocked());
+            delete ld;
+            CPPUNIT_ASSERT(d.isLocked());
+            delete ld2;
+            CPPUNIT_ASSERT( ! d.isLocked());
+        }
     }
 }
 

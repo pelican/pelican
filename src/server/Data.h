@@ -35,6 +35,8 @@ class Data : public QObject
         /// returns a pointer to the beginning of the memory block
         void* operator*();
 
+        /// returns true if there is an active lock on the data
+        bool isLocked() const;
 
         /// marks the data as locked (increases count on unlimited semaphore)
         void lock();
@@ -60,8 +62,8 @@ class Data : public QObject
         void setId(const QString& id) { _id = id; }
 
     signals:
-        void unlocked(Data*);
-        void unlockedWrite(Data*);
+        void unlocked();
+        void unlockedWrite();
 
     protected:
         QMutex _mutex;

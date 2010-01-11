@@ -28,6 +28,7 @@ class LockedData
     public:
         LockedData(Data* data = 0 );
         ~LockedData();
+        LockedData(const LockedData& data);
         bool isValid() const;
         void addData(Data*);
         void addData(const LockedData&);

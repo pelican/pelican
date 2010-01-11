@@ -25,19 +25,29 @@ class LockedData;
 
 class StreamData : public Data
 {
+    Q_OBJECT
+
+    public:
+        typedef QList<LockedData> DataList_t;
+
     public:
         StreamData(void* = 0, size_t  = 0);
         ~StreamData();
         void reset();
         bool isValid() const;
-        void addAssociatedData(LockedData);
-        QList<LockedData>& associateData();
+
+        /// associates a specific dataset with this StreamData chunk
+        void addAssociatedData(const LockedData&);
+        void addAssociatedData(Data*);
+
+        /// returns the datasets associated with this StreamData chunk
+        DataList_t& associateData();
 
     private:
         StreamData(const StreamData&);
 
     private:
-        QList<LockedData> _serviceData;
+        DataList_t _serviceData;
 };
 
 } // namespace pelican

@@ -24,6 +24,8 @@ class LockedDataTest : public CppUnit::TestFixture
         CPPUNIT_TEST_SUITE( LockedDataTest );
         CPPUNIT_TEST( test_isValid );
         CPPUNIT_TEST( test_size );
+        CPPUNIT_TEST( test_lock );
+
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -33,6 +35,7 @@ class LockedDataTest : public CppUnit::TestFixture
         // Test Methods
         void test_isValid();
         void test_size();
+        void test_lock();
 
     public:
         LockedDataTest(  );

@@ -79,16 +79,16 @@ StreamData* StreamDataBuffer::_getWritable(size_t size)
             _space -= size;
             StreamData* s = new StreamData(d, size);
             _data.append(s);
-            Q_ASSERT(connect( s, SIGNAL(unlockedWrite(Data*)), this, SLOT(activateData(Data*) ) ));
+            Q_ASSERT(connect( s, SIGNAL(unlockedWrite()), this, SLOT(activateData() ) ));
             return s;
         }
     }
     return 0; // no free containers so we return an invalid
 }
 
-void StreamDataBuffer::activateData(Data* data)
+void StreamDataBuffer::activateData()
 {
-    activateData(static_cast<StreamData*>(data) );
+    activateData(static_cast<StreamData*>( sender() ) );
 }
 
 void StreamDataBuffer::activateData(StreamData* data)

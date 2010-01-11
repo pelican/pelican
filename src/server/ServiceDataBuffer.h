@@ -51,6 +51,9 @@ class ServiceDataBuffer : public DataBuffer
         WritableData getWritable(size_t size);
 
     public slots:
+        void activateData();
+
+    protected:
         void activateData(Data*);
 
     private:

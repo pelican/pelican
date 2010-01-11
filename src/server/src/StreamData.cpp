@@ -16,12 +16,17 @@ StreamData::~StreamData()
 {
 }
 
-QList<LockedData>& StreamData::associateData()
+StreamData::DataList_t& StreamData::associateData()
 {
     return _serviceData;
 }
 
-void StreamData::addAssociatedData(LockedData data)
+void StreamData::addAssociatedData(Data* data)
+{
+    _serviceData.append(LockedData(data));
+}
+
+void StreamData::addAssociatedData(const LockedData& data)
 {
     _serviceData.append(data);
 }
