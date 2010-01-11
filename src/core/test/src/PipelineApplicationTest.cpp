@@ -26,13 +26,13 @@ void PipelineApplicationTest::tearDown()
 
 void PipelineApplicationTest::test_noQApplication()
 {
-    int argc = 0;
+    int argc = 1;
     PipelineApplication* pApp = 0;
 
-    CPPUNIT_ASSERT_THROW( new PipelineApplication(0, NULL), QString );
+    CPPUNIT_ASSERT_THROW( new PipelineApplication(argc, NULL), QString );
 
     QCoreApplication app( argc, NULL  );
-    CPPUNIT_ASSERT_NO_THROW( pApp = new PipelineApplication(0, NULL) );
+    CPPUNIT_ASSERT_NO_THROW( pApp = new PipelineApplication(argc, NULL) );
     delete pApp;
 }
 

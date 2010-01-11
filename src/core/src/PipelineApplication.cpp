@@ -59,7 +59,7 @@ PipelineApplication::PipelineApplication(int argc, char** argv)
         << vm["config"].as<std::string>() << ".\n";
         config = vm["config"].as<std::string>();
     } else {
-        std::cout << "Configuration file was not set.\n";
+        std::cout << "Configuration file not set on command line.\n";
     }
 
     /* Construct the configuration object */
