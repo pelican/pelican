@@ -24,6 +24,10 @@ PipelineApplication::PipelineApplication(int argc, char** argv)
     _factory = 0;
     _config = 0;
 
+    /* Check that argc and argv are nonzero */
+    if (argc == 0 || argv == NULL)
+        throw QString("No command line.");
+
     /* We need a QCoreApplication object for the
      * Qt framework classes to function correctly
      * There can only be one instance of this, 
