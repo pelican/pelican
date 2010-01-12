@@ -1,7 +1,7 @@
 #ifndef LOCKEDDATA_H
 #define LOCKEDDATA_H
 
-#include <QList>
+#include <QString>
 
 /**
  * @file LockedData.h
@@ -26,17 +26,29 @@ class Data;
 class LockedData
 {
     public:
-        LockedData(Data* data = 0 );
+        LockedData(const QString& name, Data* data = 0);
         ~LockedData();
+        /// copy constructor also locks the data also
         LockedData(const LockedData& data);
+
+        /// returns true if the object contains valid data
         bool isValid() const;
-        void addData(Data*);
-        void addData(const LockedData&);
+
+        /// add a data object
+        void setData(Data*);
+
+        /// returns the size of the data
         size_t size() const;
-        QList<Data*> data() { return _data; };
+
+        /// return the data object
+        Data* data() { return _data; };
+
+        /// return the name of the data
+        QString name() const { return _name; };
 
     private:
-        QList<Data*> _data;
+        Data* _data;
+        QString _name;
 };
 
 } // namespace pelican

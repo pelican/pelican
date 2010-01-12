@@ -3,6 +3,7 @@
 #include "LockedData.h"
 #include "WritableData.h"
 #include "Data.h"
+#include <stdlib.h>
 
 
 #include "utility/memCheck.h"
@@ -31,10 +32,10 @@ ServiceDataBuffer::~ServiceDataBuffer()
     }
 }
 
-LockedData ServiceDataBuffer::getData(const QString& version)
+void ServiceDataBuffer::getData(LockedData& ld, const QString& version)
 {
     QMutexLocker lock(&_mutex);
-    return LockedData(_data.value(version)); // returns an invaliid object if it does not exist
+    ld.setData(_data.value(version));
 }
 
 void ServiceDataBuffer::retireData(const QString& version)
@@ -45,10 +46,10 @@ void ServiceDataBuffer::retireData(const QString& version)
     }
 }
 
-LockedData ServiceDataBuffer::getCurrent()
+void ServiceDataBuffer::getCurrent(LockedData& ld)
 {
     QMutexLocker lock(&_mutex);
-    return _data.value(_current);
+    ld.setData( _data.value(_current) );
 }
 
 WritableData ServiceDataBuffer::getWritable(size_t size)
@@ -62,7 +63,6 @@ WritableData ServiceDataBuffer::getWritable(size_t size)
             if( d ) {
                 _space -= size;
                 _newData = new Data(d, size);
-                // we set up an id in the data as our reference
                 Q_ASSERT(connect( _newData, SIGNAL(unlockedWrite()), this, SLOT(activateData() ) ));
                 return WritableData( _newData );
             }

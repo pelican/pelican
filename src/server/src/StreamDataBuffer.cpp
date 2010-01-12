@@ -4,6 +4,7 @@
 #include "LockedData.h"
 #include "WritableData.h"
 #include <QMutexLocker>
+#include <stdlib.h>
 
 
 #include "utility/memCheck.h"
@@ -33,12 +34,12 @@ void StreamDataBuffer::setDataManager(DataManager* manager)
     _manager = manager;
 }
 
-LockedData StreamDataBuffer::getNext()
+void StreamDataBuffer::getNext(LockedData& ld)
 {
     QMutexLocker locker(&_mutex);
     if( ! _serveQueue.isEmpty() )
-        return LockedData(_serveQueue.dequeue());
-    return LockedData(0);
+        ld.setData(_serveQueue.dequeue());
+    ld.setData(0);
 }
 
 WritableData StreamDataBuffer::getWritable(size_t size)

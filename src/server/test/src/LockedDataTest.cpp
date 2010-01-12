@@ -33,7 +33,7 @@ void LockedDataTest::test_isValid()
         //Use Case:
         // contains no data object
         // Expect invalid
-        LockedData ld;
+        LockedData ld("test");
         CPPUNIT_ASSERT( ! ld.isValid() );
     }
     {
@@ -41,33 +41,9 @@ void LockedDataTest::test_isValid()
         // contains a single data object which is invalid
         // Expect invalid
         Data d;
-        LockedData ld(&d);
+        LockedData ld("test",&d);
         CPPUNIT_ASSERT( ! d.isValid() );
         CPPUNIT_ASSERT( ! ld.isValid() );
-    }
-    {
-        //Use Case:
-        // contains a two data objects one of which is invalid
-        // Expect invalid
-        Data d(0,0);
-        Data d2((void*)100,100);
-        LockedData ld(&d);
-        CPPUNIT_ASSERT( ! d.isValid() );
-        ld.addData(&d2);
-        CPPUNIT_ASSERT( d2.isValid() );
-        CPPUNIT_ASSERT( ! ld.isValid() );
-    }
-    {
-        //Use Case:
-        // contains  two data objects both of which are valid
-        // Expect valid
-        Data d((void*)200,100);
-        Data d2((void*)100,100);
-        LockedData ld(&d);
-        CPPUNIT_ASSERT( d.isValid() );
-        ld.addData(&d2);
-        CPPUNIT_ASSERT( d2.isValid() );
-        CPPUNIT_ASSERT( ld.isValid() );
     }
 }
 
@@ -82,7 +58,7 @@ void LockedDataTest::test_lock()
         CPPUNIT_ASSERT( ! d.isLocked() );
         {
             // create the first lock
-            LockedData ld(&d);
+            LockedData ld("test",&d);
             CPPUNIT_ASSERT(d.isLocked());
             {
                 // create the second lock by copying
@@ -102,7 +78,7 @@ void LockedDataTest::test_lock()
         CPPUNIT_ASSERT( ! d.isLocked() );
         {
             // create the first lock
-            LockedData ld(&d);
+            LockedData ld("test",&d);
             CPPUNIT_ASSERT(d.isLocked());
             {
                 // create the second lock by copying
@@ -123,7 +99,7 @@ void LockedDataTest::test_lock()
         CPPUNIT_ASSERT( ! d.isLocked() );
         {
             // create the first lock
-            LockedData* ld = new LockedData(&d);
+            LockedData* ld = new LockedData("test",&d);
             CPPUNIT_ASSERT(d.isLocked());
             LockedData* ld2 = new LockedData(*ld);
             CPPUNIT_ASSERT(d.isLocked());
@@ -144,7 +120,7 @@ void LockedDataTest::test_lock()
         CPPUNIT_ASSERT( ! d.isLocked() );
         {
             // create the first lock
-            LockedData* ld = new LockedData(&d);
+            LockedData* ld = new LockedData("test",&d);
             CPPUNIT_ASSERT(d.isLocked());
             LockedData* ld2 = new LockedData(*ld);
             CPPUNIT_ASSERT(d.isLocked());
@@ -162,7 +138,7 @@ void LockedDataTest::test_size()
         //Use Case:
         // contains no data object
         // expect size = 0
-        LockedData ld;
+        LockedData ld("test");
         CPPUNIT_ASSERT_EQUAL( (size_t)0, ld.size());
     }
     {
@@ -170,7 +146,7 @@ void LockedDataTest::test_size()
         // contains invalid data object
         // expect size = 0
         Data d((void*)0,100);
-        LockedData ld(&d);
+        LockedData ld("test",&d);
         CPPUNIT_ASSERT_EQUAL( (size_t)0, ld.size());
     }
     {
@@ -178,18 +154,9 @@ void LockedDataTest::test_size()
         // contains valid data object
         // expect size = size of data
         Data d((void*)1000,100);
-        LockedData ld(&d);
+        LockedData ld("test",&d);
         CPPUNIT_ASSERT_EQUAL( (size_t)100, ld.size());
     }
-    {
-        //Use Case:
-        // contains multiple valid data objects
-        // expect size = sum of data sizes
-        Data d((void*)1000,100);
-        Data d2((void*)2000,33);
-        LockedData ld(&d);
-        ld.addData(&d2);
-        CPPUNIT_ASSERT_EQUAL( (size_t)133, ld.size());
-    }
 }
+
 } // namespace pelican

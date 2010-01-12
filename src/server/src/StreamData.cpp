@@ -5,7 +5,6 @@
 
 namespace pelican {
 
-
 // class StreamData 
 StreamData::StreamData(void* data, size_t size)
     : Data(data,size)
@@ -16,18 +15,19 @@ StreamData::~StreamData()
 {
 }
 
-StreamData::DataList_t& StreamData::associateData()
+const StreamData::DataList_t& StreamData::associateData() const
 {
     return _serviceData;
 }
 
-void StreamData::addAssociatedData(Data* data)
+const QSet<QString>& StreamData::associateDataTypes() const
 {
-    _serviceData.append(LockedData(data));
+    return _serviceDataTypes;
 }
 
 void StreamData::addAssociatedData(const LockedData& data)
 {
+    _serviceDataTypes.insert(data.name());
     _serviceData.append(data);
 }
 
@@ -38,11 +38,24 @@ void StreamData::reset()
 
 bool StreamData::isValid() const
 {
+    return isValid( _serviceDataTypes );
+    /*
     bool rv = Data::isValid();
     foreach(LockedData data, _serviceData )
     {
         rv = rv && data.isValid();
-    } 
+    }
+    return rv;
+    */
+}
+
+bool StreamData::isValid(const QSet<QString>& associates) const
+{
+    bool rv = Data::isValid();
+    foreach(LockedData data, associates )
+    {
+        rv = rv && data.isValid();
+    }
     return rv;
 }
 

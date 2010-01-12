@@ -39,6 +39,12 @@ class DataManager
         //  return the next unlocked data block from Stream Data
         LockedData getNext(const QString& type);
 
+        /// getNext
+        //  return the next unlocked data block from Stream Data, 
+        //  If the associate data requested is unavailable then
+        //  LockedData will be invalid
+        LockedData getNext(const QString& type, const QSet<QString>& associateData );
+
         /// getServiceData
         //  return the requested Service Data
         LockedData getServiceData(const QString& type, const QString& version);

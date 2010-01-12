@@ -63,9 +63,9 @@ void Session::processRequest(const ServerRequest& req, QDataStream& out)
                 break;
             case ServerRequest::StreamData:
                 {
-                    LockedData d = processStreamDataRequest(static_cast<const StreamDataRequest&>(req) );
-                    if( d.isValid() )
-                        _proto->send( out, d );
+                    QList<LockedData> d = processStreamDataRequest(static_cast<const StreamDataRequest&>(req) );
+                    if( d.size() )
+                        _proto->send( out, d.first() );
                 }
                 break;
             case ServerRequest::ServiceData:
@@ -87,27 +87,29 @@ void Session::processRequest(const ServerRequest& req, QDataStream& out)
  * The data will be returned as a locked container to ensure access
  * by other threads will be blocked.
  */
-LockedData Session::processStreamDataRequest(const StreamDataRequest& req )
+QList<LockedData> Session::processStreamDataRequest(const StreamDataRequest& req )
 {
+    QList<LockedData> data;
     DataRequirementsIterator it=req.begin();
-    while( it != req.end() )
+    while( it != req.end() && data.size() == 0 )
     {
-        LockedData data;
         if( ! it->isCompatible( _data->dataSpec() ) )
             throw QString("data requested not supported by server");
         // attempt to get the required stream data
-        foreach (QString stream, it->streamData() )
+        foreach (const QString stream, it->streamData() )
         {
             //std::cout << "stream: " << stream.toStdString() << std::endl;
-            LockedData d = _data->getNext(stream);
-            data.addData(d); // need to add it here to ensure data is invalidated
-            if( ! d.isValid() )
-                break;
+            LockedData d = _data->getNext(stream, it->serviceData() );
+            if( ! d.isValid() ) {
+                data.clear();
+                break; // one invalid stream invalidates the request
+            }
+            data.append(d);
         }
-        if( data.isValid() ) return data;
         ++it;
     }
-    return LockedData(0);
+    return data;
 }
+
 
 } // namespace pelican

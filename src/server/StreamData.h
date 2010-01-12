@@ -1,7 +1,7 @@
 #ifndef STREAMDATA_H
 #define STREAMDATA_H
 
-#include <QList>
+#include <QSet>
 #include <QString>
 #include "Data.h"
 
@@ -34,20 +34,26 @@ class StreamData : public Data
         StreamData(void* = 0, size_t  = 0);
         ~StreamData();
         void reset();
+
+        /// test validity of all data
         bool isValid() const;
+
+        /// test validity of data only taking into account the named associates
+        bool isValid(const QSet<QString>&) const;
 
         /// associates a specific dataset with this StreamData chunk
         void addAssociatedData(const LockedData&);
-        void addAssociatedData(Data*);
 
         /// returns the datasets associated with this StreamData chunk
-        DataList_t& associateData();
+        const DataList_t& associateData() const;
+        const QSet<QString>& associateDataTypes() const;
 
     private:
         StreamData(const StreamData&);
 
     private:
         DataList_t _serviceData;
+        QSet<QString> _serviceDataTypes;
 };
 
 } // namespace pelican

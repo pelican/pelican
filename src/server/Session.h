@@ -2,6 +2,7 @@
 #define SESSION_H
 
 #include <QThread>
+#include <QList>
 class QTcpSocket;
 
 /**
@@ -35,7 +36,7 @@ class Session : public QThread
         ~Session();
         void run();
         void processRequest(const ServerRequest&, QDataStream& );
-        LockedData processStreamDataRequest(const StreamDataRequest& req );
+        QList<LockedData> processStreamDataRequest(const StreamDataRequest& req );
 
     private:
         int _socketDescriptor;
