@@ -5,6 +5,7 @@
 #include "StreamData.h"
 #include "data/ServerRequest.h"
 #include "data/StreamDataRequest.h"
+#include "data/ServiceDataRequest.h"
 #include <QTcpSocket>
 #include <QString>
 #include <QHash>
@@ -64,11 +65,26 @@ void Session::processRequest(const ServerRequest& req, QDataStream& out)
             case ServerRequest::StreamData:
                 {
                     QList<LockedData> d = processStreamDataRequest(static_cast<const StreamDataRequest&>(req) );
-                    if( d.size() )
-                        _proto->send( out, d.first() );
+                    if( d.size() ) {
+                        AbstractProtocol::StreamData_t data;
+                        foreach( LockedData ld, d) {
+                            data.insert(ld.name(), static_cast<StreamData*>(ld.data()));
+                        }
+                        _proto->send( out, data );
+                    }
                 }
                 break;
             case ServerRequest::ServiceData:
+                {
+                    QList<LockedData> d = processServiceDataRequest(static_cast<const ServiceDataRequest&>(req) );
+                    if( d.size() ) {
+                        AbstractProtocol::ServiceData_t data;
+                        foreach( LockedData ld, d) {
+                            data.insert(ld.name(), ld.data());
+                        }
+                        _proto->send( out, data );
+                    }
+                }
                 break;
             default:
                 _proto->sendError( out, req.message());
@@ -111,5 +127,25 @@ QList<LockedData> Session::processStreamDataRequest(const StreamDataRequest& req
     return data;
 }
 
+/*
+ * @details
+ * aquires all the datasets mentioned in the list (or none if any one is missing)
+ * The data will be returned as a locked containeris to ensure access
+ * by other threads will be blocked.
+ */
+QList<LockedData> Session::processServiceDataRequest(const ServiceDataRequest& req )
+{
+    QList<LockedData> data;
+    foreach( QString type, req.types() ) {
+        LockedData d = _data->getServiceData(type, req.version(type));
+        if( ! d.isValid() )
+        {
+            data.clear();
+            break;
+        }
+        data.append(d);
+    }
+    return data;
+}
 
 } // namespace pelican

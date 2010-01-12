@@ -28,7 +28,11 @@ void TestProtocol::send( QDataStream& stream, const QString& msg )
     stream << _id;
 }
 
-void TestProtocol::send( QDataStream& stream, LockedData& )
+void TestProtocol::send( QDataStream& stream, const AbstractProtocol::StreamData_t& )
+{
+}
+
+void TestProtocol::send( QDataStream& stream, const AbstractProtocol::ServiceData_t& )
 {
 }
 

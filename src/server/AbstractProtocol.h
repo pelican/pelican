@@ -1,6 +1,6 @@
 #ifndef ABSTRACTPROTOCOL_H
 #define ABSTRACTPROTOCOL_H
-#include <QList>
+#include <QMap>
 class QString;
 class QDataStream;
 class QTcpSocket;
@@ -12,7 +12,8 @@ class QTcpSocket;
 namespace pelican {
 
 class ServerRequest;
-class LockedData;
+class StreamData;
+class Data;
 
 /**
  * @class AbstractProtocol
@@ -31,10 +32,15 @@ class LockedData;
 class AbstractProtocol
 {
     public:
+        typedef QMap<QString,StreamData*> StreamData_t;
+        typedef QMap<QString,Data*> ServiceData_t;
+
+    public:
         AbstractProtocol();
         virtual ~AbstractProtocol();
         virtual ServerRequest request(QTcpSocket& socket) = 0;
-        virtual void send(QDataStream& stream, LockedData& ) = 0;
+        virtual void send(QDataStream& stream, const StreamData_t& ) = 0;
+        virtual void send(QDataStream& stream, const ServiceData_t& ) = 0;
         virtual void send( QDataStream& stream, const QString& message ) = 0;
         virtual void sendError(QDataStream& stream, const QString&) = 0;
 

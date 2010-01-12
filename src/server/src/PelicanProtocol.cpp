@@ -34,7 +34,11 @@ ServerRequest PelicanProtocol::request(QTcpSocket& socket)
     return r;
 }
 
-void PelicanProtocol::send(QDataStream& stream, LockedData& ) 
+void PelicanProtocol::send(QDataStream& stream, const AbstractProtocol::StreamData_t& ) 
+{
+}
+
+void PelicanProtocol::send(QDataStream& stream, const AbstractProtocol::ServiceData_t& ) 
 {
 }
 

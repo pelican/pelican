@@ -36,12 +36,17 @@ class Session : public QThread
         ~Session();
         void run();
         void processRequest(const ServerRequest&, QDataStream& );
+
+    protected:
         QList<LockedData> processStreamDataRequest(const StreamDataRequest& req );
+        QList<LockedData> processServiceDataRequest(const ServiceDataRequest& req );
 
     private:
         int _socketDescriptor;
         DataManager* _data;
         AbstractProtocol* _proto;
+
+    friend class SessionTest; // unit test
 };
 
 } // namespace pelican

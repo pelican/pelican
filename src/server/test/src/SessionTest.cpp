@@ -171,7 +171,7 @@ void SessionTest::test_streamData()
         _injectData(&servicebuffer);
         QList<LockedData> dataList = _session->processStreamDataRequest(request);
         foreach(LockedData data, dataList) {
-            CPPUNIT_ASSERT(  data.isValid() );
+            CPPUNIT_ASSERT( data.isValid() );
         }
     }
 }
