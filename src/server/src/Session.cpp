@@ -129,7 +129,7 @@ QList<LockedData> Session::processStreamDataRequest(const StreamDataRequest& req
 
 /*
  * @details
- * aquires all the datasets mentioned in the list (or none if any one is missing)
+ * returns all the datasets mentioned in the list (or throws if any one is missing)
  * The data will be returned as a locked containeris to ensure access
  * by other threads will be blocked.
  */
@@ -140,8 +140,7 @@ QList<LockedData> Session::processServiceDataRequest(const ServiceDataRequest& r
         LockedData d = _data->getServiceData(type, req.version(type));
         if( ! d.isValid() )
         {
-            data.clear();
-            break;
+            throw QString("Data Requested does not exist :" + type + " " + req.version(type));
         }
         data.append(d);
     }

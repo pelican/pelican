@@ -63,11 +63,9 @@ LockedData DataManager::getNext(const QString& type)
 
 LockedData DataManager::getServiceData(const QString& type, const QString& version)
 {
-    // we make the assumption that this method
-    // will not be called with an invalid type
-    // No checking in order to speed things up
     LockedData ld(type,0);
-    _service[type]->getData(ld, version);
+    if( _service.contains(type) ) 
+        _service[type]->getData(ld, version);
     return ld;
 }
 

@@ -84,6 +84,55 @@ void SessionTest::test_serviceData()
     }
 }
 
+void SessionTest::test_processServiceDataRequest()
+{
+    {
+        // Use Case:
+        // ServiceDataRequest is empty
+        // expect empty list
+        ServiceDataRequest request;
+        QList<LockedData> dataList = _session->processServiceDataRequest(request);
+        CPPUNIT_ASSERT( dataList.size() == 0  );
+    }
+    QString badversion("badv");
+    QString badtype("bad");
+    QString type1("type1");
+    ServiceDataBuffer servicebuffer1;
+    _data->serviceDataBuffer( type1, &servicebuffer1 );
+    QString version1 = _injectData(&servicebuffer1, "version1");
+    QString type2("type2");
+    ServiceDataBuffer servicebuffer2;
+    _data->serviceDataBuffer( type2, &servicebuffer2 );
+    QString version2 = _injectData(&servicebuffer2, "version2");
+    {
+        // Use Case:
+        // ServiceDataRequest for data that does not exist
+        // expect throw
+        ServiceDataRequest request;
+        request.request(type1, badversion);
+        CPPUNIT_ASSERT_THROW( _session->processServiceDataRequest(request), QString );
+    }
+    {
+        // Use Case:
+        // ServiceDataRequest for two objects , one not existing
+        // expect throw
+        ServiceDataRequest request;
+        request.request(type1, version1);
+        request.request(badtype, version1);
+        CPPUNIT_ASSERT_THROW( _session->processServiceDataRequest(request), QString );
+    }
+    {
+        // Use Case:
+        // ServiceDataRequest for two objects , both existing
+        // expect a list of objects
+        ServiceDataRequest request;
+        request.request(type1, version1);
+        request.request(type2, version2);
+        QList<LockedData> dataList = _session->processServiceDataRequest(request);
+        CPPUNIT_ASSERT_EQUAL( 2, dataList.size() );
+    }
+}
+
 void SessionTest::test_streamData()
 {
     {
@@ -176,10 +225,14 @@ void SessionTest::test_streamData()
     }
 }
 
-void SessionTest::_injectData(DataBuffer* buffer)
+QString SessionTest::_injectData(DataBuffer* buffer, const QString id)
 {
-    buffer->getWritable(10);
+    {
+        WritableData d = buffer->getWritable(10);
+        d.data()->setId(id);
+    }
     _app->processEvents();
+    return id;
 }
 
 } // namespace pelican

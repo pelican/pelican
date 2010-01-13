@@ -2,6 +2,7 @@
 #define SESSIONTEST_H
 
 #include <QByteArray>
+#include <QString>
 class QCoreApplication;
 //class QDataStream;
 #include <cppunit/extensions/HelperMacros.h>
@@ -30,6 +31,7 @@ class SessionTest : public CppUnit::TestFixture
 {
     public:
         CPPUNIT_TEST_SUITE( SessionTest );
+        CPPUNIT_TEST( test_processServiceDataRequest );
         CPPUNIT_TEST( test_processRequest );
         CPPUNIT_TEST( test_dataReport );
         CPPUNIT_TEST( test_serviceData );
@@ -43,6 +45,7 @@ class SessionTest : public CppUnit::TestFixture
         // Test Methods
         void test_processRequest();
         void test_streamData();
+        void test_processServiceDataRequest();
         void test_serviceData();
         void test_dataReport();
 
@@ -51,7 +54,7 @@ class SessionTest : public CppUnit::TestFixture
         ~SessionTest();
 
     protected:
-        void _injectData(DataBuffer* stream);
+        QString _injectData(DataBuffer* stream, const QString id = QString("") );
 
     private:
         QCoreApplication* _app;
