@@ -26,6 +26,11 @@ class ServiceDataRequest : public ServerRequest
         ServiceDataRequest();
         ~ServiceDataRequest();
 
+        /// request
+        //  add a request for the data object of the specified type
+        //  and version
+        void request(const QString& type, const QString& version);
+
         // return a list of data types in the request
         QList<QString> types() const;
 
