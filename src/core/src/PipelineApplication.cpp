@@ -1,12 +1,12 @@
 #include <QString>
-#include <QCoreApplication>
-#include "PipelineApplication.h"
-#include "CoreOptions.h"
+#include "core/PipelineApplication.h"
+#include "core/CoreOptions.h"
+#include "core/ModuleFactory.h"
+#include "core/DataClient.h"
 #include "boost/program_options.hpp"
 #include <string>
 #include <iostream>
 
-#include "ModuleFactory.h"
 #include "utility/Config.h"
 #include "utility/memCheck.h"
 
@@ -16,10 +16,15 @@ namespace po = boost::program_options;
 
 /**
  * @details
- * PipelineApplication constructor.
+ * PipelineApplication constructor. This invokes the QCoreApplication object
+ * needed for the Qt framework classes to function correctly.
  * Command line arguments are passed as function arguments.
+ *
+ * The PipelineApplication constructor also creates the configuration object,
+ * the module factory and the data client.
  */
 PipelineApplication::PipelineApplication(int argc, char** argv)
+: QCoreApplication(argc, argv)
 {
     _factory = 0;
     _config = 0;
@@ -27,17 +32,6 @@ PipelineApplication::PipelineApplication(int argc, char** argv)
     /* Check that argc and argv are nonzero */
     if (argc == 0 || argv == NULL)
         throw QString("No command line.");
-
-    /* We need a QCoreApplication object for the
-     * Qt framework classes to function correctly
-     * There can only be one instance of this, 
-     * and we leave it to the user of the class to
-     * instantiate it beforehand.
-     */
-    QCoreApplication* app = QCoreApplication::instance();
-    if( ! app ) {
-        throw QString("You must instantiate a QApplication or QCoreApplication object before PipelineApplication.");
-    }
 
     /* Parse the command line arguments */
     // Declare the supported options.
@@ -71,6 +65,9 @@ PipelineApplication::PipelineApplication(int argc, char** argv)
 
     /* Construct the module factory */
     _factory = new ModuleFactory(_config);
+
+    /* Construct the data client */
+    _dataClient = new DataClient();
 }
 
 /**

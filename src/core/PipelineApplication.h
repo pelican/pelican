@@ -1,9 +1,9 @@
 #ifndef PIPELINEAPPLICATION_H
 #define PIPELINEAPPLICATION_H
 
+#include <QCoreApplication>
 #include "PipelineDriver.h"
 
-class QCoreApplication;
 /**
  * @file PipelineApplication.h
  */
@@ -23,11 +23,12 @@ class QCoreApplication;
 
 namespace pelican {
 
+class Config;
 class ModuleFactory;
 class PipelineDriver;
-class Config;
+class DataClient;
 
-class PipelineApplication
+class PipelineApplication : public QCoreApplication
 {
     public:
         /// Constructor.
@@ -43,6 +44,7 @@ class PipelineApplication
         Config *_config;
         ModuleFactory *_factory;
         PipelineDriver _driver;
+        DataClient *_dataClient;
 };
 
 } // namespace pelican

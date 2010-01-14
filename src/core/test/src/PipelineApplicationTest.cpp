@@ -24,15 +24,11 @@ void PipelineApplicationTest::tearDown()
 {
 }
 
-void PipelineApplicationTest::test_noQApplication()
+void PipelineApplicationTest::test_createApplication()
 {
-    int argc = 1;
+    int argc = 2;
     char *argv[] = {(char*)"pelican", (char*)"test"};
     PipelineApplication* pApp = 0;
-
-    CPPUNIT_ASSERT_THROW( new PipelineApplication(argc, argv), QString );
-
-    QCoreApplication app( argc, argv  );
     CPPUNIT_ASSERT_NO_THROW( pApp = new PipelineApplication(argc, argv) );
     delete pApp;
 }

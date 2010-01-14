@@ -22,7 +22,7 @@ class PipelineApplicationTest : public CppUnit::TestFixture
 {
     public:
         CPPUNIT_TEST_SUITE( PipelineApplicationTest );
-        CPPUNIT_TEST( test_noQApplication);
+        CPPUNIT_TEST( test_createApplication);
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -30,7 +30,7 @@ class PipelineApplicationTest : public CppUnit::TestFixture
         void tearDown();
 
         // Test Methods
-        void test_noQApplication();
+        void test_createApplication();
 
     public:
         PipelineApplicationTest(  );

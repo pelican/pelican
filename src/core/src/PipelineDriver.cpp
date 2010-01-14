@@ -24,7 +24,7 @@ PipelineDriver::PipelineDriver()
 
 /**
  * @details
- * PipelineDriver destructor.
+ * PipelineDriver destructor. This deletes all the registered pipelines.
  */
 PipelineDriver::~PipelineDriver()
 {
