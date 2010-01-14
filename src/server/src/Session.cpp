@@ -5,6 +5,7 @@
 #include "StreamData.h"
 #include "data/ServerRequest.h"
 #include "data/StreamDataRequest.h"
+#include "data/ServiceDataRequest.h"
 #include <QTcpSocket>
 #include <QString>
 #include <QHash>
@@ -63,12 +64,27 @@ void Session::processRequest(const ServerRequest& req, QDataStream& out)
                 break;
             case ServerRequest::StreamData:
                 {
-                    LockedData d = processStreamDataRequest(static_cast<const StreamDataRequest&>(req) );
-                    if( d.isValid() )
-                        _proto->send( out, d );
+                    QList<LockedData> d = processStreamDataRequest(static_cast<const StreamDataRequest&>(req) );
+                    if( d.size() ) {
+                        AbstractProtocol::StreamData_t data;
+                        foreach( LockedData ld, d) {
+                            data.insert(ld.name(), static_cast<StreamData*>(ld.data()));
+                        }
+                        _proto->send( out, data );
+                    }
                 }
                 break;
             case ServerRequest::ServiceData:
+                {
+                    QList<LockedData> d = processServiceDataRequest(static_cast<const ServiceDataRequest&>(req) );
+                    if( d.size() ) {
+                        AbstractProtocol::ServiceData_t data;
+                        foreach( LockedData ld, d) {
+                            data.insert(ld.name(), ld.data());
+                        }
+                        _proto->send( out, data );
+                    }
+                }
                 break;
             default:
                 _proto->sendError( out, req.message());
@@ -87,27 +103,48 @@ void Session::processRequest(const ServerRequest& req, QDataStream& out)
  * The data will be returned as a locked container to ensure access
  * by other threads will be blocked.
  */
-LockedData Session::processStreamDataRequest(const StreamDataRequest& req )
+QList<LockedData> Session::processStreamDataRequest(const StreamDataRequest& req )
 {
+    QList<LockedData> data;
     DataRequirementsIterator it=req.begin();
-    while( it != req.end() )
+    while( it != req.end() && data.size() == 0 )
     {
-        LockedData data;
         if( ! it->isCompatible( _data->dataSpec() ) )
             throw QString("data requested not supported by server");
         // attempt to get the required stream data
-        foreach (QString stream, it->streamData() )
+        foreach (const QString stream, it->streamData() )
         {
             //std::cout << "stream: " << stream.toStdString() << std::endl;
-            LockedData d = _data->getNext(stream);
-            data.addData(d); // need to add it here to ensure data is invalidated
-            if( ! d.isValid() )
-                break;
+            LockedData d = _data->getNext(stream, it->serviceData() );
+            if( ! d.isValid() ) {
+                data.clear();
+                break; // one invalid stream invalidates the request
+            }
+            data.append(d);
         }
-        if( data.isValid() ) return data;
         ++it;
     }
-    return LockedData(0);
+    return data;
+}
+
+/*
+ * @details
+ * returns all the datasets mentioned in the list (or throws if any one is missing)
+ * The data will be returned as a locked containeris to ensure access
+ * by other threads will be blocked.
+ */
+QList<LockedData> Session::processServiceDataRequest(const ServiceDataRequest& req )
+{
+    QList<LockedData> data;
+    foreach( QString type, req.types() ) {
+        LockedData d = _data->getServiceData(type, req.version(type));
+        if( ! d.isValid() )
+        {
+            throw QString("Data Requested does not exist :" + type + " " + req.version(type));
+        }
+        data.append(d);
+    }
+    return data;
 }
 
 } // namespace pelican

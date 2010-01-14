@@ -37,13 +37,13 @@ class ServiceDataBuffer : public DataBuffer
         ~ServiceDataBuffer();
         /// return a specific version of the data
         //  if this data is unavailable then return an invalid
-        LockedData getData(const QString& version);
+        void getData(LockedData& locker, const QString& version);
 
         /// remove the specified version from the buffer
         void retireData(const QString& version);
 
         /// return the current version
-        LockedData getCurrent();
+        void getCurrent(LockedData& locker);
 
         /// getWritable returns an object for filling
         //  this object is locked and on unlocking
@@ -51,6 +51,9 @@ class ServiceDataBuffer : public DataBuffer
         WritableData getWritable(size_t size);
 
     public slots:
+        void activateData();
+
+    protected:
         void activateData(Data*);
 
     private:

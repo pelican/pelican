@@ -9,6 +9,7 @@ set( server_moc_headers
      PelicanPortServer.h
      PelicanServer.h
      Session.h
+     StreamData.h
    )
 set( server_src
      src/AbstractProtocol.cpp

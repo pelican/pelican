@@ -2,6 +2,7 @@
 #define SESSION_H
 
 #include <QThread>
+#include <QList>
 class QTcpSocket;
 
 /**
@@ -35,12 +36,17 @@ class Session : public QThread
         ~Session();
         void run();
         void processRequest(const ServerRequest&, QDataStream& );
-        LockedData processStreamDataRequest(const StreamDataRequest& req );
+
+    protected:
+        QList<LockedData> processStreamDataRequest(const StreamDataRequest& req );
+        QList<LockedData> processServiceDataRequest(const ServiceDataRequest& req );
 
     private:
         int _socketDescriptor;
         DataManager* _data;
         AbstractProtocol* _proto;
+
+    friend class SessionTest; // unit test
 };
 
 } // namespace pelican

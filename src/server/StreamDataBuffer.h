@@ -36,7 +36,7 @@ class StreamDataBuffer : public DataBuffer
         ~StreamDataBuffer();
 
         /// get the next data object that is ready to be served
-        LockedData getNext();
+        void getNext(LockedData&);
 
         /// get a data object that is ready to be written to
         WritableData getWritable(size_t size);
@@ -45,7 +45,7 @@ class StreamDataBuffer : public DataBuffer
         void setDataManager(DataManager* manager);
 
     protected slots:
-        void activateData(Data*);
+        void activateData();
 
     protected:
         void activateData(StreamData*);

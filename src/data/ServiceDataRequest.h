@@ -1,7 +1,7 @@
 #ifndef SERVICEDATAREQUEST_H
 #define SERVICEDATAREQUEST_H
 
-
+#include <QHash>
 #include "ServerRequest.h"
 
 /**
@@ -21,11 +21,25 @@ namespace pelican {
 
 class ServiceDataRequest : public ServerRequest
 {
+
     public:
-        ServiceDataRequest(  );
+        ServiceDataRequest();
         ~ServiceDataRequest();
 
+        /// request
+        //  add a request for the data object of the specified type
+        //  and version
+        void request(const QString& type, const QString& version);
+
+        // return a list of data types in the request
+        QList<QString> types() const;
+
+        // return the version of a specific type
+        // n.b only one version per type allowed per request
+        QString version(const QString& version) const;
+
     private:
+        QHash<QString,QString> _dataRequested;
 };
 
 } // namespace pelican

@@ -80,7 +80,8 @@ void StreamDataBufferTest::test_getNext()
         // getNext called on an empty buffer
         // expect to return an invalid LockedData object
         StreamDataBuffer b(_dataManager);
-        LockedData data = b.getNext();
+        LockedData data("test");
+        b.getNext(data);
         CPPUNIT_ASSERT( ! data.isValid() );
     }
     {
@@ -90,12 +91,14 @@ void StreamDataBufferTest::test_getNext()
         StreamDataBuffer b(_dataManager);
         b.getWritable(100);
         _app->processEvents();
-        LockedData data = b.getNext();
+        LockedData data("test");
+        b.getNext(data);
         CPPUNIT_ASSERT( data.isValid() );
         // Use Case:
         // Make a second call to getNext() whilst data exists but locked
         // Expect to return an invalid object
-        LockedData data2 = b.getNext();
+        LockedData data2("test2");
+        b.getNext(data2);
         CPPUNIT_ASSERT( ! data2.isValid() );
     }
 }

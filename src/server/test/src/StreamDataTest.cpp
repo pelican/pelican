@@ -30,6 +30,13 @@ void StreamDataTest::test_isValid()
 {
     {
         // Use Case:
+        // Stream Data invalid, no associated data
+        // expect invalid
+        StreamData sd((void*)0,10);
+        CPPUNIT_ASSERT( ! sd.isValid() );
+    }
+    {
+        // Use Case:
         // Stream Data valid, no associated data
         // expect valid
         StreamData sd((void*)1000,10);
@@ -39,11 +46,15 @@ void StreamDataTest::test_isValid()
         // Use Case:
         // Stream Data is valid, but associate Data is not
         // expect invalid
-        StreamData sd((void*)1000,10);
         Data d; 
-        CPPUNIT_ASSERT( ! d.isValid() );
-        sd.addAssociatedData( LockedData(&d) );
-        CPPUNIT_ASSERT( ! sd.isValid() );
+        {
+            StreamData sd((void*)1000,10);
+            CPPUNIT_ASSERT( ! d.isValid() );
+            CPPUNIT_ASSERT( sd.isValid() );
+            LockedData ld("test", &d);
+            sd.addAssociatedData( ld );
+            CPPUNIT_ASSERT( ! sd.isValid() );
+        }
     }
 }
 
