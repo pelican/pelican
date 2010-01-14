@@ -8,6 +8,10 @@
  * @file DataRequirements.h
  */
 
+namespace pelican {
+
+class DataBlob;
+
 /**
  * @class DataRequirements
  *  
@@ -18,11 +22,6 @@
  * @details
  * Streaming data and service data specifications.
  */
-
-namespace pelican {
-
-class DataBlob;
-
 class DataRequirements
 {
     public:
@@ -32,26 +31,17 @@ class DataRequirements
         /// Destroys the data requirements object.
         ~DataRequirements();
 
-        /// adds the required stream data as a requirement.
-        void setStreamData(const QString& string);
+        /// Adds the required service data set.
+        void addServiceData(const QSet<QString>& list);
 
-        /// adds the required service data as a requirement.
-        void setServiceData(const QString& string);
+        /// Adds the required stream data set.
+        void addStreamData(const QSet<QString>& list);
 
-        /// Sets the required stream data string list.
-        void setStreamData(const QSet<QString>& list);
+        /// Clears the data requirements object.
+        void clear();
 
-        /// Sets the required service data string list.
-        void setServiceData(const QSet<QString>& list);
-
-        /// Returns the stream data.
-        const QSet<QString> streamData() const {return _streamData;}
-
-        /// Returns the service data.
-        const QSet<QString> serviceData() const {return _serviceData;}
-
-        /// Test for equality with another object.
-        bool operator==(const DataRequirements&) const;
+        /// Compute a hash value for use with QHash.
+        uint hash() const;
 
         /// Test for compatibility with another DataRequirements.
         bool isCompatible(const DataRequirements& d) const;
@@ -59,11 +49,35 @@ class DataRequirements
         /// Test for compatibility with a data blob hash.
         bool isCompatible(const QHash<QString, DataBlob*>& d) const;
 
+        /// Adds the given service data as a requirement.
+        void setServiceData(const QString& string);
+
+        /// Adds the given stream data as a requirement.
+        void setStreamData(const QString& string);
+
+        /// Sets the required service data set.
+        void setServiceData(const QSet<QString>& list);
+
+        /// Sets the required stream data set.
+        void setStreamData(const QSet<QString>& list);
+
+        /// Returns the set of service data required.
+        const QSet<QString> serviceData() const {return _serviceData;}
+
+        /// Returns the set of stream data required.
+        const QSet<QString> streamData() const {return _streamData;}
+
+        /// Test for equality with another object.
+        bool operator==(const DataRequirements&) const;
+
+        /// Test for inequality with another object.
+        bool operator!=(const DataRequirements&) const;
+
         /// Merge another requirements object with this one.
         DataRequirements& operator+=(const DataRequirements&);
 
-        /// Compute a hash value for use with QHash.
-        uint hash() const;
+        /// Merge two requirements objects and return the new result.
+        const DataRequirements operator+(const DataRequirements&) const;
 
     private:
         mutable uint _hash;
@@ -78,4 +92,5 @@ bool operator==(const DataRequirements&, const QHash<QString, DataBlob*>&);
 uint qHash(const DataRequirements& key);
 
 } // namespace pelican
+
 #endif // DATAREQUIREMENTS_H 

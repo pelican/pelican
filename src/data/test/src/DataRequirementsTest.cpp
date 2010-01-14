@@ -61,63 +61,6 @@ void DataRequirementsTest::test_hash()
     }
 }
 
-void DataRequirementsTest::test_operators()
-{
-    // Use Case:
-    // Test for identical objects.
-    {
-        DataRequirements d1;
-        d1.setStreamData(QString("hello"));
-        DataRequirements d2;
-        d2.setStreamData(QString("hello"));
-        CPPUNIT_ASSERT(d1 == d2);
-    }
-
-    // Use Case:
-    // Test for merging two requirements objects.
-    {
-        DataRequirements d1, d2, d3;
-        QStringList req;
-        req << "one" << "two";
-
-        d1.setStreamData(req.at(0));
-        d2.setStreamData(req.at(1));
-        d3.setStreamData(req.toSet());
-        d1 += d2;
-        CPPUNIT_ASSERT(d1 == d3);
-    }
-
-    // Use Case:
-    // Test for merging two requirements objects in a different order.
-    {
-        DataRequirements d1, d2, d3;
-        QStringList req;
-        req << "one" << "two";
-
-        d1.setStreamData(req.at(0));
-        d2.setStreamData(req.at(1));
-        d3.setStreamData(req.toSet());
-        d2 += d1;
-        CPPUNIT_ASSERT(d2 == d3);
-    }
-
-    // Use Case:
-    // Test for merging two requirements objects, removing duplicates.
-    {
-        DataRequirements d, d1, d2;
-        QSet<QString> req, req1, req2;
-        req  << "one" << "two" << "three";
-        req1 << "one" << "two";
-        req2 << "two" << "three";
-
-        d.setStreamData(req);
-        d1.setStreamData(req1);
-        d2.setStreamData(req2);
-        d2 += d1;
-        CPPUNIT_ASSERT(d == d2);
-    }
-}
-
 void DataRequirementsTest::test_isCompatible()
 {
     // Use Case:
@@ -172,6 +115,107 @@ void DataRequirementsTest::test_isCompatible()
         CPPUNIT_ASSERT_EQUAL(false, req.isCompatible(reqdata));
     }
 
+}
+
+void DataRequirementsTest::test_operator_equalTo()
+{
+    // Use Case:
+    // Test for identical objects.
+    {
+        DataRequirements d1;
+        d1.setStreamData(QString("hello"));
+        DataRequirements d2;
+        d2.setStreamData(QString("hello"));
+        CPPUNIT_ASSERT(d1 == d2);
+    }
+}
+
+void DataRequirementsTest::test_operator_notEqualTo()
+{
+    // Use Case:
+    // Test for non identical objects.
+    {
+        DataRequirements d1;
+        d1.setStreamData(QString("hello1"));
+        DataRequirements d2;
+        d2.setStreamData(QString("hello2"));
+        CPPUNIT_ASSERT(d1 != d2);
+    }
+}
+
+void DataRequirementsTest::test_operator_additiveAssignment()
+{
+    // Use Case:
+    // Test for merging two requirements objects.
+    {
+        DataRequirements d1, d2, d3;
+        QStringList req;
+        req << "one" << "two";
+
+        d1.setStreamData(req.at(0));
+        d2.setStreamData(req.at(1));
+        d3.setStreamData(req.toSet());
+        d1 += d2;
+        CPPUNIT_ASSERT(d1 == d3);
+    }
+
+    // Use Case:
+    // Test for merging two requirements objects in a different order.
+    {
+        DataRequirements d1, d2, d3;
+        QStringList req;
+        req << "one" << "two";
+
+        d1.setStreamData(req.at(0));
+        d2.setStreamData(req.at(1));
+        d3.setStreamData(req.toSet());
+        d2 += d1;
+        CPPUNIT_ASSERT(d2 == d3);
+    }
+
+    // Use Case:
+    // Test for merging two requirements objects, removing duplicates.
+    {
+        DataRequirements d, d1, d2;
+        QSet<QString> req, req1, req2;
+        req  << "one" << "two" << "three";
+        req1 << "one" << "two";
+        req2 << "two" << "three";
+
+        d.setStreamData(req);
+        d1.setStreamData(req1);
+        d2.setStreamData(req2);
+        d2 += d1;
+        CPPUNIT_ASSERT(d == d2);
+    }
+}
+
+void DataRequirementsTest::test_operator_addition()
+{
+    // Use Case:
+    // Test for adding two objects together.
+    {
+        QSet<QString> l1, l2, l3, l4;
+        l1 << "one" << "two";
+        l2 << "three" << "four";
+        l3 << "five" << "six";
+        l4 << "seven" << "eight";
+
+        DataRequirements d1, d2, d3, d4;
+        d1.setStreamData(l1);
+        d1.setServiceData(l2);
+        d2.setStreamData(l3);
+        d2.setServiceData(l4);
+
+        // Add the two objects together.
+        d3 = d1 + d2;
+
+        d4.setStreamData(l1);
+        d4.addStreamData(l3);
+        d4.setServiceData(l2);
+        d4.addServiceData(l4);
+        CPPUNIT_ASSERT(d3 == d4);
+    }
 }
 
 } // namespace pelican

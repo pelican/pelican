@@ -25,42 +25,33 @@ DataRequirements::~DataRequirements()
 
 /**
  * @details
- * Sets the required stream data string list.
+ * Adds the given set to the service data requirements.
  */
-void DataRequirements::setStreamData(const QString& string)
+void DataRequirements::addServiceData(const QSet<QString>& list)
 {
-    _hash = 0; // mark to regenerate hash
-    _streamData.insert(string);
+    _hash = 0; // Mark for rehashing.
+    _serviceData.unite(list);
 }
 
 /**
  * @details
- * Sets the required service data string list.
+ * Adds the given set to the service data requirements.
  */
-void DataRequirements::setServiceData(const QString& string)
+void DataRequirements::addStreamData(const QSet<QString>& list)
 {
-    _hash = 0; // mark to regenerate hash
-    _serviceData.insert(string);
+    _hash = 0; // Mark for rehashing.
+    _streamData.unite(list);
 }
 
 /**
  * @details
- * Sets the required stream data string list.
+ * Clears all the current requirements.
  */
-void DataRequirements::setStreamData(const QSet<QString>& list)
+void DataRequirements::clear()
 {
-    _hash = 0; // Invalidate the current hash.
-    _streamData = list;
-}
-
-/**
- * @details
- * Sets the required service data string list.
- */
-void DataRequirements::setServiceData(const QSet<QString>& list)
-{
-    _hash = 0; // Invalidate the current hash.
-    _serviceData = list;
+    _hash = 0; // Mark for rehashing.
+    _streamData.clear();
+    _serviceData.clear();
 }
 
 /**
@@ -82,28 +73,6 @@ uint DataRequirements::hash() const
 
 /**
  * @details
- * Merges the given data requirements with those already known to this
- * class, removing any duplicates.
- */
-DataRequirements& DataRequirements::operator+=(const DataRequirements& d)
-{
-    _streamData.unite(d.streamData());
-    _serviceData.unite(d.serviceData());
-    _hash = 0; // mark for rehashing
-    return *this;
-}
-
-/**
- * @details
- * Tests if this requirements object is the same as the other one.
- */
-bool DataRequirements::operator==(const DataRequirements& d) const
-{
-    return hash() == d.hash();
-}
-
-/**
- * @details
  * Tests if this requirements object is the same as or is a subset of another.
  */
 bool DataRequirements::isCompatible(const DataRequirements& d) const
@@ -119,7 +88,7 @@ bool DataRequirements::isCompatible(const DataRequirements& d) const
 /**
  * @details
  * Tests if data specified in this requirements object is
- * contained within the passed hash
+ * contained within the passed hash.
  */
 bool DataRequirements::isCompatible(const QHash<QString, DataBlob*>& d) const
 {
@@ -129,9 +98,92 @@ bool DataRequirements::isCompatible(const QHash<QString, DataBlob*>& d) const
     return (temp.size() == 0);
 }
 
+/**
+ * @details
+ * Adds the given parameter to the required service data.
+ * TODO rename this method to addServiceData?
+ */
+void DataRequirements::setServiceData(const QString& string)
+{
+    _hash = 0; // Mark for rehashing.
+    _serviceData.insert(string);
+}
 
 /**
  * @details
+ * Adds the given parameter to the required stream data.
+ * TODO rename this method to addStreamData?
+ */
+void DataRequirements::setStreamData(const QString& string)
+{
+    _hash = 0; // Mark for rehashing.
+    _streamData.insert(string);
+}
+
+/**
+ * @details
+ * Sets the required service data string list.
+ */
+void DataRequirements::setServiceData(const QSet<QString>& list)
+{
+    _hash = 0; // Mark for rehashing.
+    _serviceData = list;
+}
+
+/**
+ * @details
+ * Sets the required stream data string list.
+ */
+void DataRequirements::setStreamData(const QSet<QString>& list)
+{
+    _hash = 0; // Mark for rehashing.
+    _streamData = list;
+}
+
+/**
+ * @details
+ * Tests if this requirements object is the same as the other one.
+ */
+bool DataRequirements::operator==(const DataRequirements& d) const
+{
+    return hash() == d.hash();
+}
+
+/**
+ * @details
+ * Tests if this requirements object is not the same as the other one.
+ */
+bool DataRequirements::operator!=(const DataRequirements& d) const
+{
+    return !(*this == d);
+}
+
+/**
+ * @details
+ * Merges the given data requirements with those already known to this
+ * class, removing any duplicates.
+ */
+DataRequirements& DataRequirements::operator+=(const DataRequirements& d)
+{
+    _streamData.unite(d.streamData());
+    _serviceData.unite(d.serviceData());
+    _hash = 0; // Mark for rehashing.
+    return *this;
+}
+
+/**
+ * @details
+ * Merges the two sets of requirements together and returns a new instance
+ * with the result.
+ */
+const DataRequirements DataRequirements::operator+(const DataRequirements& d) const
+{
+    return DataRequirements(*this) += d;
+}
+
+/**
+ * @details
+ * Test if the DataRequirements object is compatible with a hash of data blobs.
  */
 bool operator==(const DataRequirements& r, const QHash<QString, DataBlob*>& hash)
 {
