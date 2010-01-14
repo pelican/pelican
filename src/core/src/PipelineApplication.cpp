@@ -78,6 +78,7 @@ PipelineApplication::~PipelineApplication()
 {
     delete _config;
     delete _factory;
+    delete _dataClient;
 }
 
 /**
