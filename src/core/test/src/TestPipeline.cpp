@@ -6,7 +6,7 @@
 namespace pelican {
 
 
-// class TestPipeline 
+// class TestPipeline
 TestPipeline::TestPipeline()
     : AbstractPipeline()
 {
@@ -26,13 +26,14 @@ TestPipeline::~TestPipeline()
 
 void TestPipeline::init()
 {
+    createModule("Test");
 }
 
 void TestPipeline::run(QHash<QString, DataBlob*>& dataHash)
 {
 //    std::cout << "Running test pipeline\n";
 
-    if (_data == dataHash) {
+    if (dataRequired() == dataHash) {
         ++_matchedCounter;
     }
 

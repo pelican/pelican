@@ -47,6 +47,7 @@ class PipelineDriverTest : public CppUnit::TestFixture
         ~PipelineDriverTest();
 
     private:
+        PipelineApplication *pipelineApp;
         PipelineDriver *pipelineDriver;
 };
 
