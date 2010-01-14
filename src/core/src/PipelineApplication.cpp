@@ -12,11 +12,16 @@
 
 namespace pelican {
 
+// Static variable initialisation.
+Config* PipelineApplication::_config = NULL;
+DataClient* PipelineApplication::_dataClient = NULL;
+ModuleFactory* PipelineApplication::_factory = NULL;
+
 namespace po = boost::program_options;
 
 /**
  * @details
- * PipelineApplication constructor. This invokes the QCoreApplication object
+ * PipelineApplication constructor. This inherits QCoreApplication, which is
  * needed for the Qt framework classes to function correctly.
  * Command line arguments are passed as function arguments.
  *
@@ -26,9 +31,6 @@ namespace po = boost::program_options;
 PipelineApplication::PipelineApplication(int argc, char** argv)
 : QCoreApplication(argc, argv)
 {
-    _factory = 0;
-    _config = 0;
-
     /* Check that argc and argv are nonzero */
     if (argc == 0 || argv == NULL)
         throw QString("No command line.");
@@ -79,6 +81,9 @@ PipelineApplication::~PipelineApplication()
     delete _config;
     delete _factory;
     delete _dataClient;
+    _config = NULL;
+    _factory = NULL;
+    _dataClient = NULL;
 }
 
 /**

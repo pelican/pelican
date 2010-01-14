@@ -30,6 +30,18 @@ class DataClient;
 
 class PipelineApplication : public QCoreApplication
 {
+    private:
+        /// Pointer to the application's configuration object.
+        static Config *_config;
+
+        /// Pointer to the application's data client.
+        static DataClient *_dataClient;
+
+        /// Pointer to the application's module factory.
+        static ModuleFactory *_factory;
+
+        PipelineDriver _driver; // to be removed from here (create in main()).
+
     public:
         /// Constructor.
         PipelineApplication(int argc, char** argv);
@@ -37,14 +49,17 @@ class PipelineApplication : public QCoreApplication
         /// Destructor.
         ~PipelineApplication();
 
+        /// Return a pointer to the configuration object.
+        static Config* config() {return _config;}
+
+        /// Return a pointer to the data client.
+        static DataClient* dataClient() {return _dataClient;}
+
+        /// Return a pointer to the module factory.
+        static ModuleFactory* moduleFactory() {return _factory;}
+
         /// Gets the configuration file name.
         QString getConfigFile() const;
-
-    private:
-        Config *_config;
-        ModuleFactory *_factory;
-        PipelineDriver _driver;
-        DataClient *_dataClient;
 };
 
 } // namespace pelican
