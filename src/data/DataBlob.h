@@ -1,22 +1,23 @@
 #ifndef DATABLOB_H
 #define DATABLOB_H
 
-
 /**
  * @file DataBlob.h
  */
+
+namespace pelican {
 
 /**
  * @class DataBlob
  *  
  * @brief
+ * Base class for all Pelican data blobs.
  * 
  * @details
- * 
+ * This is the base class used for all Pelican data blobs required by
+ * pipeline modules. It provides a timestamp based using the Modified
+ * Julian Date at the time of creation.
  */
-
-namespace pelican {
-
 class DataBlob
 {
     public:
@@ -40,4 +41,5 @@ class DataBlob
 };
 
 } // namespace pelican
+
 #endif // DATABLOB_H 
