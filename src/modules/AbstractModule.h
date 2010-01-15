@@ -15,12 +15,15 @@ namespace pelican {
  * @class AbstractModule
  *  
  * @brief
- * Base class for all pipeline modules.
+ * Abstract base class for all pipeline modules.
  *
  * @details
  * This class is the base class for all Pelican pipeline modules, which
  * provide functionality to Pelican pipelines. Each module must report
  * its set of data requirements.
+ *
+ * Inherit this class and implement the run() method to create a new
+ * Pelican module.
  */
 class AbstractModule
 {
@@ -45,8 +48,8 @@ class AbstractModule
         /// Constructs a new module.
         AbstractModule(const QDomElement& config);
 
-        /// Destroys the module.
-        ~AbstractModule();
+        /// Destroys the module (virtual).
+        virtual ~AbstractModule();
 
         /// Returns the data required by this module.
         const DataRequirements& requiredData() const {return _req;}
