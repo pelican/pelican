@@ -8,6 +8,13 @@
  * @file PipelineApplication.h
  */
 
+namespace pelican {
+
+class Config;
+class ModuleFactory;
+class PipelineDriver;
+class DataClient;
+
 /**
  * @class PipelineApplication
  *  
@@ -20,14 +27,6 @@
  * as needed.
  * This class also creates and manages the module factory.
  */
-
-namespace pelican {
-
-class Config;
-class ModuleFactory;
-class PipelineDriver;
-class DataClient;
-
 class PipelineApplication : public QCoreApplication
 {
     private:
@@ -60,6 +59,16 @@ class PipelineApplication : public QCoreApplication
 
         /// Gets the configuration file name.
         QString getConfigFile() const;
+
+    private:
+        /// Creates a configuration object based on the command line arguments.
+        void createConfig(int argc, char** argv);
+
+        /// Creates a data client based on the configuration.
+        void createDataClient(const Config* config);
+
+        /// Creates the module factory based on the configuration.
+        void createModuleFactory(const Config* config);
 };
 
 } // namespace pelican

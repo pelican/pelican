@@ -11,7 +11,7 @@ namespace pelican {
  * @details
  * ModuleFactory constructor.
  */
-ModuleFactory::ModuleFactory(Config *config)
+ModuleFactory::ModuleFactory(const Config *config)
 {
     _config = config;
     _configRoot.append(Config::NodeId_t("modules", ""));

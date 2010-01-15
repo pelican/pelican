@@ -32,7 +32,7 @@ class ModuleFactory
 {
     public:
         /// Module factory constructor.
-        ModuleFactory(Config *config);
+        ModuleFactory(const Config *config);
 
         /// Module factory destructor.
         ~ModuleFactory();
@@ -49,7 +49,7 @@ class ModuleFactory
         AbstractModule* _createModule(const QString& name, const QDomElement& config);
 
     private:
-        Config* _config; ///< Pointer to the configuration object.
+        const Config* _config; ///< Pointer to the configuration object.
         Config::TreeAddress_t _configRoot;
         QVector<AbstractModule*> _modules; ///< Holds pointers to the created modules.
 };

@@ -12,11 +12,6 @@
 
 namespace pelican {
 
-// Static variable initialisation.
-Config* PipelineApplication::_config = NULL;
-DataClient* PipelineApplication::_dataClient = NULL;
-ModuleFactory* PipelineApplication::_factory = NULL;
-
 namespace po = boost::program_options;
 
 /**
@@ -30,6 +25,46 @@ namespace po = boost::program_options;
  */
 PipelineApplication::PipelineApplication(int argc, char** argv)
 : QCoreApplication(argc, argv)
+{
+    /* Set configuration using command line arguments */
+    createConfig(argc, argv);
+
+    /* Construct the module factory */
+    createModuleFactory(_config);
+
+    /* Construct the data client */
+    createDataClient(_config);
+}
+
+/**
+ * @details
+ * Destroys the pipeline application.
+ */
+PipelineApplication::~PipelineApplication()
+{
+    delete _config;
+    delete _factory;
+    delete _dataClient;
+    _config = NULL;
+    _factory = NULL;
+    _dataClient = NULL;
+}
+
+/**
+ * @details
+ * Return the configuration file name.
+ */
+QString PipelineApplication::getConfigFile() const
+{
+    return _config->getFileName();
+}
+
+/**
+ * @details
+ * This method is called by the constructor and parses the command line arguments
+ * to create the configuration object.
+ */
+void PipelineApplication::createConfig(int argc, char** argv)
 {
     /* Check that argc and argv are nonzero */
     if (argc == 0 || argv == NULL)
@@ -65,34 +100,35 @@ PipelineApplication::PipelineApplication(int argc, char** argv)
     /* Construct the configuration object */
     _config = new Config(QString::fromStdString(config));
 
-    /* Construct the module factory */
-    _factory = new ModuleFactory(_config);
-
-    /* Construct the data client */
-    _dataClient = new DataClient();
+    return;
 }
 
 /**
  * @details
- * Destroys the pipeline application.
+ * Creates the data client based on the supplied configuration object.
  */
-PipelineApplication::~PipelineApplication()
+void PipelineApplication::createDataClient(const Config* config)
 {
-    delete _config;
-    delete _factory;
-    delete _dataClient;
-    _config = NULL;
-    _factory = NULL;
-    _dataClient = NULL;
+    // TODO create data client.
 }
 
 /**
  * @details
- * Return the configuration file name.
+ * Creates the module factory based on the supplied configuration object.
  */
-QString PipelineApplication::getConfigFile() const
+void PipelineApplication::createModuleFactory(const Config* config)
 {
-    return _config->getFileName();
+    _factory = new ModuleFactory(config);
 }
+
+
+// Initialise pointer to configuation object.
+Config* PipelineApplication::_config = NULL;
+
+// Initialise pointer to data client.
+DataClient* PipelineApplication::_dataClient = NULL;
+
+// Initialise pointer to module factory.
+ModuleFactory* PipelineApplication::_factory = NULL;
 
 } // namespace pelican
