@@ -2,7 +2,7 @@
 #include "core/PipelineApplication.h"
 #include "core/CoreOptions.h"
 #include "core/ModuleFactory.h"
-#include "core/DataClient.h"
+#include "core/AbstractDataClient.h"
 #include "boost/program_options.hpp"
 #include <string>
 #include <iostream>

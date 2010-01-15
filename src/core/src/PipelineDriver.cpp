@@ -4,7 +4,7 @@
 #include "utility/memCheck.h"
 #include "PipelineDriver.h"
 #include "AbstractPipeline.h"
-#include "DataClient.h"
+#include "AbstractDataClient.h"
 #include "ModuleFactory.h"
 #include "data/DataBlob.h"
 

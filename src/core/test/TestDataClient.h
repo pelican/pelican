@@ -1,7 +1,7 @@
 #ifndef TESTDATACLIENT_H
 #define TESTDATACLIENT_H
 
-#include "core/DataClient.h"
+#include "core/AbstractDataClient.h"
 #include <QSet>
 
 /**

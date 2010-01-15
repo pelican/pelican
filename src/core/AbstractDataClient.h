@@ -5,7 +5,7 @@
 #include <QString>
 
 /**
- * @file DataClient.h
+ * @file AbstractDataClient.h
  */
 
 namespace pelican {
