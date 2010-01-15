@@ -8,6 +8,12 @@
  * @file PipelineDriver.h
  */
 
+namespace pelican {
+
+class AbstractPipeline;
+class ModuleFactory;
+class DataClient;
+
 /**
  * @class PipelineDriver
  *
@@ -15,18 +21,9 @@
  *
  * @details
  * This class controls the data flow through the pipelines.
- * It is also responsible for the initialisation of the pipeline module
- * factories.
- * This class takes ownership of the pipelines and is responsible for
- * deleting them.
+ * The pipeline driver also takes ownership of the pipelines and is
+ * responsible for deleting them.
  */
-
-namespace pelican {
-
-class AbstractPipeline;
-class ModuleFactory;
-class DataClient;
-
 class PipelineDriver
 {
     public:
@@ -39,9 +36,6 @@ class PipelineDriver
         /// Registers the pipeline with the driver.
         /// Registered pipelines will be deleted when the class is destroyed.
         void registerPipeline(AbstractPipeline *pipeline);
-    
-        /// Returns a reference to the module factory.
-        ModuleFactory& moduleFactory() const;
     
         /// Starts the data flow through the pipelines.
         void start();
@@ -62,4 +56,5 @@ class PipelineDriver
 };
 
 } // namespace pelican
+
 #endif // PIPELINEDRIVER_H 

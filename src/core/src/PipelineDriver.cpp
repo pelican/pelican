@@ -8,8 +8,6 @@
 #include "ModuleFactory.h"
 #include "data/DataBlob.h"
 
-
-
 namespace pelican {
 
 /**
@@ -59,14 +57,6 @@ void PipelineDriver::registerPipeline(AbstractPipeline *pipeline)
 
     _pipelines.insert(pipeline->dataRequired(), pipeline);
     _requiredData += pipeline->dataRequired();
-}
-
-/**
- * @details
- * Returns a reference to the module factory.
- */
-ModuleFactory& PipelineDriver::moduleFactory() const
-{
 }
 
 /**
@@ -124,4 +114,3 @@ void PipelineDriver::setDataClient(DataClient *client)
 }
 
 } // namespace pelican
-
