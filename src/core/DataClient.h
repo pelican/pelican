@@ -8,36 +8,37 @@
  * @file DataClient.h
  */
 
-/**
- * @class DataClient
- *  
- * @brief
- * This class is the data client for the pipeline driver.
- * 
- * @details
- * A pointer to a DataClient class is passed to the pipeline driver, which
- * uses it to fetch data from the data server.
- */
-
 namespace pelican {
 
 class DataBlob;
 class DataRequirements;
 
+/**
+ * @class DataClient
+ *  
+ * @brief
+ * This is the data client abstract base class for the pipeline driver.
+ * 
+ * @details
+ * The data client fetches data from the data server and makes it available
+ * to the pipelines via the pipeline driver. The PipelineApplication creates
+ * the appropriate data client object based on the supplied configuration.
+ *
+ * Inherit this class to create a new data client type.
+ */
 class DataClient
 {
     public:
         /// Data client constructor.
-        DataClient(  );
+        DataClient();
 
-        /// Data client destructor.
-        ~DataClient();
+        /// Data client destructor (virtual).
+        virtual ~DataClient();
 
         /// Gets the requested data from the data server.
-        virtual QHash<QString, DataBlob*> getData(const DataRequirements&);
-
-    private:
+        virtual QHash<QString, DataBlob*> getData(const DataRequirements&) = 0;
 };
 
 } // namespace pelican
+
 #endif // DATACLIENT_H 

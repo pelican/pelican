@@ -2,23 +2,22 @@
 #include "data/DataRequirements.h"
 #include "utility/memCheck.h"
 
-
 namespace pelican {
 
-
-// class DataClient 
+/**
+ * @details
+ * This creates a new abstract data client.
+ */
 DataClient::DataClient()
 {
 }
 
+/**
+ * @details
+ * Destroys the data client.
+ */
 DataClient::~DataClient()
 {
-}
-
-QHash<QString, DataBlob*> DataClient::getData(const DataRequirements&)
-{
-    QHash<QString, DataBlob*> dataHash;
-    return dataHash;
 }
 
 } // namespace pelican
