@@ -1,7 +1,7 @@
 #include "core/AbstractPipeline.h"
 #include "core/ModuleFactory.h"
 #include "core/PipelineApplication.h"
-#include "modules/AbstractModule.h"
+#include "core/AbstractModule.h"
 #include <QtGlobal>
 #include "utility/memCheck.h"
 

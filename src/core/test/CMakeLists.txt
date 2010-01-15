@@ -6,8 +6,9 @@ set( coreTest_src
      src/PipelineDriverTest.cpp
 )
 set( coreTestLibrary_src
-     src/TestPipeline.cpp
      src/TestDataClient.cpp
+     src/TestModule.cpp
+     src/TestPipeline.cpp
 )
 add_library(coreTestUtilities ${coreTestLibrary_src} )
 SUBPACKAGE_ADD_LIBRARIES(coreTestUtilities)

@@ -1,7 +1,7 @@
 #ifndef ZENITHMODELVISIBILITIES_H
 #define ZENITHMODELVISIBILITIES_H
 
-#include "AbstractModule.h"
+#include "core/AbstractModule.h"
 
 class QDomElement;
 
@@ -28,6 +28,9 @@ class ZenithModelVisibilities : public AbstractModule
 
         /// Module destructor.
         ~ZenithModelVisibilities();
+
+        /// Runs the module.
+        void run() {}
 };
 
 } // namespace pelican

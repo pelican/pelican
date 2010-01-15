@@ -1,7 +1,7 @@
 #ifndef ZENITHCALIBRATER_H
 #define ZENITHCALIBRATER_H
 
-#include "AbstractModule.h"
+#include "core/AbstractModule.h"
 
 class QDomElement;
 
@@ -28,6 +28,9 @@ class ZenithCalibrater : public AbstractModule
 
         /// Module destructor.
         ~ZenithCalibrater();
+
+        /// Runs the module.
+        void run() {}
 };
 
 } // namespace pelican

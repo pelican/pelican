@@ -1,9 +1,10 @@
 INCLUDE_DIRECTORIES(${QT_INCLUDES})
 SUBPACKAGE(core modules data)
 set( core_src
-     src/AbstractPipeline.cpp
-     src/CoreOptions.cpp
      src/AbstractDataClient.cpp
+     src/AbstractPipeline.cpp
+     src/AbstractModule.cpp
+     src/CoreOptions.cpp
      src/ModuleFactory.cpp
      src/PipelineApplication.cpp
      src/PipelineDriver.cpp

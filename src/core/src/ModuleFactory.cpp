@@ -1,7 +1,8 @@
 #include <QStringList>
 #include <QtGlobal>
 #include "ModuleFactory.h"
-#include "modules/TestModule.h"
+#include "core/AbstractModule.h"
+#include "modules/BasicFlagger.h"
 #include "utility/Config.h"
 #include "utility/memCheck.h"
 
@@ -64,8 +65,8 @@ AbstractModule* ModuleFactory::createModule(const QString& name)
 AbstractModule* ModuleFactory::_createModule(const QString& name, const QDomElement& config)
 {
     AbstractModule* module = 0;
-    if( name == "Test" ) {
-        module = new TestModule(config);
+    if( name == "BasicFlagger" ) {
+        module = new BasicFlagger(config);
         _modules.append( module );
     }
     else {

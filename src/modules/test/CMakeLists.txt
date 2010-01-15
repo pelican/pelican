@@ -1,4 +1,4 @@
-SUBPACKAGE(modulesTest modules)
+SUBPACKAGE(modulesTest modules core)
 set(
    modulesTest_src
    src/modulesTest.cpp

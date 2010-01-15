@@ -1,7 +1,7 @@
 #ifndef BASICFLAGGER_H
 #define BASICFLAGGER_H
 
-#include "AbstractModule.h"
+#include "core/AbstractModule.h"
 
 class QDomElement;
 
@@ -28,6 +28,9 @@ class BasicFlagger : public AbstractModule
 
         /// Module destructor.
         ~BasicFlagger();
+
+        /// Runs the module.
+        void run() {}
 };
 
 } // namespace pelican

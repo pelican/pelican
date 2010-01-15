@@ -1,7 +1,7 @@
 #ifndef ZENITHIMAGERDFT_H
 #define ZENITHIMAGERDFT_H
 
-#include "AbstractModule.h"
+#include "core/AbstractModule.h"
 
 class QDomElement;
 
@@ -28,6 +28,9 @@ class ZenithImagerDft : public AbstractModule
 
         /// Module destructor.
         ~ZenithImagerDft();
+
+        /// Runs the module.
+        void run() {}
 };
 
 } // namespace pelican

@@ -1,6 +1,6 @@
 #include "ModuleFactoryTest.h"
 #include "ModuleFactory.h"
-#include "modules/AbstractModule.h"
+#include "core/AbstractModule.h"
 #include "utility/Config.h"
 #include "utility/memCheck.h"
 
