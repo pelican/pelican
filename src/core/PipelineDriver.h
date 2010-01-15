@@ -12,7 +12,7 @@ namespace pelican {
 
 class AbstractPipeline;
 class ModuleFactory;
-class DataClient;
+class AbstractDataClient;
 
 /**
  * @class PipelineDriver
@@ -44,12 +44,12 @@ class PipelineDriver
         void stop();
 
         /// Sets the data client.
-        void setDataClient(DataClient *client);
+        void setDataClient(AbstractDataClient *client);
 
     private: /* Methods */
 
     private:
-        DataClient *_dataClient;
+        AbstractDataClient *_dataClient;
         DataRequirements _requiredData;
         QMultiHash<DataRequirements, AbstractPipeline*> _pipelines;
         bool _run;

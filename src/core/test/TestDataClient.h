@@ -1,12 +1,14 @@
 #ifndef TESTDATACLIENT_H
 #define TESTDATACLIENT_H
 
-#include "DataClient.h"
+#include "core/DataClient.h"
 #include <QSet>
 
 /**
  * @file TestDataClient.h
  */
+
+namespace pelican {
 
 /**
  * @class TestDataClient
@@ -16,10 +18,7 @@
  * @details
  * 
  */
-
-namespace pelican {
-
-class TestDataClient : public DataClient
+class TestDataClient : public AbstractDataClient
 {
     public:
         TestDataClient(  );
@@ -36,4 +35,5 @@ class TestDataClient : public DataClient
 };
 
 } // namespace pelican
+
 #endif // TESTDATACLIENT_H 

@@ -13,7 +13,7 @@ namespace pelican {
 class Config;
 class ModuleFactory;
 class PipelineDriver;
-class DataClient;
+class AbstractDataClient;
 
 /**
  * @class PipelineApplication
@@ -34,7 +34,7 @@ class PipelineApplication : public QCoreApplication
         static Config *_config;
 
         /// Pointer to the application's data client.
-        static DataClient *_dataClient;
+        static AbstractDataClient *_dataClient;
 
         /// Pointer to the application's module factory.
         static ModuleFactory *_factory;
@@ -52,7 +52,7 @@ class PipelineApplication : public QCoreApplication
         static Config* config() {return _config;}
 
         /// Return a pointer to the data client.
-        static DataClient* dataClient() {return _dataClient;}
+        static AbstractDataClient* dataClient() {return _dataClient;}
 
         /// Return a pointer to the module factory.
         static ModuleFactory* moduleFactory() {return _factory;}

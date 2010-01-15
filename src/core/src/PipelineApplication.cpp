@@ -126,7 +126,7 @@ void PipelineApplication::createModuleFactory(const Config* config)
 Config* PipelineApplication::_config = NULL;
 
 // Initialise pointer to data client.
-DataClient* PipelineApplication::_dataClient = NULL;
+AbstractDataClient* PipelineApplication::_dataClient = NULL;
 
 // Initialise pointer to module factory.
 ModuleFactory* PipelineApplication::_factory = NULL;

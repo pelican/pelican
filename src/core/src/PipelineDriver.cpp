@@ -108,7 +108,7 @@ void PipelineDriver::stop()
  * @details
  * Sets the data client.
  */
-void PipelineDriver::setDataClient(DataClient *client)
+void PipelineDriver::setDataClient(AbstractDataClient *client)
 {
     _dataClient = client;
 }

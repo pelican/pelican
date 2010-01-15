@@ -9,7 +9,7 @@ namespace pelican {
 
 // class TestDataClient 
 TestDataClient::TestDataClient()
-    : DataClient()
+    : AbstractDataClient()
 {
 }
 
