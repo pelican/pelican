@@ -29,10 +29,10 @@ class TestPipeline : public AbstractPipeline
         ~TestPipeline();
 
         /// Initialises the pipeline.
-        virtual void init();
+        void init();
 
         /// Runs the pipeline.
-        virtual void run(QHash<QString, DataBlob*>& dataHash);
+        void run(QHash<QString, DataBlob*>& dataHash);
 
         /// Reads counter.
         int count() {return _counter;}

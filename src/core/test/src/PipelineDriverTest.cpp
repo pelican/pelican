@@ -43,16 +43,16 @@ void PipelineDriverTest::test_registerPipeline()
     // Use Case:
     // Pipeline requiring some data.
     // Expected to not throw any exceptions.
-//    DataRequirements req;
-//    req.setStreamData("wibble");
-//    CPPUNIT_ASSERT_NO_THROW(pipelineDriver->registerPipeline(new TestPipeline(req)));
+    DataRequirements req;
+    req.setStreamData("wibble");
+    CPPUNIT_ASSERT_NO_THROW(pipelineDriver->registerPipeline(new TestPipeline(req)));
 
     // Use Case:
     // Try to register two pipelines requiring the same stream data.
     // Expect an exception to be thrown.
-//    DataRequirements req1;
-//    req1.setStreamData("wibble");
-//    CPPUNIT_ASSERT_THROW(pipelineDriver->registerPipeline(new TestPipeline(req1)), QString);
+    DataRequirements req1;
+    req1.setStreamData("wibble");
+    CPPUNIT_ASSERT_THROW(pipelineDriver->registerPipeline(new TestPipeline(req1)), QString);
 
 }
 
@@ -70,10 +70,10 @@ void PipelineDriverTest::test_singlePipelineInvalidData()
     // Attempt to run a pipeline which has been set up
     // but the data returned by getData() does not match any of the pipelines.
     // Expected to throw an exception with a message.
-//    DataRequirements req;
-//    req.setStreamData("wibble");
-//    CPPUNIT_ASSERT_NO_THROW(pipelineDriver->registerPipeline(new TestPipeline(req)));
-//    CPPUNIT_ASSERT_THROW(pipelineDriver->start(), QString);
+    DataRequirements req;
+    req.setStreamData("wibble");
+    CPPUNIT_ASSERT_NO_THROW(pipelineDriver->registerPipeline(new TestPipeline(req)));
+    CPPUNIT_ASSERT_THROW(pipelineDriver->start(), QString);
 }
 
 void PipelineDriverTest::test_singlePipeline()
@@ -92,7 +92,7 @@ void PipelineDriverTest::test_singlePipeline()
     DataRequirements req;
     req.setStreamData(wibble);
     TestPipeline *pipeline = new TestPipeline(req);
-    pipeline->setDriver(pipelineDriver);
+    pipeline->setPipelineDriver(pipelineDriver);
     CPPUNIT_ASSERT_NO_THROW(pipelineDriver->registerPipeline(pipeline));
     int num = 10;
     pipeline->setIterations(num);
@@ -123,8 +123,8 @@ void PipelineDriverTest::test_multiPipeline()
     req2.setStreamData(reqData2);
     TestPipeline *pipeline1 = new TestPipeline(req1);
     TestPipeline *pipeline2 = new TestPipeline(req2);
-    pipeline1->setDriver(pipelineDriver);
-    pipeline2->setDriver(pipelineDriver);
+    pipeline1->setPipelineDriver(pipelineDriver);
+    pipeline2->setPipelineDriver(pipelineDriver);
     CPPUNIT_ASSERT_NO_THROW(pipelineDriver->registerPipeline(pipeline1));
     CPPUNIT_ASSERT_NO_THROW(pipelineDriver->registerPipeline(pipeline2));
     int num = 10;
@@ -141,7 +141,6 @@ void PipelineDriverTest::test_multiPipeline()
     CPPUNIT_ASSERT_EQUAL(pipeline1->count(), pipeline1->matchedCounter());
     CPPUNIT_ASSERT_EQUAL(pipeline2->count(), pipeline2->matchedCounter());
 
-    return;
     // Reset pipeline counters.
     pipeline1->reset();
     pipeline2->reset();

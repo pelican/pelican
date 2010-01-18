@@ -11,8 +11,9 @@
 namespace pelican {
 
 class AbstractModule;
-class ModuleFactory;
 class DataBlob;
+class PipelineDriver;
+class ModuleFactory;
 
 /**
  * @class AbstractPipeline
@@ -30,8 +31,11 @@ class DataBlob;
 class AbstractPipeline
 {
     private:
-        /// Pointer to the PipelineApplication module factory.
+        /// Pointer to the PipelineApplication module factory (private, not protected).
         ModuleFactory* _moduleFactory;
+
+        /// Pointer to the pipeline driver.
+        PipelineDriver* _pipelineDriver;
 
         /// List of pointers to modules in this pipeline.
         QList<AbstractModule*> _modules;
@@ -43,21 +47,30 @@ class AbstractPipeline
         /// Create a pipeline module using the module factory.
         AbstractModule* createModule(const QString& moduleName);
 
+        /// Stops the pipeline driver.
+        void stop();
+
     public:
         /// Constructs a new abstract pipeline.
         AbstractPipeline();
 
         /// Destroys the abstract pipeline.
-        ~AbstractPipeline();
+        virtual ~AbstractPipeline();
 
         /// Return the data requirements for the pipeline.
         const DataRequirements& dataRequired();
 
-        /// Initialises the pipeline by creating the required modules.
-        virtual void init() {}
+        /// Initialises the pipeline by creating the required modules (pure virtual).
+        virtual void init() = 0;
 
         /// Defines a single iteration of the pipeline (pure virtual).
         virtual void run(QHash<QString, DataBlob*>& dataHash) = 0;
+
+        /// Sets the module factory.
+        void setModuleFactory(ModuleFactory* moduleFactory);
+
+        /// Sets the pipeline driver.
+        void setPipelineDriver(PipelineDriver* pipelineDriver);
 };
 
 } // namespace pelican

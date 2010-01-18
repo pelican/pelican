@@ -3,6 +3,7 @@
 
 #include "data/DataRequirements.h"
 #include <QMultiHash>
+#include <QList>
 
 /**
  * @file PipelineDriver.h
@@ -26,6 +27,14 @@ class AbstractDataClient;
  */
 class PipelineDriver
 {
+    private: /* Data */
+        AbstractDataClient* _dataClient;
+        ModuleFactory* _moduleFactory;
+        DataRequirements _requiredData;
+        QMultiHash<DataRequirements, AbstractPipeline*> _pipelines;
+        QList<AbstractPipeline*> _registeredPipelines;
+        bool _run;
+
     public:
         /// Constructs a new pipeline driver.
         PipelineDriver();
@@ -34,25 +43,23 @@ class PipelineDriver
         ~PipelineDriver();
 
         /// Registers the pipeline with the driver.
-        /// Registered pipelines will be deleted when the class is destroyed.
         void registerPipeline(AbstractPipeline *pipeline);
     
+        /// Sets the data client.
+        void setDataClient(AbstractDataClient *client);
+
+        /// Sets the module factory.
+        void setModuleFactory(ModuleFactory *moduleFactory);
+
         /// Starts the data flow through the pipelines.
         void start();
 
         /// Stops the data flow through the pipelines.
         void stop();
 
-        /// Sets the data client.
-        void setDataClient(AbstractDataClient *client);
-
-    private: /* Methods */
-
     private:
-        AbstractDataClient *_dataClient;
-        DataRequirements _requiredData;
-        QMultiHash<DataRequirements, AbstractPipeline*> _pipelines;
-        bool _run;
+        /// Find the data requirements of the given \p pipeline.
+        void _registerPipeline(AbstractPipeline *pipeline);
 };
 
 } // namespace pelican

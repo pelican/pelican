@@ -1,7 +1,8 @@
+#include "core/AbstractModule.h"
 #include "core/AbstractPipeline.h"
 #include "core/ModuleFactory.h"
 #include "core/PipelineApplication.h"
-#include "core/AbstractModule.h"
+#include "core/PipelineDriver.h"
 #include <QtGlobal>
 #include "utility/memCheck.h"
 
@@ -13,13 +14,9 @@ namespace pelican {
  */
 AbstractPipeline::AbstractPipeline()
 {
-    /* Store pointer to module factory */
-    _moduleFactory = PipelineApplication::moduleFactory();
-    if (_moduleFactory == NULL)
-        throw QString("Module factory doesn't exist: Create a PipelineApplication first.");
-
-    /* Call init() to create the pipeline modules */
-    init();
+    /* Initialise members */
+    _moduleFactory = NULL;
+    _pipelineDriver = NULL;
 }
 
 /**
@@ -36,6 +33,10 @@ AbstractPipeline::~AbstractPipeline()
  */
 AbstractModule* AbstractPipeline::createModule(const QString& moduleName)
 {
+    /* Check that the module factory exists */
+    if (_moduleFactory == NULL)
+           throw QString("Module factory doesn't exist.");
+
     AbstractModule* module = _moduleFactory->createModule(moduleName);
     _modules.append(module);
     return module;
@@ -47,14 +48,45 @@ AbstractModule* AbstractPipeline::createModule(const QString& moduleName)
  */
 const DataRequirements& AbstractPipeline::dataRequired()
 {
-    /* Clear existing data requirements */
-    _data.clear();
-
     /* Loop over all the modules in the pipeline */
     foreach (AbstractModule* module, _modules) {
         _data += module->requiredData();
     }
     return _data;
+}
+
+/**
+ * @details
+ * Sets the pointer to the module factory.
+ *
+ * @param[in] moduleFactory Pointer to the module factory to use.
+ */
+void AbstractPipeline::setModuleFactory(ModuleFactory* moduleFactory)
+{
+    _moduleFactory = moduleFactory;
+}
+
+/**
+ * @details
+ * Sets the pointer to the pipeline driver.
+ *
+ * @param[in] pipelineDriver Pointer to the pipeline driver to use.
+ */
+void AbstractPipeline::setPipelineDriver(PipelineDriver* pipelineDriver)
+{
+    _pipelineDriver = pipelineDriver;
+}
+
+/**
+ * @details
+ * Stops the pipeline driver.
+ */
+void AbstractPipeline::stop()
+{
+    if (_pipelineDriver == NULL)
+        throw QString("");
+
+    _pipelineDriver->stop();
 }
 
 } // namespace pelican

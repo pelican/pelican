@@ -31,8 +31,6 @@ void TestPipeline::init()
 
 void TestPipeline::run(QHash<QString, DataBlob*>& dataHash)
 {
-//    std::cout << "Running test pipeline\n";
-
     if (dataRequired() == dataHash) {
         ++_matchedCounter;
     }

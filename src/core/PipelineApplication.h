@@ -1,7 +1,6 @@
 #ifndef PIPELINEAPPLICATION_H
 #define PIPELINEAPPLICATION_H
 
-#include <QCoreApplication>
 #include "PipelineDriver.h"
 
 /**
@@ -13,6 +12,7 @@ namespace pelican {
 class Config;
 class ModuleFactory;
 class PipelineDriver;
+class AbstractPipeline;
 class AbstractDataClient;
 
 /**
@@ -22,24 +22,25 @@ class AbstractDataClient;
  * This sets up and configures the pipeline driver.
  * 
  * @details
- * The PipelineApplication class initialises the pipeline driver
- * with its configuration options, parsing the command-line arguments
- * as needed.
- * This class also creates and manages the module factory.
+ * The PipelineApplication is the user-facing class which reads the
+ * command-line arguments and creates the configuration object, the data
+ * client, the module factory and the pipeline driver. It also provides
+ * public methods to register pipelines and start them running.
  */
-class PipelineApplication : public QCoreApplication
+class PipelineApplication
 {
     private:
         /// Pointer to the application's configuration object.
-        static Config *_config;
+        Config *_config;
 
         /// Pointer to the application's data client.
-        static AbstractDataClient *_dataClient;
+        AbstractDataClient *_dataClient;
 
         /// Pointer to the application's module factory.
-        static ModuleFactory *_factory;
+        ModuleFactory *_factory;
 
-        PipelineDriver _driver; // to be removed from here (create in main()).
+        /// The pipeline driver object.
+        PipelineDriver _driver;
 
     public:
         /// Constructor.
@@ -49,27 +50,34 @@ class PipelineApplication : public QCoreApplication
         ~PipelineApplication();
 
         /// Return a pointer to the configuration object.
-        static Config* config() {return _config;}
+        Config* config() {return _config;}
 
         /// Return a pointer to the data client.
-        static AbstractDataClient* dataClient() {return _dataClient;}
+        AbstractDataClient* dataClient() {return _dataClient;}
 
         /// Return a pointer to the module factory.
-        static ModuleFactory* moduleFactory() {return _factory;}
+        ModuleFactory* moduleFactory() {return _factory;}
 
         /// Gets the configuration file name.
         QString getConfigFile() const;
 
+        /// Register a pipeline with the pipeline driver.
+        void registerPipeline(AbstractPipeline *pipeline);
+
+        /// Starts the pipeline driver.
+        void start();
+
     private:
         /// Creates a configuration object based on the command line arguments.
-        void createConfig(int argc, char** argv);
+        void _createConfig(int argc, char** argv);
 
         /// Creates a data client based on the configuration.
-        void createDataClient(const Config* config);
+        void _createDataClient(const Config* config);
 
         /// Creates the module factory based on the configuration.
-        void createModuleFactory(const Config* config);
+        void _createModuleFactory(const Config* config);
 };
 
 } // namespace pelican
+
 #endif // PIPELINEAPPLICATION_H 

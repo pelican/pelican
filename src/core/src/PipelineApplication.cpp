@@ -1,3 +1,4 @@
+#include <QCoreApplication>
 #include <QString>
 #include "core/PipelineApplication.h"
 #include "core/CoreOptions.h"
@@ -16,24 +17,27 @@ namespace po = boost::program_options;
 
 /**
  * @details
- * PipelineApplication constructor. This inherits QCoreApplication, which is
- * needed for the Qt framework classes to function correctly.
- * Command line arguments are passed as function arguments.
+ * PipelineApplication constructor. This requires a QCoreApplication object
+ * to be created first, which is needed for the Qt framework classes to function
+ * correctly. Command line arguments are passed as function arguments.
  *
  * The PipelineApplication constructor also creates the configuration object,
  * the module factory and the data client.
  */
 PipelineApplication::PipelineApplication(int argc, char** argv)
-: QCoreApplication(argc, argv)
 {
+    /* Check for QCoreApplication */
+    if (QCoreApplication::instance() == NULL)
+        throw QString("Create a QCoreApplication before the pipeline application.");
+
     /* Set configuration using command line arguments */
-    createConfig(argc, argv);
+    _createConfig(argc, argv);
 
     /* Construct the module factory */
-    createModuleFactory(_config);
+    _createModuleFactory(_config);
 
     /* Construct the data client */
-    createDataClient(_config);
+    _createDataClient(_config);
 }
 
 /**
@@ -61,10 +65,33 @@ QString PipelineApplication::getConfigFile() const
 
 /**
  * @details
+ * Registers a pipeline with the pipeline driver.
+ *
+ * @param[in] pipeline Pointer to the allocated pipeline.
+ */
+void PipelineApplication::registerPipeline(AbstractPipeline *pipeline)
+{
+    _driver.registerPipeline(pipeline);
+}
+
+/**
+ * @details
+ * Starts the pipeline driver and sets pointers to the module factory and
+ * data client.
+ */
+void PipelineApplication::start()
+{
+    _driver.setDataClient(_dataClient);
+    _driver.setModuleFactory(_factory);
+    _driver.start();
+}
+
+/**
+ * @details
  * This method is called by the constructor and parses the command line arguments
  * to create the configuration object.
  */
-void PipelineApplication::createConfig(int argc, char** argv)
+void PipelineApplication::_createConfig(int argc, char** argv)
 {
     /* Check that argc and argv are nonzero */
     if (argc == 0 || argv == NULL)
@@ -107,7 +134,7 @@ void PipelineApplication::createConfig(int argc, char** argv)
  * @details
  * Creates the data client based on the supplied configuration object.
  */
-void PipelineApplication::createDataClient(const Config* config)
+void PipelineApplication::_createDataClient(const Config* config)
 {
     // TODO create data client.
 }
@@ -116,19 +143,9 @@ void PipelineApplication::createDataClient(const Config* config)
  * @details
  * Creates the module factory based on the supplied configuration object.
  */
-void PipelineApplication::createModuleFactory(const Config* config)
+void PipelineApplication::_createModuleFactory(const Config* config)
 {
     _factory = new ModuleFactory(config);
 }
-
-
-// Initialise pointer to configuation object.
-Config* PipelineApplication::_config = NULL;
-
-// Initialise pointer to data client.
-AbstractDataClient* PipelineApplication::_dataClient = NULL;
-
-// Initialise pointer to module factory.
-ModuleFactory* PipelineApplication::_factory = NULL;
 
 } // namespace pelican
