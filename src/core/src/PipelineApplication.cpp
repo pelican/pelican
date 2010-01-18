@@ -26,12 +26,18 @@ namespace po = boost::program_options;
  */
 PipelineApplication::PipelineApplication(int argc, char** argv)
 {
+    /* Initialise member variables */
+    _config = NULL;
+    _factory = NULL;
+    _dataClient = NULL;
+
     /* Check for QCoreApplication */
     if (QCoreApplication::instance() == NULL)
         throw QString("Create a QCoreApplication before the pipeline application.");
 
     /* Set configuration using command line arguments */
-    _createConfig(argc, argv);
+    if (!_createConfig(argc, argv))
+        return;
 
     /* Construct the module factory */
     _createModuleFactory(_config);
@@ -91,43 +97,43 @@ void PipelineApplication::start()
  * This method is called by the constructor and parses the command line arguments
  * to create the configuration object.
  */
-void PipelineApplication::_createConfig(int argc, char** argv)
+bool PipelineApplication::_createConfig(int argc, char** argv)
 {
     /* Check that argc and argv are nonzero */
     if (argc == 0 || argv == NULL)
         throw QString("No command line.");
 
-    /* Parse the command line arguments */
-    // Declare the supported options.
+    /* Declare the supported options */
     po::options_description desc("Allowed options");
     desc.add_options()
-        ("help", "produce help message")
-        ("config,c", po::value<std::string>(), "set configuration file")
+        ("help", "Produce help message.")
+        ("config,c", po::value<std::string>(), "Set configuration file.")
     ;
 
-    po::variables_map vm;
-    po::store(po::parse_command_line(argc, argv, desc), vm);
-    po::notify(vm);
+    /* Parse the command line arguments */
+    po::variables_map varMap;
+    po::store(po::parse_command_line(argc, argv, desc), varMap);
+    po::notify(varMap);
 
-    if (vm.count("help")) {
+    /* Check for help message */
+    if (varMap.count("help")) {
         std::cout << desc << "\n";
-        exit(0);
+        return false;
     }
 
-    std::string config = "";
-
-    if (vm.count("config")) {
-        std::cout << "Configuration file was set to "
-        << vm["config"].as<std::string>() << ".\n";
-        config = vm["config"].as<std::string>();
-    } else {
-        std::cout << "Configuration file not set on command line.\n";
-    }
+    /* Get the configuration file name */
+    std::string configFilename = "";
+    if (varMap.count("config"))
+        configFilename = varMap["config"].as<std::string>();
 
     /* Construct the configuration object */
-    _config = new Config(QString::fromStdString(config));
+    try {
+        _config = new Config(QString::fromStdString(configFilename));
+    } catch (QString error) {
+        std::cerr << error.toLatin1().data() << std::endl;
+    }
 
-    return;
+    return true;
 }
 
 /**

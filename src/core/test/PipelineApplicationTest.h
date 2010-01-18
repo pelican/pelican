@@ -7,22 +7,37 @@
  * @file PipelineApplicationTest.h
  */
 
+namespace pelican {
+
 /**
  * @class PipelineApplicationTest
  *  
  * @brief
+ * CppUnit tests for PipelineApplication class.
  * 
  * @details
- * 
+ * Tries to create a PipelineApplication:
+ * - before a QCoreApplication
+ * - after a QCoreApplication
+ *
+ * Tests parsing of command line arguments:
+ * - for setting configuration file
+ * - for printing a help message
+ *
+ * Tests registering one pipeline.
+ * Tests registering two pipelines.
+ * Tests starting the pipeline driver.
  */
-
-namespace pelican {
-
 class PipelineApplicationTest : public CppUnit::TestFixture
 {
     public:
-        CPPUNIT_TEST_SUITE( PipelineApplicationTest );
-        CPPUNIT_TEST( test_createApplication);
+        CPPUNIT_TEST_SUITE(PipelineApplicationTest);
+        CPPUNIT_TEST(test_create_beforeQCoreApplication);
+        CPPUNIT_TEST(test_create_afterQCoreApplication);
+        CPPUNIT_TEST(test_commandLine_config);
+        CPPUNIT_TEST(test_commandLine_help);
+        CPPUNIT_TEST(test_registerEmptyPipeline);
+        CPPUNIT_TEST(test_start);
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -30,7 +45,12 @@ class PipelineApplicationTest : public CppUnit::TestFixture
         void tearDown();
 
         // Test Methods
-        void test_createApplication();
+        void test_create_beforeQCoreApplication();
+        void test_create_afterQCoreApplication();
+        void test_commandLine_config();
+        void test_commandLine_help();
+        void test_registerEmptyPipeline();
+        void test_start();
 
     public:
         PipelineApplicationTest(  );
@@ -40,4 +60,5 @@ class PipelineApplicationTest : public CppUnit::TestFixture
 };
 
 } // namespace pelican
+
 #endif // PIPELINEAPPLICATIONTEST_H 

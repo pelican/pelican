@@ -26,6 +26,8 @@ class AbstractDataClient;
  * command-line arguments and creates the configuration object, the data
  * client, the module factory and the pipeline driver. It also provides
  * public methods to register pipelines and start them running.
+ *
+ * A QCoreApplication must be created before a PipelineApplication.
  */
 class PipelineApplication
 {
@@ -69,7 +71,7 @@ class PipelineApplication
 
     private:
         /// Creates a configuration object based on the command line arguments.
-        void _createConfig(int argc, char** argv);
+        bool _createConfig(int argc, char** argv);
 
         /// Creates a data client based on the configuration.
         void _createDataClient(const Config* config);
