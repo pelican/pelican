@@ -43,13 +43,11 @@ class TestPipeline : public AbstractPipeline
         /// Reads counter used to check that the data passed is the same as the expected data.
         int matchedCounter() {return _matchedCounter;}
 
-        void setDriver(PipelineDriver *driver) {_driver = driver;}
         void setIterations(int number) {_iterations = number;}
 
     private:
         void _setDefaults();
 
-        PipelineDriver* _driver;
         int _iterations;
         int _counter;
         int _matchedCounter;

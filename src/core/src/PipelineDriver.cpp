@@ -1,12 +1,12 @@
 #include <QString>
 #include <QtGlobal>
 #include <QtDebug>
-#include "utility/memCheck.h"
-#include "PipelineDriver.h"
-#include "AbstractPipeline.h"
-#include "AbstractDataClient.h"
-#include "ModuleFactory.h"
+#include "core/AbstractDataClient.h"
+#include "core/AbstractPipeline.h"
+#include "core/ModuleFactory.h"
+#include "core/PipelineDriver.h"
 #include "data/DataBlob.h"
+#include "utility/memCheck.h"
 
 namespace pelican {
 

@@ -7,19 +7,21 @@
  * @file PipelineDriverTest.h
  */
 
-/**
- * @class PipelineDriverTest
- *  
- * @brief
- * 
- * @details
- * 
- */
+class QCoreApplication;
 
 namespace pelican {
 
 class PipelineDriver;
 
+/**
+ * @class PipelineDriverTest
+ *  
+ * @brief
+ * CppUnit tests for PipelineDriver class.
+ * 
+ * @details
+ * 
+ */
 class PipelineDriverTest : public CppUnit::TestFixture
 {
     public:
@@ -47,9 +49,11 @@ class PipelineDriverTest : public CppUnit::TestFixture
         ~PipelineDriverTest();
 
     private:
+        QCoreApplication *coreApp;
         PipelineApplication *pipelineApp;
         PipelineDriver *pipelineDriver;
 };
 
 } // namespace pelican
+
 #endif // PIPELINEDRIVERTEST_H 

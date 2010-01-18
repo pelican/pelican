@@ -35,16 +35,12 @@ void TestPipeline::run(QHash<QString, DataBlob*>& dataHash)
         ++_matchedCounter;
     }
 
-    if (++_counter >= _iterations) {
-        if (_driver) {
-            _driver->stop();
-        }
-    }
+    if (++_counter >= _iterations)
+        stop();
 }
 
 void TestPipeline::_setDefaults()
 {
-    _driver = NULL;
     _iterations = 10; // by default
     reset();
 }
