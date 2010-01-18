@@ -1,6 +1,7 @@
 SUBPACKAGE(modules data utility)
 set( modules_src
      src/BasicFlagger.cpp
+     src/EmptyModule.cpp
      src/ZenithCalibrater.cpp
      src/ZenithImagerDft.cpp
      src/ZenithModelVisibilities.cpp
