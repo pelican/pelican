@@ -11,6 +11,10 @@ class QDomElement;
  * @file ModuleFactory.h
  */
 
+namespace pelican {
+
+class AbstractModule;
+
 /**
  * @class ModuleFactory
  *  
@@ -23,11 +27,6 @@ class QDomElement;
  * The modules are owned by the factory and will be destroyed with
  * the factory.
  */
-
-namespace pelican {
-
-class AbstractModule;
-
 class ModuleFactory
 {
     public:
@@ -55,4 +54,5 @@ class ModuleFactory
 };
 
 } // namespace pelican
+
 #endif // MODULEFACTORY_H 

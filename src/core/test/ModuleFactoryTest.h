@@ -13,16 +13,16 @@ namespace pelican {
  * @class ModuleFactoryTest
  *  
  * @brief
+ * CppUnit tests for ModuleFactory class.
  * 
  * @details
- * 
+ * Tries to create a number of modules.
  */
-
 class ModuleFactoryTest : public CppUnit::TestFixture
 {
     public:
         CPPUNIT_TEST_SUITE( ModuleFactoryTest );
-        CPPUNIT_TEST( test_createTestModule );
+        CPPUNIT_TEST( test_create_EmptyModule );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -30,7 +30,7 @@ class ModuleFactoryTest : public CppUnit::TestFixture
         void tearDown();
 
         // Test Methods
-        void test_createTestModule();
+        void test_create_EmptyModule();
 
     public:
         ModuleFactoryTest(  );
