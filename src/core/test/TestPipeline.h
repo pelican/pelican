@@ -1,57 +1,65 @@
 #ifndef TESTPIPELINE_H
 #define TESTPIPELINE_H
 
-#include "AbstractPipeline.h"
+#include "core/AbstractPipeline.h"
 #include "utility/memCheck.h"
 
 /**
  * @file TestPipeline.h
  */
 
+namespace pelican {
+
 /**
  * @class TestPipeline
  *  
  * @brief
+ * This class tests methods of AbstractPipeline by inheriting it.
  * 
  * @details
- * 
+ * The TestPipeline class is used as the basis of unit testing the
+ * AbstractPipeline class, of which this is a friend.
  */
-
-namespace pelican {
-
-class PipelineDriver;
-
 class TestPipeline : public AbstractPipeline
 {
+    private: /* Data */
+        int _iterations;
+        int _counter;
+        int _matchedCounter;
+
     public:
+        /// Default constructor.
         TestPipeline();
+
+        /// Overloaded constructor.
         TestPipeline(const DataRequirements& requirements);
+
+        /// Destructor.
         ~TestPipeline();
+
+        /// Reads counter.
+        int count() const {return _counter;}
 
         /// Initialises the pipeline.
         void init();
 
+        /// Reads counter used to check that the data passed is the same as the expected data.
+        int matchedCounter() const {return _matchedCounter;}
+
+        /// Reset counters.
+        void reset();
+
         /// Runs the pipeline.
         void run(QHash<QString, DataBlob*>& dataHash);
 
-        /// Reads counter.
-        int count() {return _counter;}
-
-        /// Reset method (reset counters).
-        void reset();
-
-        /// Reads counter used to check that the data passed is the same as the expected data.
-        int matchedCounter() {return _matchedCounter;}
-
+        /// Sets the number of pipeline iterations to perform.
         void setIterations(int number) {_iterations = number;}
 
     private:
+        /// Sets the default member variables.
         void _setDefaults();
-
-        int _iterations;
-        int _counter;
-        int _matchedCounter;
 };
 
 } // namespace pelican
+
 #endif // TESTPIPELINE_H 
