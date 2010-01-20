@@ -69,23 +69,8 @@ void PipelineDriver::setModuleFactory(ModuleFactory *moduleFactory)
  */
 void PipelineDriver::start()
 {
-    /* Iterate over the registered pipelines to initialise them
-     * (to create their modules) and find the data requirements */
-    foreach (AbstractPipeline* pipeline, _registeredPipelines) {
-        /* Set the module factory and pipeline driver */
-        pipeline->setModuleFactory(_moduleFactory);
-        pipeline->setPipelineDriver(this);
-
-        /* Initialise the pipeline (create modules) */
-        pipeline->init();
-
-        /* Add the required data to the data requirements */
-        _registerPipeline(pipeline);
-    }
-
-    /* Check for at least one pipeline */
-    if (_pipelines.isEmpty())
-        throw QString("No pipelines.");
+    /* Initialise the pipelines */
+    _initialisePipelines();
 
     /* Start the pipeline driver */
     if (_dataClient == NULL)
@@ -125,19 +110,19 @@ void PipelineDriver::stop()
  * @details
  * Private method to find the data requirements of the given pipeline.
  */
-void PipelineDriver::_registerPipeline(AbstractPipeline* pipeline)
+void PipelineDriver::_determineDataRequirements(AbstractPipeline* pipeline)
 {
     /* Check for an empty pipeline */
     if (pipeline->dataRequired() == DataRequirements())
         throw QString("Empty pipelines are not supported.");
 
-    /* Check that the stream data required for this pipeline is different
-     * from all the others.
+    /* Check that the set of stream data required for this pipeline does not
+     * intersect the set of stream data required by another.
      * Data is not currently copied, so this ensures that two pipelines do not
      * try to modify the same data. */
     QMultiHash<DataRequirements, AbstractPipeline*>::iterator i = _pipelines.begin();
     while (i != _pipelines.end()) {
-        if (i.key().streamData() == pipeline->dataRequired().streamData()) {
+        if ((i.key().streamData() & pipeline->dataRequired().streamData()).size() > 0) {
             throw QString("Multiple pipelines requiring the same stream data are not currently supported.");
         }
         ++i;
@@ -145,6 +130,30 @@ void PipelineDriver::_registerPipeline(AbstractPipeline* pipeline)
 
     _pipelines.insert(pipeline->dataRequired(), pipeline);
     _requiredData += pipeline->dataRequired();
+}
+
+/**
+ * @details
+ * Private method to initialises the pipelines by iterating over them,
+ * creating their modules and finding out their data requirements.
+ */
+void PipelineDriver::_initialisePipelines()
+{
+    /* Check for at least one registered pipeline */
+    if (_registeredPipelines.isEmpty())
+        throw QString("No pipelines.");
+
+    foreach (AbstractPipeline* pipeline, _registeredPipelines) {
+        /* Set the module factory and pipeline driver */
+        pipeline->setModuleFactory(_moduleFactory);
+        pipeline->setPipelineDriver(this);
+
+        /* Initialise the pipeline (create modules) */
+        pipeline->init();
+
+        /* Add the required data to the data requirements */
+        _determineDataRequirements(pipeline);
+    }
 }
 
 } // namespace pelican

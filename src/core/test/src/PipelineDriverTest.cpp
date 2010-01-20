@@ -40,7 +40,6 @@ void PipelineDriverTest::tearDown()
 
 void PipelineDriverTest::test_registerPipeline()
 {
-    return;
     // Use Case:
     // Pipeline requiring no data.
     // Expected to throw an exception and delete the passed object.
@@ -59,7 +58,6 @@ void PipelineDriverTest::test_registerPipeline()
     DataRequirements req1;
     req1.setStreamData("wibble");
     CPPUNIT_ASSERT_THROW(pipelineDriver->registerPipeline(new TestPipeline(req1)), QString);
-
 }
 
 void PipelineDriverTest::test_emptyPipeline()

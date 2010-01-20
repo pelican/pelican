@@ -27,12 +27,25 @@ class AbstractDataClient;
  */
 class PipelineDriver
 {
+        friend class PipelineDriverTest;
+
     private: /* Data */
+        /// Pointer to the data client.
         AbstractDataClient* _dataClient;
+
+        /// Pointer to the module factory.
         ModuleFactory* _moduleFactory;
+
+        /// Data required by all the pipelines.
         DataRequirements _requiredData;
+
+        /// Hash of pipelines with known data requirements.
         QMultiHash<DataRequirements, AbstractPipeline*> _pipelines;
+
+        /// List of registered pipelines owned by the driver.
         QList<AbstractPipeline*> _registeredPipelines;
+
+        /// Flag to run the pipeline driver.
         bool _run;
 
     public:
@@ -59,7 +72,10 @@ class PipelineDriver
 
     private:
         /// Find the data requirements of the given \p pipeline.
-        void _registerPipeline(AbstractPipeline *pipeline);
+        void _determineDataRequirements(AbstractPipeline *pipeline);
+
+        /// Initialise pipelines.
+        void _initialisePipelines();
 };
 
 } // namespace pelican
