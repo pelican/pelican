@@ -100,7 +100,7 @@ void PipelineApplicationTest::test_commandLine_help()
  * Try to create a PipelineApplication and register an empty pipeline.
  * Expect an exception.
  */
-void PipelineApplicationTest::test_registerEmptyPipeline()
+void PipelineApplicationTest::test_registerPipeline_EmptyPipeline()
 {
     int argc = 1;
     char *argv[] = {(char*)"pelican"};

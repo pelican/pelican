@@ -1,7 +1,7 @@
 #ifndef PIPELINEAPPLICATION_H
 #define PIPELINEAPPLICATION_H
 
-#include "PipelineDriver.h"
+#include "core/PipelineDriver.h"
 
 /**
  * @file PipelineApplication.h
@@ -31,6 +31,8 @@ class AbstractDataClient;
  */
 class PipelineApplication
 {
+        friend class PipelineApplicationTest;
+
     private:
         /// Pointer to the application's configuration object.
         Config *_config;

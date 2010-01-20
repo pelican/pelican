@@ -36,7 +36,7 @@ class PipelineApplicationTest : public CppUnit::TestFixture
         CPPUNIT_TEST(test_create_afterQCoreApplication);
         CPPUNIT_TEST(test_commandLine_config);
         CPPUNIT_TEST(test_commandLine_help);
-        CPPUNIT_TEST(test_registerEmptyPipeline);
+        CPPUNIT_TEST(test_registerPipeline_EmptyPipeline);
         CPPUNIT_TEST(test_start);
         CPPUNIT_TEST_SUITE_END();
 
@@ -49,7 +49,7 @@ class PipelineApplicationTest : public CppUnit::TestFixture
         void test_create_afterQCoreApplication();
         void test_commandLine_config();
         void test_commandLine_help();
-        void test_registerEmptyPipeline();
+        void test_registerPipeline_EmptyPipeline();
         void test_start();
 
     public:

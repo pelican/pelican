@@ -94,8 +94,11 @@ void PipelineApplication::start()
 
 /**
  * @details
- * This method is called by the constructor and parses the command line arguments
- * to create the configuration object.
+ * This method is called by the constructor and parses the command line
+ * arguments to create the configuration object.
+ *
+ * @return
+ * This method returns true if the Config object was created, or false if not.
  */
 bool PipelineApplication::_createConfig(int argc, char** argv)
 {
