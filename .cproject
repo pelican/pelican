@@ -23,9 +23,16 @@
 <tool id="cdt.managedbuild.tool.gnu.archiver.base.2119509667" name="GCC Archiver" superClass="cdt.managedbuild.tool.gnu.archiver.base"/>
 <tool id="cdt.managedbuild.tool.gnu.cpp.compiler.base.759732828" name="GCC C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.base">
 <option id="gnu.cpp.compiler.option.include.paths.83624209" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" valueType="includePath">
-<listOptionValue builtIn="false" value="/usr/include/qt4/QtCore"/>
-<listOptionValue builtIn="false" value="/usr/include/qt4/QtXml"/>
 <listOptionValue builtIn="false" value="/usr/include/qt4/QtNetwork"/>
+<listOptionValue builtIn="false" value="/usr/include/qt4/QtXml"/>
+<listOptionValue builtIn="false" value="/usr/include/qt4/QtCore"/>
+<listOptionValue builtIn="false" value="&quot;${workspace_loc:/pelican/src/core}&quot;"/>
+<listOptionValue builtIn="false" value="&quot;${workspace_loc:/pelican/src/data}&quot;"/>
+<listOptionValue builtIn="false" value="&quot;${workspace_loc:/pelican/src/modules}&quot;"/>
+<listOptionValue builtIn="false" value="&quot;${workspace_loc:/pelican/src/pipelines}&quot;"/>
+<listOptionValue builtIn="false" value="&quot;${workspace_loc:/pelican/src/server}&quot;"/>
+<listOptionValue builtIn="false" value="&quot;${workspace_loc:/pelican/src/utility}&quot;"/>
+<listOptionValue builtIn="false" value="&quot;${workspace_loc:/pelican/src}&quot;"/>
 </option>
 <inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.510246143" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
 </tool>
