@@ -145,4 +145,74 @@ void ConfigTest::test_getConfiguration()
 
 }
 
+
+/**
+ * @details
+ * Test for reading a configuration xml from file.
+ */
+void ConfigTest::test_configFileRead()
+{
+
+    // Use case
+    // Ask for the address of a module node in the test config file and check
+    // that its children and their attributes are correct.
+    // Expect that all of the parameters are found
+    {
+        Config config("data/testConfig.xml");
+        Config::TreeAddress_t address;
+        address << Config::NodeId_t("modules", "");
+        address << Config::NodeId_t("module", "testA");
+        QDomElement e = config.get(address);
+
+        CPPUNIT_ASSERT(e.parentNode().nodeName() == "modules");
+        CPPUNIT_ASSERT(e.childNodes().count() == 2);
+        CPPUNIT_ASSERT(e.childNodes().at(0).nodeName() == "paramA");
+        CPPUNIT_ASSERT(e.childNodes().at(1).nodeName() == "paramB");
+        CPPUNIT_ASSERT(e.childNodes().at(0).toElement().attribute("name") == "some_value");
+        CPPUNIT_ASSERT(e.childNodes().at(0).toElement().attribute("value") == "1");
+        CPPUNIT_ASSERT(e.childNodes().at(1).toElement().attribute("name") == "some_coords");
+        CPPUNIT_ASSERT(e.childNodes().at(1).toElement().attribute("x") == "1024");
+        CPPUNIT_ASSERT(e.childNodes().at(1).toElement().attribute("y") == "2048");
+    }
+
+    // Use case
+    // Ask for the address of another module to to check this exists too.
+    // Expect that the module node is found but has no children.
+    {
+        Config config("data/testConfig.xml");
+        Config::TreeAddress_t address;
+        address << Config::NodeId_t("modules", "");
+        address << Config::NodeId_t("module", "default::testA");
+        QDomElement e = config.get(address);
+        CPPUNIT_ASSERT(e.parentNode().nodeName() == "modules");
+        CPPUNIT_ASSERT(e.nodeName() == "module");
+        CPPUNIT_ASSERT(e.childNodes().count() == 0);
+    }
+
+    // Use case
+    // Try to read an empty xml file
+    // Expect that a parse error exception is thrown
+    {
+        try {
+            Config config("data/emptyConfig.xml");
+        }
+        catch (QString err) {
+            CPPUNIT_ASSERT(err.startsWith("Parse error (11)"));
+        }
+    }
+
+    // Use case
+    // Try to read a xml file with a bad doctype
+    // Expect to throw an exception.
+    {
+        try {
+            Config config("data/badConfig.xml");
+        }
+        catch (QString err) {
+            CPPUNIT_ASSERT(err == "Invalid doctype.");
+        }
+    }
+}
+
+
 } // namespace pelican

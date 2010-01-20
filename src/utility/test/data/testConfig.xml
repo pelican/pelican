@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pelican>
+<configuration version="1.0">
+    <servers>
+        <server name="server1" type="tcp" ip="0.1.2.3" port="12345"/>
+        <server name="server2" type="tcp" ip="4.5.6.7" port="678910"/>
+    </servers>
+    <modules>
+        <module name="testA">
+            <paramA name="some_value" value="1"/>
+            <paramB name="some_coords" x="1024" y="2048"/>
+        </module>
+        <module name="testB"/>
+        <module name="testC"/>
+        <module name="default::testA"/>
+        <module name="pipeline1::testA"/>
+    </modules>
+</configuration>

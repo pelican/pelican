@@ -1,3 +1,4 @@
+include(CopyFiles)
 SUBPACKAGE(utilityTest utility)
 set(
    utilityTest_src
@@ -8,3 +9,8 @@ set(
 add_executable(utilityTest ${utilityTest_src} )
 target_link_libraries(utilityTest ${SUBPACKAGE_LIBRARIES} ${CPPUNIT_LIBRARIES})
 add_test(utilityTest ${EXECUTABLE_OUTPUT_PATH}/utilityTest )
+
+copy_files(${CMAKE_CURRENT_SOURCE_DIR}/data/*.xml .)
+
+
+

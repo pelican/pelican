@@ -33,6 +33,7 @@ class ConfigTest : public CppUnit::TestFixture
         CPPUNIT_TEST( test_invalidDocType );
         CPPUNIT_TEST( test_setConfiguration );
         CPPUNIT_TEST( test_getConfiguration );
+        CPPUNIT_TEST( test_configFileRead );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -50,6 +51,9 @@ class ConfigTest : public CppUnit::TestFixture
         void test_setConfiguration();
         /// Test for returning configuration options
         void test_getConfiguration();
+        /// Test for reading a xml config from file
+        void test_configFileRead();
+
 
     public:
         ConfigTest();
