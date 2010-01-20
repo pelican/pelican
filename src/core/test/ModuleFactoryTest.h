@@ -22,7 +22,7 @@ class ModuleFactoryTest : public CppUnit::TestFixture
 {
     public:
         CPPUNIT_TEST_SUITE( ModuleFactoryTest );
-        CPPUNIT_TEST( test_create_EmptyModule );
+        CPPUNIT_TEST( test_createModule_EmptyModule );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -30,7 +30,7 @@ class ModuleFactoryTest : public CppUnit::TestFixture
         void tearDown();
 
         // Test Methods
-        void test_create_EmptyModule();
+        void test_createModule_EmptyModule();
 
     public:
         ModuleFactoryTest(  );

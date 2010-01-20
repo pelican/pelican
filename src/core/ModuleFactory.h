@@ -37,7 +37,7 @@ class ModuleFactory
         ~ModuleFactory();
 
         /// Creates a new module.
-        AbstractModule* createModule(const QString& name);
+        AbstractModule* createModule(const QString& name, const QString& pipeline);
 
         /// Returns the tree node address that marks the start
         /// of the module configuration block.

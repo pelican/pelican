@@ -45,7 +45,7 @@ void ModuleFactoryTest::tearDown()
  * @details
  * Tries to create an EmptyModule with and without a configuration object.
  */
-void ModuleFactoryTest::test_create_EmptyModule()
+void ModuleFactoryTest::test_createModule_EmptyModule()
 {
     // Use Case:
     // Ask for a module without any configuration
@@ -54,7 +54,7 @@ void ModuleFactoryTest::test_create_EmptyModule()
         Config emptyConfig;
         ModuleFactory factory(&emptyConfig);
         AbstractModule* module = 0;
-        CPPUNIT_ASSERT_NO_THROW(module = factory.createModule("EmptyModule"));
+        CPPUNIT_ASSERT_NO_THROW(module = factory.createModule("EmptyModule", "EmptyPipeline"));
         CPPUNIT_ASSERT(module != 0);
     }
 
@@ -68,7 +68,7 @@ void ModuleFactoryTest::test_create_EmptyModule()
         config.set(address);
 
         AbstractModule* module = 0;
-        CPPUNIT_ASSERT_NO_THROW(module = factory.createModule("EmptyModule"));
+        CPPUNIT_ASSERT_NO_THROW(module = factory.createModule("EmptyModule", "EmptyPipeline"));
         CPPUNIT_ASSERT(module != 0);
     }
 }

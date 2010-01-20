@@ -37,13 +37,14 @@ ModuleFactory::~ModuleFactory()
  * @details
  * Public interface to create a new module.
  *
- * @param[in] name A string containing the name of the module.
+ * @param[in] name     A string containing the name of the module.
+ * @param[in] pipeline A string containing the name of the pipeline.
  *
  * @return
  * Returns a pointer to the newly-created module.
  * The object is still owned by the factory.
  */
-AbstractModule* ModuleFactory::createModule(const QString& name)
+AbstractModule* ModuleFactory::createModule(const QString& name, const QString& pipeline)
 {
     /* Create an index into the configuration file and get the configuration */
     Config::TreeAddress_t address = _configRoot;
