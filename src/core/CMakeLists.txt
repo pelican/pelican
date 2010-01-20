@@ -4,7 +4,6 @@ set( core_src
      src/AbstractDataClient.cpp
      src/AbstractPipeline.cpp
      src/AbstractModule.cpp
-     src/CoreOptions.cpp
      src/ModuleFactory.cpp
      src/PipelineApplication.cpp
      src/PipelineDriver.cpp

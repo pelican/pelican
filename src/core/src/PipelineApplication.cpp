@@ -1,7 +1,6 @@
 #include <QCoreApplication>
 #include <QString>
 #include "core/PipelineApplication.h"
-#include "core/CoreOptions.h"
 #include "core/ModuleFactory.h"
 #include "core/AbstractDataClient.h"
 #include "boost/program_options.hpp"
@@ -13,7 +12,7 @@
 
 namespace pelican {
 
-namespace po = boost::program_options;
+namespace opts = boost::program_options;
 
 /**
  * @details
@@ -71,7 +70,8 @@ QString PipelineApplication::getConfigFile() const
 
 /**
  * @details
- * Registers a pipeline with the pipeline driver.
+ * Registers a pipeline with the pipeline driver, which takes ownership of
+ * the pipeline.
  *
  * @param[in] pipeline Pointer to the allocated pipeline.
  */
@@ -107,16 +107,16 @@ bool PipelineApplication::_createConfig(int argc, char** argv)
         throw QString("No command line.");
 
     /* Declare the supported options */
-    po::options_description desc("Allowed options");
+    opts::options_description desc("Allowed options");
     desc.add_options()
         ("help", "Produce help message.")
-        ("config,c", po::value<std::string>(), "Set configuration file.")
+        ("config,c", opts::value<std::string>(), "Set configuration file.")
     ;
 
     /* Parse the command line arguments */
-    po::variables_map varMap;
-    po::store(po::parse_command_line(argc, argv, desc), varMap);
-    po::notify(varMap);
+    opts::variables_map varMap;
+    opts::store(opts::parse_command_line(argc, argv, desc), varMap);
+    opts::notify(varMap);
 
     /* Check for help message */
     if (varMap.count("help")) {
