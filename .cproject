@@ -26,12 +26,6 @@
 <listOptionValue builtIn="false" value="/usr/include/qt4/QtNetwork"/>
 <listOptionValue builtIn="false" value="/usr/include/qt4/QtXml"/>
 <listOptionValue builtIn="false" value="/usr/include/qt4/QtCore"/>
-<listOptionValue builtIn="false" value="&quot;${workspace_loc:/pelican/src/core}&quot;"/>
-<listOptionValue builtIn="false" value="&quot;${workspace_loc:/pelican/src/data}&quot;"/>
-<listOptionValue builtIn="false" value="&quot;${workspace_loc:/pelican/src/modules}&quot;"/>
-<listOptionValue builtIn="false" value="&quot;${workspace_loc:/pelican/src/pipelines}&quot;"/>
-<listOptionValue builtIn="false" value="&quot;${workspace_loc:/pelican/src/server}&quot;"/>
-<listOptionValue builtIn="false" value="&quot;${workspace_loc:/pelican/src/utility}&quot;"/>
 <listOptionValue builtIn="false" value="&quot;${workspace_loc:/pelican/src}&quot;"/>
 </option>
 <inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.510246143" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>

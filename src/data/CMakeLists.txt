@@ -7,6 +7,7 @@ set( data_src
      src/ServerRequest.cpp
      src/ServiceDataRequest.cpp
      src/StreamDataRequest.cpp
+     src/VisibilityData.cpp
 )
 add_library(data ${data_src} )
 target_link_libraries(data ${SUBPACKAGE_LIBRARIES} )
