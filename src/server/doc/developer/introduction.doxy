@@ -1,0 +1,32 @@
+/**
+@page introduction The Pelican Server Design
+
+@section overview General Concepts
+
+@subsection streamdata Chunking of Stream Data
+The pelican server role is to service clients with data sets extracted from one or more incomming streams (data chunking).
+Each client is to receive a unique data set from the stream. After a particular data-set has been delivered it is removed 
+from the server to make room for a new data set.
+Chunking is highly dependent on the format of the incomming data and pelican provides a framework to slot in specialised 
+chunking modules.
+
+@subsection servicedata The Service Data
+
+In addition to this stream data, there is Service data. Service data is more static than the incomming stream, and represents some
+additional information associated with the stream. An example may be the position of instruments that are generating the stream data,
+or their working status. Service Data has the following properties:
+
+@li for each type of service data there is one, and one only, that is marked "current"
+@li service data is marked as "current" when it is received, displacing the existing "current" service data
+@li the service data marked "current" are associated with the data sets of all incomming data streams
+@li any Service data that is not current and is not associated with any buffered stream data chunks is removed
+
+@subsection protocols Transport Protocols
+
+The pelican server allows you to associate different server ports with different protocols.
+Each port socket will be monitored by a seperate server thread.
+The default protocol is the PelicanProtocol which is used by the pelican pipeline client, but the server is
+written to allow functionality to be easily extended (e.g. web monitoring through port 80, or web control via port 8080) 
+
+*/
+

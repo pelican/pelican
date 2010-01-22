@@ -1,0 +1,18 @@
+/**
+
+@mainpage Pelican Server Developer Guide
+
+@section introUser Introduction.
+
+This guide provides a guide for developers of the pelican server. It contains server specific implementation details
+and should be read in conjunction with the general "Pelican Developer Guide"
+
+@li @subpage introduction
+@li @subpage serverSessions
+@li @subpage dataRetirement
+@li @subpage chunkingPluginDevelopment
+@li @subpage pelicanProtocol
+@li @subpage newProtocolDevelopment
+@li @subpage references
+
+*/
