@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QTcpServer>
 #include <QMap>
+#include <QPair>
 #include <QThread>
 
 /**
@@ -13,6 +14,7 @@
 namespace pelican {
 
 class AbstractProtocol;
+class AbstractChunker;
 class PelicanPortServer;
 
 /**
@@ -40,12 +42,18 @@ class PelicanServer : public QThread
         //  transferred to this class.
         void addProtocol(AbstractProtocol*, quint16 port);
 
+        /// Assosiate a host and port with a particular
+        //  chunker type. Ownership of the Chunker is
+        //  transferred to this class.
+        void addChunker(AbstractChunker*, const QString& host, quint16 port);
+
     protected:
-        // code to be executed in the thread (via start() )
+        // code to be executed in the thread ( via start() )
         void run();
 
     private:
         QMap<quint16,AbstractProtocol* > _protocolPortMap;
+        QMap<QPair<QString,quint16>,AbstractChunker* > _chunkerPortMap;
 };
 
 } // namespace pelican

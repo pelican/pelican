@@ -4,6 +4,7 @@ SUBPACKAGE(server data utility)
 set( server_moc_headers
      Data.h
      DataBuffer.h
+     DataReceiver.h
      ServiceDataBuffer.h
      StreamDataBuffer.h
      PelicanPortServer.h
@@ -13,7 +14,9 @@ set( server_moc_headers
    )
 set( server_src
      src/AbstractProtocol.cpp
+     src/AbstractChunker.cpp
      src/Data.cpp
+     src/DataReceiver.cpp
      src/LockedData.cpp
      src/DataManager.cpp
      src/DataBuffer.cpp
@@ -33,6 +36,7 @@ set( serverExe_src
 QT4_WRAP_CPP(
     server_moc_sources
     ${server_moc_headers} )
+
 add_library(server ${server_src} ${server_moc_sources})
 SUBPACKAGE_ADD_LIBRARIES(server ${QT_QTNETWORK_LIBRARY} ${QT_QTCORE_LIBRARY})
 target_link_libraries(server ${SUBPACKAGE_LIBRARIES} )

@@ -1,5 +1,59 @@
 /**
 @page chunkingPluginDevelopment The Chunking Plugin Framework
 
+@section overviewChunking Overview of Chunking system
+
+The chunking plugin modules are driven by the DataReceiver class.
+This DataReceiver class is responsible for setting up the connection and
+calling the chunking plug-in whenever there is new data available.
+
+@subsection chunkerWriting Writing A New Chunker
+
+New chunking algorithms should inherit from the AbstractChunker class.
+
+@subsubsection chunkerAbsMethods Required Implementation
+Whenever data arrives on an incomming socket, the virtual method
+
+@code
+next(QAbstractSocket*)
+@endcode
+
+is called. This method should process a complete data chunk before returning.
+
+An example:
+In this example we expect our data to be demarkated with a size byte followed by
+the data itself.
+
+@code
+
+
+class myChunker : public AbstractChunker
+{
+    public:
+        virtual void next(QAbstractSocket*);
+        void setDataType(const QString& type) { dataType = type; }
+
+    private:
+        QString dataType;
+};
+
+void myChunker::next(QAbstractSocket* socket)
+{
+    // First byte will indicate the size
+    int size = socket.readChar();
+    if( size > 0 ) 
+    {
+        // get some appropriate buffer space to store the raw bytes
+        WritableData bufferedData = getData( dataType, size );
+        if( buffereData.isValid() ) {
+             bufferedData.setData(socket.read(), size);
+        }
+        {
+            // read off next data chunk and discard it
+        }
+    }
+}
+
+@endcode
 
 */
