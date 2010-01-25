@@ -197,7 +197,7 @@ void ConfigTest::test_configFileRead()
             Config config("data/emptyConfig.xml");
         }
         catch (QString err) {
-            CPPUNIT_ASSERT(err.startsWith("Parse error (11)"));
+            CPPUNIT_ASSERT(err.startsWith("Parse error"));
         }
     }
 
