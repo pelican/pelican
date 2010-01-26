@@ -30,7 +30,7 @@ class ImagerDFT : public AbstractModule
         ~ImagerDFT();
 
         /// Runs the module.
-        void run() {}
+        void run(QHash<QString, DataBlob*>& data) {}
 
     private:
         void _imageDft();

@@ -30,7 +30,7 @@ class ZenithImagerDft : public AbstractModule
         ~ZenithImagerDft();
 
         /// Runs the module.
-        void run() {}
+        void run(QHash<QString, DataBlob*>& data) {}
 };
 
 } // namespace pelican
