@@ -212,6 +212,22 @@ void ConfigTest::test_configFileRead()
             CPPUNIT_ASSERT(err == "Invalid doctype.");
         }
     }
+
+    // Use case
+    // Try to extract the named parameters.
+    // Expect that all the parameters are found.
+    {
+        Config config("data/testConfig.xml");
+        Config::TreeAddress_t address;
+        address << Config::NodeId_t("modules", "");
+        address << Config::NodeId_t("module", "testA");
+        QDomElement e = config.get(address);
+
+        CPPUNIT_ASSERT(e.parentNode().nodeName() == "modules");
+        CPPUNIT_ASSERT(e.namedItem("paramA").toElement().attribute("value") == "1");
+        CPPUNIT_ASSERT(e.namedItem("paramB").toElement().attribute("x") == "1024");
+        CPPUNIT_ASSERT(e.namedItem("paramB").toElement().attribute("name") == "some_coords");
+    }
 }
 
 
