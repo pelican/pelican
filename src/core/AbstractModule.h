@@ -1,7 +1,10 @@
 #ifndef ABSTRACTMODULE_H
 #define ABSTRACTMODULE_H
 
+#include <QHash>
+#include <QString>
 #include "data/DataRequirements.h"
+#include "data/DataBlob.h"
 
 class QDomElement;
 
@@ -70,7 +73,7 @@ class AbstractModule
         const DataRequirements requiredData() const;
 
         /// Runs the module (pure virtual).
-        virtual void run() = 0;
+        virtual void run(QHash<QString, DataBlob*>& data) = 0;
 };
 
 } // namespace pelican
