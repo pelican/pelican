@@ -5,6 +5,7 @@ set( modules_src
      src/ZenithCalibrater.cpp
      src/ZenithImagerDft.cpp
      src/ZenithModelVisibilities.cpp
+     src/ImagerDFT.cpp
 )
 add_library(modules ${modules_src} )
 target_link_libraries(modules ${SUBPACKAGE_LIBRARIES} )
