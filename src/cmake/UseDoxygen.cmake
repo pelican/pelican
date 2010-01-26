@@ -37,41 +37,49 @@
 #  For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 #
 
+
 macro(usedoxygen_set_default name value)
+#    message("use doxygen: ${name} - ${value}")
 	if(NOT DEFINED "${name}")
 		set("${name}" "${value}")
 	endif()
 endmacro()
 
+#===============================================================================
+macro(add_doxygen_target name doxyfile_name)
+#message("")
+#message("= Buidling Doxygen makefile for \"${name}\", doxyfile: \"${doxyfile_name}\".")
+#message("")
+
 find_package(Doxygen)
 
+file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/doc")
+
 if(DOXYGEN_FOUND)
-	find_file(DOXYFILE_IN "Doxyfile.in" PATHS ${CMAKE_SOURCE_DIR}/cmake)
+    set(DOXYFILE_IN_${name})
+    find_file(DOXYFILE_IN_${name} ${doxyfile_name}.in PATHS ${CMAKE_SOURCE_DIR}/cmake)
 	include(FindPackageHandleStandardArgs)
-	find_package_handle_standard_args(Doxyfile.in DEFAULT_MSG DOXYFILE_IN)
+	find_package_handle_standard_args(${doxyfile_name}.in DEFAULT_MSG DOXYFILE_IN_${name})
 endif()
 
-if(DOXYGEN_FOUND AND DOXYFILE_IN)
-	add_custom_target(doxygen ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
-
-	usedoxygen_set_default(DOXYFILE_OUTPUT_DIR "${CMAKE_CURRENT_BINARY_DIR}/doc")
+if(DOXYGEN_FOUND AND DOXYFILE_IN_${name})
+    set(DOXYFILE_OUTPUT_DIR)
+	add_custom_target(doc_${doxyfile_name} ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/${doxyfile_name})
+	usedoxygen_set_default(DOXYFILE_OUTPUT_DIR ${CMAKE_CURRENT_BINARY_DIR}/doc/${name})
 	usedoxygen_set_default(DOXYFILE_HTML_DIR "html")
-
-	set_property(DIRECTORY APPEND PROPERTY
-			ADDITIONAL_MAKE_CLEAN_FILES "${DOXYFILE_OUTPUT_DIR}/${DOXYFILE_HTML_DIR}")
+	set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_MAKE_CLEAN_FILES "${DOXYFILE_OUTPUT_DIR}/${DOXYFILE_HTML_DIR}")
 
 	set(DOXYFILE_LATEX "NO")
 	set(DOXYFILE_PDFLATEX "NO")
 	set(DOXYFILE_DOT "NO")
 
 	find_package(LATEX)
+	
 	if(LATEX_COMPILER AND MAKEINDEX_COMPILER)
 		set(DOXYFILE_LATEX "YES")
 		usedoxygen_set_default(DOXYFILE_LATEX_DIR "latex")
 
-		set_property(DIRECTORY APPEND PROPERTY
-				ADDITIONAL_MAKE_CLEAN_FILES
-				"${DOXYFILE_OUTPUT_DIR}/${DOXYFILE_LATEX_DIR}")
+		set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_MAKE_CLEAN_FILES "${DOXYFILE_OUTPUT_DIR}/${DOXYFILE_LATEX_DIR}")
 
 		if(PDFLATEX_COMPILER)
 			set(DOXYFILE_PDFLATEX "YES")
@@ -80,19 +88,22 @@ if(DOXYGEN_FOUND AND DOXYFILE_IN)
 			set(DOXYFILE_DOT "YES")
 		endif()
 
-		add_custom_command(TARGET doxygen
+		add_custom_command(TARGET ${name}
 			POST_BUILD
 			COMMAND ${CMAKE_MAKE_PROGRAM}
 			WORKING_DIRECTORY "${DOXYFILE_OUTPUT_DIR}/${DOXYFILE_LATEX_DIR}")
 	endif()
 
-
-	configure_file(${DOXYFILE_IN} Doxyfile ESCAPE_QUOTES IMMEDIATE @ONLY)
+	configure_file(${DOXYFILE_IN_${name}} ${doxyfile_name} ESCAPE_QUOTES IMMEDIATE @ONLY)
 
 	get_target_property(DOC_TARGET doc TYPE)
 	if(NOT DOC_TARGET)
 		add_custom_target(doc)
 	endif()
 		
-	add_dependencies(doc doxygen)
+	add_dependencies(doc doc_${doxyfile_name})
+	
 endif()
+
+endmacro()
+
