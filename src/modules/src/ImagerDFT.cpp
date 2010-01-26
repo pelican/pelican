@@ -24,8 +24,9 @@ ImagerDFT::~ImagerDFT()
 
 /**
  * @details
+ * Perform a discrete Fourier transform to form an image from the visibily data.
  */
-void _generateExpTerms()
+void _imageDFT()
 {
 }
 

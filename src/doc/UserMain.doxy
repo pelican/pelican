@@ -1,0 +1,11 @@
+/**
+
+@mainpage Pelican User Guide
+
+@section intro Introduction.
+
+This is a user guide to Pelican!
+
+@li @subpage user_server
+
+*/

@@ -59,5 +59,8 @@ include(modules.cmake)
 # -- doxygen documentation targets
 
 include(UseDoxygen)
-add_doxygen_target(main DoxyfileMain)
-add_doxygen_target(server DoxyfileServer)
+set(DOXYFILE_LATEX "YES")
+add_doxygen_target(code DoxyfileCode)
+add_doxygen_target(user DoxyfileUser)
+add_doxygen_target(developer DoxyfileDeveloper)
+

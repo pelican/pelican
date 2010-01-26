@@ -1,15 +1,15 @@
 /**
 
-@mainpage Pelican Server User Guide
+@page user_server Server
 
 @section introUser Introduction.
 
 This guide provides a guide to the installation and configuration of the pelican server.
 
-@li @subpage introduction
-@li @subpage install
-@li @subpage running
-@li @subpage configuration
-@li @subpage references
+@li @subpage user_server_introduction
+@li @subpage user_server_install
+@li @subpage user_server_running
+@li @subpage user_server_configuration
+@li @subpage user_server_references
 
 */

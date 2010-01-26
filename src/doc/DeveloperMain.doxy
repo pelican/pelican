@@ -1,0 +1,11 @@
+/**
+
+@mainpage Pelican Developer Guide
+
+@section intro Introduction.
+
+This is a developer guide to Pelican!
+
+@li @subpage dev_server
+
+*/

@@ -39,7 +39,6 @@
 
 
 macro(usedoxygen_set_default name value)
-#    message("use doxygen: ${name} - ${value}")
 	if(NOT DEFINED "${name}")
 		set("${name}" "${value}")
 	endif()
@@ -53,7 +52,7 @@ macro(add_doxygen_target name doxyfile_name)
 
 find_package(Doxygen)
 
-file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/doc")
+#file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/doc")
 
 if(DOXYGEN_FOUND)
     set(DOXYFILE_IN_${name})

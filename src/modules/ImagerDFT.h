@@ -33,7 +33,7 @@ class ImagerDFT : public AbstractModule
         void run() {}
 
     private:
-        void _generateExpTerms();
+        void _imageDft();
 };
 
 } // namespace pelican
