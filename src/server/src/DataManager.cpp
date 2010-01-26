@@ -2,6 +2,7 @@
 
 #include "Data.h"
 #include "StreamData.h"
+#include "WritableData.h"
 #include "utility/memCheck.h"
 
 namespace pelican {
@@ -21,7 +22,16 @@ const DataRequirements& DataManager::dataSpec() const
     return _specs;
 }
 
-void DataManager::streamDataBuffer(const QString& name, StreamDataBuffer* buffer)
+WritableData DataManager::getWritableData( const QString& type, size_t size)
+{
+    if( _streams.contains(type) )
+        return _streams[type]->getWritable(size);
+    if( _service.contains(type) )
+        return _service[type]->getWritable(size);
+    return WritableData(0);
+}
+
+void DataManager::streamDataBuffer( const QString& name, StreamDataBuffer* buffer)
 {
     _specs.setStreamData(name);
     buffer->setDataManager(this);

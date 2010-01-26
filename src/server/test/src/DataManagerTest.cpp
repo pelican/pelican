@@ -1,4 +1,6 @@
 #include "DataManagerTest.h"
+#include "DataManager.h"
+#include "WritableData.h"
 
 
 #include "utility/memCheck.h"
@@ -24,8 +26,18 @@ void DataManagerTest::tearDown()
 {
 }
 
-void DataManagerTest::test_method()
+void DataManagerTest::test_getWritable()
 {
+    {
+        // Use Case:
+        // call get Writable with an unknown type
+        // Expect:
+        // return an invalid Writable
+        DataManager d;
+        WritableData data = d.getWritableData("anything",100);
+        CPPUNIT_ASSERT(!data.isValid());
+    }
+
 }
 
 } // namespace pelican

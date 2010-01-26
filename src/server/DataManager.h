@@ -29,7 +29,7 @@ class StreamData;
 class DataManager
 {
     public:
-        DataManager(  );
+        DataManager();
         ~DataManager();
 
         /// returns the data types handled by this manager
@@ -48,6 +48,13 @@ class DataManager
         /// getServiceData
         //  return the requested Service Data
         LockedData getServiceData(const QString& type, const QString& version);
+
+        /// getWritableData
+        //  return a Wriatble data object that represents
+        //  a space in the buffer of a minimum size specified  
+        //  An invalid Writable object will be returned if
+        //  the space is not available
+        WritableData getWritableData(const QString& type, size_t size);
 
         /// associateServiceData
         void associateServiceData(StreamData* data);

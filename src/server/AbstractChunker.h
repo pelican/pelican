@@ -1,13 +1,15 @@
 #ifndef ABSTRACTCHUNKER_H
 #define ABSTRACTCHUNKER_H
 #include <QUdpSocket>
-
+#include <QString>
 
 /**
  * @file AbstractChunker.h
  */
 
 namespace pelican {
+class DataManager;
+class WritableData;
 
 /**
  * @class AbstractChunker
@@ -23,7 +25,7 @@ class AbstractChunker
 {
 
     public:
-        AbstractChunker();
+        AbstractChunker(DataManager*);
         virtual ~AbstractChunker();
         /// create a new socket appropriate to the type expected
         //  on the data stream
@@ -33,9 +35,17 @@ class AbstractChunker
         ///  called whenever there is data ready to be processed
         //   Inheriting classes should process a complete data chunk
         //   inside this method
-        virtual void next(QAbstractSocket*) = 0;
+        virtual void next(QAbstractSocket*)  = 0;
+
+    protected:
+        /// access to memory to store data is through this interface.
+        //  The WritableData object should always be checked with its isValid() method
+        //  before use. When the WritableData object goes out of scope the data 
+        //  will become available to be served automatically if it is valid.
+        WritableData getDataStorage(const QString& type, size_t size ) const;
 
     private:
+        DataManager* _dm;
 };
 
 } // namespace pelican

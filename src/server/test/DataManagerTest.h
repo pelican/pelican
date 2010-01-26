@@ -13,7 +13,7 @@ namespace pelican {
  * @class DataManagerTest
  *  
  * @brief
- * 
+ *   Unit test for the DataManager class
  * @details
  * 
  */
@@ -22,7 +22,7 @@ class DataManagerTest : public CppUnit::TestFixture
 {
     public:
         CPPUNIT_TEST_SUITE( DataManagerTest );
-        CPPUNIT_TEST( test_method );
+        CPPUNIT_TEST( test_getWritable );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -30,7 +30,7 @@ class DataManagerTest : public CppUnit::TestFixture
         void tearDown();
 
         // Test Methods
-        void test_method();
+        void test_getWritable();
 
     public:
         DataManagerTest(  );

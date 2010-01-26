@@ -18,7 +18,8 @@ class Data;
  *    to enable writing
  * @details
  *    The data will become unlocked on destruction
- * 
+ *    and emit a signal when there are no locks upon it
+ *
  */
 
 class WritableData 

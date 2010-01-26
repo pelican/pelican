@@ -1,9 +1,11 @@
 SUBPACKAGE(serverTest server)
 set(
    serverTestlib_src
+   src/TestChunker.cpp
    src/TestProtocol.cpp
    src/PelicanTestClient.cpp
-   )
+)
+
 set(
    serverTest_src
    src/serverTest.cpp
@@ -15,7 +17,16 @@ set(
    src/StreamDataBufferTest.cpp
    src/StreamDataTest.cpp
    src/WritableDataTest.cpp
-   #   src/PelicanServerTest.cpp
+)
+
+# multi-threaded tests
+# these need to be seperate so as not to use the
+# single threaded utility libs
+set(
+   serverTestMT_src
+   src/serverTest.cpp
+   src/DataReceiverTest.cpp
+   src/PelicanServerTest.cpp
 )
 
 add_library( serverTestUtilities ${serverTestlib_src} )
@@ -23,4 +34,8 @@ SUBPACKAGE_ADD_LIBRARIES(serverTestUtilities)
 
 add_executable(serverTest ${serverTest_src} )
 target_link_libraries(serverTest ${SUBPACKAGE_LIBRARIES} ${CPPUNIT_LIBRARIES} )
+add_executable(serverTestMT ${serverTestMT_src} )
+target_link_libraries(serverTestMT ${SUBPACKAGE_LIBRARIES} ${CPPUNIT_LIBRARIES} )
+
 add_test(serverTest ${EXECUTABLE_OUTPUT_PATH}/serverTest )
+add_test(serverTestMT ${EXECUTABLE_OUTPUT_PATH}/serverTestMT )
