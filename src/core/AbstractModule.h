@@ -28,21 +28,36 @@ namespace pelican {
 class AbstractModule
 {
     private:
-        /// The service data and stream data required by the module.
-        DataRequirements _req;
+        /// The remote service data and stream data required by the module.
+        DataRequirements _reqRemote;
+
+        /// The local service and stream data required by the module.
+        DataRequirements _reqLocal;
 
     protected:
-        /// Adds the required service data set.
-        void addServiceData(const QSet<QString>& list) {_req.addServiceData(list);}
+        /// Adds the required local service data set.
+        void addLocalServiceData(const QSet<QString>& list);
 
-        /// Adds the given service data as a requirement.
-        void addServiceData(const QString& string) {_req.setServiceData(string);}
+        /// Adds the given local service data as a requirement.
+        void addLocalServiceData(const QString& string);
 
-        /// Adds the required stream data set.
-        void addStreamData(const QSet<QString>& list)  {_req.addStreamData(list);}
+        /// Adds the required local stream data set.
+        void addLocalStreamData(const QSet<QString>& list);
 
-        /// Adds the given stream data as a requirement.
-        void addStreamData(const QString& string) {_req.setStreamData(string);}
+        /// Adds the given local stream data as a requirement.
+        void addLocalStreamData(const QString& string);
+
+        /// Adds the required remote service data set.
+        void addRemoteServiceData(const QSet<QString>& list);
+
+        /// Adds the given remote service data as a requirement.
+        void addRemoteServiceData(const QString& string);
+
+        /// Adds the required remote stream data set.
+        void addRemoteStreamData(const QSet<QString>& list);
+
+        /// Adds the given remote stream data as a requirement.
+        void addRemoteStreamData(const QString& string);
 
     public:
         /// Constructs a new module.
@@ -51,8 +66,8 @@ class AbstractModule
         /// Destroys the module (virtual).
         virtual ~AbstractModule();
 
-        /// Returns the data required by this module.
-        const DataRequirements& requiredData() const {return _req;}
+        /// Returns all the data required by this module.
+        const DataRequirements requiredData() const;
 
         /// Runs the module (pure virtual).
         virtual void run() = 0;
