@@ -6,8 +6,9 @@ namespace pelican {
  * @details
  * Creates a new abstract Pelican module with the given configuration.
  */
-AbstractModule::AbstractModule(const QDomElement&)
+AbstractModule::AbstractModule(const QDomElement& config)
 {
+    _config = config;
 }
 
 /**
@@ -106,6 +107,15 @@ void AbstractModule::addRemoteStreamData(const QString& string)
 const DataRequirements AbstractModule::requiredData() const
 {
     return _reqRemote + _reqLocal;
+}
+
+/**
+ * @details
+ * Gets the configuration for the given \p tagName and \p attribute.
+ */
+QString AbstractModule::getOption(const QString& tagName, const QString& attribute)
+{
+    return _config.namedItem(tagName).toElement().attribute(attribute);
 }
 
 } // namespace pelican

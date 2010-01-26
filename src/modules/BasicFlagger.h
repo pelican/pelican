@@ -30,7 +30,7 @@ class BasicFlagger : public AbstractModule
         ~BasicFlagger();
 
         /// Runs the module.
-        void run(QHash<QString, DataBlob*>& data) {}
+        void run(QHash<QString, DataBlob*>& data);
 };
 
 } // namespace pelican

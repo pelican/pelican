@@ -3,10 +3,9 @@
 
 #include <QHash>
 #include <QString>
+#include <QDomElement>
 #include "data/DataRequirements.h"
 #include "data/DataBlob.h"
-
-class QDomElement;
 
 /**
  * @file AbstractModule.h
@@ -37,6 +36,9 @@ class AbstractModule
         /// The local service and stream data required by the module.
         DataRequirements _reqLocal;
 
+        /// The configuration node for the module.
+        QDomElement _config;
+
     protected:
         /// Adds the required local service data set.
         void addLocalServiceData(const QSet<QString>& list);
@@ -62,6 +64,9 @@ class AbstractModule
         /// Adds the given remote stream data as a requirement.
         void addRemoteStreamData(const QString& string);
 
+        /// Gets a configuration option.
+        QString getOption(const QString& tagName, const QString& attribute);
+
     public:
         /// Constructs a new module.
         AbstractModule(const QDomElement& config);
@@ -73,6 +78,15 @@ class AbstractModule
         const DataRequirements requiredData() const;
 
         /// Runs the module (pure virtual).
+        /// This public method is called by the pipeline to run the module.
+        /// A reference to the complete hash of data blobs required for this iteration
+        /// of the pipeline is passed as a function argument.
+        ///
+        /// The module updates the contents of this hash while running.
+        ///
+        /// @param[in,out] data The hash of data blobs required to run the pipeline
+        ///                     module. The module updates the contents of the data
+        ///                     blobs in the hash as required.
         virtual void run(QHash<QString, DataBlob*>& data) = 0;
 };
 
