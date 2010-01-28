@@ -5,7 +5,7 @@
 #ifndef NDEBUG
 #ifndef MEMCHECK_NEW_H
 #define MEMCHECK_NEW_H 1
-#include "memoryTracer.h"
+#include "memoryCheckInterface.h"
 
 #include <iostream>
 #define new new(__FILE__, __LINE__)

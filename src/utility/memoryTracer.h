@@ -11,11 +11,7 @@
 #include <QMutex>
 #include <new>
 #include <boost/pool/detail/singleton.hpp>
-
-void* operator new(std::size_t size, char const * file, int line);
-void  operator delete(void * p, char const * file, int line);
-extern void* operator new(std::size_t size) throw (std::bad_alloc);
-extern void  operator delete(void * p) throw();
+#include "memoryCheckInterface.h"
 
 #include <map>
 

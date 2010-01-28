@@ -33,9 +33,9 @@ add_library( serverTestUtilities ${serverTestlib_src} )
 SUBPACKAGE_ADD_LIBRARIES(serverTestUtilities)
 
 add_executable(serverTest ${serverTest_src} )
-target_link_libraries(serverTest ${SUBPACKAGE_LIBRARIES} ${CPPUNIT_LIBRARIES} )
+target_link_libraries(serverTest ${SUBPACKAGE_LIBRARIES} ${CPPUNIT_LIBRARIES} memoryTracer )
 add_executable(serverTestMT ${serverTestMT_src} )
-target_link_libraries(serverTestMT ${SUBPACKAGE_LIBRARIES} ${CPPUNIT_LIBRARIES} )
+target_link_libraries(serverTestMT ${SUBPACKAGE_LIBRARIES} ${CPPUNIT_LIBRARIES} memoryTracerDummy )
 
 add_test(serverTest ${EXECUTABLE_OUTPUT_PATH}/serverTest )
 add_test(serverTestMT ${EXECUTABLE_OUTPUT_PATH}/serverTestMT )

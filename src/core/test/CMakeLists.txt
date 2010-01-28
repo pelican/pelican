@@ -13,7 +13,7 @@ set( coreTestLibrary_src
 add_library(coreTestUtilities ${coreTestLibrary_src} )
 SUBPACKAGE_ADD_LIBRARIES(coreTestUtilities)
 add_executable(coreTest ${coreTest_src} )
-target_link_libraries(coreTest ${SUBPACKAGE_LIBRARIES} ${CPPUNIT_LIBRARIES})
+target_link_libraries(coreTest ${SUBPACKAGE_LIBRARIES} ${CPPUNIT_LIBRARIES} memoryTracer )
 add_test(coreTest ${EXECUTABLE_OUTPUT_PATH}/coreTest )
 
 

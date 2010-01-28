@@ -4,11 +4,9 @@
  * http://www.relisoft.com/book/tech/9new.html
  */
 
-#include <QMutexLocker>
 #include "memoryTracer.h"
 #include <sstream>
 #include <iostream>
-#include <new>
 
 #if !defined NDEBUG
 
@@ -23,7 +21,7 @@ void* operator new(std::size_t size, char const * file, int line)
     return p;
 }
 
-extern void operator delete(void * p, char const * file, int line)
+void operator delete(void * p, char const * file, int line)
 {
     //std::cout << "delete() :" << file << " line: " << line << std::endl;
     if (Tracer::ready)
@@ -39,7 +37,7 @@ extern void* operator new(std::size_t size) throw (std::bad_alloc)
     return p;
 }
 
-void operator delete(void* p) throw()
+extern void operator delete(void* p) throw()
 {
     //std::cout << "delete(" << p << ")" << std::endl;
     if (Tracer::ready)
