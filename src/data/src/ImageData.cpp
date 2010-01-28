@@ -22,10 +22,7 @@ ImageData::ImageData() : DataBlob()
 ImageData::ImageData(int sizeL, int sizeM, int nChannels)
 : DataBlob()
 {
-    _sizeL = sizeL;
-    _sizeM = sizeM;
-    _nChannels = nChannels;
-    _image.resize(_nChannels * _sizeL * _sizeM);
+    assign(sizeL, sizeM, nChannels);
 }
 
 

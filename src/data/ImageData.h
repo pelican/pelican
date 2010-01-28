@@ -26,7 +26,7 @@ class ImageData : public DataBlob
         ImageData();
 
         /// Constructor assigning memory for the image cube.
-        ImageData(const int sizeL, const int sizeM, const int nChannels);
+        ImageData(const unsigned int sizeL, const unsigned int sizeM, const unsigned int nChannels);
 
         /// Image data destructor.
         ~ImageData();
@@ -110,11 +110,11 @@ class ImageData : public DataBlob
         }
 
         /// Return a pointer to the image cube.
-        real_t* ampPtr() const { return &_image[0]; }
+        real_t* ampPtr() const { return _image.size() > 0 ? &_image[0] : NULL; }
 
         /// Return a pointer to the image for a specifed channel
         real_t* ampPtr(const unsigned int channel) const {
-            return &_image[channel * _sizeL * _sizeM];
+            return _image.size() > 0 ? &_image[channel * _sizeL * _sizeM] : NULL;
         }
 
         /// Returns a reference to the image amplitude vector
@@ -122,6 +122,11 @@ class ImageData : public DataBlob
 
         /// Operator to dereference the image amplitude array
         real_t& operator[](const unsigned int i) const { return _image[i]; }
+
+        /// Operator to dereference the image amplitude array
+        real_t& operator()(const unsigned int l, const unsigned int m, const unsigned int channel) {
+            return _image[channel * _sizeL * _sizeM + m * _sizeL + l];
+        }
 
         /// Sets the image pixel amplitude at the coordinate l,m for the specified channel
         void setAmp(const unsigned int l, const unsigned int m, const unsigned int channel, const real_t value) {
