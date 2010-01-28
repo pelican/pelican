@@ -17,12 +17,17 @@ VisibilityData::VisibilityData() : DataBlob()
  * Constructs an empty set of visibility data.
  * The visibility matrix is pre-sized to the given parameters.
  *
- * @param[in] rows The number of rows in the matrix.
- * @param[in] cols The number of columns in the matrix.
+ * @param[in] antennas The number of antennas in the visibility matrix.
+ * @param[in] channels The number of frequency channels.
+ * @param[in] polarisations The number of polarisations.
  */
-VisibilityData::VisibilityData(int rows, int cols) : DataBlob()
+VisibilityData::VisibilityData(int antennas, int channels, int polarisations)
+: DataBlob()
 {
-    _init();
+    _nAntennas = antennas;
+    _nChannels = channels;
+    _nPolarisations = polarisations;
+    _visibilities.resize(antennas * antennas * channels * polarisations);
 }
 
 /**
@@ -41,6 +46,7 @@ void VisibilityData::_init()
 {
     _nAntennas = 0;
     _nChannels = 0;
+    _nPolarisations = 0;
 }
 
 } // namespace pelican
