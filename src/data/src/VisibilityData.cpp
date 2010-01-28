@@ -9,6 +9,7 @@ namespace pelican {
  */
 VisibilityData::VisibilityData() : DataBlob()
 {
+    _init();
 }
 
 /**
@@ -21,6 +22,7 @@ VisibilityData::VisibilityData() : DataBlob()
  */
 VisibilityData::VisibilityData(int rows, int cols) : DataBlob()
 {
+    _init();
 }
 
 /**
@@ -29,6 +31,16 @@ VisibilityData::VisibilityData(int rows, int cols) : DataBlob()
  */
 VisibilityData::~VisibilityData()
 {
+}
+
+/**
+ * @details
+ * Initialises the class data members (called from constructors).
+ */
+void VisibilityData::_init()
+{
+    _nAntennas = 0;
+    _nChannels = 0;
 }
 
 } // namespace pelican

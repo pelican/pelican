@@ -1,11 +1,19 @@
 #ifndef DATABLOB_H
 #define DATABLOB_H
 
+#include <complex>
+
 /**
  * @file DataBlob.h
  */
 
 namespace pelican {
+
+/// Real floating point data type.
+typedef double real_t;
+
+/// Complex floating point data type.
+typedef std::complex<real_t> complex_t;
 
 /**
  * @class DataBlob
