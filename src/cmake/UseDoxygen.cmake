@@ -46,13 +46,13 @@ endmacro()
 
 #===============================================================================
 macro(add_doxygen_target name doxyfile_name)
-#message("")
-#message("= Buidling Doxygen makefile for \"${name}\", doxyfile: \"${doxyfile_name}\".")
-#message("")
+message("")
+message("***************************************************************")
+message("= Setting \"${name}\" doxygen makefile (doxyfile: \"${doxyfile_name}\").")
+message("***************************************************************")
+message("")
 
 find_package(Doxygen)
-
-#file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/doc")
 
 if(DOXYGEN_FOUND)
     set(DOXYFILE_IN_${name})
@@ -72,7 +72,7 @@ if(DOXYGEN_FOUND AND DOXYFILE_IN_${name})
 	set(DOXYFILE_PDFLATEX "NO")
 	set(DOXYFILE_DOT "NO")
 
-	find_package(LATEX)
+    find_package(LATEX)
 	
 	if(LATEX_COMPILER AND MAKEINDEX_COMPILER)
 		set(DOXYFILE_LATEX "YES")

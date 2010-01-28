@@ -33,7 +33,17 @@ class ImagerDFT : public AbstractModule
         void run(QHash<QString, DataBlob*>& data) {}
 
     private:
-        void _imageDft();
+        /// Extract the configuration from the xml node setting default where required.
+        void _getConfiguration(const QDomElement& config);
+
+        /// Construct the image by dft
+        void _dft();
+
+    private:
+        int _sizex;
+        int _sizey;
+        int _cellsizex;
+        int _cellsizey;
 };
 
 } // namespace pelican
