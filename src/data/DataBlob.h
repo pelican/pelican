@@ -7,6 +7,9 @@
 
 namespace pelican {
 
+/// Real floating point data type.
+typedef double real_t;
+
 /**
  * @class DataBlob
  *  
