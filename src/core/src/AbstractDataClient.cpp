@@ -20,4 +20,13 @@ AbstractDataClient::~AbstractDataClient()
 {
 }
 
+/**
+ * @details
+ * Sets the IO device.
+ */
+void AbstractDataClient::setDevice(QIODevice *device)
+{
+    _inputDataStream.setDevice(device);
+}
+
 } // namespace pelican

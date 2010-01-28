@@ -1,6 +1,8 @@
 #ifndef DATABLOB_H
 #define DATABLOB_H
 
+#include <complex>
+
 /**
  * @file DataBlob.h
  */

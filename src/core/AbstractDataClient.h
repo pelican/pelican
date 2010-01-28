@@ -3,6 +3,9 @@
 
 #include <QHash>
 #include <QString>
+#include <QDataStream>
+
+class QIODevice;
 
 /**
  * @file AbstractDataClient.h
@@ -30,6 +33,9 @@ class DataRequirements;
  */
 class AbstractDataClient
 {
+    private:
+        QDataStream _inputDataStream;
+
     public:
         /// Data client constructor.
         AbstractDataClient();
@@ -39,6 +45,9 @@ class AbstractDataClient
 
         /// Gets the requested data from the data server.
         virtual QHash<QString, DataBlob*> getData(const DataRequirements&) = 0;
+
+        /// Sets the input device.
+        void setDevice(QIODevice *device);
 };
 
 } // namespace pelican
