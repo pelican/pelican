@@ -28,23 +28,16 @@ Session::~Session()
 
 void Session::run()
 {
-    // setup the output stream
-    QByteArray block;
-    QDataStream out(&block, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_0);
-    out << (quint16)0; // this should really be in the protocol
-
     QTcpSocket socket;
     if (!socket.setSocketDescriptor(_socketDescriptor)) {
+        emit error(socket.error());
         return;
     }
-    //ServerRequest req = _proto->request(socket);
-    //processRequest(req, out);
-    out << "Hello";
 
-    out.device()->seek(0);   // TODO move to protocol
-    out << (quint16)(block.size() - sizeof(quint16)); // TODO move to protocol
+    ServerRequest req = _proto->request(socket);
 
+    QByteArray block;
+    processRequest(req, block);
     socket.write(block); 
     socket.disconnectFromHost();
     socket.waitForDisconnected();
@@ -55,7 +48,7 @@ void Session::run()
  * this routine processes a general ServerRequest, calling the appropriate
  * working and then passes this on to the protocol to be returned to the client
  */
-void Session::processRequest(const ServerRequest& req, QDataStream& out)
+void Session::processRequest(const ServerRequest& req, QByteArray& out)
 {
     try {
         switch(req.type()) {

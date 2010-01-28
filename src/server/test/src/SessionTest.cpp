@@ -35,13 +35,11 @@ SessionTest::~SessionTest()
 
 void SessionTest::setUp()
 {
-    _out = new QDataStream(&_block,QIODevice::WriteOnly);
-    _out->setVersion(QDataStream::Qt_4_0);
-
     QString id = "1";
     _proto = new TestProtocol(id);
     _data = new DataManager;
     _session = new Session(0, _proto, _data);
+    _block = new QByteArray;
 }
 
 void SessionTest::tearDown()
@@ -49,7 +47,7 @@ void SessionTest::tearDown()
     delete _data;
     delete _proto;
     delete _session;
-    delete _out;
+    delete _block;
 }
 
 void SessionTest::test_processRequest()
@@ -60,9 +58,9 @@ void SessionTest::test_processRequest()
         // Expect the id to be returned
         ServerRequest request(ServerRequest::Acknowledge);
 
-        CPPUNIT_ASSERT_EQUAL( 0, _block.size() );
-        _session->processRequest(request, *_out);
-        CPPUNIT_ASSERT( _block.size() != 0 );
+        CPPUNIT_ASSERT_EQUAL( 0, _block->size() );
+        _session->processRequest(request, *_block);
+        CPPUNIT_ASSERT( *_block == _proto->lastBlock() );
     }
 }
 
@@ -76,11 +74,11 @@ void SessionTest::test_serviceData()
         // Use Case:
         // Request ServiceData that is not supported
         // Expect error message to be returned
-        QDataStream out(&_block,QIODevice::WriteOnly);
+        QDataStream out(_block,QIODevice::WriteOnly);
         out.setVersion(QDataStream::Qt_4_0);
 
         ServiceDataRequest request;
-        _session->processRequest(request, *_out);
+        _session->processRequest(request, *_block);
     }
 }
 

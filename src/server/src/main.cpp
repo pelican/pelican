@@ -4,6 +4,7 @@
  */
 
 #include <QCoreApplication>
+#include "DataManager.h"
 #include "PelicanServer.h"
 #include "PelicanPortServer.h"
 #include "PelicanProtocol.h"
@@ -13,7 +14,8 @@ using namespace pelican;
 int main(int argc, char *argv[])
 {
     QCoreApplication app(argc, argv);
-    //PelicanPortServer s(new PelicanProtocol);
+    //DataManager dm;
+    //PelicanPortServer s(new PelicanProtocol, &dm);
     //s.listen(QHostAddress::Any , 2000);
     PelicanServer s;
     s.addProtocol(new PelicanProtocol, 2000);

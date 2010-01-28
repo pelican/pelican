@@ -2,7 +2,7 @@
 #define ABSTRACTPROTOCOL_H
 #include <QMap>
 class QString;
-class QDataStream;
+class QByteArray;
 class QTcpSocket;
 
 /**
@@ -38,11 +38,19 @@ class AbstractProtocol
     public:
         AbstractProtocol();
         virtual ~AbstractProtocol();
+        /// processes an incomming request
         virtual ServerRequest request(QTcpSocket& socket) = 0;
-        virtual void send(QDataStream& stream, const StreamData_t& ) = 0;
-        virtual void send(QDataStream& stream, const ServiceData_t& ) = 0;
-        virtual void send( QDataStream& stream, const QString& message ) = 0;
-        virtual void sendError(QDataStream& stream, const QString&) = 0;
+        /// write StreamData to an outgoing datastream
+        virtual void send(QByteArray& stream, const StreamData_t& ) = 0;
+
+        /// write Servicedata to an outgoing datastream
+        virtual void send(QByteArray& stream, const ServiceData_t& ) = 0;
+
+        /// write a non-error message to an outgoing datastream
+        virtual void send( QByteArray& stream, const QString& message ) = 0;
+
+        /// send an error to an outgoing datastream
+        virtual void sendError(QByteArray& stream, const QString&) = 0;
 
     private:
 };

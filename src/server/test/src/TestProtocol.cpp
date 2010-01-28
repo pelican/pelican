@@ -16,6 +16,11 @@ TestProtocol::~TestProtocol()
 {
 }
 
+QByteArray& TestProtocol::lastBlock()
+{
+    return _last;
+}
+
 ServerRequest TestProtocol::request(QTcpSocket& socket)
 {
     QStringList tokens;
@@ -23,22 +28,28 @@ ServerRequest TestProtocol::request(QTcpSocket& socket)
     return ServerRequest(ServerRequest::Acknowledge);
 }
 
-void TestProtocol::send( QDataStream& stream, const QString& msg )
+void TestProtocol::send( QByteArray& stream, const QString& message)
 {
-    stream << _id;
+    stream.append(msg);
+    stream.append(message);
+    _last = stream;
 }
 
-void TestProtocol::send( QDataStream& stream, const AbstractProtocol::StreamData_t& )
+void TestProtocol::send( QByteArray& stream, const AbstractProtocol::StreamData_t& )
 {
+    _last = stream;
 }
 
-void TestProtocol::send( QDataStream& stream, const AbstractProtocol::ServiceData_t& )
+void TestProtocol::send( QByteArray& stream, const AbstractProtocol::ServiceData_t& )
 {
+    _last = stream;
 }
 
-void TestProtocol::sendError( QDataStream& stream, const QString& msg)
+void TestProtocol::sendError( QByteArray& stream, const QString& msg)
 {
-    stream << "ERROR" << msg << "\n";
+    stream.append(error);
+    stream.append(msg);
+    _last = stream;
 }
 
 } // namespace pelican

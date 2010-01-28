@@ -34,21 +34,32 @@ ServerRequest PelicanProtocol::request(QTcpSocket& socket)
     return r;
 }
 
-void PelicanProtocol::send(QDataStream& stream, const AbstractProtocol::StreamData_t& ) 
+void PelicanProtocol::send(QByteArray& stream, const AbstractProtocol::StreamData_t& ) 
 {
 }
 
-void PelicanProtocol::send(QDataStream& stream, const AbstractProtocol::ServiceData_t& ) 
+void PelicanProtocol::send(QByteArray& stream, const AbstractProtocol::ServiceData_t& ) 
 {
 }
 
-void PelicanProtocol::send(QDataStream& stream, const QString& msg )
+void PelicanProtocol::send(QByteArray& stream, const QString& msg )
 {
-    stream << msg;
+    QDataStream out(&stream, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_4_0);
+    out << (quint16)0;
+    out << msg;
+    out.device()->seek(0);
+    out << (quint16)(stream.size() - sizeof(quint16));
 }
 
-void PelicanProtocol::sendError(QDataStream& stream, const QString&)
+void PelicanProtocol::sendError(QByteArray& stream, const QString& msg)
 {
+    QDataStream out(&stream, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_4_0);
+    out << (quint16)0;
+    out << msg;
+    out.device()->seek(0);
+    out << (quint16)(stream.size() - sizeof(quint16));
 }
 
 } // namespace pelican

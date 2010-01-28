@@ -3,7 +3,7 @@
 
 #include <QThread>
 #include <QList>
-class QTcpSocket;
+#include <QTcpSocket>
 
 /**
  * @file Session.h
@@ -35,16 +35,20 @@ class Session : public QThread
         Session(int socketDescriptor, AbstractProtocol* proto, DataManager* data, QObject* parent=0 );
         ~Session();
         void run();
-        void processRequest(const ServerRequest&, QDataStream& );
+        void processRequest(const ServerRequest&, QByteArray& );
 
     protected:
         QList<LockedData> processStreamDataRequest(const StreamDataRequest& req );
         QList<LockedData> processServiceDataRequest(const ServiceDataRequest& req );
 
+    signals:
+        void error(QTcpSocket::SocketError socketError);
+
     private:
         int _socketDescriptor;
         DataManager* _data;
         AbstractProtocol* _proto;
+        static int _n;
 
     friend class SessionTest; // unit test
 };

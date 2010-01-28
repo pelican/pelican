@@ -3,12 +3,6 @@
 #include "Session.h"
 #include "AbstractProtocol.h"
 #include "utility/memCheck.h"
-#ifdef new
-#undef new
-#endif
-#ifdef delete
-#undef delete
-#endif
 
 namespace pelican {
 
