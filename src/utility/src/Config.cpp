@@ -102,7 +102,7 @@ const QDomElement Config::get(const TreeAddress_t &address) const
 {
     QDomElement parent = _document.documentElement();
 
-    /* Empty configuraiton return null element */
+    /* Empty configuration return null element */
     if (parent.isNull()) {
         return QDomElement();
     }

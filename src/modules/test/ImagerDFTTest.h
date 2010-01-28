@@ -22,15 +22,16 @@ class ImagerDFTTest : public CppUnit::TestFixture
 {
     public:
         CPPUNIT_TEST_SUITE( ImagerDFTTest );
-        CPPUNIT_TEST( test_method );
+        CPPUNIT_TEST( test_createModule );
         CPPUNIT_TEST_SUITE_END();
+
 
     public:
         void setUp();
         void tearDown();
 
         // Test Methods
-        void test_method();
+        void test_createModule();
 
     public:
         ImagerDFTTest(  );
