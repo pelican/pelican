@@ -16,7 +16,7 @@ SocketTester::~SocketTester()
 {
 }
 
-QTcpSocket& SocketTester::send(QByteArray& block)
+QTcpSocket& SocketTester::send(const QByteArray& block)
 {
     init();
     _sock1.write(block);
