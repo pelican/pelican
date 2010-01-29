@@ -64,7 +64,6 @@ void AntennaPositionsDataTest::test_accessorMethods()
         CPPUNIT_ASSERT(zPtr[i] == zpos);
         CPPUNIT_ASSERT(z[i] == zpos);
     }
-
 }
 
 

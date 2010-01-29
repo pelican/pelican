@@ -3,7 +3,6 @@ SUBPACKAGE(core modules data)
 set( core_src
      src/AbstractDataClient.cpp
      src/AbstractPipeline.cpp
-     src/AbstractModule.cpp
      src/ModuleFactory.cpp
      src/PipelineApplication.cpp
      src/PipelineDriver.cpp

@@ -30,6 +30,17 @@ void VisibilityPositionsDataTest::tearDown()
  */
 void VisibilityPositionsDataTest::test_accessorMethods()
 {
+    int nAnt = 96;
+    VisibilityPositions visPos(nAnt);
+    visPos.refChannel() = 0;
+    visPos.refFreq() = 1.0e8;
+    visPos.freqInc() = 1.0e6;
+
+    for (int j = 0; j < nAnt; j++) {
+        for (int i = 0; i < nAnt; i++) {
+            visPos.u(i, j) = static_cast<real_t>(j - i);
+        }
+    }
 
 }
 

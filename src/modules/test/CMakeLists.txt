@@ -1,7 +1,8 @@
-SUBPACKAGE(modulesTest modules core utility)
+SUBPACKAGE(modulesTest modules utility)
 set(
    modulesTest_src
    src/modulesTest.cpp
+   src/TestModule.cpp
    src/BasicFlaggerTest.cpp
    src/ZenithCalibraterTest.cpp
    src/ZenithImagerDftTest.cpp

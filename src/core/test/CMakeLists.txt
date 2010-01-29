@@ -7,7 +7,6 @@ set( coreTest_src
 )
 set( coreTestLibrary_src
      src/TestDataClient.cpp
-     src/TestModule.cpp
      src/TestPipeline.cpp
 )
 add_library(coreTestUtilities ${coreTestLibrary_src} )

@@ -1,7 +1,7 @@
 #ifndef ZENITHIMAGERDFT_H
 #define ZENITHIMAGERDFT_H
 
-#include "core/AbstractModule.h"
+#include "AbstractModule.h"
 
 class QDomElement;
 

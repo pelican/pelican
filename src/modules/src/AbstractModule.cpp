@@ -1,4 +1,4 @@
-#include "core/AbstractModule.h"
+#include "modules/AbstractModule.h"
 
 namespace pelican {
 

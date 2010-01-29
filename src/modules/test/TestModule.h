@@ -3,7 +3,7 @@
 
 class QDomElement;
 
-#include "core/AbstractModule.h"
+#include "AbstractModule.h"
 
 /**
  * @file TestModule.h

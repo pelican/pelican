@@ -1,5 +1,6 @@
 SUBPACKAGE(modules data utility)
 set( modules_src
+     src/AbstractModule.cpp
      src/BasicFlagger.cpp
      src/EmptyModule.cpp
      src/ZenithCalibrater.cpp

@@ -46,7 +46,7 @@ class VisibilityPositions : public DataBlob
         void clear();
 
         /// Returns the frequency scaling factor for the specified channel
-        double freqScale(const unsigned int channel) {
+        const double freqScaleFactor(const unsigned int channel) {
             return (_refFreq + (channel - _refChannel) * _freqInc) / _refFreq;
         }
 
@@ -58,23 +58,14 @@ class VisibilityPositions : public DataBlob
         /// Returns the number of visibility coordinates held.
         int nVis() const { return _u.size(); }
 
-        /// Returns the reference frequency channel id.
-        int refChannel() const { return _refChannel; }
+        /// Returns a reference to the reference frequency channel id.
+        int& refChannel() { return _refChannel; }
 
-        /// Sets the reference channel id
-        void setRefChannel(const unsigned int channel) { _refChannel = channel; }
+        /// Returns a reference to the frequency of the reference channel
+        double& refFreq() { return _refFreq; }
 
-        /// Returns the frequency of the reference channel
-        double refFreq() const { return _refFreq; }
-
-        /// Sets the frequency of the reference channel
-        void setRefFreq(const double value) { _refFreq = value; }
-
-        /// Frequency increment between channels
-        double freqInc() const { return _freqInc; }
-
-        /// Sets the frequency increment between channels
-        void setFreqInc(const double value) { _freqInc = value; }
+        /// Frequency a reference to the increment between channels
+        double& freqInc() { return _freqInc; }
 
         /// Returns the u coordinate for the visibility i at the reference frequency
         real_t& u(const unsigned int i) { return _u[i]; }
@@ -85,16 +76,8 @@ class VisibilityPositions : public DataBlob
         }
 
         /// Returns the u coordinate for the visibility indexed by antennas at the specified frequency
-        real_t u(const unsigned int a1, const unsigned int a2, const unsigned int channel) {
-            return _u[a2 * _nAntennas + a1] * freqScale(channel);
-        }
-
-        /// Sets the u coordinate of the visibility i to the value specified for the reference channel
-        void setU(const unsigned int i, const real_t value) { _u[i] = value; }
-
-        /// Sets the u coordinate of the visibility indexed by antennas to the value specified for the reference channel
-        void setU(const unsigned int a1, const unsigned int a2, const real_t value) {
-            _u[a2 * _nAntennas + a1] = value;
+        const real_t u(const unsigned int a1, const unsigned int a2, const unsigned int channel) {
+            return _u[a2 * _nAntennas + a1] * freqScaleFactor(channel);
         }
 
         /// Returns the v coordinate for the visibility i at the reference frequency
@@ -106,37 +89,19 @@ class VisibilityPositions : public DataBlob
         }
 
         /// Returns the v coordinate for the visibility indexed by antennas at the specified frequency
-        real_t v(const unsigned int a1, const unsigned int a2, const unsigned int channel) {
-            return static_cast<real_t>(_v[a2 * _nAntennas + a1] * freqScale(channel));
-        }
-
-        /// Sets the v coordinate of the visibility i to the value specified for the reference channel
-        void setV(const unsigned int i, const real_t value) { _v[i] = value; }
-
-        /// Sets the v coordinate of the visibility indexed by antennas to the value specified for the reference channel
-        void setV(const unsigned int a1, const unsigned int a2, const real_t value) {
-            _v[a2 * _nAntennas + a1] = value;
+        const real_t v(const unsigned int a1, const unsigned int a2, const unsigned int channel) {
+            return static_cast<real_t>(_v[a2 * _nAntennas + a1] * freqScaleFactor(channel));
         }
 
         /// Returns the w coordinate for the visibility i at the reference frequency
         real_t& w(const unsigned int i) { return _w[i]; }
 
         /// Returns the w coordinate for the visibility indexed by antennas at the reference frequency
-        real_t& w(const unsigned int a1, const unsigned int a2) {
-            return _w[a2 * _nAntennas + a1];
-        }
+        real_t& w(const unsigned int a1, const unsigned int a2) { return _w[a2 * _nAntennas + a1]; }
 
         /// Returns the w coordinate for the visibility indexed by antennas at the specified frequency
-        real_t w(const unsigned int a1, const unsigned int a2, const unsigned int channel) {
-            return _w[a2 * _nAntennas + a1] * freqScale(channel);
-        }
-
-        /// Sets the w coordinate of the visibility i to the value specified for the reference channel
-        void setW(const unsigned int i, const real_t value) { _w[i] = value; }
-
-        /// Sets the w coordinate of the visibility indexed by antennas to the value specified for the reference channel
-        void setW(const unsigned int a1, const unsigned int a2, const real_t value) {
-            _w[a2 * _nAntennas + a1] = value;
+        const real_t w(const unsigned int a1, const unsigned int a2, const unsigned int channel) {
+            return _w[a2 * _nAntennas + a1] * freqScaleFactor(channel);
         }
 
         /// Returns a pointer to the u antenna positions.

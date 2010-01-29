@@ -1,7 +1,7 @@
 #ifndef IMAGERDFT_H_
 #define IMAGERDFT_H_
 
-#include "core/AbstractModule.h"
+#include "AbstractModule.h"
 
 class QDomElement;
 

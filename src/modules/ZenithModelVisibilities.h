@@ -1,7 +1,7 @@
 #ifndef ZENITHMODELVISIBILITIES_H
 #define ZENITHMODELVISIBILITIES_H
 
-#include "core/AbstractModule.h"
+#include "AbstractModule.h"
 
 class QDomElement;
 
