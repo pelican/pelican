@@ -9,6 +9,9 @@ set( data_src
      src/ServiceDataRequest.cpp
      src/StreamDataRequest.cpp
      src/VisibilityData.cpp
+     src/ImageData.cpp
+     src/AntennaPositionsData.cpp
+     src/VisibilityPositionsData.cpp
 )
 add_library(data ${data_src} )
 target_link_libraries(data ${SUBPACKAGE_LIBRARIES} )

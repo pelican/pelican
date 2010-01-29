@@ -9,7 +9,7 @@ namespace pelican {
  */
 VisibilityData::VisibilityData() : DataBlob()
 {
-    _init();
+    resize(0, 0, 0);
 }
 
 /**
@@ -17,12 +17,15 @@ VisibilityData::VisibilityData() : DataBlob()
  * Constructs an empty set of visibility data.
  * The visibility matrix is pre-sized to the given parameters.
  *
- * @param[in] rows The number of rows in the matrix.
- * @param[in] cols The number of columns in the matrix.
+ * @param[in] antennas The number of antennas in the visibility matrix.
+ * @param[in] channels The number of frequency channels.
+ * @param[in] polarisations The number of polarisations.
  */
-VisibilityData::VisibilityData(int rows, int cols) : DataBlob()
+VisibilityData::VisibilityData(unsigned antennas,
+        unsigned channels, unsigned polarisations)
+: DataBlob()
 {
-    _init();
+    resize(antennas, channels, polarisations);
 }
 
 /**
@@ -35,12 +38,19 @@ VisibilityData::~VisibilityData()
 
 /**
  * @details
- * Initialises the class data members (called from constructors).
+ * This function resizes the storage allocated for the visibility data.
+ *
+ * @param[in] antennas The number of antennas in the visibility matrix.
+ * @param[in] channels The number of frequency channels.
+ * @param[in] polarisations The number of polarisations.
  */
-void VisibilityData::_init()
+void VisibilityData::resize(unsigned antennas,
+        unsigned channels, unsigned polarisations)
 {
-    _nAntennas = 0;
-    _nChannels = 0;
+    _nAntennas = antennas;
+    _nChannels = channels;
+    _nPolarisations = polarisations;
+    _visibilities.resize(antennas * antennas * channels * polarisations);
 }
 
 } // namespace pelican

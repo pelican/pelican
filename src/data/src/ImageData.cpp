@@ -19,13 +19,10 @@ ImageData::ImageData() : DataBlob()
  * @param[in]   sizeM       The image size (pixels) in the M direction.
  * @param[in]   nChannels   The number of frequency channels in the image cube.
  */
-ImageData::ImageData(int sizeL, int sizeM, int nChannels)
+ImageData::ImageData(const unsigned int sizeL, const unsigned int sizeM, const unsigned int nChannels)
 : DataBlob()
 {
-    _sizeL = sizeL;
-    _sizeM = sizeM;
-    _nChannels = nChannels;
-    _image.resize(_nChannels * _sizeL * _sizeM);
+    assign(sizeL, sizeM, nChannels);
 }
 
 
@@ -46,7 +43,7 @@ ImageData::~ImageData()
  * @param[in]   sizeM       The image size (pixels) in the M direction.
  * @param[in]   nChannels   The number of frequency channels in the image cube.
  */
-void ImageData::assign(int sizeL, int sizeM, int nChannels)
+void ImageData::assign(const unsigned int sizeL, const unsigned int sizeM, const unsigned int nChannels)
 {
     _sizeL = sizeL;
     _sizeM = sizeM;

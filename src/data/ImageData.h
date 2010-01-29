@@ -1,8 +1,8 @@
 #ifndef IMAGEDATA_H
 #define IMAGEDATA_H
 
+#include "data/DataBlob.h"
 #include <vector>
-#include <complex>
 
 /**
  * @file ImageData.h
@@ -19,6 +19,7 @@ namespace pelican {
  * @details
  * This class holds image data at a number of frequencies.
  */
+
 class ImageData : public DataBlob
 {
     public:
@@ -26,25 +27,28 @@ class ImageData : public DataBlob
         ImageData();
 
         /// Constructor assigning memory for the image cube.
-        ImageData(const int sizeL, const int sizeM, const int nChannels);
+        ImageData(const unsigned int sizeL, const unsigned int sizeM, const unsigned int nChannels);
 
         /// Image data destructor.
         ~ImageData();
 
     public:
         /// The coordinate type of the reference pixel
-        const enum coordinates { COORD_RA_DEC, COORD_AZ_EL };
+        enum coordinates { COORD_RA_DEC, COORD_AZ_EL };
 
     public:
         /// Assign the image cube
-        void assign(const int sizeL, const int sizeM, const int nChannels);
+        void assign(const unsigned int sizeL, const unsigned int sizeM, const unsigned int nChannels);
 
         /// Clears the image data blob
         void clear();
 
     public: // accessor methods
 
-        /// Return the number of channels.
+        // Returns the number of pixels in the image
+        int nPixels() const { return _image.size(); }
+
+        /// Returns the number of channels.
         int nChannels() const { return _nChannels; }
 
         /// Sets the number of channels
@@ -105,23 +109,28 @@ class ImageData : public DataBlob
         void setRefCoordM(const double coord) { _refCoordM = coord; }
 
         /// Returns the image pixel amplitude at the coordinate l,m for the specified channel
-        real_t& at(const unsigned int l, const unsigned int m, const unsigned int channel) const {
-            return _image[channel * _sizeL * _sizeM + m * _sizeL + l];
+        real_t& at(const unsigned int l, const unsigned int m, const unsigned int channel) {
+            return _image[l + _sizeL * (m + _sizeM * channel)];
         }
 
         /// Return a pointer to the image cube.
-        real_t* ampPtr() const { return &_image[0]; }
+        real_t* ampPtr() { return _image.size() > 0 ? &_image[0] : NULL; }
 
         /// Return a pointer to the image for a specifed channel
-        real_t* ampPtr(const unsigned int channel) const {
-            return &_image[channel * _sizeL * _sizeM];
+        real_t* ampPtr(const unsigned int channel) {
+            return _image.size() > 0 ? &_image[channel * _sizeL * _sizeM] : NULL;
         }
 
         /// Returns a reference to the image amplitude vector
-        std::vector<real_t>& amp() const { return _image; }
+        std::vector<real_t>& amp() { return _image; }
 
         /// Operator to dereference the image amplitude array
-        real_t& operator[](const unsigned int i) const { return _image[i]; }
+        real_t& operator[](const unsigned int i) { return _image[i]; }
+
+        /// Operator to dereference the image amplitude array
+        real_t& operator()(const unsigned int l, const unsigned int m, const unsigned int channel) {
+            return _image[l + _sizeL * (m + _sizeM * channel)];
+        }
 
         /// Sets the image pixel amplitude at the coordinate l,m for the specified channel
         void setAmp(const unsigned int l, const unsigned int m, const unsigned int channel, const real_t value) {
