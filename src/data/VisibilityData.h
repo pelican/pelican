@@ -40,32 +40,33 @@ class VisibilityData : public DataBlob
         std::vector<complex_t> _visibilities;
 
         /// The number of antennas.
-        int _nAntennas;
+        unsigned _nAntennas;
 
         /// The number of frequency channels.
-        int _nChannels;
+        unsigned _nChannels;
 
         /// The number of polarisations.
-        int _nPolarisations;
+        unsigned _nPolarisations;
 
     public:
         /// Constructs an empty visibility cube.
         VisibilityData();
 
         /// Constructs a pre-sized visibility cube.
-        VisibilityData(int antennas, int channels, int polarisations);
+        VisibilityData(unsigned antennas, unsigned channels,
+                unsigned polarisations);
 
         /// Visibility data destructor.
         ~VisibilityData();
 
         /// Returns the number of antennas.
-        int nAntennas() const {return _nAntennas;}
+        unsigned nAntennas() const {return _nAntennas;}
 
         /// Returns the number of frequency channels.
-        int nChannels() const {return _nChannels;}
+        unsigned nChannels() const {return _nChannels;}
 
         /// Returns the number of polarisations.
-        int nPolarisations() const {return _nPolarisations;}
+        unsigned nPolarisations() const {return _nPolarisations;}
 
         /// Returns a pointer to the first element of the memory block.
         complex_t* ptr() {
@@ -74,37 +75,64 @@ class VisibilityData : public DataBlob
 
         /// Returns a pointer to the first element of the data cube
         /// for the given polarisation.
-        complex_t* ptr(const unsigned int p) {
-            unsigned int index = p * _nChannels * _nAntennas * _nAntennas;
+        complex_t* ptr(const unsigned p) {
+            unsigned index = p * _nChannels * _nAntennas * _nAntennas;
             return _visibilities.size() > index ? &_visibilities[index] : NULL;
         }
 
         /// Returns a pointer to the first element of the visibility matrix
         /// for the given channel and polarisation.
-        complex_t* ptr(const unsigned int c, const unsigned int p) {
-            unsigned int index = (_nAntennas * _nAntennas) * (p * _nChannels + c);
+        complex_t* ptr(const unsigned c, const unsigned p) {
+            unsigned index = (_nAntennas * _nAntennas) * (p * _nChannels + c);
             return _visibilities.size() > index ? &_visibilities[index] : NULL;
         }
 
+        /// Resizes the visibility data container.
+        void resize(unsigned antennas, unsigned channels,
+                unsigned polarisations);
+
+        /// Returns a reference to the visibility data vector (use with caution!).
+        std::vector<complex_t>& visibilities() {return _visibilities;}
+
         /// Dereferences the visibility data for antennas (i, j),
         /// channel (c) and polarisation (p).
-        complex_t& operator() (const unsigned int i, const unsigned int j,
-                const unsigned int c, const unsigned int p) {
-            int index = i + _nAntennas * (j + _nAntennas * (c + _nChannels * p));
+        /// The index \p i is the row number, and the index \p j is the
+        /// column number (the matrix is column-major).
+        complex_t& operator() (const unsigned i, const unsigned j,
+                const unsigned c, const unsigned p) {
+            unsigned index = i + _nAntennas * (j + _nAntennas * (c + _nChannels * p));
+            return _visibilities[index];
+        }
+
+        /// Dereferences the visibility data for antennas (i, j),
+        /// channel (c) and polarisation (p) (const overload).
+        /// The index \p i is the row number, and the index \p j is the
+        /// column number (the matrix is column-major).
+        const complex_t& operator() (const unsigned i, const unsigned j,
+                const unsigned c, const unsigned p) const {
+            unsigned index = i + _nAntennas * (j + _nAntennas * (c + _nChannels * p));
             return _visibilities[index];
         }
 
         /// Dereferences the visibility data for the given index.
-        complex_t& operator() (const unsigned int i) {
+        complex_t& operator() (const unsigned i) {
             return _visibilities[i];
         }
 
-        /// Returns a reference to the visibility data (use with caution!).
-        std::vector<complex_t>& visibilities() {return _visibilities;}
+        /// Dereferences the visibility data for the given index (const overload).
+        const complex_t& operator() (const unsigned i) const {
+            return _visibilities[i];
+        }
 
-    private: /* Methods */
-        /// Initialises the data members.
-        void _init();
+        /// Dereferences the visibility data for the given index.
+        complex_t& operator[] (const unsigned i) {
+            return _visibilities[i];
+        }
+
+        /// Dereferences the visibility data for the given index (const overload).
+        const complex_t& operator[] (const unsigned i) const {
+            return _visibilities[i];
+        }
 };
 
 } // namespace pelican
