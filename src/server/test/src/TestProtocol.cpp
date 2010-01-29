@@ -1,5 +1,5 @@
 #include "TestProtocol.h"
-#include "data/ServerRequest.h"
+#include "comms/ServerRequest.h"
 
 #include <iostream>
 #include "utility/memCheck.h"

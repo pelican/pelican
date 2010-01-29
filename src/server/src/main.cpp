@@ -7,7 +7,7 @@
 #include "DataManager.h"
 #include "PelicanServer.h"
 #include "PelicanPortServer.h"
-#include "PelicanProtocol.h"
+#include "comms/PelicanProtocol.h"
 
 using namespace pelican;
 

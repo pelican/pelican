@@ -2,7 +2,7 @@
 #define TESTPROTOCOL_H
 #include <QString>
 
-#include "AbstractProtocol.h"
+#include "comms/AbstractProtocol.h"
 #include <QByteArray>
 
 /**

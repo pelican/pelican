@@ -1,6 +1,6 @@
 #include "StreamDataRequest.h"
 
-#include "DataRequirements.h"
+#include "data/DataRequirements.h"
 #include "utility/memCheck.h"
 
 namespace pelican {

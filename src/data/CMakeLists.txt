@@ -4,10 +4,6 @@ set( data_src
      src/DataBlob.cpp
      src/TestDataBlob.cpp
      src/DataRequirements.cpp
-     src/AcknowledgementRequest.cpp
-     src/ServerRequest.cpp
-     src/ServiceDataRequest.cpp
-     src/StreamDataRequest.cpp
      src/VisibilityData.cpp
      src/ImageData.cpp
      src/AntennaPositionsData.cpp

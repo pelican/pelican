@@ -8,9 +8,9 @@
 #include "WritableData.h"
 #include "StreamDataBuffer.h"
 #include "data/DataRequirements.h"
-#include "data/ServerRequest.h"
-#include "data/ServiceDataRequest.h"
-#include "data/StreamDataRequest.h"
+#include "comms/ServerRequest.h"
+#include "comms/ServiceDataRequest.h"
+#include "comms/StreamDataRequest.h"
 #include "TestProtocol.h"
 #include <iostream>
 

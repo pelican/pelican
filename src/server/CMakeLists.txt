@@ -1,5 +1,5 @@
 INCLUDE_DIRECTORIES(${QT_INCLUDES})
-SUBPACKAGE(server data utility)
+SUBPACKAGE(server comms utility)
 # files requireing mpp preprocessing (i.e. QObjects)
 set( server_moc_headers
      Data.h
@@ -13,7 +13,6 @@ set( server_moc_headers
      StreamData.h
    )
 set( server_src
-     src/AbstractProtocol.cpp
      src/AbstractChunker.cpp
      src/Data.cpp
      src/DataReceiver.cpp
@@ -26,7 +25,6 @@ set( server_src
      src/StreamData.cpp
      src/StreamDataBuffer.cpp
      src/ServiceDataBuffer.cpp
-     src/PelicanProtocol.cpp
      src/WritableData.cpp
 )
 set( serverExe_src
