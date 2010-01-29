@@ -3,6 +3,7 @@
 #include <QString>
 #include "PelicanProtocol.h"
 #include "ServerRequest.h"
+#include "AcknowledgementRequest.h"
 #include "utility/memCheck.h"
 
 namespace pelican {
@@ -20,18 +21,28 @@ PelicanProtocol::~PelicanProtocol()
 
 ServerRequest PelicanProtocol::request(QTcpSocket& socket) 
 {
+
+    int timeout = 1000;
     ServerRequest::Request_t type = ServerRequest::Error;
-    if ( socket.waitForReadyRead(1000) ) {
-        QStringList tokens =
-            QString(socket.readLine()).split(QRegExp("[ \r\n][ \r\n]*"));
-        if( ! tokens.isEmpty() )
-                        type = (ServerRequest::Request_t)tokens.first().toInt() ;
+    while (socket.bytesAvailable() < (int)sizeof(quint16)) {
+        if ( !socket.waitForReadyRead(timeout) ) {
+            return ServerRequest(type,  socket.errorString() );
+        }
     }
-    else {
-        return ServerRequest(type, "Timeout waiting for client");
+
+    QDataStream in(&socket);
+    in.setVersion(QDataStream::Qt_4_0);
+    in >> (quint16&)type;
+
+    switch(type)
+    {
+        case ServerRequest::Acknowledge:
+            return AcknowledgementRequest();
+            break;
+        default:
+            return ServerRequest(ServerRequest::Error, "Unknown type Passed");
+            break;
     }
-    ServerRequest r(type);
-    return r;
 }
 
 void PelicanProtocol::send(QByteArray& stream, const AbstractProtocol::StreamData_t& ) 
