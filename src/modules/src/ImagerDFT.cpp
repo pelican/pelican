@@ -1,7 +1,5 @@
 #include "modules/ImagerDFT.h"
-
 #include "utility/memCheck.h"
-
 #include <iostream>
 
 namespace pelican {
@@ -39,17 +37,17 @@ ImagerDFT::~ImagerDFT()
  */
 void ImagerDFT::_getConfiguration(const QDomElement &config)
 {
-    if (_sizex != getOption("imageSize", "x").toInt()) {
-        _sizex = 128;
+    if (_sizeL != getOption("imageSize", "l").toInt()) {
+        _sizeL = 128;
     }
-    if (_sizey != getOption("imageSize", "y").toInt()) {
-        _sizey = 128;
+    if (_sizeM != getOption("imageSize", "m").toInt()) {
+        _sizeM = 128;
     }
-    if (_cellsizex != getOption("cellsize", "x").toDouble()) {
-        _cellsizex = 10.0;
+    if (_cellsizeL != getOption("cellsize", "l").toDouble()) {
+        _cellsizeL = 10.0;
     }
-    if (_cellsizex != getOption("cellsize", "x").toDouble()) {
-        _cellsizex = 10.0;
+    if (_cellsizeM != getOption("cellsize", "m").toDouble()) {
+        _cellsizeM = 10.0;
     }
 }
 
