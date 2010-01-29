@@ -2,6 +2,8 @@
 #define IMAGERDFT_H_
 
 #include "AbstractModule.h"
+#include "data/ImageData.h"
+#include "data/VisibilityData.h"
 
 class QDomElement;
 
@@ -18,7 +20,7 @@ namespace pelican {
  * Module which will produce a brightness map given a matrix of visibility data.
  * 
  * @details
-
+ *
  */
 class ImagerDFT : public AbstractModule
 {
@@ -40,10 +42,12 @@ class ImagerDFT : public AbstractModule
         void _dft();
 
     private:
-        int _sizex;
-        int _sizey;
-        int _cellsizex;
-        int _cellsizey;
+        VisibilityData *_vis;
+        ImageData *_image;
+        unsigned int _sizeL;
+        unsigned int _sizeM;
+        unsigned int _cellsizeL;
+        unsigned int _cellsizeM;
 };
 
 } // namespace pelican
