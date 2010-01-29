@@ -11,10 +11,10 @@
  * @class ImageDataTest
  *  
  * @brief
- * Unit testing class for the data requirements object.
+ * Unit testing class for the image data blob.
  * 
  * @details
- * Performs unit tests on the DataRequirements object
+ * Performs unit tests on the image data blob object
  * using the CppUnit framework.
  */
 
@@ -24,7 +24,7 @@ class ImageDataTest : public CppUnit::TestFixture
 {
     public:
         CPPUNIT_TEST_SUITE( ImageDataTest );
-        CPPUNIT_TEST( test_assign );
+        CPPUNIT_TEST( test_accessorMethods );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -32,7 +32,8 @@ class ImageDataTest : public CppUnit::TestFixture
         void tearDown();
 
         // Test Methods
-        void test_assign();
+        ///Test accessor methods for image blob
+        void test_accessorMethods();
 
     public:
         ImageDataTest();

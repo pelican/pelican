@@ -1,8 +1,5 @@
 #include "ImageDataTest.h"
 #include "ImageData.h"
-
-#include <iostream>
-
 #include "utility/memCheck.h"
 
 namespace pelican {
@@ -26,7 +23,12 @@ void ImageDataTest::tearDown()
 {
 }
 
-void ImageDataTest::test_assign()
+
+/**
+ * @details
+ * Tests the various accessor methods for the image data blob
+ */
+void ImageDataTest::test_accessorMethods()
 {
     // Use Case
     // Construct an image and test each of the accessor methods
@@ -83,6 +85,17 @@ void ImageDataTest::test_assign()
         }
     }
 
+    real_t *imPtr = image.ampPtr();
+    real_t *imPtrChan0 = image.ampPtr(0);
+    real_t *imPtrChan1 = image.ampPtr(1);
+    for (int m = 0; m < nM; m++) {
+        for (int l = 0; l < nL; l++) {
+            CPPUNIT_ASSERT(imPtr[m * nL + l] == l + m);
+            CPPUNIT_ASSERT(imPtr[nL * nM + m * nL + l] == 1 + l + m);
+            CPPUNIT_ASSERT(imPtrChan0[m * nL + l] == l + m);
+            CPPUNIT_ASSERT(imPtrChan1[m * nL + l] == 1 + l + m);
+        }
+    }
 }
 
 
