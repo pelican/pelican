@@ -39,7 +39,7 @@ void PelicanProtocolTest::test_request()
         AcknowledgementRequest req;
         PelicanProtocol proto;
         Socket_t& socket = _send(&req);
-//        CPPUNIT_ASSERT( req == proto.request(socket) );
+        CPPUNIT_ASSERT( req == proto.request(socket) );
     }
     {
         // Use Case:
@@ -47,7 +47,7 @@ void PelicanProtocolTest::test_request()
         PelicanProtocol proto;
         ServiceDataRequest req;
         Socket_t& socket = _send(&req);
-//        CPPUNIT_ASSERT( req == proto.request(socket) );
+        CPPUNIT_ASSERT( req == proto.request(socket) );
     }
     {
         // Use Case:
@@ -55,7 +55,7 @@ void PelicanProtocolTest::test_request()
         StreamDataRequest req;
         PelicanProtocol proto;
         Socket_t& socket = _send(&req);
-//        CPPUNIT_ASSERT( req == proto.request(socket) );
+        CPPUNIT_ASSERT( req == proto.request(socket) );
     }
 }
 
