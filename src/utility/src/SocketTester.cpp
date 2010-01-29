@@ -34,7 +34,7 @@ void SocketTester::init()
 {
     if( ! _init ) {
         int sv[2];
-        Q_ASSERT( socketpair(PF_LOCAL, SOCK_STREAM, 0, sv ) );
+        Q_ASSERT( ! socketpair(PF_LOCAL, SOCK_STREAM, 0, sv ) );
         Q_ASSERT( _sock1.setSocketDescriptor(sv[0]) );
         Q_ASSERT( _sock2.setSocketDescriptor(sv[1]) );
     }
