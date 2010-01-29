@@ -19,7 +19,7 @@ class Data;
  * @class AbstractProtocol
  *  
  * @brief
- *      Base class for all server protocols interpretations
+ *      Base class for all server side protocol interpretations
  * 
  * @details
  *      The protocol interprets the requests of a particular client type into 
@@ -38,8 +38,10 @@ class AbstractProtocol
     public:
         AbstractProtocol();
         virtual ~AbstractProtocol();
+
         /// processes an incomming request
         virtual ServerRequest request(QTcpSocket& socket) = 0;
+
         /// write StreamData to an outgoing datastream
         virtual void send(QByteArray& stream, const StreamData_t& ) = 0;
 

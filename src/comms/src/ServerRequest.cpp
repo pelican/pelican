@@ -30,4 +30,11 @@ QString ServerRequest::message() const
 {
     return _error;
 }
+
+bool ServerRequest::operator==(const ServerRequest& req)
+{
+    return _type == req._type;
+}
+
+
 } // namespace pelican

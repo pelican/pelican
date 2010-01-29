@@ -2,9 +2,13 @@
 #include <cppunit/XmlOutputter.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 #include <cppunit/ui/text/TestRunner.h>
+#include <QCoreApplication>
 
 int main(int argc, char* argv[])
 {
+
+    QCoreApplication app(argc,argv);
+
     // Get the top level suite from the registry
     CppUnit::Test *suite = CppUnit::TestFactoryRegistry::getRegistry().makeTest();
 

@@ -4,7 +4,6 @@ set( data_src
      src/DataBlob.cpp
      src/TestDataBlob.cpp
      src/DataRequirements.cpp
-     src/VisibilityData.cpp
      src/ImageData.cpp
      src/AntennaPositionsData.cpp
      src/VisibilityPositionsData.cpp

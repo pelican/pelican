@@ -1,8 +1,9 @@
 #include "PelicanProtocolTest.h"
-#include "data/ServerRequest.h"
-#include "data/AcknowledgementRequest.h"
-#include "data/ServiceDataRequest.h"
-#include "data/StreamDataRequest.h"
+#include "PelicanProtocol.h"
+#include "ServerRequest.h"
+#include "AcknowledgementRequest.h"
+#include "ServiceDataRequest.h"
+#include "StreamDataRequest.h"
 #include "utility/SocketTester.h"
 
 #include "utility/memCheck.h"
@@ -36,29 +37,32 @@ void PelicanProtocolTest::test_request()
         // Use Case:
         // An Acknowledgement Request
         AcknowledgementRequest req;
+        PelicanProtocol proto;
         Socket_t& socket = _send(&req);
-        CPPUNIT_ASSERT( req == _protocol.request(socket) );
+        CPPUNIT_ASSERT( req == proto.request(socket) );
     }
     {
         // Use Case:
         // A ServiceData Request
+        PelicanProtocol proto;
         ServiceDataRequest req;
         Socket_t& socket = _send(&req);
-        CPPUNIT_ASSERT( req == _protocol.request(socket) );
+        CPPUNIT_ASSERT( req == proto.request(socket) );
     }
     {
         // Use Case:
         // A StreamData Request
         StreamDataRequest req;
+        PelicanProtocol proto;
         Socket_t& socket = _send(&req);
-        CPPUNIT_ASSERT( req == _protocol.request(socket) );
+        CPPUNIT_ASSERT( req == proto.request(socket) );
     }
 }
 
 PelicanProtocolTest::Socket_t& PelicanProtocolTest::_send(ServerRequest* req)
 {
     // create a Socket
-    Socket_t socket = _st->send( req->serialise() );
+    Socket_t& socket = _st->send( _protocol.serialise(*req) );
     return socket;
 }
 

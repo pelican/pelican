@@ -24,7 +24,7 @@ class SocketTester
         SocketTester();
         ~SocketTester();
         // send some data to the socket
-        QTcpSocket& send(QByteArray&);
+        QTcpSocket& send(const QByteArray&);
         QTcpSocket& receivingSocket();
 
     protected:

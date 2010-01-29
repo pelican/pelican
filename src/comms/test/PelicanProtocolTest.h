@@ -2,6 +2,7 @@
 #define PELICANPROTOCOLTEST_H
 
 #include <cppunit/extensions/HelperMacros.h>
+#include "PelicanClientProtocol.h"
 class QTcpSocket;
 
 /**
@@ -44,6 +45,7 @@ class PelicanProtocolTest : public CppUnit::TestFixture
         PelicanProtocolTest(  );
         ~PelicanProtocolTest();
         SocketTester* _st;
+        PelicanClientProtocol _protocol;
 
 };
 
