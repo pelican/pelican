@@ -23,7 +23,7 @@ typedef std::complex<real_t> complex_t;
  * 
  * @details
  * This is the base class used for all Pelican data blobs required by
- * pipeline modules. It provides a timestamp based using the Modified
+ * pipeline modules. It provides a timestamp using the Modified
  * Julian Date at the time of creation.
  */
 class DataBlob
@@ -41,8 +41,11 @@ class DataBlob
         /// Data blob destructor.
         virtual ~DataBlob();
 
-        /// Sets the timestamp using the current value of the system clock.
+        /// Sets the time stamp using the current value of the system clock.
         void setTimeStamp();
+
+        /// Sets the time stamp to the given value.
+        void setTimeStamp(double timeStamp) {_modifiedJulianDate = timeStamp;}
 
         /// Returns the MJD timestamp of the data blob.
         double timeStamp() const { return _modifiedJulianDate; }
