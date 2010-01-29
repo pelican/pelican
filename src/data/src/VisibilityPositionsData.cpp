@@ -17,7 +17,7 @@ VisibilityPositions::VisibilityPositions() : DataBlob()
  *
  * @param[in]   nAntennas   The number of antennas.
  */
-VisibilityPositions::VisibilityPositions(int nAntennas)
+VisibilityPositions::VisibilityPositions(const unsigned int nAntennas)
 : DataBlob()
 {
     assign(nAntennas);
@@ -39,7 +39,7 @@ VisibilityPositions::~VisibilityPositions()
  *
  * @param[in]   nAntenna   The number of antennas.
  */
-void VisibilityPositions::assign(int nAntennas)
+void VisibilityPositions::assign(const unsigned int nAntennas)
 {
    _nAntennas = nAntennas;
     int nBaselines = nAntennas * nAntennas;

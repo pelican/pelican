@@ -1,6 +1,7 @@
 #ifndef VISIBILITYPOSITIONSDATA_H
 #define VISIBILITYPOSITIONSDATA_H
 
+#include "data/DataBlob.h"
 #include <vector>
 
 /**
@@ -73,19 +74,19 @@ class VisibilityPositions : public DataBlob
         double freqInc() const { return _freqInc; }
 
         /// Sets the frequency increment between channels
-        double setFreqInc(const double value) { _freqInc = value; }
+        void setFreqInc(const double value) { _freqInc = value; }
 
         /// Returns the u coordinate for the visibility i at the reference frequency
-        real_t& u(const unsigned int i) const { return _u[i]; }
+        real_t& u(const unsigned int i) { return _u[i]; }
 
         /// Returns the u coordinate for the visibility indexed by antennas at the reference frequency
-        real_t& u(const unsigned int a1, const unsigned int a2) const {
-            _u[a2 * _nAntennas + a1];
+        real_t& u(const unsigned int a1, const unsigned int a2) {
+            return _u[a2 * _nAntennas + a1];
         }
 
         /// Returns the u coordinate for the visibility indexed by antennas at the specified frequency
-        real_t& u(const unsigned int a1, const unsigned int a2, const unsigned int channel) const {
-            return static_cast<real_t>(_u[a2 * _nAntennas + a1] * freqScale(channel));
+        real_t u(const unsigned int a1, const unsigned int a2, const unsigned int channel) {
+            return _u[a2 * _nAntennas + a1] * freqScale(channel);
         }
 
         /// Sets the u coordinate of the visibility i to the value specified for the reference channel
@@ -97,15 +98,15 @@ class VisibilityPositions : public DataBlob
         }
 
         /// Returns the v coordinate for the visibility i at the reference frequency
-        real_t& v(const unsigned int i) const { return _v[i]; }
+        real_t& v(const unsigned int i) { return _v[i]; }
 
         /// Returns the v coordinate for the visibility indexed by antennas at the reference frequency
-        real_t& v(const unsigned int a1, const unsigned int a2) const {
-            _u[a2 * _nAntennas + a1];
+        real_t& v(const unsigned int a1, const unsigned int a2) {
+            return _v[a2 * _nAntennas + a1];
         }
 
         /// Returns the v coordinate for the visibility indexed by antennas at the specified frequency
-        real_t& v(const unsigned int a1, const unsigned int a2, const unsigned int channel) const {
+        real_t v(const unsigned int a1, const unsigned int a2, const unsigned int channel) {
             return static_cast<real_t>(_v[a2 * _nAntennas + a1] * freqScale(channel));
         }
 
@@ -118,16 +119,16 @@ class VisibilityPositions : public DataBlob
         }
 
         /// Returns the w coordinate for the visibility i at the reference frequency
-        real_t& w(const unsigned int i) const { return _w[i]; }
+        real_t& w(const unsigned int i) { return _w[i]; }
 
         /// Returns the w coordinate for the visibility indexed by antennas at the reference frequency
-        real_t& w(const unsigned int a1, const unsigned int a2) const {
-            _w[a2 * _nAntennas + a1];
+        real_t& w(const unsigned int a1, const unsigned int a2) {
+            return _w[a2 * _nAntennas + a1];
         }
 
         /// Returns the w coordinate for the visibility indexed by antennas at the specified frequency
-        real_t& w(const unsigned int a1, const unsigned int a2, const unsigned int channel) const {
-            return static_cast<real_t>(_w[a2 * _nAntennas + a1] * freqScale(channel));
+        real_t w(const unsigned int a1, const unsigned int a2, const unsigned int channel) {
+            return _w[a2 * _nAntennas + a1] * freqScale(channel);
         }
 
         /// Sets the w coordinate of the visibility i to the value specified for the reference channel
@@ -139,13 +140,13 @@ class VisibilityPositions : public DataBlob
         }
 
         /// Returns a pointer to the u antenna positions.
-        real_t* uPtr() { return _u.size > 0 ? &_u[0] : NULL; }
+        real_t* uPtr() { return (_u.size() > 0) ? &_u[0] : NULL; }
 
         /// Returns a pointer to the v antenna positions.
-        real_t* vPtr() { return _v.size > 0 ? &_v[0] : NULL; }
+        real_t* vPtr() { return (_v.size() > 0) ? &_v[0] : NULL; }
 
         /// Returns a pointer to the w antenna positions.
-        real_t* wPtr() { return _w.size > 0 ? &_w[0] : NULL; }
+        real_t* wPtr() { return (_w.size() > 0) ? &_w[0] : NULL; }
 
     private:
         /// The number of antennas

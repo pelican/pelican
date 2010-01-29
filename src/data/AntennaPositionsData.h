@@ -1,6 +1,7 @@
 #ifndef ANTENNAPOSITIONSDATA_H
 #define ANTENNAPOSITIONSDATA_H
 
+#include "data/DataBlob.h"
 #include <vector>
 
 /**
@@ -43,19 +44,19 @@ class AntennaPositions : public DataBlob
         int nAntennas() const { return _x.size(); }
 
         /// Returns the x coordinate antenna position for antenna i
-        real_t& x(const unsigned int i) const { return _x[i]; }
+        real_t& x(const unsigned int i) { return _x[i]; }
 
         /// Sets the x coordinate of the antenna position for antenna i to the value specified
         void setX(const unsigned int i, const real_t value) { _x[i] = value; }
 
         /// Returns the y coordinate antenna position for antenna i
-        real_t& y(const unsigned int i) const { return _y[i]; }
+        real_t& y(const unsigned int i) { return _y[i]; }
 
         /// Sets the y coordinate of the antenna position for antenna i to the value specified
         void setY(const unsigned int i, const real_t value) { _y[i] = value; }
 
         /// Returns the z coordinate antenna position for antenna i
-        real_t& z(const unsigned int i) const { return _z[i]; }
+        real_t& z(const unsigned int i) { return _z[i]; }
 
         /// Sets the z coordinate of the antenna position for antenna i to the value specified
         void setZ(const unsigned int i, const real_t value) { _z[i] = value; }

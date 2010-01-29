@@ -17,7 +17,7 @@ AntennaPositions::AntennaPositions() : DataBlob()
  *
  * @param[in]   nAntennas   The number of antennas.
  */
-AntennaPositions::AntennaPositions(int nAntennas)
+AntennaPositions::AntennaPositions(const unsigned int nAntennas)
 : DataBlob()
 {
     assign(nAntennas);
@@ -39,7 +39,7 @@ AntennaPositions::~AntennaPositions()
  *
  * @param[in]   nAntenna   The number of antennas.
  */
-void AntennaPositions::assign(int nAntennas)
+void AntennaPositions::assign(const unsigned int nAntennas)
 {
    _x.resize(nAntennas);
    _y.resize(nAntennas);
@@ -51,7 +51,7 @@ void AntennaPositions::assign(int nAntennas)
  * @details
  * Clears the antenna positions data blob.
  */
-void ImageData::clear()
+void AntennaPositions::clear()
 {
     _x.clear();
     _y.clear();
