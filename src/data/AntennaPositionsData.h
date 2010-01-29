@@ -43,23 +43,23 @@ class AntennaPositions : public DataBlob
         /// Returns the number of antennas for which positions are held
         int nAntennas() const { return _x.size(); }
 
-        /// Returns the x coordinate antenna position for antenna i
+        /// Returns a reference to the x coordinate antenna position for antenna i
         real_t& x(const unsigned int i) { return _x[i]; }
 
-        /// Sets the x coordinate of the antenna position for antenna i to the value specified
-        void setX(const unsigned int i, const real_t value) { _x[i] = value; }
-
-        /// Returns the y coordinate antenna position for antenna i
+        /// Returns a reference to the y coordinate antenna position for antenna i
         real_t& y(const unsigned int i) { return _y[i]; }
 
-        /// Sets the y coordinate of the antenna position for antenna i to the value specified
-        void setY(const unsigned int i, const real_t value) { _y[i] = value; }
-
-        /// Returns the z coordinate antenna position for antenna i
+        /// Returns a reference to the z coordinate antenna position for antenna i
         real_t& z(const unsigned int i) { return _z[i]; }
 
-        /// Sets the z coordinate of the antenna position for antenna i to the value specified
-        void setZ(const unsigned int i, const real_t value) { _z[i] = value; }
+        /// Returns a refrence to the vector for the x antenna positions
+        std::vector<real_t>& x() { return _x; }
+
+        /// Returns a refrence to the vector for the y antenna positions
+        std::vector<real_t>& y() { return _y; }
+
+        /// Returns a refrence to the vector for the z antenna positions
+        std::vector<real_t>& z() { return _z; }
 
         /// Returns a pointer to the x antenna positions.
         real_t* xPtr() { return _x.size() > 0 ? &_x[0] : NULL; }
@@ -69,6 +69,7 @@ class AntennaPositions : public DataBlob
 
         /// Returns a pointer to the z antenna positions.
         real_t* zPtr() { return _z.size() > 0 ? &_z[0] : NULL; }
+
 
     private:
         /// x coordinate of antenna position in metres.
