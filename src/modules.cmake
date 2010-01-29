@@ -1,4 +1,5 @@
 add_subdirectory(utility)
+add_subdirectory(comms)
 add_subdirectory(server)
 add_subdirectory(modules)
 #add_subdirectory(pipelines)
