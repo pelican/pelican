@@ -1,4 +1,4 @@
-#include "core/AbstractModule.h"
+#include "modules/AbstractModule.h"
 #include "core/AbstractPipeline.h"
 #include "core/ModuleFactory.h"
 #include "core/PipelineApplication.h"

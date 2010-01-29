@@ -46,11 +46,11 @@ endmacro()
 
 #===============================================================================
 macro(add_doxygen_target name doxyfile_name)
-message("")
-message("***************************************************************")
-message("= Setting \"${name}\" doxygen makefile (doxyfile: \"${doxyfile_name}\").")
-message("***************************************************************")
-message("")
+#message("")
+#message("***************************************************************")
+#message("= Setting \"${name}\" doxygen makefile (doxyfile: \"${doxyfile_name}\").")
+#message("***************************************************************")
+#message("")
 
 find_package(Doxygen)
 
@@ -68,9 +68,9 @@ if(DOXYGEN_FOUND AND DOXYFILE_IN_${name})
 	usedoxygen_set_default(DOXYFILE_HTML_DIR "html")
 	set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_MAKE_CLEAN_FILES "${DOXYFILE_OUTPUT_DIR}/${DOXYFILE_HTML_DIR}")
 
-	set(DOXYFILE_LATEX "NO")
-	set(DOXYFILE_PDFLATEX "NO")
-	set(DOXYFILE_DOT "NO")
+#	set(DOXYFILE_LATEX "NO")
+	#set(DOXYFILE_PDFLATEX "NO")
+	#set(DOXYFILE_DOT "NO")
 
     find_package(LATEX)
 	

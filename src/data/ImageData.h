@@ -34,7 +34,7 @@ class ImageData : public DataBlob
 
     public:
         /// The coordinate type of the reference pixel
-        enum coordinates { COORD_RA_DEC, COORD_AZ_EL };
+        enum { COORD_RA_DEC, COORD_AZ_EL };
 
     public:
         /// Assign the image cube
@@ -51,74 +51,36 @@ class ImageData : public DataBlob
         /// Returns the number of channels.
         int nChannels() const { return _nChannels; }
 
-        /// Sets the number of channels
-        void setNChannels(const unsigned int n) { _nChannels = n; }
-
         /// Returns the image size (number of pixels) in the L direction.
         int sizeL() const { return _sizeL; }
-
-        /// Sets the image size in the L direction
-        void setImageSizeL(const unsigned int size) { _sizeL = size; }
 
         /// Returns the image size (number of pixels) in the L direction.
         int sizeM() const { return _sizeM; }
 
-        /// Sets the image size in the L direction
-        void setImageSizeM(const unsigned int size) { _sizeM = size; }
+        /// Returns a reference to the image pixel separation in the L direction in arcseconds.
+        double& cellsizeL() { return _cellsizeL; }
 
-        /// Returns the image pixel separation in the L direction in arcseconds.
-        double cellsizeL() const { return _cellsizeL; }
+        /// Returns a reference to the  image pixel separation in the M direction arcseconds.
+        double& cellsizeM() { return _cellsizeM; }
 
-        /// Sets the image pixel separation in the L direction
-        void setCellsizeL(const double size) { _cellsizeL = size; }
+        /// Returns a reference to the  reference pixel position in the L direction.
+        double& refPixelL()  { return _refPixelL; }
 
-        /// Returns the image pixel separation in the M direction arcseconds.
-        double cellsizeM() const { return _cellsizeM; }
+        /// Returns a reference to the reference pixel in the M direction.
+        double& refPixelM() { return _refPixelM; }
 
-        /// Sets the image pixel separation in the M direction
-        void setCellsizeM(const double size) { _cellsizeM = size; }
+        /// Returns a reference to reference pixel coordinate type.
+        int& coordType() { return _coordType; }
 
-        /// Returns the reference pixel position in the L direction.
-        double refPixelL() const { return _refPixelL; }
+        /// Returns a reference to the reference pixel coordinate in units specified by the coordinate type
+        double& refCoordL() { return _refCoordL; }
 
-        /// Set the reference pixel in the L direction
-        void setRefPixelL(const double pos) { _refPixelL = pos; }
+        /// Returns a reference to the reference pixel coordinate in units specified by the coordinate type
+        double& refCoordM() { return _refCoordM; }
 
-        /// Returns the reference pixel in the M direction.
-        double refPixelM() const { return _refPixelM; }
-
-        /// Set the reference pixel in the L direction
-        void setRefPixelM(const double pos) { _refPixelM = pos; }
-
-        /// Returns the reference pixel coordinate type.
-        int coordType() const { return _coordType; }
-
-        /// Sets the reference pixel coordinate type.
-        void setCoordType(const int type) { _coordType = type; }
-
-        /// Returns the reference pixel coordinate in units specified by the coordinate type
-        double refCoordL() const { return _refCoordL; }
-
-        /// sets the reference pixel coordinate in units specified by the coordinate type
-        void setRefCoordL(const double coord) { _refCoordL = coord; }
-
-        /// Returns the reference pixel coordinate in units specified by the coordinate type
-        double refCoordM() const { return _refCoordM; }
-
-        /// sets the reference pixel coordinate in units specified by the coordinate type
-        void setRefCoordM(const double coord) { _refCoordM = coord; }
-
-        /// Returns the image pixel amplitude at the coordinate l,m for the specified channel
-        real_t& at(const unsigned int l, const unsigned int m, const unsigned int channel) {
+        /// Returns a reference to the image pixel amplitude at the coordinate l,m for the specified channel
+        real_t& amp(const unsigned int l, const unsigned int m, const unsigned int channel) {
             return _image[l + _sizeL * (m + _sizeM * channel)];
-        }
-
-        /// Return a pointer to the image cube.
-        real_t* ampPtr() { return _image.size() > 0 ? &_image[0] : NULL; }
-
-        /// Return a pointer to the image for a specifed channel
-        real_t* ampPtr(const unsigned int channel) {
-            return _image.size() > 0 ? &_image[channel * _sizeL * _sizeM] : NULL;
         }
 
         /// Returns a reference to the image amplitude vector
@@ -132,9 +94,12 @@ class ImageData : public DataBlob
             return _image[l + _sizeL * (m + _sizeM * channel)];
         }
 
-        /// Sets the image pixel amplitude at the coordinate l,m for the specified channel
-        void setAmp(const unsigned int l, const unsigned int m, const unsigned int channel, const real_t value) {
-            _image[channel * _sizeL * _sizeM + m * _sizeL + l] = value;
+        /// Return a pointer to the image cube.
+        real_t* ampPtr() { return _image.size() > 0 ? &_image[0] : NULL; }
+
+        /// Return a pointer to the image for a specifed channel
+        real_t* ampPtr(const unsigned int channel) {
+            return _image.size() > 0 ? &_image[channel * _sizeL * _sizeM] : NULL;
         }
 
     private:

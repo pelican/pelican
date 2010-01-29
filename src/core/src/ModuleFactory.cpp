@@ -1,7 +1,7 @@
 #include <QStringList>
 #include <QtGlobal>
 #include "ModuleFactory.h"
-#include "core/AbstractModule.h"
+#include "modules/AbstractModule.h"
 #include "modules/BasicFlagger.h"
 #include "modules/EmptyModule.h"
 #include "modules/ZenithCalibrater.h"

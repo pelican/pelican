@@ -1,7 +1,7 @@
 #ifndef BASICFLAGGER_H
 #define BASICFLAGGER_H
 
-#include "core/AbstractModule.h"
+#include "AbstractModule.h"
 
 class QDomElement;
 

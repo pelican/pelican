@@ -1,7 +1,7 @@
 #ifndef EMPTYMODULE_H
 #define EMPTYMODULE_H
 
-#include "core/AbstractModule.h"
+#include "AbstractModule.h"
 
 class QDomElement;
 

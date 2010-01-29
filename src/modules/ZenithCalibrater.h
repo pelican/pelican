@@ -1,7 +1,7 @@
 #ifndef ZENITHCALIBRATER_H
 #define ZENITHCALIBRATER_H
 
-#include "core/AbstractModule.h"
+#include "AbstractModule.h"
 
 class QDomElement;
 

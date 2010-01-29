@@ -1,4 +1,4 @@
-#include "core/test/TestModule.h"
+#include "modules/test/TestModule.h"
 #include "utility/memCheck.h"
 
 namespace pelican {

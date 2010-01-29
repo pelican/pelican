@@ -41,7 +41,8 @@ VisibilityPositions::~VisibilityPositions()
  */
 void VisibilityPositions::assign(const unsigned int nAntennas)
 {
-   _nAntennas = nAntennas;
+   _refChannel = 0;
+    _nAntennas = nAntennas;
     int nBaselines = nAntennas * nAntennas;
    _u.resize(nBaselines);
    _v.resize(nBaselines);
