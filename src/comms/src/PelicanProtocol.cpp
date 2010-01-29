@@ -2,7 +2,7 @@
 #include <QStringList>
 #include <QString>
 #include "PelicanProtocol.h"
-#include "data/ServerRequest.h"
+#include "ServerRequest.h"
 #include "utility/memCheck.h"
 
 namespace pelican {
