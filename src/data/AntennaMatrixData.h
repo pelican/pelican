@@ -40,7 +40,7 @@ namespace pelican {
  */
 template<typename T> class AntennaMatrixData : public DataBlob
 {
-    private: /* Data */
+    protected: /* Data */
         /// The data.
         std::vector<T> _data;
 
