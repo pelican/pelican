@@ -1,7 +1,7 @@
 #ifndef VISIBILITYDATA_H
 #define VISIBILITYDATA_H
 
-#include "data/MatrixData.h"
+#include "data/AntennaMatrixData.h"
 
 /**
  * @file VisibilityData.h
@@ -19,9 +19,9 @@ namespace pelican {
  * This class is used to store telescope visibility data
  * (matrices of complex correlation products).
  *
- * It is a typedef for MatrixData<complex_t>.
+ * It is a typedef for AntennaMatrixData<complex_t>.
  */
-typedef MatrixData<complex_t> VisibilityData;
+typedef AntennaMatrixData<complex_t> VisibilityData;
 
 } // namespace pelican
 

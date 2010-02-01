@@ -1,7 +1,7 @@
 #ifndef ANTENNAGAINS_H
 #define ANTENNAGAINS_H
 
-#include "data/MatrixData.h"
+#include "data/AntennaMatrixData.h"
 
 /**
  * @file AntennaGains.h
@@ -16,12 +16,12 @@ namespace pelican {
  * Class to store antenna complex gain data.
  * 
  * @details
- * This class is used to store complex antenna gains for each
- * (matrices of complex correlation products).
+ * This class is used to store complex gains (amplitude and phase)
+ * for each antenna.
  *
- * It is a typedef for MatrixData<complex_t>.
+ * It is a typedef for AntennaMatrixData<complex_t>.
  */
-typedef MatrixData<complex_t> AntennaGains;
+typedef AntennaMatrixData<complex_t> AntennaGains;
 
 } // namespace pelican
 

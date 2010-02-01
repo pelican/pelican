@@ -1,7 +1,7 @@
 #ifndef FLAGTABLE_H
 #define FLAGTABLE_H
 
-#include "data/FlagTable.h"
+#include "data/AntennaMatrixData.h"
 #include <vector>
 
 /**
@@ -18,10 +18,10 @@ namespace pelican {
  * 
  * @details
  * This class holds flag table data. It inherits
- * the MatrixData<char> base class, which is used to define
+ * the AntennaMatrixData<char> base class, which is used to define
  * the storage format.
  */
-class FlagTable : public MatrixData<unsigned char>
+class FlagTable : public AntennaMatrixData<unsigned char>
 {
     public:
         /// Enumerator describing the flag reason code.
@@ -33,7 +33,7 @@ class FlagTable : public MatrixData<unsigned char>
         } reason_t;
 
         /// Default constructor.
-        FlagTable() : MatrixData<unsigned char>() {}
+        FlagTable() : AntennaMatrixData<unsigned char>() {}
 
         /// Destructor.
         ~FlagTable();
