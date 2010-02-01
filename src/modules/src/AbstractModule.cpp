@@ -112,10 +112,13 @@ const DataRequirements AbstractModule::requiredData() const
 /**
  * @details
  * Gets the configuration for the given \p tagName and \p attribute.
+ * If the \p tagName and/or \p attribute do not exist, \p defValue is returned.
  */
-QString AbstractModule::getOption(const QString& tagName, const QString& attribute)
+QString AbstractModule::getOption(const QString& tagName,
+        const QString& attribute, const QString& defValue)
 {
-    return _config.namedItem(tagName).toElement().attribute(attribute);
+    return _config.namedItem(tagName).toElement().attribute(attribute,
+            defValue);
 }
 
 } // namespace pelican
