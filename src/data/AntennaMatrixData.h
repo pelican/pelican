@@ -61,10 +61,9 @@ template<typename T> class AntennaMatrixData : public DataBlob
         /// The constructed data cube has zero size.
         ///
         /// @param[in] use2dAntennaMatrix If set, use a 2D antenna matrix (default true).
-        AntennaMatrixData(bool use2dAntennaMatrix = true) :
+        AntennaMatrixData(bool use2dAntennaMatrix = true) : DataBlob(),
             _use2dAntennaMatrix(use2dAntennaMatrix),
-            _nAntennas(0), _nChannels(0), _nPolarisations(0),
-            DataBlob() {}
+            _nAntennas(0), _nChannels(0), _nPolarisations(0) {}
 
         /// Constructs a pre-sized, empty cube.
         /// The cube is pre-sized using the given parameters.
@@ -74,9 +73,8 @@ template<typename T> class AntennaMatrixData : public DataBlob
         /// @param[in] polarisations The number of polarisations.
         /// @param[in] use2dAntennaMatrix If set, use a 2D antenna matrix (default true).
         AntennaMatrixData(unsigned antennas, unsigned channels,
-                unsigned polarisations, bool use2dAntennaMatrix = true) :
-                    _use2dAntennaMatrix(use2dAntennaMatrix),
-                    DataBlob() {
+                unsigned polarisations, bool use2dAntennaMatrix = true) : DataBlob(),
+                _use2dAntennaMatrix(use2dAntennaMatrix) {
             resize(antennas, channels, polarisations);
         }
 

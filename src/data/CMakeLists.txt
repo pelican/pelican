@@ -2,7 +2,6 @@ INCLUDE_DIRECTORIES(${QT_INCLUDES})
 SUBPACKAGE(data utility)
 set( data_src
      src/DataBlob.cpp
-     src/TestDataBlob.cpp
      src/DataRequirements.cpp
      src/ImageData.cpp
      src/AntennaPositionsData.cpp
