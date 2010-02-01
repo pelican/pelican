@@ -2,6 +2,7 @@
 #define BASICFLAGGER_H
 
 #include "AbstractModule.h"
+#include "data/DataBlob.h"
 
 class QDomElement;
 
@@ -22,6 +23,18 @@ namespace pelican {
  */
 class BasicFlagger : public AbstractModule
 {
+        friend class BasicFlaggerTest;
+
+    private:
+        /// Flag set if using a separate flag table.
+        bool _useFlagTable;
+
+        /// Minimum visibility level at which to flag, as a fraction of the median.
+        real_t _minLevelMedian;
+
+        /// Maximum visibility level at which to flag, as a fraction of the median.
+        real_t _maxLevelMedian;
+
     public:
         /// Module constructor.
         BasicFlagger(const QDomElement& config);
