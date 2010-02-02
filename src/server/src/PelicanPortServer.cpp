@@ -1,7 +1,7 @@
 #include <QTcpSocket>
 #include "PelicanPortServer.h"
 #include "Session.h"
-#include "AbstractProtocol.h"
+#include "comms/AbstractProtocol.h"
 #include "utility/memCheck.h"
 
 namespace pelican {
