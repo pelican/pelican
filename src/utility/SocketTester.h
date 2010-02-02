@@ -16,7 +16,10 @@ namespace pelican {
  * @brief
  *    C++ interface to allow unit testing of socket communications
  * @details
- * 
+ *    Class to assist in testing methods that take a QTcpSocket as
+ *    an argument. call the send method with the required data stream and
+ *    a QTcpSocket that receives the data will be provided for passing to the
+ *    method.
  */
 
 class SocketTester

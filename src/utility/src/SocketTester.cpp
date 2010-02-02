@@ -19,6 +19,9 @@ SocketTester::~SocketTester()
 QTcpSocket& SocketTester::send(const QByteArray& block)
 {
     init();
+    if( _sock1.isOpen() ) {
+        _sock1.disconnectFromHost();
+    }
     _sock1.connectToHost(_server.serverAddress(),_server.serverPort());
     if( ! _sock1.waitForConnected(1000) ) {
         throw QString("connection timed out");
@@ -33,6 +36,7 @@ void SocketTester::init()
 {
     if( ! _init ) {
         _server.listen(QHostAddress::LocalHost,0);
+        _init = true;
     }
 }
 
