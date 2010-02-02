@@ -3,12 +3,14 @@
 
 
 #include "AbstractClientProtocol.h"
+class QDataStream;
 
 /**
  * @file PelicanClientProtocol.h
  */
 
 namespace pelican {
+    class DataRequirements;
 
 /**
  * @class PelicanClientProtocol
@@ -27,6 +29,7 @@ class PelicanClientProtocol : public AbstractClientProtocol
         virtual QByteArray serialise(const ServerRequest&);
 
     private:
+        void _serializeDataRequirements(QDataStream& stream, const DataRequirements& req) const;
 };
 
 } // namespace pelican

@@ -34,7 +34,7 @@ class ServerRequest
 
         void error(const QString& msg);
         QString message() const;
-        virtual bool operator==(const ServerRequest&);
+        virtual bool operator==(const ServerRequest&) const;
 
     private:
         Request_t _type;

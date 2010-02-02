@@ -21,11 +21,11 @@ QByteArray& TestProtocol::lastBlock()
     return _last;
 }
 
-ServerRequest TestProtocol::request(QTcpSocket& socket)
+boost::shared_ptr<ServerRequest> TestProtocol::request(QTcpSocket& socket)
 {
     QStringList tokens;
     tokens.append(_id);
-    return ServerRequest(ServerRequest::Acknowledge);
+    return boost::shared_ptr<ServerRequest>(new ServerRequest(ServerRequest::Acknowledge));
 }
 
 void TestProtocol::send( QByteArray& stream, const QString& message)
