@@ -27,7 +27,6 @@ class SocketTester
         // send some data to the socket
         // the socket returned is the receiving socket
         QTcpSocket& send(const QByteArray&);
-        QTcpSocket& receivingSocket();
 
     protected:
         void init();
