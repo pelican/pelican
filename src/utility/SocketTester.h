@@ -1,6 +1,7 @@
 #ifndef SOCKETTESTER_H
 #define SOCKETTESTER_H
 #include <QTcpSocket>
+#include <QTcpServer>
 
 
 /**
@@ -24,6 +25,7 @@ class SocketTester
         SocketTester();
         ~SocketTester();
         // send some data to the socket
+        // the socket returned is the receiving socket
         QTcpSocket& send(const QByteArray&);
         QTcpSocket& receivingSocket();
 
@@ -32,8 +34,8 @@ class SocketTester
 
     private:
         bool _init;
+        QTcpServer _server;
         QTcpSocket _sock1;
-        QTcpSocket _sock2;
 };
 
 

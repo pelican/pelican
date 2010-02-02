@@ -4,6 +4,7 @@ set(
    utilityTest_src
    src/utilityTest.cpp
    src/memoryTracerTest.cpp
+   src/SocketTesterTest.cpp
    src/ConfigTest.cpp
 )
 add_executable(utilityTest ${utilityTest_src} )

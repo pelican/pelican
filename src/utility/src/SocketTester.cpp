@@ -1,7 +1,7 @@
 #include "SocketTester.h"
 
-#include <sys/types.h>
-#include <sys/socket.h>
+//#include <sys/types.h>
+//#include <sys/socket.h>
 #include "utility/memCheck.h"
 
 namespace pelican {
@@ -19,25 +19,22 @@ SocketTester::~SocketTester()
 QTcpSocket& SocketTester::send(const QByteArray& block)
 {
     init();
+    _sock1.connectToHost(_server.serverAddress(),_server.serverPort());
+    if( ! _sock1.waitForConnected(1000) ) {
+        throw QString("connection timed out");
+    }
     _sock1.write(block);
     _sock1.flush();
-    return _sock1;
-}
-
-QTcpSocket& SocketTester::receivingSocket()
-{
-    init();
-    return _sock2;
+    _server.waitForNewConnection();
+    return *(_server.nextPendingConnection());
 }
 
 void SocketTester::init()
 {
     if( ! _init ) {
-        int sv[2];
-        Q_ASSERT( ! socketpair(PF_LOCAL, SOCK_STREAM, 0, sv ) );
-        Q_ASSERT( _sock1.setSocketDescriptor(sv[0]) );
-        Q_ASSERT( _sock2.setSocketDescriptor(sv[1]) );
+        _server.listen(QHostAddress::LocalHost,0);
     }
 }
 
 } // namespace pelican
+
