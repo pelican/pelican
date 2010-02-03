@@ -1,9 +1,11 @@
 #include "PelicanProtocolTest.h"
 #include "PelicanProtocol.h"
 #include "ServerRequest.h"
+#include "ServerResponse.h"
 #include "AcknowledgementRequest.h"
 #include "ServiceDataRequest.h"
 #include "StreamDataRequest.h"
+#include "server/StreamData.h"
 #include "data/DataRequirements.h"
 #include "utility/SocketTester.h"
 
@@ -30,6 +32,34 @@ void PelicanProtocolTest::setUp()
 void PelicanProtocolTest::tearDown()
 {
     delete _st;
+}
+
+void PelicanProtocolTest::test_sendStreamData()
+{
+    /*
+    {
+        // Use Case
+        // Empty Data
+        PelicanProtocol proto;
+        AbstractProtocol::StreamData_t data;
+        QByteArray stream;
+        proto.send(stream, data);
+        boost::shared_ptr<ServerResponse> resp = _protocol.receive(_st->send(stream));
+        CPPUNIT_ASSERT( resp->type() == ServerResponse::StreamData );
+    }
+    {
+        // Use Case
+        // Single Stream Data with no service data
+        PelicanProtocol proto;
+        StreamData sd;
+        AbstractProtocol::StreamData_t data;
+        data.insert(QString("teststream"), &sd);
+        QByteArray stream;
+        proto.send(stream, data);
+        boost::shared_ptr<ServerResponse> resp = _protocol.receive(_st->send(stream));
+        CPPUNIT_ASSERT( resp->type() == ServerResponse::StreamData );
+    }
+    */
 }
 
 void PelicanProtocolTest::test_request()

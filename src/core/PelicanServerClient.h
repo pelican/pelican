@@ -27,6 +27,7 @@ class PelicanServerClient : public AbstractDataClient
         virtual QHash<QString, DataBlob*> getData(const DataRequirements&);
 
     protected:
+        void getServiceData(QHash<QString,QString> requirements, QHash<QString, DataBlob*>& datahash);
         void _connect();
 
     private:

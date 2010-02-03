@@ -27,6 +27,7 @@ class PelicanClientProtocol : public AbstractClientProtocol
         PelicanClientProtocol(  );
         ~PelicanClientProtocol();
         virtual QByteArray serialise(const ServerRequest&);
+        virtual boost::shared_ptr<ServerResponse> receive(QAbstractSocket&);
 
     private:
         void _serializeDataRequirements(QDataStream& stream, const DataRequirements& req) const;

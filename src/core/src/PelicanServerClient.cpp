@@ -1,7 +1,10 @@
 #include "PelicanServerClient.h"
 #include "data/DataRequirements.h"
+#include "comms/ServerResponse.h"
 #include "comms/StreamDataRequest.h"
 #include "comms/ServiceDataRequest.h"
+#include "comms/StreamDataResponse.h"
+#include "comms/ServiceDataResponse.h"
 #include "comms/PelicanClientProtocol.h"
 #include <QHash>
 #include <QTcpSocket>
@@ -26,6 +29,8 @@ PelicanServerClient::~PelicanServerClient()
 
 QHash<QString, DataBlob*> PelicanServerClient::getData(const DataRequirements& req)
 {
+    QHash<QString, DataBlob*> data;
+
     // construct the request
     StreamDataRequest sr;
     sr.addDataOption(req);
@@ -37,13 +42,29 @@ QHash<QString, DataBlob*> PelicanServerClient::getData(const DataRequirements& r
     //sock.flush();
 
     // interpret server response
-    _protocol->receive(sock);
+    boost::shared_ptr<ServerResponse> r = _protocol->receive(sock);
+    switch( r->type() ) {
+        case ServerResponse::Error:
+            break;
+        case ServerResponse::StreamData:
+            {
+                // manage the service data
+            }
+            break;
+        default:
+            break;
+    }
 
+    return data;
 }
 
 void PelicanServerClient::_connect()
 {
 }
 
+void PelicanServerClient::getServiceData(QHash<QString,QString> requirements, QHash<QString, DataBlob*>& datahash)
+{
+    StreamDataRequest sr;
+}
 
 } // namespace pelican
