@@ -6,6 +6,7 @@ set( comms_src
      src/PelicanProtocol.cpp
      src/AcknowledgementRequest.cpp
      src/ServerRequest.cpp
+     src/ServerResponse.cpp
      src/ServiceDataRequest.cpp
      src/StreamDataRequest.cpp
 )

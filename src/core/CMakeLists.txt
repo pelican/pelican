@@ -1,9 +1,10 @@
 INCLUDE_DIRECTORIES(${QT_INCLUDES})
-SUBPACKAGE(core modules data)
+SUBPACKAGE(core modules comms data)
 set( core_src
      src/AbstractDataClient.cpp
      src/AbstractPipeline.cpp
      src/ModuleFactory.cpp
+     src/PelicanServerClient.cpp
      src/PipelineApplication.cpp
      src/PipelineDriver.cpp
 )
