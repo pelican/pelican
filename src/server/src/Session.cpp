@@ -1,8 +1,8 @@
 #include "Session.h"
+#include "comms/AbstractProtocol.h"
 #include "DataManager.h"
 #include "LockedData.h"
 #include "StreamData.h"
-#include "comms/AbstractProtocol.h"
 #include "comms/ServerRequest.h"
 #include "comms/StreamDataRequest.h"
 #include "comms/ServiceDataRequest.h"
@@ -34,10 +34,10 @@ void Session::run()
         return;
     }
 
-    ServerRequest req = _proto->request(socket);
+    boost::shared_ptr<ServerRequest> req = _proto->request(socket);
 
     QByteArray block;
-    processRequest(req, block);
+    processRequest(*req, block);
     socket.write(block); 
     socket.disconnectFromHost();
     socket.waitForDisconnected();

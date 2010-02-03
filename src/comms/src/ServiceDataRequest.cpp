@@ -31,4 +31,18 @@ QString ServiceDataRequest::version(const QString& version) const
     return _dataRequested.value(version);
 }
 
+bool ServiceDataRequest::operator==(const ServiceDataRequest& req) const
+{
+    return _dataRequested == req._dataRequested;
+}
+
+bool ServiceDataRequest::operator==(const ServerRequest& request) const
+{
+    bool r = ServerRequest::operator==(request);
+    if( r ) {
+        r = operator==( static_cast<const ServiceDataRequest& >( request ) );
+    }
+    return r;
+}
+
 } // namespace pelican

@@ -1,5 +1,6 @@
 #ifndef ABSTRACTPROTOCOL_H
 #define ABSTRACTPROTOCOL_H
+#include <boost/shared_ptr.hpp>
 #include <QMap>
 class QString;
 class QByteArray;
@@ -40,7 +41,7 @@ class AbstractProtocol
         virtual ~AbstractProtocol();
 
         /// processes an incomming request
-        virtual ServerRequest request(QTcpSocket& socket) = 0;
+        virtual boost::shared_ptr<ServerRequest> request(QTcpSocket& socket) = 0;
 
         /// write StreamData to an outgoing datastream
         virtual void send(QByteArray& stream, const StreamData_t& ) = 0;

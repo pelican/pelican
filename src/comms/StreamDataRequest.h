@@ -47,6 +47,11 @@ class StreamDataRequest : public ServerRequest
         //  DataRequirements options
         DataRequirementsIterator end() const;
 
+        int size() const;
+
+        // test for equality between ServiceData objects
+        virtual bool operator==(const ServerRequest&) const;
+
     private:
         QVector<DataRequirements> _dataOptions;
 };

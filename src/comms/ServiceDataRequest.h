@@ -38,6 +38,11 @@ class ServiceDataRequest : public ServerRequest
         // n.b only one version per type allowed per request
         QString version(const QString& version) const;
 
+        // test for equality between ServiceData objects
+        bool operator==(const ServiceDataRequest&) const;
+
+        virtual bool operator==(const ServerRequest&) const;
+
     private:
         QHash<QString,QString> _dataRequested;
 };

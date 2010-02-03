@@ -4,6 +4,7 @@
 #include "AcknowledgementRequest.h"
 #include "ServiceDataRequest.h"
 #include "StreamDataRequest.h"
+#include "data/DataRequirements.h"
 #include "utility/SocketTester.h"
 
 #include "utility/memCheck.h"
@@ -39,23 +40,50 @@ void PelicanProtocolTest::test_request()
         AcknowledgementRequest req;
         PelicanProtocol proto;
         Socket_t& socket = _send(&req);
-        CPPUNIT_ASSERT( req == proto.request(socket) );
+        CPPUNIT_ASSERT( req == *(proto.request(socket)) );
     }
     {
         // Use Case:
-        // A ServiceData Request
+        // An empty ServiceData Request
         PelicanProtocol proto;
         ServiceDataRequest req;
         Socket_t& socket = _send(&req);
-        CPPUNIT_ASSERT( req == proto.request(socket) );
+        boost::shared_ptr<ServerRequest> req2 = proto.request(socket);
+        CPPUNIT_ASSERT( req == *req2 );
     }
     {
         // Use Case:
-        // A StreamData Request
+        // A serviceData Request with 2 objects
+        PelicanProtocol proto;
+        ServiceDataRequest req;
+        req.request("testa","versiona");
+        req.request("testb","versionb");
+        Socket_t& socket = _send(&req);
+        CPPUNIT_ASSERT( req == *(proto.request(socket)) );
+    }
+    {
+        // Use Case:
+        // An empty StreamData Request
         StreamDataRequest req;
         PelicanProtocol proto;
         Socket_t& socket = _send(&req);
-        CPPUNIT_ASSERT( req == proto.request(socket) );
+        CPPUNIT_ASSERT( req == *(proto.request(socket)) );
+    }
+    {
+        // Use Case:
+        // A non-empty StreamData Request
+        StreamDataRequest req;
+        DataRequirements require1;
+        require1.setStreamData("teststream");
+        require1.setServiceData("testservice");
+        DataRequirements require2;
+        require2.setStreamData("teststream2");
+        require2.setServiceData("testservice2");
+        PelicanProtocol proto;
+        req.addDataOption(require1);
+        req.addDataOption(require2);
+        Socket_t& socket = _send(&req);
+        CPPUNIT_ASSERT( req == *(proto.request(socket)) );
     }
 }
 

@@ -31,7 +31,7 @@ QString ServerRequest::message() const
     return _error;
 }
 
-bool ServerRequest::operator==(const ServerRequest& req)
+bool ServerRequest::operator==(const ServerRequest& req) const
 {
     return _type == req._type;
 }

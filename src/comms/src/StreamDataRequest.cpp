@@ -31,4 +31,18 @@ StreamDataRequest::DataRequirementsIterator StreamDataRequest::end() const
     return _dataOptions.end();
 }
 
+int StreamDataRequest::size() const
+{
+    return _dataOptions.size();
+}
+
+bool StreamDataRequest::operator==(const ServerRequest& req) const
+{
+    bool r = ServerRequest::operator==(req);
+    if( r ) {
+        const StreamDataRequest& sr = static_cast<const StreamDataRequest&>(req);
+        return _dataOptions == sr._dataOptions;
+    }
+    return r;
+}
 } // namespace pelican
