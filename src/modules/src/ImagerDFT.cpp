@@ -37,10 +37,10 @@ ImagerDFT::~ImagerDFT()
  */
 void ImagerDFT::_getConfiguration(const QDomElement &config)
 {
-    if (_sizeL != getOption("imageSize", "l").toInt()) {
+    if ((int)_sizeL != getOption("imageSize", "l").toInt()) {
         _sizeL = 128;
     }
-    if (_sizeM != getOption("imageSize", "m").toInt()) {
+    if ((int)_sizeM != getOption("imageSize", "m").toInt()) {
         _sizeM = 128;
     }
     if (_cellsizeL != getOption("cellsize", "l").toDouble()) {

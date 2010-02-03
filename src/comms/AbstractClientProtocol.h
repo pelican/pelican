@@ -1,7 +1,9 @@
 #ifndef ABSTRACTCLIENTPROTOCOL_H
 #define ABSTRACTCLIENTPROTOCOL_H
 
+#include <boost/shared_ptr.hpp>
 class QByteArray;
+class QAbstractSocket;
 
 
 /**
@@ -10,12 +12,13 @@ class QByteArray;
 
 namespace pelican {
 class ServerRequest;
+class ServerResponse;
 
 /**
  * @class AbstractClientProtocol
  *  
  * @brief
- *    Base class for all protocols
+ *    Base class for all protocols on the Server Side
  * @details
  * 
  */
@@ -26,6 +29,7 @@ class AbstractClientProtocol
         AbstractClientProtocol(  );
         ~AbstractClientProtocol();
         virtual QByteArray serialise(const ServerRequest&) = 0;
+        virtual boost::shared_ptr<ServerResponse> receive(QAbstractSocket&) = 0;
 
     private:
 };
