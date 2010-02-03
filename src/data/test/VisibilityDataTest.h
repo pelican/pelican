@@ -27,6 +27,7 @@ class VisibilityDataTest : public CppUnit::TestFixture
         CPPUNIT_TEST( test_accessorMethodsLinear );
         CPPUNIT_TEST( test_emptyBlob );
         CPPUNIT_TEST( test_resize );
+        CPPUNIT_TEST( test_swap_twice );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -45,6 +46,9 @@ class VisibilityDataTest : public CppUnit::TestFixture
 
         /// Test trying to resize empty and non-empty blobs.
         void test_resize();
+
+        /// Test swap of antenna rows and columns.
+        void test_swap_twice();
 
     public:
         VisibilityDataTest();
