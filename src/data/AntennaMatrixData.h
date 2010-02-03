@@ -128,6 +128,43 @@ template<typename T> class AntennaMatrixData : public DataBlob
             _data.resize(a * channels * polarisations);
         }
 
+        /// Puts the data for the given antenna index at the end of the matrix.
+        /// This function moves the row and column of the specified antenna
+        /// index to the edge of the matrix. It can be used to compact 'good'
+        /// visibility data when flagging bad antennas. Note that the index is
+        /// the current row and column of the antenna, not the original one
+        /// (which may have been changed by prior calls to this function).
+        ///
+        /// <b>Important:</b> This function can only be used for 2D antenna data.
+        ///
+        /// @param[in] index The row and column index to move.
+        /// @param[in] channel The channel index.
+        /// @param[in] polarisation The polarisation index.
+        void moveAntennaData2d(unsigned index, unsigned channel, unsigned polarisation)
+        {
+            T *mptr = ptr(channel, polarisation); // Matrix pointer.
+
+            /* Swap the columns */
+            T *ptrc1 = mptr + index * _nAntennas;
+            T *ptrc2 = mptr + (_nAntennas - 1) * _nAntennas;
+            for (unsigned row = 0; row < _nAntennas; ++row) {
+                const T tmp = ptrc1[row];
+                ptrc1[row]  = ptrc2[row];
+                ptrc2[row]  = tmp;
+            }
+
+            /* Swap the rows */
+            for (unsigned col = 0; col < _nAntennas; ++col) {
+                const unsigned offset = col * _nAntennas;
+                const unsigned pos1 = index + offset;
+                const unsigned pos2 = _nAntennas - 1 + offset;
+
+                const T tmp = mptr[pos1];
+                mptr[pos1]  = mptr[pos2];
+                mptr[pos2]  = tmp;
+            }
+        }
+
         /// Returns a reference to the data vector (use with caution!).
         /// This method may be deprecated in due course.
         std::vector<T>& data() {return _data;}
@@ -137,7 +174,7 @@ template<typename T> class AntennaMatrixData : public DataBlob
         /// The index \p ai is the row number, and the index \p aj is the
         /// column number (the matrix is column-major).
         ///
-        /// This is used when the the antenna matrix is two-dimensional.
+        /// This is used when the antenna matrix is two-dimensional.
         T& operator() (const unsigned ai, const unsigned aj,
                 const unsigned c, const unsigned p) {
             unsigned index = ai + _nAntennas * (aj + _nAntennas * (c + _nChannels * p));
@@ -149,7 +186,7 @@ template<typename T> class AntennaMatrixData : public DataBlob
         /// The index \p ai is the row number, and the index \p aj is the
         /// column number (the matrix is column-major).
         ///
-        /// This is used when the the antenna matrix is two-dimensional.
+        /// This is used when the antenna matrix is two-dimensional.
         const T& operator() (const unsigned ai, const unsigned aj,
                 const unsigned c, const unsigned p) const {
             unsigned index = ai + _nAntennas * (aj + _nAntennas * (c + _nChannels * p));
