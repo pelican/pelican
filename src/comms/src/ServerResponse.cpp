@@ -7,8 +7,8 @@ namespace pelican {
 
 
 // class ServerResponse 
-ServerResponse::ServerResponse(ServerResponse::Response_t type)
-    : _type(type)
+ServerResponse::ServerResponse(ServerResponse::Response_t type, const QString& msg)
+    : _type(type), _msg(msg)
 {
 }
 

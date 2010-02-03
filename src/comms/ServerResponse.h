@@ -1,6 +1,6 @@
 #ifndef SERVERRESPONSE_H
 #define SERVERRESPONSE_H
-
+#include <QString>
 
 /**
  * @file ServerResponse.h
@@ -24,12 +24,13 @@ class ServerResponse
         typedef private_Response_t Response_t;
 
     public:
-        ServerResponse(Response_t type);
+        ServerResponse(Response_t type = Error, const QString& msg = "" );
         ~ServerResponse();
         Response_t type() const;
 
     private:
         Response_t _type;
+        QString _msg;
 };
 
 } // namespace pelican

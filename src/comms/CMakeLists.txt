@@ -8,7 +8,9 @@ set( comms_src
      src/ServerRequest.cpp
      src/ServerResponse.cpp
      src/ServiceDataRequest.cpp
+     src/ServiceDataResponse.cpp
      src/StreamDataRequest.cpp
+     src/StreamDataResponse.cpp
 )
 add_library(comms ${comms_src} )
 target_link_libraries(comms ${SUBPACKAGE_LIBRARIES} )
