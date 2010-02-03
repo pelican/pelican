@@ -128,25 +128,27 @@ template<typename T> class AntennaMatrixData : public DataBlob
             _data.resize(a * channels * polarisations);
         }
 
-        /// Puts the data for the given antenna index at the end of the matrix.
-        /// This function moves the row and column of the specified antenna
-        /// index to the edge of the matrix. It can be used to compact 'good'
-        /// visibility data when flagging bad antennas. Note that the index is
-        /// the current row and column of the antenna, not the original one
-        /// (which may have been changed by prior calls to this function).
+        /// Swaps the two rows and columns in the antenna matrix.
+        /// This function swaps the row and column of the specified antenna
+        /// indices. It can be used to compact 'good' visibility data when
+        /// flagging bad antennas. Note that the index is the current row and
+        /// column of the antenna, not the original one (which may have been
+        /// changed by prior calls to this function).
         ///
         /// <b>Important:</b> This function can only be used for 2D antenna data.
         ///
-        /// @param[in] index The row and column index to move.
+        /// @param[in] index1 The row and column index to swap.
+        /// @param[in] index2 The row and column index to swap.
         /// @param[in] channel The channel index.
         /// @param[in] polarisation The polarisation index.
-        void moveAntennaData2d(unsigned index, unsigned channel, unsigned polarisation)
+        void swapAntennaData2d(unsigned index1, unsigned index2,
+                unsigned channel, unsigned polarisation)
         {
             T *mptr = ptr(channel, polarisation); // Matrix pointer.
 
             /* Swap the columns */
-            T *ptrc1 = mptr + index * _nAntennas;
-            T *ptrc2 = mptr + (_nAntennas - 1) * _nAntennas;
+            T *ptrc1 = mptr + index1 * _nAntennas;
+            T *ptrc2 = mptr + index2 * _nAntennas;
             for (unsigned row = 0; row < _nAntennas; ++row) {
                 const T tmp = ptrc1[row];
                 ptrc1[row]  = ptrc2[row];
@@ -156,8 +158,8 @@ template<typename T> class AntennaMatrixData : public DataBlob
             /* Swap the rows */
             for (unsigned col = 0; col < _nAntennas; ++col) {
                 const unsigned offset = col * _nAntennas;
-                const unsigned pos1 = index + offset;
-                const unsigned pos2 = _nAntennas - 1 + offset;
+                const unsigned pos1 = index1 + offset;
+                const unsigned pos2 = index2 + offset;
 
                 const T tmp = mptr[pos1];
                 mptr[pos1]  = mptr[pos2];
