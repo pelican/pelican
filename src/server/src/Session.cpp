@@ -1,11 +1,11 @@
 #include "Session.h"
-#include "AbstractProtocol.h"
 #include "DataManager.h"
 #include "LockedData.h"
 #include "StreamData.h"
-#include "data/ServerRequest.h"
-#include "data/StreamDataRequest.h"
-#include "data/ServiceDataRequest.h"
+#include "comms/AbstractProtocol.h"
+#include "comms/ServerRequest.h"
+#include "comms/StreamDataRequest.h"
+#include "comms/ServiceDataRequest.h"
 #include <QTcpSocket>
 #include <QString>
 #include <QHash>

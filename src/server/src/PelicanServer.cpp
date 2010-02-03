@@ -2,11 +2,11 @@
 #include <QtGlobal>
 #include <QTcpSocket>
 #include "PelicanServer.h"
-#include "AbstractProtocol.h"
+#include "comms/AbstractProtocol.h"
 #include "AbstractChunker.h"
 #include "DataManager.h"
 #include "DataReceiver.h"
-#include "PelicanProtocol.h"
+#include "comms/PelicanProtocol.h"
 #include "PelicanPortServer.h"
 #include "utility/memCheck.h"
 
