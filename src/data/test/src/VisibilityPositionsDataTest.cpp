@@ -34,7 +34,7 @@ void VisibilityPositionsDataTest::test_accessorMethods()
     double c = 299792458.0;
     double refFreq = 1.0e8;
     double freqInc = 1.0e6;
-    VisibilityPositions visPos(nAnt);
+    VisibilityPositionsData visPos(nAnt);
     visPos.refChannel() = 0;
     visPos.refFreq() = refFreq;
     visPos.freqInc() = freqInc;
