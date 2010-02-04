@@ -27,7 +27,8 @@ class ImageData : public DataBlob
         ImageData();
 
         /// Constructor assigning memory for the image cube.
-        ImageData(const unsigned int sizeL, const unsigned int sizeM, const unsigned int nChannels);
+        ImageData(const unsigned sizeL, const unsigned sizeM,
+                const unsigned nChannels, const unsigned nPolarisations);
 
         /// Image data destructor.
         ~ImageData();
@@ -38,7 +39,8 @@ class ImageData : public DataBlob
 
     public:
         /// Assign the image cube
-        void assign(const unsigned int sizeL, const unsigned int sizeM, const unsigned int nChannels);
+        void assign(const unsigned sizeL, const unsigned sizeM,
+                const unsigned nChannels, const unsigned nPolarisations);
 
         /// Clears the image data blob
         void clear();
@@ -46,16 +48,19 @@ class ImageData : public DataBlob
     public: // accessor methods
 
         // Returns the number of pixels in the image
-        int nPixels() const { return _image.size(); }
+        unsigned nPixels() const { return _image.size(); }
 
         /// Returns the number of channels.
-        int nChannels() const { return _nChannels; }
+        unsigned nChannels() const { return _nChannels; }
+
+        /// Returns the number of polarisations
+        unsigned nPolarisations() const { return _nPolarisations; }
 
         /// Returns the image size (number of pixels) in the L direction.
-        int sizeL() const { return _sizeL; }
+        unsigned sizeL() const { return _sizeL; }
 
         /// Returns the image size (number of pixels) in the L direction.
-        int sizeM() const { return _sizeM; }
+        unsigned sizeM() const { return _sizeM; }
 
         /// Returns a reference to the image pixel separation in the L direction in arcseconds.
         double& cellsizeL() { return _cellsizeL; }
@@ -78,37 +83,57 @@ class ImageData : public DataBlob
         /// Returns a reference to the reference pixel coordinate in units specified by the coordinate type
         double& refCoordM() { return _refCoordM; }
 
-        /// Returns a reference to the image pixel amplitude at the coordinate l,m for the specified channel
-        real_t& amp(const unsigned int l, const unsigned int m, const unsigned int channel) {
-            return _image[l + _sizeL * (m + _sizeM * channel)];
-        }
-
         /// Returns a reference to the image amplitude vector
         std::vector<real_t>& amp() { return _image; }
 
-        /// Operator to dereference the image amplitude array
-        real_t& operator[](const unsigned int i) { return _image[i]; }
+        /// Dereferences the image amplitude array for image index (\p i)
+        real_t& operator[](const unsigned i) { return _image[i]; }
 
-        /// Operator to dereference the image amplitude array
-        real_t& operator()(const unsigned int l, const unsigned int m, const unsigned int channel) {
-            return _image[l + _sizeL * (m + _sizeM * channel)];
+        /// Dereferences the image amplitude array for image index (\p i)
+        const real_t& operator[](const unsigned i) const { return _image[i]; }
+
+        /// Dereference the image amplitude array for image coordinate
+        /// (\p l, \p m), channel (\p c) and polarisation (\p p)
+        real_t& operator()(const unsigned l, const unsigned m,
+                const unsigned c, const unsigned p) {
+            unsigned index = l + _sizeL * (_sizeM * (p * _nChannels + c) + m);
+            return _image[index];
+        }
+
+        /// Dereference the image amplitude array for image coordinate
+        /// (\p l, \p m), channel (\p c) and polarisation (\p p)
+        const real_t& operator()(const unsigned l, const unsigned m,
+                const unsigned c, const unsigned p) const {
+            unsigned index = l + _sizeL * (_sizeM * (p * _nChannels + c) + m);
+            return _image[index];
         }
 
         /// Return a pointer to the image cube.
         real_t* ampPtr() { return _image.size() > 0 ? &_image[0] : NULL; }
 
-        /// Return a pointer to the image for a specifed channel
-        real_t* ampPtr(const unsigned int channel) {
-            return _image.size() > 0 ? &_image[channel * _sizeL * _sizeM] : NULL;
+        /// Return a pointer to the image for a specified polarisation (\p p)
+        real_t* ampPtr(const unsigned p) {
+            unsigned index = p * _nChannels * _sizeL * _sizeM;
+            return _image.size() > 0 ? &_image[index] : NULL;
         }
+
+        /// Return a pointer to the image for a specified polarisation (\p p)
+        /// and channel (\p c)
+        real_t* ampPtr(const unsigned p, const unsigned c) {
+            unsigned index = _sizeL * _sizeM * (p * _nChannels + c);
+            return _image.size() > 0 ? &_image[index] : NULL;
+        }
+
 
     private:
         /// Number of channels in the image cube
-        int _nChannels;
+        unsigned _nChannels;
+        /// Number of polarisations in the image cube
+        unsigned _nPolarisations;
         /// Number of image pixels in the L/x direction.
-        int _sizeL;
+        unsigned _sizeL;
         /// Number of image pixels in the M/y direction.
-        int _sizeM;
+        unsigned _sizeM;
         /// Pixel separation in the L direction in arcseconds.
         double _cellsizeL;
         /// Pixel separation in the M direction in arcseconds.

@@ -6,7 +6,7 @@ namespace pelican {
  * @details
  * Constructs an empty visibility positions data blob
  */
-VisibilityPositions::VisibilityPositions() : DataBlob()
+VisibilityPositionsData::VisibilityPositionsData() : DataBlob()
 {
 }
 
@@ -17,7 +17,7 @@ VisibilityPositions::VisibilityPositions() : DataBlob()
  *
  * @param[in]   nAntennas   The number of antennas.
  */
-VisibilityPositions::VisibilityPositions(const unsigned int nAntennas)
+VisibilityPositionsData::VisibilityPositionsData(const unsigned nAntennas)
 : DataBlob()
 {
     assign(nAntennas);
@@ -28,7 +28,7 @@ VisibilityPositions::VisibilityPositions(const unsigned int nAntennas)
  * @details
  * Image data destructor.
  */
-VisibilityPositions::~VisibilityPositions()
+VisibilityPositionsData::~VisibilityPositionsData()
 {
 }
 
@@ -39,11 +39,11 @@ VisibilityPositions::~VisibilityPositions()
  *
  * @param[in]   nAntenna   The number of antennas.
  */
-void VisibilityPositions::assign(const unsigned int nAntennas)
+void VisibilityPositionsData::assign(const unsigned nAntennas)
 {
    _refChannel = 0;
     _nAntennas = nAntennas;
-    int nBaselines = nAntennas * nAntennas;
+    unsigned nBaselines = nAntennas * nAntennas;
    _u.resize(nBaselines);
    _v.resize(nBaselines);
    _w.resize(nBaselines);
@@ -54,7 +54,7 @@ void VisibilityPositions::assign(const unsigned int nAntennas)
  * @details
  * Clears the visibility positions data blob.
  */
-void VisibilityPositions::clear()
+void VisibilityPositionsData::clear()
 {
     _nAntennas = 0;
     _refChannel = 0;
@@ -65,5 +65,21 @@ void VisibilityPositions::clear()
     _w.clear();
 }
 
+
+/**
+ * @details
+ * Visibility positions are stored for a reference frequency therefore a
+ * frequency dependent scaling factor is needed to convert the position from
+ * the coordinates at one channel to another. This function returns
+ * this scaling factor for a specified channel index.
+ *
+ * @param[in] channel Channel of the requested visibility scaling.
+ *
+ * @return Visibility position scaling factor.
+ */
+double VisibilityPositionsData::freqScaleFactor(const unsigned channel)
+{
+    return (_refFreq + (channel - _refChannel) * _freqInc) / _refFreq;
+}
 
 } // namespace pelican

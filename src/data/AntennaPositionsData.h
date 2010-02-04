@@ -26,14 +26,14 @@ class AntennaPositions : public DataBlob
         AntennaPositions();
 
         /// Constructor assigning memory for the antenna positions
-        AntennaPositions(const unsigned int nAntennas);
+        AntennaPositions(const unsigned nAntennas);
 
         /// Image data destructor.
         ~AntennaPositions();
 
     public:
         /// Assign memory for antenna positions
-        void assign(const unsigned int nAntennas);
+        void assign(const unsigned nAntennas);
 
         /// Clears the antenna positions data
         void clear();
@@ -41,16 +41,19 @@ class AntennaPositions : public DataBlob
     public: // accessor methods
 
         /// Returns the number of antennas for which positions are held
-        int nAntennas() const { return _x.size(); }
+        unsigned nAntennas() const { return _x.size(); }
 
-        /// Returns a reference to the x coordinate antenna position for antenna i
-        real_t& x(const unsigned int i) { return _x[i]; }
+        /// Returns a reference to the x coordinate antenna position for
+        /// antenna \p i
+        real_t& x(const unsigned i) { return _x[i]; }
 
-        /// Returns a reference to the y coordinate antenna position for antenna i
-        real_t& y(const unsigned int i) { return _y[i]; }
+        /// Returns a reference to the y coordinate antenna position for
+        // antenna \p i
+        real_t& y(const unsigned i) { return _y[i]; }
 
-        /// Returns a reference to the z coordinate antenna position for antenna i
-        real_t& z(const unsigned int i) { return _z[i]; }
+        /// Returns a reference to the z coordinate antenna position for
+        /// antenna \p i
+        real_t& z(const unsigned i) { return _z[i]; }
 
         /// Returns a refrence to the vector for the x antenna positions
         std::vector<real_t>& x() { return _x; }

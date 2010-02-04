@@ -27,13 +27,13 @@ void AntennaPositionsDataTest::tearDown()
 
 /**
  * @details
- * Tests the various accessor methods for the antenna positions data blob
+ * Tests the various accessor methods for the antenna positions data blob.
  */
 void AntennaPositionsDataTest::test_accessorMethods()
 {
-    int nAnt = 96;
+    unsigned nAnt = 96;
     AntennaPositions antPos(nAnt);
-    for (int i = 0; i < nAnt; i++) {
+    for (unsigned i = 0; i < nAnt; i++) {
         antPos.x(i) = static_cast<real_t>(i + 0.25);
         antPos.y(i) = static_cast<real_t>(i + 0.5);
         antPos.z(i) = static_cast<real_t>(i + 0.75);
@@ -47,7 +47,7 @@ void AntennaPositionsDataTest::test_accessorMethods()
     std::vector<real_t> y = antPos.y();
     std::vector<real_t> z = antPos.z();
 
-    for (int i = 0; i < nAnt; i++) {
+    for (unsigned i = 0; i < nAnt; i++) {
         real_t xpos = static_cast<real_t>(i + 0.25);
         real_t ypos = static_cast<real_t>(i + 0.5);
         real_t zpos = static_cast<real_t>(i + 0.75);
