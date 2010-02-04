@@ -2,7 +2,8 @@
 #define BASICFLAGGER_H
 
 #include "AbstractModule.h"
-#include "data/DataBlob.h"
+#include "data/VisibilityData.h"
+#include <vector>
 
 class QDomElement;
 
@@ -44,7 +45,20 @@ class BasicFlagger : public AbstractModule
 
         /// Runs the module.
         void run(QHash<QString, DataBlob*>& data);
+
+    private:
+        /// Gets the autocorrelations.
+        void _getAutocorrelations(const VisibilityData* visData,
+                std::vector<complex_t>& autocorr);
+
+        /// Determines the median autocorrelation values.
+        void _getMedian(const unsigned nAntennas,
+                const unsigned nChannels, const unsigned nPols,
+                std::vector<complex_t>& autocorr,
+                std::vector<complex_t>& medians);
 };
+
+bool complexCompareAbs(complex_t i, complex_t j);
 
 } // namespace pelican
 

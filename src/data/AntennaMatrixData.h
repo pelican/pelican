@@ -31,6 +31,12 @@ namespace pelican {
  * The data for each polarisation (p) is stored in separate, but contiguous,
  * data cubes.
  *
+ * The memory layout is as shown in the figure below, using visibility data
+ * or complex antenna gains as an example:
+ *
+ * \image html doc/VisibilityData.png
+ * \image latex doc/VisibilityData.eps "AntennaMatrixData memory layout." width=10cm
+ *
  * The matrix data is stored in column-major order for compatibility
  * with high-performance FORTRAN libraries like LAPACK.
  *
@@ -95,6 +101,11 @@ template<typename T> class AntennaMatrixData : public DataBlob
             return _data.size() > 0 ? &_data[0] : NULL;
         }
 
+        /// Returns a pointer to the first element of the memory block (const overload).
+        const T* ptr() const {
+            return _data.size() > 0 ? &_data[0] : NULL;
+        }
+
         /// Returns a pointer to the first element of the data cube
         /// for the given polarisation \p p.
         T* ptr(const unsigned p) {
@@ -103,9 +114,25 @@ template<typename T> class AntennaMatrixData : public DataBlob
             return _data.size() > index ? &_data[index] : NULL;
         }
 
+        /// Returns a pointer to the first element of the data cube
+        /// for the given polarisation \p p (const overload).
+        const T* ptr(const unsigned p) const {
+            unsigned index = p * _nChannels * _nAntennas;
+            if (_use2dAntennaMatrix) index *= _nAntennas;
+            return _data.size() > index ? &_data[index] : NULL;
+        }
+
         /// Returns a pointer to the first element of the matrix
         /// for the given channel \p c and polarisation \p p.
         T* ptr(const unsigned c, const unsigned p) {
+            unsigned a = (_use2dAntennaMatrix) ? _nAntennas * _nAntennas : _nAntennas;
+            unsigned index = a * (p * _nChannels + c);
+            return _data.size() > index ? &_data[index] : NULL;
+        }
+
+        /// Returns a pointer to the first element of the matrix
+        /// for the given channel \p c and polarisation \p p (const overload).
+        const T* ptr(const unsigned c, const unsigned p) const {
             unsigned a = (_use2dAntennaMatrix) ? _nAntennas * _nAntennas : _nAntennas;
             unsigned index = a * (p * _nChannels + c);
             return _data.size() > index ? &_data[index] : NULL;
