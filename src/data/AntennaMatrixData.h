@@ -81,6 +81,9 @@ template<typename T> class AntennaMatrixData : public DataBlob
         /// Matrix data destructor.
         ~AntennaMatrixData() {}
 
+        /// Returns the number of entries in the antenna matrix data.
+        unsigned nEntries() const { return _data.size(); }
+
         /// Returns the number of antennas.
         unsigned nAntennas() const {return _nAntennas;}
 
