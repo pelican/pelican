@@ -32,6 +32,7 @@ class PelicanProtocolTest : public CppUnit::TestFixture
     public:
         CPPUNIT_TEST_SUITE( PelicanProtocolTest );
         CPPUNIT_TEST( test_request );
+        CPPUNIT_TEST( test_sendStreamData );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -40,6 +41,7 @@ class PelicanProtocolTest : public CppUnit::TestFixture
 
         // Test Methods
         void test_request();
+        void test_sendStreamData();
 
     public:
         PelicanProtocolTest(  );

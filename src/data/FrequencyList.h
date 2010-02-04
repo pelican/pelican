@@ -1,20 +1,20 @@
-#ifndef FREQUENCYTABLE_H
-#define FREQUENCYTABLE_H
+#ifndef FREQUENCYLIST_H
+#define FREQUENCYLIST_H
 
 #include "data/DataBlob.h"
 #include <vector>
 
 /**
- * @file FrequencyTable.h
+ * @file FrequencyList.h
  */
 
 namespace pelican {
 
 /**
- * @class FrequencyTable
+ * @class FrequencyList
  *
  * @brief
- * Class to define antenna matrix data.
+ * Class to define the channel to frequency mapping.
  * 
  * @details
  * This class defines how channel frequency data is held. It inherits
@@ -23,7 +23,7 @@ namespace pelican {
  * Internally, the data is stored as a contiguous memory
  * block wrapped inside a standard vector.
  */
-template<typename T> class FrequencyTable : public DataBlob
+template<typename T> class FrequencyList : public DataBlob
 {
     private: /* Data */
         /// The list of channel-to-frequency mappings.
@@ -33,20 +33,17 @@ template<typename T> class FrequencyTable : public DataBlob
         unsigned _nChannels;
 
     public:
-        /// Constructs an empty data cube.
-        /// The constructed data cube has zero size.
-        FrequencyTable() : DataBlob() {}
+        /// Constructs an empty frequency list.
+        FrequencyList() : DataBlob() {}
 
-        /// Matrix data destructor.
-        ~FrequencyTable() {}
+        /// Frequency list destructor.
+        ~FrequencyList() {}
 
         /// Returns the number of frequency channels.
-        unsigned nChannels() const {return _nChannels;}
+        unsigned nChannels() const { return _nChannels; }
 
         /// Returns a pointer to the first element of the memory block.
-        T* ptr() {
-            return _data.size() > 0 ? &_data[0] : NULL;
-        }
+        T* ptr() { return _data.size() > 0 ? &_data[0] : NULL; }
 
         /// Resizes the data container.
         /// This public method is used to resize the container using the
@@ -60,29 +57,21 @@ template<typename T> class FrequencyTable : public DataBlob
 
         /// Returns a reference to the data vector (use with caution!).
         /// This method may be deprecated in due course.
-        std::vector<T>& data() {return _data;}
+        std::vector<T>& data() { return _data; }
 
         /// Dereferences the data for channel (\p c).
-        T& operator() (const unsigned c) {
-            return _data[c];
-        }
+        T& operator() (const unsigned c) { return _data[c]; }
 
         /// Dereferences the data for channel (\p c) (const overload).
-        const T& operator() (const unsigned c) const {
-            return _data[c];
-        }
+        const T& operator() (const unsigned c) const { return _data[c]; }
 
         /// Dereferences the data for the given index \p i.
-        T& operator[] (const unsigned c) {
-            return _data[c];
-        }
+        T& operator[] (const unsigned c) { return _data[c]; }
 
         /// Dereferences the data for the given index \p i (const overload).
-        const T& operator[] (const unsigned c) const {
-            return _data[c];
-        }
+        const T& operator[] (const unsigned c) const { return _data[c]; }
 };
 
 } // namespace pelican
 
-#endif // FREQUENCYTABLE_H
+#endif // FREQUENCYLIST_H

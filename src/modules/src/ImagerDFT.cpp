@@ -69,7 +69,7 @@ void ImagerDFT::_getConfiguration(const QDomElement &config)
         _sizeL = 128;
     }
     if (_sizeM != getOption("imageSize", "m").toUInt()) {
-        _sizeM = 128;
+        _sizeL = 128;
     }
     if (_cellsizeL != getOption("cellsize", "l").toDouble()) {
         _cellsizeL = 10.0;
@@ -183,7 +183,7 @@ void ImagerDFT::_makeImageDft1(unsigned channel)
             index += il;
             image[index] = 0.0;
             for (unsigned iv = 0; iv < nVis; iv++) {
-                image[index] +=
+//                image[index] +=
             }
         }
     }
