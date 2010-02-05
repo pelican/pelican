@@ -1,8 +1,6 @@
 # CMake Build File
 project(Pelican CXX C)
 
-set(CMAKE_BUILD_TYPE DEBUG)
-
 # -- cmake setup info
 cmake_minimum_required(VERSION 2.6)
 list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_SOURCE_DIR}/cmake)
@@ -10,6 +8,14 @@ include(cmake/packagemacros.cmake)
 include_directories(${PROJECT_SOURCE_DIR})
 
 # options and defaults
+if (NOT CMAKE_BUILD_TYPE ) 
+    set( CMAKE_BUILD_TYPE DEBUG )
+endif(NOT CMAKE_BUILD_TYPE )
+
+if (TIMER)
+    ADD_DEFINITIONS(-DTIMER_ENABLE=1)
+endif(TIMER)
+
 set( BUILD_SHARED_LIBS TRUE )
 
 if(NOT LIBRARY_INSTALL_DIR )
