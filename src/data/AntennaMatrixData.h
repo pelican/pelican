@@ -40,6 +40,10 @@ namespace pelican {
  * The matrix data is stored in column-major order for compatibility
  * with high-performance FORTRAN libraries like LAPACK.
  *
+ * The antenna index data is stored separately, and is used to convert row and
+ * column indices to a physical antenna index. The list of antenna index data is
+ * stored for each channel and polarisation.
+ *
  * If the optional argument \p use2dAntennaMatrix is set to false in the
  * constructor, the antenna data will be stored and indexed as a
  * one-dimensional vector rather than a two-dimensional matrix.
@@ -49,6 +53,9 @@ template<typename T> class AntennaMatrixData : public DataBlob
     protected: /* Data */
         /// The data.
         std::vector<T> _data;
+
+        /// The antenna index data.
+        std::vector<unsigned> _antIndex;
 
         /// Flag to use a 2D antenna matrix
         bool _use2dAntennaMatrix;
@@ -86,6 +93,18 @@ template<typename T> class AntennaMatrixData : public DataBlob
 
         /// Matrix data destructor.
         ~AntennaMatrixData() {}
+
+        /// Initialises the antenna index data.
+        void initIndex() {
+            _antIndex.resize(_nAntennas * _nChannels * _nPolarisations);
+            for (unsigned p = 0, i = 0; p < _nPolarisations; p++) {
+                for (unsigned c = 0; c < _nChannels; c++) {
+                    for (unsigned a = 0; a < _nAntennas; a++, i++) {
+                        _antIndex[i] = a;
+                    }
+                }
+            }
+        }
 
         /// Returns the number of entries in the antenna matrix data.
         unsigned nEntries() const { return _data.size(); }
@@ -156,6 +175,7 @@ template<typename T> class AntennaMatrixData : public DataBlob
             _nPolarisations = polarisations;
             unsigned a = (_use2dAntennaMatrix) ? antennas * antennas : antennas;
             _data.resize(a * channels * polarisations);
+            initIndex();
         }
 
         /// Swaps the two rows and columns in the antenna matrix.
@@ -195,6 +215,14 @@ template<typename T> class AntennaMatrixData : public DataBlob
                 mptr[pos1]  = mptr[pos2];
                 mptr[pos2]  = tmp;
             }
+
+            /* Swap the antenna indices */
+            const unsigned as = _nAntennas * (channel + polarisation * _nChannels);
+            const unsigned a1 = as + index1;
+            const unsigned a2 = as + index2;
+            const unsigned tmp = _antIndex[a1];
+            _antIndex[a1] = _antIndex[a2];
+            _antIndex[a2] = tmp;
         }
 
         /// Returns a reference to the data vector (use with caution!).

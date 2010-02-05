@@ -52,7 +52,16 @@ void BasicFlagger::run(QHash<QString, DataBlob*>& data)
     if (!visibilityData)
         throw QString("No visibility data.");
 
+    /* Get the median autocorrelations */
+    const unsigned nAntennas = visibilityData->nAntennas();
+    const unsigned nChannels = visibilityData->nChannels();
+    const unsigned nPols = visibilityData->nPolarisations();
+    std::vector<complex_t> autocorr, medians;
+    _getAutocorrelations(visibilityData, autocorr);
+    _getMedians(nAntennas, nChannels, nPols, autocorr, medians);
 
+    /* Loop through the autocorrelations and flag them if outside limits */
+    // TODO
 }
 
 /**
@@ -97,23 +106,31 @@ void BasicFlagger::_getAutocorrelations(const VisibilityData* visData,
 
 /**
  * @details
- * This method returns the median values of the autocorrelation data.
+ * This method returns the median values of the autocorrelation data for
+ * each channel and polarisation.
  *
  * The median antenna values are returned in a standard vector, which is of
  * length nChannels * nPolarisations. The fastest-varying dimension is
  * the channel index, and the slowest is the polarisation.
  *
+ * The median is found optimally so that it runs in linear time, on average.
+ *
+ * The autocorrelation data is passed by value, since it is modified by the
+ * function when obtaining the median.
+ *
  * @param[in] nAntennas The number of antennas.
  * @param[in] nChannels The number of frequency channels.
  * @param[in] nPols The number of polarisations.
- * @param[in] autocorr A reference to the autocorrelation data.
+ * @param[in] autocorr The autocorrelation data (this must be copied).
  * @param[in,out] medians A reference to the median data.
  */
-void BasicFlagger::_getMedian(const unsigned nAntennas,
-        const unsigned nChannels, const unsigned nPols,
-        std::vector<complex_t>& autocorr,
-        std::vector<complex_t>& medians)
-{
+void BasicFlagger::_getMedians (
+        const unsigned nAntennas,
+        const unsigned nChannels,
+        const unsigned nPols,
+        std::vector<complex_t> autocorr,
+        std::vector<complex_t>& medians
+){
     /* Get start address of median data */
     const unsigned nAntennasChannels = nAntennas * nChannels;
     const unsigned size = nPols * nChannels;
@@ -132,12 +149,12 @@ void BasicFlagger::_getMedian(const unsigned nAntennas,
 
             /* Find the median value by rearranging the autocorrelation
              * data. The cost is linear in the number of antennas. */
-            std::nth_element(aBeg, aBeg + (nAntennas / 2), aEnd,
-                    complexCompareAbs);
+            const unsigned m = nAntennas / 2; // Median index.
+            std::nth_element(aBeg, aBeg + m, aEnd, complexCompareAbs);
 
             /* Store median value */
             const unsigned j = c + p * nChannels;
-            mptr[j] = aBeg[nAntennas / 2];
+            mptr[j] = aBeg[m];
         }
     }
 }

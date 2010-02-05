@@ -20,7 +20,7 @@ namespace pelican {
  * Provides basic flagging routines for visibility data.
  * 
  * @details
- * 
+ * The BasicFlagger module
  */
 class BasicFlagger : public AbstractModule
 {
@@ -52,10 +52,13 @@ class BasicFlagger : public AbstractModule
                 std::vector<complex_t>& autocorr);
 
         /// Determines the median autocorrelation values.
-        void _getMedian(const unsigned nAntennas,
-                const unsigned nChannels, const unsigned nPols,
-                std::vector<complex_t>& autocorr,
-                std::vector<complex_t>& medians);
+        void _getMedians (
+                const unsigned nAntennas,
+                const unsigned nChannels,
+                const unsigned nPols,
+                std::vector<complex_t> autocorr,
+                std::vector<complex_t>& medians
+        );
 };
 
 bool complexCompareAbs(complex_t i, complex_t j);
