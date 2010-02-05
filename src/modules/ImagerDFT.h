@@ -21,8 +21,8 @@ namespace pelican {
  * Module which will produce a brightness map given a matrix of visibility data.
  * 
  * @details
- *
  */
+
 class ImagerDFT : public AbstractModule
 {
     public:
@@ -49,18 +49,24 @@ class ImagerDFT : public AbstractModule
                 std::vector<real_t>& imageCoord,
                 std::vector<complex_t>& weight);
 
-        /// Construct the image by DFT
-        void _makeImageDft(unsigned channel);
+        /// Construct the image by DFT for polarisation (\p p) and channel (\p c)
+        void _makeImageDft(unsigned p, unsigned c);
 
-
-        void _makeImageDft1(unsigned channel);
+        ///
+        void _makeImageDft1(
+                unsigned p, unsigned c,
+                std::vector<complex_t>& visAmp,
+                std::vector<complex_t>& weightUL,
+                std::vector<complex_t>& weightVM,
+                real_t* image
+        );
 
         /// Cut the image outside unit radius in l, m.
         void _cutHemisphere();
 
     private:
         VisibilityData *_vis;               ///< Visibility amplitude matrix.
-        VisibilityPositions *_visCoord;     ///< Visibility positions matrix.
+        VisibilityPositionsData *_visCoord;     ///< Visibility positions matrix.
         ImageData *_image;                  ///< Image amplitude matrix.
 
         unsigned _sizeL;                    ///< Image size in l (x) pixels.

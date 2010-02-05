@@ -34,7 +34,7 @@ class ImagerDFTTest : public CppUnit::TestFixture
         void test_createModule();
 
     public:
-        ImagerDFTTest(  );
+        ImagerDFTTest();
         ~ImagerDFTTest();
 
     private:

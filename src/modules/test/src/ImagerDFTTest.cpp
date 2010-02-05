@@ -7,7 +7,8 @@
 namespace pelican {
 
 CPPUNIT_TEST_SUITE_REGISTRATION( ImagerDFTTest );
-// class BasicFlaggerTest 
+
+// class ImagerDFTTest
 ImagerDFTTest::ImagerDFTTest()
     : CppUnit::TestFixture()
 {
