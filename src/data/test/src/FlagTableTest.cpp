@@ -1,5 +1,7 @@
 #include "FlagTableTest.h"
 #include "data/FlagTable.h"
+//#define TIMER_ENABLE
+#include "utility/pelicanTimer.h"
 #include "utility/memCheck.h"
 
 namespace pelican {
@@ -38,6 +40,7 @@ void FlagTableTest::test_accessorMethodsIndexed()
     FlagTable data(nAntennas, nChannels, nPols);
 
     // Fill the flag matrix and read it out again.
+    TIMER_START
     for (unsigned p = 0; p < nPols; p++) {
         for (unsigned c = 0; c < nChannels; c++) {
             for (unsigned aj = 0; aj < nAntennas; aj++) {
@@ -51,6 +54,7 @@ void FlagTableTest::test_accessorMethodsIndexed()
             }
         }
     }
+    TIMER_STOP("Flag write/read indexed data access time")
 
     // Use Case
     // Test getting the memory address of the first element.
@@ -103,12 +107,14 @@ void FlagTableTest::test_accessorMethodsLinear()
     FlagTable data(nAntennas, nChannels, nPols);
 
     // Fill the flag matrix and read it out again.
+    TIMER_START
     for (unsigned index = 0; index < nTotal; index++) {
         unsigned char val = (index % 2 == 0) ? FlagTable::FLAG_AUTOCORR : 0;
         data[index] = val;
         CPPUNIT_ASSERT_EQUAL( val, data(index) );
         CPPUNIT_ASSERT_EQUAL( val, data[index] );
     }
+    TIMER_STOP("Flag write/read linear data access time")
 
     // Use Case
     // Test getting the memory address of the first element.
