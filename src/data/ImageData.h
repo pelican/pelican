@@ -109,17 +109,17 @@ class ImageData : public DataBlob
         }
 
         /// Return a pointer to the image cube.
-        real_t* ampPtr() { return _image.size() > 0 ? &_image[0] : NULL; }
+        real_t* ptr() { return _image.size() > 0 ? &_image[0] : NULL; }
 
         /// Return a pointer to the image for a specified polarisation (\p p)
-        real_t* ampPtr(const unsigned p) {
+        real_t* ptr(const unsigned p) {
             unsigned index = p * _nChannels * _sizeL * _sizeM;
             return _image.size() > 0 ? &_image[index] : NULL;
         }
 
         /// Return a pointer to the image for a specified polarisation (\p p)
         /// and channel (\p c)
-        real_t* ampPtr(const unsigned p, const unsigned c) {
+        real_t* ptr(const unsigned p, const unsigned c) {
             unsigned index = _sizeL * _sizeM * (p * _nChannels + c);
             return _image.size() > 0 ? &_image[index] : NULL;
         }

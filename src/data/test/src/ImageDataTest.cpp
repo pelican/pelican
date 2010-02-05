@@ -62,7 +62,7 @@ void ImageDataTest::test_accessorMethods()
     CPPUNIT_ASSERT(image.sizeM() == nM);
 
     std::vector<real_t> im = image.amp();
-    real_t *imPtr = image.ampPtr();
+    real_t *imPtr = image.ptr();
     for (unsigned p = 0; p < nPol; p++ ) {
         for (unsigned c = 0; c < nChan; c++) {
             for (unsigned m = 0; m < nM; m++) {
@@ -78,8 +78,8 @@ void ImageDataTest::test_accessorMethods()
         }
     }
 
-    real_t *imPtrPol0 = image.ampPtr(0);
-    real_t *imPtrPol1 = image.ampPtr(1);
+    real_t *imPtrPol0 = image.ptr(0);
+    real_t *imPtrPol1 = image.ptr(1);
     for (unsigned c = 0; c < nChan; c++) {
         for (unsigned m = 0; m < nM; m++) {
             for (unsigned l = 0; l < nL; l++) {
@@ -91,8 +91,8 @@ void ImageDataTest::test_accessorMethods()
         }
     }
 
-    real_t *imPtrPol0Chan0 = image.ampPtr(0,0);
-    real_t *imPtrPol1Chan1 = image.ampPtr(1,1);
+    real_t *imPtrPol0Chan0 = image.ptr(0, 0);
+    real_t *imPtrPol1Chan1 = image.ptr(1, 1);
     for (unsigned m = 0; m < nM; m++) {
         for (unsigned l = 0; l < nL; l++) {
             unsigned value = m + l;
