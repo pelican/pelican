@@ -8,7 +8,7 @@ set(
 )
 
 if (CMAKE_BUILD_TYPE MATCHES DEBUG)
-    list(append utilityTest_src src/memoryTracerTest.cpp)
+    list(APPEND utilityTest_src src/memoryTracerTest.cpp)
 endif (CMAKE_BUILD_TYPE MATCHES DEBUG)
 
 add_executable(utilityTest ${utilityTest_src} )
