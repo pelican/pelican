@@ -6,9 +6,10 @@ set(
    src/SocketTesterTest.cpp
    src/ConfigTest.cpp
 )
+
 if (CMAKE_BUILD_TYPE MATCHES DEBUG)
     list(append utilityTest_src src/memoryTracerTest.cpp)
-endif (CMAKE_BUILD_TYPE)
+endif (CMAKE_BUILD_TYPE MATCHES DEBUG)
 
 add_executable(utilityTest ${utilityTest_src} )
 target_link_libraries(utilityTest ${SUBPACKAGE_LIBRARIES} ${CPPUNIT_LIBRARIES} memoryTracer)
