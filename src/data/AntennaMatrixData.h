@@ -69,14 +69,17 @@ template<typename T> class AntennaMatrixData : public DataBlob
             _nAntennas(0), _nChannels(0), _nPolarisations(0) {}
 
         /// Constructs a pre-sized, empty cube.
-        /// The cube is pre-sized using the given parameters.
+        /// The cube is pre-sized using the given parameters, and the antenna
+        /// indices are initialised to increase along the rows and columns,
+        /// for each polarisation and frequency.
         ///
         /// @param[in] antennas The number of antennas in the visibility matrix.
         /// @param[in] channels The number of frequency channels.
         /// @param[in] polarisations The number of polarisations.
-        AntennaMatrixData(unsigned antennas, unsigned channels,
-                unsigned polarisations) : DataBlob() {
+        AntennaMatrixData(const unsigned antennas, const unsigned channels,
+                const unsigned polarisations) : DataBlob() {
             resize(antennas, channels, polarisations);
+            initIndex();
         }
 
         /// Matrix data destructor.
@@ -106,64 +109,71 @@ template<typename T> class AntennaMatrixData : public DataBlob
         /// Returns the number of polarisations.
         unsigned nPolarisations() const {return _nPolarisations;}
 
-        /// Returns a pointer to the first element of the memory block.
+        /// Returns a pointer to the start of the memory block.
+        /// This method returns a pointer to the first element of the
+        /// memory block used for all matrix data.
         T* ptr() {
             return _data.size() > 0 ? &_data[0] : NULL;
         }
 
-        /// Returns a pointer to the first element of the memory block (const overload).
+        /// Returns a pointer to the start of the memory block.
+        /// This method returns a pointer to the first element of the
+        /// memory block used for all matrix data (const overload).
         const T* ptr() const {
             return _data.size() > 0 ? &_data[0] : NULL;
         }
 
-        /// Returns a pointer to the first element of the data cube
-        /// for the given polarisation \p p.
+        /// Returns a pointer to the start of polarisation \p p.
+        /// This method returns a pointer to the first element of the data
+        /// cube for the given polarisation \p p.
         T* ptr(const unsigned p) {
             unsigned index = p * _nChannels * _nAntennas * _nAntennas;
             return _data.size() > index ? &_data[index] : NULL;
         }
 
-        /// Returns a pointer to the first element of the data cube
-        /// for the given polarisation \p p (const overload).
+        /// Returns a pointer to the start of polarisation \p p.
+        /// This method returns a pointer to the first element of the data
+        /// cube for the given polarisation \p p (const overload).
         const T* ptr(const unsigned p) const {
             unsigned index = p * _nChannels * _nAntennas * _nAntennas;
             return _data.size() > index ? &_data[index] : NULL;
         }
 
-        /// Returns a pointer to the first element of the matrix
-        /// for the given channel \p c and polarisation \p p.
+        /// Returns a pointer to the start of the antenna matrix.
+        /// This method returns a pointer to the first element of the antenna
+        /// matrix for the given channel \p c and polarisation \p p.
         T* ptr(const unsigned c, const unsigned p) {
             unsigned index = _nAntennas * _nAntennas * (p * _nChannels + c);
             return _data.size() > index ? &_data[index] : NULL;
         }
 
-        /// Returns a pointer to the first element of the matrix
-        /// for the given channel \p c and polarisation \p p (const overload).
+        /// Returns a pointer to the start of the antenna matrix.
+        /// This method returns a pointer to the first element of the antenna
+        /// matrix for the given channel \p c and polarisation \p p
+        /// (const overload).
         const T* ptr(const unsigned c, const unsigned p) const {
             unsigned index = _nAntennas * _nAntennas * (p * _nChannels + c);
             return _data.size() > index ? &_data[index] : NULL;
         }
 
         /// Resizes the data container.
-        /// This public method is used to resize the container using the
-        /// specified values. The container is resized appropriately depending
-        /// on whether the antenna data is one- or two-dimensional.
+        /// This method is used to resize the container using the
+        /// specified values.
         ///
         /// @param[in] antennas The number of antennas in the visibility matrix.
         /// @param[in] channels The number of frequency channels.
         /// @param[in] polarisations The number of polarisations.
-        void resize(unsigned antennas, unsigned channels,
-                unsigned polarisations) {
+        void resize(const unsigned antennas, const unsigned channels,
+                const unsigned polarisations) {
             _nAntennas = antennas;
             _nChannels = channels;
             _nPolarisations = polarisations;
             _data.resize(antennas * antennas * channels * polarisations);
-            initIndex();
         }
 
         /// Swaps the two rows and columns in the antenna matrix.
         /// This function swaps the row and column of the specified antenna
-        /// indices. It can be used to compact 'good' visibility data when
+        /// indices. It can be used to compact 'good' visibility data after
         /// flagging bad antennas. Note that the index is the current row and
         /// column of the antenna, not the original one (which may have been
         /// changed by prior calls to this function).
@@ -172,8 +182,8 @@ template<typename T> class AntennaMatrixData : public DataBlob
         /// @param[in] index2 The row and column index to swap.
         /// @param[in] channel The channel index.
         /// @param[in] polarisation The polarisation index.
-        void swapAntennaData(unsigned index1, unsigned index2,
-                unsigned channel, unsigned polarisation)
+        void swapAntennaData(const unsigned index1, const unsigned index2,
+                const unsigned channel, const unsigned polarisation)
         {
             T *mptr = ptr(channel, polarisation); // Matrix pointer.
 

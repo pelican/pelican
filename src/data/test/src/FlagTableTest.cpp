@@ -39,8 +39,22 @@ void FlagTableTest::test_accessorMethodsIndexed()
     const unsigned nPols = 2;
     FlagTable data(nAntennas, nChannels, nPols);
 
-    // Fill the flag matrix and read it out again.
+    // Fill the flag matrix for timing purposes.
     TIMER_START
+    for (unsigned p = 0; p < nPols; p++) {
+        for (unsigned c = 0; c < nChannels; c++) {
+            for (unsigned aj = 0; aj < nAntennas; aj++) {
+                for (unsigned ai = 0; ai < nAntennas; ai++) {
+                    unsigned index = ai + nAntennas * (aj + nAntennas * (c + nChannels * p));
+                    unsigned char val = (index % 2 == 0) ? FlagTable::FLAG_AUTOCORR : 0;
+                    data(ai, aj, c, p) = val;
+                }
+            }
+        }
+    }
+    TIMER_STOP("Flag table (indexed) data write time")
+
+    // Fill the flag matrix and read it out again.
     for (unsigned p = 0; p < nPols; p++) {
         for (unsigned c = 0; c < nChannels; c++) {
             for (unsigned aj = 0; aj < nAntennas; aj++) {
@@ -54,7 +68,6 @@ void FlagTableTest::test_accessorMethodsIndexed()
             }
         }
     }
-    TIMER_STOP("Flag write/read indexed data access time")
 
     // Use Case
     // Test getting the memory address of the first element.
@@ -106,15 +119,21 @@ void FlagTableTest::test_accessorMethodsLinear()
     const unsigned nTotal = nPols * nChannels * nAntennas * nAntennas;
     FlagTable data(nAntennas, nChannels, nPols);
 
-    // Fill the flag matrix and read it out again.
+    // Fill the flag matrix for timing purposes.
     TIMER_START
+    for (unsigned index = 0; index < nTotal; index++) {
+        unsigned char val = (index % 2 == 0) ? FlagTable::FLAG_AUTOCORR : 0;
+        data[index] = val;
+    }
+    TIMER_STOP("Flag table (linear) data write time")
+
+    // Fill the flag matrix and read it out again.
     for (unsigned index = 0; index < nTotal; index++) {
         unsigned char val = (index % 2 == 0) ? FlagTable::FLAG_AUTOCORR : 0;
         data[index] = val;
         CPPUNIT_ASSERT_EQUAL( val, data(index) );
         CPPUNIT_ASSERT_EQUAL( val, data[index] );
     }
-    TIMER_STOP("Flag write/read linear data access time")
 
     // Use Case
     // Test getting the memory address of the first element.
