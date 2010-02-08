@@ -165,7 +165,7 @@ void VisibilityDataTest::test_swap_same()
     }
 
     // Swap antenna 1 with itself.
-    data.swapAntennaData2d(1, 1, 0, 0);
+    data.swapAntennaData(1, 1, 0, 0);
 
     // Data should be the same as it was before.
     for (unsigned index = 0; index < nTotal; index++) {
@@ -195,10 +195,10 @@ void VisibilityDataTest::test_swap_twice()
     }
 
     // Put antenna index 1 at the back of the matrix.
-    data.swapAntennaData2d(1, 2, 0, 0);
+    data.swapAntennaData(1, 2, 0, 0);
 
     // Put antenna 2 (now at position 1) at the back of the matrix.
-    data.swapAntennaData2d(1, 2, 0, 0);
+    data.swapAntennaData(1, 2, 0, 0);
 
     // Data should now be the same as it was before.
     for (unsigned index = 0; index < nTotal; index++) {
@@ -209,10 +209,10 @@ void VisibilityDataTest::test_swap_twice()
     // Test channel 1, polarisation 1 in the same way.
 
     // Put antenna index 1 at the back of the matrix.
-    data.swapAntennaData2d(1, 2, 1, 1);
+    data.swapAntennaData(1, 2, 1, 1);
 
     // Put antenna 2 (now at position 1) at the back of the matrix.
-    data.swapAntennaData2d(1, 2, 1, 1);
+    data.swapAntennaData(1, 2, 1, 1);
 
     // Data should now be the same as it was before.
     for (unsigned index = 0; index < nTotal; index++) {

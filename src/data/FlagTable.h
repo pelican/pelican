@@ -34,10 +34,7 @@ class FlagTable : public AntennaMatrixData<unsigned char>
 
         /// Constructs an empty data cube.
         /// The constructed data cube has zero size.
-        ///
-        /// @param[in] use2dAntennaMatrix If set, use a 2D antenna matrix (default true).
-        FlagTable(bool use2dAntennaMatrix = true) :
-            AntennaMatrixData<unsigned char>(use2dAntennaMatrix) {}
+        FlagTable() : AntennaMatrixData<unsigned char>() {}
 
         /// Constructs a pre-sized, empty cube.
         /// The cube is pre-sized using the given parameters.
@@ -45,10 +42,8 @@ class FlagTable : public AntennaMatrixData<unsigned char>
         /// @param[in] antennas The number of antennas in the visibility matrix.
         /// @param[in] channels The number of frequency channels.
         /// @param[in] polarisations The number of polarisations.
-        /// @param[in] use2dAntennaMatrix If set, use a 2D antenna matrix (default true).
-        FlagTable(unsigned antennas, unsigned channels,
-                unsigned polarisations, bool use2dAntennaMatrix = true) :
-                    AntennaMatrixData<unsigned char>(antennas, channels, polarisations, use2dAntennaMatrix) {}
+        FlagTable(unsigned antennas, unsigned channels, unsigned polarisations) :
+                    AntennaMatrixData<unsigned char>(antennas, channels, polarisations) {}
 
         /// Destructor.
         ~FlagTable() {}

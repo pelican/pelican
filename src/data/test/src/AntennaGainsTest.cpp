@@ -26,94 +26,9 @@ void AntennaGainsTest::tearDown()
 /**
  * @details
  * Tests the indexed accessor methods for the antenna gains blob
- * using a 1D antenna vector.
- */
-void AntennaGainsTest::test_accessorMethodsIndexed1d()
-{
-    // Use Case
-    // Construct a gains data set and test each of the accessor methods.
-    const unsigned nAntennas = 96;
-    const unsigned nChannels = 64;
-    const unsigned nPols = 2;
-    AntennaGains data(nAntennas, nChannels, nPols, false);
-
-    // Fill the gain matrix and read it out again.
-    for (unsigned p = 0; p < nPols; p++) {
-        for (unsigned c = 0; c < nChannels; c++) {
-            for (unsigned a = 0; a < nAntennas; a++) {
-                unsigned index = a + nAntennas * (c + nChannels * p);
-                std::complex<real_t> val(index);
-                data(a, c, p) = val;
-                CPPUNIT_ASSERT_EQUAL( val, data(a, c, p) );
-                CPPUNIT_ASSERT_EQUAL( val, data(index) );
-            }
-        }
-    }
-
-    // Use Case
-    // Test getting the memory address of the first element.
-    std::complex<real_t>* ptr = NULL;
-    ptr = data.ptr();
-    CPPUNIT_ASSERT_EQUAL( std::complex<real_t>(0), *ptr );
-
-    // Use Case
-    // Test getting the memory address of the second polarisation.
-    ptr = data.ptr(1);
-    CPPUNIT_ASSERT_EQUAL( std::complex<real_t>(nAntennas * nChannels), *ptr );
-
-    // Use Case
-    // Test getting the memory address of the middle channel in the first polarisation.
-    ptr = data.ptr(nChannels / 2, 0);
-    CPPUNIT_ASSERT_EQUAL( std::complex<real_t>(nAntennas * nChannels / 2), *ptr );
-
-    // Use Case
-    // Test getting the memory address of the middle channel in the second polarisation.
-    ptr = data.ptr(nChannels / 2, 1);
-    CPPUNIT_ASSERT_EQUAL( std::complex<real_t>(nAntennas * 3 * nChannels / 2), *ptr );
-
-    // Use Case
-    // Test getting the memory address of an element out of range.
-    // Expect NULL to be returned.
-    ptr = data.ptr(nChannels / 2, nPols);
-    CPPUNIT_ASSERT( ptr  == NULL );
-}
-
-/**
- * @details
- * Tests the linear accessor methods for the antenna gains data blob
- * using a 1D antenna vector.
- */
-void AntennaGainsTest::test_accessorMethodsLinear1d()
-{
-    // Use Case
-    // Construct a gain data set and test each of the accessor methods.
-    const unsigned nAntennas = 96;
-    const unsigned nChannels = 64;
-    const unsigned nPols = 2;
-    const unsigned nTotal = nPols * nChannels * nAntennas;
-    AntennaGains data(nAntennas, nChannels, nPols, false);
-
-    // Fill the gain matrix and read it out again.
-    for (unsigned index = 0; index < nTotal; index++) {
-        std::complex<real_t> val(index);
-        data[index] = val;
-        CPPUNIT_ASSERT_EQUAL( val, data(index) );
-        CPPUNIT_ASSERT_EQUAL( val, data[index] );
-    }
-
-    // Use Case
-    // Test getting the memory address of the first element.
-    std::complex<real_t>* ptr = NULL;
-    ptr = data.ptr();
-    CPPUNIT_ASSERT_EQUAL( std::complex<real_t>(0), *ptr );
-}
-
-/**
- * @details
- * Tests the indexed accessor methods for the antenna gains blob
  * using a 2D antenna matrix.
  */
-void AntennaGainsTest::test_accessorMethodsIndexed2d()
+void AntennaGainsTest::test_accessorMethodsIndexed()
 {
     // Use Case
     // Construct a gains data set and test each of the accessor methods.
@@ -170,7 +85,7 @@ void AntennaGainsTest::test_accessorMethodsIndexed2d()
  * Tests the linear accessor methods for the antenna gains data blob
  * using a 2D antenna matrix.
  */
-void AntennaGainsTest::test_accessorMethodsLinear2d()
+void AntennaGainsTest::test_accessorMethodsLinear()
 {
     // Use Case
     // Construct a gain data set and test each of the accessor methods.
@@ -217,7 +132,7 @@ void AntennaGainsTest::test_resize()
 {
     // Use Case
     // Test trying to resize an empty blob.
-    AntennaGains data(false);
+    AntennaGains data;
     data.resize(96, 128, 2);
     std::complex<real_t>* ptr = data.ptr(1);
     CPPUNIT_ASSERT( ptr  != NULL );

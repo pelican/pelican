@@ -43,10 +43,6 @@ namespace pelican {
  * The antenna index data is stored separately, and is used to convert row and
  * column indices to a physical antenna index. The list of antenna index data is
  * stored for each channel and polarisation.
- *
- * If the optional argument \p use2dAntennaMatrix is set to false in the
- * constructor, the antenna data will be stored and indexed as a
- * one-dimensional vector rather than a two-dimensional matrix.
  */
 template<typename T> class AntennaMatrixData : public DataBlob
 {
@@ -56,9 +52,6 @@ template<typename T> class AntennaMatrixData : public DataBlob
 
         /// The antenna index data.
         std::vector<unsigned> _antIndex;
-
-        /// Flag to use a 2D antenna matrix
-        bool _use2dAntennaMatrix;
 
         /// The number of antennas.
         unsigned _nAntennas;
@@ -72,10 +65,7 @@ template<typename T> class AntennaMatrixData : public DataBlob
     public:
         /// Constructs an empty data cube.
         /// The constructed data cube has zero size.
-        ///
-        /// @param[in] use2dAntennaMatrix If set, use a 2D antenna matrix (default true).
-        AntennaMatrixData(bool use2dAntennaMatrix = true) : DataBlob(),
-            _use2dAntennaMatrix(use2dAntennaMatrix),
+        AntennaMatrixData() : DataBlob(),
             _nAntennas(0), _nChannels(0), _nPolarisations(0) {}
 
         /// Constructs a pre-sized, empty cube.
@@ -84,10 +74,8 @@ template<typename T> class AntennaMatrixData : public DataBlob
         /// @param[in] antennas The number of antennas in the visibility matrix.
         /// @param[in] channels The number of frequency channels.
         /// @param[in] polarisations The number of polarisations.
-        /// @param[in] use2dAntennaMatrix If set, use a 2D antenna matrix (default true).
         AntennaMatrixData(unsigned antennas, unsigned channels,
-                unsigned polarisations, bool use2dAntennaMatrix = true) : DataBlob(),
-                _use2dAntennaMatrix(use2dAntennaMatrix) {
+                unsigned polarisations) : DataBlob() {
             resize(antennas, channels, polarisations);
         }
 
@@ -131,32 +119,28 @@ template<typename T> class AntennaMatrixData : public DataBlob
         /// Returns a pointer to the first element of the data cube
         /// for the given polarisation \p p.
         T* ptr(const unsigned p) {
-            unsigned index = p * _nChannels * _nAntennas;
-            if (_use2dAntennaMatrix) index *= _nAntennas;
+            unsigned index = p * _nChannels * _nAntennas * _nAntennas;
             return _data.size() > index ? &_data[index] : NULL;
         }
 
         /// Returns a pointer to the first element of the data cube
         /// for the given polarisation \p p (const overload).
         const T* ptr(const unsigned p) const {
-            unsigned index = p * _nChannels * _nAntennas;
-            if (_use2dAntennaMatrix) index *= _nAntennas;
+            unsigned index = p * _nChannels * _nAntennas * _nAntennas;
             return _data.size() > index ? &_data[index] : NULL;
         }
 
         /// Returns a pointer to the first element of the matrix
         /// for the given channel \p c and polarisation \p p.
         T* ptr(const unsigned c, const unsigned p) {
-            unsigned a = (_use2dAntennaMatrix) ? _nAntennas * _nAntennas : _nAntennas;
-            unsigned index = a * (p * _nChannels + c);
+            unsigned index = _nAntennas * _nAntennas * (p * _nChannels + c);
             return _data.size() > index ? &_data[index] : NULL;
         }
 
         /// Returns a pointer to the first element of the matrix
         /// for the given channel \p c and polarisation \p p (const overload).
         const T* ptr(const unsigned c, const unsigned p) const {
-            unsigned a = (_use2dAntennaMatrix) ? _nAntennas * _nAntennas : _nAntennas;
-            unsigned index = a * (p * _nChannels + c);
+            unsigned index = _nAntennas * _nAntennas * (p * _nChannels + c);
             return _data.size() > index ? &_data[index] : NULL;
         }
 
@@ -173,8 +157,7 @@ template<typename T> class AntennaMatrixData : public DataBlob
             _nAntennas = antennas;
             _nChannels = channels;
             _nPolarisations = polarisations;
-            unsigned a = (_use2dAntennaMatrix) ? antennas * antennas : antennas;
-            _data.resize(a * channels * polarisations);
+            _data.resize(antennas * antennas * channels * polarisations);
             initIndex();
         }
 
@@ -185,13 +168,11 @@ template<typename T> class AntennaMatrixData : public DataBlob
         /// column of the antenna, not the original one (which may have been
         /// changed by prior calls to this function).
         ///
-        /// <b>Important:</b> This function can only be used for 2D antenna data.
-        ///
         /// @param[in] index1 The row and column index to swap.
         /// @param[in] index2 The row and column index to swap.
         /// @param[in] channel The channel index.
         /// @param[in] polarisation The polarisation index.
-        void swapAntennaData2d(unsigned index1, unsigned index2,
+        void swapAntennaData(unsigned index1, unsigned index2,
                 unsigned channel, unsigned polarisation)
         {
             T *mptr = ptr(channel, polarisation); // Matrix pointer.
@@ -233,8 +214,6 @@ template<typename T> class AntennaMatrixData : public DataBlob
         /// channel (\p c) and polarisation (\p p).
         /// The index \p ai is the row number, and the index \p aj is the
         /// column number (the matrix is column-major).
-        ///
-        /// This is used when the antenna matrix is two-dimensional.
         T& operator() (const unsigned ai, const unsigned aj,
                 const unsigned c, const unsigned p) {
             unsigned index = ai + _nAntennas * (aj + _nAntennas * (c + _nChannels * p));
@@ -245,30 +224,9 @@ template<typename T> class AntennaMatrixData : public DataBlob
         /// channel (\p c) and polarisation (\p p) (const overload).
         /// The index \p ai is the row number, and the index \p aj is the
         /// column number (the matrix is column-major).
-        ///
-        /// This is used when the antenna matrix is two-dimensional.
         const T& operator() (const unsigned ai, const unsigned aj,
                 const unsigned c, const unsigned p) const {
             unsigned index = ai + _nAntennas * (aj + _nAntennas * (c + _nChannels * p));
-            return _data[index];
-        }
-
-        /// Dereferences the data for antenna (\p a),
-        /// channel (\p c) and polarisation (\p p).
-        ///
-        /// This is used when the antenna matrix is NOT two-dimensional.
-        T& operator() (const unsigned a, const unsigned c, const unsigned p) {
-            unsigned index = a + _nAntennas * (c + _nChannels * p);
-            return _data[index];
-        }
-
-        /// Dereferences the data for antenna (\p a),
-        /// channel (\p c) and polarisation (\p p) (const overload).
-        ///
-        /// This is used when the antenna matrix is NOT two-dimensional.
-        const T& operator() (const unsigned a, const unsigned c,
-                const unsigned p) const {
-            unsigned index = a + _nAntennas * (c + _nChannels * p);
             return _data[index];
         }
 

@@ -23,10 +23,8 @@ class AntennaGainsTest : public CppUnit::TestFixture
 {
     public:
         CPPUNIT_TEST_SUITE( AntennaGainsTest );
-        CPPUNIT_TEST( test_accessorMethodsIndexed1d );
-        CPPUNIT_TEST( test_accessorMethodsLinear1d );
-        CPPUNIT_TEST( test_accessorMethodsIndexed2d );
-        CPPUNIT_TEST( test_accessorMethodsLinear2d );
+        CPPUNIT_TEST( test_accessorMethodsIndexed );
+        CPPUNIT_TEST( test_accessorMethodsLinear );
         CPPUNIT_TEST( test_emptyBlob );
         CPPUNIT_TEST( test_resize );
         CPPUNIT_TEST_SUITE_END();
@@ -36,17 +34,11 @@ class AntennaGainsTest : public CppUnit::TestFixture
         void tearDown();
 
         // Test Methods
-        /// Test indexed accessor methods for 1D gains data blob.
-        void test_accessorMethodsIndexed1d();
+        /// Test indexed accessor methods for gains data blob.
+        void test_accessorMethodsIndexed();
 
-        /// Test linear accessor methods for 1D gains data blob.
-        void test_accessorMethodsLinear1d();
-
-        /// Test indexed accessor methods for 2D gains data blob.
-        void test_accessorMethodsIndexed2d();
-
-        /// Test linear accessor methods for 2D gains data blob.
-        void test_accessorMethodsLinear2d();
+        /// Test linear accessor methods for gains data blob.
+        void test_accessorMethodsLinear();
 
         /// Test trying to access an empty blob.
         void test_emptyBlob();
