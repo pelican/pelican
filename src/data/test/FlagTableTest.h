@@ -26,6 +26,7 @@ class FlagTableTest : public CppUnit::TestFixture
         CPPUNIT_TEST( test_accessorMethodsIndexed );
         CPPUNIT_TEST( test_accessorMethodsLinear );
         CPPUNIT_TEST( test_emptyBlob );
+        CPPUNIT_TEST( test_flag );
         CPPUNIT_TEST( test_resize );
         CPPUNIT_TEST_SUITE_END();
 
@@ -42,6 +43,9 @@ class FlagTableTest : public CppUnit::TestFixture
 
         /// Test trying to access an empty blob.
         void test_emptyBlob();
+
+        /// Test writing flag table entries.
+        void test_flag();
 
         /// Test trying to resize empty and non-empty blobs.
         void test_resize();

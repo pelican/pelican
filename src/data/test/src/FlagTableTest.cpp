@@ -144,6 +144,94 @@ void FlagTableTest::test_accessorMethodsLinear()
 
 /**
  * @details
+ * Tests trying to write flag table entries.
+ */
+void FlagTableTest::test_flag()
+{
+    // Initialise test.
+    const unsigned nAntennas = 96;
+    const unsigned nChannels = 64;
+    const unsigned nPols = 2;
+
+    {
+        // Use Case
+        // Test flagging a single antenna pair.
+        FlagTable data(nAntennas, nChannels, nPols);
+        const unsigned sAntennai = 45;
+        const unsigned sAntennaj = 21;
+        const unsigned sChannel = 12;
+        const unsigned sPol = 1;
+        TIMER_START
+        data.flag(sAntennai, sAntennaj, sChannel, sPol, FlagTable::FLAG_UVDIST);
+        TIMER_STOP("Flagging single point")
+        for (unsigned p = 0; p < nPols; ++p) {
+            for (unsigned c = 0; c < nChannels; ++c) {
+                for (unsigned aj = 0; aj < nAntennas; ++aj) {
+                    for (unsigned ai = 0; ai < nAntennas; ++ai) {
+                        if (ai == sAntennai && aj == sAntennaj && c == sChannel && p == sPol)
+                            CPPUNIT_ASSERT( data.flags(ai, aj, c, p) == FlagTable::FLAG_UVDIST);
+                        else
+                            CPPUNIT_ASSERT( data.flags(ai, aj, c, p) == 0 );
+                    }
+                }
+            }
+        }
+    }
+
+    {
+        // Use Case
+        // Test flagging all data from an antenna.
+        FlagTable data(nAntennas, nChannels, nPols);
+        const unsigned sAntenna = 67;
+        const unsigned sChannel = 20;
+        const unsigned sPol = 0;
+        TIMER_START
+        data.flag(sAntenna, sChannel, sPol, FlagTable::FLAG_AUTOCORR);
+        TIMER_STOP("Flagging one antenna")
+        for (unsigned p = 0; p < nPols; ++p) {
+            for (unsigned c = 0; c < nChannels; ++c) {
+                for (unsigned aj = 0; aj < nAntennas; ++aj) {
+                    for (unsigned ai = 0; ai < nAntennas; ++ai) {
+                        if (c == sChannel && p == sPol) {
+                            if (ai == sAntenna || aj == sAntenna)
+                                CPPUNIT_ASSERT( data.flags(ai, aj, c, p) == FlagTable::FLAG_AUTOCORR);
+                            else
+                                CPPUNIT_ASSERT( data.flags(ai, aj, c, p) == 0 );
+                        }
+                        else
+                            CPPUNIT_ASSERT( data.flags(ai, aj, c, p) == 0 );
+                    }
+                }
+            }
+        }
+    }
+
+    {
+        // Use Case
+        // Test flagging all data from one channel.
+        FlagTable data(nAntennas, nChannels, nPols);
+        const unsigned sChannel = 13;
+        const unsigned sPol = 1;
+        TIMER_START
+        data.flag(sChannel, sPol, FlagTable::FLAG_RFI_BAD);
+        TIMER_STOP("Flagging one channel")
+        for (unsigned p = 0; p < nPols; ++p) {
+            for (unsigned c = 0; c < nChannels; ++c) {
+                for (unsigned aj = 0; aj < nAntennas; ++aj) {
+                    for (unsigned ai = 0; ai < nAntennas; ++ai) {
+                        if (c == sChannel && p == sPol)
+                            CPPUNIT_ASSERT( data.flags(ai, aj, c, p) == FlagTable::FLAG_RFI_BAD);
+                        else
+                            CPPUNIT_ASSERT( data.flags(ai, aj, c, p) == 0 );
+                    }
+                }
+            }
+        }
+    }
+}
+
+/**
+ * @details
  * Tests trying to obtain the memory address at the start of an empty blob.
  */
 void FlagTableTest::test_emptyBlob()
