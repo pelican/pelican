@@ -3,10 +3,13 @@ SUBPACKAGE(utilityTest utility)
 set(
    utilityTest_src
    src/utilityTest.cpp
-   src/memoryTracerTest.cpp
    src/SocketTesterTest.cpp
    src/ConfigTest.cpp
 )
+if (CMAKE_BUILD_TYPE MATCHES DEBUG)
+    list(append utilityTest_src src/memoryTracerTest.cpp)
+endif (CMAKE_BUILD_TYPE)
+
 add_executable(utilityTest ${utilityTest_src} )
 target_link_libraries(utilityTest ${SUBPACKAGE_LIBRARIES} ${CPPUNIT_LIBRARIES} memoryTracer)
 add_test(utilityTest ${EXECUTABLE_OUTPUT_PATH}/utilityTest )
