@@ -56,6 +56,8 @@ namespace pelican {
  */
 class FlagTable : public AntennaMatrixData<unsigned char>
 {
+    friend class FlagTableTest;
+
     private:
         /// List of antennas flagged for each polarisation and channel.
         /// Dereference using [polarisation][channel][antenna].
@@ -162,6 +164,8 @@ class FlagTable : public AntennaMatrixData<unsigned char>
         /// Returns a pointer to the list of flagged antennas.
         /// This method returns a const pointer to the start of the list of
         /// flagged antennas for the given channel \p c and polarisation \p p.
+        ///
+        /// If the list is empty, then a null pointer is returned.
         const unsigned* flaggedAntennaPtr(const unsigned c,
                 const unsigned p) const {
             unsigned size = _flaggedAntennas[p][c].size();
@@ -178,6 +182,8 @@ class FlagTable : public AntennaMatrixData<unsigned char>
         /// Returns a pointer to the list of flagged channels.
         /// This method returns a const pointer to the start of the list of
         /// flagged channels for the given polarisation \p p.
+        ///
+        /// If the list is empty, then a null pointer is returned.
         const unsigned* flaggedChannelPtr(const unsigned p) const {
             unsigned size = _flaggedChannels[p].size();
             return (size > 0) ? &_flaggedChannels[p][0] : NULL;
