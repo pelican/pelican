@@ -7,8 +7,8 @@ set( modules_src
      src/ZenithModelVisibilities.cpp
      src/ZenithImagerDft.cpp
      src/ImageWriterFits.cpp
-     src/ImagerDFT.cpp
-     src/ImagerFFT.cpp
+     src/ImagerDft.cpp
+     src/ImagerFft.cpp
 )
 add_library(modules ${modules_src} )
 target_link_libraries(modules ${SUBPACKAGE_LIBRARIES} )

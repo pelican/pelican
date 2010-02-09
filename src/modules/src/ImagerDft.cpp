@@ -1,4 +1,4 @@
-#include "modules/ImagerDFT.h"
+#include "modules/ImagerDft.h"
 #include "utility/constants.h"
 #include <iostream>
 
@@ -11,7 +11,7 @@ namespace pelican {
  * @details
  * Module constructor.
  */
-ImagerDFT::ImagerDFT(const QDomElement& config)
+ImagerDft::ImagerDft(const QDomElement& config)
     : AbstractModule(config)
 {
     // Register which data blobs are needed by the module
@@ -34,7 +34,7 @@ ImagerDFT::ImagerDFT(const QDomElement& config)
  * @details
  * Module destructor.
  */
-ImagerDFT::~ImagerDFT()
+ImagerDft::~ImagerDft()
 {
 }
 
@@ -43,7 +43,7 @@ ImagerDFT::~ImagerDFT()
  * @details
  * Method called by the pipeline to create images of the visibility data.
  */
-void ImagerDFT::run(QHash<QString, DataBlob*>& data)
+void ImagerDft::run(QHash<QString, DataBlob*>& data)
 {
     // Grab local pointers to the relevant data blobs.
     _vis = static_cast<VisibilityData*>(data["VisibilityData"]);
@@ -92,7 +92,7 @@ void ImagerDFT::run(QHash<QString, DataBlob*>& data)
  *
  * @param[in]   config  Configuraiton options xml node
  */
-void ImagerDFT::_getConfiguration(const QDomElement &config)
+void ImagerDft::_getConfiguration(const QDomElement &config)
 {
     _sizeL = getOption("imageSize", "l", "128").toUInt();
     _sizeM = getOption("imageSize", "m", "128").toUInt();
@@ -116,7 +116,7 @@ void ImagerDFT::_getConfiguration(const QDomElement &config)
  * @param[in]  nPixels   Number of image pixels along the axis.
  * @param[out] coords    Reference to a vector of image coordinates.
  */
-void ImagerDFT::_calculateImageCoords(const double cellsize,
+void ImagerDft::_calculateImageCoords(const double cellsize,
         const unsigned nPixels, real_t* coords)
 {
     double delta = cellsize * math::asec2rad;
@@ -149,7 +149,7 @@ void ImagerDFT::_calculateImageCoords(const double cellsize,
  * @param[in]  freqScale    Visibility coordinate frequency scaling factor
  * @param[out] weights      Matrix of DFT weights (nVis * nCoords)
  */
-void ImagerDFT::_calculateWeights(real_t* visCoord, const unsigned nVis,
+void ImagerDft::_calculateWeights(real_t* visCoord, const unsigned nVis,
         const double freqScale, real_t* imageCoord, const unsigned nCoords,
         complex_t* weights)
 {
@@ -170,7 +170,7 @@ void ImagerDFT::_calculateWeights(real_t* visCoord, const unsigned nVis,
  *
  * @param[in]
  */
-void ImagerDFT::_makeImageDftSimple(const unsigned nVis, const unsigned nL,
+void ImagerDft::_makeImageDftSimple(const unsigned nVis, const unsigned nL,
         const unsigned nM, complex_t* vis, complex_t* weightUL,
         complex_t* weightVM, real_t *image)
 {
@@ -192,7 +192,7 @@ void ImagerDFT::_makeImageDftSimple(const unsigned nVis, const unsigned nL,
 /**
  * @details
  */
-void ImagerDFT::_cutHemisphere()
+void ImagerDft::_cutHemisphere()
 {
 }
 

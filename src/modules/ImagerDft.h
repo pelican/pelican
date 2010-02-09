@@ -9,7 +9,7 @@
 class QDomElement;
 
 /**
- * @file ImagerDFT.h
+ * @file ImagerDft.h
  */
 
 namespace pelican {
@@ -23,14 +23,14 @@ namespace pelican {
  * @details
  */
 
-class ImagerDFT : public AbstractModule
+class ImagerDft : public AbstractModule
 {
     public:
         /// Module constructor.
-        ImagerDFT(const QDomElement& config);
+        ImagerDft(const QDomElement& config);
 
         /// Module destructor.
-        ~ImagerDFT();
+        ~ImagerDft();
 
         /// Sets the channel (\p c) which to produce an image from.
         /// Method overrides the selected channel from the configuration

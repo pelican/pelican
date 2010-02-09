@@ -1,4 +1,4 @@
-#include "modules/ImagerFFT.h"
+#include "modules/ImagerFft.h"
 #include "utility/memCheck.h"
 #include <iostream>
 
@@ -8,7 +8,7 @@ namespace pelican {
  * @details
  * Module constructor.
  */
-ImagerFFT::ImagerFFT(const QDomElement& config)
+ImagerFft::ImagerFft(const QDomElement& config)
     : AbstractModule(config)
 {
     // Register which data blobs are needed by the module
@@ -25,7 +25,7 @@ ImagerFFT::ImagerFFT(const QDomElement& config)
  * @details
  * Module destructor.
  */
-ImagerFFT::~ImagerFFT()
+ImagerFft::~ImagerFft()
 {
 }
 
@@ -34,7 +34,7 @@ ImagerFFT::~ImagerFFT()
  * @details
  * Method called by the pipeline to create images of the visibility data.
  */
-void ImagerFFT::run(QHash<QString, DataBlob*>& data)
+void ImagerFft::run(QHash<QString, DataBlob*>& data)
 {
     // Grab local pointers to the relevant data blobs.
     _vis = static_cast<VisibilityData*>(data["VisibilityData"]);
@@ -59,7 +59,7 @@ void ImagerFFT::run(QHash<QString, DataBlob*>& data)
  *
  * @param[in]   config  Configuraiton options xml node
  */
-void ImagerFFT::_getConfiguration(const QDomElement &config)
+void ImagerFft::_getConfiguration(const QDomElement &config)
 {
     _sizeL = getOption("imageSize", "l", "128").toUInt();
     _sizeM = getOption("imageSize", "m", "128").toUInt();

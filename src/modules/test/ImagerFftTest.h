@@ -1,27 +1,26 @@
-#ifndef IMAGERDFT_TEST_H
-#define IMAGERDFT_TEST_H
+#ifndef IMAGERFFT_TEST_H
+#define IMAGERFFT_TEST_H
 
 #include <cppunit/extensions/HelperMacros.h>
 
 /**
- * @file ImagerDFTTest.h
+ * @file ImagerFftTest.h
  */
 
 namespace pelican {
 
 /**
- * @class ImagerDFTTest
+ * @class ImagerFftTest
  *  
  * @brief
  * 
  * @details
- * 
  */
 
-class ImagerDFTTest : public CppUnit::TestFixture
+class ImagerFftTest : public CppUnit::TestFixture
 {
     public:
-        CPPUNIT_TEST_SUITE( ImagerDFTTest );
+        CPPUNIT_TEST_SUITE( ImagerFftTest );
         CPPUNIT_TEST( test_createModule );
         CPPUNIT_TEST_SUITE_END();
 
@@ -34,12 +33,12 @@ class ImagerDFTTest : public CppUnit::TestFixture
         void test_createModule();
 
     public:
-        ImagerDFTTest();
-        ~ImagerDFTTest();
+        ImagerFftTest();
+        ~ImagerFftTest();
 
     private:
 };
 
 } // namespace pelican
 
-#endif // IMAGERDFT_TEST_H
+#endif // IMAGERFFT_TEST_H
