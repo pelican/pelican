@@ -16,6 +16,13 @@ if (TIMER)
     ADD_DEFINITIONS(-DTIMER_ENABLE=1)
 endif(TIMER)
 
+if (OPENMP)
+    FIND_PACKAGE( OpenMP REQUIRED)
+    set( CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS})
+    set( CMAKE_C_FLAGS ${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS})
+endif (OPENMP)
+
+
 set( BUILD_SHARED_LIBS TRUE )
 
 if(NOT LIBRARY_INSTALL_DIR )
@@ -55,6 +62,7 @@ if(CMAKE_COMPILER_IS_GNUCC)
     add_definitions(-Wno-deprecated -Wno-unknown-pragmas)
     list(APPEND CPP_PLATFORM_LIBS util dl)
 endif(CMAKE_COMPILER_IS_GNUCC)
+
 IF(APPLE)
     add_definitions(-DDARWIN)
 ENDIF(APPLE)
@@ -63,7 +71,6 @@ ENDIF(APPLE)
 include(modules.cmake)
 
 # -- doxygen documentation targets
-
 include(UseDoxygen)
 set(DOXYFILE_LATEX "NO")
 add_doxygen_target(code DoxyfileCode)
