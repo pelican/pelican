@@ -1,5 +1,6 @@
 #include "modules/ZenithImagerDft.h"
 #include "utility/constants.h"
+#include "utility/pelicanTimer.h"
 #include <QString>
 #include <QStringList>
 #include <iostream>
@@ -43,14 +44,65 @@ ZenithImagerDft::~ZenithImagerDft()
 
 /**
  * @details
+ * Sets the image size to the specified values and calculates
+ * image coordinate vectors.
+ */
+void ZenithImagerDft::setSize(const unsigned sizeL, const unsigned sizeM)
+{
+    _sizeL = sizeL;
+    _sizeM = sizeM;
+    _coordL.resize(_sizeL);
+    _coordM.resize(_sizeM);
+    _calculateImageCoords(_cellsizeL, _sizeL, &_coordL[0]);
+    _calculateImageCoords(_cellsizeM, _sizeM, &_coordM[0]);
+}
+
+
+/**
+ * @details
+ * Sets the image cellsize to the specified values and calculates
+ * image coordinate vectors.
+ */
+void ZenithImagerDft::setCellsize(const double cellsizeL,
+        const double cellsizeM)
+{
+    _cellsizeL = cellsizeL;
+    _cellsizeM = cellsizeM;
+    _calculateImageCoords(_cellsizeL, _sizeL, &_coordL[0]);
+    _calculateImageCoords(_cellsizeM, _sizeM, &_coordM[0]);
+}
+
+
+/**
+ * @details
+ * Sets the image size and cellsize to the specified values and
+ * calculate image coordinate vectors.
+ */
+void ZenithImagerDft::setDimensions(const unsigned sizeL, const unsigned sizeM,
+                const double cellsizeL, const double cellsizeM)
+{
+    _cellsizeL = cellsizeL;
+    _cellsizeM = cellsizeM;
+    _sizeL = sizeL;
+    _sizeM = sizeM;
+    _coordL.resize(_sizeL);
+    _coordM.resize(_sizeM);
+    _calculateImageCoords(_cellsizeL, _sizeL, &_coordL[0]);
+    _calculateImageCoords(_cellsizeM, _sizeM, &_coordM[0]);
+}
+
+
+/**
+ * @details
  * Method called by the pipeline to create images of the visibility data.
  */
 void ZenithImagerDft::run(QHash<QString, DataBlob*>& data)
 {
     _fetchDataBlobs(data);
+
     unsigned nAnt = _antPos->nAntennas();
-    unsigned nChan = _channels.size();
     unsigned nPol = _polarisation == POL_BOTH ? 2 : 1;
+    unsigned nChan = _channels.size();
 
     /// Assign memory for the image (only resizes if needed)
     _image->assign(_sizeL, _sizeM, nChan, nPol);
@@ -58,7 +110,11 @@ void ZenithImagerDft::run(QHash<QString, DataBlob*>& data)
     /// Loop over selected channels and polarisations to make images
     for (unsigned c = 0; c < nChan; c++) {
         unsigned channel = _channels[c];
-        double frequency = _freq->at(channel);
+
+        if (channel > _freqList->nChannels())
+            throw QString("Selected channel out of range.");
+
+        double frequency = _freqList->at(channel);
 
         for (unsigned p = 0; p < nPol; p++) {
 
@@ -120,8 +176,8 @@ void ZenithImagerDft::_calculateImageCoords(const double cellsize,
         const unsigned nPixels, real_t* coords)
 {
     double delta = cellsize * math::asec2rad;
-    unsigned centre = nPixels / 2;
-    for (unsigned i = 0; i < nPixels; i++) {
+    int centre = nPixels / 2;
+    for (int i = 0; i < static_cast<int>(nPixels); i++) {
         coords[i] = static_cast<double>(i - centre) * delta;
     }
 }
@@ -136,10 +192,16 @@ void ZenithImagerDft::_fetchDataBlobs(QHash<QString, DataBlob*>& data)
     _vis = static_cast<VisibilityData*>(data["VisibilityData"]);
     _antPos = static_cast<AntennaPositions*>(data["AntennaPositions"]);
     _image = static_cast<ImageData*>(data["ImageData"]);
+    _freqList = static_cast<FrequencyList*>(data["FrequencyList"]);
 
-    if (!_vis) throw QString("No visibility data,");
-    if (!_antPos) throw QString("No antenna coordinate data");
-    if (!_image) throw QString("No image data");
+    if (!_vis) throw QString("Data blob missing: VisibilityData");
+    if (!_antPos) throw QString("Data blob missing: AntennaPositions");
+    if (!_image) throw QString("Data blob missing: ImageData");
+    if (!_freqList) throw QString("Data blob missing: FrequencyList.");
+
+    if (_vis->nAntennas() == 0) throw QString("Empty data blob: VisibilityData");
+    if (_antPos->nAntennas() == 0) throw QString("Empty data blob: AntennaPositions");
+    if (_freqList->nChannels() == 0) throw QString("Empty data blob: FrequencyList");
 }
 
 
@@ -153,7 +215,6 @@ void ZenithImagerDft::_calculateWeights(const unsigned nAnt, real_t* antPos,
         real_t* imageCoord, complex_t* weights)
 {
     double k = (math::twoPi * frequency) / phy::c;
-
     for (unsigned i = 0; i < nCoords; i++) {
         unsigned index = i * nAnt;
         double arg1 = k * imageCoord[i];
@@ -174,21 +235,21 @@ void ZenithImagerDft::_makeImageDft(const unsigned nAnt, real_t* antPosX,
         const unsigned nL, const unsigned nM, real_t* coordsL, real_t* coordsM,
         real_t *image)
 {
-    std::vector<complex_t> weightsXL(nAnt * nL);
-    std::vector<complex_t> weightsYM(nAnt * nM);
-    _calculateWeights(nAnt, antPosX, frequency, nL, coordsL, &weightsXL[0]);
-    _calculateWeights(nAnt, antPosY, frequency, nM, coordsM, &weightsYM[0]);
+    _weightsXL.resize(nAnt * nL);
+    _weightsYM.resize(nAnt * nM);
+    _calculateWeights(nAnt, antPosX, frequency, nL, coordsL, &_weightsXL[0]);
+    _calculateWeights(nAnt, antPosY, frequency, nM, coordsM, &_weightsYM[0]);
 
     std::vector<complex_t> weights(nAnt);
     std::vector<complex_t> temp(nAnt);
 
     for (unsigned m = 0; m < nM; m++) {
-        complex_t *wYM = &weightsYM[m * nAnt];
+        complex_t *weightsYM = &_weightsYM[m * nAnt];
         unsigned indexM = m * nL;
 
         for (unsigned l = 0; l < nL; l++) {
-            complex_t * wXL = &weightsXL[l * nAnt];
-            _multWeights(nAnt, wXL, wYM, &weights[0]);
+            complex_t * weightsXL = &_weightsXL[l * nAnt];
+            _multWeights(nAnt, weightsXL, weightsYM, &weights[0]);
             _multMatrixVector(nAnt, vis, &weights[0], &temp[0]);
             image[indexM + l] = _vectorDotConj(nAnt, &temp[0], &weights[0]).real();
         }
@@ -204,7 +265,6 @@ void ZenithImagerDft::_makeImageDft(const unsigned nAnt, real_t* antPosX,
 void ZenithImagerDft::_multWeights(const unsigned nAnt, complex_t* weightsXL,
         complex_t *weightsYM, complex_t *weights)
 {
-#pragma omp parallel for
     for (unsigned i = 0; i < nAnt; i++) {
         weights[i] = weightsXL[i] * weightsYM[i];
     }
@@ -219,7 +279,6 @@ void ZenithImagerDft::_multWeights(const unsigned nAnt, complex_t* weightsXL,
 void ZenithImagerDft::_multMatrixVector(const unsigned nAnt, complex_t* visMatrix,
         complex_t *weights, complex_t* result)
 {
-#pragma omp parallel for
     for (unsigned j = 0; j < nAnt; j++) {
         unsigned indexJ = j * nAnt;
         for (unsigned i = 0; i < nAnt; i++) {
@@ -250,6 +309,5 @@ complex_t ZenithImagerDft::_vectorDotConj(const unsigned n, complex_t* a, comple
 void ZenithImagerDft::_cutHemisphere()
 {
 }
-
 
 } // namespace pelican
