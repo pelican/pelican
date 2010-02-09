@@ -40,16 +40,18 @@ class Config
         const QDomElement get(const TreeAddress_t &address) const;
 
         /// Sets a configuration option attribute at the specified address.
-        void setAttribute(
-                const TreeAddress_t &address,
-                const QString &key,
-                const QString &value
-        );
+        void setAttribute(const TreeAddress_t &address, const QString &key,
+                const QString &value);
 
         /// Returns the attribute at specified address and key.
-        QString getAttribute(
-                const TreeAddress_t& address,
+        QString getAttribute(const TreeAddress_t& address,
                 const QString& key) const;
+
+        /// Set the text node at the specified address.
+        void setText(const TreeAddress_t& address, const QString& text);
+
+        /// Returns the text node at the specified address.
+        QString getText(const TreeAddress_t& address) const;
 
         /// Prints a summary of the configuration to specified tree depth
         void summary() const;
@@ -62,7 +64,8 @@ class Config
         void _read();
 
         /// Creates a child configuration node
-        void _createChildNode(QDomElement &parent, const QString& tag, const QString& name);
+        void _createChildNode(QDomElement &parent, const QString& tag,
+                const QString& name);
 
     private:
         QString _fileName;

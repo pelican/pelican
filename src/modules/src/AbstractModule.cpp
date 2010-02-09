@@ -121,4 +121,31 @@ QString AbstractModule::getOption(const QString& tagName,
             defValue);
 }
 
+
+/**
+ * @details
+ * Gets the configuration text for the given \p tagName.
+ * If the \p tagName and/or text do not exist, \p defValue is returned.
+ */
+QString AbstractModule::getOptionText(const QString& tagName,
+        const QString& defValue)
+{
+    QDomNode node = _config.namedItem(tagName);
+    if (node.isNull()) return defValue;
+
+    QDomNodeList children = node.childNodes();
+    QString text = QString();
+
+    if (children.isEmpty()) return defValue;
+    else {
+       for (int c = 0; c < children.size(); c++) {
+           if (children.at(c).nodeType() == QDomNode::TextNode) {
+               text += children.at(c).nodeValue();
+           }
+       }
+    }
+    return text.isEmpty() ? defValue : text;
+}
+
+
 } // namespace pelican

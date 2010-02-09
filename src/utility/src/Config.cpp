@@ -157,11 +157,9 @@ const QDomElement Config::get(const TreeAddress_t &address) const
  * @details
  * Set the the attribute at the specified address to the key, value.
  */
-void Config::setAttribute(
-        const TreeAddress_t &address,
-        const QString &key,
-        const QString &value
-){
+void Config::setAttribute(const TreeAddress_t &address, const QString &key,
+        const QString &value)
+{
     QDomElement e = set(address);
     e.setAttribute(key, value);
 }
@@ -186,14 +184,50 @@ QString Config::getAttribute(const TreeAddress_t& address, const QString& key) c
 
 /**
  * @details
+ * Sets the text node at the address.
+ */
+void Config::setText(const TreeAddress_t& address, const QString& text)
+{
+    QDomElement e = set(address);
+    QDomText t = _document.createTextNode(text);
+    e.appendChild(t);
+}
+
+
+/**
+ * @details
+ * Gets value of the text node at the address. If multiple text nodes are
+ * found at the same level they will be concatenated.
+ */
+QString Config::getText(const TreeAddress_t& address) const
+{
+    QDomElement e = get(address);
+    QDomNodeList children = e.childNodes();
+    QString text = QString();
+    if (children.isEmpty()) {
+        return text;
+    }
+    else {
+        for (int c = 0; c < children.size(); c++) {
+            if (children.at(c).nodeType() == QDomNode::TextNode) {
+                text += children.at(c).nodeValue();
+            }
+        }
+    }
+    return text;
+}
+
+
+/**
+ * @details
  * Prints a summary of the configuration tree to STDOUT.
  */
 void Config::summary() const
 {
     std::cout << std::endl;
-    std::cout << QString(70, QChar('-')).toStdString() << std::endl;
+    std::cout << QString(70, QChar('=')).toStdString() << std::endl;
     std::cout << _document.toString(4).toStdString();
-    std::cout << QString(70, QChar('-')).toStdString() << std::endl;
+    std::cout << QString(70, QChar('=')).toStdString() << std::endl;
     std::cout << std::endl;
 }
 
