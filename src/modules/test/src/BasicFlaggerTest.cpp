@@ -1,8 +1,9 @@
 #include "BasicFlaggerTest.h"
 #include "modules/BasicFlagger.h"
 #include "data/VisibilityData.h"
-//#define TIMER_ENABLE
+#include "data/FlagTable.h"
 #include "utility/pelicanTimer.h"
+#include <algorithm>
 
 #include "utility/memCheck.h"
 
@@ -63,12 +64,22 @@ void BasicFlaggerTest::test_run_noData()
         data.insert("EmptyBlob", &blob);
         CPPUNIT_ASSERT_THROW(_basicFlagger->run(data), QString);
     }
+
+    // Use Case
+    // Pass a data blob hash containing empty visibility data.
+    // Expect an exception.
+    {
+        QHash<QString, DataBlob*> data;
+        VisibilityData blob;
+        data.insert("VisibilityData", &blob);
+        CPPUNIT_ASSERT_THROW(_basicFlagger->run(data), QString);
+    }
 }
 
 /**
  * @details
- * Tests the run() method of the BasicFlagger using supplied
- * visibility data.
+ * Tests the run() method of the BasicFlagger using
+ * visibility data and flag table.
  */
 void BasicFlaggerTest::test_run_withData()
 {
@@ -77,15 +88,56 @@ void BasicFlaggerTest::test_run_withData()
     const unsigned nAntennas = 96;
     const unsigned nChannels = 512;
     const unsigned nPols = 2;
-    const unsigned nTotal = nAntennas * nAntennas * nChannels * nPols;
     VisibilityData visData(nAntennas, nChannels, nPols);
-
-
+    FlagTable flagTable(nAntennas, nChannels, nPols);
 
     QHash<QString, DataBlob*> data;
     data.insert("VisibilityData", &visData);
+    data.insert("FlagTable", &flagTable);
 
     CPPUNIT_ASSERT_NO_THROW(_basicFlagger->run(data));
+}
+
+/**
+ * @details
+ * Tests the routine to flag the autocorrelations (diagonal terms)
+ * in the visibility matrix.
+ */
+void BasicFlaggerTest::test__flagAutocorrelations()
+{
+    // Use Case
+    // Create a set of test visibility data and get the autocorrelations.
+    const unsigned nAntennas = 97;
+    const unsigned nChannels = 512;
+    const unsigned nPols = 2;
+    const real_t minFraction = 0.25;
+    const real_t maxFraction = 1.25;
+    VisibilityData visData(nAntennas, nChannels, nPols);
+    FlagTable flagTable(nAntennas, nChannels, nPols);
+    std::vector<complex_t> medians(nChannels * nPols);
+
+    // Fill the visibility matrix
+    for (unsigned p = 0; p < nPols; p++) {
+        for (unsigned c = 0; c < nChannels; c++) {
+            for (unsigned aj = 0; aj < nAntennas; aj++) {
+                for (unsigned ai = 0; ai < nAntennas; ai++) {
+                    std::complex<real_t> val( sqrt((ai+1)*(aj+1)) );
+                    visData(ai, aj, c, p) = val;
+                }
+            }
+            medians[c + p * nChannels] = visData(nAntennas/2, nAntennas/2, c, p);
+        }
+    }
+
+    // Get the autocorrelations.
+    TIMER_START
+    _basicFlagger->_flagAutocorrelations(&visData, &medians[0],
+            minFraction, maxFraction, &flagTable);
+    TIMER_STOP("BasicFlagger::_flagAutocorrelations (%d ant, %d chan, %d pol)",
+            nAntennas, nChannels, nPols)
+
+//    const unsigned sChan = 400;
+//    printf("Number of flags in channel %d: %d\n", sChan, flagTable.nFlaggedAntennas(sChan, 0));
 }
 
 /**
@@ -101,7 +153,7 @@ void BasicFlaggerTest::test__getAutocorrelations()
     const unsigned nChannels = 512;
     const unsigned nPols = 2;
     VisibilityData visData(nAntennas, nChannels, nPols);
-    std::vector<complex_t> autocorr;
+    std::vector<complex_t> autocorr(nAntennas * nChannels * nPols);
 
     // Fill the visibility matrix
     for (unsigned p = 0; p < nPols; p++) {
@@ -117,11 +169,11 @@ void BasicFlaggerTest::test__getAutocorrelations()
 
     // Get the autocorrelations.
     TIMER_START
-    _basicFlagger->_getAutocorrelations(&visData, autocorr);
-    TIMER_STOP("BasicFlagger::_getAutocorrelations (96 ant, 512 chan, 2 pol)")
+    _basicFlagger->_getAutocorrelations(&visData, &autocorr[0]);
+    TIMER_STOP("BasicFlagger::_getAutocorrelations (%d ant, %d chan, %d pol)",
+            nAntennas, nChannels, nPols)
 
     // Check the autocorrelations.
-    CPPUNIT_ASSERT( autocorr.size() == (nAntennas * nChannels * nPols) );
     for (unsigned p = 0, i = 0; p < nPols; p++) {
         for (unsigned c = 0; c < nChannels; c++) {
             for (unsigned a = 0; a < nAntennas; a++) {
@@ -145,28 +197,32 @@ void BasicFlaggerTest::test__getMedians()
     const unsigned nAntennas = 96;
     const unsigned nChannels = 512;
     const unsigned nPols = 2;
-    std::vector<complex_t> autocorr;
-    std::vector<complex_t> medians;
+    std::vector<complex_t> autocorr(nAntennas * nChannels * nPols);
+    std::vector<complex_t> medians(nChannels * nPols);
 
     // Fill the autocorrelation data.
-    autocorr.resize(nAntennas * nChannels * nPols);
-    for (unsigned p = 0, i = 0; p < nPols; p++) {
+    for (unsigned p = 0; p < nPols; p++) {
         for (unsigned c = 0; c < nChannels; c++) {
+            /* Get the address of the start of the antenna list */
+            const unsigned i = c * nAntennas + p * nAntennas * nChannels;
+            complex_t* beg = &autocorr[i];
+            complex_t* end = &autocorr[i + nAntennas];
+
             for (unsigned a = 0; a < nAntennas; a++) {
                 std::complex<real_t> val( p + c + a*a );
-                autocorr[i] = val;
-                i++;
+                autocorr[i + a] = val;
             }
+            std::random_shuffle(beg, end);
         }
     }
 
     // Get the medians.
     TIMER_START
-    _basicFlagger->_getMedians(nAntennas, nChannels, nPols, autocorr, medians);
-    TIMER_STOP("BasicFlagger::_getMedians (96 ant, 512 chan, 2 pol)")
+    _basicFlagger->_getMedians(nAntennas, nChannels, nPols, &autocorr[0], &medians[0]);
+    TIMER_STOP("BasicFlagger::_getMedians (%d ant, %d chan, %d pol)",
+            nAntennas, nChannels, nPols)
 
     // Check the medians.
-    CPPUNIT_ASSERT( medians.size() == (nChannels * nPols) );
     for (unsigned p = 0, i = 0; p < nPols; p++) {
         for (unsigned c = 0; c < nChannels; c++) {
             std::complex<real_t> val( p + c + (nAntennas/2)*(nAntennas/2) );
@@ -174,6 +230,15 @@ void BasicFlaggerTest::test__getMedians()
             i++;
         }
     }
+}
+
+/**
+ * @details
+ * Tests the routine to move the bad antennas to the edge of the visibility
+ * matrix.
+ */
+void BasicFlaggerTest::test__moveBadAntennas()
+{
 }
 
 } // namespace pelican

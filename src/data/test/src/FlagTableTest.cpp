@@ -1,6 +1,5 @@
 #include "FlagTableTest.h"
 #include "data/FlagTable.h"
-//#define TIMER_ENABLE
 #include "utility/pelicanTimer.h"
 #include "utility/memCheck.h"
 

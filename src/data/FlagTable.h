@@ -2,6 +2,7 @@
 #define FLAGTABLE_H
 
 #include "data/AntennaMatrixData.h"
+#include <algorithm>
 #include <vector>
 
 using std::vector;
@@ -53,6 +54,12 @@ namespace pelican {
  * reference to the list of all the channels flagged using flagChannel() can
  * be obtained by calling flaggedChannels(). A pointer to the first element of
  * the list can be obtained by calling flaggedChannelPtr().
+ *
+ * @section FlagTable_Modifying Meta-data Modification
+ *
+ * The flagging module requires the list of bad antennas at each channel and
+ * polarisation to be reverse-sorted by antenna index, which is achieved by
+ * a call to
  */
 class FlagTable : public AntennaMatrixData<unsigned char>
 {
@@ -235,6 +242,15 @@ class FlagTable : public AntennaMatrixData<unsigned char>
                 _flaggedAntennas[p].resize(channels);
             }
             AntennaMatrixData<unsigned char>::resize(antennas, channels, polarisations);
+        }
+
+        /// Reverse-sorts the list of bad antennas.
+        /// This method performs a reverse-sort on the list of bad antennas at
+        /// the given channel \p c and polarisation \p p. This functionality
+        /// is required by the flagging module.
+        void reverseSortBadAntennas(const unsigned c, const unsigned p) {
+            std::sort(_flaggedAntennas[p][c].begin(), _flaggedAntennas[p][c].end());
+            std::reverse(_flaggedAntennas[p][c].begin(), _flaggedAntennas[p][c].end());
         }
 };
 
