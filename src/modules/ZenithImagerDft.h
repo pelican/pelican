@@ -26,8 +26,8 @@ namespace pelican {
  */
 class ZenithImagerDft : public AbstractModule
 {
-    public:
-        friend class ZenithImagerTest;
+    private:
+        friend class ZenithImagerDftTest;
 
     public:
         enum { POL_X, POL_Y, POL_BOTH };
@@ -47,11 +47,21 @@ class ZenithImagerDft : public AbstractModule
         /// Method overrides the selected channels from the configuration
         void setPolarisations(const unsigned p) { _polarisation = p; }
 
+        /// Sets the image size
+        void setSize(const unsigned sizeL, const unsigned sizeM);
+
+        /// Sets the image cellsize
+        void setCellsize(const double cellsizeL, const double cellsizeM);
+
+        /// Sets the image size and cellsize
+        void setDimensions(const unsigned sizeL, const unsigned sizeM,
+                const double cellsizeL, const double cellsizeM);
+
         /// Runs the module.
         void run(QHash<QString, DataBlob*>& data);
 
     private:
-        /// Extract the configuration from the xml node setting default where required.
+        /// Extract the configuration from the XML node setting default where required.
         void _getConfiguration(const QDomElement& config);
 
         /// Generates an array of image coordinates in radians.
@@ -91,17 +101,20 @@ class ZenithImagerDft : public AbstractModule
           VisibilityData *_vis;               ///< Visibility amplitude matrix.
           AntennaPositions *_antPos;          ///< Visibility positions matrix.
           ImageData *_image;                  ///< Image amplitude matrix.
-          FrequencyList *_freq;               ///< Frequency list data.
+          FrequencyList *_freqList;           ///< Frequency list data.
 
-          std::vector<unsigned> _channels;    ///< Channel list.
-          unsigned _polarisation;              ///< Polarisation selection enumeration.
+          std::vector<unsigned> _channels;    ///< Selected channel list.
+          unsigned _polarisation;             ///< Selection polarisation (enumeration).
           unsigned _sizeL;                    ///< Image size in l (x) pixels.
           unsigned _sizeM;                    ///< Image size in m (y) pixels.
-          unsigned _cellsizeL;                ///< Image pixel increment in m (y) direction.
-          unsigned _cellsizeM;                ///< Image pixel increment in l (x) direction.
+          double _cellsizeL;                  ///< Image pixel increment in m (y) direction.
+          double _cellsizeM;                  ///< Image pixel increment in l (x) direction.
 
           std::vector<real_t> _coordL;        ///< Image l (x) coordinates in radians.
           std::vector<real_t> _coordM;        ///< Image m (y) coordinates in radians.
+
+          std::vector<complex_t> _weightsXL;  ///< DFT weights
+          std::vector<complex_t> _weightsYM;  ///< DFT weights
 };
 
 } // namespace pelican

@@ -22,7 +22,12 @@ class ZenithImagerDftTest : public CppUnit::TestFixture
 {
     public:
         CPPUNIT_TEST_SUITE( ZenithImagerDftTest );
-        CPPUNIT_TEST( test_assign );
+        CPPUNIT_TEST( test_configuration );
+        CPPUNIT_TEST( test_inputDataBlobs );
+        CPPUNIT_TEST( test_calculateImageCoords );
+        CPPUNIT_TEST( test_calculateWeights );
+        CPPUNIT_TEST( test_makeImageDft );
+        CPPUNIT_TEST( test_run );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -30,7 +35,12 @@ class ZenithImagerDftTest : public CppUnit::TestFixture
         void tearDown();
 
         // Test Methods
-        void test_assign();
+        void test_configuration();
+        void test_inputDataBlobs();
+        void test_calculateImageCoords();
+        void test_calculateWeights();
+        void test_makeImageDft();
+        void test_run();
 
     public:
         ZenithImagerDftTest();
