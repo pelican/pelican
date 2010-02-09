@@ -15,7 +15,6 @@ namespace pelican {
  * @brief
  * 
  * @details
- * 
  */
 
 class ZenithModelVisibilitiesTest : public CppUnit::TestFixture

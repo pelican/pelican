@@ -7,8 +7,8 @@ set(
    src/ZenithCalibraterTest.cpp
    src/ZenithImagerDftTest.cpp
    src/ZenithModelVisibilitiesTest.cpp
-   src/ImagerDFTTest.cpp
-   src/ImagerFFTTest.cpp
+   src/ImagerDftTest.cpp
+   src/ImagerFftTest.cpp
    src/ImageWriterFitsTest.cpp
 )
 add_executable(modulesTest ${modulesTest_src} )
