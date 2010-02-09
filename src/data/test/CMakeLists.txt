@@ -7,8 +7,8 @@ set(
    src/VisibilityDataTest.cpp
    src/AntennaGainsTest.cpp
    src/FlagTableTest.cpp
-   src/VisibilityPositionsDataTest.cpp
-   src/AntennaPositionsDataTest.cpp
+   src/VisibilityPositionsTest.cpp
+   src/AntennaPositionsTest.cpp
 )
 add_executable(dataTest ${dataTest_src} )
 target_link_libraries(dataTest ${SUBPACKAGE_LIBRARIES} ${CPPUNIT_LIBRARIES} )
