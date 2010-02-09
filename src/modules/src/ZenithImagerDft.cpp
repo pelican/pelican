@@ -95,7 +95,7 @@ void ZenithImagerDft::_getConfiguration(const QDomElement &config)
 
     QString chan = getOptionText("channels", "0");
     QStringList chanList = chan.split(",", QString::SkipEmptyParts);
-    _channels.resize(chanList.length());
+    _channels.resize(chanList.size());
     for (int c = 0; c < chanList.size(); c++) {
         _channels[c] = chanList.at(c).toUInt();
     }
