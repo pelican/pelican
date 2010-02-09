@@ -1,11 +1,11 @@
-#ifndef VISIBILITYPOSITIONSDATA_H
-#define VISIBILITYPOSITIONSDATA_H
+#ifndef VISIBILITYPOSITIONS_H
+#define VISIBILITYPOSITIONS_H
 
 #include "data/DataBlob.h"
 #include <vector>
 
 /**
- * @file VisibilityPositionsData.h
+ * @file VisibilityPositions.h
  */
 
 namespace pelican {
@@ -25,19 +25,20 @@ namespace pelican {
  * or and either a pair of antenna index from a list of visibility id's.
  */
 
-class VisibilityPositionsData : public DataBlob
+class VisibilityPositions : public DataBlob
 {
     public:
         /// Constructor
-        VisibilityPositionsData();
+        VisibilityPositions();
 
         /// Constructor assigning memory for the visibility positions
-        VisibilityPositionsData(const unsigned nAntennas);
+        VisibilityPositions(const unsigned nAntennas);
 
         /// Image data destructor.
-        ~VisibilityPositionsData();
+        ~VisibilityPositions();
 
     public:
+
         /// Assign memory for visibility positions
         void assign(const unsigned nAntennas);
 
@@ -125,23 +126,16 @@ class VisibilityPositionsData : public DataBlob
         real_t* wPtr() { return (_w.size() > 0) ? &_w[0] : NULL; }
 
     private:
-        /// The number of antennas
-        unsigned _nAntennas;
-        /// Reference frequency channel id.
-        unsigned _refChannel;
-        /// Frequency of the reference channel
-        double _refFreq;
-        /// Frequency increment between channels
-        double _freqInc;
-        /// u coordinate of visibility
-        std::vector<real_t> _u;
-        /// v coordinate of visibility
-        std::vector<real_t> _v;
-        /// w coordinate of visibility
-        std::vector<real_t> _w;
+        unsigned _nAntennas;    ///< The number of antennas.
+        unsigned _refChannel;   ///< Reference frequency channel id.
+        double _refFreq;        ///< Frequency of the reference channel.
+        double _freqInc;        ///< Frequency increment between channels.
+        std::vector<real_t> _u; ///< u coordinate of visibility.
+        std::vector<real_t> _v; ///< v coordinate of visibility.
+        std::vector<real_t> _w; ///< w coordinate of visibility.
 };
 
 
 } // namespace pelican
 
-#endif // VISIBILITYPOSITIONSDATA_H
+#endif // VISIBILITYPOSITIONS_H

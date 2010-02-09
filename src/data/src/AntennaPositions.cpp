@@ -1,4 +1,4 @@
-#include "data/AntennaPositionsData.h"
+#include "data/AntennaPositions.h"
 
 namespace pelican {
 

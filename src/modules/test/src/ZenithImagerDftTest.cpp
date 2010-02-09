@@ -1,5 +1,5 @@
 #include "ZenithImagerDftTest.h"
-
+#include "ZenithImagerDft.h"
 
 #include "utility/memCheck.h"
 
@@ -24,8 +24,13 @@ void ZenithImagerDftTest::tearDown()
 {
 }
 
-void ZenithImagerDftTest::test_method()
+void ZenithImagerDftTest::test_assign()
 {
+    ImageData image;
+    VisibilityData vis;
+    AntennaPositions ant;
+    QDomElement config;
+    ZenithImagerDft imager(config);
 }
 
 } // namespace pelican

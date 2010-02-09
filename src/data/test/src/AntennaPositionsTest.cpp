@@ -1,26 +1,26 @@
-#include "AntennaPositionsDataTest.h"
-#include "AntennaPositionsData.h"
+#include "AntennaPositionsTest.h"
+#include "AntennaPositions.h"
 
 #include "utility/memCheck.h"
 
 namespace pelican {
 
-CPPUNIT_TEST_SUITE_REGISTRATION( AntennaPositionsDataTest );
+CPPUNIT_TEST_SUITE_REGISTRATION( AntennaPositionsTest );
 // class DataRequirementsTest 
-AntennaPositionsDataTest::AntennaPositionsDataTest()
+AntennaPositionsTest::AntennaPositionsTest()
     : CppUnit::TestFixture()
 {
 }
 
-AntennaPositionsDataTest::~AntennaPositionsDataTest()
+AntennaPositionsTest::~AntennaPositionsTest()
 {
 }
 
-void AntennaPositionsDataTest::setUp()
+void AntennaPositionsTest::setUp()
 {
 }
 
-void AntennaPositionsDataTest::tearDown()
+void AntennaPositionsTest::tearDown()
 {
 }
 
@@ -29,7 +29,7 @@ void AntennaPositionsDataTest::tearDown()
  * @details
  * Tests the various accessor methods for the antenna positions data blob.
  */
-void AntennaPositionsDataTest::test_accessorMethods()
+void AntennaPositionsTest::test_accessorMethods()
 {
     unsigned nAnt = 96;
     AntennaPositions antPos(nAnt);

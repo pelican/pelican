@@ -1,0 +1,55 @@
+#ifndef IMAGERFFT_H_
+#define IMAGERFFT_H_
+
+#include "AbstractModule.h"
+#include "data/ImageData.h"
+#include "data/VisibilityData.h"
+#include "data/VisibilityPositions.h"
+
+class QDomElement;
+
+/**
+ * @file ImagerFFT.h
+ */
+
+namespace pelican {
+
+/**
+ * @class ImagerFFT
+ *  
+ * @brief
+ * Module which will produce a brightness map given a matrix of visibility data.
+ * 
+ * @details
+ */
+
+class ImagerFFT : public AbstractModule
+{
+    public:
+        /// Module constructor.
+        ImagerFFT(const QDomElement& config);
+
+        /// Module destructor.
+        ~ImagerFFT();
+
+        /// Runs the module.
+        void run(QHash<QString, DataBlob*>& data);
+
+    private:
+        /// Extract the configuration from the xml node setting default where required.
+        void _getConfiguration(const QDomElement& config);
+
+    private:
+        VisibilityData *_vis;               ///< Visibility amplitude matrix.
+        VisibilityPositions *_visCoord; ///< Visibility positions matrix.
+        ImageData *_image;                  ///< Image amplitude matrix.
+
+        unsigned _sizeL;                    ///< Image size in l (x) pixels.
+        unsigned _sizeM;                    ///< Image size in m (y) pixels.
+        unsigned _cellsizeL;                ///< Image pixel increment in m (y) direction.
+        unsigned _cellsizeM;                ///< Image pixel increment in l (x) direction.
+};
+
+} // namespace pelican
+
+#endif // IMAGERFFT_H_

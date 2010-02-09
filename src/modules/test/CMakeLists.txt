@@ -8,6 +8,8 @@ set(
    src/ZenithImagerDftTest.cpp
    src/ZenithModelVisibilitiesTest.cpp
    src/ImagerDFTTest.cpp
+   src/ImagerFFTTest.cpp
+   src/ImageWriterFitsTest.cpp
 )
 add_executable(modulesTest ${modulesTest_src} )
 target_link_libraries(modulesTest ${SUBPACKAGE_LIBRARIES} ${CPPUNIT_LIBRARIES} memoryTracer )

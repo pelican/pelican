@@ -1,4 +1,4 @@
-#include "data/VisibilityPositionsData.h"
+#include "data/VisibilityPositions.h"
 
 namespace pelican {
 
@@ -6,7 +6,7 @@ namespace pelican {
  * @details
  * Constructs an empty visibility positions data blob
  */
-VisibilityPositionsData::VisibilityPositionsData() : DataBlob()
+VisibilityPositions::VisibilityPositions() : DataBlob()
 {
 }
 
@@ -17,7 +17,7 @@ VisibilityPositionsData::VisibilityPositionsData() : DataBlob()
  *
  * @param[in]   nAntennas   The number of antennas.
  */
-VisibilityPositionsData::VisibilityPositionsData(const unsigned nAntennas)
+VisibilityPositions::VisibilityPositions(const unsigned nAntennas)
 : DataBlob()
 {
     assign(nAntennas);
@@ -28,7 +28,7 @@ VisibilityPositionsData::VisibilityPositionsData(const unsigned nAntennas)
  * @details
  * Image data destructor.
  */
-VisibilityPositionsData::~VisibilityPositionsData()
+VisibilityPositions::~VisibilityPositions()
 {
 }
 
@@ -39,7 +39,7 @@ VisibilityPositionsData::~VisibilityPositionsData()
  *
  * @param[in]   nAntenna   The number of antennas.
  */
-void VisibilityPositionsData::assign(const unsigned nAntennas)
+void VisibilityPositions::assign(const unsigned nAntennas)
 {
    _refChannel = 0;
     _nAntennas = nAntennas;
@@ -54,7 +54,7 @@ void VisibilityPositionsData::assign(const unsigned nAntennas)
  * @details
  * Clears the visibility positions data blob.
  */
-void VisibilityPositionsData::clear()
+void VisibilityPositions::clear()
 {
     _nAntennas = 0;
     _refChannel = 0;
@@ -77,7 +77,7 @@ void VisibilityPositionsData::clear()
  *
  * @return Visibility position scaling factor.
  */
-double VisibilityPositionsData::freqScaleFactor(const unsigned channel)
+double VisibilityPositions::freqScaleFactor(const unsigned channel)
 {
     return (_refFreq + (channel - _refChannel) * _freqInc) / _refFreq;
 }

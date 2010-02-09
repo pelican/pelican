@@ -64,8 +64,12 @@ class AbstractModule
         /// Adds the given remote stream data as a requirement.
         void addRemoteStreamData(const QString& string);
 
-        /// Gets a configuration option.
+        /// Returns a configuration option (attribute).
         QString getOption(const QString& tagName, const QString& attribute,
+                const QString& defValue = QString());
+
+        /// Returns a configuration option text string value.
+        QString getOptionText(const QString& tagName,
                 const QString& defValue = QString());
 
     public:

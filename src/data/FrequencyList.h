@@ -39,6 +39,12 @@ class FrequencyList : public DataBlob
         /// Frequency list destructor.
         ~FrequencyList() {}
 
+        /// Dereferences the data for channel \p c.
+        double& at(const unsigned c) { return _data[c]; }
+
+        /// Dereferences the data for channel \p c (const overload).
+        const double& at(const unsigned c) const { return _data[c]; }
+
         /// Returns the number of frequency channels.
         unsigned nChannels() const { return _nChannels; }
 
@@ -65,10 +71,10 @@ class FrequencyList : public DataBlob
         /// Dereferences the data for channel (\p c) (const overload).
         const double& operator() (const unsigned c) const { return _data[c]; }
 
-        /// Dereferences the data for the given index \p i.
+        /// Dereferences the data for the channel \p c.
         double& operator[] (const unsigned c) { return _data[c]; }
 
-        /// Dereferences the data for the given index \p i (const overload).
+        /// Dereferences the data for channel \p c (const overload).
         const double& operator[] (const unsigned c) const { return _data[c]; }
 };
 

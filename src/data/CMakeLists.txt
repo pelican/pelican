@@ -4,8 +4,8 @@ set( data_src
      src/DataBlob.cpp
      src/DataRequirements.cpp
      src/ImageData.cpp
-     src/AntennaPositionsData.cpp
-     src/VisibilityPositionsData.cpp
+     src/AntennaPositions.cpp
+     src/VisibilityPositions.cpp
 )
 add_library(data ${data_src} )
 target_link_libraries(data ${SUBPACKAGE_LIBRARIES} )

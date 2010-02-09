@@ -100,7 +100,6 @@ void ConfigTest::test_setConfiguration()
         config.setAttribute(address, "ip", ip);
         CPPUNIT_ASSERT(config.getAttribute(address, "ip") == ip);
     }
-
 }
 
 
@@ -165,7 +164,7 @@ void ConfigTest::test_configFileRead()
         QDomElement e = config.get(address);
 
         CPPUNIT_ASSERT(e.parentNode().nodeName() == "modules");
-        CPPUNIT_ASSERT(e.childNodes().count() == 2);
+        CPPUNIT_ASSERT(e.childNodes().count() == 3);
         CPPUNIT_ASSERT(e.childNodes().at(0).nodeName() == "paramA");
         CPPUNIT_ASSERT(e.childNodes().at(1).nodeName() == "paramB");
         CPPUNIT_ASSERT(e.childNodes().at(0).toElement().attribute("name") == "some_value");
@@ -173,6 +172,8 @@ void ConfigTest::test_configFileRead()
         CPPUNIT_ASSERT(e.childNodes().at(1).toElement().attribute("name") == "some_coords");
         CPPUNIT_ASSERT(e.childNodes().at(1).toElement().attribute("x") == "1024");
         CPPUNIT_ASSERT(e.childNodes().at(1).toElement().attribute("y") == "2048");
+        address << Config::NodeId_t("paramC", "channels");
+        CPPUNIT_ASSERT(config.getText(address) == "1,2,3,4,5");
     }
 
     // Use case

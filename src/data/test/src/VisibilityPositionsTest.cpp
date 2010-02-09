@@ -1,25 +1,25 @@
-#include "VisibilityPositionsDataTest.h"
-#include "VisibilityPositionsData.h"
+#include "VisibilityPositionsTest.h"
+#include "VisibilityPositions.h"
 #include "utility/memCheck.h"
 
 namespace pelican {
 
-CPPUNIT_TEST_SUITE_REGISTRATION( VisibilityPositionsDataTest );
+CPPUNIT_TEST_SUITE_REGISTRATION( VisibilityPositionsTest );
 // class DataRequirementsTest 
-VisibilityPositionsDataTest::VisibilityPositionsDataTest()
+VisibilityPositionsTest::VisibilityPositionsTest()
     : CppUnit::TestFixture()
 {
 }
 
-VisibilityPositionsDataTest::~VisibilityPositionsDataTest()
+VisibilityPositionsTest::~VisibilityPositionsTest()
 {
 }
 
-void VisibilityPositionsDataTest::setUp()
+void VisibilityPositionsTest::setUp()
 {
 }
 
-void VisibilityPositionsDataTest::tearDown()
+void VisibilityPositionsTest::tearDown()
 {
 }
 
@@ -28,13 +28,13 @@ void VisibilityPositionsDataTest::tearDown()
  * @details
  * Tests the various accessor methods for the visibility positions data blob
  */
-void VisibilityPositionsDataTest::test_accessorMethods()
+void VisibilityPositionsTest::test_accessorMethods()
 {
     int nAnt = 96;
     double c = 299792458.0;
     double refFreq = 1.0e8;
     double freqInc = 1.0e6;
-    VisibilityPositionsData visPos(nAnt);
+    VisibilityPositions visPos(nAnt);
     visPos.refChannel() = 0;
     visPos.refFreq() = refFreq;
     visPos.freqInc() = freqInc;

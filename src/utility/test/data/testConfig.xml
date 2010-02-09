@@ -9,6 +9,7 @@
         <module name="testA">
             <paramA name="some_value" value="1"/>
             <paramB name="some_coords" x="1024" y="2048"/>
+            <paramC name="channels">1,2,3,4,5</paramC>
         </module>
         <module name="testB"/>
         <module name="testC"/>

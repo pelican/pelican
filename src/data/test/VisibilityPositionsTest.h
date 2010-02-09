@@ -1,14 +1,14 @@
-#ifndef VISIBILITYPOSITIONSDATATEST_H
-#define VISIBILITYPOSITIONSDATATEST_H
+#ifndef VISIBILITYPOSITIONSTEST_H
+#define VISIBILITYPOSITIONSTEST_H
 
 #include <cppunit/extensions/HelperMacros.h>
 
 /**
- * @file VisibilityPositionsData.h
+ * @file VisibilityPositionsTest.h
  */
 
 /**
- * @class VisibilityPositionsData
+ * @class VisibilityPositionsTest
  *  
  * @brief
  * Unit testing class for the visibility positions data blob.
@@ -20,10 +20,10 @@
 
 namespace pelican {
 
-class VisibilityPositionsDataTest : public CppUnit::TestFixture
+class VisibilityPositionsTest : public CppUnit::TestFixture
 {
     public:
-        CPPUNIT_TEST_SUITE( VisibilityPositionsDataTest );
+        CPPUNIT_TEST_SUITE( VisibilityPositionsTest );
         CPPUNIT_TEST( test_accessorMethods );
         CPPUNIT_TEST_SUITE_END();
 
@@ -36,8 +36,8 @@ class VisibilityPositionsDataTest : public CppUnit::TestFixture
         void test_accessorMethods();
 
     public:
-        VisibilityPositionsDataTest();
-        ~VisibilityPositionsDataTest();
+        VisibilityPositionsTest();
+        ~VisibilityPositionsTest();
 
     private:
 };

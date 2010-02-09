@@ -32,6 +32,6 @@ add_library(memoryTracer ${tracer_src} )
 target_link_libraries(memoryTracer ${SUBPACKAGE_LIBRARIES})
 IF(DEBUG)
 install(TARGETS memoryTracer DESTINATION ${LIBRARY_INSTALL_DIR} )
-ENDIF(DEBUG)
+ENDIF(DEBUG)    
 
 add_subdirectory(test)

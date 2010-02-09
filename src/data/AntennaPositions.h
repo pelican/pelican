@@ -1,11 +1,11 @@
-#ifndef ANTENNAPOSITIONSDATA_H
-#define ANTENNAPOSITIONSDATA_H
+#ifndef ANTENNAPOSITIONS_H
+#define ANTENNAPOSITIONS_H
 
 #include "data/DataBlob.h"
 #include <vector>
 
 /**
- * @file AntennaPositionsData.h
+ * @file AntennaPositions.h
  */
 
 namespace pelican {
@@ -73,17 +73,13 @@ class AntennaPositions : public DataBlob
         /// Returns a pointer to the z antenna positions.
         real_t* zPtr() { return _z.size() > 0 ? &_z[0] : NULL; }
 
-
     private:
-        /// x coordinate of antenna position in metres.
-        std::vector<real_t> _x;
-        /// y coordinate of antenna position in metres.
-        std::vector<real_t> _y;
-        /// z coordinate of antenna position in metres.
-        std::vector<real_t> _z;
+        std::vector<real_t> _x; ///< x coordinate of antenna position in metres.
+        std::vector<real_t> _y; ///< y coordinate of antenna position in metres.
+        std::vector<real_t> _z; ///< z coordinate of antenna position in metres.
 };
 
 
 } // namespace pelican
 
-#endif // ANTENNAPOSITIONSDATA_H
+#endif // ANTENNAPOSITIONS_H

@@ -1,6 +1,8 @@
 #include "modules/ImagerDFT.h"
-#include "utility/memCheck.h"
+#include "utility/constants.h"
 #include <iostream>
+
+#include "utility/memCheck.h"
 
 namespace pelican {
 
@@ -14,15 +16,17 @@ ImagerDFT::ImagerDFT(const QDomElement& config)
 {
     // Register which data blobs are needed by the module
     addRemoteStreamData("VisibilityData");
-    addLocalStreamData("VisibilityPositionsData");
+    addLocalStreamData("VisibilityPositions");
     addLocalStreamData("ImageData");
 
     // Extract configuration from the xml configuration node.
     _getConfiguration(config);
 
     // Generate image pixel coordinate vectors based on the image configuration.
-    _calculateImageCoords(_cellsizeL, _sizeL, _coordL);
-    _calculateImageCoords(_cellsizeM, _sizeL, _coordM);
+    _coordL.resize(_sizeL);
+    _coordM.resize(_sizeM);
+    _calculateImageCoords(_cellsizeL, _sizeL, &_coordL[0]);
+    _calculateImageCoords(_cellsizeM, _sizeL, &_coordM[0]);
 }
 
 
@@ -43,7 +47,7 @@ void ImagerDFT::run(QHash<QString, DataBlob*>& data)
 {
     // Grab local pointers to the relevant data blobs.
     _vis = static_cast<VisibilityData*>(data["VisibilityData"]);
-    _visCoord = static_cast<VisibilityPositionsData*>(data["VisiblityPositionsData"]);
+    _visCoord = static_cast<VisibilityPositions*>(data["VisiblityPositions"]);
     _image = static_cast<ImageData*>(data["ImageData"]);
 
     /// Check the data is available
@@ -51,17 +55,28 @@ void ImagerDFT::run(QHash<QString, DataBlob*>& data)
     if (!_visCoord) throw QString("No visibility coordinate data");
     if (!_image) throw QString("No image data");
 
-    /// Loop over polarisations and channels to generate images.
-    // need to find if all are left after flagging...
-    unsigned nChannels = 1;
-    unsigned nPolarisations = 1;
-    for (unsigned c = 0; c < nChannels; c++) {
-        _calculateImageWeights(c, _visCoord->u(), _coordL, _weightUL);
-        _calculateImageWeights(c, _visCoord->v(), _coordM, _weightVM);
-        for (unsigned p = 0; p < nPolarisations; p++) {
-//            _makeImageDft(p, c, _weightUL, _weightVM, _image->ptr(p, c));
-//            _cutHemisphere();
-        }
+    unsigned nPolarisations = 2;
+    unsigned channel = _channel;
+    unsigned nAntennas = _visCoord->nAntennas();
+    unsigned nVis = nAntennas * nAntennas;
+    real_t* uCoords = _visCoord->uPtr();
+    real_t* vCoords = _visCoord->uPtr();
+    real_t* lCoords = &_coordL[0];
+    real_t* mCoords = &_coordM[0];
+    _weightsUL.resize(nVis * _sizeL);
+    _weightsVM.resize(nVis * _sizeM);
+    complex_t* weightsUL = &_weightsUL[0];
+    complex_t* weightsVM = &_weightsVM[0];
+    double freqScale = _visCoord->freqScaleFactor(channel);
+
+    _calculateWeights(uCoords, nVis, freqScale, lCoords, _sizeL, weightsUL);
+    _calculateWeights(vCoords, nVis, freqScale, mCoords, _sizeM, weightsVM);
+
+    for (unsigned p = 0; p < nPolarisations; p++) {
+        real_t* image = _image->ptr(p, channel);
+        complex_t* vis = _vis->ptr(channel, p);
+        _makeImageDftSimple(nVis, _sizeL, _sizeM, vis, weightsUL, weightsVM, image);
+        _cutHemisphere();
     }
 }
 
@@ -83,6 +98,7 @@ void ImagerDFT::_getConfiguration(const QDomElement &config)
     _sizeM = getOption("imageSize", "m", "128").toUInt();
     _cellsizeL = getOption("cellsize", "l", "10.0").toDouble();
     _cellsizeM = getOption("cellsize", "m", "10.0").toDouble();
+    _channel = getOption("channel", "value", "0").toUInt();
 }
 
 
@@ -100,15 +116,11 @@ void ImagerDFT::_getConfiguration(const QDomElement &config)
  * @param[in]  nPixels   Number of image pixels along the axis.
  * @param[out] coords    Reference to a vector of image coordinates.
  */
-void ImagerDFT::_calculateImageCoords(
-        const double cellsize,
-        const unsigned nPixels,
-        std::vector<real_t>& coords
-){
-    coords.resize(nPixels);
-    double delta = cellsize * M_PI / 648000.0;
+void ImagerDFT::_calculateImageCoords(const double cellsize,
+        const unsigned nPixels, real_t* coords)
+{
+    double delta = cellsize * math::asec2rad;
     unsigned centre = nPixels / 2;
-
     for (unsigned i = 0; i < nPixels; i++) {
         coords[i] = static_cast<double>(i - centre) * delta;
     }
@@ -119,8 +131,7 @@ void ImagerDFT::_calculateImageCoords(
 /**
  * @details
  * Calculates a matrix of complex weights for forming an image by
- * 2D DFT at a specified frequency channel \p c for a set of visibility
- * coordinates (either u or v) and a set of image coordinates (either l or m).
+ * 2D DFT.
  *
  * Weights take the form:
  * \f[
@@ -131,72 +142,50 @@ void ImagerDFT::_calculateImageCoords(
  * antenna positions and frequency channel and \f$ l \f$ and \f$ m \f$ are pixel
  * positions in radians.
  *
- * @param[in]  c            Frequency channel for which to generate weights.
- * @param[in]  visCoord
- * @param[in]  imageCoord
- * @param[out] weight
+ * @param[in]  imageCoord   Image coordinate array (either l or m)
+ * @param[in]  nCoords      Number of image coordinates
+ * @param[in]  visCoord     Visibility coordinates array (either u or v)
+ * @param[in]  nVis         Number of visibility coordinates
+ * @param[in]  freqScale    Visibility coordinate frequency scaling factor
+ * @param[out] weights      Matrix of DFT weights (nVis * nCoords)
  */
-void ImagerDFT::_calculateImageWeights(
-        unsigned c,
-        std::vector<real_t>& visCoord,
-        std::vector<real_t>& imageCoord,
-        std::vector<complex_t>& weight
-){
-//    const double twoPi = 2.0 * M_PI;
-//    double freqScale = _visCoord->freqScaleFactor(c);
-//    unsigned nVis = visCoord.size();
-//    unsigned nCoords = imageCoord.size();
-//    unsigned nWeights = nVis * nPixels;
-//    weight.resize(nWeights);
-//
-//    for (unsigned j = 0; j < nCoords; i++) {
-//        unsigned index = j * nVis;
-//
-//        for (unsigned i = 0; i < nVis; i++) {
-//            double twoPiVis = twoPi * visCoord[i] * freqScale;
-//            double arg = twoPiVis * imageCoord[j];
-//            weight[index + i] = complex_t(cos(arg), sin(arg));
-//        }
-//    }
-}
-
-
-/**
- * @details
- * Perform a discrete Fourier transform to form an image from the visibility data.
- */
-void ImagerDFT::_makeImageDft(unsigned p, unsigned c)
+void ImagerDFT::_calculateWeights(real_t* visCoord, const unsigned nVis,
+        const double freqScale, real_t* imageCoord, const unsigned nCoords,
+        complex_t* weights)
 {
-    if (!_vis->nEntries()) {
-        throw QString("Empty visibility matrix.");
+    for (unsigned j = 0; j < nCoords; j++) {
+        unsigned index = j * nVis;
+        double a = math::twoPi * imageCoord[j] * freqScale;
+        for (unsigned i = 0; i < nVis; i++) {
+            double arg = a * visCoord[i];
+            weights[index + i] = complex_t(cos(arg), sin(arg));
+        }
     }
 }
 
 
 /**
  * @details
+ * Perform a discrete Fourier transform to form an image from the visibility data.
+ *
+ * @param[in]
  */
-void ImagerDFT::_makeImageDft1(
-        unsigned p, unsigned c,
-        std::vector<complex_t>& visAmp,
-        std::vector<complex_t>& weightUL,
-        std::vector<complex_t>& weightVM,
-        real_t* image
-){
-//    unsigned nAnt = 0;
-//
-//    for (unsigned im = 0; im < _sizeM; im++) {
-//        unsigned index = im * _sizeL;
-//        for (unsigned il = 0; il < _sizeL; il++) {
-//            index += il;
-//            image[index] = 0.0;
-//            for (unsigned j; j < nAnt; j++) {
-//                for (unsigned i; i < nAnt; i++) {
-////                    image[index] += visAmp(i, j) * weightUL[i] * weightVM[j];
-//                }
-//            }
-//        }
-//    }
+void ImagerDFT::_makeImageDftSimple(const unsigned nVis, const unsigned nL,
+        const unsigned nM, complex_t* vis, complex_t* weightUL,
+        complex_t* weightVM, real_t *image)
+{
+#pragma omp parallel for
+    for (unsigned m = 0; m < nM; m++) {
+        unsigned indexM = m * nL;
+        for (unsigned l = 0; l < nL; l++) {
+            complex_t temp = complex_t(0.0, 0.0);
+            for (unsigned i = 0; i < nVis; i++) {
+                temp += vis[i] * weightUL[l * nVis + i] * weightVM[m * nVis + i];
+            }
+            unsigned index = indexM + l;
+            image[index] = temp.real() / nVis;
+        }
+    }
 }
 
 

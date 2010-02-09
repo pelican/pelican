@@ -1,14 +1,14 @@
-#ifndef ANTENNAPOSITIONSDATATEST_H
-#define ANTENNAPOSITIONSDATATEST_H
+#ifndef ANTENNAPOSITIONSTEST_H
+#define ANTENNAPOSITIONSTEST_H
 
 #include <cppunit/extensions/HelperMacros.h>
 
 /**
- * @file AntennaPositionsData.h
+ * @file AntennaPositionsTest.h
  */
 
 /**
- * @class AntennaPositionsData
+ * @class AntennaPositionsTest
  *  
  * @brief
  * Unit testing class for the antenna positions data blob.
@@ -20,10 +20,10 @@
 
 namespace pelican {
 
-class AntennaPositionsDataTest : public CppUnit::TestFixture
+class AntennaPositionsTest : public CppUnit::TestFixture
 {
     public:
-        CPPUNIT_TEST_SUITE( AntennaPositionsDataTest );
+        CPPUNIT_TEST_SUITE( AntennaPositionsTest );
         CPPUNIT_TEST( test_accessorMethods );
         CPPUNIT_TEST_SUITE_END();
 
@@ -36,12 +36,12 @@ class AntennaPositionsDataTest : public CppUnit::TestFixture
         void test_accessorMethods();
 
     public:
-        AntennaPositionsDataTest();
-        ~AntennaPositionsDataTest();
+        AntennaPositionsTest();
+        ~AntennaPositionsTest();
 
     private:
 };
 
 } // namespace pelican
 
-#endif // ANTENNAPOSITIONSDATATEST_H
+#endif // ANTENNAPOSITIONSTEST_H
