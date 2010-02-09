@@ -1,0 +1,17 @@
+mkdir build
+cd build
+cmake ../src/.
+
+
+Build Options
+=============
+-DTIMER=TRUE
+-DCMAKE_BUILD_TYPE=release/debug
+-DOPENMP=TRUE
+
+Setting the compiler
+====================
+export C="icc"
+export CXX="icpc"
+cmake ...
+
