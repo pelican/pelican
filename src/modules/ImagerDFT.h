@@ -4,7 +4,7 @@
 #include "AbstractModule.h"
 #include "data/ImageData.h"
 #include "data/VisibilityData.h"
-#include "data/VisibilityPositionsData.h"
+#include "data/VisibilityPositions.h"
 
 class QDomElement;
 
@@ -32,6 +32,10 @@ class ImagerDFT : public AbstractModule
         /// Module destructor.
         ~ImagerDFT();
 
+        /// Sets the channel (\p c) which to produce an image from.
+        /// Method overrides the selected channel from the configuration
+        void setImageChannel(unsigned c) { _channel = c; }
+
         /// Runs the module.
         void run(QHash<QString, DataBlob*>& data);
 
@@ -41,34 +45,27 @@ class ImagerDFT : public AbstractModule
 
         /// Generates an array of image coordinates in radians.
         void _calculateImageCoords(const double cellsize, const unsigned nPixels,
-                std::vector<real_t>& coords);
+                real_t* coords);
 
         /// Calculate the an image weights vector for.
-        void _calculateImageWeights(unsigned channel,
-                std::vector<real_t>& visCoord,
-                std::vector<real_t>& imageCoord,
-                std::vector<complex_t>& weight);
+        void _calculateWeights(real_t* visCoord, const unsigned nVis,
+                const double freqScale, real_t* imageCoord, const unsigned nCoords,
+                complex_t* weights);
 
         /// Construct the image by DFT for polarisation (\p p) and channel (\p c)
-        void _makeImageDft(unsigned p, unsigned c);
-
-        ///
-        void _makeImageDft1(
-                unsigned p, unsigned c,
-                std::vector<complex_t>& visAmp,
-                std::vector<complex_t>& weightUL,
-                std::vector<complex_t>& weightVM,
-                real_t* image
-        );
+        void _makeImageDftSimple(const unsigned nVis, const unsigned nL,
+                const unsigned nM, complex_t* vis, complex_t* weightsUL,
+                complex_t* weightsVM, real_t *image);
 
         /// Cut the image outside unit radius in l, m.
         void _cutHemisphere();
 
     private:
         VisibilityData *_vis;               ///< Visibility amplitude matrix.
-        VisibilityPositionsData *_visCoord;     ///< Visibility positions matrix.
+        VisibilityPositions *_visCoord;     ///< Visibility positions matrix.
         ImageData *_image;                  ///< Image amplitude matrix.
 
+        unsigned _channel;                  ///< Channel at which to generate the image
         unsigned _sizeL;                    ///< Image size in l (x) pixels.
         unsigned _sizeM;                    ///< Image size in m (y) pixels.
         unsigned _cellsizeL;                ///< Image pixel increment in m (y) direction.
@@ -77,8 +74,8 @@ class ImagerDFT : public AbstractModule
         std::vector<real_t> _coordL;        ///< Image l (x) coordinates in radians.
         std::vector<real_t> _coordM;        ///< Image m (y) coordinates in radians.
 
-        std::vector<complex_t> _weightUL;   ///< DFT weights \f$ w(u,l) exp^{(2 \pi i u l)} \f$
-        std::vector<complex_t> _weightVM;   ///< DFT weights \f$ w(u,l) exp^{(2 \pi i v m)} \f$
+        std::vector<complex_t> _weightsUL;   ///< DFT weights \f$ w(u,l) exp^{(2 \pi i u l)} \f$
+        std::vector<complex_t> _weightsVM;   ///< DFT weights \f$ w(u,l) exp^{(2 \pi i v m)} \f$
 };
 
 } // namespace pelican
