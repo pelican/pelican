@@ -183,7 +183,7 @@ void BasicFlagger::_getMedians (
     if (size == 0) return;
 
     /* Create a working copy of the autocorrelation data */
-    complex_t* autocorr = new complex_t[size];
+    complex_t* autocorr = (complex_t*)malloc(size * sizeof(complex_t));
     memcpy(autocorr, aptr, size * sizeof(complex_t));
 
     /* Loop over polarisations and channels */
@@ -206,7 +206,7 @@ void BasicFlagger::_getMedians (
     }
 
     /* Free the working copy */
-    delete[] autocorr;
+    free(autocorr);
 }
 
 /**

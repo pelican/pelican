@@ -133,8 +133,8 @@ void BasicFlaggerTest::test__flagAutocorrelations()
     TIMER_START
     _basicFlagger->_flagAutocorrelations(&visData, &medians[0],
             minFraction, maxFraction, &flagTable);
-    TIMER_STOP("BasicFlagger::_flagAutocorrelations (%d ant, %d chan, %d pol)",
-            nAntennas, nChannels, nPols)
+    TIMER_STOP("BasicFlagger::_flagAutocorrelations (%d/%d ant in %d chan, %d pol)",
+            flagTable.nFlaggedAntennas(0, 0), nAntennas, nChannels, nPols)
 }
 
 /**
@@ -241,8 +241,8 @@ void BasicFlaggerTest::test__moveBadAntennas()
     const unsigned nAntennas = 97;
     const unsigned nChannels = 512;
     const unsigned nPols = 2;
-    const real_t minFraction = 0.25;
-    const real_t maxFraction = 1.25;
+    const real_t minFraction = 0.1;
+    const real_t maxFraction = 1.9;
     VisibilityData visData(nAntennas, nChannels, nPols);
     FlagTable flagTable(nAntennas, nChannels, nPols);
     std::vector<complex_t> medians(nChannels * nPols);
@@ -260,14 +260,15 @@ void BasicFlaggerTest::test__moveBadAntennas()
         }
     }
 
-    // Get the autocorrelations.
+    // Flag the autocorrelations.
     _basicFlagger->_flagAutocorrelations(&visData, &medians[0],
             minFraction, maxFraction, &flagTable);
 
     // Move the bad antennas.
     TIMER_START
     _basicFlagger->_moveBadAntennas(&visData, &flagTable);
-    TIMER_STOP("BasicFlagger::_moveBadAntennas")
+    TIMER_STOP("BasicFlagger::_moveBadAntennas (%d/%d ant in %d chan, %d pol)",
+            flagTable.nFlaggedAntennas(0, 0), nAntennas, nChannels, nPols)
 }
 
 } // namespace pelican
