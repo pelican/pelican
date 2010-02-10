@@ -5,6 +5,14 @@
         <server name="server1" type="tcp" ip="0.1.2.3" port="12345"/>
         <server name="server2" type="tcp" ip="4.5.6.7" port="678910"/>
     </servers>
+   
+    <dataClients>
+        <client name="file" value="somefile.dat"/>
+        <client name="client2">
+            <param name="ip" value="1.1.2.3"/>
+        </client>
+    </dataClients>
+    
     <modules>
         <module name="testA">
             <paramA name="some_value" value="1"/>
