@@ -260,8 +260,7 @@ void ZenithImagerDft::_makeImageDft(const unsigned nAnt, real_t* antPosX,
             _multWeights(nAnt, weightsXL, weightsYM, &weights[0]);
 
 #ifdef USE_BLAS
-            cblas_cgemv(CblasRowMajor, CblasNoTrans, nAnt, nAnt,
-                    alpha, vis, nAnt, &weights[0], 1, beta, &temp[0], 1);
+            cblas_cgemv(CblasRowMajor, CblasNoTrans, nAnt, nAnt, alpha, vis, nAnt, &weights[0], 1, beta, &temp[0], 1);
 #else
             _multMatrixVector(nAnt, vis, &weights[0], &temp[0]);
 #endif
