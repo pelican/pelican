@@ -1,6 +1,11 @@
 #include "modules/ZenithImagerDft.h"
 #include "utility/constants.h"
 #include "utility/pelicanTimer.h"
+#ifdef USE_MKL
+    #include <mkl_cblas.h>
+#else
+    #include "cblas.h"
+#endif
 #include <QString>
 #include <QStringList>
 #include <iostream>
@@ -243,6 +248,9 @@ void ZenithImagerDft::_makeImageDft(const unsigned nAnt, real_t* antPosX,
     std::vector<complex_t> weights(nAnt);
     std::vector<complex_t> temp(nAnt);
 
+    real_t alpha[2] = {1.0, 0.0};
+    real_t beta[2]  = {0.0, 0.0};
+
     for (unsigned m = 0; m < nM; m++) {
         complex_t *weightsYM = &_weightsYM[m * nAnt];
         unsigned indexM = m * nL;
@@ -250,7 +258,14 @@ void ZenithImagerDft::_makeImageDft(const unsigned nAnt, real_t* antPosX,
         for (unsigned l = 0; l < nL; l++) {
             complex_t * weightsXL = &_weightsXL[l * nAnt];
             _multWeights(nAnt, weightsXL, weightsYM, &weights[0]);
+
+#ifdef USE_BLAS
+            cblas_cgemv(CblasRowMajor, CblasNoTrans, nAnt, nAnt,
+                    alpha, vis, nAnt, &weights[0], 1, beta, &temp[0], 1);
+#else
             _multMatrixVector(nAnt, vis, &weights[0], &temp[0]);
+#endif
+
             image[indexM + l] = _vectorDotConj(nAnt, &temp[0], &weights[0]).real();
         }
     }
