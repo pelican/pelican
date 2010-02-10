@@ -215,7 +215,7 @@ class FlagTable : public AntennaMatrixData<unsigned char>
         /// Returns the number of flagged antennas.
         /// This method returns the number of antennas flagged for the given
         /// channel \p c and polarisation \p.
-        const unsigned nFlaggedAntennas(const unsigned c,
+        unsigned nFlaggedAntennas(const unsigned c,
                 const unsigned p) const {
             return _flaggedAntennas[p][c].size();
         }
@@ -223,7 +223,7 @@ class FlagTable : public AntennaMatrixData<unsigned char>
         /// Returns number of flagged channels.
         /// This method returns the number of channels flagged for the given
         /// polarisation \p.
-        const unsigned nFlaggedChannels(const unsigned p) const {
+        unsigned nFlaggedChannels(const unsigned p) const {
             return _flaggedChannels[p].size();
         }
 
