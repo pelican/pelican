@@ -105,6 +105,7 @@ class ZenithImagerDft : public AbstractModule
 
           std::vector<unsigned> _channels;    ///< Selected channel list.
           unsigned _polarisation;             ///< Selection polarisation (enumeration).
+          bool _fullSky;                      ///< Image the full sky (overrides cellsize)
           unsigned _sizeL;                    ///< Image size in l (x) pixels.
           unsigned _sizeM;                    ///< Image size in m (y) pixels.
           double _cellsizeL;                  ///< Image pixel increment in m (y) direction.
