@@ -23,5 +23,43 @@
         <module name="testC"/>
         <module name="default::testA"/>
         <module name="pipeline1::testA"/>
+        <module name=""/>
+      
+        <!-- example configuration for zenith imager dft module -->
+        <module name="ZenithImagerDft">
+            <size l="128" m="128"/>
+            <fullSky value="false"/> <!-- over rides cellsize if true -->
+            <cellsize l="10.0" m="10.0"/>
+            <polarisation value="both"/>
+            <channels>0,1,2</channels>
+        </module>
+        
+        <!-- example configuration for fits image writer -->
+        <module name="ImageWriterFits">
+            <overwrite value="true"/> <!-- overwrite exising fits files ? -->
+            <directory value=""/>
+            <file name="" prefix="" suffix=""/>
+            <cube value="true"/>
+
+            <dateObs value=""/>
+            <origin value="Oxford e-Research Centre"/>
+            <telescope value="LOFAR"/>
+            <instrument value="Effelsberg"/>
+            <observer value=""/>
+            <object value="full sky"/>
+            <author value=""/>
+            <reference value=""/>
+            <equinox value="2000.0"/>
+        </module>
+        
     </modules>
+    
+    <pipelines>
+        <pipeline name="default">
+            <module>
+                <paramA name="" value=""/>
+            </moudle>
+        </pipeline>
+    </pipelines>
+    
 </configuration>
