@@ -53,6 +53,7 @@ include(MathLibraries)
 set(dependencies
         Qt4
         CppUnit
+        CFitsio
 )
 PACKAGE_DEPENDENCIES( ${dependencies} )
 

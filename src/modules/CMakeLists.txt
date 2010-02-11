@@ -13,6 +13,10 @@ set( modules_src
 add_library(modules ${modules_src} )
 target_link_libraries(modules ${SUBPACKAGE_LIBRARIES} )
 install(TARGETS modules DESTINATION ${LIBRARY_INSTALL_DIR} )
-SUBPACKAGE_ADD_LIBRARIES(modules ${PELICAN_CBLAS_LIBS} /usr/lib/libpthread.so)
+SUBPACKAGE_ADD_LIBRARIES(modules 
+    ${PELICAN_CBLAS_LIBS}
+    /usr/lib/libpthread.so
+    ${CFITSIO_LIBRARIES}
+)
 
 add_subdirectory(test)
