@@ -57,6 +57,9 @@ class ZenithImagerDft : public AbstractModule
         void setDimensions(const unsigned& sizeL, const unsigned& sizeM,
                 const double& cellsizeL, const double& cellsizeM);
 
+        /// Set the image size to the full sky.
+        void setFullSky();
+
         /// Runs the module.
         void run(QHash<QString, DataBlob*>& data);
 
@@ -96,6 +99,9 @@ class ZenithImagerDft : public AbstractModule
 
         /// Cut the image outside unit radius in l, m.
         void _cutHemisphere();
+
+        /// Sets the cellsize corresponding to a full sky image
+        void _setCellsizeFullSky();
 
     private:
           VisibilityData *_vis;               ///< Visibility amplitude matrix.

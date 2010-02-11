@@ -49,8 +49,9 @@ void ZenithImagerDftTest::test_configuration()
         ZenithImagerDft imager(config);
         CPPUNIT_ASSERT(imager._sizeL == 128);
         CPPUNIT_ASSERT(imager._sizeM == 128);
-        CPPUNIT_ASSERT(imager._cellsizeL == 10.0);
-        CPPUNIT_ASSERT(imager._cellsizeM == 10.0);
+        CPPUNIT_ASSERT(imager._fullSky == true);
+        CPPUNIT_ASSERT(imager._cellsizeL == (math::pi / 128) * math::rad2asec);
+        CPPUNIT_ASSERT(imager._cellsizeM == (math::pi / 128) * math::rad2asec);
         CPPUNIT_ASSERT(imager._polarisation == ZenithImagerDft::POL_X);
         CPPUNIT_ASSERT(imager._channels.size() == 1);
         CPPUNIT_ASSERT(imager._channels[0] == 0);
@@ -122,7 +123,7 @@ void ZenithImagerDftTest::test_inputDataBlobs()
     // Expect not to throw
     {
         QHash<QString, DataBlob*> data;
-        image.assign(10,10,2,1);
+        image.resize(10,10,2,1);
         vis.resize(5,2,1);
         ant.assign(5);
         freqList.resize(2);

@@ -26,15 +26,23 @@ ZenithImagerDft::ZenithImagerDft(const QDomElement& config)
     addRemoteStreamData("VisibilityData");
     addLocalStreamData("AntennaPositions");
     addLocalStreamData("ImageData");
+    addLocalStreamData("FrequencyList");
+
+    // Initialise local data pointers
+    _vis = NULL;
+    _antPos = NULL;
+    _image = NULL;
+    _freqList = NULL;
 
     // Extract configuration from the xml configuration node.
     _getConfiguration(config);
 
-    // Generate image pixel coordinate vectors based on the image configuration.
+    // Generate image pixel coordinate vectors based on the configuration.
     _coordL.resize(_sizeL);
     _coordM.resize(_sizeM);
     _calculateImageCoords(_cellsizeL, _sizeL, &_coordL[0]);
     _calculateImageCoords(_cellsizeM, _sizeL, &_coordM[0]);
+
 }
 
 
@@ -58,6 +66,7 @@ void ZenithImagerDft::setSize(const unsigned& sizeL, const unsigned& sizeM)
     _sizeM = sizeM;
     _coordL.resize(_sizeL);
     _coordM.resize(_sizeM);
+    if (_fullSky) _setCellsizeFullSky();
     _calculateImageCoords(_cellsizeL, _sizeL, &_coordL[0]);
     _calculateImageCoords(_cellsizeM, _sizeM, &_coordM[0]);
 }
@@ -71,6 +80,7 @@ void ZenithImagerDft::setSize(const unsigned& sizeL, const unsigned& sizeM)
 void ZenithImagerDft::setCellsize(const double& cellsizeL,
         const double& cellsizeM)
 {
+    _fullSky = false;
     _cellsizeL = cellsizeL;
     _cellsizeM = cellsizeM;
     _calculateImageCoords(_cellsizeL, _sizeL, &_coordL[0]);
@@ -86,12 +96,26 @@ void ZenithImagerDft::setCellsize(const double& cellsizeL,
 void ZenithImagerDft::setDimensions(const unsigned& sizeL, const unsigned& sizeM,
                 const double& cellsizeL, const double& cellsizeM)
 {
+    _fullSky = false;
     _cellsizeL = cellsizeL;
     _cellsizeM = cellsizeM;
     _sizeL = sizeL;
     _sizeM = sizeM;
     _coordL.resize(_sizeL);
     _coordM.resize(_sizeM);
+    _calculateImageCoords(_cellsizeL, _sizeL, &_coordL[0]);
+    _calculateImageCoords(_cellsizeM, _sizeM, &_coordM[0]);
+}
+
+
+/**
+ * @details
+ * Sets the imager to make a full sky image.
+ */
+void ZenithImagerDft::setFullSky()
+{
+    _fullSky = true;
+    _setCellsizeFullSky();
     _calculateImageCoords(_cellsizeL, _sizeL, &_coordL[0]);
     _calculateImageCoords(_cellsizeM, _sizeM, &_coordM[0]);
 }
@@ -110,7 +134,7 @@ void ZenithImagerDft::run(QHash<QString, DataBlob*>& data)
     unsigned nChan = _channels.size();
 
     /// Assign memory for the image (only resizes if needed)
-    _image->assign(_sizeL, _sizeM, nChan, nPol);
+    _image->resize(_sizeL, _sizeM, nChan, nPol);
 
     /// Loop over selected channels and polarisations to make images
     for (unsigned c = 0; c < nChan; c++) {
@@ -147,14 +171,23 @@ void ZenithImagerDft::_getConfiguration(const QDomElement &config)
     _sizeL = getOption("size", "l", "128").toUInt();
     _sizeM = getOption("size", "m", "128").toUInt();
     _fullSky = getOption("fullSky", "value", "true") == "true" ? true : false;
-    _cellsizeL = getOption("cellsize", "l", "10.0").toDouble();
-    _cellsizeM = getOption("cellsize", "m", "10.0").toDouble();
 
+    // Full sky = set l and m cellsize for a full image ignoring other settings.
+    if (_fullSky) {
+        _setCellsizeFullSky();
+    }
+    else {
+        _cellsizeL = getOption("cellsize", "l", "10.0").toDouble();
+        _cellsizeM = getOption("cellsize", "m", "10.0").toDouble();
+    }
+
+    // Get the polarisation selection.
     QString pol = getOption("polarisation", "value", "x").toLower();
     if (pol == "x") _polarisation = POL_X;
     else if (pol == "y") _polarisation = POL_Y;
     else if (pol == "both") _polarisation = POL_BOTH;
 
+    // Get the channels to image.
     QString chan = getOptionText("channels", "0");
     QStringList chanList = chan.split(",", QString::SkipEmptyParts);
     _channels.resize(chanList.size());
@@ -324,5 +357,16 @@ complex_t ZenithImagerDft::_vectorDotConj(const unsigned& n, complex_t* a, compl
 void ZenithImagerDft::_cutHemisphere()
 {
 }
+
+
+/**
+ * @details
+ */
+void ZenithImagerDft::_setCellsizeFullSky()
+{
+    _cellsizeL = math::pi / _sizeL * math::rad2asec;
+    _cellsizeM = math::pi / _sizeM * math::rad2asec;
+}
+
 
 } // namespace pelican
