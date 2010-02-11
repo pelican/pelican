@@ -27,8 +27,8 @@ class ImageData : public DataBlob
         ImageData();
 
         /// Constructor assigning memory for the image cube.
-        ImageData(const unsigned sizeL, const unsigned sizeM,
-                const unsigned nChannels, const unsigned nPolarisations);
+        ImageData(const unsigned& sizeL, const unsigned& sizeM,
+                const unsigned& nChannels, const unsigned& nPolarisations);
 
         /// Image data destructor.
         ~ImageData();
@@ -39,8 +39,8 @@ class ImageData : public DataBlob
 
     public:
         /// Assign the image cube
-        void assign(const unsigned sizeL, const unsigned sizeM,
-                const unsigned nChannels, const unsigned nPolarisations);
+        void resize(const unsigned& sizeL, const unsigned& sizeM,
+                const unsigned& nChannels, const unsigned& nPolarisations);
 
         /// Clears the image data blob
         void clear();
@@ -90,23 +90,23 @@ class ImageData : public DataBlob
         std::vector<real_t>& amp() { return _image; }
 
         /// Dereferences the image amplitude array for image index (\p i)
-        real_t& operator[](const unsigned i) { return _image[i]; }
+        real_t& operator[](const unsigned& i) { return _image[i]; }
 
         /// Dereferences the image amplitude array for image index (\p i)
-        const real_t& operator[](const unsigned i) const { return _image[i]; }
+        const real_t& operator[](const unsigned& i) const { return _image[i]; }
 
         /// Dereference the image amplitude array for image coordinate
         /// (\p l, \p m), channel (\p c) and polarisation (\p p)
-        real_t& operator()(const unsigned l, const unsigned m,
-                const unsigned c, const unsigned p) {
+        real_t& operator()(const unsigned& l, const unsigned& m,
+                const unsigned& c, const unsigned& p) {
             unsigned index = l + _sizeL * (_sizeM * (p * _nChannels + c) + m);
             return _image[index];
         }
 
         /// Dereference the image amplitude array for image coordinate
         /// (\p l, \p m), channel (\p c) and polarisation (\p p)
-        const real_t& operator()(const unsigned l, const unsigned m,
-                const unsigned c, const unsigned p) const {
+        const real_t& operator()(const unsigned& l, const unsigned& m,
+                const unsigned& c, const unsigned& p) const {
             unsigned index = l + _sizeL * (_sizeM * (p * _nChannels + c) + m);
             return _image[index];
         }
@@ -115,14 +115,14 @@ class ImageData : public DataBlob
         real_t* ptr() { return _image.size() > 0 ? &_image[0] : NULL; }
 
         /// Return a pointer to the image for a specified polarisation (\p p)
-        real_t* ptr(const unsigned p) {
+        real_t* ptr(const unsigned& p) {
             unsigned index = p * _nChannels * _sizeL * _sizeM;
             return _image.size() > 0 ? &_image[index] : NULL;
         }
 
         /// Return a pointer to the image for a specified polarisation (\p p)
         /// and channel (\p c)
-        real_t* ptr(const unsigned p, const unsigned c) {
+        real_t* ptr(const unsigned& p, const unsigned& c) {
             unsigned index = _sizeL * _sizeM * (p * _nChannels + c);
             return _image.size() > 0 ? &_image[index] : NULL;
         }

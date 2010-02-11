@@ -20,11 +20,11 @@ ImageData::ImageData() : DataBlob()
  * @param[in]   sizeM       The image size (pixels) in the M direction.
  * @param[in]   nChannels   The number of frequency channels in the image cube.
  */
-ImageData::ImageData(const unsigned sizeL, const unsigned sizeM,
-        const unsigned nChannels, const unsigned nPolarisations)
+ImageData::ImageData(const unsigned& sizeL, const unsigned& sizeM,
+        const unsigned& nChannels, const unsigned& nPolarisations)
 : DataBlob()
 {
-    assign(sizeL, sizeM, nChannels, nPolarisations);
+    resize(sizeL, sizeM, nChannels, nPolarisations);
 }
 
 
@@ -39,14 +39,15 @@ ImageData::~ImageData()
 
 /**
  * @details
- * Assigns memory for an image data blob.
+ * Resizes the memory for an image data blob.
  *
- * @param[in]   sizeL       The image size (pixels) in the L direction.
- * @param[in]   sizeM       The image size (pixels) in the M direction.
- * @param[in]   nChannels   The number of frequency channels in the image cube.
+ * @param[in] sizeL             Image size (pixels) in the L direction.
+ * @param[in] sizeM             Image size (pixels) in the M direction.
+ * @param[in] nChannels         Number of frequency channels in the image cube.
+ * @param[in] nPolaristaions    Number of polarisations in the image cube.
  */
-void ImageData::assign(const unsigned sizeL, const unsigned sizeM,
-        const unsigned nChannels, const unsigned nPolarisations)
+void ImageData::resize(const unsigned& sizeL, const unsigned& sizeM,
+        const unsigned& nChannels, const unsigned& nPolarisations)
 {
     _sizeL = sizeL;
     _sizeM = sizeM;
