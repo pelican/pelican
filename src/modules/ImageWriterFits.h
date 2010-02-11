@@ -44,7 +44,7 @@ class ImageWriterFits : public AbstractModule
         void _getConfiguration(const QDomElement& config);
 
         /// Opens the FITS image file for writing.
-        bool _open();
+        void _open();
 
         /// Closes the FITS image file.
         void _close();

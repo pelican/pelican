@@ -2,9 +2,9 @@
 #include "utility/constants.h"
 #include <ctime>
 #include <QFile>
-
-
 #include <iostream>
+
+#define HERE std::cout << "** " <<__FUNCTION__ << "()::L" << __LINE__ << std::endl;
 
 #include "utility/memCheck.h"
 
@@ -22,6 +22,9 @@ ImageWriterFits::ImageWriterFits(const QDomElement& config)
 
     // Extract configuration from the xml configuration node.
     _getConfiguration(config);
+
+    _image=NULL;
+    _fits=NULL;
 }
 
 
@@ -31,6 +34,7 @@ ImageWriterFits::ImageWriterFits(const QDomElement& config)
  */
 ImageWriterFits::~ImageWriterFits()
 {
+    _close();
 }
 
 
@@ -63,7 +67,7 @@ void ImageWriterFits::_getConfiguration(const QDomElement &config)
 {
     _overwrite = getOption("overwrite", "value", "true") == "true" ? true : false;
     _directory = getOption("directory", "value", "");
-    _fileName = getOption("file", "name", "pelican");
+    _fileName = getOption("file", "name", "pelican.fits");
     _prefix = getOption("file", "prefix");
     _suffix = getOption("file", "suffix");
     _cube = getOption("cube", "value", "true") == "true" ? true : false;
@@ -82,16 +86,29 @@ void ImageWriterFits::_getConfiguration(const QDomElement &config)
  * @details
  * Opens a FITS image file for writing.
  */
-bool ImageWriterFits::_open()
+void ImageWriterFits::_open()
 {
-    // Check if the file to be opened for writing already exists.
+    HERE
+    // Check the we have image data !
+    if (_image == NULL) throw QString("ImagerWriterFits: Image data missing!");
+    HERE
+
+    // Check if the file to be opened has been set.
+    if (_fileName.isEmpty()) throw QString("ImagerWriterFits: Output file empty");;
+
     QFile file(_fileName);
     if (file.exists()) {
         if (_overwrite) file.remove();
-        else return false;
+        else throw QString("ImageWriterFits: File already exists");
     }
 
-    int err = 0; // cfitsio error code
+    HERE
+    unsigned nL = _image->sizeL();
+    unsigned nM = _image->sizeM();
+    unsigned nChan = _image->nPolarisations();
+    unsigned nPol = _image->nChannels();
+    std::cout << nL << " " << nM << " " << nChan << " " << nPol << std::endl;
+
     long nAxis = 4; // Number of axes: l, m, polarisations, channels
     long axisDims[] = {
             _image->sizeL(),
@@ -100,13 +117,12 @@ bool ImageWriterFits::_open()
             _image->nChannels()
     };
 
+    int err = 0; // cfitsio error code
     fits_create_file(&_fits, _fileName.toLatin1().data(), &err);
     if (err) throw QString("ImageWriterFits: Unable to open file for writing");
 
     fits_create_img(_fits, FLOAT_IMG, nAxis, axisDims, &err);
     if (err) throw QString("ImageWriterFits: Unable to create FITS image");
-
-    return true;
 }
 
 
@@ -116,7 +132,7 @@ bool ImageWriterFits::_open()
 void ImageWriterFits::_close()
 {
     int err = 0;
-    fits_close_file(_fits, &err);
+    if (_fits != NULL) fits_close_file(_fits, &err);
 }
 
 
