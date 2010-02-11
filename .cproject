@@ -29,7 +29,6 @@
 <listOptionValue builtIn="false" value="/usr/include/qt4/QtXml"/>
 <listOptionValue builtIn="false" value="/usr/include/qt4/QtCore"/>
 <listOptionValue builtIn="false" value="&quot;${workspace_loc:/pelican/src}&quot;"/>
-<listOptionValue builtIn="false" value="/opt/intel/cmkl/10.2.4.032/include"/>
 </option>
 <inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.1377490114" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
 </tool>
