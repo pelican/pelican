@@ -241,8 +241,8 @@ void BasicFlaggerTest::test__moveBadAntennas()
     const unsigned nAntennas = 97;
     const unsigned nChannels = 512;
     const unsigned nPols = 2;
-    const real_t minFraction = 0.1;
-    const real_t maxFraction = 1.9;
+    const real_t minFraction = 0.5;
+    const real_t maxFraction = 1.5;
     VisibilityData visData(nAntennas, nChannels, nPols);
     FlagTable flagTable(nAntennas, nChannels, nPols);
     std::vector<complex_t> medians(nChannels * nPols);

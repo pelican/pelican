@@ -109,6 +109,7 @@ void PipelineDriver::stop()
 /**
  * @details
  * Private method to find the data requirements of the given pipeline.
+ * This is called by _initialisePipelines().
  */
 void PipelineDriver::_determineDataRequirements(AbstractPipeline* pipeline)
 {
@@ -136,6 +137,7 @@ void PipelineDriver::_determineDataRequirements(AbstractPipeline* pipeline)
  * @details
  * Private method to initialises the pipelines by iterating over them,
  * creating their modules and finding out their data requirements.
+ * This is called by start().
  */
 void PipelineDriver::_initialisePipelines()
 {

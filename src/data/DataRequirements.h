@@ -62,10 +62,10 @@ class DataRequirements
         void setStreamData(const QSet<QString>& list);
 
         /// Returns the set of service data required.
-        const QSet<QString> serviceData() const {return _serviceData;}
+        const QSet<QString>& serviceData() const {return _serviceData;}
 
         /// Returns the set of stream data required.
-        const QSet<QString> streamData() const {return _streamData;}
+        const QSet<QString>& streamData() const {return _streamData;}
 
         /// Test for equality with another object.
         bool operator==(const DataRequirements&) const;

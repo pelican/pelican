@@ -2,27 +2,29 @@
 #define PELICANSERVERCLIENT_H
 
 #include "AbstractDataClient.h"
+#include <QDomElement>
 
 /**
  * @file PelicanServerClient.h
  */
 
 namespace pelican {
-    class AbstractClientProtocol;
+
+class AbstractClientProtocol;
 
 /**
  * @class PelicanServerClient
  *  
  * @brief
- *    Implements the dataClient interface for attaching to a Pelican Server
+ * Implements the data client interface for attaching to a Pelican Server
+ *
  * @details
  * 
  */
-
 class PelicanServerClient : public AbstractDataClient
 {
     public:
-        PelicanServerClient(  );
+        PelicanServerClient(const QDomElement& config);
         ~PelicanServerClient();
         virtual QHash<QString, DataBlob*> getData(const DataRequirements&);
 

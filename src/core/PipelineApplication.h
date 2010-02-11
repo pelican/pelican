@@ -2,6 +2,7 @@
 #define PIPELINEAPPLICATION_H
 
 #include "core/PipelineDriver.h"
+#include "core/AbstractDataClient.h"
 
 /**
  * @file PipelineApplication.h
@@ -13,7 +14,6 @@ class Config;
 class ModuleFactory;
 class PipelineDriver;
 class AbstractPipeline;
-class AbstractDataClient;
 
 /**
  * @class PipelineApplication
@@ -68,18 +68,15 @@ class PipelineApplication
         /// Register a pipeline with the pipeline driver.
         void registerPipeline(AbstractPipeline *pipeline);
 
+        /// Sets the data client.
+        void setDataClient(QString name);
+
         /// Starts the pipeline driver.
         void start();
 
     private:
         /// Creates a configuration object based on the command line arguments.
         bool _createConfig(int argc, char** argv);
-
-        /// Creates a data client based on the configuration.
-        void _createDataClient(const Config* config);
-
-        /// Creates the module factory based on the configuration.
-        void _createModuleFactory(const Config* config);
 };
 
 } // namespace pelican

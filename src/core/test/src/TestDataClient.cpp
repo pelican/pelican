@@ -1,15 +1,17 @@
 #include "TestDataClient.h"
 #include "data/DataRequirements.h"
 #include "data/DataBlob.h"
-#include "utility/memCheck.h"
+#include <QDomElement>
 #include <QtGlobal>
+
+#include "utility/memCheck.h"
 
 namespace pelican {
 
 
 // class TestDataClient 
 TestDataClient::TestDataClient()
-    : AbstractDataClient()
+    : AbstractDataClient(QDomElement())
 {
 }
 
