@@ -127,7 +127,7 @@ void ZenithImagerDft::run(QHash<QString, DataBlob*>& data)
             if (nPol == 1) pol = _polarisation;
 
             complex_t* vis = _vis->ptr(channel, pol);
-            real_t* image = _image->ptr(pol, channel);
+            real_t* image = _image->ptr(pol, c);
             _makeImageDft(nAnt, _antPos->xPtr(), _antPos->yPtr(), vis, frequency,
                     _sizeL, _sizeM, &_coordL[0], &_coordM[0], image);
         }
@@ -144,8 +144,9 @@ void ZenithImagerDft::run(QHash<QString, DataBlob*>& data)
  */
 void ZenithImagerDft::_getConfiguration(const QDomElement &config)
 {
-    _sizeL = getOption("imageSize", "l", "128").toUInt();
-    _sizeM = getOption("imageSize", "m", "128").toUInt();
+    _sizeL = getOption("size", "l", "128").toUInt();
+    _sizeM = getOption("size", "m", "128").toUInt();
+    _fullSky = getOption("fullSky", "value", "true") == "true" ? true : false;
     _cellsizeL = getOption("cellsize", "l", "10.0").toDouble();
     _cellsizeM = getOption("cellsize", "m", "10.0").toDouble();
 
