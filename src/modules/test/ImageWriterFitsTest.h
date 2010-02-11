@@ -23,6 +23,7 @@ class ImageWriterFitsTest : public CppUnit::TestFixture
     public:
         CPPUNIT_TEST_SUITE( ImageWriterFitsTest );
         CPPUNIT_TEST( test_createModule );
+        CPPUNIT_TEST( test_openFile );
         CPPUNIT_TEST_SUITE_END();
 
 
@@ -32,6 +33,8 @@ class ImageWriterFitsTest : public CppUnit::TestFixture
 
         // Test Methods
         void test_createModule();
+        void test_openFile();
+
 
     public:
         ImageWriterFitsTest();
