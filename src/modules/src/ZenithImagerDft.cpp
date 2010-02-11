@@ -52,7 +52,7 @@ ZenithImagerDft::~ZenithImagerDft()
  * Sets the image size to the specified values and calculates
  * image coordinate vectors.
  */
-void ZenithImagerDft::setSize(const unsigned sizeL, const unsigned sizeM)
+void ZenithImagerDft::setSize(const unsigned& sizeL, const unsigned& sizeM)
 {
     _sizeL = sizeL;
     _sizeM = sizeM;
@@ -68,8 +68,8 @@ void ZenithImagerDft::setSize(const unsigned sizeL, const unsigned sizeM)
  * Sets the image cellsize to the specified values and calculates
  * image coordinate vectors.
  */
-void ZenithImagerDft::setCellsize(const double cellsizeL,
-        const double cellsizeM)
+void ZenithImagerDft::setCellsize(const double& cellsizeL,
+        const double& cellsizeM)
 {
     _cellsizeL = cellsizeL;
     _cellsizeM = cellsizeM;
@@ -83,8 +83,8 @@ void ZenithImagerDft::setCellsize(const double cellsizeL,
  * Sets the image size and cellsize to the specified values and
  * calculate image coordinate vectors.
  */
-void ZenithImagerDft::setDimensions(const unsigned sizeL, const unsigned sizeM,
-                const double cellsizeL, const double cellsizeM)
+void ZenithImagerDft::setDimensions(const unsigned& sizeL, const unsigned& sizeM,
+                const double& cellsizeL, const double& cellsizeM)
 {
     _cellsizeL = cellsizeL;
     _cellsizeM = cellsizeM;
@@ -178,8 +178,8 @@ void ZenithImagerDft::_getConfiguration(const QDomElement &config)
  * @param[in]  nPixels   Number of image pixels along the axis.
  * @param[out] coords    Reference to a vector of image coordinates.
  */
-void ZenithImagerDft::_calculateImageCoords(const double cellsize,
-        const unsigned nPixels, real_t* coords)
+void ZenithImagerDft::_calculateImageCoords(const double& cellsize,
+        const unsigned& nPixels, real_t* coords)
 {
     double delta = cellsize * math::asec2rad;
     int centre = nPixels / 2;
@@ -216,8 +216,8 @@ void ZenithImagerDft::_fetchDataBlobs(QHash<QString, DataBlob*>& data)
  * Calculates a matrix of complex weights for forming an image by
  * 2D DFT.
  */
-void ZenithImagerDft::_calculateWeights(const unsigned nAnt, real_t* antPos,
-        const double frequency, const unsigned nCoords,
+void ZenithImagerDft::_calculateWeights(const unsigned& nAnt, real_t* antPos,
+        const double& frequency, const unsigned& nCoords,
         real_t* imageCoord, complex_t* weights)
 {
     double k = (math::twoPi * frequency) / phy::c;
@@ -236,10 +236,10 @@ void ZenithImagerDft::_calculateWeights(const unsigned nAnt, real_t* antPos,
  * @details
  * Perform a discrete Fourier transform to form an image from the visibility data.
  */
-void ZenithImagerDft::_makeImageDft(const unsigned nAnt, real_t* antPosX,
-        real_t* antPosY, complex_t* vis, const double frequency,
-        const unsigned nL, const unsigned nM, real_t* coordsL, real_t* coordsM,
-        real_t *image)
+void ZenithImagerDft::_makeImageDft(const unsigned& nAnt, real_t* antPosX,
+        real_t* antPosY, complex_t* vis, const double& frequency,
+        const unsigned& nL, const unsigned& nM,
+        real_t* coordsL, real_t* coordsM, real_t *image)
 {
     _weightsXL.resize(nAnt * nL);
     _weightsYM.resize(nAnt * nM);
@@ -277,7 +277,7 @@ void ZenithImagerDft::_makeImageDft(const unsigned nAnt, real_t* antPosX,
  * Element wise multiplication of two weights vectors.
  * - need to find a blas function to do this...
  */
-void ZenithImagerDft::_multWeights(const unsigned nAnt, complex_t* weightsXL,
+void ZenithImagerDft::_multWeights(const unsigned& nAnt, complex_t* weightsXL,
         complex_t *weightsYM, complex_t *weights)
 {
     for (unsigned i = 0; i < nAnt; i++) {
@@ -291,7 +291,7 @@ void ZenithImagerDft::_multWeights(const unsigned nAnt, complex_t* weightsXL,
  * Performs matrix vector multiply of a matrix of visibility amplitudes
  * by a vector of complex dft weights
  */
-void ZenithImagerDft::_multMatrixVector(const unsigned nAnt, complex_t* visMatrix,
+void ZenithImagerDft::_multMatrixVector(const unsigned& nAnt, complex_t* visMatrix,
         complex_t *weights, complex_t* result)
 {
     for (unsigned j = 0; j < nAnt; j++) {
@@ -307,7 +307,7 @@ void ZenithImagerDft::_multMatrixVector(const unsigned nAnt, complex_t* visMatri
  * @details
  * Vector dot product
  */
-complex_t ZenithImagerDft::_vectorDotConj(const unsigned n, complex_t* a, complex_t* b)
+complex_t ZenithImagerDft::_vectorDotConj(const unsigned& n, complex_t* a, complex_t* b)
 {
     complex_t result = complex_t(0.0, 0.0);
     for (unsigned i = 0; i < n; i++) {
