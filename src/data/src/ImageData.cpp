@@ -1,4 +1,5 @@
 #include "data/ImageData.h"
+#include <algorithm>
 
 namespace pelican {
 
@@ -75,5 +76,20 @@ void ImageData::clear()
     _image.clear();
 }
 
+
+/**
+ * @details
+ */
+void ImageData::findAmpRange()
+{
+    if (_image.empty()) return;
+    real_t *image = &_image[0];
+    _ampMin = 1.0e99;
+    _ampMax = -1.0e99;
+    for (unsigned i = 0; i < _image.size(); i++) {
+        _ampMin = std::min(image[i], _ampMin);
+        _ampMax = std::max(image[i], _ampMax);
+    }
+}
 
 } // namespace pelican
