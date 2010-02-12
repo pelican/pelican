@@ -38,4 +38,4 @@ add_executable(serverTestMT ${serverTestMT_src} )
 target_link_libraries(serverTestMT ${SUBPACKAGE_LIBRARIES} ${CPPUNIT_LIBRARIES} memoryTracerDummy )
 
 add_test(serverTest serverTest )
-add_test(serverTestMT serverTestMT )
+#add_test(serverTestMT serverTestMT )
