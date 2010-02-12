@@ -4,11 +4,8 @@
 #include <QTextStream>
 #include <QFile>
 #include <QDir>
-#include <iostream>
 
 #include "utility/memCheck.h"
-
-#define HERE std::cout << "** " <<__FUNCTION__ << "()::L" << __LINE__ << std::endl;
 
 namespace pelican {
 
@@ -87,7 +84,7 @@ void ConfigTest::test_setConfiguration()
         Config::TreeAddress_t address;
         address << Config::NodeId_t("modules", "");
         address << Config::NodeId_t("module", "test1");
-        QDomElement e = config.set(address);
+        QDomElement e = config._set(address);
         CPPUNIT_ASSERT(e.parentNode().toElement().tagName() == "modules");
         CPPUNIT_ASSERT(e.tagName() == "module");
         CPPUNIT_ASSERT(e.attribute("name") == "test1");
@@ -121,7 +118,7 @@ void ConfigTest::test_getConfiguration()
     {
         Config::TreeAddress_t address;
         address << Config::NodeId_t("wibble", "wobble");
-        QDomElement e = config.get(address);
+        QDomElement e = config._get(address);
         CPPUNIT_ASSERT(e.isNull());
     }
 
@@ -166,13 +163,12 @@ void ConfigTest::test_configFileRead()
     // Expect that all of the parameters are found
     {
         QString fileName = dir.path() + "/testConfig.xml";
-        QFile file(fileName);
-        if (!file.exists()) return;
+        if (!QFile(fileName).exists()) return;
         Config config(fileName);
         Config::TreeAddress_t address;
         address << Config::NodeId_t("modules", "");
         address << Config::NodeId_t("module", "testA");
-        QDomElement e = config.get(address);
+        QDomElement e = config._get(address);
 
         CPPUNIT_ASSERT(e.parentNode().nodeName() == "modules");
         CPPUNIT_ASSERT(e.childNodes().count() == 3);
@@ -192,11 +188,12 @@ void ConfigTest::test_configFileRead()
     // Expect that the module node is found but has no children.
     {
         QString fileName = dir.path() + "/testConfig.xml";
+        if (!QFile(fileName).exists()) return;
         Config config(fileName);
         Config::TreeAddress_t address;
         address << Config::NodeId_t("modules", "");
         address << Config::NodeId_t("module", "default::testA");
-        QDomElement e = config.get(address);
+        QDomElement e = config._get(address);
         CPPUNIT_ASSERT(e.parentNode().nodeName() == "modules");
         CPPUNIT_ASSERT(e.nodeName() == "module");
         CPPUNIT_ASSERT(e.childNodes().count() == 0);
@@ -221,6 +218,7 @@ void ConfigTest::test_configFileRead()
     {
         try {
             QString fileName = dir.path() + "/badConfig.xml";
+            if (!QFile(fileName).exists()) return;
             Config config(fileName);
         }
         catch (QString err) {
@@ -233,11 +231,12 @@ void ConfigTest::test_configFileRead()
     // Expect that all the parameters are found.
     {
         QString fileName = dir.path() + "/testConfig.xml";
+        if (!QFile(fileName).exists()) return;
         Config config(fileName);
         Config::TreeAddress_t address;
         address << Config::NodeId_t("modules", "");
         address << Config::NodeId_t("module", "testA");
-        QDomElement e = config.get(address);
+        QDomElement e = config._get(address);
 
         CPPUNIT_ASSERT(e.parentNode().nodeName() == "modules");
         CPPUNIT_ASSERT(e.namedItem("paramA").toElement().attribute("value") == "1");

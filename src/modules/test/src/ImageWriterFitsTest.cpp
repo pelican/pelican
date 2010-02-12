@@ -38,7 +38,15 @@ void ImageWriterFitsTest::test_openFile()
 {
     QDomElement config;
     ImageWriterFits fits(config);
-//    fits._open();
+
+    ImageData image(128, 128, 512, 2);
+    fits._image = &image;
+
+    fits.fileName() = "test";
+    fits._open();
+    fits._writeHeader();
+    fits._writeImage();
+    fits._close();
 }
 
 

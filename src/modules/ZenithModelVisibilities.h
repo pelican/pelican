@@ -2,8 +2,8 @@
 #define ZENITHMODELVISIBILITIES_H
 
 #include "AbstractModule.h"
+#include "utility/ConfigNode.h"
 
-class QDomElement;
 
 /**
  * @file ZenithModelVisibilities.h
@@ -24,7 +24,7 @@ class ZenithModelVisibilities : public AbstractModule
 {
     public:
         /// Module constructor.
-        ZenithModelVisibilities(const QDomElement& config);
+        ZenithModelVisibilities(const ConfigNode& config);
 
         /// Module destructor.
         ~ZenithModelVisibilities();

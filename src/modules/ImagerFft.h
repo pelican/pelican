@@ -5,8 +5,7 @@
 #include "data/ImageData.h"
 #include "data/VisibilityData.h"
 #include "data/VisibilityPositions.h"
-
-class QDomElement;
+#include "utility/ConfigNode.h"
 
 /**
  * @file ImagerFft.h
@@ -27,7 +26,7 @@ class ImagerFft : public AbstractModule
 {
     public:
         /// Module constructor.
-        ImagerFft(const QDomElement& config);
+        ImagerFft(const ConfigNode& config);
 
         /// Module destructor.
         ~ImagerFft();
@@ -37,7 +36,7 @@ class ImagerFft : public AbstractModule
 
     private:
         /// Extract the configuration from the XML node setting default where required.
-        void _getConfiguration(const QDomElement& config);
+        void _getConfiguration(const ConfigNode& config);
 
     private:
         VisibilityData *_vis;           ///< Visibility amplitude matrix.

@@ -36,7 +36,7 @@ Config::~Config()
  *
  * @return QDomElement at the address specified in the argument.
  */
-QDomElement Config::set(const TreeAddress_t &address)
+QDomElement Config::_set(const TreeAddress_t &address)
 {
     QDomElement parent = _document.documentElement();
 
@@ -100,7 +100,7 @@ QDomElement Config::set(const TreeAddress_t &address)
  * Returns a QDomElement at the specified address. The element returned is
  * null the address dosn't exist.
  */
-const QDomElement Config::get(const TreeAddress_t &address) const
+QDomElement Config::_get(const TreeAddress_t &address) const
 {
     QDomElement parent = _document.documentElement();
 
@@ -162,7 +162,7 @@ const QDomElement Config::get(const TreeAddress_t &address) const
 void Config::setAttribute(const TreeAddress_t &address, const QString &key,
         const QString &value)
 {
-    QDomElement e = set(address);
+    QDomElement e = _set(address);
     e.setAttribute(key, value);
 }
 
@@ -174,7 +174,7 @@ void Config::setAttribute(const TreeAddress_t &address, const QString &key,
  */
 QString Config::getAttribute(const TreeAddress_t& address, const QString& key) const
 {
-    QDomElement e = get(address);
+    QDomElement e = _get(address);
     if (e.isNull()) {
         return QString();
     }
@@ -190,7 +190,7 @@ QString Config::getAttribute(const TreeAddress_t& address, const QString& key) c
  */
 void Config::setText(const TreeAddress_t& address, const QString& text)
 {
-    QDomElement e = set(address);
+    QDomElement e = _set(address);
     QDomText t = _document.createTextNode(text);
     e.appendChild(t);
 }
@@ -203,7 +203,7 @@ void Config::setText(const TreeAddress_t& address, const QString& text)
  */
 QString Config::getText(const TreeAddress_t& address) const
 {
-    QDomElement e = get(address);
+    QDomElement e = _get(address);
     QDomNodeList children = e.childNodes();
     QString text = QString();
     if (children.isEmpty()) {
@@ -240,9 +240,7 @@ void Config::summary() const
  */
 void Config::save(const QString& fileName) const
 {
-    if (fileName.isEmpty()) {
-        return;
-    }
+    if (fileName.isEmpty()) return;
 
     QFile file(fileName);
 

@@ -5,8 +5,7 @@
 #include "data/ImageData.h"
 #include "data/VisibilityData.h"
 #include "data/VisibilityPositions.h"
-
-class QDomElement;
+#include "utility/ConfigNode.h"
 
 /**
  * @file ImagerDft.h
@@ -27,7 +26,7 @@ class ImagerDft : public AbstractModule
 {
     public:
         /// Module constructor.
-        ImagerDft(const QDomElement& config);
+        ImagerDft(const ConfigNode& config);
 
         /// Module destructor.
         ~ImagerDft();
@@ -41,7 +40,7 @@ class ImagerDft : public AbstractModule
 
     private:
         /// Extract the configuration from the xml node setting default where required.
-        void _getConfiguration(const QDomElement& config);
+        void _getConfiguration(const ConfigNode& config);
 
         /// Generates an array of image coordinates in radians.
         void _calculateImageCoords(const double cellsize, const unsigned nPixels,

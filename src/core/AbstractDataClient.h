@@ -15,6 +15,7 @@ namespace pelican {
 class DataBlob;
 class DataRequirements;
 class DataBlobFactory;
+class ConfigNode;
 
 /**
  * @class AbstractDataClient
@@ -36,7 +37,7 @@ class AbstractDataClient
 {
     private:
         /// The configuration node for the data client.
-        QDomElement _config;
+        const ConfigNode* _config;
 
         /// A pointer to the data blob factory.
         DataBlobFactory* _blobFactory;
@@ -51,7 +52,7 @@ class AbstractDataClient
 
     public:
         /// Data client constructor.
-        AbstractDataClient(const QDomElement& config,
+        AbstractDataClient(const ConfigNode& config,
                 DataBlobFactory* blobFactory);
 
         /// Data client destructor (virtual).
@@ -59,10 +60,6 @@ class AbstractDataClient
 
         /// Gets the requested data from the data server.
         virtual QHash<QString, DataBlob*>& getData(const DataRequirements&) = 0;
-
-        /// Returns a configuration option (attribute).
-        QString getOption(const QString& tagName, const QString& attribute,
-                const QString& defValue = QString());
 };
 
 } // namespace pelican

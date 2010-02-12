@@ -100,7 +100,7 @@ void PipelineApplication::setDataClient(QString name)
     Config::TreeAddress_t address;
     address.append(Config::NodeId_t("clients", ""));
     address.append(QPair<QString, QString>("client", name));
-    QDomElement element = _config->get(address);
+    ConfigNode element = _config->get(address);
 
     /* Create the required data client */
     if (name == "FileDataClient") {

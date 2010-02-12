@@ -3,13 +3,14 @@
 
 #include "AbstractModule.h"
 
-class QDomElement;
 
 /**
  * @file ZenithCalibrater.h
  */
 
 namespace pelican {
+
+class ConfigNode;
 
 /**
  * @class ZenithCalibrater
@@ -24,7 +25,7 @@ class ZenithCalibrater : public AbstractModule
 {
     public:
         /// Module constructor.
-        ZenithCalibrater(const QDomElement& config);
+        ZenithCalibrater(const ConfigNode& config);
 
         /// Module destructor.
         ~ZenithCalibrater();

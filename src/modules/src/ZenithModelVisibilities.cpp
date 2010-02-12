@@ -8,7 +8,7 @@ namespace pelican {
  * @details
  * Module constructor.
  */
-ZenithModelVisibilities::ZenithModelVisibilities(const QDomElement& config)
+ZenithModelVisibilities::ZenithModelVisibilities(const ConfigNode& config)
     : AbstractModule(config)
 {
 }

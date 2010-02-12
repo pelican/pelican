@@ -5,6 +5,7 @@ set(
    src/utilityTest.cpp
    src/SocketTesterTest.cpp
    src/ConfigTest.cpp
+   src/ConfigNodeTest.cpp
 )
 
 if (CMAKE_BUILD_TYPE MATCHES DEBUG)

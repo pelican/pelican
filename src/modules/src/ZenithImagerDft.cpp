@@ -19,7 +19,7 @@ namespace pelican {
  * @details
  * Module constructor.
  */
-ZenithImagerDft::ZenithImagerDft(const QDomElement& config)
+ZenithImagerDft::ZenithImagerDft(const ConfigNode& config)
     : AbstractModule(config)
 {
     // Register which data blobs are needed by the module
@@ -133,11 +133,13 @@ void ZenithImagerDft::run(QHash<QString, DataBlob*>& data)
     unsigned nPol = _polarisation == POL_BOTH ? 2 : 1;
     unsigned nChan = _channels.size();
 
-    /// Assign memory for the image (only resizes if needed)
+    /// Assign memory for the image cube (only resizes if needed)
     _image->resize(_sizeL, _sizeM, nChan, nPol);
 
     /// Loop over selected channels and polarisations to make images
     for (unsigned c = 0; c < nChan; c++) {
+
+        // The channel list channel id selection
         unsigned channel = _channels[c];
 
         if (channel > _freqList->nChannels())
@@ -150,8 +152,11 @@ void ZenithImagerDft::run(QHash<QString, DataBlob*>& data)
             unsigned pol = p;
             if (nPol == 1) pol = _polarisation;
 
+            // Get pointers to the visibility data and image for the selected
+            // channel and polarisation
             complex_t* vis = _vis->ptr(channel, pol);
             real_t* image = _image->ptr(pol, c);
+
             _makeImageDft(nAnt, _antPos->xPtr(), _antPos->yPtr(), vis, frequency,
                     _sizeL, _sizeM, &_coordL[0], &_coordM[0], image);
         }
@@ -166,29 +171,29 @@ void ZenithImagerDft::run(QHash<QString, DataBlob*>& data)
  *
  * @param[in]   config  Configuration options XML node.
  */
-void ZenithImagerDft::_getConfiguration(const QDomElement &config)
+void ZenithImagerDft::_getConfiguration(const ConfigNode &config)
 {
-    _sizeL = getOption("size", "l", "128").toUInt();
-    _sizeM = getOption("size", "m", "128").toUInt();
-    _fullSky = getOption("fullSky", "value", "true") == "true" ? true : false;
+    _sizeL = config.getOption("size", "l", "128").toUInt();
+    _sizeM = config.getOption("size", "m", "128").toUInt();
+    _fullSky = config.getOption("fullSky", "value", "true") == "true" ? true : false;
 
     // Full sky = set l and m cellsize for a full image ignoring other settings.
     if (_fullSky) {
         _setCellsizeFullSky();
     }
     else {
-        _cellsizeL = getOption("cellsize", "l", "10.0").toDouble();
-        _cellsizeM = getOption("cellsize", "m", "10.0").toDouble();
+        _cellsizeL = config.getOption("cellsize", "l", "10.0").toDouble();
+        _cellsizeM = config.getOption("cellsize", "m", "10.0").toDouble();
     }
 
     // Get the polarisation selection.
-    QString pol = getOption("polarisation", "value", "x").toLower();
+    QString pol = config.getOption("polarisation", "value", "x").toLower();
     if (pol == "x") _polarisation = POL_X;
     else if (pol == "y") _polarisation = POL_Y;
     else if (pol == "both") _polarisation = POL_BOTH;
 
     // Get the channels to image.
-    QString chan = getOptionText("channels", "0");
+    QString chan = config.getOptionText("channels", "0");
     QStringList chanList = chan.split(",", QString::SkipEmptyParts);
     _channels.resize(chanList.size());
     for (int c = 0; c < chanList.size(); c++) {
@@ -279,11 +284,13 @@ void ZenithImagerDft::_makeImageDft(const unsigned& nAnt, real_t* antPosX,
     _calculateWeights(nAnt, antPosX, frequency, nL, coordsL, &_weightsXL[0]);
     _calculateWeights(nAnt, antPosY, frequency, nM, coordsM, &_weightsYM[0]);
 
-    std::vector<complex_t> weights(nAnt);
-    std::vector<complex_t> temp(nAnt);
+    _weights.resize(nAnt);
+    _temp.resize(nAnt);
 
+#ifdef USE_BLAS
     real_t alpha[2] = {1.0, 0.0};
     real_t beta[2]  = {0.0, 0.0};
+#endif
 
     for (unsigned m = 0; m < nM; m++) {
         complex_t *weightsYM = &_weightsYM[m * nAnt];
@@ -291,15 +298,17 @@ void ZenithImagerDft::_makeImageDft(const unsigned& nAnt, real_t* antPosX,
 
         for (unsigned l = 0; l < nL; l++) {
             complex_t * weightsXL = &_weightsXL[l * nAnt];
-            _multWeights(nAnt, weightsXL, weightsYM, &weights[0]);
+            _multWeights(nAnt, weightsXL, weightsYM, &_weights[0]);
 
 #ifdef USE_BLAS
-            cblas_cgemv(CblasRowMajor, CblasNoTrans, nAnt, nAnt, alpha, vis, nAnt, &weights[0], 1, beta, &temp[0], 1);
+            cblas_cgemv(CblasRowMajor, CblasNoTrans, nAnt, nAnt, alpha, vis,
+                    nAnt, &_weights[0], 1, beta, &_temp[0], 1);
 #else
-            _multMatrixVector(nAnt, vis, &weights[0], &temp[0]);
+            _multMatrixVector(nAnt, vis, &_weights[0], &_temp[0]);
 #endif
 
-            image[indexM + l] = _vectorDotConj(nAnt, &temp[0], &weights[0]).real();
+            /// use some sort of cblas_cdot to replace this call.
+            image[indexM + l] = _vectorDotConj(nAnt, &_temp[0], &_weights[0]).real();
         }
     }
 }
@@ -324,8 +333,8 @@ void ZenithImagerDft::_multWeights(const unsigned& nAnt, complex_t* weightsXL,
  * Performs matrix vector multiply of a matrix of visibility amplitudes
  * by a vector of complex dft weights
  */
-void ZenithImagerDft::_multMatrixVector(const unsigned& nAnt, complex_t* visMatrix,
-        complex_t *weights, complex_t* result)
+void ZenithImagerDft::_multMatrixVector(const unsigned& nAnt,
+        complex_t* visMatrix, complex_t *weights, complex_t* result)
 {
     for (unsigned j = 0; j < nAnt; j++) {
         unsigned indexJ = j * nAnt;
@@ -340,7 +349,8 @@ void ZenithImagerDft::_multMatrixVector(const unsigned& nAnt, complex_t* visMatr
  * @details
  * Vector dot product
  */
-complex_t ZenithImagerDft::_vectorDotConj(const unsigned& n, complex_t* a, complex_t* b)
+complex_t ZenithImagerDft::_vectorDotConj(const unsigned& n, complex_t* a,
+        complex_t* b)
 {
     complex_t result = complex_t(0.0, 0.0);
     for (unsigned i = 0; i < n; i++) {

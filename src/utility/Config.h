@@ -1,6 +1,7 @@
-#ifndef PELICAN_CONFIG_H_
-#define PELICAN_CONFIG_H_
+#ifndef CONFIG_H
+#define CONFIG_H
 
+#include "utility/ConfigNode.h"
 #include <QDomDocument>
 #include <QString>
 #include <QStringList>
@@ -19,6 +20,9 @@ namespace pelican {
 
 class Config
 {
+    private:
+        friend class ConfigTest;
+
     public:
         typedef QPair<QString, QString> NodeId_t;
         typedef QList<NodeId_t> TreeAddress_t;
@@ -34,10 +38,14 @@ class Config
         QString getFileName() const { return _fileName; }
 
         /// Creates and returns a configuration option at the specified address.
-        QDomElement set(const TreeAddress_t &address);
+        ConfigNode set(const TreeAddress_t &address) {
+            return ConfigNode(_get(address));
+        }
 
         /// Returns a pointer to the specified configuration node.
-        const QDomElement get(const TreeAddress_t &address) const;
+        ConfigNode get(const TreeAddress_t &address) const {
+            return ConfigNode(_get(address));
+        }
 
         /// Sets a configuration option attribute at the specified address.
         void setAttribute(const TreeAddress_t &address, const QString &key,
@@ -60,6 +68,12 @@ class Config
         void save(const QString& fileName) const;
 
     private:
+        /// Returns a pointer to the specified configuration node.
+        QDomElement _get(const TreeAddress_t &address) const;
+
+        /// Creates and returns a configuration option at the specified address.
+        QDomElement _set(const TreeAddress_t &address);
+
         /// Reads and parses the configuration file.
         void _read();
 
@@ -72,7 +86,6 @@ class Config
         QDomDocument _document;
 };
 
+} // namespace pelican
 
-} /* namespace pelican */
-
-#endif /* PELICAN_CONFIG_H_ */
+#endif /* CONFIG_H */

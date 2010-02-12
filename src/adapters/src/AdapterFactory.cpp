@@ -50,7 +50,7 @@ AbstractAdapter* AdapterFactory::create(const QString& type, const QString& name
     /* Create an index into the configuration file and get the configuration */
     Config::TreeAddress_t address = _configRoot;
     address.append(QPair<QString, QString>(type, name));
-    const ConfigNode config = _config->get(address);
+    ConfigNode config = _config->get(address);
 
     /* Create the module */
     return _create(name, config);

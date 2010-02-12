@@ -1,6 +1,7 @@
 #include "TestDataClient.h"
 #include "data/DataRequirements.h"
 #include "data/DataBlob.h"
+#include "utility/ConfigNode.h"
 #include <QDomElement>
 #include <QtGlobal>
 
@@ -11,7 +12,7 @@ namespace pelican {
 
 // class TestDataClient 
 TestDataClient::TestDataClient()
-    : AbstractDataClient(QDomElement(), NULL)
+    : AbstractDataClient(ConfigNode(QDomElement()), NULL)
 {
 }
 

@@ -8,7 +8,7 @@ namespace pelican {
  * @details
  * Module constructor.
  */
-EmptyModule::EmptyModule(const QDomElement& config)
+EmptyModule::EmptyModule(const ConfigNode& config)
     : AbstractModule(config)
 {
 }

@@ -8,6 +8,7 @@
 #include "modules/ZenithImagerDft.h"
 #include "modules/ZenithModelVisibilities.h"
 #include "utility/Config.h"
+
 #include "utility/memCheck.h"
 
 namespace pelican {
@@ -49,7 +50,7 @@ AbstractModule* ModuleFactory::createModule(const QString& name, const QString& 
     /* Create an index into the configuration file and get the configuration */
     Config::TreeAddress_t address = _configRoot;
     address.append(QPair<QString, QString>("module", name));
-    QDomElement element = _config->get(address);
+    ConfigNode element = _config->get(address);
 
     /* Create the module */
     return _createModule(name, element);
@@ -67,7 +68,7 @@ AbstractModule* ModuleFactory::createModule(const QString& name, const QString& 
  * Returns a pointer to the newly-created module.
  * The object is still owned by the factory.
  */
-AbstractModule* ModuleFactory::_createModule(const QString& name, const QDomElement& config)
+AbstractModule* ModuleFactory::_createModule(const QString& name, const ConfigNode& config)
 {
     AbstractModule* module = 0;
     if( name == "BasicFlagger" ) {

@@ -9,14 +9,13 @@
 #include <QHash>
 #include <QTcpSocket>
 
-
 #include "utility/memCheck.h"
 
 namespace pelican {
 
 
 // class PelicanServerClient 
-PelicanServerClient::PelicanServerClient(const QDomElement& config,
+PelicanServerClient::PelicanServerClient(const ConfigNode& config,
         DataBlobFactory* blobFactory)
     : AbstractDataClient(config, blobFactory), _protocol(0)
 {

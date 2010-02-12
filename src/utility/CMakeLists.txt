@@ -2,6 +2,7 @@ INCLUDE_DIRECTORIES(${QT_INCLUDES})
 SUBPACKAGE(utility)
 # thread safe library
 set( utility_src
+    src/ConfigNode.cpp
     src/Config.cpp
     src/SocketTester.cpp
 )

@@ -1,6 +1,7 @@
 #include "core/FileDataClient.h"
 #include "data/DataRequirements.h"
 #include "data/DataBlobFactory.h"
+#include "utility/ConfigNode.h"
 
 #include <QFile>
 #include <QSet>
@@ -14,11 +15,11 @@ namespace pelican {
  * @details
  * This creates a new file data client.
  */
-FileDataClient::FileDataClient(const QDomElement& config,
+FileDataClient::FileDataClient(const ConfigNode& config,
         DataBlobFactory* blobFactory)
 : AbstractDataClient(config, blobFactory)
 {
-    _fileVisibilities = getOption("fileVisibilities", "value");
+    _fileVisibilities = config.getOption("fileVisibilities", "value");
 }
 
 /**
