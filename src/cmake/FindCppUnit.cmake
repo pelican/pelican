@@ -1,22 +1,20 @@
-# - Find wcslib
+# - Find cppunit
 # Find the native CPPUNIT includes and library
 #
-#  CPPUNIT_INCLUDE_DIR - where to find wcslib.h, etc.
-#  CPPUNIT_LIBRARIES   - List of libraries when using wcslib.
-#  CPPUNIT_FOUND       - True if wcslib found.
+#  CPPUNIT_INCLUDE_DIR - where to find cppunit.h.
+#  CPPUNIT_LIBRARIES   - List of libraries when using cppunit.
+#  CPPUNIT_FOUND       - True if cppunit found.
 
+# Already in cache, be silent
 IF (CPPUNIT_INCLUDE_DIR)
-    # Already in cache, be silent
     SET(CPPUNIT_FIND_QUIETLY TRUE)
 ENDIF (CPPUNIT_INCLUDE_DIR)
 
 FIND_PATH(CPPUNIT_INCLUDE_DIR TestSuite.h PATHS /usr/include/cppunit /usr/include/libcppunit )
 
-SET(CPPUNIT_NAMES 
-    cppunit
-    )
+SET(CPPUNIT_NAMES cppunit)
 FOREACH( lib ${CPPUNIT_NAMES} )
-FIND_LIBRARY(CPPUNIT_LIBRARY_${lib} NAMES ${lib} )
+    FIND_LIBRARY(CPPUNIT_LIBRARY_${lib} NAMES ${lib} )
     LIST(APPEND CPPUNIT_LIBRARIES ${CPPUNIT_LIBRARY_${lib}})
 ENDFOREACH(lib)
 
@@ -29,5 +27,5 @@ IF(NOT CPPUNIT_FOUND)
     SET( CPPUNIT_LIBRARIES )
 ENDIF(NOT CPPUNIT_FOUND)
 
-MARK_AS_ADVANCED( CPPUNIT_LIBRARIES CPPUNIT_INCLUDE_DIR )
+MARK_AS_ADVANCED(CPPUNIT_LIBRARIES CPPUNIT_INCLUDE_DIR)
 

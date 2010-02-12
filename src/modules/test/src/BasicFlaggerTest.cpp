@@ -133,11 +133,8 @@ void BasicFlaggerTest::test__flagAutocorrelations()
     TIMER_START
     _basicFlagger->_flagAutocorrelations(&visData, &medians[0],
             minFraction, maxFraction, &flagTable);
-    TIMER_STOP("BasicFlagger::_flagAutocorrelations (%d ant, %d chan, %d pol)",
-            nAntennas, nChannels, nPols)
-
-//    const unsigned sChan = 400;
-//    printf("Number of flags in channel %d: %d\n", sChan, flagTable.nFlaggedAntennas(sChan, 0));
+    TIMER_STOP("BasicFlagger::_flagAutocorrelations (%d/%d ant in %d chan, %d pol)",
+            flagTable.nFlaggedAntennas(0, 0), nAntennas, nChannels, nPols)
 }
 
 /**
@@ -239,6 +236,39 @@ void BasicFlaggerTest::test__getMedians()
  */
 void BasicFlaggerTest::test__moveBadAntennas()
 {
+    // Use Case
+    // Create a set of test visibility data and get the autocorrelations.
+    const unsigned nAntennas = 97;
+    const unsigned nChannels = 512;
+    const unsigned nPols = 2;
+    const real_t minFraction = 0.5;
+    const real_t maxFraction = 1.5;
+    VisibilityData visData(nAntennas, nChannels, nPols);
+    FlagTable flagTable(nAntennas, nChannels, nPols);
+    std::vector<complex_t> medians(nChannels * nPols);
+
+    // Fill the visibility matrix
+    for (unsigned p = 0; p < nPols; p++) {
+        for (unsigned c = 0; c < nChannels; c++) {
+            for (unsigned aj = 0; aj < nAntennas; aj++) {
+                for (unsigned ai = 0; ai < nAntennas; ai++) {
+                    std::complex<real_t> val( sqrt((ai+1)*(aj+1)) );
+                    visData(ai, aj, c, p) = val;
+                }
+            }
+            medians[c + p * nChannels] = visData(nAntennas/2, nAntennas/2, c, p);
+        }
+    }
+
+    // Flag the autocorrelations.
+    _basicFlagger->_flagAutocorrelations(&visData, &medians[0],
+            minFraction, maxFraction, &flagTable);
+
+    // Move the bad antennas.
+    TIMER_START
+    _basicFlagger->_moveBadAntennas(&visData, &flagTable);
+    TIMER_STOP("BasicFlagger::_moveBadAntennas (%d/%d ant in %d chan, %d pol)",
+            flagTable.nFlaggedAntennas(0, 0), nAntennas, nChannels, nPols)
 }
 
 } // namespace pelican

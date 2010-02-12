@@ -65,10 +65,17 @@ class AbstractModule
         void addRemoteStreamData(const QString& string);
 
         /// Returns a configuration option (attribute).
+        /// i.e. the attribute for the XML: <tagName attribute=""/>
         QString getOption(const QString& tagName, const QString& attribute,
                 const QString& defValue = QString());
 
+        /// Returns a configuration option (attribute).
+        /// i.e. the attribute for the XML: <tagName name="" attribute=""/>
+        QString getNamedOption(const QString& tagName, const QString& name,
+                const QString& attribute, const QString& defValue = QString());
+
         /// Returns a configuration option text string value.
+        /// i.e. the text node for <tagName>text</tagName>
         QString getOptionText(const QString& tagName,
                 const QString& defValue = QString());
 

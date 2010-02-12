@@ -96,20 +96,37 @@ class FlagTable : public AntennaMatrixData<unsigned char>
         FlagTable(const unsigned antennas, const unsigned channels,
                 const unsigned polarisations) :
                     AntennaMatrixData<unsigned char>(antennas, channels, polarisations) {
-            _flaggedChannels.resize(polarisations);
-            _flaggedAntennas.resize(polarisations);
-            for (unsigned p = 0; p < polarisations; p++) {
-                _flaggedAntennas[p].resize(channels);
-            }
+            clear(antennas, channels, polarisations);
         }
 
         /// Destructor.
         ~FlagTable() {}
 
-        /// Clears the flag table.
+        /// Clears the current flag table.
         void clear() {
-            _flaggedAntennas.clear();
             _flaggedChannels.clear();
+            _flaggedChannels.resize(_nPolarisations);
+            _flaggedAntennas.clear();
+            _flaggedAntennas.resize(_nPolarisations);
+            for (unsigned p = 0; p < _nPolarisations; p++) {
+                _flaggedAntennas[p].resize(_nChannels);
+            }
+            unsigned char* p = ptr();
+            unsigned len = _data.size();
+            for (unsigned i = 0; i < len; i++) p[i] = 0;
+            initAntennaIndex();
+        }
+
+        /// Resizes and clears the flag table.
+        /// Calls the base class method resize(), before clear().
+        ///
+        /// @param[in] antennas The number of antennas in the visibility matrix.
+        /// @param[in] channels The number of frequency channels.
+        /// @param[in] polarisations The number of polarisations.
+        void clear(const unsigned antennas, const unsigned channels,
+                const unsigned polarisations) {
+            resize(antennas, channels, polarisations);
+            clear();
         }
 
         /// Flags a single antenna pair.
@@ -215,7 +232,7 @@ class FlagTable : public AntennaMatrixData<unsigned char>
         /// Returns the number of flagged antennas.
         /// This method returns the number of antennas flagged for the given
         /// channel \p c and polarisation \p.
-        const unsigned nFlaggedAntennas(const unsigned c,
+        unsigned nFlaggedAntennas(const unsigned c,
                 const unsigned p) const {
             return _flaggedAntennas[p][c].size();
         }
@@ -223,25 +240,8 @@ class FlagTable : public AntennaMatrixData<unsigned char>
         /// Returns number of flagged channels.
         /// This method returns the number of channels flagged for the given
         /// polarisation \p.
-        const unsigned nFlaggedChannels(const unsigned p) const {
+        unsigned nFlaggedChannels(const unsigned p) const {
             return _flaggedChannels[p].size();
-        }
-
-        /// Resizes the flag table.
-        /// Overrides (and calls) the base class method
-        /// AntennaMatrixData<unsigned char>::resize() .
-        ///
-        /// @param[in] antennas The number of antennas in the visibility matrix.
-        /// @param[in] channels The number of frequency channels.
-        /// @param[in] polarisations The number of polarisations.
-        void resize(const unsigned antennas, const unsigned channels,
-                const unsigned polarisations) {
-            _flaggedChannels.resize(polarisations);
-            _flaggedAntennas.resize(polarisations);
-            for (unsigned p = 0; p < polarisations; p++) {
-                _flaggedAntennas[p].resize(channels);
-            }
-            AntennaMatrixData<unsigned char>::resize(antennas, channels, polarisations);
         }
 
         /// Reverse-sorts the list of bad antennas.

@@ -8,30 +8,29 @@ include(cmake/packagemacros.cmake)
 include_directories(${PROJECT_SOURCE_DIR})
 
 # options and defaults
-if (NOT CMAKE_BUILD_TYPE ) 
+if(NOT CMAKE_BUILD_TYPE ) 
     set( CMAKE_BUILD_TYPE DEBUG )
 endif(NOT CMAKE_BUILD_TYPE )
 
-if (TIMER)
+if(TIMER)
     ADD_DEFINITIONS(-DTIMER_ENABLE=1)
 endif(TIMER)
 
-if (OPENMP)
+if(OPENMP)
     FIND_PACKAGE( OpenMP REQUIRED)
     set( CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS})
     set( CMAKE_C_FLAGS ${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS})
 endif (OPENMP)
 
-
 set( BUILD_SHARED_LIBS TRUE )
 
 if(NOT LIBRARY_INSTALL_DIR )
     set( LIBRARY_INSTALL_DIR lib )
-endif(NOT LIBRARY_INSTALL_DIR )
+endif (NOT LIBRARY_INSTALL_DIR )
 
 if(NOT PELICAN_INSTALL_DIR )
     set( PELICAN_INSTALL_DIR "${LIBRARY_INSTALL_DIR}/pelican" )
-endif(NOT PELICAN_INSTALL_DIR )
+endif (NOT PELICAN_INSTALL_DIR )
 
 if(NOT INCLUDE_INSTALL_DIR )
     set( INCLUDE_INSTALL_DIR "include/pelican" )
@@ -41,17 +40,20 @@ if(NOT ICON_INSTALL_DIR )
     set( ICON_INSTALL_DIR "${PELICAN_INSTALL_DIR}/icons" )
 endif(NOT ICON_INSTALL_DIR )
 
-# project version
+# Project version
 set( ${PROJECT_NAME}_MAJOR_VERSION 0 )
 set( ${PROJECT_NAME}_MINOR_VERSION 0 )
 set( ${PROJECT_NAME}_PATCH_LEVEL 0 )
 
 FIND_PACKAGE( Boost COMPONENTS program_options REQUIRED )
 
+include(MathLibraries)
+
 # -- dependencies
 set(dependencies
         Qt4
         CppUnit
+        CFitsio
 )
 PACKAGE_DEPENDENCIES( ${dependencies} )
 

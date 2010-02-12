@@ -2,7 +2,7 @@
 #include <QString>
 #include "core/PipelineApplication.h"
 #include "core/ModuleFactory.h"
-#include "core/AbstractDataClient.h"
+#include "core/FileDataClient.h"
 #include "boost/program_options.hpp"
 #include <string>
 #include <iostream>
@@ -39,10 +39,7 @@ PipelineApplication::PipelineApplication(int argc, char** argv)
         return;
 
     /* Construct the module factory */
-    _createModuleFactory(_config);
-
-    /* Construct the data client */
-    _createDataClient(_config);
+    _factory = new ModuleFactory(_config);
 }
 
 /**
@@ -82,8 +79,35 @@ void PipelineApplication::registerPipeline(AbstractPipeline *pipeline)
 
 /**
  * @details
+ * Sets (and creates) the given data client based on the named argument.
+ * Throws an exception of type QString if the data client is unknown.
+ *
+ * The recognised values are:
+ * - FileDataClient
+ *
+ * @param[in] name The type of the data client to create.
+ */
+void PipelineApplication::setDataClient(QString name)
+{
+    /* Get the configuration address */
+    Config::TreeAddress_t address;
+    address.append(Config::NodeId_t("clients", ""));
+    address.append(QPair<QString, QString>("client", name));
+    QDomElement element = _config->get(address);
+
+    /* Create the required data client */
+    if (name == "FileDataClient") {
+        _dataClient = new FileDataClient(element);
+    }
+    else {
+        throw QString("Unknown data client type: ").arg(name);
+    }
+}
+
+/**
+ * @details
  * Starts the pipeline driver and sets pointers to the module factory and
- * data client.
+ * data client. This should be called from main().
  */
 void PipelineApplication::start()
 {
@@ -137,24 +161,6 @@ bool PipelineApplication::_createConfig(int argc, char** argv)
     }
 
     return true;
-}
-
-/**
- * @details
- * Creates the data client based on the supplied configuration object.
- */
-void PipelineApplication::_createDataClient(const Config* config)
-{
-    // TODO create data client.
-}
-
-/**
- * @details
- * Creates the module factory based on the supplied configuration object.
- */
-void PipelineApplication::_createModuleFactory(const Config* config)
-{
-    _factory = new ModuleFactory(config);
 }
 
 } // namespace pelican

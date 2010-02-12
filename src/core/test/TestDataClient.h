@@ -30,7 +30,6 @@ class TestDataClient : public AbstractDataClient
         void setSubset(QSet<QString> set);
 
     private:
-        QHash<QString, DataBlob*> _dataHash;
         QSet<QString> _subset;
 };
 

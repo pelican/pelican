@@ -1,5 +1,6 @@
-#Fri Nov 20 13:11:37 GMT 2009
+#Thu Feb 11 11:32:35 GMT 2010
 eclipse.preferences.version=1
+environment/project/cdt.managedbuild.toolchain.gnu.base.935239837=<?xml version\="1.0" encoding\="UTF-8" standalone\="no"?>\n<environment append\="true" appendContributed\="true"/>\n
 org.eclipse.cdt.core.formatter.alignment_for_arguments_in_method_invocation=16
 org.eclipse.cdt.core.formatter.alignment_for_base_clause_in_type_declaration=80
 org.eclipse.cdt.core.formatter.alignment_for_compact_if=0

@@ -1,6 +1,8 @@
 #include "ImageWriterFitsTest.h"
 #include "ImageWriterFits.h"
 #include "utility/Config.h"
+#include <iostream>
+
 #include "utility/memCheck.h"
 
 namespace pelican {
@@ -27,10 +29,17 @@ void ImageWriterFitsTest::tearDown()
 
 void ImageWriterFitsTest::test_createModule()
 {
-//    Config config;
     QDomElement config;
-    ImageWriterFits fitsWriter(config);
-
+    ImageWriterFits fits(config);
 }
+
+
+void ImageWriterFitsTest::test_openFile()
+{
+    QDomElement config;
+    ImageWriterFits fits(config);
+//    fits._open();
+}
+
 
 } // namespace pelican

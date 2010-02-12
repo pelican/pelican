@@ -16,8 +16,8 @@ namespace pelican {
 
 
 // class PelicanServerClient 
-PelicanServerClient::PelicanServerClient()
-    : AbstractDataClient(), _protocol(0)
+PelicanServerClient::PelicanServerClient(const QDomElement& config)
+    : AbstractDataClient(config), _protocol(0)
 {
     _protocol = new PelicanClientProtocol; // hard code for now
 }

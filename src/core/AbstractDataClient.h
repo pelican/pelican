@@ -4,8 +4,7 @@
 #include <QHash>
 #include <QString>
 #include <QDataStream>
-
-class QIODevice;
+#include <QDomElement>
 
 /**
  * @file AbstractDataClient.h
@@ -25,17 +24,31 @@ class DataRequirements;
  * 
  * @details
  * The data client fetches data from the data server and makes it available
- * to the pipelines via the pipeline driver. The PipelineApplication creates
- * the appropriate data client object based on the supplied configuration.
+ * to the pipelines via the pipeline driver. The pipeline application defines
+ * the appropriate data client object in main(), and the PipelineApplication
+ * class is responsible for creating it.
  *
  * Inherit this class and implement the getData() method to create a new data
  * client type.
  */
 class AbstractDataClient
 {
+    private:
+        /// The configuration node for the data client.
+        QDomElement _config;
+
+    protected: /* Data */
+        /// The hash of data returned by the getData() method.
+        QHash<QString, DataBlob*> _dataHash;
+
+    protected: /* Methods */
+        /// Creates the flag table.
+        void ensureFlagTableExists (unsigned nAntennas, unsigned nChannels,
+                unsigned nPols);
+
     public:
         /// Data client constructor.
-        AbstractDataClient();
+        AbstractDataClient(const QDomElement& config);
 
         /// Data client destructor (virtual).
         virtual ~AbstractDataClient();
@@ -43,6 +56,9 @@ class AbstractDataClient
         /// Gets the requested data from the data server.
         virtual QHash<QString, DataBlob*> getData(const DataRequirements&) = 0;
 
+        /// Returns a configuration option (attribute).
+        QString getOption(const QString& tagName, const QString& attribute,
+                const QString& defValue = QString());
 };
 
 } // namespace pelican

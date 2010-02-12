@@ -1,4 +1,5 @@
 #include "data/ImageData.h"
+#include <algorithm>
 
 namespace pelican {
 
@@ -19,11 +20,11 @@ ImageData::ImageData() : DataBlob()
  * @param[in]   sizeM       The image size (pixels) in the M direction.
  * @param[in]   nChannels   The number of frequency channels in the image cube.
  */
-ImageData::ImageData(const unsigned sizeL, const unsigned sizeM,
-        const unsigned nChannels, const unsigned nPolarisations)
+ImageData::ImageData(const unsigned& sizeL, const unsigned& sizeM,
+        const unsigned& nChannels, const unsigned& nPolarisations)
 : DataBlob()
 {
-    assign(sizeL, sizeM, nChannels, nPolarisations);
+    resize(sizeL, sizeM, nChannels, nPolarisations);
 }
 
 
@@ -38,14 +39,15 @@ ImageData::~ImageData()
 
 /**
  * @details
- * Assigns memory for an image data blob.
+ * Resizes the memory for an image data blob.
  *
- * @param[in]   sizeL       The image size (pixels) in the L direction.
- * @param[in]   sizeM       The image size (pixels) in the M direction.
- * @param[in]   nChannels   The number of frequency channels in the image cube.
+ * @param[in] sizeL             Image size (pixels) in the L direction.
+ * @param[in] sizeM             Image size (pixels) in the M direction.
+ * @param[in] nChannels         Number of frequency channels in the image cube.
+ * @param[in] nPolaristaions    Number of polarisations in the image cube.
  */
-void ImageData::assign(const unsigned sizeL, const unsigned sizeM,
-        const unsigned nChannels, const unsigned nPolarisations)
+void ImageData::resize(const unsigned& sizeL, const unsigned& sizeM,
+        const unsigned& nChannels, const unsigned& nPolarisations)
 {
     _sizeL = sizeL;
     _sizeM = sizeM;
@@ -75,5 +77,20 @@ void ImageData::clear()
     _image.clear();
 }
 
+
+/**
+ * @details
+ */
+void ImageData::findAmpRange()
+{
+    if (_image.empty()) return;
+    real_t *image = &_image[0];
+    _ampMin = 1.0e99;
+    _ampMax = -1.0e99;
+    for (unsigned i = 0; i < _image.size(); i++) {
+        _ampMin = std::min(image[i], _ampMin);
+        _ampMax = std::max(image[i], _ampMax);
+    }
+}
 
 } // namespace pelican
