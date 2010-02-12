@@ -2,6 +2,8 @@
 #include <iostream>
 #include <QTextStream>
 #include <QFile>
+#include <iostream>
+
 #include "utility/memCheck.h"
 
 namespace pelican {

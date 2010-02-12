@@ -2,9 +2,13 @@
 #include "Config.h"
 #include <QCoreApplication>
 #include <QTextStream>
+#include <QFile>
+#include <QDir>
 #include <iostream>
+
 #include "utility/memCheck.h"
 
+#define HERE std::cout << "** " <<__FUNCTION__ << "()::L" << __LINE__ << std::endl;
 
 namespace pelican {
 
@@ -151,13 +155,20 @@ void ConfigTest::test_getConfiguration()
  */
 void ConfigTest::test_configFileRead()
 {
+    QDir dir("utility/test/data");
+    if (!dir.exists()) dir = QDir("test/data");
+    else if (!dir.exists()) dir = QDir("data");
+    else if (!dir.exists()) return;
 
     // Use case
     // Ask for the address of a module node in the test config file and check
     // that its children and their attributes are correct.
     // Expect that all of the parameters are found
     {
-        Config config("data/testConfig.xml");
+        QString fileName = dir.path() + "/testConfig.xml";
+        QFile file(fileName);
+        if (!file.exists()) return;
+        Config config(fileName);
         Config::TreeAddress_t address;
         address << Config::NodeId_t("modules", "");
         address << Config::NodeId_t("module", "testA");
@@ -180,7 +191,8 @@ void ConfigTest::test_configFileRead()
     // Ask for the address of another module to to check this exists too.
     // Expect that the module node is found but has no children.
     {
-        Config config("data/testConfig.xml");
+        QString fileName = dir.path() + "/testConfig.xml";
+        Config config(fileName);
         Config::TreeAddress_t address;
         address << Config::NodeId_t("modules", "");
         address << Config::NodeId_t("module", "default::testA");
@@ -195,7 +207,8 @@ void ConfigTest::test_configFileRead()
     // Expect that a parse error exception is thrown
     {
         try {
-            Config config("data/emptyConfig.xml");
+            QString fileName = dir.path() + "/emptyConfig.xml";
+            Config config(fileName);
         }
         catch (QString err) {
             CPPUNIT_ASSERT(err.startsWith("Parse error"));
@@ -207,7 +220,8 @@ void ConfigTest::test_configFileRead()
     // Expect to throw an exception.
     {
         try {
-            Config config("data/badConfig.xml");
+            QString fileName = dir.path() + "/badConfig.xml";
+            Config config(fileName);
         }
         catch (QString err) {
             CPPUNIT_ASSERT(err == "Invalid doctype.");
@@ -218,7 +232,8 @@ void ConfigTest::test_configFileRead()
     // Try to extract the named parameters.
     // Expect that all the parameters are found.
     {
-        Config config("data/testConfig.xml");
+        QString fileName = dir.path() + "/testConfig.xml";
+        Config config(fileName);
         Config::TreeAddress_t address;
         address << Config::NodeId_t("modules", "");
         address << Config::NodeId_t("module", "testA");
