@@ -16,8 +16,9 @@ namespace pelican {
 
 
 // class PelicanServerClient 
-PelicanServerClient::PelicanServerClient(const QDomElement& config)
-    : AbstractDataClient(config), _protocol(0)
+PelicanServerClient::PelicanServerClient(const QDomElement& config,
+        DataBlobFactory* blobFactory)
+    : AbstractDataClient(config, blobFactory), _protocol(0)
 {
     _protocol = new PelicanClientProtocol; // hard code for now
 }
@@ -27,10 +28,8 @@ PelicanServerClient::~PelicanServerClient()
     delete _protocol;
 }
 
-QHash<QString, DataBlob*> PelicanServerClient::getData(const DataRequirements& req)
+QHash<QString, DataBlob*>& PelicanServerClient::getData(const DataRequirements& req)
 {
-    QHash<QString, DataBlob*> data;
-
     // construct the request
     StreamDataRequest sr;
     sr.addDataOption(req);
@@ -55,7 +54,7 @@ QHash<QString, DataBlob*> PelicanServerClient::getData(const DataRequirements& r
             break;
     }
 
-    return data;
+    return _dataHash;
 }
 
 void PelicanServerClient::_connect()

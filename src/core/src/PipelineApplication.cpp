@@ -3,6 +3,7 @@
 #include "core/PipelineApplication.h"
 #include "core/ModuleFactory.h"
 #include "core/FileDataClient.h"
+#include "data/DataBlobFactory.h"
 #include "boost/program_options.hpp"
 #include <string>
 #include <iostream>
@@ -29,6 +30,7 @@ PipelineApplication::PipelineApplication(int argc, char** argv)
     _config = NULL;
     _factory = NULL;
     _dataClient = NULL;
+    _dataBlobFactory = NULL;
 
     /* Check for QCoreApplication */
     if (QCoreApplication::instance() == NULL)
@@ -40,6 +42,9 @@ PipelineApplication::PipelineApplication(int argc, char** argv)
 
     /* Construct the module factory */
     _factory = new ModuleFactory(_config);
+
+    /* Construct the data blob factory */
+    _dataBlobFactory = new DataBlobFactory;
 }
 
 /**
@@ -51,9 +56,11 @@ PipelineApplication::~PipelineApplication()
     delete _config;
     delete _factory;
     delete _dataClient;
+    delete _dataBlobFactory;
     _config = NULL;
     _factory = NULL;
     _dataClient = NULL;
+    _dataBlobFactory = NULL;
 }
 
 /**
@@ -97,7 +104,7 @@ void PipelineApplication::setDataClient(QString name)
 
     /* Create the required data client */
     if (name == "FileDataClient") {
-        _dataClient = new FileDataClient(element);
+        _dataClient = new FileDataClient(element, _dataBlobFactory);
     }
     else {
         throw QString("Unknown data client type: ").arg(name);

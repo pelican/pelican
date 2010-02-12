@@ -59,7 +59,7 @@ namespace pelican {
  *
  * The flagging module requires the list of bad antennas at each channel and
  * polarisation to be reverse-sorted by antenna index, which is achieved by
- * a call to
+ * a call to reverseSortBadAntennas().
  */
 class FlagTable : public AntennaMatrixData<unsigned char>
 {
