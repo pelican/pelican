@@ -8,7 +8,7 @@ namespace pelican {
  * @details
  * Module constructor.
  */
-ImagerFft::ImagerFft(const QDomElement& config)
+ImagerFft::ImagerFft(const ConfigNode& config)
     : AbstractModule(config)
 {
     // Register which data blobs are needed by the module
@@ -59,12 +59,12 @@ void ImagerFft::run(QHash<QString, DataBlob*>& data)
  *
  * @param[in]   config  Configuraiton options xml node
  */
-void ImagerFft::_getConfiguration(const QDomElement &config)
+void ImagerFft::_getConfiguration(const ConfigNode& config)
 {
-    _sizeL = getOption("imageSize", "l", "128").toUInt();
-    _sizeM = getOption("imageSize", "m", "128").toUInt();
-    _cellsizeL = getOption("cellsize", "l", "10.0").toDouble();
-    _cellsizeM = getOption("cellsize", "m", "10.0").toDouble();
+    _sizeL = config.getOption("imageSize", "l", "128").toUInt();
+    _sizeM = config.getOption("imageSize", "m", "128").toUInt();
+    _cellsizeL = config.getOption("cellsize", "l", "10.0").toDouble();
+    _cellsizeM = config.getOption("cellsize", "m", "10.0").toDouble();
 }
 
 } // namespace pelican

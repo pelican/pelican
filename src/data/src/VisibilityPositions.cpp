@@ -20,7 +20,7 @@ VisibilityPositions::VisibilityPositions() : DataBlob()
 VisibilityPositions::VisibilityPositions(const unsigned nAntennas)
 : DataBlob()
 {
-    assign(nAntennas);
+    resize(nAntennas);
 }
 
 
@@ -30,23 +30,6 @@ VisibilityPositions::VisibilityPositions(const unsigned nAntennas)
  */
 VisibilityPositions::~VisibilityPositions()
 {
-}
-
-
-/**
- * @details
- * Assigns memory for an visibility positions data blob.
- *
- * @param[in]   nAntenna   The number of antennas.
- */
-void VisibilityPositions::assign(const unsigned nAntennas)
-{
-   _refChannel = 0;
-    _nAntennas = nAntennas;
-    unsigned nBaselines = nAntennas * nAntennas;
-   _u.resize(nBaselines);
-   _v.resize(nBaselines);
-   _w.resize(nBaselines);
 }
 
 
@@ -81,5 +64,23 @@ double VisibilityPositions::freqScaleFactor(const unsigned channel)
 {
     return (_refFreq + (channel - _refChannel) * _freqInc) / _refFreq;
 }
+
+
+/**
+ * @details
+ * Assigns memory for an visibility positions data blob.
+ *
+ * @param[in]   nAntenna   The number of antennas.
+ */
+void VisibilityPositions::resize(const unsigned nAntennas)
+{
+   _refChannel = 0;
+    _nAntennas = nAntennas;
+    unsigned nBaselines = nAntennas * nAntennas;
+   _u.resize(nBaselines);
+   _v.resize(nBaselines);
+   _w.resize(nBaselines);
+}
+
 
 } // namespace pelican

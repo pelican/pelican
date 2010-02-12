@@ -2,8 +2,7 @@
 #define EMPTYMODULE_H
 
 #include "AbstractModule.h"
-
-class QDomElement;
+#include "utility/ConfigNode.h"
 
 /**
  * @file EmptyModule.h
@@ -24,7 +23,7 @@ class EmptyModule : public AbstractModule
 {
     public:
         /// Module constructor.
-        EmptyModule(const QDomElement& config);
+        EmptyModule(const ConfigNode& config);
 
         /// Module destructor.
         ~EmptyModule();

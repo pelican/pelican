@@ -11,7 +11,7 @@ namespace pelican {
  * @details
  * Module constructor.
  */
-BasicFlagger::BasicFlagger(const QDomElement& config)
+BasicFlagger::BasicFlagger(const ConfigNode& config)
     : AbstractModule(config)
 {
     /* Set data requirements */
@@ -19,8 +19,8 @@ BasicFlagger::BasicFlagger(const QDomElement& config)
     addLocalServiceData("FlagTable");
 
     /* Get clipping levels */
-    _minLevelMedian = getOption("min_level_median", "value", "0.25").toDouble();
-    _maxLevelMedian = getOption("max_level_median", "value", "4.00").toDouble();
+    _minLevelMedian = config.getOption("min_level_median", "value", "0.25").toDouble();
+    _maxLevelMedian = config.getOption("max_level_median", "value", "4.00").toDouble();
 }
 
 /**

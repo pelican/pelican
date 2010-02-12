@@ -4,9 +4,8 @@
 #include "AbstractModule.h"
 #include "data/VisibilityData.h"
 #include "data/FlagTable.h"
+#include "utility/ConfigNode.h"
 #include <vector>
-
-class QDomElement;
 
 /**
  * @file BasicFlagger.h
@@ -23,6 +22,7 @@ namespace pelican {
  * @details
  * The BasicFlagger module
  */
+
 class BasicFlagger : public AbstractModule
 {
         friend class BasicFlaggerTest;
@@ -36,7 +36,7 @@ class BasicFlagger : public AbstractModule
 
     public:
         /// Module constructor.
-        BasicFlagger(const QDomElement& config);
+        BasicFlagger(const ConfigNode& config);
 
         /// Module destructor.
         ~BasicFlagger();

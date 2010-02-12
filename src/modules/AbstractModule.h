@@ -3,7 +3,7 @@
 
 #include <QHash>
 #include <QString>
-#include <QDomElement>
+#include "utility/ConfigNode.h"
 #include "data/DataRequirements.h"
 #include "data/DataBlob.h"
 
@@ -37,7 +37,7 @@ class AbstractModule
         DataRequirements _reqLocal;
 
         /// The configuration node for the module.
-        QDomElement _config;
+        const ConfigNode* _config;
 
     protected:
         /// Adds the required local service data set.
@@ -64,24 +64,9 @@ class AbstractModule
         /// Adds the given remote stream data as a requirement.
         void addRemoteStreamData(const QString& string);
 
-        /// Returns a configuration option (attribute).
-        /// i.e. the attribute for the XML: <tagName attribute=""/>
-        QString getOption(const QString& tagName, const QString& attribute,
-                const QString& defValue = QString());
-
-        /// Returns a configuration option (attribute).
-        /// i.e. the attribute for the XML: <tagName name="" attribute=""/>
-        QString getNamedOption(const QString& tagName, const QString& name,
-                const QString& attribute, const QString& defValue = QString());
-
-        /// Returns a configuration option text string value.
-        /// i.e. the text node for <tagName>text</tagName>
-        QString getOptionText(const QString& tagName,
-                const QString& defValue = QString());
-
     public:
         /// Constructs a new module.
-        AbstractModule(const QDomElement& config);
+        AbstractModule(const ConfigNode& config);
 
         /// Destroys the module (virtual).
         virtual ~AbstractModule();

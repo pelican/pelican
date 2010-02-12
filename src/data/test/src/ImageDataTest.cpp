@@ -1,5 +1,7 @@
 #include "ImageDataTest.h"
 #include "ImageData.h"
+#include "utility/pelicanTimer.h"
+
 #include "utility/memCheck.h"
 
 namespace pelican {
@@ -55,11 +57,11 @@ void ImageDataTest::test_accessorMethods()
         }
     }
 
-    CPPUNIT_ASSERT(image.nPixels() == nL * nM * nChan * nPol);
-    CPPUNIT_ASSERT(image.nChannels() == nChan);
-    CPPUNIT_ASSERT(image.nPolarisations() == nPol);
-    CPPUNIT_ASSERT(image.sizeL() == nL);
-    CPPUNIT_ASSERT(image.sizeM() == nM);
+    CPPUNIT_ASSERT_EQUAL(nL * nM * nChan * nPol, image.nPixels());
+    CPPUNIT_ASSERT_EQUAL(nChan, image.nChannels());
+    CPPUNIT_ASSERT_EQUAL(nPol, image.nPolarisations());
+    CPPUNIT_ASSERT_EQUAL(nL, image.sizeL());
+    CPPUNIT_ASSERT_EQUAL(nM, image.sizeM());
 
     std::vector<real_t> im = image.amp();
     real_t *imPtr = image.ptr();
@@ -69,10 +71,10 @@ void ImageDataTest::test_accessorMethods()
                 for (unsigned l = 0; l < nL; l++) {
                     unsigned index = p * nChan * nL * nM + c * nL * nM + m * nL + l;
                     real_t value = static_cast<real_t>(c + l + m + p);
-                    CPPUNIT_ASSERT(image(l, m, c, p) == value);
-                    CPPUNIT_ASSERT(image[index] == value);
-                    CPPUNIT_ASSERT(im[index] == value);
-                    CPPUNIT_ASSERT(imPtr[index] == value);
+                    CPPUNIT_ASSERT_EQUAL(value, image(l, m, c, p));
+                    CPPUNIT_ASSERT_EQUAL(value, image[index]);
+                    CPPUNIT_ASSERT_EQUAL(value, im[index]);
+                    CPPUNIT_ASSERT_EQUAL(value, imPtr[index]);
                 }
             }
         }
@@ -83,10 +85,10 @@ void ImageDataTest::test_accessorMethods()
     for (unsigned c = 0; c < nChan; c++) {
         for (unsigned m = 0; m < nM; m++) {
             for (unsigned l = 0; l < nL; l++) {
-                unsigned value = c + m + l;
                 unsigned index = c * nL * nM + m * nL + l;
-                CPPUNIT_ASSERT(imPtrPol0[index] == value + 0);
-                CPPUNIT_ASSERT(imPtrPol1[index] == value + 1);
+                real_t value = static_cast<real_t>(c + m + l);
+                CPPUNIT_ASSERT_EQUAL(value, imPtrPol0[index]);
+                CPPUNIT_ASSERT_EQUAL(value + 1.0, imPtrPol1[index]);
             }
         }
     }
@@ -95,10 +97,10 @@ void ImageDataTest::test_accessorMethods()
     real_t *imPtrPol1Chan1 = image.ptr(1, 1);
     for (unsigned m = 0; m < nM; m++) {
         for (unsigned l = 0; l < nL; l++) {
-            unsigned value = m + l;
             unsigned index = m * nL + l;
-            CPPUNIT_ASSERT(imPtrPol0Chan0[index] == value + 0 + 0);
-            CPPUNIT_ASSERT(imPtrPol1Chan1[index] == value + 1 + 1);
+            real_t value = static_cast<real_t>(m + l);
+            CPPUNIT_ASSERT_EQUAL(value, imPtrPol0Chan0[index]);
+            CPPUNIT_ASSERT_EQUAL(value + 2.0, imPtrPol1Chan1[index]);
         }
     }
 }

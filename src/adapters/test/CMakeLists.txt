@@ -1,8 +1,9 @@
-SUBPACKAGE(adaptersTest adapters)
-set(
-   adaptersTest_src
-src/adaptersTest.cpp
+SUBPACKAGE(adaptersTest adapters utility)
+
+set( adaptersTest_src
+     src/adaptersTest.cpp
 )
+
 add_executable(adaptersTest ${adaptersTest_src} )
 target_link_libraries(adaptersTest ${SUBPACKAGE_LIBRARIES} ${CPPUNIT_LIBRARIES} )
 add_test(adaptersTest ${EXECUTABLE_OUTPUT_PATH}/adaptersTest )

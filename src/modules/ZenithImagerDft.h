@@ -6,9 +6,9 @@
 #include "data/VisibilityData.h"
 #include "data/AntennaPositions.h"
 #include "data/FrequencyList.h"
+#include "utility/ConfigNode.h"
 
 
-class QDomElement;
 
 /**
  * @file ZenithImagerDft.h
@@ -34,7 +34,7 @@ class ZenithImagerDft : public AbstractModule
 
     public:
         /// Module constructor.
-        ZenithImagerDft(const QDomElement& config);
+        ZenithImagerDft(const ConfigNode& config);
 
         /// Module destructor.
         ~ZenithImagerDft();
@@ -65,7 +65,7 @@ class ZenithImagerDft : public AbstractModule
 
     private:
         /// Extract the configuration from the XML node setting default where required.
-        void _getConfiguration(const QDomElement& config);
+        void _getConfiguration(const ConfigNode& config);
 
         /// Generates an array of image coordinates in radians.
         void _calculateImageCoords(const double& cellsize, const unsigned& nPixels,
@@ -120,8 +120,10 @@ class ZenithImagerDft : public AbstractModule
           std::vector<real_t> _coordL;        ///< Image l (x) coordinates in radians.
           std::vector<real_t> _coordM;        ///< Image m (y) coordinates in radians.
 
-          std::vector<complex_t> _weightsXL;  ///< DFT weights
-          std::vector<complex_t> _weightsYM;  ///< DFT weights
+          std::vector<complex_t> _weightsXL;  ///< DFT weights for XL coordinates
+          std::vector<complex_t> _weightsYM;  ///< DFT weights for YM coordinates
+          std::vector<complex_t> _weights;    ///< Vector of DFT weights for a single l,m
+          std::vector<complex_t> _temp;       ///< Temporary vector used in the DFT.
 };
 
 } // namespace pelican

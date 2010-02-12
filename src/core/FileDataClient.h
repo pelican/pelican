@@ -4,7 +4,6 @@
 #include "core/AbstractDataClient.h"
 #include <QHash>
 #include <QString>
-#include <QVector>
 
 /**
  * @file FileDataClient.h
@@ -14,6 +13,7 @@ namespace pelican {
 
 class DataBlob;
 class DataRequirements;
+class ConfigNode;
 
 /**
  * @class FileDataClient
@@ -29,32 +29,19 @@ class DataRequirements;
 class FileDataClient : public AbstractDataClient
 {
     private:
-        QVector<DataBlob*> _streamData;
-        QVector<DataBlob*> _serviceData;
-
         QString _fileVisibilities;  ///< Visibility data file name.
         QString _fileAntennas;      ///< Antenna positions file name.
         QString _fileChannels;      ///< Channel-to-frequency file name.
 
-        /* Visibility file parameters */
-        unsigned _nAntennas;        ///< Number of antennas.
-        unsigned _nChannels;        ///< Number of frequency channels.
-        unsigned _nPolarisations;   ///< Number of polarisations.
-
     public:
         /// Data client constructor.
-        FileDataClient(const QDomElement& config);
+        FileDataClient(const ConfigNode& config, DataBlobFactory* blobFactory);
 
         /// Data client destructor
         ~FileDataClient();
 
         /// Gets the requested data.
-        QHash<QString, DataBlob*> getData(const DataRequirements&);
-
-    private:
-        /// Gets the visibility data from the file into the data blob.
-        void _getVisibilityData(QString filename, unsigned nAntennas,
-                unsigned nChannels, unsigned nPols);
+        QHash<QString, DataBlob*>& getData(const DataRequirements&);
 };
 
 } // namespace pelican

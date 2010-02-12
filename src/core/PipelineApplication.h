@@ -12,6 +12,7 @@ namespace pelican {
 
 class Config;
 class ModuleFactory;
+class DataBlobFactory;
 class PipelineDriver;
 class AbstractPipeline;
 
@@ -42,6 +43,9 @@ class PipelineApplication
 
         /// Pointer to the application's module factory.
         ModuleFactory *_factory;
+
+        /// Pointer to the application's data blob factory.
+        DataBlobFactory *_dataBlobFactory;
 
         /// The pipeline driver object.
         PipelineDriver _driver;

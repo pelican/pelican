@@ -8,7 +8,7 @@ namespace pelican {
  * @details
  * Module constructor.
  */
-ZenithCalibrater::ZenithCalibrater(const QDomElement& config)
+ZenithCalibrater::ZenithCalibrater(const ConfigNode& config)
     : AbstractModule(config)
 {
 }

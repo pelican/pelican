@@ -58,7 +58,7 @@
         <pipeline name="default">
             <module>
                 <paramA name="" value=""/>
-            </moudle>
+            </module>
         </pipeline>
     </pipelines>
     

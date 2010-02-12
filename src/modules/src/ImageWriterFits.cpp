@@ -2,6 +2,8 @@
 #include "utility/constants.h"
 #include <ctime>
 #include <QFile>
+#include <QFileInfo>
+#include <QDir>
 #include <iostream>
 
 #define HERE std::cout << "** " <<__FUNCTION__ << "()::L" << __LINE__ << std::endl;
@@ -14,7 +16,7 @@ namespace pelican {
  * @details
  * Module constructor.
  */
-ImageWriterFits::ImageWriterFits(const QDomElement& config)
+ImageWriterFits::ImageWriterFits(const ConfigNode& config)
     : AbstractModule(config)
 {
     // Register which data blobs are needed by the module
@@ -63,22 +65,22 @@ void ImageWriterFits::run(QHash<QString, DataBlob*>& data)
  * @details
  * Parse and extract options from the configuration xml node.
  */
-void ImageWriterFits::_getConfiguration(const QDomElement &config)
+void ImageWriterFits::_getConfiguration(const ConfigNode &config)
 {
-    _overwrite = getOption("overwrite", "value", "true") == "true" ? true : false;
-    _directory = getOption("directory", "value", "");
-    _fileName = getOption("file", "name", "pelican.fits");
-    _prefix = getOption("file", "prefix");
-    _suffix = getOption("file", "suffix");
-    _cube = getOption("cube", "value", "true") == "true" ? true : false;
+    _overwrite = config.getOption("overwrite", "value", "true") == "true" ? true : false;
+    _directory = config.getOption("directory", "value", QDir::currentPath());
+    _fileName = config.getOption("file", "name", "pelican.fits");
+    _prefix = config.getOption("file", "prefix");
+    _suffix = config.getOption("file", "suffix");
+    _cube = config.getOption("cube", "value", "true") == "true" ? true : false;
 
-    _dateObs = getOption("dateObs", "value");
-    _origin = getOption("origin", "value");
-    _telescope = getOption("telescope", "value");
-    _instrument = getOption("instrument", "value");
-    _object = getOption("object", "value");
-    _author = getOption("author", "value");
-    _equinox = getOption("equinox", "value", "2000").toDouble();
+    _dateObs = config.getOption("dateObs", "value");
+    _origin = config.getOption("origin", "value");
+    _telescope = config.getOption("telescope", "value");
+    _instrument = config.getOption("instrument", "value");
+    _object = config.getOption("object", "value");
+    _author = config.getOption("author", "value");
+    _equinox = config.getOption("equinox", "value", "2000").toDouble();
 }
 
 
@@ -88,28 +90,26 @@ void ImageWriterFits::_getConfiguration(const QDomElement &config)
  */
 void ImageWriterFits::_open()
 {
-    HERE
-    // Check the we have image data !
-    if (_image == NULL) throw QString("ImagerWriterFits: Image data missing!");
-    HERE
+    // Throw if there is no image data.
+    if (_image == NULL) throw QString("ImageWriterFits: Image data missing.");
 
-    // Check if the file to be opened has been set.
-    if (_fileName.isEmpty()) throw QString("ImagerWriterFits: Output file empty");;
+    // Throw if the filename is empty
+    if (_fileName.isEmpty()) throw QString("ImagerWriterFits: Output file empty");
 
+    // Append fits file suffix if neede
+    QFileInfo fileInfo(_fileName);
+    if (fileInfo.suffix().toLower() != "fits") _fileName += ".fits";
+
+    // Delete any existing file if overwrite mode is selected else throw if a file
+    // already exits
     QFile file(_fileName);
     if (file.exists()) {
         if (_overwrite) file.remove();
         else throw QString("ImageWriterFits: File already exists");
     }
 
-    HERE
-    unsigned nL = _image->sizeL();
-    unsigned nM = _image->sizeM();
-    unsigned nChan = _image->nPolarisations();
-    unsigned nPol = _image->nChannels();
-    std::cout << nL << " " << nM << " " << nChan << " " << nPol << std::endl;
-
-    long nAxis = 4; // Number of axes: l, m, polarisations, channels
+    // Set axis dimensions require to create a fits image
+    long nAxis = 4;
     long axisDims[] = {
             _image->sizeL(),
             _image->sizeM(),
@@ -118,9 +118,10 @@ void ImageWriterFits::_open()
     };
 
     int err = 0; // cfitsio error code
+
+    // Create the fits file as an image of the specified dimensions
     fits_create_file(&_fits, _fileName.toLatin1().data(), &err);
     if (err) throw QString("ImageWriterFits: Unable to open file for writing");
-
     fits_create_img(_fits, FLOAT_IMG, nAxis, axisDims, &err);
     if (err) throw QString("ImageWriterFits: Unable to create FITS image");
 }
@@ -142,6 +143,11 @@ void ImageWriterFits::_close()
  */
 void ImageWriterFits::_writeHeader()
 {
+    // Throw if the cfitsio FITS file handle isn't open
+    if (_fits == NULL) throw QString("ImageWriterFits: Fits file not open.");
+    // Throw if there is no image data
+    if (_image == NULL) throw QString("ImageWriterFits: Image data missing.");
+
     // Write descriptive keys
     _writeKey("DATE", _getDate());
     _writeKey("ORIGIN", _origin);
@@ -207,6 +213,11 @@ void ImageWriterFits::_writeHeader()
  */
 void ImageWriterFits::_writeImage()
 {
+    // Throw if the cfitsio FITS file handle isn't open
+    if (_fits == NULL) throw QString("ImageWriterFits: Fits file not open.");
+    // Throw if there is no image data
+    if (_image == NULL) throw QString("ImageWriterFits: Image data missing.");
+
     int err = 0;
     real_t* image = _image->ptr();
     long nPixels = _image->nPixels();
@@ -242,10 +253,9 @@ void ImageWriterFits::_writeKey(const QString& keyword, const QString& value,
         const QString& comment)
 {
     int err = 0;
-    char* k = keyword.toLatin1().data();
-    char* v = value.toLatin1().data();
-    char* c = comment.toLatin1().data();
-    fits_write_key(_fits, TSTRING, k, v, c, &err);
+    ffpky(_fits, TSTRING, (char*)keyword.toLatin1().data(),
+            (void*)value.toLatin1().data(), (char*)comment.toLatin1().data(),
+            &err);
 }
 
 
@@ -256,25 +266,33 @@ void ImageWriterFits::_writeKey(const QString& keyword, const double& value,
         const QString& comment)
 {
     int err = 0;
-    char* k = keyword.toLatin1().data();
-    double v = value;
-    char* c = comment.toLatin1().data();
-    fits_write_key(_fits, TDOUBLE, k, &v, c, &err);
+    ffpky(_fits, TDOUBLE, (char*)keyword.toLatin1().data(), (void*)&value,
+            (char*)comment.toLatin1().data(), &err);
 }
-
 
 
 /**
  * @details
  */
-void ImageWriterFits::_writeKey(const QString& keyword, const long& value,
+void ImageWriterFits::_writeKey(const QString& keyword, const int& value,
         const QString& comment)
 {
     int err = 0;
-    char* k = keyword.toLatin1().data();
-    long v = value;
-    char* c = comment.toLatin1().data();
-    fits_write_key(_fits, TDOUBLE, k, &v, c, &err);
+    ffpky(_fits, TINT, (char*)keyword.toLatin1().data(), (void*)&value,
+            (char*)comment.toLatin1().data(), &err);
 }
+
+/**
+ * @details
+ */
+void ImageWriterFits::_writeKey(const QString& keyword, const unsigned& value,
+        const QString& comment)
+{
+    int err = 0;
+    ffpky(_fits, TUINT, (char*)keyword.toLatin1().data(), (void*)&value,
+            (char*)comment.toLatin1().data(), &err);
+}
+
+
 
 } // namespace pelican

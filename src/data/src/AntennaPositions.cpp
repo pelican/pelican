@@ -20,7 +20,7 @@ AntennaPositions::AntennaPositions() : DataBlob()
 AntennaPositions::AntennaPositions(const unsigned int nAntennas)
 : DataBlob()
 {
-    assign(nAntennas);
+    resize(nAntennas);
 }
 
 
@@ -35,20 +35,6 @@ AntennaPositions::~AntennaPositions()
 
 /**
  * @details
- * Assigns memory for an antenna positions data blob.
- *
- * @param[in]   nAntenna   The number of antennas.
- */
-void AntennaPositions::assign(const unsigned int nAntennas)
-{
-   _x.resize(nAntennas);
-   _y.resize(nAntennas);
-   _z.resize(nAntennas);
-}
-
-
-/**
- * @details
  * Clears the antenna positions data blob.
  */
 void AntennaPositions::clear()
@@ -56,6 +42,20 @@ void AntennaPositions::clear()
     _x.clear();
     _y.clear();
     _z.clear();
+}
+
+
+/**
+ * @details
+ * Assigns memory for an antenna positions data blob.
+ *
+ * @param[in]   nAntenna   The number of antennas.
+ */
+void AntennaPositions::resize(const unsigned int nAntennas)
+{
+   _x.resize(nAntennas);
+   _y.resize(nAntennas);
+   _z.resize(nAntennas);
 }
 
 

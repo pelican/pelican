@@ -1,6 +1,7 @@
 #include "TestDataClient.h"
 #include "data/DataRequirements.h"
 #include "data/DataBlob.h"
+#include "utility/ConfigNode.h"
 #include <QDomElement>
 #include <QtGlobal>
 
@@ -11,7 +12,7 @@ namespace pelican {
 
 // class TestDataClient 
 TestDataClient::TestDataClient()
-    : AbstractDataClient(QDomElement())
+    : AbstractDataClient(ConfigNode(QDomElement()), NULL)
 {
 }
 
@@ -27,7 +28,7 @@ TestDataClient::~TestDataClient()
  * Implementation of getData for the TestDataClient.
  * Returns the requested subset of data.
  */
-QHash<QString, DataBlob*> TestDataClient::getData(const DataRequirements& requirements)
+QHash<QString, DataBlob*>& TestDataClient::getData(const DataRequirements& requirements)
 {
     foreach (QString key, _subset) {
         if (!_dataHash.contains(key)) {

@@ -26,15 +26,19 @@ namespace pelican {
 class FrequencyList : public DataBlob
 {
     private: /* Data */
-        /// The list of channel-to-frequency mappings.
-        std::vector<double> _data;
-
         /// The number of frequency channels.
         unsigned _nChannels;
+
+        /// The list of channel-to-frequency mappings.
+        std::vector<double> _data;
 
     public:
         /// Constructs an empty frequency list.
         FrequencyList() : DataBlob() {}
+
+        /// Constructs a pre-sized frequency list.
+        FrequencyList(const unsigned nChannels) : DataBlob(),
+        _nChannels(nChannels), _data(nChannels, 0) {}
 
         /// Frequency list destructor.
         ~FrequencyList() {}

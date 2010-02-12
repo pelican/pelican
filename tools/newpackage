@@ -60,7 +60,8 @@ print $tfh "SUBPACKAGE($testname $name)\n";
 print $tfh "set(\n   ",$testname,"_src\nsrc/$testname.cpp\n)\n";
 print $tfh "add_executable($testname \${".$testname."_src} )\n";
 print $tfh "target_link_libraries($testname \${SUBPACKAGE_LIBRARIES} \${CPPUNIT_LIBRARIES} memoryTracer )\n";
-print $tfh "add_test($testname \${EXECUTABLE_OUTPUT_PATH}/$testname )\n";
+#print $tfh "add_test($testname \${EXECUTABLE_OUTPUT_PATH}/$testname )\n";
+print $tfh "add_test($testname $testname )\n";
 $tfh->close();
 
 # test template

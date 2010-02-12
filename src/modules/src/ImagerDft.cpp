@@ -11,7 +11,7 @@ namespace pelican {
  * @details
  * Module constructor.
  */
-ImagerDft::ImagerDft(const QDomElement& config)
+ImagerDft::ImagerDft(const ConfigNode& config)
     : AbstractModule(config)
 {
     // Register which data blobs are needed by the module
@@ -92,13 +92,13 @@ void ImagerDft::run(QHash<QString, DataBlob*>& data)
  *
  * @param[in]   config  Configuraiton options xml node
  */
-void ImagerDft::_getConfiguration(const QDomElement &config)
+void ImagerDft::_getConfiguration(const ConfigNode &config)
 {
-    _sizeL = getOption("imageSize", "l", "128").toUInt();
-    _sizeM = getOption("imageSize", "m", "128").toUInt();
-    _cellsizeL = getOption("cellsize", "l", "10.0").toDouble();
-    _cellsizeM = getOption("cellsize", "m", "10.0").toDouble();
-    _channel = getOption("channel", "value", "0").toUInt();
+    _sizeL = config.getOption("imageSize", "l", "128").toUInt();
+    _sizeM = config.getOption("imageSize", "m", "128").toUInt();
+    _cellsizeL = config.getOption("cellsize", "l", "10.0").toDouble();
+    _cellsizeM = config.getOption("cellsize", "m", "10.0").toDouble();
+    _channel = config.getOption("channel", "value", "0").toUInt();
 }
 
 

@@ -125,7 +125,7 @@ void ZenithImagerDftTest::test_inputDataBlobs()
         QHash<QString, DataBlob*> data;
         image.resize(10,10,2,1);
         vis.resize(5,2,1);
-        ant.assign(5);
+        ant.resize(5);
         freqList.resize(2);
         data["ImageData"] = &image;
         data["VisibilityData"] = &vis;

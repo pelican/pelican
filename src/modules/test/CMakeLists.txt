@@ -13,4 +13,4 @@ set(
 )
 add_executable(modulesTest ${modulesTest_src} )
 target_link_libraries(modulesTest ${SUBPACKAGE_LIBRARIES} ${CPPUNIT_LIBRARIES} memoryTracer )
-add_test(modulesTest ${EXECUTABLE_OUTPUT_PATH}/modulesTest )
+add_test(modulesTest modulesTest )

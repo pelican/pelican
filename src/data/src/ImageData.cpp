@@ -9,6 +9,7 @@ namespace pelican {
  */
 ImageData::ImageData() : DataBlob()
 {
+    clear();
 }
 
 
@@ -24,6 +25,7 @@ ImageData::ImageData(const unsigned& sizeL, const unsigned& sizeM,
         const unsigned& nChannels, const unsigned& nPolarisations)
 : DataBlob()
 {
+    clear();
     resize(sizeL, sizeM, nChannels, nPolarisations);
 }
 

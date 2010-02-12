@@ -39,14 +39,14 @@ class VisibilityPositions : public DataBlob
 
     public:
 
-        /// Assign memory for visibility positions
-        void assign(const unsigned nAntennas);
-
         /// Clears the visibility positions data
         void clear();
 
         /// Returns a frequency scaling factor.
         double freqScaleFactor(const unsigned channel);
+
+        /// Assign memory for visibility positions
+        void resize(const unsigned nAntennas);
 
     public: // accessor methods
 

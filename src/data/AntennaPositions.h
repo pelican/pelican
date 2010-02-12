@@ -32,11 +32,11 @@ class AntennaPositions : public DataBlob
         ~AntennaPositions();
 
     public:
-        /// Assign memory for antenna positions
-        void assign(const unsigned nAntennas);
-
         /// Clears the antenna positions data
         void clear();
+
+        /// Assign memory for antenna positions
+        void resize(const unsigned nAntennas);
 
     public: // accessor methods
 

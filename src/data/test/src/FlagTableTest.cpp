@@ -149,7 +149,11 @@ void FlagTableTest::test_flag()
 {
     // Initialise test.
     const unsigned nAntennas = 96;
+#ifdef TIMER_ENABLE
     const unsigned nChannels = 512;
+#else
+    const unsigned nChannels = 10;
+#endif
     const unsigned nPols = 2;
 
     {
@@ -158,7 +162,7 @@ void FlagTableTest::test_flag()
         FlagTable data(nAntennas, nChannels, nPols);
         const unsigned sAntennai = 45;
         const unsigned sAntennaj = 21;
-        const unsigned sChannel = 12;
+        const unsigned sChannel = 1;
         const unsigned sPol = 1;
         TIMER_START
         data.flag(sAntennai, sAntennaj, sChannel, sPol, FlagTable::FLAG_UVDIST);
@@ -182,7 +186,7 @@ void FlagTableTest::test_flag()
         // Test flagging all data from an antenna.
         FlagTable data(nAntennas, nChannels, nPols);
         const unsigned sAntenna = 67;
-        const unsigned sChannel = 20;
+        const unsigned sChannel = 2;
         const unsigned sPol = 0;
         TIMER_START
         data.flag(sAntenna, sChannel, sPol, FlagTable::FLAG_AUTOCORR);
@@ -209,7 +213,7 @@ void FlagTableTest::test_flag()
         // Use Case
         // Test flagging all data from one channel.
         FlagTable data(nAntennas, nChannels, nPols);
-        const unsigned sChannel = 13;
+        const unsigned sChannel = 3;
         const unsigned sPol = 1;
         TIMER_START
         data.flag(sChannel, sPol, FlagTable::FLAG_RFI_BAD);

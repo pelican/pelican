@@ -3,11 +3,10 @@
 
 #include "AbstractModule.h"
 #include "data/ImageData.h"
+#include "utility/ConfigNode.h"
 #include <fitsio.h>
 #include <QStringList>
 
-
-class QDomElement;
 
 /**
  * @file ImageWriterFits.h
@@ -31,7 +30,7 @@ class ImageWriterFits : public AbstractModule
 
     public:
         /// Module constructor.
-        ImageWriterFits(const QDomElement& config);
+        ImageWriterFits(const ConfigNode& config);
 
         /// Module destructor.
         ~ImageWriterFits();
@@ -39,9 +38,22 @@ class ImageWriterFits : public AbstractModule
         /// Runs the module.
         void run(QHash<QString, DataBlob*>& data);
 
+    public:
+        /// Returns a reference to the image output directory.
+        QString& directory() { return _directory; }
+
+        /// Returns a reference to the filename.
+        QString& fileName() { return _fileName; }
+
+        /// Returns a reference to the filename prefix.
+        QString& prefix() { return _prefix; }
+
+        /// Returns a reference to the filename suffix.
+        QString& suffix() { return _suffix; }
+
     private:
         /// Extract the configuration from the xml node setting default where required.
-        void _getConfiguration(const QDomElement& config);
+        void _getConfiguration(const ConfigNode& config);
 
         /// Opens the FITS image file for writing.
         void _open();
@@ -61,14 +73,20 @@ class ImageWriterFits : public AbstractModule
         /// Sets the FITS header date value from the system time.
         QString _getDate() const;
 
-        /// Write a header keyword
+        /// Write a header key - string value
         void _writeKey(const QString& keyword, const QString& value,
                 const QString& comment = QString());
 
+        /// Write a header key - double value
         void _writeKey(const QString& keyword, const double& value,
                 const QString& comment = QString());
 
-        void _writeKey(const QString& keyword, const long& value,
+        /// Write a header key - int value
+        void _writeKey(const QString& keyword, const int& value,
+                const QString& comment = QString());
+
+        /// Write a header key - unsigned value
+        void _writeKey(const QString& keyword, const unsigned& value,
                 const QString& comment = QString());
 
     private:

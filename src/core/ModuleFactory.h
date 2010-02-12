@@ -4,6 +4,7 @@
 #include <QString>
 #include <QVector>
 #include "utility/Config.h"
+#include "utility/ConfigNode.h"
 
 class QDomElement;
 
@@ -45,7 +46,7 @@ class ModuleFactory
 
     private:
         /// Creates a new module.
-        AbstractModule* _createModule(const QString& name, const QDomElement& config);
+        AbstractModule* _createModule(const QString& name, const ConfigNode& config);
 
     private:
         const Config* _config; ///< Pointer to the configuration object.
