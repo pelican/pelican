@@ -6,4 +6,4 @@ set(
 )
 add_executable(commsTest ${commsTest_src} )
 target_link_libraries(commsTest ${SUBPACKAGE_LIBRARIES} ${CPPUNIT_LIBRARIES} memoryTracer )
-add_test(commsTest ${EXECUTABLE_OUTPUT_PATH}/commsTest )
+add_test(commsTest commsTest )

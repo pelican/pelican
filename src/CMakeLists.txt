@@ -6,6 +6,7 @@ cmake_minimum_required(VERSION 2.6)
 list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_SOURCE_DIR}/cmake)
 include(cmake/packagemacros.cmake)
 include_directories(${PROJECT_SOURCE_DIR})
+enable_testing()
 
 # options and defaults
 if(NOT CMAKE_BUILD_TYPE ) 

@@ -12,4 +12,4 @@ set(
 )
 add_executable(dataTest ${dataTest_src} )
 target_link_libraries(dataTest ${SUBPACKAGE_LIBRARIES} ${CPPUNIT_LIBRARIES} )
-add_test(dataTest ${EXECUTABLE_OUTPUT_PATH}/dataTest )
+add_test(dataTest dataTest )
