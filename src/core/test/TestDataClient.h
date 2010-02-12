@@ -24,7 +24,7 @@ class TestDataClient : public AbstractDataClient
         TestDataClient(  );
         ~TestDataClient();
 
-        QHash<QString, DataBlob*> getData(const DataRequirements& requirements);
+        QHash<QString, DataBlob*>& getData(const DataRequirements& requirements);
 
         /// Sets the subset of the data to return.
         void setSubset(QSet<QString> set);

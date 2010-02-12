@@ -11,7 +11,7 @@ namespace pelican {
 
 // class TestDataClient 
 TestDataClient::TestDataClient()
-    : AbstractDataClient(QDomElement())
+    : AbstractDataClient(QDomElement(), NULL)
 {
 }
 
@@ -27,7 +27,7 @@ TestDataClient::~TestDataClient()
  * Implementation of getData for the TestDataClient.
  * Returns the requested subset of data.
  */
-QHash<QString, DataBlob*> TestDataClient::getData(const DataRequirements& requirements)
+QHash<QString, DataBlob*>& TestDataClient::getData(const DataRequirements& requirements)
 {
     foreach (QString key, _subset) {
         if (!_dataHash.contains(key)) {

@@ -14,6 +14,7 @@ namespace pelican {
 
 class DataBlob;
 class DataRequirements;
+class DataBlobFactory;
 
 /**
  * @class AbstractDataClient
@@ -37,24 +38,27 @@ class AbstractDataClient
         /// The configuration node for the data client.
         QDomElement _config;
 
+        /// A pointer to the data blob factory.
+        DataBlobFactory* _blobFactory;
+
     protected: /* Data */
         /// The hash of data returned by the getData() method.
         QHash<QString, DataBlob*> _dataHash;
 
     protected: /* Methods */
-        /// Creates the flag table.
-        void ensureFlagTableExists (unsigned nAntennas, unsigned nChannels,
-                unsigned nPols);
+        /// Returns a pointer to the data blob factory.
+        DataBlobFactory* blobFactory() {return _blobFactory;}
 
     public:
         /// Data client constructor.
-        AbstractDataClient(const QDomElement& config);
+        AbstractDataClient(const QDomElement& config,
+                DataBlobFactory* blobFactory);
 
         /// Data client destructor (virtual).
         virtual ~AbstractDataClient();
 
         /// Gets the requested data from the data server.
-        virtual QHash<QString, DataBlob*> getData(const DataRequirements&) = 0;
+        virtual QHash<QString, DataBlob*>& getData(const DataRequirements&) = 0;
 
         /// Returns a configuration option (attribute).
         QString getOption(const QString& tagName, const QString& attribute,
