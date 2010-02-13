@@ -1,4 +1,5 @@
 #include "adapters/AbstractAdapter.h"
+#include "utility/ConfigNode.h"
 
 #include "utility/memCheck.h"
 
@@ -10,7 +11,6 @@ namespace pelican {
  */
 AbstractAdapter::AbstractAdapter(const ConfigNode& config)
 {
-    _config = &config;
 }
 
 
@@ -22,6 +22,12 @@ AbstractAdapter::~AbstractAdapter()
 {
 }
 
+
+inline QDataStream& operator>> (QDataStream& in, const AbstractAdapter& adapter)
+{
+    adapter.deseralise(in);
+    return in;
+}
 
 } // namespace pelican
 

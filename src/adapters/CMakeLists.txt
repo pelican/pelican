@@ -1,5 +1,5 @@
 INCLUDE_DIRECTORIES(${QT_INCLUDES})
-SUBPACKAGE(adapters data utility)
+SUBPACKAGE(adapters utility data)
 
 set( adapters_src
     src/AbstractAdapter.cpp
