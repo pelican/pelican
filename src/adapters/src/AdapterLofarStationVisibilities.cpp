@@ -37,7 +37,7 @@ AdapterLofarStationVisibilities::~AdapterLofarStationVisibilities()
  */
 void AdapterLofarStationVisibilities::deseralise(QDataStream& in)
 {
-    _resizeVisibilityData();
+    _setVisibilityData();
 
     complex_t* vis = _vis->ptr();
 
@@ -57,8 +57,13 @@ void AdapterLofarStationVisibilities::deseralise(QDataStream& in)
 
 /**
  * @detail
+ * Sets the size of the visibility data chunk which can be updated from
+ * service data.
+ * Checks the dimensions of the visibility data to be read matches the stream
+ * chunk size.
+ * Resizes the visibility data blob as required.
  */
-void AdapterLofarStationVisibilities::_resizeVisibilityData()
+void AdapterLofarStationVisibilities::_setVisibilityData()
 {
     if (!_serviceData.empty()) {
         // get new sizes for nAnt, nChan, nPol, dataBytes from service data...

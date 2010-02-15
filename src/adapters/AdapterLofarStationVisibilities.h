@@ -35,8 +35,8 @@ class AdapterLofarStationVisibilities : public AbstractStreamAdapter
         void deseralise(QDataStream& in);
 
     private:
-        /// Update the size of the visibility data being read
-        void _resizeVisibilityData();
+        /// Updates and checks the size of the visibility data being read into.
+        void _setVisibilityData();
 
     private:
         unsigned _nAnt;         ///< Number of antennas in the chunk
