@@ -9,7 +9,7 @@ namespace pelican {
 /**
  * @details
  */
-FileAdapterLofarVisibilities::FileAdapterLofarVisibilities(const ConfigNode& config)
+FileAdapterLofarVisibilities::FileAdapterLofarVisibilities(const ConfigNode& config, DataBlob* dataBlob)
 : AbstractAdapter(config)
 {
     // Grab config for the adapter
@@ -17,7 +17,6 @@ FileAdapterLofarVisibilities::FileAdapterLofarVisibilities(const ConfigNode& con
     _nChan = config.getOption("channels", "number", "512").toUInt();
     _nPol = config.getOption("polarisations", "number", "2").toUInt();
     _dataBytes = config.getOption("dataBytes", "number", "4").toUInt();
-    _data = NULL;
 }
 
 

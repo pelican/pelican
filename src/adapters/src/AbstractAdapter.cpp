@@ -9,8 +9,9 @@ namespace pelican {
  * @details
  * Creates a new abstract Pelican adapter with the given configuration.
  */
-AbstractAdapter::AbstractAdapter(const ConfigNode& config)
+AbstractAdapter::AbstractAdapter(const ConfigNode& config, DataBlob* dataBlob)
 {
+    _dataBlob = dataBlob;
 }
 
 

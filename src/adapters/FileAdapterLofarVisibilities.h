@@ -26,13 +26,10 @@ class FileAdapterLofarVisibilities : public AbstractAdapter
 {
     public:
         /// Constructs the adapter
-        FileAdapterLofarVisibilities(const ConfigNode& config);
+        FileAdapterLofarVisibilities(const ConfigNode& config, DataBlob* dataBlob);
 
         /// Destorys the adapter
         ~FileAdapterLofarVisibilities();
-
-        /// Sets the data blob the adapter is going to deseralise into.
-        void setData(VisibilityData &data) { _data = &data; }
 
     public:
         /// The number of antenna in the data stream chunk.
@@ -52,7 +49,6 @@ class FileAdapterLofarVisibilities : public AbstractAdapter
         virtual void deseralise(QDataStream& in) const;
 
     private:
-        VisibilityData *_data;  ///< Pointer to visibility data being populated
 
         unsigned _nAnt;         ///< Number of antennas in the chunk
         unsigned _nChan;        ///< Number of channels in the chunk
