@@ -11,6 +11,8 @@ namespace pelican {
  */
 AbstractAdapter::AbstractAdapter(const ConfigNode& config)
 {
+    _chunkSize = 0;
+    _data = NULL;
 }
 
 
@@ -23,7 +25,7 @@ AbstractAdapter::~AbstractAdapter()
 }
 
 
-inline QDataStream& operator>> (QDataStream& in, const AbstractAdapter& adapter)
+inline QDataStream& operator>> (QDataStream& in, AbstractAdapter& adapter)
 {
     adapter.deseralise(in);
     return in;

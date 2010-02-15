@@ -45,7 +45,6 @@ class AbstractAdapter
         // Create adapters when creating data client and link to data blob
         // =====================================================================
         // someAdapter = adapterFactory("SomeAdapter")
-        // someAdapter.setData(visibilityData);
         //
         // getData() method then opens the file and reads from the file stream
         // into the adapter.
@@ -53,20 +52,20 @@ class AbstractAdapter
         // QFile file("data.dat")
         // if (!file.open(QIODevice::ReadOnly)) { error... }
         // QDataStream in(&file);
-        // in >> someAdapter;
+        // in >> someAdapter.config(visBlobPtr, size, QHash of any relevant service data);
         //
-        friend QDataStream& operator>> (QDataStream& in, const AbstractAdapter& adapter);
+        friend QDataStream& operator>> (QDataStream& in, AbstractAdapter& adapter);
 
     protected:
         /// Deseralise method to convert a stream into a data blob (pure virtual)
-        virtual void deseralise(QDataStream& in) const = 0;
+        virtual void deseralise(QDataStream& in) = 0;
 
     protected:
         /// Data blob pointer to be by the adapter.
         DataBlob* _data;
 
         /// Chunk size in bytes.
-        std::size_t _size;
+        std::size_t _chunkSize;
 };
 
 } // namespace pelican

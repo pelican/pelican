@@ -1,6 +1,5 @@
 #include "adapters/AdapterLofarStationVisibilities.h"
 #include "utility/ConfigNode.h"
-#include "data/VisibilityData.h"
 
 #include "utility/memCheck.h"
 
@@ -36,10 +35,11 @@ AdapterLofarStationVisibilities::~AdapterLofarStationVisibilities()
  *
  * !......ONLY AN EXAMPLE AT THE MOMENT....!
  */
-void AdapterLofarStationVisibilities::deseralise(QDataStream& in) const
+void AdapterLofarStationVisibilities::deseralise(QDataStream& in)
 {
-    VisibilityData *data = static_cast<VisibilityData*>(_data);
-    complex_t* vis = data->ptr();
+    _resizeVisibilityData();
+
+    complex_t* vis = _vis->ptr();
 
     // Assuming checkboard ant(XX/YY) per channel ?!
     for (unsigned c = 0; c < _nChan; c++) {
@@ -53,5 +53,27 @@ void AdapterLofarStationVisibilities::deseralise(QDataStream& in) const
         }
     }
 }
+
+
+/**
+ * @detail
+ */
+void AdapterLofarStationVisibilities::_resizeVisibilityData()
+{
+    if (!_serviceData.empty()) {
+        // get new sizes for nAnt, nChan, nPol, dataBytes from service data...
+    }
+
+    // Check the expected size due to data dimensions matches the stream chunk size
+    unsigned dataSize = _nAnt * _nAnt * _nChan * _nPol * _dataBytes;
+    if (dataSize != _chunkSize) {
+        throw QString("Stream chunk size does not match data current dimensions");
+    }
+
+    // Resize the visibility data being read into to match the adapter dimensions
+    _vis = static_cast<VisibilityData*>(_data);
+    _vis->resize(_nAnt, _nChan, _nPol);
+}
+
 
 } // namespace pelican

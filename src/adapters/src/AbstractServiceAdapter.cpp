@@ -31,7 +31,7 @@ const AbstractServiceAdapter& AbstractServiceAdapter::config(DataBlob* data,
         std::size_t size)
 {
     _data = data;
-    _size = size;
+    _chunkSize = size;
     return *this;
 }
 

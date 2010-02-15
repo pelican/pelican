@@ -11,6 +11,7 @@ namespace pelican {
 AbstractStreamAdapter::AbstractStreamAdapter(const ConfigNode& config)
 : AbstractAdapter(config)
 {
+    _serviceData = QHash<QString, DataBlob*>();
 }
 
 
@@ -30,7 +31,7 @@ const AbstractStreamAdapter& AbstractStreamAdapter::config(DataBlob* data,
         std::size_t size, QHash<QString, DataBlob*>& serviceData)
 {
     _data = data;
-    _size = size;
+    _chunkSize = size;
     _serviceData = serviceData;
     return *this;
 }

@@ -2,6 +2,7 @@
 #define ADAPTERLOFARSTATIONVISIBILITIES_H
 
 #include "adapters/AbstractStreamAdapter.h"
+#include "data/VisibilityData.h"
 #include <QDataStream>
 
 /**
@@ -31,13 +32,18 @@ class AdapterLofarStationVisibilities : public AbstractStreamAdapter
 
     protected:
         /// Method to deseralise a LOFAR visibility file data stream.
-        virtual void deseralise(QDataStream& in) const;
+        void deseralise(QDataStream& in);
+
+    private:
+        /// Update the size of the visibility data being read
+        void _resizeVisibilityData();
 
     private:
         unsigned _nAnt;         ///< Number of antennas in the chunk
         unsigned _nChan;        ///< Number of channels in the chunk
         unsigned _nPol;         ///< Number of polarisations in the chunk
         unsigned _dataBytes;    ///< number of bytes per data point
+        VisibilityData* _vis;   ///< Pointer to visibility data blob being read into.
 };
 
 } // namespace pelican
