@@ -18,7 +18,7 @@ AdapterLofarStationVisibilities::AdapterLofarStationVisibilities(const ConfigNod
 : AbstractStreamAdapter(config)
 {
     // Grab configuration for the adapter setting sensible defaults
-    _nAnt = config.getOption("antenna", "number", "96").toUInt();
+    _nAnt = config.getOption("antennas", "number", "96").toUInt();
     _nChan = config.getOption("channels", "number", "512").toUInt();
     _nPol = config.getOption("polarisations", "number", "2").toUInt();
     _dataBytes = config.getOption("dataBytes", "number", "4").toUInt();
