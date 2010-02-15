@@ -23,9 +23,9 @@ class AbstractPipeline;
  * 
  * @details
  * The PipelineApplication is the user-facing class which reads the
- * command-line arguments and creates the configuration object, the data
- * client, the module factory and the pipeline driver. It also provides
- * public methods to register pipelines and start them running.
+ * command-line arguments and creates the configuration object, the module
+ * factory and the pipeline driver. It also provides public methods to
+ * register pipelines and start them running.
  *
  * A QCoreApplication must be created before a PipelineApplication.
  */
@@ -37,11 +37,11 @@ class PipelineApplication
         /// Pointer to the application's configuration object.
         Config *_config;
 
-        /// Pointer to the application's data client.
-        AbstractDataClient *_dataClient;
+        /// Pointer to adapter factory.
+        AdapterFactory* _adapterFactory;
 
         /// Pointer to the application's module factory.
-        ModuleFactory *_factory;
+        ModuleFactory *_moduleFactory;
 
         /// Pointer to the application's data blob factory.
         DataBlobFactory *_dataBlobFactory;
@@ -59,11 +59,8 @@ class PipelineApplication
         /// Return a pointer to the configuration object.
         Config* config() {return _config;}
 
-        /// Return a pointer to the data client.
-        AbstractDataClient* dataClient() {return _dataClient;}
-
         /// Return a pointer to the module factory.
-        ModuleFactory* moduleFactory() {return _factory;}
+        ModuleFactory* moduleFactory() {return _moduleFactory;}
 
         /// Gets the configuration file name.
         QString getConfigFile() const;

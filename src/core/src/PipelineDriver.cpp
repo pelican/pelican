@@ -2,10 +2,14 @@
 #include <QtGlobal>
 #include <QtDebug>
 #include "core/AbstractDataClient.h"
+#include "core/FileDataClient.h"
 #include "core/AbstractPipeline.h"
 #include "core/ModuleFactory.h"
 #include "core/PipelineDriver.h"
 #include "data/DataBlob.h"
+#include "data/DataBlobFactory.h"
+#include "utility/Config.h"
+#include "utility/ConfigNode.h"
 #include "utility/memCheck.h"
 
 namespace pelican {
@@ -15,13 +19,14 @@ namespace pelican {
  * PipelineDriver constructor, which takes the command line arguments
  * for initialisation.
  */
-PipelineDriver::PipelineDriver(DataBlobFactory* blobFactory)
+PipelineDriver::PipelineDriver(DataBlobFactory* blobFactory, AdapterFactory* adapterFactory)
 {
     /* Initialise member variables */
     _run = false;
     _dataClient = NULL;
     _moduleFactory = NULL;
     _blobFactory = blobFactory;
+    _adapterFactory = adapterFactory;
 }
 
 /**
@@ -62,6 +67,34 @@ void PipelineDriver::setDataClient(AbstractDataClient *client)
 
 /**
  * @details
+ * Sets (and creates) the given data client based on the named argument.
+ * Throws an exception of type QString if the data client is unknown.
+ *
+ * The recognised values are:
+ * - FileDataClient
+ *
+ * @param[in] name The type of the data client to create.
+ */
+void PipelineDriver::setDataClient(QString name, Config* config)
+{
+    /* Get the configuration address */
+    Config::TreeAddress_t address;
+    address.append(Config::NodeId_t("clients", ""));
+    address.append(QPair<QString, QString>("client", name));
+    ConfigNode element = config->get(address);
+
+    /* Create the required data client */
+    if (name == "FileDataClient") {
+        QList<DataRequirements> list; // TODO
+        _dataClient = new FileDataClient(element, _adapterFactory, list);
+    }
+    else {
+        throw QString("Unknown data client type: ").arg(name);
+    }
+}
+
+/**
+ * @details
  * Sets the module factory.
  */
 void PipelineDriver::setModuleFactory(ModuleFactory *moduleFactory)
@@ -87,17 +120,17 @@ void PipelineDriver::start()
     _run = true;
     while (_run) {
         /* Get the data from the client */
-        QHash<QString, DataBlob*> data = _dataClient->getData(_requiredData);
+        QHash<QString, DataBlob*> validData = _dataClient->getData(_dataHash);
 
         /* Check for empty data */
-        if (data.isEmpty())
+        if (validData.isEmpty())
             throw QString("No data returned from client.");
 
         /* Run all the pipelines compatible with this data hash */
         QMultiHash<DataRequirements, AbstractPipeline*>::iterator i = _pipelines.begin();
         while (i != _pipelines.end()) {
-            if (i.key().isCompatible(data))
-                i.value()->run(data);
+            if (i.key().isCompatible(validData))
+                i.value()->run(validData);
             ++i;
         }
     }

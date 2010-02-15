@@ -12,6 +12,7 @@ namespace pelican {
 
 class AbstractClientProtocol;
 class ConfigNode;
+class AdapterFactory;
 
 /**
  * @class PelicanServerClient
@@ -25,9 +26,11 @@ class ConfigNode;
 class PelicanServerClient : public AbstractDataClient
 {
     public:
-        PelicanServerClient(const ConfigNode& config, DataBlobFactory* blobFactory);
+        PelicanServerClient(const ConfigNode& config,
+                AdapterFactory* adapterFactory,
+                QList<DataRequirements>& dataRequirements);
         ~PelicanServerClient();
-        virtual QHash<QString, DataBlob*>& getData(const DataRequirements&);
+        virtual QHash<QString, DataBlob*> getData(QHash<QString, DataBlob*>& dataHash);
 
     protected:
         void getServiceData(QHash<QString,QString> requirements, QHash<QString, DataBlob*>& datahash);

@@ -35,13 +35,19 @@ class FileDataClient : public AbstractDataClient
 
     public:
         /// Data client constructor.
-        FileDataClient(const ConfigNode& config);
+        FileDataClient(const ConfigNode& config,
+                AdapterFactory* adapterFactory,
+                QList<DataRequirements>& dataRequirements);
 
         /// Data client destructor
         ~FileDataClient();
 
         /// Gets the requested data.
-        void getData(const DataRequirements&, QHash<QString, DataBlob*>&);
+        QHash<QString, DataBlob*> getData(QHash<QString, DataBlob*>&);
+
+    private:
+        /// Gets the configuration options.
+        void _getConfig();
 };
 
 } // namespace pelican

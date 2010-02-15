@@ -1,5 +1,6 @@
 #include <QCoreApplication>
 #include <QString>
+#include "adapters/AdapterFactory.h"
 #include "core/PipelineApplication.h"
 #include "core/PipelineDriver.h"
 #include "core/ModuleFactory.h"
@@ -29,8 +30,7 @@ PipelineApplication::PipelineApplication(int argc, char** argv)
 {
     /* Initialise member variables */
     _config = NULL;
-    _factory = NULL;
-    _dataClient = NULL;
+    _moduleFactory = NULL;
     _dataBlobFactory = NULL;
     _driver = NULL;
 
@@ -43,13 +43,16 @@ PipelineApplication::PipelineApplication(int argc, char** argv)
         return;
 
     /* Construct the module factory */
-    _factory = new ModuleFactory(_config);
+    _moduleFactory = new ModuleFactory(_config);
+
+    /* Construct the adapter factory */
+    _adapterFactory = new AdapterFactory(_config);
 
     /* Construct the data blob factory */
     _dataBlobFactory = new DataBlobFactory;
 
     /* Construct the pipeline driver */
-    _driver = new PipelineDriver(_dataBlobFactory);
+    _driver = new PipelineDriver(_dataBlobFactory, _adapterFactory);
 }
 
 /**
@@ -59,13 +62,11 @@ PipelineApplication::PipelineApplication(int argc, char** argv)
 PipelineApplication::~PipelineApplication()
 {
     delete _config;
-    delete _factory;
-    delete _dataClient;
+    delete _moduleFactory;
     delete _dataBlobFactory;
     delete _driver;
     _config = NULL;
-    _factory = NULL;
-    _dataClient = NULL;
+    _moduleFactory = NULL;
     _dataBlobFactory = NULL;
     _driver = NULL;
 }
@@ -103,19 +104,7 @@ void PipelineApplication::registerPipeline(AbstractPipeline *pipeline)
  */
 void PipelineApplication::setDataClient(QString name)
 {
-    /* Get the configuration address */
-    Config::TreeAddress_t address;
-    address.append(Config::NodeId_t("clients", ""));
-    address.append(QPair<QString, QString>("client", name));
-    ConfigNode element = _config->get(address);
-
-    /* Create the required data client */
-    if (name == "FileDataClient") {
-        _dataClient = new FileDataClient(element, _dataBlobFactory);
-    }
-    else {
-        throw QString("Unknown data client type: ").arg(name);
-    }
+    _driver->setDataClient(name, _config);
 }
 
 /**
@@ -125,8 +114,7 @@ void PipelineApplication::setDataClient(QString name)
  */
 void PipelineApplication::start()
 {
-    _driver->setDataClient(_dataClient);
-    _driver->setModuleFactory(_factory);
+    _driver->setModuleFactory(_moduleFactory);
     _driver->start();
 }
 

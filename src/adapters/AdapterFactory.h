@@ -37,7 +37,7 @@ class AdapterFactory
         ~AdapterFactory();
 
         /// Creates a new module.
-        AbstractAdapter* create(const QString& type, const QString& name);
+        AbstractAdapter* create(const QString& type, const QString& name = QString());
 
         /// Returns the tree node address that marks the start
         /// of the module configuration block.

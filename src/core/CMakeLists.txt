@@ -1,5 +1,5 @@
 INCLUDE_DIRECTORIES(${QT_INCLUDES})
-SUBPACKAGE(core modules comms data)
+SUBPACKAGE(core modules comms data adapters)
 set( core_src
      src/AbstractDataClient.cpp
      src/AbstractPipeline.cpp
