@@ -1,41 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE pelican>
 <configuration version="1.0">
+
     <servers>
         <server name="server1" type="tcp" ip="0.1.2.3" port="12345"/>
         <server name="server2" type="tcp" ip="4.5.6.7" port="678910"/>
     </servers>
-   
-    <clients>
-        <client name="file" value="somefile.dat"/>
+    
+    <dataClients>
+        <fileDataClient name="lofarVisTest">
+            <file name="lofarVis.dat" adapter="lofarStationVisibilties"/>
+            <file name="antennaPositions.dat" adapter="lofarStationAntennas"/>
+        </fileDataClient>
         <client name="client2">
             <param name="ip" value="1.1.2.3"/>
         </client>
-    </clients>
+    </dataClients>
     
     <modules>
-        <module name="testA">
+        <moduleType name="testA">
             <paramA name="some_value" value="1"/>
             <paramB name="some_coords" x="1024" y="2048"/>
             <paramC name="channels">1,2,3,4,5</paramC>
-        </module>
-        <module name="testB"/>
-        <module name="testC"/>
-        <module name="default::testA"/>
-        <module name="pipeline1::testA"/>
-        <module name=""/>
+        </moduleType>
+        <moduleType name="testB"/>
+        <moduleType name="testC"/>
+        <moduleType name="default::testA"/>
+        <moduleType name="pipeline1::testA"/>
+        <moduleType name=""/>
       
         <!-- example configuration for zenith imager dft module -->
-        <module name="ZenithImagerDft">
+        <ZenithImagerDft name="default">
             <size l="128" m="128"/>
             <fullSky value="false"/> <!-- over rides cellsize if true -->
             <cellsize l="10.0" m="10.0"/>
             <polarisation value="both"/>
             <channels>0,1,2</channels>
-        </module>
+        </ZenithImagerDft>
         
         <!-- example configuration for fits image writer -->
-        <module name="ImageWriterFits">
+        <ImageWriterFits name="default">
             <overwrite value="true"/> <!-- overwrite exising fits files ? -->
             <directory value=""/>
             <file name="" prefix="" suffix=""/>
@@ -50,9 +54,20 @@
             <author value=""/>
             <reference value=""/>
             <equinox value="2000.0"/>
-        </module>
+        </ImageWriterFits>
         
     </modules>
+    
+    
+    <adapters>
+        <lofarStationVisibilties name="default">
+            <antennas number="96"/>
+            <channels number="512"/>
+            <polaristaions number="2"/>
+            <dataBytes number="4"/>
+        </lofarStationVisibilties>
+    </adapters>
+        
     
     <pipelines>
         <pipeline name="default">

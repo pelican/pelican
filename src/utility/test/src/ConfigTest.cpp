@@ -167,7 +167,7 @@ void ConfigTest::test_configFileRead()
         Config config(fileName);
         Config::TreeAddress_t address;
         address << Config::NodeId_t("modules", "");
-        address << Config::NodeId_t("module", "testA");
+        address << Config::NodeId_t("moduleType", "testA");
         QDomElement e = config._get(address);
 
         CPPUNIT_ASSERT(e.parentNode().nodeName() == "modules");
@@ -192,10 +192,10 @@ void ConfigTest::test_configFileRead()
         Config config(fileName);
         Config::TreeAddress_t address;
         address << Config::NodeId_t("modules", "");
-        address << Config::NodeId_t("module", "default::testA");
+        address << Config::NodeId_t("moduleType", "default::testA");
         QDomElement e = config._get(address);
         CPPUNIT_ASSERT(e.parentNode().nodeName() == "modules");
-        CPPUNIT_ASSERT(e.nodeName() == "module");
+        CPPUNIT_ASSERT(e.nodeName() == "moduleType");
         CPPUNIT_ASSERT(e.childNodes().count() == 0);
     }
 
@@ -235,7 +235,7 @@ void ConfigTest::test_configFileRead()
         Config config(fileName);
         Config::TreeAddress_t address;
         address << Config::NodeId_t("modules", "");
-        address << Config::NodeId_t("module", "testA");
+        address << Config::NodeId_t("moduleType", "testA");
         QDomElement e = config._get(address);
 
         CPPUNIT_ASSERT(e.parentNode().nodeName() == "modules");

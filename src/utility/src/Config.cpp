@@ -281,6 +281,7 @@ void Config::_read()
     if (!_document.setContent(&file, true, &error, &line, &column)) {
         QString err = "Parse error (" + QString::number(line)
         + QString::number(column) + "): " + error;
+//        std::cout << err.toStdString() << std::endl;
         throw err;
     }
 
