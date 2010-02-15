@@ -27,7 +27,7 @@ AbstractAdapter::~AbstractAdapter()
 
 inline QDataStream& operator>> (QDataStream& in, AbstractAdapter& adapter)
 {
-    adapter.deseralise(in);
+    adapter.deserialise(in);
     return in;
 }
 

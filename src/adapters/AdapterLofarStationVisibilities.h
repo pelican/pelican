@@ -17,8 +17,16 @@ class ConfigNode;
  * @class AdapterLofarStationVisibilities
  *  
  * @brief
+ * Adapter to deserialise a set of LOFAR station visibilities into a
+ * PELICAN visibility data blob.
  * 
  * @details
+ * Stream adapter to deserialise a visibility amplitude data set parameterised
+ * by number of antennas, number of channels, and number of polarisations into
+ * a PELICAN VisibilityData blob.
+ * The initial size of the visibility data blob is set from the configuration
+ * options by may be updated by passing appropriate server data blobs (not yet
+ * implemented) to the adapter configuration.
  */
 
 class AdapterLofarStationVisibilities : public AbstractStreamAdapter
@@ -27,16 +35,20 @@ class AdapterLofarStationVisibilities : public AbstractStreamAdapter
         /// Constructs the adapter
         AdapterLofarStationVisibilities(const ConfigNode& config);
 
-        /// Destorys the adapter
+        /// Destroys the adapter
         ~AdapterLofarStationVisibilities();
 
     protected:
-        /// Method to deseralise a LOFAR visibility file data stream.
-        void deseralise(QDataStream& in);
+        /// Method to deserialise a LOFAR visibility file data stream.
+        void deserialise(QDataStream& in);
 
     private:
         /// Updates and checks the size of the visibility data being read into.
         void _setVisibilityData();
+
+        /// Updates dimensions of visibility data being deserialised based
+        /// on information contained in the service passed in the adapter config.
+        void _updateVisibilityDimensions();
 
     private:
         unsigned _nAnt;         ///< Number of antennas in the chunk

@@ -58,7 +58,7 @@ class AbstractAdapter
 
     protected:
         /// Deseralise method to convert a stream into a data blob (pure virtual)
-        virtual void deseralise(QDataStream& in) = 0;
+        virtual void deserialise(QDataStream& in) = 0;
 
     protected:
         /// Data blob pointer to be by the adapter.

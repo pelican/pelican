@@ -8,6 +8,11 @@ namespace pelican {
 
 /**
  * @details
+ * Constructs a stream adapter for a LOFAR station visibility amplidude data set.
+ * Extracts the default data blob dimensions from the default configuration
+ * setting some defaults if configuration options cant be found.
+ *
+ * @param[in]   config  Pelican XML configuration node object.
  */
 AdapterLofarStationVisibilities::AdapterLofarStationVisibilities(const ConfigNode& config)
 : AbstractStreamAdapter(config)
@@ -30,12 +35,15 @@ AdapterLofarStationVisibilities::~AdapterLofarStationVisibilities()
 
 /**
  * @details
- * Method for reading a Lofar station visibility file from a QDataStream into
- * a visibility data object.
+ * Method for deserialise a LOFAR station visibility data set
+ * contained in a QDataStream into a pelican visibility data blob.
  *
  * !......ONLY AN EXAMPLE AT THE MOMENT....!
+ *
+ * @param[in] in QDataStream containing a serialised version of a LOFAR
+ *               visibility data set.
  */
-void AdapterLofarStationVisibilities::deseralise(QDataStream& in)
+void AdapterLofarStationVisibilities::deserialise(QDataStream& in)
 {
     _setVisibilityData();
 
@@ -56,7 +64,7 @@ void AdapterLofarStationVisibilities::deseralise(QDataStream& in)
 
 
 /**
- * @detail
+ * @details
  * Sets the size of the visibility data chunk which can be updated from
  * service data.
  * Checks the dimensions of the visibility data to be read matches the stream
@@ -65,9 +73,16 @@ void AdapterLofarStationVisibilities::deseralise(QDataStream& in)
  */
 void AdapterLofarStationVisibilities::_setVisibilityData()
 {
-    if (!_serviceData.empty()) {
-        // get new sizes for nAnt, nChan, nPol, dataBytes from service data...
+    if (_chunkSize == 0) {
+        throw QString("No data to read. Stream chunk size set to zero.");
     }
+
+    if (_data == NULL) {
+        throw QString("Cannot deserialise into an unallocated blob!");
+    }
+
+    // If any service data exists update the visibility dimensions from it...
+    if (!_serviceData.empty()) _updateVisibilityDimensions();
 
     // Check the expected size due to data dimensions matches the stream chunk size
     unsigned dataSize = _nAnt * _nAnt * _nChan * _nPol * _dataBytes;
@@ -78,6 +93,20 @@ void AdapterLofarStationVisibilities::_setVisibilityData()
     // Resize the visibility data being read into to match the adapter dimensions
     _vis = static_cast<VisibilityData*>(_data);
     _vis->resize(_nAnt, _nChan, _nPol);
+}
+
+
+/**
+ * @details
+ * Updates the visibility data dimensions from service data passed down
+ * from the adapter configuration.
+ */
+void AdapterLofarStationVisibilities::_updateVisibilityDimensions()
+{
+    // EXAMPLE ++ pseudo-code only +++
+    // _nAnt = serviceData.nAnt;
+    // _nChan = serviceData.nAnt;
+    // _nPol = serviceData.nAnt; etc...
 }
 
 
