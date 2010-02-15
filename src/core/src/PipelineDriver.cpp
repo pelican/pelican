@@ -15,23 +15,30 @@ namespace pelican {
  * PipelineDriver constructor, which takes the command line arguments
  * for initialisation.
  */
-PipelineDriver::PipelineDriver()
+PipelineDriver::PipelineDriver(DataBlobFactory* blobFactory)
 {
     /* Initialise member variables */
     _run = false;
     _dataClient = NULL;
     _moduleFactory = NULL;
+    _blobFactory = blobFactory;
 }
 
 /**
  * @details
- * PipelineDriver destructor. This deletes all the registered pipelines.
+ * PipelineDriver destructor. This deletes all the registered pipelines and
+ * the data blobs.
  */
 PipelineDriver::~PipelineDriver()
 {
     foreach (AbstractPipeline* pipeline, _registeredPipelines) {
         delete pipeline;
     }
+
+    foreach (DataBlob* dataBlob, _dataHash) {
+        delete dataBlob;
+    }
+    _dataHash.clear();
 }
 
 /**
@@ -104,6 +111,25 @@ void PipelineDriver::start()
 void PipelineDriver::stop()
 {
     _run = false;
+}
+
+/**
+ * @details
+ * This method allocates all the required data blobs and inserts pointers to
+ * them into the data hash.
+ *
+ * @param[in] req All data required by the pipeline.
+ */
+void PipelineDriver::_createDataBlobs(const DataRequirements& req)
+{
+    /* Create a union of all data requirements */
+    QSet<QString> allData = req.serviceData() & req.streamData();
+
+    /* Iterate over the data requirements to create blobs if they don't exist */
+    foreach (QString type, allData) {
+        if (  ! _dataHash.contains(type) )
+            _dataHash.insert(type, _blobFactory->create(type));
+    }
 }
 
 /**

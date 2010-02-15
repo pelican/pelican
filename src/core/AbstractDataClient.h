@@ -39,27 +39,15 @@ class AbstractDataClient
         /// The configuration node for the data client.
         const ConfigNode* _config;
 
-        /// A pointer to the data blob factory.
-        DataBlobFactory* _blobFactory;
-
-    protected: /* Data */
-        /// The hash of data returned by the getData() method.
-        QHash<QString, DataBlob*> _dataHash;
-
-    protected: /* Methods */
-        /// Returns a pointer to the data blob factory.
-        DataBlobFactory* blobFactory() {return _blobFactory;}
-
     public:
         /// Data client constructor.
-        AbstractDataClient(const ConfigNode& config,
-                DataBlobFactory* blobFactory);
+        AbstractDataClient(const ConfigNode& config);
 
         /// Data client destructor (virtual).
         virtual ~AbstractDataClient();
 
         /// Gets the requested data from the data server.
-        virtual QHash<QString, DataBlob*>& getData(const DataRequirements&) = 0;
+        virtual void getData(const DataRequirements&, QHash<QString, DataBlob*>&) = 0;
 };
 
 } // namespace pelican

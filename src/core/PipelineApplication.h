@@ -1,7 +1,6 @@
 #ifndef PIPELINEAPPLICATION_H
 #define PIPELINEAPPLICATION_H
 
-#include "core/PipelineDriver.h"
 #include "core/AbstractDataClient.h"
 
 /**
@@ -48,7 +47,7 @@ class PipelineApplication
         DataBlobFactory *_dataBlobFactory;
 
         /// The pipeline driver object.
-        PipelineDriver _driver;
+        PipelineDriver* _driver;
 
     public:
         /// Constructor.

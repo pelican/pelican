@@ -6,7 +6,6 @@ set( coreTest_src
      src/PipelineDriverTest.cpp
 )
 set( coreTestLibrary_src
-     src/TestDataClient.cpp
      src/TestPipeline.cpp
 )
 add_library(coreTestUtilities ${coreTestLibrary_src} )

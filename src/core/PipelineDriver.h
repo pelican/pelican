@@ -14,6 +14,7 @@ namespace pelican {
 class AbstractPipeline;
 class ModuleFactory;
 class AbstractDataClient;
+class DataBlobFactory;
 
 /**
  * @class PipelineDriver
@@ -36,6 +37,9 @@ class PipelineDriver
         /// Pointer to the module factory.
         ModuleFactory* _moduleFactory;
 
+        /// A pointer to the data blob factory.
+        DataBlobFactory* _blobFactory;
+
         /// Data required by all the pipelines.
         DataRequirements _requiredData;
 
@@ -48,9 +52,12 @@ class PipelineDriver
         /// Flag to run the pipeline driver.
         bool _run;
 
+        /// The hash of data returned by the getData() method.
+        QHash<QString, DataBlob*> _dataHash;
+
     public:
         /// Constructs a new pipeline driver.
-        PipelineDriver();
+        PipelineDriver(DataBlobFactory* blobFactory);
 
         /// Destroys the pipeline driver.
         ~PipelineDriver();
@@ -76,6 +83,12 @@ class PipelineDriver
 
         /// Initialise pipelines.
         void _initialisePipelines();
+
+        /// Creates all the data blobs required by the pipeline.
+        void _createDataBlobs(const DataRequirements&);
+
+        /// Returns a pointer to the data blob factory.
+        DataBlobFactory* blobFactory() {return _blobFactory;}
 };
 
 } // namespace pelican

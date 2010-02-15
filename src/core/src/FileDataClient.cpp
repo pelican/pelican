@@ -15,9 +15,8 @@ namespace pelican {
  * @details
  * This creates a new file data client.
  */
-FileDataClient::FileDataClient(const ConfigNode& config,
-        DataBlobFactory* blobFactory)
-: AbstractDataClient(config, blobFactory)
+FileDataClient::FileDataClient(const ConfigNode& config)
+: AbstractDataClient(config)
 {
     _fileVisibilities = config.getOption("fileVisibilities", "value");
 }
@@ -38,26 +37,9 @@ FileDataClient::~FileDataClient()
  * available data.
  *
  * @param[in] req All the data required by the pipeline application.
- *
- * @return The hash of data blobs.
  */
-QHash<QString, DataBlob*>& FileDataClient::getData(const DataRequirements& req)
+void FileDataClient::getData(const DataRequirements& req, QHash<QString, DataBlob*>& dataHash)
 {
-    /* Create a union of all data requirements */
-    QSet<QString> allData = req.serviceData() & req.streamData();
-
-    /* Iterate over the data requirements to create blobs if they don't exist */
-    foreach (QString type, allData) {
-        if (  ! _dataHash.contains(type) ) {
-            _dataHash.insert(type, blobFactory()->create(type));
-//            // open a file
-//            QFile file(_filenames[type]);
-//            QData
-        }
-    }
-
-    /* Return the data hash */
-    return _dataHash;
 }
 
 } // namespace pelican

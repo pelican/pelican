@@ -11,11 +11,9 @@ namespace pelican {
  * @details
  * This creates a new abstract data client.
  */
-AbstractDataClient::AbstractDataClient(const ConfigNode& config,
-        DataBlobFactory* blobFactory)
+AbstractDataClient::AbstractDataClient(const ConfigNode& config)
 {
     _config = &config;
-    _blobFactory = blobFactory;
 }
 
 /**
@@ -25,10 +23,7 @@ AbstractDataClient::AbstractDataClient(const ConfigNode& config,
  */
 AbstractDataClient::~AbstractDataClient()
 {
-    foreach (DataBlob* dataBlob, _dataHash) {
-        delete dataBlob;
-    }
-    _dataHash.clear();
 }
+
 
 } // namespace pelican

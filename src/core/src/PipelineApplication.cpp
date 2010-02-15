@@ -1,6 +1,7 @@
 #include <QCoreApplication>
 #include <QString>
 #include "core/PipelineApplication.h"
+#include "core/PipelineDriver.h"
 #include "core/ModuleFactory.h"
 #include "core/FileDataClient.h"
 #include "data/DataBlobFactory.h"
@@ -31,6 +32,7 @@ PipelineApplication::PipelineApplication(int argc, char** argv)
     _factory = NULL;
     _dataClient = NULL;
     _dataBlobFactory = NULL;
+    _driver = NULL;
 
     /* Check for QCoreApplication */
     if (QCoreApplication::instance() == NULL)
@@ -45,6 +47,9 @@ PipelineApplication::PipelineApplication(int argc, char** argv)
 
     /* Construct the data blob factory */
     _dataBlobFactory = new DataBlobFactory;
+
+    /* Construct the pipeline driver */
+    _driver = new PipelineDriver(_dataBlobFactory);
 }
 
 /**
@@ -57,10 +62,12 @@ PipelineApplication::~PipelineApplication()
     delete _factory;
     delete _dataClient;
     delete _dataBlobFactory;
+    delete _driver;
     _config = NULL;
     _factory = NULL;
     _dataClient = NULL;
     _dataBlobFactory = NULL;
+    _driver = NULL;
 }
 
 /**
@@ -81,7 +88,7 @@ QString PipelineApplication::getConfigFile() const
  */
 void PipelineApplication::registerPipeline(AbstractPipeline *pipeline)
 {
-    _driver.registerPipeline(pipeline);
+    _driver->registerPipeline(pipeline);
 }
 
 /**
@@ -118,9 +125,9 @@ void PipelineApplication::setDataClient(QString name)
  */
 void PipelineApplication::start()
 {
-    _driver.setDataClient(_dataClient);
-    _driver.setModuleFactory(_factory);
-    _driver.start();
+    _driver->setDataClient(_dataClient);
+    _driver->setModuleFactory(_factory);
+    _driver->start();
 }
 
 /**
