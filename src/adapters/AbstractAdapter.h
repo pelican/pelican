@@ -2,6 +2,7 @@
 #define ABSTRACTADAPTER_H
 
 #include <QDataStream>
+#include "utility/ConfigNode.h"
 
 /**
  * @file AbstractAdapter.h
@@ -9,7 +10,6 @@
 
 namespace pelican {
 
-class ConfigNode;
 class DataBlob;
 
 /**

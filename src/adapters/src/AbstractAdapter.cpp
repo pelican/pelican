@@ -1,5 +1,4 @@
 #include "adapters/AbstractAdapter.h"
-#include "utility/ConfigNode.h"
 
 #include "utility/memCheck.h"
 

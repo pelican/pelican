@@ -45,11 +45,11 @@ AdapterLofarStationVisibilities::~AdapterLofarStationVisibilities()
  */
 void AdapterLofarStationVisibilities::deserialise(QDataStream& in)
 {
-    _setVisibilityData();
+    // Set local data pointers, resize data if needed, and perform sanity checks!
+    _setData();
 
+    // Read data from the stream
     complex_t* vis = _vis->ptr();
-
-    // Assuming checkboard ant(XX/YY) per channel ?!
     for (unsigned c = 0; c < _nChan; c++) {
         for (unsigned j = 0; j < _nAnt; j++) {
             for (unsigned i = 0; i < _nAnt; i++) {
@@ -71,7 +71,7 @@ void AdapterLofarStationVisibilities::deserialise(QDataStream& in)
  * chunk size.
  * Resizes the visibility data blob as required.
  */
-void AdapterLofarStationVisibilities::_setVisibilityData()
+void AdapterLofarStationVisibilities::_setData()
 {
     if (_chunkSize == 0) {
         throw QString("No data to read. Stream chunk size set to zero.");
@@ -82,7 +82,7 @@ void AdapterLofarStationVisibilities::_setVisibilityData()
     }
 
     // If any service data exists update the visibility dimensions from it...
-    if (!_serviceData.empty()) _updateVisibilityDimensions();
+    if (!_serviceData.empty()) _updateDimensions();
 
     // Check the expected size due to data dimensions matches the stream chunk size
     unsigned dataSize = _nAnt * _nAnt * _nChan * _nPol * _dataBytes;
@@ -101,7 +101,7 @@ void AdapterLofarStationVisibilities::_setVisibilityData()
  * Updates the visibility data dimensions from service data passed down
  * from the adapter configuration.
  */
-void AdapterLofarStationVisibilities::_updateVisibilityDimensions()
+void AdapterLofarStationVisibilities::_updateDimensions()
 {
     // EXAMPLE ++ pseudo-code only +++
     // _nAnt = serviceData.nAnt;

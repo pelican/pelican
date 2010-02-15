@@ -7,6 +7,8 @@
 #include <QStringList>
 #include <QtGlobal>
 
+#include "adapters/AdapterFrequencyList.h"
+#include "adapters/AdapterAntennaList.h"
 #include "adapters/AdapterLofarStationVisibilities.h"
 
 #include "utility/memCheck.h"
@@ -56,7 +58,7 @@ AbstractAdapter* AdapterFactory::create(const QString& type, const QString& name
     ConfigNode config = _config->get(address);
 
     /* Create the module */
-    return _create(name, config);
+    return _create(type, config);
 }
 
 
@@ -75,8 +77,16 @@ AbstractAdapter* AdapterFactory::create(const QString& type, const QString& name
 AbstractAdapter* AdapterFactory::_create(const QString& type, const ConfigNode& config)
 {
     AbstractAdapter* adapter = 0;
-    if (type == "FileAdatperLofarVisibilties") {
+    if (type == "AdatperLofarStationVisibilties") {
         adapter = new AdapterLofarStationVisibilities(config);
+        _adapters.append(adapter);
+    }
+    else if (type == "AdapterFrequencyList") {
+        adapter = new AdapterFrequencyList(config);
+        _adapters.append(adapter);
+    }
+    else if (type == "AdapterAntennaList") {
+        adapter = new AdapterAntennaList(config);
         _adapters.append(adapter);
     }
     else throw QString("Unknown adapter type '" + type + "'");

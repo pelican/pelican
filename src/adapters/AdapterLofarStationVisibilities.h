@@ -44,11 +44,11 @@ class AdapterLofarStationVisibilities : public AbstractStreamAdapter
 
     private:
         /// Updates and checks the size of the visibility data being read into.
-        void _setVisibilityData();
+        void _setData();
 
         /// Updates dimensions of visibility data being deserialised based
         /// on information contained in the service passed in the adapter config.
-        void _updateVisibilityDimensions();
+        void _updateDimensions();
 
     private:
         unsigned _nAnt;         ///< Number of antennas in the chunk

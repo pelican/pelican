@@ -7,6 +7,8 @@ set( adapters_src
     src/AbstractStreamAdapter.cpp
     src/AdapterFactory.cpp
     src/AdapterLofarStationVisibilities.cpp
+    src/AdapterAntennaList.cpp
+    src/AdapterFrequencyList.cpp
 )
 
 add_library(adapters ${adapters_src} )
