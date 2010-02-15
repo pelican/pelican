@@ -1,10 +1,13 @@
 #include "AdapterFactory.h"
 #include "adapters/AbstractAdapter.h"
-#include "adapters/FileAdapterLofarVisibilities.h"
+#include "adapters/AbstractStreamAdapter.h"
+#include "adapters/AbstractServiceAdapter.h"
 #include "utility/ConfigNode.h"
 #include "utility/Config.h"
 #include <QStringList>
 #include <QtGlobal>
+
+#include "adapters/AdapterLofarStationVisibilities.h"
 
 #include "utility/memCheck.h"
 
@@ -73,7 +76,7 @@ AbstractAdapter* AdapterFactory::_create(const QString& type, const ConfigNode& 
 {
     AbstractAdapter* adapter = 0;
     if (type == "FileAdatperLofarVisibilties") {
-        adapter = new FileAdapterLofarVisibilities(config);
+        adapter = new AdapterLofarStationVisibilities(config);
         _adapters.append(adapter);
     }
     else throw QString("Unknown adapter type '" + type + "'");

@@ -1,17 +1,18 @@
 #ifndef ADAPTERFACTOR_H
 #define ADAPTERFACTOR_H
 
-#include "utility/Config.h"
-#include "utility/ConfigNode.h"
-#include "adapters/AbstractAdapter.h"
 #include <QString>
 #include <QVector>
+#include "utility/Config.h"
 
 /**
  * @file AdapterFactory.h
  */
 
 namespace pelican {
+
+class ConfigNode;
+class AbstractAdapter;
 
 /**
  * @class AdapterFactory

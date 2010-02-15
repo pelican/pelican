@@ -30,7 +30,7 @@ class AbstractAdapter
 {
     public:
         /// Constructs a new adapter.
-        AbstractAdapter(const ConfigNode& config, DataBlob* dataBlob);
+        AbstractAdapter(const ConfigNode& config);
 
         /// Destroys the adapter (virtual).
         virtual ~AbstractAdapter();
@@ -61,9 +61,12 @@ class AbstractAdapter
         /// Deseralise method to convert a stream into a data blob (pure virtual)
         virtual void deseralise(QDataStream& in) const = 0;
 
-    private:
-        /// Data blob filled by this adapter.
-        DataBlob* _dataBlob;
+    protected:
+        /// Data blob pointer to be by the adapter.
+        DataBlob* _data;
+
+        /// Chunk size in bytes.
+        std::size_t _size;
 };
 
 } // namespace pelican

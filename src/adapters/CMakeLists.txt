@@ -3,8 +3,10 @@ SUBPACKAGE(adapters utility data)
 
 set( adapters_src
     src/AbstractAdapter.cpp
+    src/AbstractServiceAdapter.cpp
+    src/AbstractStreamAdapter.cpp
     src/AdapterFactory.cpp
-    src/FileAdapterLofarVisibilities.cpp
+    src/AdapterLofarStationVisibilities.cpp
 )
 
 add_library(adapters ${adapters_src} )
