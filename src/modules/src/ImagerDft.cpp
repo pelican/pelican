@@ -15,11 +15,11 @@ ImagerDft::ImagerDft(const ConfigNode& config)
     : AbstractModule(config)
 {
     // Register which data blobs are needed by the module
-    addRemoteStreamData("VisibilityData");
-    addLocalStreamData("VisibilityPositions");
-    addLocalStreamData("ImageData");
+    addStreamData("VisibilityData");
+    addGeneratedData("VisibilityPositions");
+    addGeneratedData("ImageData");
 
-    // Extract configuration from the xml configuration node.
+    // Extract configuration from the XML configuration node.
     _getConfiguration(config);
 
     // Generate image pixel coordinate vectors based on the image configuration.

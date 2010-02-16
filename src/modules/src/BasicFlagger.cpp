@@ -15,8 +15,8 @@ BasicFlagger::BasicFlagger(const ConfigNode& config)
     : AbstractModule(config)
 {
     /* Set data requirements */
-    addRemoteStreamData("VisibilityData");
-    addLocalServiceData("FlagTable");
+    addStreamData("VisibilityData");
+    addGeneratedData("FlagTable");
 
     /* Get clipping levels */
     _minLevelMedian = config.getOption("min_level_median", "value", "0.25").toDouble();

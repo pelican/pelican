@@ -31,8 +31,14 @@ class DataRequirements
         /// Destroys the data requirements object.
         ~DataRequirements();
 
+        /// Adds the required service data type.
+        void addServiceData(const QString& type);
+
         /// Adds the required service data set.
         void addServiceData(const QSet<QString>& list);
+
+        /// Adds the required stream data type.
+        void addStreamData(const QString& type);
 
         /// Adds the required stream data set.
         void addStreamData(const QSet<QString>& list);
@@ -49,10 +55,10 @@ class DataRequirements
         /// Test for compatibility with a data blob hash.
         bool isCompatible(const QHash<QString, DataBlob*>& d) const;
 
-        /// Adds the given service data as a requirement.
+        /// Adds the given service data as a requirement. (DEPRECATED)
         void setServiceData(const QString& string);
 
-        /// Adds the given stream data as a requirement.
+        /// Adds the given stream data as a requirement. (DEPRECATED)
         void setStreamData(const QString& string);
 
         /// Sets the required service data set.

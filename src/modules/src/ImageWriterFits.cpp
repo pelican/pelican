@@ -20,9 +20,9 @@ ImageWriterFits::ImageWriterFits(const ConfigNode& config)
     : AbstractModule(config)
 {
     // Register which data blobs are needed by the module
-    addLocalStreamData("ImageData");
+    addGeneratedData("ImageData");
 
-    // Extract configuration from the xml configuration node.
+    // Extract configuration from the XML configuration node.
     _getConfiguration(config);
 
     _image = NULL;

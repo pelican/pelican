@@ -24,7 +24,7 @@ TestPipeline::TestPipeline(const DataRequirements& requirements)
     : AbstractPipeline()
 {
     _setDefaults();
-    _data = requirements;
+//    _data = requirements;
 }
 
 /**
@@ -62,7 +62,7 @@ void TestPipeline::reset()
  */
 void TestPipeline::run(QHash<QString, DataBlob*>& dataHash)
 {
-    if (dataRequired() == dataHash)
+//    if (dataRequired() == dataHash)
         ++_matchedCounter;
 
     /* Increment counter and test for completion */

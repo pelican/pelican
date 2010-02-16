@@ -160,7 +160,7 @@ void PipelineDriver::_createDataBlobs(const DataRequirements& req)
 void PipelineDriver::_determineDataRequirements(AbstractPipeline* pipeline)
 {
     /* Check for an empty pipeline */
-    if (pipeline->dataRequired() == DataRequirements())
+    if (pipeline->requiredDataAll() == DataRequirements())
         throw QString("Empty pipelines are not supported.");
 
     /* Check that the set of stream data required for this pipeline does not
@@ -169,19 +169,19 @@ void PipelineDriver::_determineDataRequirements(AbstractPipeline* pipeline)
      * try to modify the same data. */
     QMultiHash<DataRequirements, AbstractPipeline*>::iterator i = _pipelines.begin();
     while (i != _pipelines.end()) {
-        if ((i.key().streamData() & pipeline->dataRequired().streamData()).size() > 0) {
-            throw QString("Multiple pipelines requiring the same stream data are not currently supported.");
+        if ((i.key().streamData() & pipeline->requiredDataRemote().streamData()).size() > 0) {
+            throw QString("Multiple pipelines requiring the same remote stream data are not supported.");
         }
         ++i;
     }
 
-    _pipelines.insert(pipeline->dataRequired(), pipeline);
-    _requiredData += pipeline->dataRequired();
+    _pipelines.insert(pipeline->requiredDataRemote(), pipeline);
+    _requiredData += pipeline->requiredDataRemote();
 }
 
 /**
  * @details
- * Private method to initialises the pipelines by iterating over them,
+ * Private method to initialise the pipelines by iterating over them,
  * creating their modules and finding out their data requirements.
  * This is called by start().
  */

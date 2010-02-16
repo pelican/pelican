@@ -25,12 +25,32 @@ DataRequirements::~DataRequirements()
 
 /**
  * @details
+ * Adds the given parameter to the required service data.
+ */
+void DataRequirements::addServiceData(const QString& string)
+{
+    _hash = 0; // Mark for rehashing.
+    _serviceData.insert(string);
+}
+
+/**
+ * @details
  * Adds the given set to the service data requirements.
  */
 void DataRequirements::addServiceData(const QSet<QString>& list)
 {
     _hash = 0; // Mark for rehashing.
     _serviceData.unite(list);
+}
+
+/**
+ * @details
+ * Adds the given parameter to the required stream data.
+ */
+void DataRequirements::addStreamData(const QString& string)
+{
+    _hash = 0; // Mark for rehashing.
+    _streamData.insert(string);
 }
 
 /**
@@ -101,7 +121,7 @@ bool DataRequirements::isCompatible(const QHash<QString, DataBlob*>& d) const
 /**
  * @details
  * Adds the given parameter to the required service data.
- * TODO rename this method to addServiceData?
+ * TODO DEPRECATED: use addServiceData() instead.
  */
 void DataRequirements::setServiceData(const QString& string)
 {
@@ -112,7 +132,7 @@ void DataRequirements::setServiceData(const QString& string)
 /**
  * @details
  * Adds the given parameter to the required stream data.
- * TODO rename this method to addStreamData?
+ * TODO DEPRECATED: use addStreamData() instead.
  */
 void DataRequirements::setStreamData(const QString& string)
 {

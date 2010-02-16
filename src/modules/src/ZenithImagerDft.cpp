@@ -23,10 +23,10 @@ ZenithImagerDft::ZenithImagerDft(const ConfigNode& config)
     : AbstractModule(config)
 {
     // Register which data blobs are needed by the module
-    addRemoteStreamData("VisibilityData");
-    addLocalStreamData("AntennaPositions");
-    addLocalStreamData("ImageData");
-    addLocalStreamData("FrequencyList");
+    addStreamData("VisibilityData");
+    addServiceData("AntennaPositions");
+    addServiceData("FrequencyList");
+    addGeneratedData("ImageData");
 
     // Initialise local data pointers
     _vis = NULL;

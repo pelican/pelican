@@ -10,8 +10,8 @@ namespace pelican {
 TestModule::TestModule(const QDomElement& config)
     : AbstractModule(config)
 {
-    addRemoteStreamData("TestStream");
-    addRemoteServiceData("TestService");
+    addStreamData("TestStream");
+    addServiceData("TestService");
 }
 
 /**

@@ -1,6 +1,5 @@
 SUBPACKAGE(modules data utility)
 set( modules_src
-     src/AbstractModule.cpp
      src/VisibilityPrinter.cpp
      src/BasicFlagger.cpp
      src/EmptyModule.cpp

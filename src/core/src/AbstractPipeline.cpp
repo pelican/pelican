@@ -54,18 +54,55 @@ AbstractModule* AbstractPipeline::createModule(const QString& type)
 
 /**
  * @details
- * Computes and returns the data required by the modules in this pipeline.
+ * Computes and returns all the data required by the modules in this pipeline.
  *
- * @return Returns a const-reference to the DataRequirements object held
- *         by the pipeline.
+ * @return Returns all the data required by all modules in the pipeline.
  */
-const DataRequirements& AbstractPipeline::dataRequired()
+const DataRequirements AbstractPipeline::requiredDataAll()
 {
+    DataRequirements reqDataAll;
+
     /* Loop over all the modules in the pipeline */
     foreach (AbstractModule* module, _modules) {
-        _data += module->requiredData();
+        reqDataAll += module->requiredDataAll();
     }
-    return _data;
+    return reqDataAll;
+}
+
+/**
+ * @details
+ * Computes and returns all the generated data required by the modules in
+ * this pipeline.
+ *
+ * @return Returns the generated data required by all modules in the pipeline.
+ */
+const DataRequirements AbstractPipeline::requiredDataGenerated()
+{
+    DataRequirements reqDataGenerated;
+
+    /* Loop over all the modules in the pipeline */
+    foreach (AbstractModule* module, _modules) {
+        reqDataGenerated += module->requiredDataGenerated();
+    }
+    return reqDataGenerated;
+}
+
+/**
+ * @details
+ * Computes and returns all the remote data required by the modules in this
+ * pipeline.
+ *
+ * @return Returns the remote data required by all modules in the pipeline.
+ */
+const DataRequirements AbstractPipeline::requiredDataRemote()
+{
+    DataRequirements reqDataRemote;
+
+    /* Loop over all the modules in the pipeline */
+    foreach (AbstractModule* module, _modules) {
+        reqDataRemote += module->requiredDataRemote();
+    }
+    return reqDataRemote;
 }
 
 /**

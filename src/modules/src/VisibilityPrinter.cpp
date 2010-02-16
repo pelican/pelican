@@ -15,7 +15,7 @@ namespace pelican {
 VisibilityPrinter::VisibilityPrinter(const ConfigNode& config)
     : AbstractModule(config)
 {
-    addLocalStreamData("VisibilityData");
+    addStreamData("VisibilityData");
     _vis = NULL;
 }
 

@@ -34,7 +34,7 @@ class ModuleFactory;
  * {
  *     private:
  *         // Module pointers.
- *         AbstractModule *flagger;
+ *         BasicFlagger *flagger;
  *
  *     public:
  *         void init()
@@ -66,9 +66,6 @@ class AbstractPipeline
         friend class TestPipeline;
 
     private:
-        /// The service and stream data required by the pipeline.
-        DataRequirements _data;
-
         /// Pointer to the PipelineApplication module factory (private, not protected).
         ModuleFactory* _moduleFactory;
 
@@ -98,9 +95,6 @@ class AbstractPipeline
         /// Destroys the abstract pipeline.
         virtual ~AbstractPipeline();
 
-        /// Compute and return the data requirements for the pipeline.
-        const DataRequirements& dataRequired();
-
         /// Initialises the pipeline by creating the required modules
         /// (pure virtual).
         /// This method creates the required modules when the pipeline is
@@ -111,6 +105,15 @@ class AbstractPipeline
         /// This method returns the name of the pipeline for use when finding
         /// configuration settings for the pipeline modules.
         const QString& name() const {return _pipelineName;}
+
+        /// Compute and return the data requirements for the pipeline.
+        const DataRequirements requiredDataAll();
+
+        /// Compute and return the generated data requirements for the pipeline.
+        const DataRequirements requiredDataGenerated();
+
+        /// Compute and return the remote data requirements for the pipeline.
+        const DataRequirements requiredDataRemote();
 
         /// Defines a single iteration of the pipeline (pure virtual).
         /// This method defines what happens when the pipeline is run once,
