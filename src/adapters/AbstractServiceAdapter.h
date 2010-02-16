@@ -37,7 +37,7 @@ class AbstractServiceAdapter : public AbstractAdapter
 
     public:
         /// Configures an abstract adapter
-        const AbstractServiceAdapter& config(DataBlob* data, std::size_t size);
+        AbstractServiceAdapter& config(DataBlob* data, std::size_t size);
 
 };
 

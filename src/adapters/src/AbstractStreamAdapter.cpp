@@ -27,7 +27,7 @@ AbstractStreamAdapter::~AbstractStreamAdapter()
 /**
  * @details
  */
-const AbstractStreamAdapter& AbstractStreamAdapter::config(DataBlob* data,
+AbstractStreamAdapter& AbstractStreamAdapter::config(DataBlob* data,
         std::size_t size, QHash<QString, DataBlob*>& serviceData)
 {
     _data = data;

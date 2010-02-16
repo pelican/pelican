@@ -27,7 +27,7 @@ AbstractServiceAdapter::~AbstractServiceAdapter()
 /**
  * @details
  */
-const AbstractServiceAdapter& AbstractServiceAdapter::config(DataBlob* data,
+AbstractServiceAdapter& AbstractServiceAdapter::config(DataBlob* data,
         std::size_t size)
 {
     _data = data;

@@ -1,4 +1,6 @@
 #include "core/FileDataClient.h"
+#include "adapters/AbstractServiceAdapter.h"
+#include "adapters/AbstractStreamAdapter.h"
 #include "adapters/AdapterFactory.h"
 #include "data/DataRequirements.h"
 #include "data/DataBlobFactory.h"
@@ -27,12 +29,12 @@ FileDataClient::FileDataClient(const ConfigNode& config,
     /* Loop over data requirements for each pipeline */
     foreach (DataRequirements req, dataRequirements) {
         /* Create a union of required data types for this pipeline */
-        QSet<QString> allData = req.serviceData() & req.streamData();
+        QSet<QString> allDataReq = req.serviceData() & req.streamData();
 
         /* Loop over each data type to set up the adapters for each pipeline */
         adapters().append(QHash<QString, AbstractAdapter*>());
-        foreach (QString type, allData) {
-            AbstractAdapter* adapter = adapterFactory->create(type);
+        foreach (QString type, allDataReq) {
+            AbstractAdapter* adapter = adapterFactory->create(adapterNames().value(type));
             adapters().last().insert(type, adapter);
         }
     }
@@ -57,9 +59,41 @@ QHash<QString, DataBlob*> FileDataClient::getData(QHash<QString, DataBlob*>& dat
     QHash<QString, DataBlob*> validHash;
 
     /* Loop over each pipeline's set of data requirements */
+    unsigned pipelineIndex = 0;
     foreach (DataRequirements req, dataRequirements()) {
 
+        /* Loop over service data requirements */
+        foreach (QString type, req.serviceData()) {
+            QString filename = _fileNames.value(type);
+            if (!filename.isEmpty()) {
+                QFile file(filename);
+                if (!file.open(QIODevice::ReadOnly))
+                    throw QString("Cannot open file.");
+                QDataStream in(&file);
+                AbstractAdapter* ad = adapters().at(pipelineIndex).value(type);
+                AbstractServiceAdapter* adapter = static_cast<AbstractServiceAdapter*>(ad);
+                in >> adapter->config(dataHash.value(type), 0);
+            }
+        }
+
+        /* Loop over stream data requirements */
+        foreach (QString type, req.streamData()) {
+            QString filename = _fileNames.value(type);
+            if (!filename.isEmpty()) {
+                QFile file(filename);
+                if (!file.open(QIODevice::ReadOnly))
+                    throw QString("Cannot open file.");
+                QDataStream in(&file);
+                AbstractAdapter* ad = adapters().at(pipelineIndex).value(type);
+                AbstractStreamAdapter* adapter = static_cast<AbstractStreamAdapter*>(ad);
+                QHash<QString, DataBlob*> hash;
+                in >> adapter->config(dataHash.value(type), 0, hash);
+            }
+        }
+        pipelineIndex++;
     }
+
+    return validHash;
 }
 
 /**

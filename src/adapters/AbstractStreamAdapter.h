@@ -39,7 +39,7 @@ class AbstractStreamAdapter : public AbstractAdapter
 
     public:
         /// Configures an abstract adapter for use with the stream operator
-        const AbstractStreamAdapter& config(DataBlob* data, std::size_t size,
+        AbstractStreamAdapter& config(DataBlob* data, std::size_t size,
                 QHash<QString, DataBlob*>& serviceData);
 
     protected:

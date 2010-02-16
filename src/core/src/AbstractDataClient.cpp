@@ -1,5 +1,6 @@
 #include "core/AbstractDataClient.h"
 #include "data/DataRequirements.h"
+#include "utility/ConfigNode.h"
 
 #include "utility/memCheck.h"
 
@@ -21,9 +22,13 @@ AbstractDataClient::AbstractDataClient(const ConfigNode& config,
         AdapterFactory* adapterFactory,
         QList<DataRequirements>& dataRequirements
 ){
+    /* Store local copies */
     _configNode = &config;
     _adapterFactory = adapterFactory;
     _dataRequirements = dataRequirements;
+
+    /* Get the file-type to adapter mapping */
+    _adapterNames = config.getOptionHash("data", "type", "adapter");
 }
 
 /**
@@ -33,6 +38,5 @@ AbstractDataClient::AbstractDataClient(const ConfigNode& config,
 AbstractDataClient::~AbstractDataClient()
 {
 }
-
 
 } // namespace pelican
