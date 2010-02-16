@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pelican>
+<configuration version="1.0">
+
+<clients>
+    <FileDataClient>
+        <data type="VisibilityData" adapter="AdapterLofarStationVisibilities" file="test.dat"/>
+    </FileDataClient>
+</clients>
+
+<adapters>
+    <AdapterLofarStationVisibilties>
+    </AdapterLofarStationVisibilties>
+</adapters>
+
+</configuration>
