@@ -42,17 +42,19 @@ PipelineApplication::PipelineApplication(int argc, char** argv)
     if (!_createConfig(argc, argv))
         return;
 
-    /* Construct the module factory */
-    _moduleFactory = new ModuleFactory(_config);
-
     /* Construct the adapter factory */
     _adapterFactory = new AdapterFactory(_config);
 
     /* Construct the data blob factory */
     _dataBlobFactory = new DataBlobFactory;
 
+    /* Construct the module factory */
+    _moduleFactory = new ModuleFactory(_config);
+
     /* Construct the pipeline driver */
-    _driver = new PipelineDriver(_dataBlobFactory, _adapterFactory);
+    _driver = new PipelineDriver(_adapterFactory, _dataBlobFactory,
+            _moduleFactory);
+
 }
 
 /**
@@ -102,13 +104,11 @@ void PipelineApplication::setDataClient(QString name)
 
 /**
  * @details
- * Starts the pipeline driver and sets pointers to the module factory and
- * data client. This should be called from main().
+ * Starts the pipeline driver. This should be called from main().
  */
 void PipelineApplication::start()
 {
     try {
-        _driver->setModuleFactory(_moduleFactory);
         _driver->start();
     }
     catch (QString err) {
@@ -159,6 +159,7 @@ bool PipelineApplication::_createConfig(int argc, char** argv)
         _config = new Config(QString::fromStdString(configFilename));
     } catch (QString error) {
         std::cerr << error.toLatin1().data() << std::endl;
+        return false;
     }
 
     return true;
