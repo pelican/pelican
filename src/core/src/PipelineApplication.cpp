@@ -107,8 +107,14 @@ void PipelineApplication::setDataClient(QString name)
  */
 void PipelineApplication::start()
 {
-    _driver->setModuleFactory(_moduleFactory);
-    _driver->start();
+    try {
+        _driver->setModuleFactory(_moduleFactory);
+        _driver->start();
+    }
+    catch (QString err) {
+        std::cout << "ERROR: " << err.toStdString() << std::endl;
+    }
+
 }
 
 /**
