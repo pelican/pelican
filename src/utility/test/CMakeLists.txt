@@ -16,7 +16,7 @@ add_executable(utilityTest ${utilityTest_src} )
 target_link_libraries(utilityTest ${SUBPACKAGE_LIBRARIES} ${CPPUNIT_LIBRARIES} memoryTracer)
 add_test(utilityTest utilityTest )
 
-copy_files(${CMAKE_CURRENT_SOURCE_DIR}/data/*.xml .)
+copy_files(${CMAKE_CURRENT_SOURCE_DIR}/data/*.xml . testXMLFiles)
 
 
 

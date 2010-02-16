@@ -3,6 +3,7 @@
 
 #include <QDataStream>
 #include "utility/ConfigNode.h"
+#include <iostream>
 
 /**
  * @file AbstractAdapter.h
@@ -14,7 +15,7 @@ class DataBlob;
 
 /**
  * @class AbstractAdapter
- *  
+ *
  * @brief
  * Abstract base class for all data adapters.
  *

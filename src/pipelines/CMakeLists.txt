@@ -1,5 +1,5 @@
 INCLUDE_DIRECTORIES(${QT_INCLUDES})
-SUBPACKAGE(pipelines core modules data utility)
+SUBPACKAGE(pipelines utility data modules core)
 set( pipelines_src
     src/MyPipeline.cpp
 )

@@ -29,16 +29,14 @@ void MyPipelineTest::tearDown()
 
 void MyPipelineTest::test_method()
 {
-    int argc = 1;
-    char *argv[] = {(char*)"pelican"};
+    int argc = 2;
+    char *argv[] = {(char*)"pelican", (char*)"--config=data/MyPipelineConfig.xml"};
     QCoreApplication app(argc, argv);
 
     PipelineApplication pApp(argc, argv);
     pApp.registerPipeline(new MyPipeline);
     pApp.setDataClient("FileDataClient");
     pApp.start();
-
-
 }
 
 } // namespace pelican
