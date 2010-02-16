@@ -1,5 +1,5 @@
 #include "PipelineApplicationTest.h"
-#include "PipelineApplication.h"
+#include "core/PipelineApplication.h"
 #include <QCoreApplication>
 
 

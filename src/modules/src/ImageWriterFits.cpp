@@ -1,12 +1,12 @@
 #include "modules/ImageWriterFits.h"
 #include "utility/constants.h"
+#include "utility/ConfigNode.h"
+#include "data/ImageData.h"
 #include <ctime>
 #include <QFile>
 #include <QFileInfo>
 #include <QDir>
 #include <iostream>
-
-#define HERE std::cout << "** " <<__FUNCTION__ << "()::L" << __LINE__ << std::endl;
 
 #include "utility/memCheck.h"
 
@@ -25,8 +25,8 @@ ImageWriterFits::ImageWriterFits(const ConfigNode& config)
     // Extract configuration from the xml configuration node.
     _getConfiguration(config);
 
-    _image=NULL;
-    _fits=NULL;
+    _image = NULL;
+    _fits = NULL;
 }
 
 
@@ -205,6 +205,10 @@ void ImageWriterFits::_writeHeader()
     _writeKey("CDELT4", 0.0);
     _writeKey("CRPIX4", 0.0);
     _writeKey("CROTA4", 0.0);
+
+    _writeHistory("This image was created using PELICAN.");
+    _writeHistory("- PELICAN: Pipeline for Extensible Imaging and CalibrAtion");
+//    _writeHistory("- SEE: www.pelican.oerc.ox.ac.uk");
 }
 
 
@@ -293,6 +297,12 @@ void ImageWriterFits::_writeKey(const QString& keyword, const unsigned& value,
             (char*)comment.toLatin1().data(), &err);
 }
 
+
+void ImageWriterFits::_writeHistory(const QString& text)
+{
+    int err = 0;
+    ffphis(_fits, (char*)text.toLatin1().data(), &err);
+}
 
 
 } // namespace pelican
