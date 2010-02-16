@@ -30,6 +30,8 @@ AdapterFrequencyList::~AdapterFrequencyList()
  */
 void AdapterFrequencyList::deserialise(QDataStream& in)
 {
+    _setData();
+
     double* freq = _freqList->ptr();
     for (unsigned c = 0; c < _nChan; c++) {
         in >> freq[c];

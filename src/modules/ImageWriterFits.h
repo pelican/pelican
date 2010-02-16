@@ -1,12 +1,11 @@
 #ifndef IMAGERWRITERFITS_H_
 #define IMAGERWRITERFITS_H_
 
-#include "AbstractModule.h"
-#include "data/ImageData.h"
-#include "utility/ConfigNode.h"
-#include <fitsio.h>
+#include "modules/AbstractModule.h"
 #include <QStringList>
-
+#include <QString>
+#include <QHash>
+#include <fitsio.h>
 
 /**
  * @file ImageWriterFits.h
@@ -14,12 +13,16 @@
 
 namespace pelican {
 
+class ConfigNode;
+class DataBlob;
+class ImageData;
+
 /**
  * @class ImageWriterFits
- *  
+ *
  * @brief
  * Module which will produce a brightness map given a matrix of visibility data.
- * 
+ *
  * @details
  */
 
@@ -88,6 +91,9 @@ class ImageWriterFits : public AbstractModule
         /// Write a header key - unsigned value
         void _writeKey(const QString& keyword, const unsigned& value,
                 const QString& comment = QString());
+
+        /// Write a header history line.
+        void _writeHistory(const QString& text);
 
     private:
         ImageData* _image;

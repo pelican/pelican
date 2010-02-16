@@ -1,6 +1,7 @@
 #include "ImageWriterFitsTest.h"
-#include "ImageWriterFits.h"
+#include "modules/ImageWriterFits.h"
 #include "utility/Config.h"
+#include "data/ImageData.h"
 #include <iostream>
 
 #include "utility/memCheck.h"

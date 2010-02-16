@@ -82,7 +82,7 @@ while ( $ARGV[0] =~/^-(.+)/ )
                        "{\n}\n\n";
             next;
         }
-        elsif ( $template eq "QWidget" ) 
+        elsif ( $template eq "QWidget" )
         {
             $headtext = '${i}Q_OBJECT'."\n\n";
             $includes = "#include <QWidget>\n";
@@ -90,7 +90,7 @@ while ( $ARGV[0] =~/^-(.+)/ )
             $constructSig="QWidget* parent";
             $constructHeadSig="QWidget* parent=0";
         }
-        elsif ( $template eq "QDialog" ) 
+        elsif ( $template eq "QDialog" )
         {
             $headtext = '${i}Q_OBJECT'."\n\n";
             $includes = "#include <QDialog>\n";
@@ -111,9 +111,9 @@ while ( $ARGV[0] =~/^-(.+)/ )
     }
 }
 
-if ( $#ARGV != 0 ) { 
+if ( $#ARGV != 0 ) {
     print "Expecting different number of arguments. Got : ( @ARGV )\n";
-    usage(); 
+    usage();
     exit 1;
 }
 my $verbose = 0;
@@ -151,9 +151,9 @@ if ( $verbose ) {
 {
     # expand the cpptext variables
     no strict 'refs';
-    $cpptext =~ s/(\$\{\w+\})/$1/eeg; 
-    $cppincludes =~ s/(\$\{\w+\})/$1/eeg; 
-    $cppincludesNamespace =~ s/(\$\{\w+\})/$1/eeg; 
+    $cpptext =~ s/(\$\{\w+\})/$1/eeg;
+    $cppincludes =~ s/(\$\{\w+\})/$1/eeg;
+    $cppincludesNamespace =~ s/(\$\{\w+\})/$1/eeg;
 }
 if ( ! -f $src_file ) {
     if ( $verbose ) {
@@ -165,11 +165,16 @@ if ( ! -f $src_file ) {
     print $fh "#include \"utility/memCheck.h\"\n\n";
     print $fh "namespace $namespace {\n\n", if ( defined $namespace );
     print $fh $cppincludesNamespace, "\n", if ( defined $namespace );
-    print $fh "// class $classname \n";
+    print $fh "/**\n";
+    print $fh " * @details $classname \n";
+    print $fh " */\n";
     print $fh $classname,"::", $classname, "($constructSig)\n",
               (( $baseclass ne "")?"    : ".$baseclass."()\n":"" ),
               "{\n",
               "}\n\n",
+              "/**\n",
+              " * @details\n",
+              " */\n,
               $classname, "::~", $classname, "()\n{\n",
               "}\n\n",
               $cpptext;
@@ -185,7 +190,7 @@ if ( ! -f $header_file ) {
     {
        # expand the header text variables
        no strict 'refs';
-       $headtext =~ s/(\$\{\w+\})/$1/eeg; 
+       $headtext =~ s/(\$\{\w+\})/$1/eeg;
     }
     $defname=~tr/a-z/A-Z/;
     print $fh "#ifndef ", $defname, "\n",

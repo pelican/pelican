@@ -1,3 +1,4 @@
 Adapters
 =========
-Adapters are telescope specific functional units providing conversion of data formats for compatibility with the data server.
+Adapters are data specific functional units providing conversion of data formats
+from binary data streams to PELICAN data blobs.

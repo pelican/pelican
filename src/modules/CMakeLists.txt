@@ -1,6 +1,7 @@
 SUBPACKAGE(modules data utility)
 set( modules_src
      src/AbstractModule.cpp
+     src/VisibilityPrinter.cpp
      src/BasicFlagger.cpp
      src/EmptyModule.cpp
      src/ZenithCalibrater.cpp
@@ -13,7 +14,7 @@ set( modules_src
 add_library(modules ${modules_src} )
 target_link_libraries(modules ${SUBPACKAGE_LIBRARIES} )
 install(TARGETS modules DESTINATION ${LIBRARY_INSTALL_DIR} )
-SUBPACKAGE_ADD_LIBRARIES(modules 
+SUBPACKAGE_ADD_LIBRARIES(modules
     ${PELICAN_CBLAS_LIBS}
     /usr/lib/libpthread.so
     ${CFITSIO_LIBRARIES}

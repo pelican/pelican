@@ -15,11 +15,11 @@ class ConfigNode;
 
 /**
  * @class AdapterLofarStationVisibilities
- *  
+ *
  * @brief
  * Adapter to deserialise a set of LOFAR station visibilities into a
  * PELICAN visibility data blob.
- * 
+ *
  * @details
  * Stream adapter to deserialise a visibility amplitude data set parameterised
  * by number of antennas, number of channels, and number of polarisations into
@@ -60,4 +60,4 @@ class AdapterLofarStationVisibilities : public AbstractStreamAdapter
 
 } // namespace pelican
 
-#endif // FILEADAPTERLOFARVISIBILITIES_H 
+#endif // FILEADAPTERLOFARVISIBILITIES_H
