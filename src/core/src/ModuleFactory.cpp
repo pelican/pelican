@@ -1,13 +1,15 @@
 #include <QStringList>
 #include <QtGlobal>
-#include "ModuleFactory.h"
+#include "core/ModuleFactory.h"
+#include "utility/Config.h"
+
 #include "modules/AbstractModule.h"
+#include "modules/VisibilityPrinter.h"
 #include "modules/BasicFlagger.h"
 #include "modules/EmptyModule.h"
 #include "modules/ZenithCalibrater.h"
 #include "modules/ZenithImagerDft.h"
 #include "modules/ZenithModelVisibilities.h"
-#include "utility/Config.h"
 
 #include "utility/memCheck.h"
 
@@ -71,25 +73,29 @@ AbstractModule* ModuleFactory::createModule(const QString& name, const QString& 
 AbstractModule* ModuleFactory::_createModule(const QString& name, const ConfigNode& config)
 {
     AbstractModule* module = 0;
-    if( name == "BasicFlagger" ) {
+    if (name == "BasicFlagger" ) {
         module = new BasicFlagger(config);
         _modules.append( module );
     }
-    else if( name == "EmptyModule" ) {
+    else if (name == "EmptyModule" ) {
         module = new EmptyModule(config);
         _modules.append( module );
     }
-    else if( name == "ZenithCalibrater" ) {
+    else if (name == "ZenithCalibrater" ) {
         module = new ZenithCalibrater(config);
         _modules.append( module );
     }
-    else if( name == "ZenithImagerDft" ) {
+    else if (name == "ZenithImagerDft" ) {
         module = new ZenithImagerDft(config);
         _modules.append( module );
     }
-    else if( name == "ZenithModelVisibilities" ) {
+    else if (name == "ZenithModelVisibilities" ) {
         module = new ZenithModelVisibilities(config);
         _modules.append( module );
+    }
+    else if (name == "VisibilityPrinter") {
+        module = new VisibilityPrinter(config);
+        _modules.append(module);
     }
     else {
         throw QString("Unknown module type '" + name + "'");
