@@ -73,6 +73,7 @@ QHash<QString, DataBlob*> FileDataClient::getData(QHash<QString, DataBlob*>& dat
                 AbstractAdapter* ad = adapters().at(pipelineIndex).value(type);
                 AbstractServiceAdapter* adapter = static_cast<AbstractServiceAdapter*>(ad);
                 in >> adapter->config(dataHash.value(type), 0);
+                validHash.insert(type, dataHash.value(type));
             }
         }
 
@@ -88,6 +89,7 @@ QHash<QString, DataBlob*> FileDataClient::getData(QHash<QString, DataBlob*>& dat
                 AbstractStreamAdapter* adapter = static_cast<AbstractStreamAdapter*>(ad);
                 QHash<QString, DataBlob*> hash;
                 in >> adapter->config(dataHash.value(type), 0, hash);
+                validHash.insert(type, dataHash.value(type));
             }
         }
         pipelineIndex++;
