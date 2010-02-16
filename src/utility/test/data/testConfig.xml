@@ -6,7 +6,7 @@
         <server name="server1" type="tcp" ip="0.1.2.3" port="12345"/>
         <server name="server2" type="tcp" ip="4.5.6.7" port="678910"/>
     </servers>
-    
+
     <dataClients>
         <fileDataClient name="lofarVisTest">
             <file name="lofarVis.dat" adapter="lofarStationVisibilties"/>
@@ -16,7 +16,7 @@
             <param name="ip" value="1.1.2.3"/>
         </client>
     </dataClients>
-    
+
     <modules>
         <moduleType name="testA">
             <paramA name="some_value" value="1"/>
@@ -28,7 +28,7 @@
         <moduleType name="default::testA"/>
         <moduleType name="pipeline1::testA"/>
         <moduleType name=""/>
-      
+
         <!-- example configuration for zenith imager dft module -->
         <ZenithImagerDft name="default">
             <size l="128" m="128"/>
@@ -37,7 +37,7 @@
             <polarisation value="both"/>
             <channels>0,1,2</channels>
         </ZenithImagerDft>
-        
+
         <!-- example configuration for fits image writer -->
         <ImageWriterFits name="default">
             <overwrite value="true"/> <!-- overwrite exising fits files ? -->
@@ -55,10 +55,10 @@
             <reference value=""/>
             <equinox value="2000.0"/>
         </ImageWriterFits>
-        
+
     </modules>
-    
-    
+
+
     <adapters>
         <lofarStationVisibilties name="default">
             <antennas number="96"/>
@@ -67,8 +67,8 @@
             <dataBytes number="4"/>
         </lofarStationVisibilties>
     </adapters>
-        
-    
+
+
     <pipelines>
         <pipeline name="default">
             <module>
@@ -76,5 +76,5 @@
             </module>
         </pipeline>
     </pipelines>
-    
+
 </configuration>
