@@ -92,15 +92,15 @@ QString ConfigNode::getOptionText(const QString& tagName,
  * Using this XML with tagName="data", attr1="type" and attr2="file",
  *
  * \verbatim
- *    <data type="VisibilityData" adapter="VisibilityAdapter" file="vis.dat"/>
- *    <data type="AntennaPositions" adapter="PositionAdapter" file="pos.dat"/>
+      <data type="VisibilityData" adapter="VisibilityAdapter" file="vis.dat"/>
+      <data type="AntennaPositions" adapter="PositionAdapter" file="pos.dat"/>
  * \endverbatim
  *
  * would produce a hash containing the following keys and values:
  *
  * \verbatim
- *    VisibilityData -> vis.dat
- *    AntennaPositions -> pos.dat
+      VisibilityData -> vis.dat
+      AntennaPositions -> pos.dat
  * \endverbatim
  */
 QHash<QString, QString> ConfigNode::getOptionHash(const QString& tagName,
