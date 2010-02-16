@@ -7,16 +7,25 @@
         <server name="server2" type="tcp" ip="4.5.6.7" port="678910"/>
     </servers>
     
-    <dataClients>
-        <fileDataClient name="lofarVisTest">
-            <file name="lofarVis.dat" adapter="lofarStationVisibilties"/>
-            <file name="antennaPositions.dat" adapter="lofarStationAntennas"/>
-        </fileDataClient>
+    <clients>
+        <FileDataClient name="lofarVisTest">
+            <data type="VisibilityData" adapter="AdapterLofarStationVisibilities" file="lofarVis.dat"/>
+            <data type="AntennaPositions" adapter="LofarStationAntennas" file="antennaPositions.dat"/>
+        </FileDataClient>
         <client name="client2">
             <param name="ip" value="1.1.2.3"/>
         </client>
-    </dataClients>
+    </clients>
     
+    <adapters>
+        <AdapterLofarStationVisibilities name="default">
+            <antennas number="96"/>
+            <channels number="512"/>
+            <polarisations number="2"/>
+            <dataBytes number="4"/>
+        </AdapterLofarStationVisibilities>
+    </adapters>
+        
     <modules>
         <moduleType name="testA">
             <paramA name="some_value" value="1"/>
@@ -57,17 +66,6 @@
         </ImageWriterFits>
         
     </modules>
-    
-    
-    <adapters>
-        <lofarStationVisibilties name="default">
-            <antennas number="96"/>
-            <channels number="512"/>
-            <polaristaions number="2"/>
-            <dataBytes number="4"/>
-        </lofarStationVisibilties>
-    </adapters>
-        
     
     <pipelines>
         <pipeline name="default">
