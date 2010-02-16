@@ -83,5 +83,38 @@ QString ConfigNode::getOptionText(const QString& tagName,
     return text.isEmpty() ? defValue : text;
 }
 
-} // namespace pelican
+/**
+ * @details
+ * Gets a hash of attribute pairs for a list of \p tagname items.
+ * The hash is created using the values of the given attributes \p attr1 and
+ * \p attr2, where the key is given in \p attr1 and value in \p attr2.
+ *
+ * Using this XML with tagName="data", attr1="type" and attr2="file",
+ *
+ * \verbatim
+ *    <data type="VisibilityData" adapter="VisibilityAdapter" file="vis.dat"/>
+ *    <data type="AntennaPositions" adapter="PositionAdapter" file="pos.dat"/>
+ * \endverbatim
+ *
+ * would produce a hash containing the following keys and values:
+ *
+ * \verbatim
+ *    VisibilityData -> vis.dat
+ *    AntennaPositions -> pos.dat
+ * \endverbatim
+ */
+QHash<QString, QString> ConfigNode::getOptionHash(const QString& tagName,
+                const QString& attr1, const QString& attr2) const
+{
+    QHash<QString, QString> hash;
+    QDomNodeList list = _config.elementsByTagName(tagName);
+    for (int i = 0; i < list.size(); ++i) {
+        QDomElement element = list.at(i).toElement();
+        if (element.hasAttribute(attr1) && element.hasAttribute(attr2)) {
+            hash.insert(element.attribute(attr1), element.attribute(attr2));
+        }
+    }
+    return hash;
+}
 
+} // namespace pelican
