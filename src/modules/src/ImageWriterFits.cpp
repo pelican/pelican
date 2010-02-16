@@ -166,7 +166,7 @@ void ImageWriterFits::_writeHeader()
     double dec = 0.0;
     _writeKey("BSCALE", bscale);
     _writeKey("BZERO", bzero);
-    _writeKey("BUNIT", "JA/BEAM", "Units of flux");
+    _writeKey("BUNIT", "JY/BEAM", "Units of flux");
     _writeKey("EQUINOX", _equinox);
     _writeKey("OBSRA", ra);
     _writeKey("OBSDEC", dec);
