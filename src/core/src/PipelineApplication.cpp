@@ -4,7 +4,6 @@
 #include "core/PipelineApplication.h"
 #include "core/PipelineDriver.h"
 #include "core/ModuleFactory.h"
-#include "core/FileDataClient.h"
 #include "data/DataBlobFactory.h"
 #include "boost/program_options.hpp"
 #include <string>
@@ -30,6 +29,7 @@ PipelineApplication::PipelineApplication(int argc, char** argv)
 {
     /* Initialise member variables */
     _config = NULL;
+    _adapterFactory = NULL;
     _moduleFactory = NULL;
     _dataBlobFactory = NULL;
     _driver = NULL;
@@ -62,22 +62,15 @@ PipelineApplication::PipelineApplication(int argc, char** argv)
 PipelineApplication::~PipelineApplication()
 {
     delete _config;
-    delete _moduleFactory;
+    delete _adapterFactory;
     delete _dataBlobFactory;
     delete _driver;
+    delete _moduleFactory;
     _config = NULL;
-    _moduleFactory = NULL;
+    _adapterFactory = NULL;
     _dataBlobFactory = NULL;
     _driver = NULL;
-}
-
-/**
- * @details
- * Return the configuration file name.
- */
-QString PipelineApplication::getConfigFile() const
-{
-    return _config->getFileName();
+    _moduleFactory = NULL;
 }
 
 /**
