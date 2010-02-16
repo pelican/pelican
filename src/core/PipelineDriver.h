@@ -37,11 +37,11 @@ class PipelineDriver
         /// Pointer to the module factory.
         AdapterFactory* _adapterFactory;
 
-        /// Pointer to the module factory.
-        ModuleFactory* _moduleFactory;
-
         /// A pointer to the data blob factory.
         DataBlobFactory* _blobFactory;
+
+        /// Pointer to the module factory.
+        ModuleFactory* _moduleFactory;
 
         /// Data required by all the pipelines.
         DataRequirements _requiredData;
@@ -60,7 +60,8 @@ class PipelineDriver
 
     public:
         /// Constructs a new pipeline driver.
-        PipelineDriver(DataBlobFactory* blobFactory, AdapterFactory* adapterFactory);
+        PipelineDriver(AdapterFactory* adapterFactory,
+                DataBlobFactory* blobFactory, ModuleFactory* moduleFactory);
 
         /// Destroys the pipeline driver.
         ~PipelineDriver();
@@ -69,13 +70,7 @@ class PipelineDriver
         void registerPipeline(AbstractPipeline *pipeline);
     
         /// Sets the data client.
-        void setDataClient(AbstractDataClient *client);
-
-        /// Sets the data client.
         void setDataClient(QString name, Config* config);
-
-        /// Sets the module factory.
-        void setModuleFactory(ModuleFactory *moduleFactory);
 
         /// Starts the data flow through the pipelines.
         void start();

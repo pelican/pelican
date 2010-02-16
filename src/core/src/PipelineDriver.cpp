@@ -16,15 +16,17 @@ namespace pelican {
 
 /**
  * @details
- * PipelineDriver constructor, which takes the command line arguments
- * for initialisation.
+ * PipelineDriver constructor, which takes pointers to the allocated factories.
  */
-PipelineDriver::PipelineDriver(DataBlobFactory* blobFactory, AdapterFactory* adapterFactory)
-{
+PipelineDriver::PipelineDriver (
+        AdapterFactory* adapterFactory,
+        DataBlobFactory* blobFactory,
+        ModuleFactory* moduleFactory
+){
     /* Initialise member variables */
     _run = false;
     _dataClient = NULL;
-    _moduleFactory = NULL;
+    _moduleFactory = moduleFactory;
     _blobFactory = blobFactory;
     _adapterFactory = adapterFactory;
 }
@@ -36,10 +38,13 @@ PipelineDriver::PipelineDriver(DataBlobFactory* blobFactory, AdapterFactory* ada
  */
 PipelineDriver::~PipelineDriver()
 {
+    /* Delete the pipelines */
     foreach (AbstractPipeline* pipeline, _registeredPipelines) {
         delete pipeline;
     }
+    _registeredPipelines.clear();
 
+    /* Delete the data blobs */
     foreach (DataBlob* dataBlob, _dataHash) {
         delete dataBlob;
     }
@@ -54,15 +59,6 @@ PipelineDriver::~PipelineDriver()
 void PipelineDriver::registerPipeline(AbstractPipeline *pipeline)
 {
     _registeredPipelines.append(pipeline);
-}
-
-/**
- * @details
- * Sets the data client.
- */
-void PipelineDriver::setDataClient(AbstractDataClient *client)
-{
-    _dataClient = client;
 }
 
 /**
@@ -91,15 +87,6 @@ void PipelineDriver::setDataClient(QString name, Config* config)
     else {
         throw QString("Unknown data client type: ").arg(name);
     }
-}
-
-/**
- * @details
- * Sets the module factory.
- */
-void PipelineDriver::setModuleFactory(ModuleFactory *moduleFactory)
-{
-    _moduleFactory = moduleFactory;
 }
 
 /**
