@@ -22,8 +22,11 @@ AdapterLofarStationVisibilities::AdapterLofarStationVisibilities(const ConfigNod
     _nChan = config.getOption("channels", "number", "512").toUInt();
     _nPol = config.getOption("polarisations", "number", "2").toUInt();
     _dataBytes = config.getOption("dataBytes", "number", "4").toUInt();
-}
 
+    _nAnt = 8;
+    _nChan = 1;
+    _nPol = 1;
+}
 
 /**
  * @details
@@ -45,21 +48,21 @@ AdapterLofarStationVisibilities::~AdapterLofarStationVisibilities()
  */
 void AdapterLofarStationVisibilities::deserialise(QDataStream& in)
 {
-    // Set local data pointers, resize data if needed, and perform sanity checks!
-    _setData();
-
-    // Read data from the stream
-    complex_t* vis = _vis->ptr();
-    for (unsigned c = 0; c < _nChan; c++) {
-        for (unsigned j = 0; j < _nAnt; j++) {
-            for (unsigned i = 0; i < _nAnt; i++) {
-                for (unsigned p = 0; p < _nPol; c++) {
-                    in >> vis[i].real();
-                    in >> vis[i].imag();
-                }
-            }
-        }
-    }
+//    // Set local data pointers, resize data if needed, and perform sanity checks!
+//    _setData();
+//
+//    // Read data from the stream
+//    complex_t* vis = _vis->ptr();
+//    for (unsigned c = 0; c < _nChan; c++) {
+//        for (unsigned j = 0; j < _nAnt; j++) {
+//            for (unsigned i = 0; i < _nAnt; i++) {
+//                for (unsigned p = 0; p < _nPol; c++) {
+//                    in >> vis[i].real();
+//                    in >> vis[i].imag();
+//                }
+//            }
+//        }
+//    }
 }
 
 
@@ -73,9 +76,9 @@ void AdapterLofarStationVisibilities::deserialise(QDataStream& in)
  */
 void AdapterLofarStationVisibilities::_setData()
 {
-    if (_chunkSize == 0) {
-        throw QString("No data to read. Stream chunk size set to zero.");
-    }
+//    if (_chunkSize == 0) {
+//        throw QString("No data to read. Stream chunk size set to zero.");
+//    }
 
     if (_data == NULL) {
         throw QString("Cannot deserialise into an unallocated blob!");
@@ -85,10 +88,10 @@ void AdapterLofarStationVisibilities::_setData()
     if (!_serviceData.empty()) _updateDimensions();
 
     // Check the expected size due to data dimensions matches the stream chunk size
-    unsigned dataSize = _nAnt * _nAnt * _nChan * _nPol * _dataBytes;
-    if (dataSize != _chunkSize) {
-        throw QString("Stream chunk size does not match data current dimensions");
-    }
+//    unsigned dataSize = _nAnt * _nAnt * _nChan * _nPol * _dataBytes;
+//    if (dataSize != _chunkSize) {
+//        throw QString("Stream chunk size does not match data current dimensions");
+//    }
 
     // Resize the visibility data being read into to match the adapter dimensions
     _vis = static_cast<VisibilityData*>(_data);
