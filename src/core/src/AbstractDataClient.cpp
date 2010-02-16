@@ -21,7 +21,7 @@ AbstractDataClient::AbstractDataClient(const ConfigNode& config,
         AdapterFactory* adapterFactory,
         QList<DataRequirements>& dataRequirements
 ){
-    _config = &config;
+    _configNode = &config;
     _adapterFactory = adapterFactory;
     _dataRequirements = dataRequirements;
 }

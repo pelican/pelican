@@ -29,9 +29,11 @@ class ConfigNode;
 class FileDataClient : public AbstractDataClient
 {
     private:
-        QString _fileVisibilities;  ///< Visibility data file name.
-        QString _fileAntennas;      ///< Antenna positions file name.
-        QString _fileChannels;      ///< Channel-to-frequency file name.
+        QHash<QString, QString> _fileNames; ///< Hash of filenames for each data type.
+        QHash<QString, QString> _adapterNames; ///< Hash of adapter names for each file type.
+        QString _fileVisibilities;  ///< Visibility data file name. (deprecated)
+        QString _fileAntennas;      ///< Antenna positions file name. (deprecated)
+        QString _fileChannels;      ///< Channel-to-frequency file name. (deprecated)
 
     public:
         /// Data client constructor.
