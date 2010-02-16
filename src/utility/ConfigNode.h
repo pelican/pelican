@@ -3,6 +3,7 @@
 
 #include <QDomElement>
 #include <QString>
+#include <QHash>
 
 namespace pelican {
 
@@ -17,6 +18,9 @@ namespace pelican {
 
 class ConfigNode
 {
+    private:
+        QDomElement _config;
+
     public:
         /// Constructs the configuration object reading the specified configuration file
         ConfigNode(const QDomElement& config);
@@ -41,8 +45,12 @@ class ConfigNode
         QString getOptionText(const QString& tagName,
                 const QString& defValue = QString()) const;
 
-    private:
-        QDomElement _config;
+        /// Returns a hash of attribute pairs.
+        QHash<QString, QString> getOptionHash(const QString& tagName,
+                const QString& attr1, const QString& attr2) const;
+
+        /// Returns the QDomElement that this class wraps.
+        const QDomElement getDomElement() const {return _config;}
 };
 
 } /* namespace pelican */

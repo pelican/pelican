@@ -56,7 +56,7 @@ QHash<QString, DataBlob*> FileDataClient::getData(QHash<QString, DataBlob*>& dat
     /* Create the local data hash to return */
     QHash<QString, DataBlob*> validHash;
 
-    /* Loop over each pipeline's data requirements */
+    /* Loop over each pipeline's set of data requirements */
     foreach (DataRequirements req, dataRequirements()) {
 
     }
@@ -68,8 +68,8 @@ QHash<QString, DataBlob*> FileDataClient::getData(QHash<QString, DataBlob*>& dat
  */
 void FileDataClient::_getConfig()
 {
-
-    _fileVisibilities = configNode()->getOption("fileVisibilities", "value");
+    /* Get all the filenames for each data type */
+    _fileNames = configNode()->getOptionHash("data", "type", "name");
 }
 
 } // namespace pelican

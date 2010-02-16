@@ -31,12 +31,27 @@ class DataBlob;
  *
  * Inherit this class and implement the getData() method to create a new data
  * client type.
+ *
+ *
+ *
+ * \section Configuration
+ *
+ * Under its root XML configuration node, each data client must have a list of
+ * data types and data adapters, for example:
+ *
+ * \verbatim
+ *     <data type="VisibilityData" adapter="AdapterStationVisibilities"/>
+ *     <data type="AntennaPositions" adapter="AdapterStationAntennas"/>
+ * \endverbatim
+ *
+ * This information is read by the abstract data client, and stored in the
+ * hash accessible using the adapterNames() method.
  */
 class AbstractDataClient
 {
     private:
         /// The configuration node for the data client.
-        const ConfigNode* _config;
+        const ConfigNode* _configNode;
 
         /// Pointer to the adapter factory.
         AdapterFactory* _adapterFactory;
@@ -47,9 +62,12 @@ class AbstractDataClient
         /// All the adapters created for each data type and pipeline.
         QList<QHash<QString, AbstractAdapter*> > _adapters;
 
+        /// The adapter names required for each data type.
+        QHash<QString, QString> _adapterNames;
+
     protected:
         /// Returns a pointer to the configuration node.
-        const ConfigNode* configNode() {return _config;}
+        const ConfigNode* configNode() {return _configNode;}
 
         /// Returns a pointer to the adapter factory.
         AdapterFactory* adapterFactory() {return _adapterFactory;}
@@ -59,6 +77,9 @@ class AbstractDataClient
 
         /// Returns the list of adapters for each data type and each pipeline.
         QList<QHash<QString, AbstractAdapter*> >& adapters() {return _adapters;}
+
+        /// Returns the adapter names required for each data type.
+        QHash<QString, QString> adapterNames() {return _adapterNames;}
 
     public:
         /// Data client constructor.
@@ -70,7 +91,7 @@ class AbstractDataClient
         virtual ~AbstractDataClient();
 
         /// Gets the requested data from the data server.
-        /// Fills the given data hash, and returns another hash of valid data.
+        /// This method gets tFills the given data hash, and returns another hash of valid data.
         virtual QHash<QString, DataBlob*> getData(QHash<QString, DataBlob*>&) = 0;
 };
 
