@@ -166,15 +166,15 @@ if ( ! -f $src_file ) {
     print $fh "namespace $namespace {\n\n", if ( defined $namespace );
     print $fh $cppincludesNamespace, "\n", if ( defined $namespace );
     print $fh "/**\n";
-    print $fh " * @details $classname \n";
+    print $fh " *\@details $classname \n";
     print $fh " */\n";
     print $fh $classname,"::", $classname, "($constructSig)\n",
               (( $baseclass ne "")?"    : ".$baseclass."()\n":"" ),
               "{\n",
               "}\n\n",
               "/**\n",
-              " * @details\n",
-              " */\n,
+              " *\@details\n",
+              " */\n",
               $classname, "::~", $classname, "()\n{\n",
               "}\n\n",
               $cpptext;

@@ -7,11 +7,16 @@ set( coreTest_src
 )
 set( coreTestLibrary_src
      src/TestPipeline.cpp
+     src/VisGen.cpp
 )
 add_library(coreTestUtilities ${coreTestLibrary_src} )
 SUBPACKAGE_ADD_LIBRARIES(coreTestUtilities)
 add_executable(coreTest ${coreTest_src} )
 target_link_libraries(coreTest ${SUBPACKAGE_LIBRARIES} ${CPPUNIT_LIBRARIES} memoryTracer )
+
+add_executable(testVisGen src/testVisGen.cpp )
+target_link_libraries(testVisGen ${SUBPACKAGE_LIBRARIES} memoryTracer )
+
 add_test(coreTest coreTest )
 
 

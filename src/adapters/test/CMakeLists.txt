@@ -5,5 +5,5 @@ set( adaptersTest_src
 )
 
 add_executable(adaptersTest ${adaptersTest_src} )
-target_link_libraries(adaptersTest ${SUBPACKAGE_LIBRARIES} ${CPPUNIT_LIBRARIES} )
-add_test(adaptersTest ${EXECUTABLE_OUTPUT_PATH}/adaptersTest )
+target_link_libraries(adaptersTest ${SUBPACKAGE_LIBRARIES} ${CPPUNIT_LIBRARIES} memoryTracer )
+add_test(adaptersTest ${EXECUTABLE_OUTPUT_PATH}/adaptersTest memoryTracer )
