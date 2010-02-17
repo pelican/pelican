@@ -1,5 +1,6 @@
 #include "VisGen.h"
 #include "utility/memCheck.h"
+#include <iomanip>
 
 namespace pelican {
 
@@ -46,7 +47,7 @@ void VisGen::generate()
 {
     int nPoints = _nAnt * _nPol * _nAnt * _nPol * _nChan;
     int nPointsPerChan = _nAnt * _nPol * _nAnt * _nPol;
-    std::cout << nPoints << "\n";
+    std::cout << "Number of data points = " << nPoints << "\n";
     _data.resize(nPoints);
 
     for (int c = 0; c < _nChan; c++) {
@@ -60,11 +61,13 @@ void VisGen::generate()
                     for (int pi = 0; pi < _nPol; pi++) {
 
                         int index = cIndex + jIndex + (i * _nPol + pi);
-                        float re = static_cast<float>(c);
-                        float im = static_cast<float>(c);
-                            re += (pi == pj) ? 1.0 : 0.0;
-                            im += (pi == pj) ? 1.0 : 0.0;
-                            _data[index] = complex_t(re, im);
+                        float aj = static_cast<float>(j) / 100.0;
+                        float ai = static_cast<float>(i) / 100.0;
+                        float re = static_cast<float>(c) + aj + ai;
+                        float im = static_cast<float>(c) + aj + ai;
+                        re += (pi == pj) ? 1.0 : 0.0;
+                        im += (pi == pj) ? 1.0 : 0.0;
+                        _data[index] = complex_t(re, im);
                         }
                     } // loop over columns
 
@@ -77,8 +80,7 @@ void VisGen::generate()
 
 void VisGen::write(const std::string& fileName)
 {
-    std::cout << "----------------------------------------\n";
-    std::cout << "Data size: " << _data.size() * sizeof(complex_t) << ".\n";
+    std::cout << "Data size = " << _data.size() * sizeof(complex_t) << " bytes.\n";
     std::ofstream file;
     file.open(fileName.c_str(), std::ios::out | std::ios::binary);
 
@@ -88,6 +90,8 @@ void VisGen::write(const std::string& fileName)
     }
     else {
         int nPointsPerChan = _nAnt * _nPol * _nAnt * _nPol;
+        file << std::setprecision(2);
+        file << std::fixed;
 
         for (int c = 0; c < _nChan; c++) {
             int cIndex = c * nPointsPerChan;
