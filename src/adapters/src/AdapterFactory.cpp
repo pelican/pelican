@@ -77,7 +77,7 @@ AbstractAdapter* AdapterFactory::create(const QString& type, const QString& name
 AbstractAdapter* AdapterFactory::_create(const QString& type, const ConfigNode& config)
 {
     AbstractAdapter* adapter = 0;
-    if (type == "AdatperLofarStationVisibilties") {
+    if (type == "AdapterLofarStationVisibilities") {
         adapter = new AdapterLofarStationVisibilities(config);
         _adapters.append(adapter);
     }

@@ -4,7 +4,7 @@
 
 <clients>
     <FileDataClient>
-        <data type="VisibilityData" adapter="AdapterLofarStationVisibilities" file="test.dat"/>
+        <data type="VisibilityData" adapter="AdapterLofarStationVisibilities" file="data/testVis.dat"/>
     </FileDataClient>
 </clients>
 
