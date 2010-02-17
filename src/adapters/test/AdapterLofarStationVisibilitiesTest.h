@@ -9,6 +9,8 @@
 
 namespace pelican {
 
+class VisGen;
+
 /**
  * @class AdapterLofarStationVisibilitiesTest
  *
@@ -20,11 +22,9 @@ namespace pelican {
 
 class AdapterLofarStationVisibilitiesTest : public CppUnit::TestFixture
 {
-    private:
-        friend class VisGen;
     public:
         CPPUNIT_TEST_SUITE( AdapterLofarStationVisibilitiesTest );
-        CPPUNIT_TEST( test_method );
+        CPPUNIT_TEST(test_method);
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -35,7 +35,7 @@ class AdapterLofarStationVisibilitiesTest : public CppUnit::TestFixture
         void test_method();
 
     public:
-        AdapterLofarStationVisibilitiesTest(  );
+        AdapterLofarStationVisibilitiesTest();
         ~AdapterLofarStationVisibilitiesTest();
 
     private:
