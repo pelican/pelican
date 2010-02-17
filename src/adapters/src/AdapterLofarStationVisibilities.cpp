@@ -22,10 +22,6 @@ AdapterLofarStationVisibilities::AdapterLofarStationVisibilities(const ConfigNod
     _nChan = config.getOption("channels", "number", "512").toUInt();
     _nPol = config.getOption("polarisations", "number", "2").toUInt();
     _dataBytes = config.getOption("dataBytes", "number", "4").toUInt();
-
-    _nAnt = 8;
-    _nChan = 1;
-    _nPol = 1;
 }
 
 /**

@@ -9,8 +9,12 @@
 </clients>
 
 <adapters>
-    <AdapterLofarStationVisibilties>
-    </AdapterLofarStationVisibilties>
+    <AdapterLofarStationVisibilities>
+        <antennas number="3"/>
+        <channels number="2"/>
+        <polarisations number="2"/>
+        <dataBytes number="4"/>
+    </AdapterLofarStationVisibilities>
 </adapters>
 
 </configuration>
