@@ -1,6 +1,7 @@
 #include "core/AbstractDataClient.h"
 #include "data/DataRequirements.h"
 #include "utility/ConfigNode.h"
+#include <QtGlobal>
 
 #include "utility/memCheck.h"
 

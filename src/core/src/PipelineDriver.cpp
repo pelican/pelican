@@ -34,8 +34,8 @@ PipelineDriver::PipelineDriver (
 
 /**
  * @details
- * PipelineDriver destructor. This deletes all the registered pipelines and
- * the data blobs.
+ * PipelineDriver destructor. This deletes all the registered pipelines,
+ * the data blobs and the data client.
  */
 PipelineDriver::~PipelineDriver()
 {
@@ -50,12 +50,17 @@ PipelineDriver::~PipelineDriver()
         delete dataBlob;
     }
     _dataHash.clear();
+
+    /* Delete the data client */
+    delete _dataClient;
 }
 
 /**
  * @details
- * Public interface to register the pipeline with the driver.
+ * Public interface to register the given \p pipeline with the driver.
  * Registered pipelines will be deleted when the class is destroyed.
+ *
+ * @param[in] pipeline Pointer to the allocated pipeline.
  */
 void PipelineDriver::registerPipeline(AbstractPipeline *pipeline)
 {
@@ -84,6 +89,8 @@ void PipelineDriver::setDataClient(QString name, Config* config)
  * @details
  * Iterates over all registered pipelines to determine the required data and
  * starts the data flow through the pipelines.
+ *
+ * This public method is called by PipelineApplication start().
  */
 void PipelineDriver::start()
 {
@@ -103,8 +110,10 @@ void PipelineDriver::start()
         QHash<QString, DataBlob*> validData = _dataClient->getData(_dataHash);
 
         /* Check for empty data */
-        if (validData.isEmpty())
+        if (validData.isEmpty()) {
+//            _run = false;
             throw QString("No data returned from client.");
+        }
 
         /* Run all the pipelines compatible with this data hash */
         QMultiHash<DataRequirements, AbstractPipeline*>::iterator i = _pipelines.begin();
@@ -131,6 +140,8 @@ void PipelineDriver::stop()
  * This method allocates all the required data blobs and inserts pointers to
  * them into the data hash.
  *
+ * This private method is called by start().
+ *
  * @param[in] req All data required by the pipeline.
  */
 void PipelineDriver::_createDataBlobs(const DataRequirements& req)
@@ -152,10 +163,10 @@ void PipelineDriver::_createDataBlobs(const DataRequirements& req)
  *
  * Throws an exception of type QString if the data client is unknown.
  *
- * @param[in] name The type of the data client to create.
+ * @param[in] type The type of the data client to create.
  * @param[in] config The application's configuration object.
  */
-void PipelineDriver::_createDataClient(QString name, Config* config)
+void PipelineDriver::_createDataClient(QString type, Config* config)
 {
     /* Check configuration object exists */
     if (config == NULL)
@@ -164,15 +175,15 @@ void PipelineDriver::_createDataClient(QString name, Config* config)
     /* Get the configuration address */
     Config::TreeAddress_t address;
     address.append(Config::NodeId_t("clients", ""));
-    address.append(QPair<QString, QString>("client", name));
+    address.append(QPair<QString, QString>(type, ""));
     ConfigNode element = config->get(address);
 
     /* Create the required data client */
-    if (name == "FileDataClient") {
+    if (type == "FileDataClient") {
         _dataClient = new FileDataClient(element, _adapterFactory, _pipelines.keys());
     }
     else {
-        throw QString("Unknown data client type: ").arg(name);
+        throw QString("Unknown data client type: ").arg(type);
     }
 }
 
