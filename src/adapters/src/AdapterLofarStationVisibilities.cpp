@@ -48,21 +48,35 @@ AdapterLofarStationVisibilities::~AdapterLofarStationVisibilities()
  */
 void AdapterLofarStationVisibilities::deserialise(QDataStream& in)
 {
-//    // Set local data pointers, resize data if needed, and perform sanity checks!
-//    _setData();
-//
-//    // Read data from the stream
-//    complex_t* vis = _vis->ptr();
-//    for (unsigned c = 0; c < _nChan; c++) {
-//        for (unsigned j = 0; j < _nAnt; j++) {
-//            for (unsigned i = 0; i < _nAnt; i++) {
-//                for (unsigned p = 0; p < _nPol; c++) {
-//                    in >> vis[i].real();
-//                    in >> vis[i].imag();
-//                }
-//            }
-//        }
-//    }
+    // Set local data pointers, resize data if needed, and perform sanity checks!
+    _setData();
+
+    // Read data from the stream
+    complex_t* vis = _vis->ptr();
+
+//    unsigned nPointsPerChan = _nAnt * _nPol * _nAnt * _nPol;
+    unsigned nPointsPerPol = _nAnt * _nAnt * _nChan;
+    unsigned nPointsPerChan = _nAnt * _nAnt;
+
+    for (unsigned c = 0; c < _nChan; c++) {
+        for (unsigned j = 0; j < _nAnt; j++) {
+            for (unsigned pj = 0; pj < _nPol; c++) {
+                for (unsigned i = 0; i < _nAnt; i++) {
+                    for (unsigned pi = 0; pi < _nPol; c++) {
+                        if (pi == pj) {
+                            unsigned index = pi * nPointsPerPol +
+                                    c * nPointsPerChan + j * _nAnt + i;
+                            in >> vis[index].real();
+                            in >> vis[index].imag();
+                        }
+                        else {
+                            continue;
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 

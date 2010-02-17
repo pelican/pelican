@@ -1,6 +1,8 @@
 #include "VisGen.h"
 #include "utility/memCheck.h"
 #include <iomanip>
+#include <QString>
+#include <QByteArray>
 
 namespace pelican {
 
@@ -43,24 +45,24 @@ void VisGen::_getCommandLineArgs(int argc, char** argv)
 }
 
 
-void VisGen::generate()
+void VisGen::_generate(int nAnt, int nChan, int nPol)
 {
-    int nPoints = _nAnt * _nPol * _nAnt * _nPol * _nChan;
-    int nPointsPerChan = _nAnt * _nPol * _nAnt * _nPol;
+    int nPoints = nAnt * nPol * nAnt * nPol * nChan;
+    int nPointsPerChan = nAnt * nPol * nAnt * nPol;
     std::cout << "Number of data points = " << nPoints << "\n";
     _data.resize(nPoints);
 
-    for (int c = 0; c < _nChan; c++) {
+    for (int c = 0; c < nChan; c++) {
         int cIndex = c * nPointsPerChan;
 
-        for (int j = 0; j < _nAnt; j++) {
-            for (int pj = 0; pj < _nPol; pj++) {
-                int jIndex = (j * _nPol + pj) * (_nAnt * _nPol);
+        for (int j = 0; j < nAnt; j++) {
+            for (int pj = 0; pj < nPol; pj++) {
+                int jIndex = (j * nPol + pj) * (nAnt * nPol);
 
-                for (int i = 0; i < _nAnt; i++) {
-                    for (int pi = 0; pi < _nPol; pi++) {
+                for (int i = 0; i < nAnt; i++) {
+                    for (int pi = 0; pi < nPol; pi++) {
 
-                        int index = cIndex + jIndex + (i * _nPol + pi);
+                        int index = cIndex + jIndex + (i * nPol + pi);
                         float aj = static_cast<float>(j) / 100.0;
                         float ai = static_cast<float>(i) / 100.0;
                         float re = static_cast<float>(c) + aj + ai;
@@ -68,14 +70,16 @@ void VisGen::generate()
                         re += (pi == pj) ? 1.0 : 0.0;
                         im += (pi == pj) ? 1.0 : 0.0;
                         _data[index] = complex_t(re, im);
-                        }
-                    } // loop over columns
+                    }
+                } // loop over columns
 
-                }
-            } // loop over rows
+            }
+        } // loop over rows
 
-        } // loop over channels
-    }
+    } // loop over channels
+}
+
+
 
 
 void VisGen::write(const std::string& fileName)
@@ -116,4 +120,17 @@ void VisGen::write(const std::string& fileName)
     file.close();
     _data.clear();
 }
+
+
+QDataStream& VisGen::dataStream()
+{
+    if (_data.empty())
+        throw QString("VisGen: data not yet genrated.");
+
+    char* data = reinterpret_cast<char*>(&_data[0]);
+    QByteArray b(data, sizeof(complex_t) * _data.size());
+    _stream = new QDataStream(b);
+    return *_stream;
+}
+
 } // namespace pelican

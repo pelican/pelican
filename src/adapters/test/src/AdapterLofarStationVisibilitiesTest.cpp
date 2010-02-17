@@ -5,7 +5,7 @@
 namespace pelican {
 
 CPPUNIT_TEST_SUITE_REGISTRATION( AdapterLofarStationVisibilitiesTest );
-// class FileAdapterLofarVisibilitiesTest 
+// class FileAdapterLofarVisibilitiesTest
 AdapterLofarStationVisibilitiesTest::AdapterLofarStationVisibilitiesTest()
     : CppUnit::TestFixture()
 {
@@ -25,6 +25,11 @@ void AdapterLofarStationVisibilitiesTest::tearDown()
 
 void AdapterLofarStationVisibilitiesTest::test_method()
 {
+    QDomElement e;
+    ConfigNode config(e);
+    AdapterLofarStationVisibilities adapter(config);
+
+
 }
 
 } // namespace pelican

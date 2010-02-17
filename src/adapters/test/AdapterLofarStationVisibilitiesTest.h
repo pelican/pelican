@@ -11,15 +11,17 @@ namespace pelican {
 
 /**
  * @class AdapterLofarStationVisibilitiesTest
- *  
+ *
  * @brief
- * 
+ *
  * @details
- * 
+ *
  */
 
 class AdapterLofarStationVisibilitiesTest : public CppUnit::TestFixture
 {
+    private:
+        friend class VisGen;
     public:
         CPPUNIT_TEST_SUITE( AdapterLofarStationVisibilitiesTest );
         CPPUNIT_TEST( test_method );
