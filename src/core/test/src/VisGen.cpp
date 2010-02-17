@@ -66,7 +66,7 @@ void VisGen::generate()
                             im += (pi == pj) ? 1.0 : 0.0;
                             _data[index] = complex_t(re, im);
                         }
-                    } // loop over columns 
+                    } // loop over columns
 
                 }
             } // loop over rows
@@ -87,14 +87,19 @@ void VisGen::write(const std::string& fileName)
                 sizeof(complex_t) * _data.size());
     }
     else {
+        int nPointsPerChan = _nAnt * _nPol * _nAnt * _nPol;
+
         for (int c = 0; c < _nChan; c++) {
-            int cIndex = c * _nAnt * _nPol * _nAnt * _nPol;
+            int cIndex = c * nPointsPerChan;
+
             for (int j = 0; j < _nAnt; j++) {
                 for (int pj = 0; pj < _nPol; pj++) {
-                    int jIndex = pj * _nAnt * _nPol + j * _nAnt * _nPol * _nPol;
+                    int jIndex = (j * _nPol + pj) * (_nAnt * _nPol);
+
                     for (int i = 0; i < _nAnt; i++) {
                         for (int pi = 0; pi < _nPol; pi++) {
-                            int index = pi + i * _nAnt + pj * jIndex + cIndex;
+
+                            int index = cIndex + jIndex + (i * _nPol + pi);
                             file << _data[index];
                         }
                     }
@@ -104,7 +109,7 @@ void VisGen::write(const std::string& fileName)
             file << std::endl;
         }
     }
-    file.close();    
+    file.close();
     _data.clear();
 }
 } // namespace pelican
