@@ -1,10 +1,10 @@
 #include "AdapterLofarStationVisibilitiesTest.h"
+#include "adapters/test/VisGen.h"
 #include <QDomElement>
 #include <QDataStream>
 #include "utility/ConfigNode.h"
 #include "adapters/AdapterLofarStationVisibilities.h"
 #include "adapters/AbstractStreamAdapter.h"
-#include "core/test/VisGen.h"
 
 
 #include "utility/memCheck.h"
