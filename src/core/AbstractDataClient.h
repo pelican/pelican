@@ -40,8 +40,8 @@ class DataBlob;
  * data types and data adapters, for example:
  *
  * \verbatim
- *     <data type="VisibilityData" adapter="AdapterStationVisibilities"/>
- *     <data type="AntennaPositions" adapter="AdapterStationAntennas"/>
+      <data type="VisibilityData" adapter="AdapterStationVisibilities"/>
+      <data type="AntennaPositions" adapter="AdapterStationAntennas"/>
  * \endverbatim
  *
  * This information is read by the abstract data client, and stored in the
@@ -85,7 +85,7 @@ class AbstractDataClient
         /// Data client constructor.
         AbstractDataClient(const ConfigNode& config,
                 AdapterFactory* adapterFactory,
-                QList<DataRequirements>& dataRequirements);
+                QList<DataRequirements> dataRequirements);
 
         /// Data client destructor (virtual).
         virtual ~AbstractDataClient();

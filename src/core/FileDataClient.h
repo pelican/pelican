@@ -30,15 +30,12 @@ class FileDataClient : public AbstractDataClient
 {
     private:
         QHash<QString, QString> _fileNames; ///< Hash of filenames for each data type.
-        QString _fileVisibilities;  ///< Visibility data file name. (deprecated)
-        QString _fileAntennas;      ///< Antenna positions file name. (deprecated)
-        QString _fileChannels;      ///< Channel-to-frequency file name. (deprecated)
 
     public:
         /// Data client constructor.
         FileDataClient(const ConfigNode& config,
                 AdapterFactory* adapterFactory,
-                QList<DataRequirements>& dataRequirements);
+                QList<DataRequirements> dataRequirements);
 
         /// Data client destructor
         ~FileDataClient();

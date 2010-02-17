@@ -34,7 +34,7 @@ class ModuleFactory;
  * {
  *     private:
  *         // Module pointers.
- *         BasicFlagger *flagger;
+ *         BasicFlagger* flagger;
  *
  *     public:
  *         void init()
@@ -43,7 +43,7 @@ class ModuleFactory;
  *             setName("MyPipeline");
  *
  *             // Create the pipeline modules.
- *             flagger = createModule("BasicFlagger");
+ *             flagger = static_cast<BasicFlagger*>(createModule("BasicFlagger"));
  *             // ...
  *             return;
  *         }

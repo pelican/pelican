@@ -20,7 +20,7 @@ namespace pelican {
  */
 FileDataClient::FileDataClient(const ConfigNode& config,
         AdapterFactory* adapterFactory,
-        QList<DataRequirements>& dataRequirements)
+        QList<DataRequirements> dataRequirements)
 : AbstractDataClient(config, adapterFactory, dataRequirements)
 {
     /* Get the configuration options */
@@ -29,7 +29,7 @@ FileDataClient::FileDataClient(const ConfigNode& config,
     /* Loop over data requirements for each pipeline */
     foreach (DataRequirements req, dataRequirements) {
         /* Create a union of required data types for this pipeline */
-        QSet<QString> allDataReq = req.serviceData() & req.streamData();
+        QSet<QString> allDataReq = req.serviceData() + req.streamData();
 
         /* Loop over each data type to set up the adapters for each pipeline */
         adapters().append(QHash<QString, AbstractAdapter*>());

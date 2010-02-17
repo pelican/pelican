@@ -25,6 +25,7 @@ PipelineDriver::PipelineDriver (
 ){
     /* Initialise member variables */
     _run = false;
+    _config = NULL;
     _dataClient = NULL;
     _moduleFactory = moduleFactory;
     _blobFactory = blobFactory;
@@ -63,30 +64,20 @@ void PipelineDriver::registerPipeline(AbstractPipeline *pipeline)
 
 /**
  * @details
- * Sets (and creates) the given data client based on the named argument.
- * Throws an exception of type QString if the data client is unknown.
+ * Sets the given data client based on the named argument.
+ * The client is only created after the pipelines have been initialised,
+ * when start() is called.
  *
  * The recognised values are:
  * - FileDataClient
  *
  * @param[in] name The type of the data client to create.
+ * @param[in] config The application's configuration object.
  */
 void PipelineDriver::setDataClient(QString name, Config* config)
 {
-    /* Get the configuration address */
-    Config::TreeAddress_t address;
-    address.append(Config::NodeId_t("clients", ""));
-    address.append(QPair<QString, QString>("client", name));
-    ConfigNode element = config->get(address);
-
-    /* Create the required data client */
-    if (name == "FileDataClient") {
-        QList<DataRequirements> list; // TODO
-        _dataClient = new FileDataClient(element, _adapterFactory, list);
-    }
-    else {
-        throw QString("Unknown data client type: ").arg(name);
-    }
+    _dataClientName = name;
+    _config = config;
 }
 
 /**
@@ -96,12 +87,14 @@ void PipelineDriver::setDataClient(QString name, Config* config)
  */
 void PipelineDriver::start()
 {
-    /* Initialise the pipelines */
+    /* Initialise the pipelines and determine their data requirements */
     _initialisePipelines();
 
-    /* Start the pipeline driver */
-    if (_dataClient == NULL)
-        throw QString("No data client set.");
+    /* Create the data blobs */
+    _createDataBlobs(_reqDataAll);
+
+    /* Create the data client */
+    _createDataClient(_dataClientName, _config);
 
     /* Enter main program loop */
     _run = true;
@@ -143,12 +136,43 @@ void PipelineDriver::stop()
 void PipelineDriver::_createDataBlobs(const DataRequirements& req)
 {
     /* Create a union of all data requirements */
-    QSet<QString> allData = req.serviceData() & req.streamData();
+    QSet<QString> allData = req.serviceData() + req.streamData();
 
-    /* Iterate over the data requirements to create blobs if they don't exist */
+    /* Iterate over data requirements to create blobs if they don't exist */
     foreach (QString type, allData) {
         if (  ! _dataHash.contains(type) )
             _dataHash.insert(type, _blobFactory->create(type));
+    }
+}
+
+/**
+ * @details
+ * Creates the data client after a call to the public method setDataClient()
+ * sets the client type.
+ *
+ * Throws an exception of type QString if the data client is unknown.
+ *
+ * @param[in] name The type of the data client to create.
+ * @param[in] config The application's configuration object.
+ */
+void PipelineDriver::_createDataClient(QString name, Config* config)
+{
+    /* Check configuration object exists */
+    if (config == NULL)
+        throw QString("Configuration not set: call setDataClient() first.");
+
+    /* Get the configuration address */
+    Config::TreeAddress_t address;
+    address.append(Config::NodeId_t("clients", ""));
+    address.append(QPair<QString, QString>("client", name));
+    ConfigNode element = config->get(address);
+
+    /* Create the required data client */
+    if (name == "FileDataClient") {
+        _dataClient = new FileDataClient(element, _adapterFactory, _pipelines.keys());
+    }
+    else {
+        throw QString("Unknown data client type: ").arg(name);
     }
 }
 
@@ -175,8 +199,11 @@ void PipelineDriver::_determineDataRequirements(AbstractPipeline* pipeline)
         ++i;
     }
 
+    /* Store the remote data requirements for this pipeline */
     _pipelines.insert(pipeline->requiredDataRemote(), pipeline);
-    _requiredData += pipeline->requiredDataRemote();
+
+    /* Accumulate all data requirements ready to create data blobs */
+    _reqDataAll += pipeline->requiredDataAll();
 }
 
 /**

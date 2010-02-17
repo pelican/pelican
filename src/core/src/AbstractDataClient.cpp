@@ -20,7 +20,7 @@ namespace pelican {
  */
 AbstractDataClient::AbstractDataClient(const ConfigNode& config,
         AdapterFactory* adapterFactory,
-        QList<DataRequirements>& dataRequirements
+        QList<DataRequirements> dataRequirements
 ){
     /* Store local copies */
     _configNode = &config;
