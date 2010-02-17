@@ -39,7 +39,7 @@ class Config
 
         /// Creates and returns a configuration option at the specified address.
         ConfigNode set(const TreeAddress_t &address) {
-            return ConfigNode(_get(address));
+            return ConfigNode(_set(address));
         }
 
         /// Returns a pointer to the specified configuration node.
