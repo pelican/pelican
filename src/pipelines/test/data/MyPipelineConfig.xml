@@ -4,16 +4,20 @@
 
 <clients>
     <FileDataClient>
+        <!-- <data type="AntennaPositions" adapter="AdapterAntennaList" adapterSettings="ant" file="data/antennaConfig.dat"/> -->
         <data type="VisibilityData" adapter="AdapterLofarStationVisibilities" file="data/testVis.dat"/>
     </FileDataClient>
 </clients>
 
 <adapters>
+    <AdapterAntennaList adapterSettings="ant">
+        <antennas number="3"/>
+    </AdapterAntennaList>
     <AdapterLofarStationVisibilities>
         <antennas number="3"/>
         <channels number="2"/>
         <polarisations number="2"/>
-        <dataBytes number="4"/>
+        <dataBytes number="8"/>
     </AdapterLofarStationVisibilities>
 </adapters>
 

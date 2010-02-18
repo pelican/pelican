@@ -1,10 +1,15 @@
 #include "AdapterLofarStationVisibilitiesTest.h"
 #include "adapters/test/VisGen.h"
+#include <QCoreApplication>
 #include <QDomElement>
 #include <QDataStream>
+#include <QBuffer>
+#include <QFile>
 #include "utility/ConfigNode.h"
 #include "adapters/AdapterLofarStationVisibilities.h"
 #include "adapters/AbstractStreamAdapter.h"
+#include <iostream>
+#include <iomanip>
 
 
 #include "utility/memCheck.h"
@@ -24,14 +29,19 @@ AdapterLofarStationVisibilitiesTest::~AdapterLofarStationVisibilitiesTest()
 
 void AdapterLofarStationVisibilitiesTest::setUp()
 {
+    int argc = 1;
+    char *argv[] = {(char*)"pelican"};
+    _app = new QCoreApplication(argc, argv);
 }
 
 void AdapterLofarStationVisibilitiesTest::tearDown()
 {
+    delete _app;
 }
 
 void AdapterLofarStationVisibilitiesTest::test_method()
 {
+    QString fileName = "hello.dat";
     QDomElement e;
     ConfigNode config(e);
     AbstractStreamAdapter* adapter = new AdapterLofarStationVisibilities(config);
@@ -40,15 +50,36 @@ void AdapterLofarStationVisibilitiesTest::test_method()
     unsigned nPol = 2;
     VisGen g;
     g.generate(nAnt, nChan, nPol);
-    QDataStream *in = &g.dataStream();
+    g.print();
+    g.write(fileName.toStdString());
+    QByteArray b(g.dataStream());
+    CPPUNIT_ASSERT_EQUAL(static_cast<int>(g.size()), (int)b.size());
+
+    QBuffer buffer(&b);
+    buffer.open(QBuffer::ReadWrite);
+
     DataBlob *data = new VisibilityData(nAnt, nChan, nPol);
     QHash<QString, DataBlob*> h;
-    *in >> adapter->config(data, 0, h);
-    VisibilityData *vis = static_cast<VisibilityData*>(data);
-    std::cout << vis->nEntries() << std::endl;
+    adapter->config(data, g.size(), h);
+    try {
+        adapter->deserialise(&buffer);
+    }
+    catch (QString err) {
+        std::cout << err.toStdString() << std::endl;
+    }
+
+    QFile testFile(fileName);
+    testFile.open(QIODevice::ReadOnly);
+    adapter->config(data, g.size(), h);
+    try {
+        adapter->deserialise(&testFile);
+    }
+    catch (QString err) {
+        std::cout << err.toStdString() << std::endl;
+    }
+
     delete adapter;
     delete data;
-    delete in;
 }
 
 } // namespace pelican

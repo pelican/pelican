@@ -8,6 +8,7 @@
 #include <iostream>
 #include <fstream>
 #include <cstdlib>
+#include <data/DataBlob.h>
 
 /**
  * @file VisGen.h
@@ -26,7 +27,8 @@ namespace pelican {
 class VisGen
 {
     public:
-        VisGen() {}
+
+        VisGen() {_binary = true;}
         VisGen(int argc, char** argv);
         ~VisGen();
 
@@ -35,12 +37,17 @@ class VisGen
         }
 
         void generate(int nAnt, int nChan, int nPol) {
+            _binary = true;
             _generate(nAnt, nChan, nPol);
         }
 
         void write(const std::string& fileName);
 
-        QDataStream& dataStream();
+        void print();
+
+        QByteArray dataStream();
+
+        complex_t* data() { return &_data[0]; }
 
         int& nAntennas() { return _nAnt; }
 
@@ -48,18 +55,18 @@ class VisGen
 
         int& nPolarisations() { return _nPol; }
 
+        unsigned size() { return _data.size() * sizeof(complex_t); }
+
     private:
         void _generate(int nAnt, int nChan, int nPol);
         void _getCommandLineArgs(int argc, char** argv);
 
     private:
-        typedef std::complex<float> complex_t;
         bool _binary;
         int _nAnt;
         int _nChan;
         int _nPol;
         std::vector<complex_t> _data;
-        QDataStream *_stream;
 };
 
 } // namespace pelican

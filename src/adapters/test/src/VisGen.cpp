@@ -9,6 +9,7 @@ namespace pelican {
 
 VisGen::VisGen(int argc, char** argv)
 {
+    _binary = true;
     _getCommandLineArgs(argc, argv);
     std::cout << "----------------------------------------\n";
     std::cout << "nAnt   = " << _nAnt << std::endl;
@@ -47,6 +48,9 @@ void VisGen::_getCommandLineArgs(int argc, char** argv)
 
 void VisGen::_generate(int nAnt, int nChan, int nPol)
 {
+    _nAnt = nAnt;
+    _nChan = nChan;
+    _nPol = nPol;
     int nPoints = nAnt * nPol * nAnt * nPol * nChan;
     int nPointsPerChan = nAnt * nPol * nAnt * nPol;
     std::cout << "Number of data points = " << nPoints << "\n";
@@ -67,8 +71,10 @@ void VisGen::_generate(int nAnt, int nChan, int nPol)
                         float ai = static_cast<float>(i) / 100.0;
                         float re = static_cast<float>(c) + aj + ai;
                         float im = static_cast<float>(c) + aj + ai;
-                        re += (pi == pj) ? 1.0 : 0.0;
-                        im += (pi == pj) ? 1.0 : 0.0;
+//                        re += (pi == pj) ? static_cast<float>(c) + 1.0 : 0.0;
+//                        im += (pi == pj) ? static_cast<float>(c) + 1.0 : 0.0;
+                        re += (pi == pj) ? 0.0 : -99999.9999;
+                        im += (pi == pj) ? 0.0 : -99999.9999;
                         _data[index] = complex_t(re, im);
                     }
                 } // loop over columns
@@ -81,16 +87,48 @@ void VisGen::_generate(int nAnt, int nChan, int nPol)
 
 
 
+void VisGen::print()
+{
+    std::cout << "Data size = " << _data.size() * sizeof(complex_t) << " bytes.\n";
+    int nPointsPerChan = _nAnt * _nPol * _nAnt * _nPol;
+    std::cout << std::setprecision(2);
+    std::cout << std::fixed;
+
+    for (int c = 0; c < _nChan; c++) {
+        int cIndex = c * nPointsPerChan;
+
+        for (int j = 0; j < _nAnt; j++) {
+            for (int pj = 0; pj < _nPol; pj++) {
+                int jIndex = (j * _nPol + pj) * (_nAnt * _nPol);
+
+                for (int i = 0; i < _nAnt; i++) {
+                    for (int pi = 0; pi < _nPol; pi++) {
+
+                        int index = cIndex + jIndex + (i * _nPol + pi);
+                        std::cout << _data[index];
+                    }
+                }
+                std::cout << std::endl;
+            }
+        }
+        std::cout << std::endl;
+    }
+}
+
+
 
 void VisGen::write(const std::string& fileName)
 {
     std::cout << "Data size = " << _data.size() * sizeof(complex_t) << " bytes.\n";
     std::ofstream file;
     file.open(fileName.c_str(), std::ios::out | std::ios::binary);
+    if (!file.good()) std::cout << "eek\n";
 
+    std::vector<char> d(_data.size() * sizeof(complex_t), 'a');
     if (_binary) {
-        file.write(reinterpret_cast<char*>(&_data[0]),
-                sizeof(complex_t) * _data.size());
+//        file.write(reinterpret_cast<char*>(&_data[0]),
+//                sizeof(complex_t) * _data.size());
+        file.write(&d[0], sizeof(complex_t) * _data.size());
     }
     else {
         int nPointsPerChan = _nAnt * _nPol * _nAnt * _nPol;
@@ -118,19 +156,17 @@ void VisGen::write(const std::string& fileName)
         }
     }
     file.close();
-    _data.clear();
+//    _data.clear();
 }
 
 
-QDataStream& VisGen::dataStream()
+QByteArray VisGen::dataStream()
 {
     if (_data.empty())
         throw QString("VisGen: data not yet genrated.");
 
     char* data = reinterpret_cast<char*>(&_data[0]);
-    QByteArray b(data, sizeof(complex_t) * _data.size());
-    _stream = new QDataStream(b);
-    return *_stream;
+    return QByteArray(data, sizeof(complex_t) * _data.size());
 }
 
 } // namespace pelican

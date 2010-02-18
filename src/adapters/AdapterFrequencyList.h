@@ -15,9 +15,9 @@ class ConfigNode;
 
 /**
  * @class AdapterFrequencyList
- *  
+ *
  * @brief
- * 
+ *
  * @details
  */
 
@@ -29,7 +29,7 @@ class AdapterFrequencyList : public AbstractServiceAdapter
 
     protected:
         /// Method to deserialise a frequency channel list file
-        void deserialise(QDataStream& in);
+        void deserialise(QIODevice* in);
 
     private:
         /// Sets frequency data blob being read into.
@@ -44,4 +44,4 @@ class AdapterFrequencyList : public AbstractServiceAdapter
 
 } // namespace pelican
 
-#endif // ADAPTERFREQUENCYLIST_H 
+#endif // ADAPTERFREQUENCYLIST_H

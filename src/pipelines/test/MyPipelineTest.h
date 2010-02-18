@@ -7,6 +7,8 @@
  * @file MyPipelineTest.h
  */
 
+class QCoreApplication;
+
 namespace pelican {
 
 /**
@@ -37,6 +39,7 @@ class MyPipelineTest : public CppUnit::TestFixture
         ~MyPipelineTest();
 
     private:
+        QCoreApplication *_app;
 };
 
 } // namespace pelican

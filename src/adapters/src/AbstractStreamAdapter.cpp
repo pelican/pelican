@@ -28,13 +28,15 @@ AbstractStreamAdapter::~AbstractStreamAdapter()
  * @details
  */
 AbstractStreamAdapter& AbstractStreamAdapter::config(DataBlob* data,
-        std::size_t size, QHash<QString, DataBlob*>& serviceData)
+        std::size_t size, QHash<QString, DataBlob*> serviceData)
 {
     _data = data;
     _chunkSize = size;
     _serviceData = serviceData;
     return *this;
 }
+
+
 
 } // namespace pelican
 

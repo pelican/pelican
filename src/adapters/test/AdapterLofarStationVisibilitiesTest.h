@@ -3,6 +3,8 @@
 
 #include <cppunit/extensions/HelperMacros.h>
 
+class QCoreApplication;
+
 /**
  * @file AdapterLofarStationVisibilitiesTest.h
  */
@@ -39,6 +41,7 @@ class AdapterLofarStationVisibilitiesTest : public CppUnit::TestFixture
         ~AdapterLofarStationVisibilitiesTest();
 
     private:
+        QCoreApplication *_app;
 };
 
 } // namespace pelican

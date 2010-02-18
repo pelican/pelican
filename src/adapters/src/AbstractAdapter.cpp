@@ -24,11 +24,5 @@ AbstractAdapter::~AbstractAdapter()
 }
 
 
-QDataStream& operator>> (QDataStream& in, AbstractAdapter& adapter)
-{
-    adapter.deserialise(in);
-    return in;
-}
-
 } // namespace pelican
 

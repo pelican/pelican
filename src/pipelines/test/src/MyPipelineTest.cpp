@@ -21,10 +21,13 @@ MyPipelineTest::~MyPipelineTest()
 
 void MyPipelineTest::setUp()
 {
+    int ac = 0;
+    _app = new QCoreApplication(ac, NULL);
 }
 
 void MyPipelineTest::tearDown()
 {
+    delete _app;
 }
 
 void MyPipelineTest::test_method()
