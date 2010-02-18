@@ -65,7 +65,7 @@ AbstractAdapter* AdapterFactory::create(const QString& type, const QString& name
 /**
  * @details
  * Creates a new adapter.
- * Called by the public function createAdapter.
+ * Called by the public function create().
  *
  * @param[in] type   A string containing the type of the adapter.
  * @param[in] config Configuration node for the adapter.

@@ -59,8 +59,8 @@ class AbstractDataClient
         /// List of data requirements for each pipeline.
         QList<DataRequirements> _dataRequirements;
 
-        /// All the adapters created for each data type and pipeline.
-        QList<QHash<QString, AbstractAdapter*> > _adapters;
+        /// All the adapters created for each data type.
+        QHash<QString, AbstractAdapter*> _adapters;
 
         /// The adapter names required for each data type.
         QHash<QString, QString> _adapterNames;
@@ -75,8 +75,8 @@ class AbstractDataClient
         /// Returns the list of data requirements for each pipeline.
         QList<DataRequirements>& dataRequirements() {return _dataRequirements;}
 
-        /// Returns the list of adapters for each data type and each pipeline.
-        QList<QHash<QString, AbstractAdapter*> >& adapters() {return _adapters;}
+        /// Returns the list of adapters for each data type.
+        QHash<QString, AbstractAdapter*>& adapters() {return _adapters;}
 
         /// Returns the adapter names required for each data type.
         QHash<QString, QString> adapterNames() {return _adapterNames;}
