@@ -10,6 +10,7 @@
 #include "adapters/AbstractStreamAdapter.h"
 #include <iostream>
 #include <iomanip>
+#include "utility/pelicanTimer.h"
 
 
 #include "utility/memCheck.h"
@@ -45,12 +46,12 @@ void AdapterLofarStationVisibilitiesTest::test_method()
     QDomElement e;
     ConfigNode config(e);
     AbstractStreamAdapter* adapter = new AdapterLofarStationVisibilities(config);
-    unsigned nAnt = 2;
-    unsigned nChan = 2;
+    unsigned nAnt = 96;
+    unsigned nChan = 512;
     unsigned nPol = 2;
     VisGen g;
     g.generate(nAnt, nChan, nPol);
-    g.print();
+//    g.print();
     g.write(fileName.toStdString());
     QByteArray b(g.dataStream());
     CPPUNIT_ASSERT_EQUAL(static_cast<int>(g.size()), (int)b.size());
@@ -72,7 +73,9 @@ void AdapterLofarStationVisibilitiesTest::test_method()
     testFile.open(QIODevice::ReadOnly);
     adapter->config(data, g.size(), h);
     try {
+        TIMER_START
         adapter->deserialise(&testFile);
+        TIMER_STOP("stuff")
     }
     catch (QString err) {
         std::cout << err.toStdString() << std::endl;

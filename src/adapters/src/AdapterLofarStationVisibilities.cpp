@@ -22,8 +22,8 @@ AdapterLofarStationVisibilities::AdapterLofarStationVisibilities(const ConfigNod
 : AbstractStreamAdapter(config)
 {
     // Grab configuration for the adapter setting sensible defaults
-    _nAnt = config.getOption("antennas", "number", "2").toUInt();
-    _nChan = config.getOption("channels", "number", "2").toUInt();
+    _nAnt = config.getOption("antennas", "number", "96").toUInt();
+    _nChan = config.getOption("channels", "number", "512").toUInt();
     _nPol = config.getOption("polarisations", "number", "2").toUInt();
     _dataBytes = config.getOption("dataBytes", "number", "8").toUInt();
 }
@@ -71,23 +71,18 @@ void AdapterLofarStationVisibilities::deserialise(QIODevice* in)
                             unsigned index = pi * nPointsPerPol +
                                     c * nPointsPerChan + j * _nAnt + i;
                             char *t = &temp[iRaw];
-//                            if (_dataBytes == 8)
+                            if (_dataBytes == 8)
                                 vis[index] = *(reinterpret_cast< std::complex<double>* >(t));
-//                            else if (_dataBytes == 4)
-//                                vis[index] = *(reinterpret_cast< std::complex<float>* >(t));
-                            std::cout << index << " " << vis[index] << std::endl;
+                            else if (_dataBytes == 4)
+                                vis[index] = *(reinterpret_cast< std::complex<float>* >(t));
                         }
 
-                        iRaw+=16;// 2*_dataBytes;
+                        iRaw+= 2*_dataBytes;
                     }
                 }
             }
         }
     }
-//    std::cout << vis[765] << std::endl;
-
-//    std::cout << (*_vis)(30, 12, 56, 1) << std::endl;
-//    std::cout << (*_vis)(45, 45, 98, 0) << std::endl;
 }
 
 
