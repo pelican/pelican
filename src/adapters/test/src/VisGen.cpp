@@ -124,11 +124,9 @@ void VisGen::write(const std::string& fileName)
     file.open(fileName.c_str(), std::ios::out | std::ios::binary);
     if (!file.good()) std::cout << "eek\n";
 
-    std::vector<char> d(_data.size() * sizeof(complex_t), 'a');
     if (_binary) {
-//        file.write(reinterpret_cast<char*>(&_data[0]),
-//                sizeof(complex_t) * _data.size());
-        file.write(&d[0], sizeof(complex_t) * _data.size());
+        file.write(reinterpret_cast<char*>(&_data[0]),
+                sizeof(complex_t) * _data.size());
     }
     else {
         int nPointsPerChan = _nAnt * _nPol * _nAnt * _nPol;
