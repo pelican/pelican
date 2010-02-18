@@ -14,7 +14,7 @@
         <antennas number="3"/>
     </AdapterAntennaList>
     <AdapterLofarStationVisibilities>
-        <antennas number="3"/>
+        <antennas number="2"/>
         <channels number="2"/>
         <polarisations number="2"/>
         <dataBytes number="8"/>
