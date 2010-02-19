@@ -28,7 +28,7 @@ class AdapterAntennaList : public AbstractServiceAdapter
         AdapterAntennaList(const ConfigNode& config);
         ~AdapterAntennaList();
 
-    protected:
+    public:
         /// Method to deserialise an antenna list file
         void deserialise(QIODevice* in);
 
@@ -38,7 +38,6 @@ class AdapterAntennaList : public AbstractServiceAdapter
 
     private:
         unsigned _nAnt;
-        unsigned _dataBytes;
         AntennaPositions* _antPos;
 };
 
