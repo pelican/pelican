@@ -22,11 +22,11 @@ class VisibilityPrinter;
  * @details
  */
 
-class MyPipeline : public AbstractPipeline
+class TestPipelineVisibilityPrinter : public AbstractPipeline
 {
     public:
-        MyPipeline();
-        ~MyPipeline();
+        TestPipelineVisibilityPrinter();
+        ~TestPipelineVisibilityPrinter();
 
     public:
         /// Creates the required modules

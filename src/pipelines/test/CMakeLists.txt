@@ -2,13 +2,13 @@ include(CopyFiles)
 SUBPACKAGE(pipelinesTest pipelines)
 set(pipelinesTest_src
     src/pipelinesTest.cpp
-    src/MyPipelineTest.cpp
+    src/TestPipelineVisibilityPrinterTest.cpp
     src/TestPipelineDirtyImageTest.cpp
 )
 
-set(MyPipelineTest_src
+set(TestPipelineVisibilityPrinter_src
     src/pipelinesTest.cpp
-    src/MyPipelineTest.cpp
+    src/TestPipelineVisibilityPrinterTest.cpp
 )
 
 set(TestPipelineDirtyImage_src
@@ -19,8 +19,8 @@ set(TestPipelineDirtyImage_src
 add_executable(pipelinesTest ${pipelinesTest_src} )
 target_link_libraries(pipelinesTest ${SUBPACKAGE_LIBRARIES} ${CPPUNIT_LIBRARIES} memoryTracer )
 
-add_executable(testMyPipeline ${MyPipelineTest_src})
-target_link_libraries(testMyPipeline ${SUBPACKAGE_LIBRARIES} ${CPPUNIT_LIBRARIES} memoryTracer)
+add_executable(testPipelineVisibilityPrinter ${TestPipelineVisibilityPrinter_src})
+target_link_libraries(testPipelineVisibilityPrinter ${SUBPACKAGE_LIBRARIES} ${CPPUNIT_LIBRARIES} memoryTracer)
 
 add_executable(testPipelineDirtyImage ${TestPipelineDirtyImage_src})
 target_link_libraries(testPipelineDirtyImage ${SUBPACKAGE_LIBRARIES} ${CPPUNIT_LIBRARIES} memoryTracer)
