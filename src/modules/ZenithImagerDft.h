@@ -109,6 +109,8 @@ class ZenithImagerDft : public AbstractModule
           ImageData *_image;                  ///< Image amplitude matrix.
 
           std::vector<unsigned> _channels;    ///< Selected channel list.
+          unsigned _nChannels;
+          double _maxFrequency;
           unsigned _polarisation;             ///< Selection polarisation (enumeration).
           bool _fullSky;                      ///< Image the full sky (overrides cellsize)
           unsigned _sizeL;                    ///< Image size in l (x) pixels.

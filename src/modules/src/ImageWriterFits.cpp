@@ -94,7 +94,7 @@ void ImageWriterFits::_getConfiguration(const ConfigNode &config)
 void ImageWriterFits::_open()
 {
     // Throw if the filename is empty
-    if (_fileName.isEmpty()) throw QString("ImagerWriterFits: Output file empty");
+    if (_fileName.isEmpty()) throw QString("ImagerWriterFits: Output file name not set");
 
     // Append fits file suffix if neede
     QFileInfo fileInfo(_fileName);
@@ -160,16 +160,16 @@ void ImageWriterFits::_writeHeader()
     _writeKey("REFERENC", _reference);
 
     // Brightness scaling and coordinate
-    double bscale = 0.0;
+    double bscale = 1.0;
     double bzero = 0.0;
-    double ra = 0.0;
-    double dec = 0.0;
+//    double ra = 0.0;
+//    double dec = 0.0;
     _writeKey("BSCALE", bscale);
     _writeKey("BZERO", bzero);
     _writeKey("BUNIT", "JY/BEAM", "Units of flux");
-    _writeKey("EQUINOX", _equinox);
-    _writeKey("OBSRA", ra);
-    _writeKey("OBSDEC", dec);
+//    _writeKey("EQUINOX", _equinox);
+//    _writeKey("OBSRA", ra);
+//    _writeKey("OBSDEC", dec);
 
     // Amplitude range
     _image->findAmpRange();
@@ -222,10 +222,41 @@ void ImageWriterFits::_writeImage()
     // Throw if there is no image data
     if (_image == NULL) throw QString("ImageWriterFits: Image data missing.");
 
+
     int err = 0;
     real_t* image = _image->ptr();
     long nPixels = _image->nPixels();
-    fits_write_img(_fits, TFLOAT, 1, nPixels, &image[0], &err);
+//    std::cout << "nPixels = " << nPixels << std::endl;
+    //std::cout << image[nPixels-1] << std::endl;
+
+
+    /* Flip the image */
+
+//    std::vector<float> temp(nPixels);
+//    unsigned nL = _image->sizeL();
+//    unsigned nM = _image->sizeM();
+//
+//    for (unsigned int l = 0; l < nL; l++) {
+//        unsigned rowIndex = ((nL - 1) - l) * nM;
+//        for (unsigned i = 0, m = 0; m < nM; m++) {
+//            temp[i] = image[rowIndex + l];
+//            i++;
+//        }
+//    }
+
+//    std::cout << "err = " << err << std::endl;
+//    fits_write_img(_fits, TFLOAT, 1, nPixels, &temp[0], &err);
+    fits_write_img(_fits, TDOUBLE, 1, nPixels, image, &err);
+//    std::cout << "err = " << err << std::endl;
+
+
+//    long nPixels = 1;
+//    for (unsigned a = 0; a < nAxis; a++) {
+//        nPixels *= nAxes[a];
+//    }
+//
+//    fits_write_img(fptr, TFLOAT, 1, nPixels, &flipAmp[0], &err);
+
 }
 
 

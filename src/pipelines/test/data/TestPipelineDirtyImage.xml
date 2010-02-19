@@ -24,17 +24,17 @@
 
 <modules>
     <ZenithImagerDft>
-        <size l="128" m="128"/>
+        <size l="256" m="256"/>
         <fullSky value="true"/>
         <polarisation value="x"/>
-        <channels>183</channels>
-        <frequencies>35.7e6</frequencies>
+        <channels>182</channels>
+        <frequencies number="512" max="1e8"/>
     </ZenithImagerDft>
 
     <ImageWriterFits>
         <overwrite value="true"/>
         <directory value=""/>
-        <file name="" prefix="" suffix=""/>
+        <file name="test.fits" prefix="" suffix=""/>
         <cube value="true"/>
 
         <dateObs value=""/>

@@ -39,7 +39,8 @@ ZenithImagerDft::ZenithImagerDft(const ConfigNode& config)
     _coordL.resize(_sizeL);
     _coordM.resize(_sizeM);
     _calculateImageCoords(_cellsizeL, _sizeL, &_coordL[0]);
-    _calculateImageCoords(_cellsizeM, _sizeL, &_coordM[0]);
+    _calculateImageCoords(_cellsizeM, _sizeM, &_coordM[0]);
+
 }
 
 
@@ -129,6 +130,7 @@ void ZenithImagerDft::run(QHash<QString, DataBlob*>& data)
     unsigned nAnt = _antPos->nAntennas();
     unsigned nPol = _polarisation == POL_BOTH ? 2 : 1;
     unsigned nChan = _channels.size();
+    double frequencyInc = _maxFrequency / static_cast<double>(_nChannels);
 
     /// Assign memory for the image cube (only resizes if needed)
     _image->resize(_sizeL, _sizeM, nChan, nPol);
@@ -142,7 +144,8 @@ void ZenithImagerDft::run(QHash<QString, DataBlob*>& data)
 //        if (channel > _freqList->nChannels())
 //            throw QString("Selected channel out of range.");
 //
-        double frequency = 0.0;//_freqList->at(channel);
+        //_freqList->at(channel);
+        double frequency = frequencyInc * channel;
 
         for (unsigned p = 0; p < nPol; p++) {
 
@@ -151,13 +154,23 @@ void ZenithImagerDft::run(QHash<QString, DataBlob*>& data)
 
             // Get pointers to the visibility data and image for the selected
             // channel and polarisation
+            std::cout << channel << " " << pol << " " << frequency <<  std::endl;
             complex_t* vis = _vis->ptr(channel, pol);
-            real_t* image = _image->ptr(pol, c);
+            real_t* image = _image->ptr(p, c);
 
             _makeImageDft(nAnt, _antPos->xPtr(), _antPos->yPtr(), vis, frequency,
                     _sizeL, _sizeM, &_coordL[0], &_coordM[0], image);
         }
     }
+
+    _image->findAmpRange(); // this only works for an image of one channel
+
+//     check nan and inf
+//    if (_image->max() != _image->max() && !(_image->max() != image->max())
+
+
+    std::cout << _image->min() << " " << _image->max() << std::endl;
+
 }
 
 
@@ -196,6 +209,9 @@ void ZenithImagerDft::_getConfiguration(const ConfigNode &config)
     for (int c = 0; c < chanList.size(); c++) {
         _channels[c] = chanList.at(c).toUInt();
     }
+
+    _nChannels = config.getOption("frequencies", "number", "512").toUInt();
+    _maxFrequency = config.getOption("frequencies", "max", "1.0e8").toDouble();
 }
 
 
@@ -220,6 +236,7 @@ void ZenithImagerDft::_calculateImageCoords(const double& cellsize,
     int centre = nPixels / 2;
     for (int i = 0; i < static_cast<int>(nPixels); i++) {
         coords[i] = static_cast<double>(i - centre) * delta;
+//        std::cout << coords[i] << std::endl;
     }
 }
 
@@ -234,12 +251,21 @@ void ZenithImagerDft::_fetchDataBlobs(QHash<QString, DataBlob*>& data)
     _antPos = static_cast<AntennaPositions*>(data["AntennaPositions"]);
     _image = static_cast<ImageData*>(data["ImageData"]);
 
-    if (!_vis) throw QString("Data blob missing: VisibilityData");
-    if (!_antPos) throw QString("Data blob missing: AntennaPositions");
-    if (!_image) throw QString("Data blob missing: ImageData");
+    if (!_vis) throw QString("ZenithImagerDft: VisibilityData blob missing");
+    if (!_antPos) throw QString("ZenithImagerDft: AntennaPositiosn blob missing");
+    if (!_image) throw QString("ZenithImagerDft: ImageData blob missing");
 
     if (_vis->nAntennas() == 0) throw QString("Empty data blob: VisibilityData");
     if (_antPos->nAntennas() == 0) throw QString("Empty data blob: AntennaPositions");
+
+    if (_vis->nAntennas() != _antPos->nAntennas())
+        throw QString("ZenithImagerDft: data blob dimension mismatch");
+
+//    for (unsigned i = 0; _vis->nEntries(); i++) {
+//        std::cout << (*_vis)[i] << std::endl;
+//    }
+
+
 }
 
 
@@ -253,12 +279,17 @@ void ZenithImagerDft::_calculateWeights(const unsigned& nAnt, real_t* antPos,
         real_t* imageCoord, complex_t* weights)
 {
     double k = (math::twoPi * frequency) / phy::c;
+//    std::cout << frequency << std::endl;
+//    std::cout << math::twoPi << std::endl;
+//    std::cout << phy::c << std::endl;
+//    std::cout << "k = " << k << std::endl;
     for (unsigned i = 0; i < nCoords; i++) {
         unsigned index = i * nAnt;
         double arg1 = k * imageCoord[i];
         for (unsigned a = 0; a < nAnt; a++) {
             double arg2 = arg1 * antPos[a];
             weights[index + a] = complex_t(cos(arg2), sin(arg2));
+//            std::cout << weights[index + a] << std::endl;
         }
     }
 }
@@ -281,6 +312,21 @@ void ZenithImagerDft::_makeImageDft(const unsigned& nAnt, real_t* antPosX,
     _weights.resize(nAnt);
     _temp.resize(nAnt);
 
+
+//    for (unsigned m = 0; m < nM; m++) {
+//        for (unsigned l = 0; l < nL; l++) {
+//            for (unsigned j = 0; j < nAnt; j++) {
+//                for (unsigned i = 0; i < nAnt; i++) {
+//                    image[indexM + l] +=
+//
+//                }
+//            }
+//        }
+//    }
+
+
+
+
 #ifdef USE_BLAS
     real_t alpha[2] = {1.0, 0.0};
     real_t beta[2]  = {0.0, 0.0};
@@ -295,7 +341,7 @@ void ZenithImagerDft::_makeImageDft(const unsigned& nAnt, real_t* antPosX,
             _multWeights(nAnt, weightsXL, weightsYM, &_weights[0]);
 
 #ifdef USE_BLAS
-            cblas_cgemv(CblasRowMajor, CblasNoTrans, nAnt, nAnt, alpha, vis,
+            cblas_zgemv(CblasRowMajor, CblasNoTrans, nAnt, nAnt, alpha, vis,
                     nAnt, &_weights[0], 1, beta, &_temp[0], 1);
 #else
             _multMatrixVector(nAnt, vis, &_weights[0], &_temp[0]);
@@ -303,6 +349,7 @@ void ZenithImagerDft::_makeImageDft(const unsigned& nAnt, real_t* antPosX,
 
             /// use some sort of cblas_cdot to replace this call.
             image[indexM + l] = _vectorDotConj(nAnt, &_temp[0], &_weights[0]).real();
+//            std::cout << m << " " << l << " " << image[indexM + l] << std::endl;
         }
     }
 }
@@ -318,6 +365,7 @@ void ZenithImagerDft::_multWeights(const unsigned& nAnt, complex_t* weightsXL,
 {
     for (unsigned i = 0; i < nAnt; i++) {
         weights[i] = weightsXL[i] * weightsYM[i];
+//        std::cout << weights[i] << std::endl;
     }
 }
 
@@ -334,6 +382,7 @@ void ZenithImagerDft::_multMatrixVector(const unsigned& nAnt,
         unsigned indexJ = j * nAnt;
         for (unsigned i = 0; i < nAnt; i++) {
             result[j] += visMatrix[indexJ + i] * weights[i];
+//            std::cout << visMatrix[indexJ + i] << " " << weights[i] << " - " << result[j] << std::endl;
         }
     }
 }

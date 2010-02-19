@@ -2,6 +2,7 @@
 #define IMAGEWRITERFITS_TEST_H
 
 #include <cppunit/extensions/HelperMacros.h>
+#include <QCoreApplication>
 
 /**
  * @file ImageWriterFitsTest.h
@@ -11,11 +12,11 @@ namespace pelican {
 
 /**
  * @class ImageWriterFitsTest
- *  
+ *
  * @brief
- * 
+ *
  * @details
- * 
+ *
  */
 
 class ImageWriterFitsTest : public CppUnit::TestFixture
@@ -24,6 +25,7 @@ class ImageWriterFitsTest : public CppUnit::TestFixture
         CPPUNIT_TEST_SUITE( ImageWriterFitsTest );
         CPPUNIT_TEST( test_createModule );
         CPPUNIT_TEST( test_openFile );
+        CPPUNIT_TEST( test_createImage );
         CPPUNIT_TEST_SUITE_END();
 
 
@@ -34,6 +36,7 @@ class ImageWriterFitsTest : public CppUnit::TestFixture
         // Test Methods
         void test_createModule();
         void test_openFile();
+        void test_createImage();
 
 
     public:
@@ -41,6 +44,7 @@ class ImageWriterFitsTest : public CppUnit::TestFixture
         ~ImageWriterFitsTest();
 
     private:
+        QCoreApplication *_app;
 };
 
 } // namespace pelican
