@@ -22,7 +22,10 @@ class ConfigNode
         QDomElement _config;
 
     public:
-        /// Constructs the configuration object reading the specified configuration file
+        /// Constructs an empty configuration node.
+        ConfigNode() {}
+
+        /// Constructs the configuration node from the specified QDomElement.
         ConfigNode(const QDomElement& config);
 
         /// Destroys the configuration object.

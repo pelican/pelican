@@ -14,11 +14,11 @@ VisGen::VisGen(int argc, char** argv)
 {
     _binary = true;
     _getCommandLineArgs(argc, argv);
+    std::string binary = (_binary) ? "yes" : "no";
     std::cout << "----------------------------------------\n";
     std::cout << "antennas      = " << _nAnt << std::endl;
     std::cout << "polarisations = " << _nPol << std::endl;
     std::cout << "channels      = " << _nChan << std::endl;
-    std::string binary = (_binary) ? "yes" : "no";
     std::cout << "binary        = " << binary << std::endl;
     std::cout << "----------------------------------------\n";
 }
@@ -164,14 +164,16 @@ void VisGen::_generate(int nAnt, int nChan, int nPol)
                     for (int pi = 0; pi < nPol; pi++) {
 
                         int index = cIndex + jIndex + (i * nPol + pi);
-                        float aj = static_cast<float>(j) / 100.0;
-                        float ai = static_cast<float>(i) / 100.0;
-                        float re = static_cast<float>(c) + aj + ai;
-                        float im = static_cast<float>(c) + aj + ai;
-//                        re += (pi == pj) ? static_cast<float>(c) + 1.0 : 0.0;
-//                        im += (pi == pj) ? static_cast<float>(c) + 1.0 : 0.0;
-                        re += (pi == pj) ? 0.0 : -99999.9999;
-                        im += (pi == pj) ? 0.0 : -99999.9999;
+
+                        /* CRITICAL: Keep this for the test to work */
+                        float aj = float(j) / 100.0;
+                        float ai = float(i) / 100.0;
+                        float re = float(c) + aj + ai;
+                        float im = float(c) + aj + ai;
+                        re += (pi == pj) ? 1000.0 * pi : -99999.9;
+                        im += (pi == pj) ? 1000.0 * pi : -99999.9;
+                        /* End critical */
+
                         _data[index] = complex_t(re, im);
                     }
                 } // loop over columns
