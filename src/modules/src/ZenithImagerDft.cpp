@@ -25,14 +25,12 @@ ZenithImagerDft::ZenithImagerDft(const ConfigNode& config)
     // Register which data blobs are needed by the module
     addStreamData("VisibilityData");
     addServiceData("AntennaPositions");
-    addServiceData("FrequencyList");
     addGeneratedData("ImageData");
 
     // Initialise local data pointers
     _vis = NULL;
     _antPos = NULL;
     _image = NULL;
-    _freqList = NULL;
 
     // Extract configuration from the xml configuration node.
     _getConfiguration(config);
@@ -42,7 +40,6 @@ ZenithImagerDft::ZenithImagerDft(const ConfigNode& config)
     _coordM.resize(_sizeM);
     _calculateImageCoords(_cellsizeL, _sizeL, &_coordL[0]);
     _calculateImageCoords(_cellsizeM, _sizeL, &_coordM[0]);
-
 }
 
 
@@ -142,10 +139,10 @@ void ZenithImagerDft::run(QHash<QString, DataBlob*>& data)
         // The channel list channel id selection
         unsigned channel = _channels[c];
 
-        if (channel > _freqList->nChannels())
-            throw QString("Selected channel out of range.");
-
-        double frequency = _freqList->at(channel);
+//        if (channel > _freqList->nChannels())
+//            throw QString("Selected channel out of range.");
+//
+        double frequency = 0.0;//_freqList->at(channel);
 
         for (unsigned p = 0; p < nPol; p++) {
 
@@ -236,16 +233,13 @@ void ZenithImagerDft::_fetchDataBlobs(QHash<QString, DataBlob*>& data)
     _vis = static_cast<VisibilityData*>(data["VisibilityData"]);
     _antPos = static_cast<AntennaPositions*>(data["AntennaPositions"]);
     _image = static_cast<ImageData*>(data["ImageData"]);
-    _freqList = static_cast<FrequencyList*>(data["FrequencyList"]);
 
     if (!_vis) throw QString("Data blob missing: VisibilityData");
     if (!_antPos) throw QString("Data blob missing: AntennaPositions");
     if (!_image) throw QString("Data blob missing: ImageData");
-    if (!_freqList) throw QString("Data blob missing: FrequencyList.");
 
     if (_vis->nAntennas() == 0) throw QString("Empty data blob: VisibilityData");
     if (_antPos->nAntennas() == 0) throw QString("Empty data blob: AntennaPositions");
-    if (_freqList->nChannels() == 0) throw QString("Empty data blob: FrequencyList");
 }
 
 

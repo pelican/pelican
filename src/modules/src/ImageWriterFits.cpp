@@ -51,6 +51,9 @@ void ImageWriterFits::run(QHash<QString, DataBlob*>& data)
     // if multiple file loop over them
 
     // grab image pointer to write
+    _image = static_cast<ImageData*>(data["ImageData"]);
+    if (!_image) throw QString("ImageWriterFits: Image data missing.");
+
 
     // write the fits file
     _open();
@@ -90,9 +93,6 @@ void ImageWriterFits::_getConfiguration(const ConfigNode &config)
  */
 void ImageWriterFits::_open()
 {
-    // Throw if there is no image data.
-    if (_image == NULL) throw QString("ImageWriterFits: Image data missing.");
-
     // Throw if the filename is empty
     if (_fileName.isEmpty()) throw QString("ImagerWriterFits: Output file empty");
 

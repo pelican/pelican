@@ -18,10 +18,10 @@ namespace pelican {
 
 /**
  * @class ZenithImagerDft
- *  
+ *
  * @brief
  * Provides basic imaging routines for whole-sky views.
- * 
+ *
  * @details
  */
 class ZenithImagerDft : public AbstractModule
@@ -107,7 +107,6 @@ class ZenithImagerDft : public AbstractModule
           VisibilityData *_vis;               ///< Visibility amplitude matrix.
           AntennaPositions *_antPos;          ///< Visibility positions matrix.
           ImageData *_image;                  ///< Image amplitude matrix.
-          FrequencyList *_freqList;           ///< Frequency list data.
 
           std::vector<unsigned> _channels;    ///< Selected channel list.
           unsigned _polarisation;             ///< Selection polarisation (enumeration).

@@ -21,6 +21,7 @@ AdapterAntennaList::~AdapterAntennaList()
 {
 }
 
+
 /**
  * @details
  * Desearalise a LOFAR station antenna list file.
@@ -44,7 +45,6 @@ void AdapterAntennaList::deserialise(QIODevice* in)
 }
 
 
-
 /**
  * @details
  */
@@ -61,7 +61,6 @@ void AdapterAntennaList::_setData()
     _antPos = static_cast<AntennaPositions*>(_data);
     _antPos->resize(_nAnt);
 }
-
 
 
 } // namespace pelican
