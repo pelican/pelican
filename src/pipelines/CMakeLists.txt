@@ -2,6 +2,7 @@ INCLUDE_DIRECTORIES(${QT_INCLUDES})
 SUBPACKAGE(pipelines utility data modules core)
 set( pipelines_src
     src/MyPipeline.cpp
+    src/TestPipelineDirtyImage.cpp
 )
 add_library(pipelines ${pipelines_src} )
 target_link_libraries(pipelines ${SUBPACKAGE_LIBRARIES} )

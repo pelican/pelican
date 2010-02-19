@@ -10,6 +10,7 @@
 #include "modules/ZenithCalibrater.h"
 #include "modules/ZenithImagerDft.h"
 #include "modules/ZenithModelVisibilities.h"
+#include "modules/ImageWriterFits.h"
 
 #include "utility/memCheck.h"
 
@@ -95,6 +96,10 @@ AbstractModule* ModuleFactory::_createModule(const QString& name, const ConfigNo
     }
     else if (name == "VisibilityPrinter") {
         module = new VisibilityPrinter(config);
+        _modules.append(module);
+    }
+    else if (name == "ImageWriterFits") {
+        module = new ImageWriterFits(config);
         _modules.append(module);
     }
     else {

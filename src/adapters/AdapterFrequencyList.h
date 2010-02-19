@@ -27,7 +27,7 @@ class AdapterFrequencyList : public AbstractServiceAdapter
         AdapterFrequencyList(const ConfigNode& config);
         ~AdapterFrequencyList();
 
-    protected:
+    public:
         /// Method to deserialise a frequency channel list file
         void deserialise(QIODevice* in);
 
