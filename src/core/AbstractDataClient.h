@@ -40,8 +40,8 @@ class DataBlob;
  * data types and data adapters, for example:
  *
  * \verbatim
- *     <data type="VisibilityData" adapter="AdapterStationVisibilities"/>
- *     <data type="AntennaPositions" adapter="AdapterStationAntennas"/>
+      <data type="VisibilityData" adapter="AdapterStationVisibilities"/>
+      <data type="AntennaPositions" adapter="AdapterStationAntennas"/>
  * \endverbatim
  *
  * This information is read by the abstract data client, and stored in the
@@ -59,8 +59,8 @@ class AbstractDataClient
         /// List of data requirements for each pipeline.
         QList<DataRequirements> _dataRequirements;
 
-        /// All the adapters created for each data type and pipeline.
-        QList<QHash<QString, AbstractAdapter*> > _adapters;
+        /// All the adapters created for each data type.
+        QHash<QString, AbstractAdapter*> _adapters;
 
         /// The adapter names required for each data type.
         QHash<QString, QString> _adapterNames;
@@ -75,8 +75,8 @@ class AbstractDataClient
         /// Returns the list of data requirements for each pipeline.
         QList<DataRequirements>& dataRequirements() {return _dataRequirements;}
 
-        /// Returns the list of adapters for each data type and each pipeline.
-        QList<QHash<QString, AbstractAdapter*> >& adapters() {return _adapters;}
+        /// Returns the list of adapters for each data type.
+        QHash<QString, AbstractAdapter*>& adapters() {return _adapters;}
 
         /// Returns the adapter names required for each data type.
         QHash<QString, QString> adapterNames() {return _adapterNames;}
@@ -85,7 +85,7 @@ class AbstractDataClient
         /// Data client constructor.
         AbstractDataClient(const ConfigNode& config,
                 AdapterFactory* adapterFactory,
-                QList<DataRequirements>& dataRequirements);
+                QList<DataRequirements> dataRequirements);
 
         /// Data client destructor (virtual).
         virtual ~AbstractDataClient();

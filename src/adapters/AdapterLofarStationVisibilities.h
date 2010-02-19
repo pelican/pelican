@@ -40,7 +40,7 @@ class AdapterLofarStationVisibilities : public AbstractStreamAdapter
 
     protected:
         /// Method to deserialise a LOFAR visibility file data stream.
-        void deserialise(QDataStream& in);
+        void deserialise(QIODevice* in);
 
     private:
         /// Updates and checks the size of the visibility data being read into.

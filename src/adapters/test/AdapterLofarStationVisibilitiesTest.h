@@ -3,26 +3,30 @@
 
 #include <cppunit/extensions/HelperMacros.h>
 
+class QCoreApplication;
+
 /**
  * @file AdapterLofarStationVisibilitiesTest.h
  */
 
 namespace pelican {
 
+class VisGen;
+
 /**
  * @class AdapterLofarStationVisibilitiesTest
- *  
+ *
  * @brief
- * 
+ *
  * @details
- * 
+ *
  */
 
 class AdapterLofarStationVisibilitiesTest : public CppUnit::TestFixture
 {
     public:
         CPPUNIT_TEST_SUITE( AdapterLofarStationVisibilitiesTest );
-        CPPUNIT_TEST( test_method );
+        CPPUNIT_TEST(test_method);
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -33,10 +37,11 @@ class AdapterLofarStationVisibilitiesTest : public CppUnit::TestFixture
         void test_method();
 
     public:
-        AdapterLofarStationVisibilitiesTest(  );
+        AdapterLofarStationVisibilitiesTest();
         ~AdapterLofarStationVisibilitiesTest();
 
     private:
+        QCoreApplication *_app;
 };
 
 } // namespace pelican

@@ -35,5 +35,6 @@ AbstractServiceAdapter& AbstractServiceAdapter::config(DataBlob* data,
     return *this;
 }
 
+
 } // namespace pelican
 

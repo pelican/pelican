@@ -15,11 +15,11 @@ class ConfigNode;
 
 /**
  * @class AdapterAntennaList
- *  
+ *
  * @brief
- * 
+ *
  * @details
- * 
+ *
  */
 
 class AdapterAntennaList : public AbstractServiceAdapter
@@ -30,7 +30,7 @@ class AdapterAntennaList : public AbstractServiceAdapter
 
     protected:
         /// Method to deserialise an antenna list file
-        void deserialise(QDataStream& in);
+        void deserialise(QIODevice* in);
 
     private:
         /// Sets antenna positions data blob being read into.
@@ -44,4 +44,4 @@ class AdapterAntennaList : public AbstractServiceAdapter
 
 } // namespace pelican
 
-#endif // ADAPTERANTENNALIST_H 
+#endif // ADAPTERANTENNALIST_H

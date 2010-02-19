@@ -40,7 +40,7 @@ PipelineApplication::PipelineApplication(int argc, char** argv)
 
     /* Set configuration using command line arguments */
     if (!_createConfig(argc, argv))
-        return;
+        throw QString("Cannot create configuration object.\n");
 
     /* Construct the adapter factory */
     _adapterFactory = new AdapterFactory(_config);
@@ -158,6 +158,7 @@ bool PipelineApplication::_createConfig(int argc, char** argv)
     try {
         _config = new Config(QString::fromStdString(configFilename));
     } catch (QString error) {
+        delete _config;
         std::cerr << error.toLatin1().data() << std::endl;
         return false;
     }

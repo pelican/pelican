@@ -4,6 +4,7 @@
 #include "adapters/AbstractAdapter.h"
 #include <QHash>
 #include <QString>
+#include <QIODevice>
 
 /**
  * @file AbstractStreamAdapter.h
@@ -16,7 +17,7 @@ class DataBlob;
 
 /**
  * @class AbstractAdapter
- *  
+ *
  * @brief
  * Abstract base class for all stream data adapters.
  *
@@ -39,8 +40,8 @@ class AbstractStreamAdapter : public AbstractAdapter
 
     public:
         /// Configures an abstract adapter for use with the stream operator
-        AbstractStreamAdapter& config(DataBlob* data, std::size_t size,
-                QHash<QString, DataBlob*>& serviceData);
+        AbstractStreamAdapter& config(DataBlob* data,
+                std::size_t size, QHash<QString, DataBlob*> serviceData);
 
     protected:
         /// Hash of service data blobs associated adaption of the stream data

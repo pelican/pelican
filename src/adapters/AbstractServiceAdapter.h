@@ -14,7 +14,7 @@ class DataBlob;
 
 /**
  * @class AbstractServiceAdapter
- *  
+ *
  * @brief
  * Abstract base class for all service data adapters.
  *
@@ -36,9 +36,8 @@ class AbstractServiceAdapter : public AbstractAdapter
         virtual ~AbstractServiceAdapter();
 
     public:
-        /// Configures an abstract adapter
+        /// Configures an abstract adapter for use with the service operator
         AbstractServiceAdapter& config(DataBlob* data, std::size_t size);
-
 };
 
 } // namespace pelican

@@ -43,10 +43,10 @@ class PipelineDriver
         /// Pointer to the module factory.
         ModuleFactory* _moduleFactory;
 
-        /// Remote service and stream data required by all the pipelines.
-        DataRequirements _requiredData;
+        /// All data required by all pipelines.
+        DataRequirements _reqDataAll;
 
-        /// Hash of pipelines with known data requirements.
+        /// Hash of pipelines with known remote data requirements.
         QMultiHash<DataRequirements, AbstractPipeline*> _pipelines;
 
         /// List of registered pipelines owned by the driver.
@@ -57,6 +57,12 @@ class PipelineDriver
 
         /// The hash of data returned by the getData() method.
         QHash<QString, DataBlob*> _dataHash;
+
+        /// The name of the data client.
+        QString _dataClientName;
+
+        /// Pointer to the configuration object.
+        Config *_config;
 
     public:
         /// Constructs a new pipeline driver.
@@ -79,17 +85,17 @@ class PipelineDriver
         void stop();
 
     private:
+        /// Creates all the data blobs required by the pipeline.
+        void _createDataBlobs(const DataRequirements&);
+
+        /// Creates the data client.
+        void _createDataClient(QString name, Config* config);
+
         /// Find the data requirements of the given \p pipeline.
         void _determineDataRequirements(AbstractPipeline *pipeline);
 
         /// Initialise pipelines.
         void _initialisePipelines();
-
-        /// Creates all the data blobs required by the pipeline.
-        void _createDataBlobs(const DataRequirements&);
-
-        /// Returns a pointer to the data blob factory.
-        DataBlobFactory* blobFactory() {return _blobFactory;}
 };
 
 } // namespace pelican

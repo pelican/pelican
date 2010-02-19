@@ -28,14 +28,14 @@ AdapterFrequencyList::~AdapterFrequencyList()
 /**
  * @details
  */
-void AdapterFrequencyList::deserialise(QDataStream& in)
+void AdapterFrequencyList::deserialise(QIODevice* in)
 {
-    _setData();
-
-    double* freq = _freqList->ptr();
-    for (unsigned c = 0; c < _nChan; c++) {
-        in >> freq[c];
-    }
+//    _setData();
+//
+//    double* freq = _freqList->ptr();
+//    for (unsigned c = 0; c < _nChan; c++) {
+////        in >> freq[c];
+//    }
 }
 
 
@@ -44,21 +44,21 @@ void AdapterFrequencyList::deserialise(QDataStream& in)
  */
 void AdapterFrequencyList::_setData()
 {
-    if (_chunkSize == 0) {
-        throw QString("No data to read. Stream chunk size set to zero.");
-    }
-
-    if (_data == NULL) {
-        throw QString("Cannot deserialise into an unallocated blob!");
-    }
-
-    unsigned dataSize = _nChan * _dataBytes;
-    if (dataSize != _chunkSize) {
-        throw QString("Stream chunk size does not match data current dimensions");
-    }
-
-    _freqList = static_cast<FrequencyList*>(_data);
-    _freqList->resize(_nChan);
+//    if (_chunkSize == 0) {
+//        throw QString("No data to read. Stream chunk size set to zero.");
+//    }
+//
+//    if (_data == NULL) {
+//        throw QString("Cannot deserialise into an unallocated blob!");
+//    }
+//
+//    unsigned dataSize = _nChan * _dataBytes;
+//    if (dataSize != _chunkSize) {
+//        throw QString("Stream chunk size does not match data current dimensions");
+//    }
+//
+//    _freqList = static_cast<FrequencyList*>(_data);
+//    _freqList->resize(_nChan);
 }
 
 

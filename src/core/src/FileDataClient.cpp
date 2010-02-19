@@ -20,7 +20,7 @@ namespace pelican {
  */
 FileDataClient::FileDataClient(const ConfigNode& config,
         AdapterFactory* adapterFactory,
-        QList<DataRequirements>& dataRequirements)
+        QList<DataRequirements> dataRequirements)
 : AbstractDataClient(config, adapterFactory, dataRequirements)
 {
     /* Get the configuration options */
@@ -29,13 +29,12 @@ FileDataClient::FileDataClient(const ConfigNode& config,
     /* Loop over data requirements for each pipeline */
     foreach (DataRequirements req, dataRequirements) {
         /* Create a union of required data types for this pipeline */
-        QSet<QString> allDataReq = req.serviceData() & req.streamData();
+        QSet<QString> allDataReq = req.serviceData() + req.streamData();
 
         /* Loop over each data type to set up the adapters for each pipeline */
-        adapters().append(QHash<QString, AbstractAdapter*>());
         foreach (QString type, allDataReq) {
-            AbstractAdapter* adapter = adapterFactory->create(adapterNames().value(type));
-            adapters().last().insert(type, adapter);
+            AbstractAdapter* adapter = adapterFactory->create(adapterNames().value(type), "");
+            adapters().insert(type, adapter);
         }
     }
 }
@@ -59,7 +58,6 @@ QHash<QString, DataBlob*> FileDataClient::getData(QHash<QString, DataBlob*>& dat
     QHash<QString, DataBlob*> validHash;
 
     /* Loop over each pipeline's set of data requirements */
-    unsigned pipelineIndex = 0;
     foreach (DataRequirements req, dataRequirements()) {
 
         /* Loop over service data requirements */
@@ -68,11 +66,11 @@ QHash<QString, DataBlob*> FileDataClient::getData(QHash<QString, DataBlob*>& dat
             if (!filename.isEmpty()) {
                 QFile file(filename);
                 if (!file.open(QIODevice::ReadOnly))
-                    throw QString("Cannot open file.");
-                QDataStream in(&file);
-                AbstractAdapter* ad = adapters().at(pipelineIndex).value(type);
+                    throw QString("Cannot open file %1").arg(filename);
+                AbstractAdapter* ad = adapters().value(type);
                 AbstractServiceAdapter* adapter = static_cast<AbstractServiceAdapter*>(ad);
-                in >> adapter->config(dataHash.value(type), 0);
+                adapter->config(dataHash[type], file.size());
+                adapter->deserialise(&file);
                 validHash.insert(type, dataHash.value(type));
             }
         }
@@ -83,16 +81,15 @@ QHash<QString, DataBlob*> FileDataClient::getData(QHash<QString, DataBlob*>& dat
             if (!filename.isEmpty()) {
                 QFile file(filename);
                 if (!file.open(QIODevice::ReadOnly))
-                    throw QString("Cannot open file.");
-                QDataStream in(&file);
-                AbstractAdapter* ad = adapters().at(pipelineIndex).value(type);
+                    throw QString("Cannot open file %1").arg(filename);
+                AbstractAdapter* ad = adapters().value(type);
                 AbstractStreamAdapter* adapter = static_cast<AbstractStreamAdapter*>(ad);
-                QHash<QString, DataBlob*> hash;
-                in >> adapter->config(dataHash.value(type), 0, hash);
+                QHash<QString, DataBlob*> serviceHash;
+                adapter->config(dataHash[type], file.size(), serviceHash);
+                adapter->deserialise(&file);
                 validHash.insert(type, dataHash.value(type));
             }
         }
-        pipelineIndex++;
     }
 
     return validHash;
@@ -105,7 +102,7 @@ QHash<QString, DataBlob*> FileDataClient::getData(QHash<QString, DataBlob*>& dat
 void FileDataClient::_getConfig()
 {
     /* Get all the filenames for each data type */
-    _fileNames = configNode()->getOptionHash("data", "type", "name");
+    _fileNames = configNode()->getOptionHash("data", "type", "file");
 }
 
 } // namespace pelican
