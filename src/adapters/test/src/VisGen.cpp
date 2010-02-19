@@ -1,29 +1,121 @@
 #include "VisGen.h"
-#include "utility/memCheck.h"
 #include <iomanip>
 #include <QString>
-#include <QByteArray>
+
+#include "utility/memCheck.h"
 
 namespace pelican {
 
-
+/**
+ * @details
+ * Constructor to parse and print out the command line arguments.
+ */
 VisGen::VisGen(int argc, char** argv)
 {
     _binary = true;
     _getCommandLineArgs(argc, argv);
     std::cout << "----------------------------------------\n";
-    std::cout << "nAnt   = " << _nAnt << std::endl;
-    std::cout << "nPol   = " << _nPol << std::endl;
-    std::cout << "nChan  = " << _nChan << std::endl;
+    std::cout << "antennas      = " << _nAnt << std::endl;
+    std::cout << "polarisations = " << _nPol << std::endl;
+    std::cout << "channels      = " << _nChan << std::endl;
     std::string binary = (_binary) ? "yes" : "no";
-    std::cout << "binary = " << binary << std::endl;
+    std::cout << "binary        = " << binary << std::endl;
     std::cout << "----------------------------------------\n";
 }
 
-VisGen::~VisGen()
+/**
+ * @details
+ * Returns a QByteArray containing the generated visibility data.
+ */
+QByteArray VisGen::byteArray()
 {
+    if (_data.empty())
+        throw QString("VisGen: Data not yet generated.");
+
+    char* data = reinterpret_cast<char*>(&_data[0]);
+    return QByteArray(data, sizeof(complex_t) * _data.size());
 }
 
+/**
+ * @details
+ * Print the generated data.
+ */
+void VisGen::print()
+{
+    int nPointsPerChan = _nAnt * _nPol * _nAnt * _nPol;
+    std::cout << std::fixed << std::setprecision(2);
+
+    for (int c = 0; c < _nChan; c++) {
+        int cIndex = c * nPointsPerChan;
+
+        for (int j = 0; j < _nAnt; j++) {
+            for (int pj = 0; pj < _nPol; pj++) {
+                int jIndex = (j * _nPol + pj) * (_nAnt * _nPol);
+
+                for (int i = 0; i < _nAnt; i++) {
+                    for (int pi = 0; pi < _nPol; pi++) {
+
+                        int index = cIndex + jIndex + (i * _nPol + pi);
+                        std::cout << _data[index];
+                    }
+                }
+                std::cout << std::endl;
+            }
+        }
+        std::cout << std::endl;
+    }
+}
+
+/**
+ * @details
+ * Writes the generated data as either binary or ASCII to the given
+ * \p fileName.
+ *
+ * @param[in] fileName File name of the data to write.
+ */
+void VisGen::write(const std::string& fileName)
+{
+    /* Open the output data stream */
+    std::ofstream file(fileName.c_str(), std::ios::out | std::ios::binary);
+
+    /* Write data to file either as binary or ASCII */
+    if (_binary) {
+        file.write(reinterpret_cast<char*>(&_data[0]),
+                sizeof(complex_t) * _data.size());
+    }
+    else {
+        int nPointsPerChan = _nAnt * _nPol * _nAnt * _nPol;
+        file << std::fixed << std::setprecision(2);
+
+        for (int c = 0; c < _nChan; c++) {
+            int cIndex = c * nPointsPerChan;
+
+            for (int j = 0; j < _nAnt; j++) {
+                for (int pj = 0; pj < _nPol; pj++) {
+                    int jIndex = (j * _nPol + pj) * (_nAnt * _nPol);
+
+                    for (int i = 0; i < _nAnt; i++) {
+                        for (int pi = 0; pi < _nPol; pi++) {
+
+                            int index = cIndex + jIndex + (i * _nPol + pi);
+                            file << _data[index];
+                        }
+                    }
+                    file << std::endl;
+                }
+            }
+            file << std::endl;
+        }
+    }
+
+    /* Close the file */
+    file.close();
+}
+
+/**
+ * @details
+ * Parses command line arguments and stores the parameters.
+ */
 void VisGen::_getCommandLineArgs(int argc, char** argv)
 {
     if (argc != 5) {
@@ -42,10 +134,16 @@ void VisGen::_getCommandLineArgs(int argc, char** argv)
         std::cout << "Error in data dimensions\n";
         exit(666);
     }
-
 }
 
-
+/**
+ * @details
+ * Generates the visibility data with the given dimensions.
+ *
+ * @param[in] nAnt Number of antennas in the generated data.
+ * @param[in] nChan Number of channels in the generated data.
+ * @param[in] nPol Number of polarisations in the generated data.
+ */
 void VisGen::_generate(int nAnt, int nChan, int nPol)
 {
     _nAnt = nAnt;
@@ -53,7 +151,6 @@ void VisGen::_generate(int nAnt, int nChan, int nPol)
     _nPol = nPol;
     int nPoints = nAnt * nPol * nAnt * nPol * nChan;
     int nPointsPerChan = nAnt * nPol * nAnt * nPol;
-    std::cout << "Number of data points = " << nPoints << "\n";
     _data.resize(nPoints);
 
     for (int c = 0; c < nChan; c++) {
@@ -83,88 +180,6 @@ void VisGen::_generate(int nAnt, int nChan, int nPol)
         } // loop over rows
 
     } // loop over channels
-}
-
-
-
-void VisGen::print()
-{
-    std::cout << "Data size = " << _data.size() * sizeof(complex_t) << " bytes.\n";
-    int nPointsPerChan = _nAnt * _nPol * _nAnt * _nPol;
-    std::cout << std::setprecision(2);
-    std::cout << std::fixed;
-
-    for (int c = 0; c < _nChan; c++) {
-        int cIndex = c * nPointsPerChan;
-
-        for (int j = 0; j < _nAnt; j++) {
-            for (int pj = 0; pj < _nPol; pj++) {
-                int jIndex = (j * _nPol + pj) * (_nAnt * _nPol);
-
-                for (int i = 0; i < _nAnt; i++) {
-                    for (int pi = 0; pi < _nPol; pi++) {
-
-                        int index = cIndex + jIndex + (i * _nPol + pi);
-                        std::cout << _data[index];
-                    }
-                }
-                std::cout << std::endl;
-            }
-        }
-        std::cout << std::endl;
-    }
-}
-
-
-
-void VisGen::write(const std::string& fileName)
-{
-    std::cout << "Data size = " << _data.size() * sizeof(complex_t) << " bytes.\n";
-    std::ofstream file;
-    file.open(fileName.c_str(), std::ios::out | std::ios::binary);
-    if (!file.good()) std::cout << "eek\n";
-
-    if (_binary) {
-        file.write(reinterpret_cast<char*>(&_data[0]),
-                sizeof(complex_t) * _data.size());
-    }
-    else {
-        int nPointsPerChan = _nAnt * _nPol * _nAnt * _nPol;
-        file << std::setprecision(2);
-        file << std::fixed;
-
-        for (int c = 0; c < _nChan; c++) {
-            int cIndex = c * nPointsPerChan;
-
-            for (int j = 0; j < _nAnt; j++) {
-                for (int pj = 0; pj < _nPol; pj++) {
-                    int jIndex = (j * _nPol + pj) * (_nAnt * _nPol);
-
-                    for (int i = 0; i < _nAnt; i++) {
-                        for (int pi = 0; pi < _nPol; pi++) {
-
-                            int index = cIndex + jIndex + (i * _nPol + pi);
-                            file << _data[index];
-                        }
-                    }
-                    file << std::endl;
-                }
-            }
-            file << std::endl;
-        }
-    }
-    file.close();
-//    _data.clear();
-}
-
-
-QByteArray VisGen::dataStream()
-{
-    if (_data.empty())
-        throw QString("VisGen: data not yet genrated.");
-
-    char* data = reinterpret_cast<char*>(&_data[0]);
-    return QByteArray(data, sizeof(complex_t) * _data.size());
 }
 
 } // namespace pelican

@@ -43,39 +43,48 @@ void AdapterLofarStationVisibilitiesTest::tearDown()
 void AdapterLofarStationVisibilitiesTest::test_method()
 {
     QString fileName = "hello.dat";
+
+    /* Create visibility data blob */
+    const unsigned nAnt = 96;
+    const unsigned nChan = 512;
+    const unsigned nPol = 2;
+    DataBlob *data = new VisibilityData(nAnt, nChan, nPol);
+
+    /* Create the adapter */
     QDomElement e;
     ConfigNode config(e);
     AbstractStreamAdapter* adapter = new AdapterLofarStationVisibilities(config);
-    unsigned nAnt = 96;
-    unsigned nChan = 512;
-    unsigned nPol = 2;
-    VisGen g;
-    g.generate(nAnt, nChan, nPol);
-//    g.print();
-    g.write(fileName.toStdString());
-    QByteArray b(g.dataStream());
-    CPPUNIT_ASSERT_EQUAL(static_cast<int>(g.size()), (int)b.size());
 
-    QBuffer buffer(&b);
+    /* Generate and write data to file */
+    VisGen generator;
+    generator.generate(nAnt, nChan, nPol);
+    generator.write(fileName.toStdString());
+
+    /* Create a buffer from the generated data and deserialise it */
+    QByteArray array(generator.byteArray());
+    CPPUNIT_ASSERT_EQUAL((int)generator.size(), array.size());
+    QBuffer buffer(&array);
     buffer.open(QBuffer::ReadWrite);
-
-    DataBlob *data = new VisibilityData(nAnt, nChan, nPol);
-    QHash<QString, DataBlob*> h;
-    adapter->config(data, g.size(), h);
+    adapter->config(data, generator.size(), QHash<QString, DataBlob*>());
     try {
+        TIMER_START
         adapter->deserialise(&buffer);
+        TIMER_STOP("Time to deserialise %.2f MByte buffer",
+                (float)buffer.size()/(1024*1024))
     }
     catch (QString err) {
         std::cout << err.toStdString() << std::endl;
     }
 
-    QFile testFile(fileName);
-    testFile.open(QIODevice::ReadOnly);
-    adapter->config(data, g.size(), h);
+    /* Read the data file from the generated data and deserialise it */
+    QFile file(fileName);
+    file.open(QIODevice::ReadOnly);
+    adapter->config(data, generator.size(), QHash<QString, DataBlob*>());
     try {
         TIMER_START
-        adapter->deserialise(&testFile);
-        TIMER_STOP("stuff")
+        adapter->deserialise(&file);
+        TIMER_STOP("Time to deserialise %.2f MByte file",
+                (float)file.size()/(1024*1024))
     }
     catch (QString err) {
         std::cout << err.toStdString() << std::endl;
