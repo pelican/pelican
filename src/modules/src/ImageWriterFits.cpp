@@ -162,12 +162,10 @@ void ImageWriterFits::_writeHeader()
     // Brightness scaling and coordinate
     double bscale = 1.0;
     double bzero = 0.0;
-//    double ra = 0.0;
-//    double dec = 0.0;
     _writeKey("BSCALE", bscale);
     _writeKey("BZERO", bzero);
     _writeKey("BUNIT", "JY/BEAM", "Units of flux");
-//    _writeKey("EQUINOX", _equinox);
+    _writeKey("EQUINOX", _equinox);
 //    _writeKey("OBSRA", ra);
 //    _writeKey("OBSDEC", dec);
 
@@ -178,18 +176,28 @@ void ImageWriterFits::_writeHeader()
 
     // x axis keywords
     double rotaX = 0.0;
-    _writeKey("CTYPE1", "L----SIN");
-    _writeKey("CRVAL1", _image->refCoordL(), "Reference pixel value");
-    _writeKey("CDELT1", _image->cellsizeL() * math::asec2deg, "Degrees per pixel");
-    _writeKey("CRPIX1", _image->refPixelL(), "Reference pixel");
+    _writeKey("CTYPE1", "RA---SIN");
+//    _writeKey("CRVAL1", _image->refCoordL(), "Coordinate value at reference point");
+//    _writeKey("CDELT1", _image->cellsizeL() * math::asec2deg, "Coordinate increment at reference point (deg)");
+//    _writeKey("CRPIX1", _image->refPixelL(), "Reference pixel");
+    _writeKey("CRVAL1", 0, "Coordinate value at reference point");
+    _writeKey("CDELT1", (2.0 / _image->sizeL()) * math::rad2deg, "Coordinate increment at reference point (deg)");
+    _writeKey("CRPIX1", _image->sizeL()/2, "Reference pixel (image centre)");
+
+    _writeKey("CUNIT1", "deg", "Axis unit (degrees)");
     _writeKey("CROTA1", rotaX);
 
     // y axis keywords
     double rotaY = 0.0;
-    _writeKey("CTYPE2", "M----SIN");
-    _writeKey("CRVAL2", _image->refCoordM(), "Reference pixel value");
-    _writeKey("CDELT2", _image->cellsizeM() * math::asec2deg, "Degrees per pixel");
-    _writeKey("CRPIX2", _image->refPixelM(), "Reference pixel");
+    _writeKey("CTYPE2", "DEC--SIN");
+//    _writeKey("CRVAL2", _image->refCoordM(), "Coordinate value at reference point");
+//    _writeKey("CDELT2", _image->cellsizeM() * math::asec2deg, "Coordinate increment at reference point (deg)");
+//    _writeKey("CRPIX2", _image->refPixelM(), "Reference pixel");
+    _writeKey("CRVAL2", 90, "Coordinate value at reference point");
+    _writeKey("CDELT2", (2.0 / _image->sizeM()) * math::rad2deg, "Coordinate increment at reference point (deg)");
+    _writeKey("CRPIX2", _image->sizeM()/2, "Reference pixel (image centre)");
+
+    _writeKey("CUNIT2", "deg", "Axis unit (degrees)");
     _writeKey("CROTA2", rotaY);
 
     // polarisation axis keywords
