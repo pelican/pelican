@@ -3,6 +3,8 @@
 
 #include "data/DataBlob.h"
 #include <vector>
+#include <string>
+#define isnan(x) ((x) != (x))
 
 /**
  * @file ImageData.h
@@ -12,10 +14,10 @@ namespace pelican {
 
 /**
  * @class ImageData
- *  
+ *
  * @brief
  * Image container class.
- * 
+ *
  * @details
  * This class holds image data at a number of frequencies.
  */
@@ -46,7 +48,7 @@ class ImageData : public DataBlob
         void clear();
 
         /// Finds and sets the pixel amplitude range for the image data.
-        void findAmpRange();
+        void findAmpRange(const unsigned& c, const unsigned& p);
 
     public: // accessor methods
 
@@ -128,10 +130,19 @@ class ImageData : public DataBlob
         }
 
         /// Returns the maximum image pixel amplitude.
-        const double& max() const  { return _ampMax; }
+        const double& max(const unsigned& p, const unsigned& c) const  {
+            unsigned index = c * _nPolarisations + p;
+            return _max[index];
+        }
 
         /// Returns the minimum image pixel amplitude.
-        const double& min() const { return _ampMin; }
+        const double& min(const unsigned& p, const unsigned& c) const {
+            unsigned index = c * _nPolarisations + p;
+            return _max[index];
+        }
+
+        /// Returns the amplitude units
+        std::string& ampUnits() { return _ampUnits; }
 
     private:
         std::vector<real_t> _image; ///< Image amplitude cube.
@@ -146,8 +157,9 @@ class ImageData : public DataBlob
         int _coordType;             ///< Reference pixel coordinate type (enum)
         double _refCoordL;          ///< Reference coordinate in \p coordType units.
         double _refCoordM;          ///< Reference coordinate in \p coordType units.
-        double _ampMax;             ///< Maximum image pixel amplitude.
-        double _ampMin;             ///< Minimum image pixel amplitude.
+        std::string _ampUnits;      ///< Amplitude unit.
+        std::vector<double> _max;   ///< Maximum image pixel amplitude. (channel, polarisation)
+        std::vector<double> _min;   ///< Minimum image pixel amplitude (channel, polarisation)
 };
 
 } // namespace pelican
