@@ -439,8 +439,8 @@ void ZenithImagerDft::_cutHemisphere()
  */
 void ZenithImagerDft::_setCellsizeFullSky()
 {
-    _cellsizeL = math::pi / _sizeL * math::rad2asec;
-    _cellsizeM = math::pi / _sizeM * math::rad2asec;
+    _cellsizeL = 2.0 / _sizeL * math::rad2asec;
+    _cellsizeM = 2.0 / _sizeM * math::rad2asec;
 }
 
 
