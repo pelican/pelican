@@ -5,6 +5,7 @@
 #include <QCoreApplication>
 #include <QFile>
 #include "utility/pelicanTimer.h"
+#include "data/DataBlob.h"
 #include <iostream>
 
 #include "utility/memCheck.h"
@@ -54,7 +55,8 @@ void ImageWriterFitsTest::test_openFile()
     fits.fileName() = "test";
     fits._open();
     fits._writeHeader();
-    fits._writeImage();
+    real_t* im = image.ptr();
+//    fits._writeImage(im, 128, 128);
     fits._close();
 }
 
@@ -67,7 +69,7 @@ void ImageWriterFitsTest::test_createImage()
     for (unsigned m = 0; m < image.sizeM(); m++) {
         for (unsigned l = 0; l < image.sizeL(); l++) {
             unsigned index = m * image.sizeL() + l;
-            amp[index] = static_cast<real_t>(l + m);
+            amp[index] = static_cast<real_t>(m);
         }
     }
 //    image.cellsizeL() = 1.0;
@@ -77,7 +79,8 @@ void ImageWriterFitsTest::test_createImage()
     fits.fileName() = "test";
     fits._open();
     fits._writeHeader();
-    fits._writeImage();
+    real_t* im = image.ptr();
+//    fits._writeImage(im, 128, 128);
     TIMER_STOP("ImageWriterFitsTest::test_createImage()");
     fits._close();
 }

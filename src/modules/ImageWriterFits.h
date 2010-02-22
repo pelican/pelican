@@ -68,10 +68,8 @@ class ImageWriterFits : public AbstractModule
         void _writeHeader();
 
         /// Write a FITS image
-        void _writeImage();
-
-        /// Write a FITS image cube
-        void _writeImageCube();
+        void _writeImage(real_t *image, unsigned& nL, unsigned &nM,
+                unsigned& chan, unsigned& pol);
 
         /// Sets the FITS header date value from the system time.
         QString _getDate() const;
@@ -94,6 +92,15 @@ class ImageWriterFits : public AbstractModule
 
         /// Write a header history line.
         void _writeHistory(const QString& text);
+
+        /// flip the image in the x direction
+        void _flipXAxis(real_t* image, unsigned& nL, unsigned& nM);
+
+        /// flip the image in the y direction
+        void _flipYAxis(real_t* image, unsigned& nL, unsigned& nM);
+
+        /// Transpose the image
+        void _transpose(real_t* image, unsigned& nL, unsigned& nM);
 
     private:
         ImageData* _image;

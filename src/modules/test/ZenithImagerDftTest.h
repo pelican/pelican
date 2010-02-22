@@ -11,11 +11,11 @@ namespace pelican {
 
 /**
  * @class ZenithImagerDftTest
- *  
+ *
  * @brief
- * 
+ *
  * @details
- * 
+ *
  */
 
 class ZenithImagerDftTest : public CppUnit::TestFixture
@@ -50,4 +50,4 @@ class ZenithImagerDftTest : public CppUnit::TestFixture
 };
 
 } // namespace pelican
-#endif // ZENITHIMAGERDFTTEST_H 
+#endif // ZENITHIMAGERDFTTEST_H
