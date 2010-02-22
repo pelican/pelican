@@ -236,7 +236,7 @@ void ZenithImagerDft::_calculateImageCoords(const double& cellsize,
     int centre = nPixels / 2;
     for (int i = 0; i < static_cast<int>(nPixels); i++) {
         coords[i] = static_cast<double>(i - centre) * delta;
-//        std::cout << coords[i] << std::endl;
+        std::cout << coords[i] << std::endl;
     }
 }
 
@@ -417,8 +417,8 @@ void ZenithImagerDft::_cutHemisphere()
  */
 void ZenithImagerDft::_setCellsizeFullSky()
 {
-    _cellsizeL = math::pi / _sizeL * math::rad2asec;
-    _cellsizeM = math::pi / _sizeM * math::rad2asec;
+    _cellsizeL = 2.0 / _sizeL * math::rad2asec;
+    _cellsizeM = 2.0 / _sizeM * math::rad2asec;
 }
 
 
