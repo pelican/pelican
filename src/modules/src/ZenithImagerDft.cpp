@@ -9,6 +9,7 @@
 #include <QString>
 #include <QStringList>
 #include <iostream>
+#include <limits>
 
 #include "utility/memCheck.h"
 
@@ -160,6 +161,8 @@ void ZenithImagerDft::run(QHash<QString, DataBlob*>& data)
 
             _makeImageDft(nAnt, _antPos->xPtr(), _antPos->yPtr(), vis, frequency,
                     _sizeL, _sizeM, &_coordL[0], &_coordM[0], image);
+
+            _cutHemisphere();
         }
     }
 
@@ -409,6 +412,25 @@ complex_t ZenithImagerDft::_vectorDotConj(const unsigned& n, complex_t* a,
  */
 void ZenithImagerDft::_cutHemisphere()
 {
+    real_t* l = &_coordL[0];
+    real_t* m = &_coordM[0];
+    real_t* amp = _image->ptr();
+
+    for (unsigned j = 0; j < _sizeM; j++) {
+        unsigned rowIndex = j * _sizeL;
+        double m2 = std::pow(m[j], 2.0);
+
+        for (unsigned i = 0; i < _sizeL; i++) {
+            double l2 = std::pow(l[i], 2.0);
+            double radius = sqrt(m2 + l2);
+
+            unsigned index = rowIndex + i;
+            if (radius > 1) {
+                amp[index] = std::numeric_limits<real_t>::quiet_NaN();
+            }
+        }
+    }
+
 }
 
 
