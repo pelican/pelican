@@ -9,6 +9,7 @@
 #include <QString>
 #include <QStringList>
 #include <iostream>
+#include <limits>
 
 #include "utility/memCheck.h"
 
@@ -25,14 +26,12 @@ ZenithImagerDft::ZenithImagerDft(const ConfigNode& config)
     // Register which data blobs are needed by the module
     addStreamData("VisibilityData");
     addServiceData("AntennaPositions");
-    addServiceData("FrequencyList");
     addGeneratedData("ImageData");
 
     // Initialise local data pointers
     _vis = NULL;
     _antPos = NULL;
     _image = NULL;
-    _freqList = NULL;
 
     // Extract configuration from the xml configuration node.
     _getConfiguration(config);
@@ -41,7 +40,7 @@ ZenithImagerDft::ZenithImagerDft(const ConfigNode& config)
     _coordL.resize(_sizeL);
     _coordM.resize(_sizeM);
     _calculateImageCoords(_cellsizeL, _sizeL, &_coordL[0]);
-    _calculateImageCoords(_cellsizeM, _sizeL, &_coordM[0]);
+    _calculateImageCoords(_cellsizeM, _sizeM, &_coordM[0]);
 
 }
 
@@ -132,6 +131,7 @@ void ZenithImagerDft::run(QHash<QString, DataBlob*>& data)
     unsigned nAnt = _antPos->nAntennas();
     unsigned nPol = _polarisation == POL_BOTH ? 2 : 1;
     unsigned nChan = _channels.size();
+    double frequencyInc = _maxFrequency / static_cast<double>(_nChannels);
 
     /// Assign memory for the image cube (only resizes if needed)
     _image->resize(_sizeL, _sizeM, nChan, nPol);
@@ -141,11 +141,7 @@ void ZenithImagerDft::run(QHash<QString, DataBlob*>& data)
 
         // The channel list channel id selection
         unsigned channel = _channels[c];
-
-        if (channel > _freqList->nChannels())
-            throw QString("Selected channel out of range.");
-
-        double frequency = _freqList->at(channel);
+        double frequency = frequencyInc * channel;
 
         for (unsigned p = 0; p < nPol; p++) {
 
@@ -155,12 +151,23 @@ void ZenithImagerDft::run(QHash<QString, DataBlob*>& data)
             // Get pointers to the visibility data and image for the selected
             // channel and polarisation
             complex_t* vis = _vis->ptr(channel, pol);
-            real_t* image = _image->ptr(pol, c);
+            real_t* image = _image->ptr(p, c);
 
             _makeImageDft(nAnt, _antPos->xPtr(), _antPos->yPtr(), vis, frequency,
                     _sizeL, _sizeM, &_coordL[0], &_coordM[0], image);
+
+            if (_fullSky) {
+                _cutHemisphere(image, _sizeL, _sizeM, &_coordL[0], &_coordM[0]);
+            }
+
+            _image->findAmpRange(c, p);
+
+            if (isnan(_image->max(c, p)) || isnan(_image->min(c, p)))
+                throw QString ("ZenithImagerDft: invalid Image range");
         }
     }
+
+
 }
 
 
@@ -199,6 +206,9 @@ void ZenithImagerDft::_getConfiguration(const ConfigNode &config)
     for (int c = 0; c < chanList.size(); c++) {
         _channels[c] = chanList.at(c).toUInt();
     }
+
+    _nChannels = config.getOption("frequencies", "number", "512").toUInt();
+    _maxFrequency = config.getOption("frequencies", "max", "1.0e8").toDouble();
 }
 
 
@@ -236,16 +246,16 @@ void ZenithImagerDft::_fetchDataBlobs(QHash<QString, DataBlob*>& data)
     _vis = static_cast<VisibilityData*>(data["VisibilityData"]);
     _antPos = static_cast<AntennaPositions*>(data["AntennaPositions"]);
     _image = static_cast<ImageData*>(data["ImageData"]);
-    _freqList = static_cast<FrequencyList*>(data["FrequencyList"]);
 
-    if (!_vis) throw QString("Data blob missing: VisibilityData");
-    if (!_antPos) throw QString("Data blob missing: AntennaPositions");
-    if (!_image) throw QString("Data blob missing: ImageData");
-    if (!_freqList) throw QString("Data blob missing: FrequencyList.");
+    if (!_vis) throw QString("ZenithImagerDft: VisibilityData blob missing");
+    if (!_antPos) throw QString("ZenithImagerDft: AntennaPositiosn blob missing");
+    if (!_image) throw QString("ZenithImagerDft: ImageData blob missing");
 
     if (_vis->nAntennas() == 0) throw QString("Empty data blob: VisibilityData");
     if (_antPos->nAntennas() == 0) throw QString("Empty data blob: AntennaPositions");
-    if (_freqList->nChannels() == 0) throw QString("Empty data blob: FrequencyList");
+
+    if (_vis->nAntennas() != _antPos->nAntennas())
+        throw QString("ZenithImagerDft: data blob dimension mismatch");
 }
 
 
@@ -256,14 +266,15 @@ void ZenithImagerDft::_fetchDataBlobs(QHash<QString, DataBlob*>& data)
  */
 void ZenithImagerDft::_calculateWeights(const unsigned& nAnt, real_t* antPos,
         const double& frequency, const unsigned& nCoords,
-        real_t* imageCoord, complex_t* weights)
+        real_t* imageCoord, complex_t* weights, const double& sign)
 {
     double k = (math::twoPi * frequency) / phy::c;
     for (unsigned i = 0; i < nCoords; i++) {
         unsigned index = i * nAnt;
         double arg1 = k * imageCoord[i];
+
         for (unsigned a = 0; a < nAnt; a++) {
-            double arg2 = arg1 * antPos[a];
+            double arg2 = arg1 * antPos[a] * sign;
             weights[index + a] = complex_t(cos(arg2), sin(arg2));
         }
     }
@@ -281,15 +292,18 @@ void ZenithImagerDft::_makeImageDft(const unsigned& nAnt, real_t* antPosX,
 {
     _weightsXL.resize(nAnt * nL);
     _weightsYM.resize(nAnt * nM);
-    _calculateWeights(nAnt, antPosX, frequency, nL, coordsL, &_weightsXL[0]);
+    _calculateWeights(nAnt, antPosX, frequency, nL, coordsL, &_weightsXL[0], -1.0);
     _calculateWeights(nAnt, antPosY, frequency, nM, coordsM, &_weightsYM[0]);
 
     _weights.resize(nAnt);
     _temp.resize(nAnt);
 
+
 #ifdef USE_BLAS
     real_t alpha[2] = {1.0, 0.0};
     real_t beta[2]  = {0.0, 0.0};
+    unsigned xInc = 1;
+    unsigned yInc = 1;
 #endif
 
     for (unsigned m = 0; m < nM; m++) {
@@ -301,13 +315,17 @@ void ZenithImagerDft::_makeImageDft(const unsigned& nAnt, real_t* antPosX,
             _multWeights(nAnt, weightsXL, weightsYM, &_weights[0]);
 
 #ifdef USE_BLAS
-            cblas_cgemv(CblasRowMajor, CblasNoTrans, nAnt, nAnt, alpha, vis,
-                    nAnt, &_weights[0], 1, beta, &_temp[0], 1);
+            // (y := alpha*A*x + beta*y)
+            // where: y = temp
+            //        A = vis
+            //        x = weights
+            cblas_zgemv(CblasRowMajor, CblasNoTrans, nAnt, nAnt, alpha, vis,
+                    nAnt, &_weights[0], xInc, beta, &_temp[0], yInc);
 #else
             _multMatrixVector(nAnt, vis, &_weights[0], &_temp[0]);
 #endif
 
-            /// use some sort of cblas_cdot to replace this call.
+            /// TODO: Use some sort of cblas_cdot to replace this call.
             image[indexM + l] = _vectorDotConj(nAnt, &_temp[0], &_weights[0]).real();
         }
     }
@@ -337,9 +355,11 @@ void ZenithImagerDft::_multMatrixVector(const unsigned& nAnt,
         complex_t* visMatrix, complex_t *weights, complex_t* result)
 {
     for (unsigned j = 0; j < nAnt; j++) {
-        unsigned indexJ = j * nAnt;
+        unsigned rowIndex = j * nAnt;
+        result[j] = complex_t(0.0, 0.0);
         for (unsigned i = 0; i < nAnt; i++) {
-            result[j] += visMatrix[indexJ + i] * weights[i];
+            unsigned index = rowIndex + i;
+            result[j] += visMatrix[index] * weights[i];
         }
     }
 }
@@ -363,9 +383,30 @@ complex_t ZenithImagerDft::_vectorDotConj(const unsigned& n, complex_t* a,
 
 /**
  * @details
+ *
+ * @param[in/out]   image   Image amplitude array.
+ * @param[in]       nL      Number of image pixels in the l (x) direction
+ * @param[in]       nM      Number of image pixels in the l (y) direction
+ * @param[in]       l       Array of l coordinates.
+ * @param[in]       m       Array of m coordinates.
  */
-void ZenithImagerDft::_cutHemisphere()
+void ZenithImagerDft::_cutHemisphere(real_t* image, unsigned& nL, unsigned& nM,
+        real_t *l, real_t *m)
 {
+    for (unsigned j = 0; j < _sizeM; j++) {
+        unsigned rowIndex = j * _sizeL;
+        double m2 = std::pow(m[j], 2.0);
+
+        for (unsigned i = 0; i < _sizeL; i++) {
+            double l2 = std::pow(l[i], 2.0);
+            double radius = sqrt(m2 + l2);
+            unsigned index = rowIndex + i;
+            if (radius > 1) {
+                image[index] = std::numeric_limits<real_t>::quiet_NaN();
+            }
+        }
+    }
+
 }
 
 
@@ -374,8 +415,8 @@ void ZenithImagerDft::_cutHemisphere()
  */
 void ZenithImagerDft::_setCellsizeFullSky()
 {
-    _cellsizeL = math::pi / _sizeL * math::rad2asec;
-    _cellsizeM = math::pi / _sizeM * math::rad2asec;
+    _cellsizeL = 2.0 / _sizeL * math::rad2asec;
+    _cellsizeM = 2.0 / _sizeM * math::rad2asec;
 }
 
 

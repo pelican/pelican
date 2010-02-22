@@ -26,6 +26,7 @@ ImageData::ImageData(const unsigned& sizeL, const unsigned& sizeM,
 : DataBlob()
 {
     clear();
+    _ampUnits = "JY/PIXEL";
     resize(sizeL, sizeM, nChannels, nPolarisations);
 }
 
@@ -55,7 +56,10 @@ void ImageData::resize(const unsigned& sizeL, const unsigned& sizeM,
     _sizeM = sizeM;
     _nChannels = nChannels;
     _nPolarisations = nPolarisations;
+    _ampUnits = "JY/PIXEL";
     _image.resize(_nPolarisations * _nChannels * _sizeL * _sizeM);
+    _min.resize(_nPolarisations * _nChannels);
+    _max.resize(_nPolarisations * _nChannels);
 }
 
 
@@ -83,15 +87,17 @@ void ImageData::clear()
 /**
  * @details
  */
-void ImageData::findAmpRange()
+void ImageData::findAmpRange(const unsigned& c, const unsigned& p)
 {
     if (_image.empty()) return;
-    real_t *image = &_image[0];
-    _ampMin = 1.0e99;
-    _ampMax = -1.0e99;
+    real_t *image = this->ptr(p, c);
+    unsigned index = c * _nPolarisations + p;
+    _min[index] = 1.0e99;
+    _max[index] = -1.0e99;
     for (unsigned i = 0; i < _image.size(); i++) {
-        _ampMin = std::min(image[i], _ampMin);
-        _ampMax = std::max(image[i], _ampMax);
+        if (isnan(image[i])) continue;
+        _min[index] = std::min(image[i], _min[index]);
+        _max[index] = std::max(image[i], _max[index]);
     }
 }
 

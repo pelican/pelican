@@ -9,7 +9,6 @@
 #include "utility/ConfigNode.h"
 
 
-
 /**
  * @file ZenithImagerDft.h
  */
@@ -18,10 +17,10 @@ namespace pelican {
 
 /**
  * @class ZenithImagerDft
- *  
+ *
  * @brief
  * Provides basic imaging routines for whole-sky views.
- * 
+ *
  * @details
  */
 class ZenithImagerDft : public AbstractModule
@@ -77,7 +76,8 @@ class ZenithImagerDft : public AbstractModule
         /// Calculate DFT weights for imaging.
         void _calculateWeights(const unsigned& nAnt, real_t* antPos,
                 const double& frequency, const unsigned& nCoords,
-                real_t* imageCoord, complex_t* weights);
+                real_t* imageCoord, complex_t* weights,
+                const double& sign = 1.0);
 
         /// Construct the image by DFT.
         void _makeImageDft(const unsigned& nAnt, real_t* antPosX,
@@ -98,7 +98,8 @@ class ZenithImagerDft : public AbstractModule
         complex_t _vectorDotConj(const unsigned& n, complex_t* a, complex_t* b);
 
         /// Cut the image outside unit radius in l, m.
-        void _cutHemisphere();
+        void _cutHemisphere(real_t* image, unsigned& nL, unsigned& nM,
+                real_t *l, real_t *m);
 
         /// Sets the cellsize corresponding to a full sky image
         void _setCellsizeFullSky();
@@ -107,9 +108,10 @@ class ZenithImagerDft : public AbstractModule
           VisibilityData *_vis;               ///< Visibility amplitude matrix.
           AntennaPositions *_antPos;          ///< Visibility positions matrix.
           ImageData *_image;                  ///< Image amplitude matrix.
-          FrequencyList *_freqList;           ///< Frequency list data.
 
           std::vector<unsigned> _channels;    ///< Selected channel list.
+          unsigned _nChannels;
+          double _maxFrequency;
           unsigned _polarisation;             ///< Selection polarisation (enumeration).
           bool _fullSky;                      ///< Image the full sky (overrides cellsize)
           unsigned _sizeL;                    ///< Image size in l (x) pixels.

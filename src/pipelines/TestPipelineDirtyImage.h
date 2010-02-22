@@ -1,5 +1,5 @@
-#ifndef MYPIPELINE_H
-#define MYPIPELINE_H
+#ifndef TESTPIPELINEDIRTYIMAGE_H
+#define TESTPIPELINEDIRTYIMAGE_H
 
 #include "core/AbstractPipeline.h"
 #include <QString>
@@ -12,7 +12,8 @@
 namespace pelican {
 
 class DataBlob;
-class VisibilityPrinter;
+class ZenithImagerDft;
+class ImageWriterFits;
 
 /**
  * @class MyPipeline
@@ -22,11 +23,11 @@ class VisibilityPrinter;
  * @details
  */
 
-class MyPipeline : public AbstractPipeline
+class TestPipelineDirtyImage : public AbstractPipeline
 {
     public:
-        MyPipeline();
-        ~MyPipeline();
+        TestPipelineDirtyImage();
+        ~TestPipelineDirtyImage();
 
     public:
         /// Creates the required modules
@@ -36,9 +37,11 @@ class MyPipeline : public AbstractPipeline
         void run(QHash<QString, DataBlob*>& data);
 
     private:
-        VisibilityPrinter* _visPrinter;
+        ZenithImagerDft* _imager;
+        ImageWriterFits* _fitsWriter;
 
 };
 
 } // namespace pelican
-#endif // MYPIPELINE_H
+
+#endif // TESTPIPELINEDIRTYIMAGE_H

@@ -60,6 +60,7 @@ void AdapterLofarStationVisibilities::deserialise(QIODevice* in)
 
     std::vector<char> temp(_chunkSize);
     in->read(reinterpret_cast<char*>(&temp[0]), _chunkSize);
+//    unsigned nNonZero = 0;
 
     for (unsigned iRaw = 0, c = 0; c < _nChan; c++) {
         for (unsigned j = 0; j < _nAnt; j++) {
@@ -75,6 +76,8 @@ void AdapterLofarStationVisibilities::deserialise(QIODevice* in)
                                 vis[index] = *(reinterpret_cast< std::complex<double>* >(t));
                             else if (_dataBytes == 4)
                                 vis[index] = *(reinterpret_cast< std::complex<float>* >(t));
+
+//                            if (vis[index] != complex_t(0.0, 0.0)) nNonZero++;
                         }
 
                         iRaw+= 2*_dataBytes;
@@ -83,6 +86,10 @@ void AdapterLofarStationVisibilities::deserialise(QIODevice* in)
             }
         }
     }
+
+//    if (nNonZero == 0)
+//        throw QString("AdapterLofarStationVisibilities: All read visibilities are zero!");
+
 }
 
 

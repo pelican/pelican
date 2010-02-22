@@ -1,7 +1,6 @@
 #include "AdapterLofarStationVisibilitiesTest.h"
 #include "adapters/test/VisGen.h"
 #include <QCoreApplication>
-#include <QDomElement>
 #include <QDataStream>
 #include <QBuffer>
 #include <QFile>
@@ -40,49 +39,107 @@ void AdapterLofarStationVisibilitiesTest::tearDown()
     delete _app;
 }
 
-void AdapterLofarStationVisibilitiesTest::test_method()
+void AdapterLofarStationVisibilitiesTest::test_deserialise_buffer()
 {
-    QString fileName = "hello.dat";
-    QDomElement e;
-    ConfigNode config(e);
+    /* Create visibility data blob */
+    const unsigned nAnt = 96;
+    const unsigned nChan = 512;
+    const unsigned nPol = 2;
+    VisibilityData *data = new VisibilityData(nAnt, nChan, nPol);
+
+    /* Create the adapter */
+    ConfigNode config;
     AbstractStreamAdapter* adapter = new AdapterLofarStationVisibilities(config);
-    unsigned nAnt = 96;
-    unsigned nChan = 512;
-    unsigned nPol = 2;
-    VisGen g;
-    g.generate(nAnt, nChan, nPol);
-//    g.print();
-    g.write(fileName.toStdString());
-    QByteArray b(g.dataStream());
-    CPPUNIT_ASSERT_EQUAL(static_cast<int>(g.size()), (int)b.size());
 
-    QBuffer buffer(&b);
-    buffer.open(QBuffer::ReadWrite);
+    /* Generate data */
+    VisGen generator;
+    generator.generate(nAnt, nChan, nPol);
 
-    DataBlob *data = new VisibilityData(nAnt, nChan, nPol);
-    QHash<QString, DataBlob*> h;
-    adapter->config(data, g.size(), h);
-    try {
-        adapter->deserialise(&buffer);
-    }
-    catch (QString err) {
-        std::cout << err.toStdString() << std::endl;
-    }
+    /* Create a buffer from the generated data */
+    QByteArray array = generator.byteArray();
+    QBuffer buffer(&array);
+    buffer.open(QBuffer::ReadOnly);
+    CPPUNIT_ASSERT_EQUAL((int)generator.size(), (int)buffer.size());
+    adapter->config(data, generator.size(), QHash<QString, DataBlob*>());
 
-    QFile testFile(fileName);
-    testFile.open(QIODevice::ReadOnly);
-    adapter->config(data, g.size(), h);
-    try {
-        TIMER_START
-        adapter->deserialise(&testFile);
-        TIMER_STOP("stuff")
-    }
-    catch (QString err) {
-        std::cout << err.toStdString() << std::endl;
-    }
+    /* Deserialise the data */
+    TIMER_START
+    CPPUNIT_ASSERT_NO_THROW(adapter->deserialise(&buffer));
+    TIMER_STOP("Time to deserialise %.2f MByte buffer",
+            (float)buffer.size()/(1024*1024))
 
+    /* Test some values in the visibility data blob */
+    unsigned ai = 0, aj = 0, c = 0, p = 0;
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(_dataVal(ai, aj, c, p),
+            (*data)(ai, aj, c, p).real(), 0.001);
+
+    ai = 1; aj = 2; c = 3; p = 1;
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(_dataVal(ai, aj, c, p),
+            (*data)(ai, aj, c, p).real(), 0.001);
+
+    ai = 12; aj = 34; c = 56; p = 0;
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(_dataVal(ai, aj, c, p),
+            (*data)(ai, aj, c, p).real(), 0.001);
+
+    ai = nAnt-1; aj = nAnt-2; c = nChan-1; p = nPol-1;
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(_dataVal(ai, aj, c, p),
+            (*data)(ai, aj, c, p).real(), 0.001);
+
+    /* Clean up */
     delete adapter;
     delete data;
+}
+
+void AdapterLofarStationVisibilitiesTest::test_deserialise_file()
+{
+    /* Create visibility data blob */
+    const unsigned nAnt = 96;
+    const unsigned nChan = 512;
+    const unsigned nPol = 2;
+    VisibilityData *data = new VisibilityData(nAnt, nChan, nPol);
+
+    /* Create the adapter */
+    ConfigNode config;
+    AbstractStreamAdapter* adapter = new AdapterLofarStationVisibilities(config);
+
+    /* Generate data */
+    VisGen generator;
+    generator.generate(nAnt, nChan, nPol);
+
+    /* Create a file from the generated data */
+    QString fileName = "deserialise_file.dat";
+    generator.write(fileName.toStdString());
+    QFile file(fileName);
+    file.open(QIODevice::ReadOnly);
+    adapter->config(data, generator.size(), QHash<QString, DataBlob*>());
+
+    /* Deserialise the data */
+    TIMER_START
+    CPPUNIT_ASSERT_NO_THROW(adapter->deserialise(&file));
+    TIMER_STOP("Time to deserialise %.2f MByte file",
+            (float)file.size()/(1024*1024))
+
+    /* Test some values in the visibility data blob */
+    unsigned ai = 0, aj = 0, c = 0, p = 0;
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(_dataVal(ai, aj, c, p),
+            (*data)(ai, aj, c, p).real(), 0.001);
+
+    ai = 1; aj = 2; c = 3; p = 1;
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(_dataVal(ai, aj, c, p),
+            (*data)(ai, aj, c, p).real(), 0.001);
+
+    ai = 12; aj = 34; c = 56; p = 0;
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(_dataVal(ai, aj, c, p),
+            (*data)(ai, aj, c, p).real(), 0.001);
+
+    ai = nAnt-1; aj = nAnt-2; c = nChan-1; p = nPol-1;
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(_dataVal(ai, aj, c, p),
+            (*data)(ai, aj, c, p).real(), 0.001);
+
+    /* Clean up */
+    delete adapter;
+    delete data;
+    file.remove();
 }
 
 } // namespace pelican

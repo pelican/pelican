@@ -119,7 +119,7 @@ void PipelineDriver::start()
         QMultiHash<DataRequirements, AbstractPipeline*>::iterator i = _pipelines.begin();
         while (i != _pipelines.end()) {
             if (i.key().isCompatible(validData))
-                i.value()->run(validData);
+                i.value()->run(_dataHash);
             ++i;
         }
     }

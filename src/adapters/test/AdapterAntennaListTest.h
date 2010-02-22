@@ -1,29 +1,26 @@
-#ifndef MYPIPELINETEST_H
-#define MYPIPELINETEST_H
+#ifndef ADAPTERANTENNALISTTEST_H
+#define ADAPTERANTENNALISTTEST_H
 
 #include <cppunit/extensions/HelperMacros.h>
 
 /**
- * @file MyPipelineTest.h
+ * @file AdapterAntennaListTest.h
  */
-
-class QCoreApplication;
 
 namespace pelican {
 
 /**
- * @class MyPipelineTest
+ * @class AdapterAntennaListTest
  *
  * @brief
  *
  * @details
- *
  */
 
-class MyPipelineTest : public CppUnit::TestFixture
+class AdapterAntennaListTest : public CppUnit::TestFixture
 {
     public:
-        CPPUNIT_TEST_SUITE( MyPipelineTest );
+        CPPUNIT_TEST_SUITE( AdapterAntennaListTest );
         CPPUNIT_TEST( test_method );
         CPPUNIT_TEST_SUITE_END();
 
@@ -35,12 +32,11 @@ class MyPipelineTest : public CppUnit::TestFixture
         void test_method();
 
     public:
-        MyPipelineTest();
-        ~MyPipelineTest();
+        AdapterAntennaListTest( );
+        ~AdapterAntennaListTest();
 
     private:
-        QCoreApplication *_app;
 };
 
 } // namespace pelican
-#endif // MYPIPELINETEST_H
+#endif // ADAPTERANTENNALISTTEST_H

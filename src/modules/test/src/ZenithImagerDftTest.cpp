@@ -16,7 +16,7 @@
 namespace pelican {
 
 CPPUNIT_TEST_SUITE_REGISTRATION( ZenithImagerDftTest );
-// class ZenithImagerDftTest 
+// class ZenithImagerDftTest
 ZenithImagerDftTest::ZenithImagerDftTest()
     : CppUnit::TestFixture()
 {
@@ -50,8 +50,8 @@ void ZenithImagerDftTest::test_configuration()
         CPPUNIT_ASSERT(imager._sizeL == 128);
         CPPUNIT_ASSERT(imager._sizeM == 128);
         CPPUNIT_ASSERT(imager._fullSky == true);
-        CPPUNIT_ASSERT(imager._cellsizeL == (math::pi / 128) * math::rad2asec);
-        CPPUNIT_ASSERT(imager._cellsizeM == (math::pi / 128) * math::rad2asec);
+        CPPUNIT_ASSERT(imager._cellsizeL == (2.0 / 128.0) * math::rad2asec);
+        CPPUNIT_ASSERT(imager._cellsizeM == (2.0 / 128.0) * math::rad2asec);
         CPPUNIT_ASSERT(imager._polarisation == ZenithImagerDft::POL_X);
         CPPUNIT_ASSERT(imager._channels.size() == 1);
         CPPUNIT_ASSERT(imager._channels[0] == 0);
@@ -77,8 +77,7 @@ void ZenithImagerDftTest::test_inputDataBlobs()
     // Expect to throw
     {
         QHash<QString, DataBlob*> data;
-        try { imager._fetchDataBlobs(data); }
-        catch (QString err) { CPPUNIT_ASSERT(err.startsWith("Data blob missing")); }
+        CPPUNIT_ASSERT_THROW(imager._fetchDataBlobs(data), QString);
     }
 
     // Use case
@@ -87,22 +86,19 @@ void ZenithImagerDftTest::test_inputDataBlobs()
     {
         QHash<QString, DataBlob*> data;
         data["ImageData"] = &image;
-        try { imager._fetchDataBlobs(data); }
-        catch (QString err) { CPPUNIT_ASSERT(err.startsWith("Data blob missing")); }
+        CPPUNIT_ASSERT_THROW(imager._fetchDataBlobs(data), QString);
     }
     {
         QHash<QString, DataBlob*> data;
         data["ImageData"] = &image;
         data["VisibilityData"] = &vis;
-        try { imager._fetchDataBlobs(data); }
-        catch (QString err) { CPPUNIT_ASSERT(err.startsWith("Data blob missing")); }
+        CPPUNIT_ASSERT_THROW(imager._fetchDataBlobs(data), QString);
     }
     {
         QHash<QString, DataBlob*> data;
         data["ImageData"] = &image;
         data["VisibilityData"] = &vis;
-        try { imager._fetchDataBlobs(data); }
-        catch (QString err) { CPPUNIT_ASSERT(err.startsWith("Data blob missing")); }
+        CPPUNIT_ASSERT_THROW(imager._fetchDataBlobs(data), QString);
     }
 
     // Use case
@@ -114,8 +110,7 @@ void ZenithImagerDftTest::test_inputDataBlobs()
         data["VisibilityData"] = &vis;
         data["AntennaPositions"] = &ant;
         data["FrequencyList"] = &freqList;
-        try { imager._fetchDataBlobs(data); }
-        catch (QString err) { CPPUNIT_ASSERT(err.startsWith("Empty data blob")); }
+        CPPUNIT_ASSERT_THROW(imager._fetchDataBlobs(data), QString);
     }
 
     // Use case
