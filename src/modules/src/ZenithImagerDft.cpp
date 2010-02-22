@@ -236,7 +236,7 @@ void ZenithImagerDft::_calculateImageCoords(const double& cellsize,
     int centre = nPixels / 2;
     for (int i = 0; i < static_cast<int>(nPixels); i++) {
         coords[i] = static_cast<double>(i - centre) * delta;
-        std::cout << coords[i] << std::endl;
+//        std::cout << coords[i] << std::endl;
     }
 }
 
