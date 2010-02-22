@@ -64,7 +64,13 @@ void ImageWriterFitsTest::test_createImage()
 {
     QDomElement config;
     ImageWriterFits fits(config);
-    ImageData image(128,128,1,1);
+    unsigned nL = 128;
+    unsigned nM = 128;
+    unsigned nChan = 1;
+    unsigned nPol = 1;
+    unsigned c = 0;
+    unsigned p = 0;
+    ImageData image(nL, nM, nChan, nPol);
     real_t* amp = image.ptr();
     for (unsigned m = 0; m < image.sizeM(); m++) {
         for (unsigned l = 0; l < image.sizeL(); l++) {
@@ -80,7 +86,7 @@ void ImageWriterFitsTest::test_createImage()
     fits._open();
     fits._writeHeader();
     real_t* im = image.ptr();
-//    fits._writeImage(im, 128, 128);
+    fits._writeImage(im, nL, nL, c, p);
     TIMER_STOP("ImageWriterFitsTest::test_createImage()");
     fits._close();
 }
