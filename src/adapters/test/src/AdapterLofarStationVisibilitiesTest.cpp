@@ -34,10 +34,12 @@ void AdapterLofarStationVisibilitiesTest::setUp()
     _app = new QCoreApplication(argc, argv);
 }
 
+
 void AdapterLofarStationVisibilitiesTest::tearDown()
 {
     delete _app;
 }
+
 
 void AdapterLofarStationVisibilitiesTest::test_deserialise_buffer()
 {
