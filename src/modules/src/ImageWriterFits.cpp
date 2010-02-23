@@ -47,25 +47,24 @@ ImageWriterFits::~ImageWriterFits()
  */
 void ImageWriterFits::run(QHash<QString, DataBlob*>& data)
 {
-    // work out filename
-
-    // if multiple file loop over them
-
     // grab image pointer to write
     _image = static_cast<ImageData*>(data["ImageData"]);
     if (!_image) throw QString("ImageWriterFits: Image data missing.");
 
-    // write the fits file
-    _open();
-    _writeHeader();
-
-    unsigned chan = 0;
-    unsigned pol = 0;
-    real_t* image = _image->ptr(pol, chan);
     unsigned nL = _image->sizeL();
     unsigned nM = _image->sizeM();
+    unsigned nChan = _image->nChannels();
+    unsigned nPol = _image->nPolarisations();
 
-    _writeImage(image, nL, nM, chan, pol);
+    _open(_fileName, nL, nM, nChan, nPol, _overwrite);
+    _writeHeader();
+    for (unsigned c = 0; c < nChan; c++) {
+        for (unsigned p = 0; p < nPol; p++) {
+            real_t* image = _image->ptr(p, c);
+            _writeImage(image, nL, nM, c, p);
+
+        }
+    }
     _close();
 }
 
@@ -97,36 +96,38 @@ void ImageWriterFits::_getConfiguration(const ConfigNode &config)
  * @details
  * Opens a FITS image file for writing.
  */
-void ImageWriterFits::_open()
+void ImageWriterFits::_open(const QString& fileName, const unsigned& nL,
+        const unsigned& nM, const unsigned& nChan, const unsigned& nPol,
+        const bool& overwrite)
 {
     // Throw if the filename is empty
-    if (_fileName.isEmpty()) throw QString("ImagerWriterFits: Output file name not set");
+    if (fileName.isEmpty())
+        throw QString("ImagerWriterFits: Output file name not set");
 
-    // Append fits file suffix if neede
-    QFileInfo fileInfo(_fileName);
-    if (fileInfo.suffix().toLower() != "fits") _fileName += ".fits";
+    // Append fits file suffix if needed
+    QFileInfo fileInfo(const_cast<QString&>(fileName));
+    if (fileInfo.suffix().toLower() != "fits") {
+        const_cast<QString&>(fileName) += ".fits";
+    }
+    _fileName = fileName;
 
     // Delete any existing file if overwrite mode is selected else throw if a file
     // already exits
-    QFile file(_fileName);
+    QFile file(fileName);
     if (file.exists()) {
-        if (_overwrite) file.remove();
+        if (overwrite) file.remove();
         else throw QString("ImageWriterFits: File already exists");
     }
 
     // Set axis dimensions require to create a fits image
     long nAxis = 4;
-    long axisDims[] = {
-            _image->sizeL(),
-            _image->sizeM(),
-            _image->nPolarisations(),
-            _image->nChannels()
-    };
+    long axisDims[] = {nL, nM, nPol, nChan};
 
     int err = 0; // cfitsio error code
 
     // Create the fits file as an image of the specified dimensions
     fits_create_file(&_fits, _fileName.toLatin1().data(), &err);
+    ffrprt(stdout, err);
     if (err) throw QString("ImageWriterFits: Unable to open file for writing");
 
     fits_create_img(_fits, FLOAT_IMG, nAxis, axisDims, &err);
@@ -140,7 +141,13 @@ void ImageWriterFits::_open()
 void ImageWriterFits::_close()
 {
     int err = 0;
-    if (_fits != NULL) fits_close_file(_fits, &err);
+    if (_fits != NULL) {
+        ffclos(_fits, &err);
+        _fits == NULL;
+        ffrprt(stdout, err);
+        if (err)
+            throw QString("ImageWriterFits: Unable to close FITS file handle");
+    }
 }
 
 
@@ -155,7 +162,8 @@ void ImageWriterFits::_writeHeader()
     if (_image == NULL) throw QString("ImageWriterFits: Image data missing.");
 
     // Write descriptive keys
-    _writeKey("DATE", _getDate());
+    QString date = _getDate(); // TODO FAILS AS STRING IS LONGER THAN 36 chars!
+//    _writeKey("DATE", date);
     _writeKey("ORIGIN", _origin);
     _writeKey("DATE-OBS", _dateObs);
     _writeKey("TELESCOP", _telescope);
@@ -177,10 +185,12 @@ void ImageWriterFits::_writeHeader()
     _writeKey("OBSRA", ra);
     _writeKey("OBSDEC", dec);
 
-    // Amplitude range
-    _image->findAmpRange(0,0);
-    _writeKey("DATAMIN", _image->min(0, 0), "Minimum pixel value");
-    _writeKey("DATAMAX", _image->max(0, 0), "Maximum pixel value");
+    // Amplitude range (only valid if not an image cube)
+    if (_image->nChannels() == 1 && _image->nPolarisations() == 1) {
+        _image->findAmpRange(0,0);
+        _writeKey("DATAMIN", _image->min(0, 0), "Minimum pixel value");
+        _writeKey("DATAMAX", _image->max(0, 0), "Maximum pixel value");
+    }
 
     // x axis keywords
     double rotaX = 0.0;
@@ -231,8 +241,8 @@ void ImageWriterFits::_writeHeader()
 /**
  * @details
  */
-void ImageWriterFits::_writeImage(real_t* image, unsigned& nL, unsigned &nM,
-        unsigned& chan, unsigned& pol)
+void ImageWriterFits::_writeImage(real_t* image, const unsigned& nL,
+        const unsigned &nM, const unsigned& chan, const unsigned& pol)
 {
     // Throw if the cfitsio FITS file handle isn't open
     if (_fits == NULL) throw QString("ImageWriterFits: Fits file not open.");
@@ -291,7 +301,7 @@ void ImageWriterFits::_writeKey(const QString& keyword, const double& value,
         const QString& comment)
 {
     int err = 0;
-    ffpky(_fits, TDOUBLE, (char*)keyword.toLatin1().data(), (void*)&value,
+    ffpkyd(_fits, (char*)keyword.toLatin1().data(), value, 8,
             (char*)comment.toLatin1().data(), &err);
 }
 
@@ -329,7 +339,8 @@ void ImageWriterFits::_writeHistory(const QString& text)
 
 
 /// flip the image in the x direction
-void ImageWriterFits::_flipXAxis(real_t* image, unsigned& nL, unsigned& nM)
+void ImageWriterFits::_flipXAxis(real_t* image, const unsigned& nL,
+        const unsigned& nM)
 {
     unsigned nPixels = nL * nM;
     std::vector<real_t> temp(nPixels);
@@ -353,7 +364,8 @@ void ImageWriterFits::_flipXAxis(real_t* image, unsigned& nL, unsigned& nM)
 
 
 /// flip the image in the y direction
-void ImageWriterFits::_flipYAxis(real_t* image, unsigned& nL, unsigned& nM)
+void ImageWriterFits::_flipYAxis(real_t* image, const unsigned& nL,
+        const unsigned& nM)
 {
     unsigned nPixels = nL * nM;
     std::vector<real_t> temp(nPixels);
@@ -376,7 +388,8 @@ void ImageWriterFits::_flipYAxis(real_t* image, unsigned& nL, unsigned& nM)
 
 
 /// Transpose the image
-void ImageWriterFits::_transpose(real_t* image, unsigned& nL, unsigned& nM)
+void ImageWriterFits::_transpose(real_t* image, const unsigned& nL,
+        const unsigned& nM)
 {
     unsigned nPixels = nL * nM;
     std::vector<real_t> temp(nPixels);
