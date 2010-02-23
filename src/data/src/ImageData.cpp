@@ -1,5 +1,6 @@
 #include "data/ImageData.h"
 #include <algorithm>
+#include <QString>
 
 namespace pelican {
 
@@ -21,8 +22,8 @@ ImageData::ImageData() : DataBlob()
  * @param[in]   sizeM       The image size (pixels) in the M direction.
  * @param[in]   nChannels   The number of frequency channels in the image cube.
  */
-ImageData::ImageData(const unsigned& sizeL, const unsigned& sizeM,
-        const unsigned& nChannels, const unsigned& nPolarisations)
+ImageData::ImageData(const unsigned sizeL, const unsigned sizeM,
+        const unsigned nChannels, const unsigned nPolarisations)
 : DataBlob()
 {
     clear();
@@ -49,14 +50,14 @@ ImageData::~ImageData()
  * @param[in] nChannels         Number of frequency channels in the image cube.
  * @param[in] nPolaristaions    Number of polarisations in the image cube.
  */
-void ImageData::resize(const unsigned& sizeL, const unsigned& sizeM,
-        const unsigned& nChannels, const unsigned& nPolarisations)
+void ImageData::resize(const unsigned sizeL, const unsigned sizeM,
+        const unsigned nChannels, const unsigned nPolarisations)
 {
+    _ampUnits = "JY/PIXEL";
     _sizeL = sizeL;
     _sizeM = sizeM;
     _nChannels = nChannels;
     _nPolarisations = nPolarisations;
-    _ampUnits = "JY/PIXEL";
     _image.resize(_nPolarisations * _nChannels * _sizeL * _sizeM);
     _min.resize(_nPolarisations * _nChannels);
     _max.resize(_nPolarisations * _nChannels);
@@ -87,10 +88,12 @@ void ImageData::clear()
 /**
  * @details
  */
-void ImageData::findAmpRange(const unsigned& c, const unsigned& p)
+void ImageData::findAmpRange(const unsigned c, const unsigned p)
 {
-    if (_image.empty()) return;
-    real_t *image = this->ptr(p, c);
+    if (_image.empty())
+        throw QString("ImageData::findAmpRange(): Image empty");
+
+    real_t *image = this->ptr(c, p);
     unsigned index = c * _nPolarisations + p;
     _min[index] = 1.0e99;
     _max[index] = -1.0e99;

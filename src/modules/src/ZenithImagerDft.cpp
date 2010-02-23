@@ -126,6 +126,7 @@ void ZenithImagerDft::setFullSky()
  */
 void ZenithImagerDft::run(QHash<QString, DataBlob*>& data)
 {
+    // Get the data blobs.
     _fetchDataBlobs(data);
 
     unsigned nAnt = _antPos->nAntennas();
@@ -133,13 +134,21 @@ void ZenithImagerDft::run(QHash<QString, DataBlob*>& data)
     unsigned nChan = _channels.size();
     double frequencyInc = _maxFrequency / static_cast<double>(_nChannels);
 
-    /// Assign memory for the image cube (only resizes if needed)
+    // Assign memory for the image cube (only resizes if needed).
     _image->resize(_sizeL, _sizeM, nChan, nPol);
 
-    /// Loop over selected channels and polarisations to make images
+    // Set the image blob meta-data.
+    _image->cellsizeL() = -_cellsizeL; // Note that this is negated.
+    _image->cellsizeM() = _cellsizeM;
+    _image->refCoordL() = 0; // Set the RA at the image centre.
+    _image->refCoordM() = 89.99; // Set the Dec at the image centre.
+    _image->refPixelL() = _sizeL / 2;
+    _image->refPixelM() = _sizeM / 2;
+
+    // Loop over selected channels and polarisations to make images.
     for (unsigned c = 0; c < nChan; c++) {
 
-        // The channel list channel id selection
+        // The channel ID selection
         unsigned channel = _channels[c];
         double frequency = frequencyInc * channel;
 
@@ -149,25 +158,27 @@ void ZenithImagerDft::run(QHash<QString, DataBlob*>& data)
             if (nPol == 1) pol = _polarisation;
 
             // Get pointers to the visibility data and image for the selected
-            // channel and polarisation
+            // channel and polarisation.
             complex_t* vis = _vis->ptr(channel, pol);
             real_t* image = _image->ptr(p, c);
 
+            // Generate the image.
             _makeImageDft(nAnt, _antPos->xPtr(), _antPos->yPtr(), vis, frequency,
                     _sizeL, _sizeM, &_coordL[0], &_coordM[0], image);
 
+            // Cut hemisphere.
             if (_fullSky) {
                 _cutHemisphere(image, _sizeL, _sizeM, &_coordL[0], &_coordM[0]);
             }
 
+            // Find the amplitude range.
             _image->findAmpRange(c, p);
-
             if (isnan(_image->max(c, p)) || isnan(_image->min(c, p)))
                 throw QString ("ZenithImagerDft: invalid Image range");
         }
     }
 
-
+    return;
 }
 
 

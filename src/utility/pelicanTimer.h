@@ -1,8 +1,12 @@
 #ifndef PELICANTIMER_H_
 #define PELICANTIMER_H_
 
+#include <QString>
 #include <ctime>
 #include <cstdio>
+#include "sys/time.h"
+
+#include "utility/memoryTracer.h"
 
 /**
  * @brief
@@ -28,5 +32,19 @@
 #define TIMER_START ;
 #define TIMER_STOP(...) ;
 #endif
+
+//
+//#ifdef TIMER_ENABLE
+//    #define TIMER2_START {timeval _t1; gettimeofday(&_t1, NULL);
+//    #define TIMER2_STOP(...) timeval _t2; gettimeofday(&_t2, NULL); \
+//		double _start = _t1.tv_sec + _t1.tv_usec * 1.0e-6; \
+//		double _end = _t2.tv_sec + _t2.tv_usec * 1.0e-6; \
+//        fprintf(stdout, "\n"); \
+//        fprintf(stdout, __VA_ARGS__); \
+//        fprintf(stdout, ": %.3f sec.\n", _end - _start);}
+//#else
+//    #define TIMER2_START ;
+//    #define TIMER2_STOP(...) ;
+//#endif
 
 #endif /* PELICANTIMER_H_ */
