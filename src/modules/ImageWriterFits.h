@@ -59,7 +59,9 @@ class ImageWriterFits : public AbstractModule
         void _getConfiguration(const ConfigNode& config);
 
         /// Opens the FITS image file for writing.
-        void _open();
+        void _open(const QString& fileName, const unsigned& nL,
+                const unsigned& nM, const unsigned& nChan, const unsigned& nPol,
+                const bool& overwrite);
 
         /// Closes the FITS image file.
         void _close();
@@ -68,8 +70,8 @@ class ImageWriterFits : public AbstractModule
         void _writeHeader();
 
         /// Write a FITS image
-        void _writeImage(real_t *image, unsigned& nL, unsigned &nM,
-                unsigned& chan, unsigned& pol);
+        void _writeImage(real_t *image, const unsigned& nL, const unsigned &nM,
+                const unsigned& chan, const unsigned& pol);
 
         /// Sets the FITS header date value from the system time.
         QString _getDate() const;
@@ -94,13 +96,13 @@ class ImageWriterFits : public AbstractModule
         void _writeHistory(const QString& text);
 
         /// flip the image in the x direction
-        void _flipXAxis(real_t* image, unsigned& nL, unsigned& nM);
+        void _flipXAxis(real_t* image, const unsigned& nL, const unsigned& nM);
 
         /// flip the image in the y direction
-        void _flipYAxis(real_t* image, unsigned& nL, unsigned& nM);
+        void _flipYAxis(real_t* image, const unsigned& nL, const unsigned& nM);
 
         /// Transpose the image
-        void _transpose(real_t* image, unsigned& nL, unsigned& nM);
+        void _transpose(real_t* image, const unsigned& nL, const unsigned& nM);
 
     private:
         ImageData* _image;
