@@ -11,8 +11,17 @@ ZenithImagerDft::_makeImageDft(): 0.56 - 0.51 sec. (image size 256 x 256)
 TestPipelineDirtyImageTest: 1.54 - 1.35 sec. (image size 256 x 256, lofar vis file)
 Time to deserialise 288.00 MByte file: 0.73 sec. (lofar vis file)
 
-Using atlas cblas and -DOPENMP=false
----------------------------------------
+Using atlas cblas and -DOPENMP=false -DNO_MKL=true
+--------------------------------------------------
+ZenithImagerDft::_makeImageDft(): 3.44 sec. (image size 256 x 256)
+TestPipelineDirtyImageTest: 4.25 sec. (image size 256 x 256, lofar vis file)
+
+
+Using fallback (non blas) and -DOPENMP=false -DNO_CBLAS=true
+------------------------------------------------------------
+ZenithImagerDft::_makeImageDft(): 2.65 sec. (image size 256 x 256)
+TestPipelineDirtyImageTest: 3.52 sec. (image size 256 x 256, lofar vis file)
+
 
 
 GNU g++ 4.3.4
@@ -22,8 +31,18 @@ Using MKL 10.2.4.032 and -DOPENMP=false
 ---------------------------------------
 ZenithImagerDft::_makeImageDft(): 0.81 - 0.53 sec. (image size 256 x 256)
 Time to deserialise 288.00 MByte file: 0.65 sec. (lofar vis file)
-TestPipelineDirtyImageTest: 1.38 - 1.28 sec (lofar vis file)
+TestPipelineDirtyImageTest: 1.38 - 1.28 sec (image size 256 x 256, lofar vis file)
 
-Using atlas cblas and -DOPENMP=false
----------------------------------------
+
+Using atlas cblas and -DOPENMP=false -DNO_MKL=true
+---------------------------------------------------
+ZenithImagerDft::_makeImageDft(): 3.40 sec. (image size 256 x 256)
+Time to deserialise 288.00 MByte file: 0.66 sec. (lofar vis file)
+TestPipelineDirtyImageTest: 4.16 sec. (image size 256 x 256, lofar vis file)
+
+
+Using fallback (non blas) and -DOPENMP=false -DNO_CBLAS=true
+------------------------------------------------------------
+ZenithImagerDft::_makeImageDft(): 4.13 sec. (image size 256 x 256)
+TestPipelineDirtyImageTest: 4.91 sec. (image size 256 x 256, lofar vis file)
 
