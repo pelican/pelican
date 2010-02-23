@@ -7,10 +7,10 @@
 #  CBLAS_LIBRARY, where to find the library.
 
 FIND_PATH(CBLAS_INCLUDE_DIR cblas.h
-/usr/include/atlas
-/usr/local/include/atlas
-/usr/include
-/usr/local/include
+    /usr/include/atlas
+    /usr/local/include/atlas
+    /usr/include
+    /usr/local/include
 )
 
 SET(CBLAS_NAMES ${CBLAS_NAMES} cblas)

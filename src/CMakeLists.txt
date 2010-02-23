@@ -9,13 +9,17 @@ include_directories(${PROJECT_SOURCE_DIR})
 enable_testing()
 
 # options and defaults
-if(NOT CMAKE_BUILD_TYPE ) 
+if(NOT CMAKE_BUILD_TYPE )
     set( CMAKE_BUILD_TYPE DEBUG )
 endif(NOT CMAKE_BUILD_TYPE )
 
 if(TIMER)
     ADD_DEFINITIONS(-DTIMER_ENABLE=1)
 endif(TIMER)
+
+if(NO_MKL)
+    set( IGNORE_MLK true)
+endif(NO_MKL)
 
 if(OPENMP)
     FIND_PACKAGE( OpenMP REQUIRED)
@@ -48,7 +52,9 @@ set( ${PROJECT_NAME}_PATCH_LEVEL 0 )
 
 FIND_PACKAGE( Boost COMPONENTS program_options REQUIRED )
 
-include(MathLibraries)
+if (NOT NO_CBLAS)
+    include(MathLibraries)
+endif (NOT NO_CBLAS)
 
 # -- dependencies
 set(dependencies
