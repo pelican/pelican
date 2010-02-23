@@ -2,7 +2,7 @@
 #include "utility/constants.h"
 #include "utility/ConfigNode.h"
 #include "data/ImageData.h"
-#include <ctime>
+#include <QDateTime>
 #include <QFile>
 #include <QFileInfo>
 #include <QDir>
@@ -20,7 +20,7 @@ namespace pelican {
 ImageWriterFits::ImageWriterFits(const ConfigNode& config)
     : AbstractModule(config)
 {
-    // Register which data blobs are needed by the module
+    // Register which data blobs are needed by the module.
     addGeneratedData("ImageData");
 
     // Extract configuration from the XML configuration node.
@@ -61,9 +61,9 @@ void ImageWriterFits::run(QHash<QString, DataBlob*>& data)
 
     unsigned chan = 0;
     unsigned pol = 0;
-    real_t* image = _image->ptr(pol, chan);
     unsigned nL = _image->sizeL();
     unsigned nM = _image->sizeM();
+    real_t* image = _image->ptr(pol, chan);
 
     _writeImage(image, nL, nM, chan, pol);
     _close();
@@ -72,7 +72,8 @@ void ImageWriterFits::run(QHash<QString, DataBlob*>& data)
 
 /**
  * @details
- * Parse and extract options from the configuration xml node.
+ * Parse and extract options from the configuration XML node, setting
+ * defaults if necessary.
  */
 void ImageWriterFits::_getConfiguration(const ConfigNode &config)
 {
@@ -95,26 +96,27 @@ void ImageWriterFits::_getConfiguration(const ConfigNode &config)
 
 /**
  * @details
- * Opens a FITS image file for writing.
+ * Opens a FITS image file for writing using the previously set filename.
  */
 void ImageWriterFits::_open()
 {
-    // Throw if the filename is empty
-    if (_fileName.isEmpty()) throw QString("ImagerWriterFits: Output file name not set");
+    // Throw if the filename is empty.
+    if (_fileName.isEmpty())
+        throw QString("ImagerWriterFits: Output file name not set.");
 
-    // Append fits file suffix if neede
+    // Append ".fits" file suffix if needed.
     QFileInfo fileInfo(_fileName);
     if (fileInfo.suffix().toLower() != "fits") _fileName += ".fits";
 
-    // Delete any existing file if overwrite mode is selected else throw if a file
-    // already exits
+    // Delete any existing file if overwrite mode is selected, else throw if
+    // a file already exits.
     QFile file(_fileName);
     if (file.exists()) {
         if (_overwrite) file.remove();
-        else throw QString("ImageWriterFits: File already exists");
+        else throw QString("ImageWriterFits: File already exists.");
     }
 
-    // Set axis dimensions require to create a fits image
+    // Set axis dimensions to create the required FITS image.
     long nAxis = 4;
     long axisDims[] = {
             _image->sizeL(),
@@ -123,19 +125,22 @@ void ImageWriterFits::_open()
             _image->nChannels()
     };
 
-    int err = 0; // cfitsio error code
+    int err = 0; // CFITSIO error code.
 
-    // Create the fits file as an image of the specified dimensions
+    // Create the FITS file as an image of the specified dimensions.
     fits_create_file(&_fits, _fileName.toLatin1().data(), &err);
-    if (err) throw QString("ImageWriterFits: Unable to open file for writing");
+    if (err)
+        throw QString("ImageWriterFits: Unable to open file for writing.");
 
     fits_create_img(_fits, FLOAT_IMG, nAxis, axisDims, &err);
-    if (err) throw QString("ImageWriterFits: Unable to create FITS image");
+    if (err)
+        throw QString("ImageWriterFits: Unable to create FITS image.");
 }
 
 
 /**
  * @details
+ * This private method closes the FITS image file.
  */
 void ImageWriterFits::_close()
 {
@@ -146,13 +151,17 @@ void ImageWriterFits::_close()
 
 /**
  * @details
+ * This private method writes all FITS header keywords into the file.
  */
 void ImageWriterFits::_writeHeader()
 {
-    // Throw if the cfitsio FITS file handle isn't open
-    if (_fits == NULL) throw QString("ImageWriterFits: Fits file not open.");
-    // Throw if there is no image data
-    if (_image == NULL) throw QString("ImageWriterFits: Image data missing.");
+    // Throw if the CFITSIO file handle isn't open.
+    if (_fits == NULL)
+        throw QString("ImageWriterFits: Fits file not open.");
+
+    // Throw if there is no image data.
+    if (_image == NULL)
+        throw QString("ImageWriterFits: Image data missing.");
 
     // Write descriptive keys
     _writeKey("DATE", _getDate());
@@ -171,11 +180,8 @@ void ImageWriterFits::_writeHeader()
     _writeKey("BSCALE", bscale);
     _writeKey("BZERO", bzero);
     _writeKey("EQUINOX", _equinox);
-    _writeKey("BUNIT", QString::fromStdString(_image->ampUnits()), "Units of flux");
-    double ra = 0;
-    double dec = 90;
-    _writeKey("OBSRA", ra);
-    _writeKey("OBSDEC", dec);
+    _writeKey("BUNIT", QString::fromStdString(_image->ampUnits()),
+            "Units of flux");
 
     // Amplitude range
     _image->findAmpRange(0,0);
@@ -185,27 +191,23 @@ void ImageWriterFits::_writeHeader()
     // x axis keywords
     double rotaX = 0.0;
     _writeKey("CTYPE1", "RA---SIN");
-//    _writeKey("CRVAL1", _image->refCoordL(), "Coordinate value at reference point");
-//    _writeKey("CDELT1", _image->cellsizeL() * math::asec2deg, "Coordinate increment at reference point (deg)");
-//    _writeKey("CRPIX1", _image->refPixelL(), "Reference pixel");
-    _writeKey("CRVAL1", 0, "Coordinate value at reference point");
-    _writeKey("CDELT1", -(2.0 / _image->sizeL()) * math::rad2deg, "Coordinate increment at reference point (deg)");
-    _writeKey("CRPIX1", _image->sizeL()/2, "Reference pixel (image centre)");
-
     _writeKey("CUNIT1", "deg", "Axis unit (degrees)");
+    _writeKey("CRPIX1", _image->refPixelL(), "Reference pixel");
+    _writeKey("CRVAL1", _image->refCoordL(),
+            "Coordinate value at reference point");
+    _writeKey("CDELT1", _image->cellsizeL() * math::asec2deg,
+            "Coordinate increment at reference point");
     _writeKey("CROTA1", rotaX);
 
     // y axis keywords
     double rotaY = 0.0;
     _writeKey("CTYPE2", "DEC--SIN");
-//    _writeKey("CRVAL2", _image->refCoordM(), "Coordinate value at reference point");
-//    _writeKey("CDELT2", _image->cellsizeM() * math::asec2deg, "Coordinate increment at reference point (deg)");
-//    _writeKey("CRPIX2", _image->refPixelM(), "Reference pixel");
-    _writeKey("CRVAL2", 90, "Coordinate value at reference point");
-    _writeKey("CDELT2", (2.0 / _image->sizeM()) * math::rad2deg, "Coordinate increment at reference point (deg)");
-    _writeKey("CRPIX2", 1 + _image->sizeM()/2, "Reference pixel (image centre)");
-
     _writeKey("CUNIT2", "deg", "Axis unit (degrees)");
+    _writeKey("CRPIX2", _image->refPixelM(), "Reference pixel");
+    _writeKey("CRVAL2", _image->refCoordM(),
+            "Coordinate value at reference point");
+    _writeKey("CDELT2", _image->cellsizeM() * math::asec2deg,
+            "Coordinate increment at reference point");
     _writeKey("CROTA2", rotaY);
 
     // polarisation axis keywords
@@ -234,9 +236,9 @@ void ImageWriterFits::_writeHeader()
 void ImageWriterFits::_writeImage(real_t* image, unsigned& nL, unsigned &nM,
         unsigned& chan, unsigned& pol)
 {
-    // Throw if the cfitsio FITS file handle isn't open
+    // Throw if the CFITSIO file handle isn't open.
     if (_fits == NULL) throw QString("ImageWriterFits: Fits file not open.");
-    // Throw if there is no image data
+    // Throw if there is no image data.
     if (_image == NULL) throw QString("ImageWriterFits: Image data missing.");
 
 
@@ -254,25 +256,33 @@ void ImageWriterFits::_writeImage(real_t* image, unsigned& nL, unsigned &nM,
         ffppr(_fits, TFLOAT, firstElement, nPixels, image, &err);
     }
     else {
-        throw QString("ImageWriterFits: unrecognised data type size");
+        throw QString("ImageWriterFits: Unrecognised data type.");
     }
 }
 
 
 /**
  * @details
- * Sets the DATE header keyword value from the system time.
+ * Returns the system time and date for the DATE header keyword.
+ * The system time is returned as UTC in the ISO 8601 extended
+ * specification, taking the form YYYY-MM-DDTHH:MM:SS.
  */
 QString ImageWriterFits::_getDate() const
 {
-    std::time_t t = time(NULL);
-    struct tm* timeinfo = localtime(&t);
-    return QString(asctime(timeinfo));
+    /* Get the system date */
+    QDateTime utc = QDateTime::currentDateTime().toUTC();
+    return utc.toString(Qt::ISODate);
 }
 
 
 /**
  * @details
+ * Writes the given header \p keyword with string \p value and optional
+ * \p comment.
+ *
+ * @param[in] keyword The keyword name tag.
+ * @param[in] value   The keyword value.
+ * @param[in] comment An optional comment.
  */
 void ImageWriterFits::_writeKey(const QString& keyword, const QString& value,
         const QString& comment)
@@ -286,6 +296,12 @@ void ImageWriterFits::_writeKey(const QString& keyword, const QString& value,
 
 /**
  * @details
+ * Writes the given header \p keyword with floating-point double
+ * \p value and optional \p comment.
+ *
+ * @param[in] keyword The keyword name tag.
+ * @param[in] value   The keyword value.
+ * @param[in] comment An optional comment.
  */
 void ImageWriterFits::_writeKey(const QString& keyword, const double& value,
         const QString& comment)
@@ -298,6 +314,12 @@ void ImageWriterFits::_writeKey(const QString& keyword, const double& value,
 
 /**
  * @details
+ * Writes the given header \p keyword with integer \p value and optional
+ * \p comment.
+ *
+ * @param[in] keyword The keyword name tag.
+ * @param[in] value   The keyword value.
+ * @param[in] comment An optional comment.
  */
 void ImageWriterFits::_writeKey(const QString& keyword, const int& value,
         const QString& comment)
@@ -310,6 +332,12 @@ void ImageWriterFits::_writeKey(const QString& keyword, const int& value,
 
 /**
  * @details
+ * Writes the given header \p keyword with unsigned integer \p value and
+ * optional \p comment.
+ *
+ * @param[in] keyword The keyword name tag.
+ * @param[in] value   The keyword value.
+ * @param[in] comment An optional comment.
  */
 void ImageWriterFits::_writeKey(const QString& keyword, const unsigned& value,
         const QString& comment)
@@ -320,6 +348,12 @@ void ImageWriterFits::_writeKey(const QString& keyword, const unsigned& value,
 }
 
 
+/**
+ * @details
+ * Writes a history tag to the FITS header.
+ *
+ * @param[in] text The history line to write.
+ */
 void ImageWriterFits::_writeHistory(const QString& text)
 {
     int err = 0;
@@ -327,15 +361,21 @@ void ImageWriterFits::_writeHistory(const QString& text)
 }
 
 
-
-/// flip the image in the x direction
+/**
+ * @details
+ * Method to flip the image in the x-direction.
+ *
+ * @param[in] image Pointer to the start of the image.
+ * @param[in] nL    Number of points along the x-axis.
+ * @param[in] nM    Number of points along the y-axis.
+ */
 void ImageWriterFits::_flipXAxis(real_t* image, unsigned& nL, unsigned& nM)
 {
     unsigned nPixels = nL * nM;
     std::vector<real_t> temp(nPixels);
     real_t* t = &temp[0];
 
-    // Flip x direction
+    // Flip x-direction.
     for (unsigned i = 0, m = 0; m < nM; m++) {
         for (int l = (nL - 1); l >= 0; l--) {
             int index = m * nL + l;
@@ -344,7 +384,7 @@ void ImageWriterFits::_flipXAxis(real_t* image, unsigned& nL, unsigned& nM)
         }
     }
 
-    // write back into the image
+    // Write back into the image.
     for (unsigned i = 0; i < nPixels; i++) {
         image[i] = t[i];
     }
@@ -352,14 +392,21 @@ void ImageWriterFits::_flipXAxis(real_t* image, unsigned& nL, unsigned& nM)
 }
 
 
-/// flip the image in the y direction
+/**
+ * @details
+ * Method to flip the image in the y-direction.
+ *
+ * @param[in] image Pointer to the start of the image.
+ * @param[in] nL    Number of points along the x-axis.
+ * @param[in] nM    Number of points along the y-axis.
+ */
 void ImageWriterFits::_flipYAxis(real_t* image, unsigned& nL, unsigned& nM)
 {
     unsigned nPixels = nL * nM;
     std::vector<real_t> temp(nPixels);
     real_t* t = &temp[0];
 
-    // Flip y direction
+    // Flip y-direction.
     for (int i = 0, m = nM - 1; m >= 0; m--) {
         for (unsigned l = 0; l < nL; l++) {
             unsigned index = m * nL + l;
@@ -368,21 +415,28 @@ void ImageWriterFits::_flipYAxis(real_t* image, unsigned& nL, unsigned& nM)
         }
     }
 
-    // Write back into the image
+    // Write back into the image.
     for (unsigned i = 0; i < nPixels; i++) {
         image[i] = t[i];
     }
 }
 
 
-/// Transpose the image
+/**
+ * @details
+ * Method to transpose the image (flip along the diagonal).
+ *
+ * @param[in] image Pointer to the start of the image.
+ * @param[in] nL    Number of points along the x-axis.
+ * @param[in] nM    Number of points along the y-axis.
+ */
 void ImageWriterFits::_transpose(real_t* image, unsigned& nL, unsigned& nM)
 {
     unsigned nPixels = nL * nM;
     std::vector<real_t> temp(nPixels);
     real_t* t = &temp[0];
 
-    // transpose into a temp
+    // Transpose into a temporary.
     for (unsigned i = 0, m = 0; m < nM; m++) {
         for (unsigned l = 0; l < nL; l++) {
             unsigned index = l * nM + m;
@@ -391,7 +445,7 @@ void ImageWriterFits::_transpose(real_t* image, unsigned& nL, unsigned& nM)
         }
     }
 
-    // write back into the image
+    // Write back into the image.
     for (unsigned i = 0; i < nPixels; i++) {
         image[i] = t[i];
     }

@@ -25,7 +25,7 @@ namespace pelican {
 class ImageData : public DataBlob
 {
     public:
-        /// Constructor
+        /// Constructor.
         ImageData();
 
         /// Constructor assigning memory for the image cube.
@@ -36,29 +36,29 @@ class ImageData : public DataBlob
         ~ImageData();
 
     public:
-        /// The coordinate type of the reference pixel
+        /// The coordinate type of the reference pixel.
         enum { COORD_RA_DEC, COORD_AZ_EL };
 
     public:
-        /// Assign the image cube
+        /// Resize the image cube.
         void resize(const unsigned& sizeL, const unsigned& sizeM,
                 const unsigned& nChannels, const unsigned& nPolarisations);
 
-        /// Clears the image data blob
+        /// Clears the image data blob.
         void clear();
 
         /// Finds and sets the pixel amplitude range for the image data.
         void findAmpRange(const unsigned& c, const unsigned& p);
 
-    public: // accessor methods
+    public: // Accessor methods.
 
-        // Returns the number of pixels in the image
+        /// Returns the number of pixels in the image.
         unsigned nPixels() const { return _image.size(); }
 
         /// Returns the number of channels.
         unsigned nChannels() const { return _nChannels; }
 
-        /// Returns the number of polarisations
+        /// Returns the number of polarisations.
         unsigned nPolarisations() const { return _nPolarisations; }
 
         /// Returns the image size (number of pixels) in the L direction.
