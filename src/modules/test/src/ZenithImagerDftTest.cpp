@@ -50,7 +50,7 @@ void ZenithImagerDftTest::test_configuration()
         CPPUNIT_ASSERT(imager._sizeL == 128);
         CPPUNIT_ASSERT(imager._sizeM == 128);
         CPPUNIT_ASSERT(imager._fullSky == true);
-        CPPUNIT_ASSERT(imager._cellsizeL == (2.0 / 128.0) * math::rad2asec);
+        CPPUNIT_ASSERT(imager._cellsizeL == -(2.0 / 128.0) * math::rad2asec);
         CPPUNIT_ASSERT(imager._cellsizeM == (2.0 / 128.0) * math::rad2asec);
         CPPUNIT_ASSERT(imager._polarisation == ZenithImagerDft::POL_X);
         CPPUNIT_ASSERT(imager._channels.size() == 1);
@@ -143,8 +143,8 @@ void ZenithImagerDftTest::test_calculateImageCoords()
     {
         QDomElement config;
         ZenithImagerDft imager(config);
-        int sizeL = 1000;
-        int sizeM = 500;
+        int sizeL = 256;
+        int sizeM = 256;
         double cellsizeL = math::rad2asec;
         double cellsizeM = 0.1 * math::rad2asec;
         imager.setDimensions(sizeL, sizeM, cellsizeL, cellsizeM);
@@ -152,7 +152,7 @@ void ZenithImagerDftTest::test_calculateImageCoords()
         // Check we have the right image dimensions
         CPPUNIT_ASSERT(imager._sizeL == static_cast<unsigned>(sizeL));
         CPPUNIT_ASSERT(imager._sizeM == static_cast<unsigned>(sizeM));
-        CPPUNIT_ASSERT(imager._cellsizeL == cellsizeL);
+        CPPUNIT_ASSERT(imager._cellsizeL == -cellsizeL);
         CPPUNIT_ASSERT(imager._cellsizeM == cellsizeM);
 
         // Time generation of image coordinates
@@ -198,7 +198,7 @@ void ZenithImagerDftTest::test_calculateWeights()
         }
 
         // Make an image coordinate array
-        unsigned nCoords = 128;
+        unsigned nCoords = 256;
         std::vector<real_t> coords(nCoords);
         for (unsigned i = 0; i < nCoords; i++) {
             coords[i] = static_cast<double>(i) / 10.0;
@@ -256,8 +256,8 @@ void ZenithImagerDftTest::test_makeImageDft()
     ZenithImagerDft imager(config);
     unsigned nAnt = 96;
     double freq = 1.0e8;
-    unsigned nL = 128;
-    unsigned nM = 128;
+    unsigned nL = 256;
+    unsigned nM = 256;
     std::vector<real_t> antX(nAnt);
     std::vector<real_t> antY(nAnt);
     std::vector<complex_t> vis(nAnt * nAnt);
@@ -265,10 +265,16 @@ void ZenithImagerDftTest::test_makeImageDft()
     std::vector<real_t> coordM(nM);
     std::vector<real_t> image(nL * nM);
 
+//    TIMER2_START
+////    imager._makeImageDft(nAnt, &antX[0], &antY[0], &vis[0], freq, nL, nM,
+////            &coordL[0], &coordM[0], &image[0]);
+//    sleep(5);
+//    TIMER2_STOP("TIMER2 ZenithImagerDft::_makeImageDft()");
+
     TIMER_START
     imager._makeImageDft(nAnt, &antX[0], &antY[0], &vis[0], freq, nL, nM,
             &coordL[0], &coordM[0], &image[0]);
-    TIMER_STOP("ZenithImagerDft::_makeImageDft()");
+    TIMER_STOP("TIMER ZenithImagerDft::_makeImageDft()");
 
 }
 

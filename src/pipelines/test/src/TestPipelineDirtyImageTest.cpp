@@ -4,6 +4,7 @@
 #include "pipelines/TestPipelineDirtyImage.h"
 #include <QCoreApplication>
 
+#include "utility/pelicanTimer.h"
 #include "utility/memCheck.h"
 
 namespace pelican {
@@ -37,6 +38,7 @@ void TestPipelineDirtyImageTest::tearDown()
 
 void TestPipelineDirtyImageTest::test_method()
 {
+    TIMER_START
     int argc = 2;
     char *argv[] = {
             (char*)"pelican",
@@ -48,6 +50,7 @@ void TestPipelineDirtyImageTest::test_method()
     pApp.registerPipeline(new TestPipelineDirtyImage);
     pApp.setDataClient("FileDataClient");
     pApp.start();
+    TIMER_STOP("TestPipelineDirtyImageTest");
 }
 
 } // namespace pelican

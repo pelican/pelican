@@ -174,7 +174,6 @@ void ImagerDft::_makeImageDftSimple(const unsigned nVis, const unsigned nL,
         const unsigned nM, complex_t* vis, complex_t* weightUL,
         complex_t* weightVM, real_t *image)
 {
-#pragma omp parallel for
     for (unsigned m = 0; m < nM; m++) {
         unsigned indexM = m * nL;
         for (unsigned l = 0; l < nL; l++) {
