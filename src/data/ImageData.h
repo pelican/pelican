@@ -101,7 +101,7 @@ class ImageData : public DataBlob
         /// (\p l, \p m), channel (\p c) and polarisation (\p p)
         real_t& operator()(const unsigned& l, const unsigned& m,
                 const unsigned& c, const unsigned& p) {
-            unsigned index = l + _sizeL * (_sizeM * (p * _nChannels + c) + m);
+            unsigned index = l + _sizeL * (_sizeM * (c * _nPolarisations + p) + m);
             return _image[index];
         }
 
@@ -109,34 +109,34 @@ class ImageData : public DataBlob
         /// (\p l, \p m), channel (\p c) and polarisation (\p p)
         const real_t& operator()(const unsigned& l, const unsigned& m,
                 const unsigned& c, const unsigned& p) const {
-            unsigned index = l + _sizeL * (_sizeM * (p * _nChannels + c) + m);
+            unsigned index = l + _sizeL * (_sizeM * (c * _nPolarisations + p) + m);
             return _image[index];
         }
 
         /// Return a pointer to the image cube.
         real_t* ptr() { return _image.size() > 0 ? &_image[0] : NULL; }
 
-        /// Return a pointer to the image for a specified polarisation (\p p)
-        real_t* ptr(const unsigned& p) {
-            unsigned index = p * _nChannels * _sizeL * _sizeM;
+        /// Return a pointer to the image for a specified channel (\p c)
+        real_t* ptr(const unsigned& c) {
+            unsigned index = c * _nPolarisations * _sizeL * _sizeM;
             return _image.size() > 0 ? &_image[index] : NULL;
         }
 
         /// Return a pointer to the image for a specified polarisation (\p p)
         /// and channel (\p c)
-        real_t* ptr(const unsigned& p, const unsigned& c) {
-            unsigned index = _sizeL * _sizeM * (p * _nChannels + c);
+        real_t* ptr(const unsigned& c, const unsigned& p) {
+            unsigned index = _sizeL * _sizeM * (c * _nPolarisations + p);
             return _image.size() > 0 ? &_image[index] : NULL;
         }
 
         /// Returns the maximum image pixel amplitude.
-        const double& max(const unsigned& p, const unsigned& c) const  {
+        const double& max(const unsigned& c, const unsigned& p) const  {
             unsigned index = c * _nPolarisations + p;
             return _max[index];
         }
 
         /// Returns the minimum image pixel amplitude.
-        const double& min(const unsigned& p, const unsigned& c) const {
+        const double& min(const unsigned& c, const unsigned& p) const {
             unsigned index = c * _nPolarisations + p;
             return _max[index];
         }
