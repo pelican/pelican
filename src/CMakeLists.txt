@@ -23,7 +23,7 @@ endif(NO_MKL)
 
 if (OPENMP)
     FIND_PACKAGE(OpenMP REQUIRED)
-    add_definitions(-DPELICAN_OPEN_MP)
+    add_definitions(-DPELICAN_OPENMP)
     LIST(APPEND CMAKE_CXX_FLAGS ${OpenMP_CXX_FLAGS})
     LIST(APPEND CMAKE_C_FLAGS ${OpenMP_C_FLAGS})
 endif (OPENMP)

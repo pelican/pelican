@@ -24,7 +24,7 @@
 
 <modules>
     <ZenithImagerDft>
-        <size l="1024" m="1024"/>
+        <size l="256" m="256"/>
         <fullSky value="true"/>
         <polarisation value="x"/>
         <channels>182</channels>
