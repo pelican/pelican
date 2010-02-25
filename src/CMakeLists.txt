@@ -8,23 +8,24 @@ include(cmake/packagemacros.cmake)
 include_directories(${PROJECT_SOURCE_DIR})
 enable_testing()
 
-# options and defaults
+# --- options and defaults
 if(NOT CMAKE_BUILD_TYPE )
-    set( CMAKE_BUILD_TYPE DEBUG )
+    set(CMAKE_BUILD_TYPE DEBUG)
 endif(NOT CMAKE_BUILD_TYPE )
 
 if(TIMER)
-    ADD_DEFINITIONS(-DTIMER_ENABLE=1)
+    ADD_DEFINITIONS(-DTIMER_ENABLE)
 endif(TIMER)
 
 if(NO_MKL)
     set( IGNORE_MLK true)
 endif(NO_MKL)
 
-if(OPENMP)
-    FIND_PACKAGE( OpenMP REQUIRED)
-    set( CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS})
-    set( CMAKE_C_FLAGS ${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS})
+if (OPENMP)
+    FIND_PACKAGE(OpenMP REQUIRED)
+    add_definitions(-DPELICAN_OPEN_MP)
+    LIST(APPEND CMAKE_CXX_FLAGS ${OpenMP_CXX_FLAGS})
+    LIST(APPEND CMAKE_C_FLAGS ${OpenMP_C_FLAGS})
 endif (OPENMP)
 
 set( BUILD_SHARED_LIBS TRUE )
@@ -66,11 +67,17 @@ PACKAGE_DEPENDENCIES( ${dependencies} )
 
 # -- compiler defaults
 SET(CPP_PLATFORM_LIBS ${CMAKE_THREAD_LIBS_INIT})
-if(CMAKE_COMPILER_IS_GNUCC)
+IF (CMAKE_COMPILER_IS_GNUCC)
     add_definitions(-Wall)
     add_definitions(-Wno-deprecated -Wno-unknown-pragmas)
     list(APPEND CPP_PLATFORM_LIBS util dl)
-endif(CMAKE_COMPILER_IS_GNUCC)
+ELSE (CMAKE_COMPILER_IS_GNUCC)
+    SET(CMAKE_CXX_FLAGS_RELEASE "-O2")
+    add_definitions(-Wall)
+    add_definitions(-wd383 -wd981)  # suppress remark/warning
+    add_definitions(-ww111 -ww1572) # promote remark to warning
+ENDIF (CMAKE_COMPILER_IS_GNUCC)
+
 
 IF(APPLE)
     add_definitions(-DDARWIN)

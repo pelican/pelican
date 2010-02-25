@@ -44,6 +44,8 @@ ImageWriterFits::~ImageWriterFits()
 /**
  * @details
  * Method called by the pipeline to create images of the visibility data.
+ *
+ * @param[in] data  Hash of data blobs.
  */
 void ImageWriterFits::run(QHash<QString, DataBlob*>& data)
 {
@@ -72,6 +74,26 @@ void ImageWriterFits::run(QHash<QString, DataBlob*>& data)
  * @details
  * Parse and extract options from the configuration XML node, setting
  * defaults if necessary.
+ * The following settings are read from the configuration if present:
+ *
+ * - General Options:
+ *  - overwrite  = Determines if fits files should be overwritten if one of the same name exists
+ *  - directory  = Output directory (NOT USED)
+ *  - file       = The name of the output fits file (at present full path)
+ *  - prefix     = File name prefix (NOT USED)
+ *  - suffix     = File name suffix (NOT USED)
+ *  - cube       = Option to control if image cubes or image slices are procuded (NOT USED)
+ *
+ * - Fits Header Options (These options get insertded into the fits header):
+ *  - dateObs    = The date of the observation
+ *  - origin     = The origin of the processed image
+ *  - telesceope = The telescope use to make the observation
+ *  - instrument = The instrument at the telescope
+ *  - object     =
+ *  - author     =
+ *  - equinox    = The equinox (epoch) of the coordinate system used.
+ *
+ * @param[in]   config  Pelican XML configuration node.
  */
 void ImageWriterFits::_getConfiguration(const ConfigNode &config)
 {
@@ -95,7 +117,13 @@ void ImageWriterFits::_getConfiguration(const ConfigNode &config)
 
 /**
  * @details
- * Opens a FITS image file for writing using the previously set filename.
+ * Opens a FITS image file for writing, creating an empty image of the specified
+ * dimensions ready for writing into.
+ *
+ * @param[in] fileName  The filename of the fits file to write to (a fits file suffix is appended if missing)
+ * @param[in] nL        The number of pixels in the l (x) direction
+ * @param[in] nM        The number of pixels in the m (y) direction
+ *
  */
 void ImageWriterFits::_open(const QString& fileName, const unsigned nL,
         const unsigned nM, const unsigned nChan, const unsigned nPol,

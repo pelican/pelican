@@ -15,8 +15,9 @@ target_link_libraries(modules ${SUBPACKAGE_LIBRARIES} )
 install(TARGETS modules DESTINATION ${LIBRARY_INSTALL_DIR} )
 SUBPACKAGE_ADD_LIBRARIES(modules
     ${PELICAN_CBLAS_LIBS}
-    /usr/lib/libpthread.so
     ${CFITSIO_LIBRARIES}
 )
+
+#/usr/lib/libpthread.so
 
 add_subdirectory(test)

@@ -103,6 +103,12 @@ class ZenithImagerDft : public AbstractModule
         /// Sets the cellsize corresponding to a full sky image
         void _setCellsizeFullSky();
 
+        /// Remove auto-correlations
+        void _zeroAutoCorrelations(complex_t* vis, unsigned nAnt);
+
+        /// Generate a set of visibilities for creating a point spread function
+        void _setPsfVisibilties(complex_t* vis, unsigned nAnt);
+
     private:
           VisibilityData *_vis;               ///< Visibility amplitude matrix.
           AntennaPositions *_antPos;          ///< Visibility positions matrix.
@@ -123,8 +129,6 @@ class ZenithImagerDft : public AbstractModule
 
           std::vector<complex_t> _weightsXL;  ///< DFT weights for XL coordinates
           std::vector<complex_t> _weightsYM;  ///< DFT weights for YM coordinates
-          std::vector<complex_t> _weights;    ///< Vector of DFT weights for a single l,m
-          std::vector<complex_t> _temp;       ///< Temporary vector used in the DFT.
 };
 
 } // namespace pelican

@@ -1,15 +1,22 @@
 #include "modules/ZenithImagerDft.h"
 #include "utility/constants.h"
 #include "utility/pelicanTimer.h"
-#ifdef USE_MKL
-    #include <mkl_cblas.h>
-#else
-    #include "cblas.h"
-#endif
 #include <QString>
 #include <QStringList>
 #include <iostream>
 #include <limits>
+
+#ifdef USE_CBLAS
+    #ifdef USE_MKL
+        #include <mkl_cblas.h>
+    #else
+        #include "cblas.h"
+    #endif
+#endif
+
+#ifdef PELICAN_OPENMP
+    #include <omp.h>
+#endif
 
 #include "utility/memCheck.h"
 
@@ -161,6 +168,8 @@ void ZenithImagerDft::run(QHash<QString, DataBlob*>& data)
             // channel and polarisation.
             complex_t* vis = _vis->ptr(channel, pol);
             real_t* image = _image->ptr(p, c);
+            _zeroAutoCorrelations(vis, nAnt);
+//            _setPsfVisibilties(vis, nAnt);
 
             // Generate the image.
             _makeImageDft(nAnt, _antPos->xPtr(), _antPos->yPtr(), vis, frequency,
@@ -177,8 +186,6 @@ void ZenithImagerDft::run(QHash<QString, DataBlob*>& data)
                 throw QString ("ZenithImagerDft: invalid Image range");
         }
     }
-
-    return;
 }
 
 
@@ -306,36 +313,65 @@ void ZenithImagerDft::_makeImageDft(const unsigned nAnt, real_t* antPosX,
     _calculateWeights(nAnt, antPosX, frequency, nL, coordsL, &_weightsXL[0]);
     _calculateWeights(nAnt, antPosY, frequency, nM, coordsM, &_weightsYM[0]);
 
-    _weights.resize(nAnt);
-    _temp.resize(nAnt);
+#ifdef PELICAN_OPENMP
+    unsigned nProcs = omp_get_num_procs();
+    std::vector< std::vector<complex_t> > tempWeights;
+    std::vector< std::vector<complex_t> > tempBuffer;
+    tempWeights.resize(nProcs);
+    tempBuffer.resize(nProcs);
+    for (unsigned i = 0; i < nProcs; i++) {
+        tempWeights[i].resize(nAnt);
+        tempBuffer[i].resize(nAnt);
+    }
+#else
+    std::vector<complex_t> tempWeights(nAnt);
+    std::vector<complex_t> tempBuffer(nAnt);
+#endif
 
-#ifdef USE_BLAS
+#ifdef USE_CBLAS
     real_t alpha[2] = {1.0, 0.0};
     real_t beta[2]  = {0.0, 0.0};
     unsigned xInc = 1;
     unsigned yInc = 1;
 #endif
+
+    int tid = 0;
+    complex_t* weights = NULL;
+    complex_t* buffer = NULL;
+
+#pragma omp parallel for private(tid, weights, buffer)
     for (unsigned m = 0; m < nM; m++) {
-        complex_t *weightsYM = &_weightsYM[m * nAnt];
-        unsigned indexM = m * nL;
+
+            unsigned indexM = m * nL;
+            complex_t *weightsYM = &_weightsYM[m * nAnt];
+
+#ifdef PELICAN_OPENMP
+            tid = omp_get_thread_num();
+            weights = &tempWeights[tid][0];
+            buffer = &tempBuffer[tid][0];
+#else
+            weights = &tempWeights[0];
+            buffer = &tempBuffer[0];
+#endif
 
         for (unsigned l = 0; l < nL; l++) {
-            complex_t * weightsXL = &_weightsXL[l * nAnt];
-            _multWeights(nAnt, weightsXL, weightsYM, &_weights[0]);
+            complex_t* weightsXL = &_weightsXL[l * nAnt];
 
-#ifdef USE_BLAS
+            _multWeights(nAnt, weightsXL, weightsYM, weights);
+
+#ifdef USE_CBLAS
             // (y := alpha*A*x + beta*y)
             // where: y = temp
             //        A = vis
             //        x = weights
             cblas_zgemv(CblasRowMajor, CblasNoTrans, nAnt, nAnt, alpha, vis,
-                    nAnt, &_weights[0], xInc, beta, &_temp[0], yInc);
+                    nAnt, weights, xInc, beta, buffer, yInc);
 #else
-            _multMatrixVector(nAnt, vis, &_weights[0], &_temp[0]);
+            _multMatrixVector(nAnt, vis, weights, buffer);
 #endif
 
-            /// TODO: Use some sort of cblas_cdot to replace this call.
-            image[indexM + l] = _vectorDotConj(nAnt, &_temp[0], &_weights[0]).real();
+            /// TODO: Use some sort of cblas_zdot to replace this call.
+            image[indexM + l] = _vectorDotConj(nAnt, buffer, weights).real();
         }
     }
 }
@@ -402,11 +438,11 @@ complex_t ZenithImagerDft::_vectorDotConj(const unsigned n, complex_t* a,
 void ZenithImagerDft::_cutHemisphere(real_t* image, const unsigned nL,
         const unsigned nM, real_t *l, real_t *m)
 {
-    for (unsigned j = 0; j < _sizeM; j++) {
-        unsigned rowIndex = j * _sizeL;
+    for (unsigned j = 0; j < nM; j++) {
+        unsigned rowIndex = j * nL;
         double m2 = std::pow(m[j], 2.0);
 
-        for (unsigned i = 0; i < _sizeL; i++) {
+        for (unsigned i = 0; i < nL; i++) {
             double l2 = std::pow(l[i], 2.0);
             double radius = sqrt(m2 + l2);
             unsigned index = rowIndex + i;
@@ -415,17 +451,55 @@ void ZenithImagerDft::_cutHemisphere(real_t* image, const unsigned nL,
             }
         }
     }
+}
+
+
+/**
+ * @details
+ * Sets the cellsize required for full sky imaging.
+ */
+void ZenithImagerDft::_setCellsizeFullSky()
+{
+    _cellsizeL = -2.0 / _sizeL * math::rad2asec;
+    _cellsizeM = 2.0 / _sizeM * math::rad2asec;
+}
+
+
+/**
+ * @details
+ * Zeros autocorrelations in the visibility matrix
+ */
+void ZenithImagerDft::_zeroAutoCorrelations(complex_t* vis, unsigned nAnt)
+{
+    for (unsigned j = 0; j < nAnt; j++) {
+        unsigned rowIndex = j * nAnt;
+        for (unsigned i = 0; i < nAnt; i++) {
+            unsigned index = rowIndex + i;
+            if (i == j) vis[index] = complex_t(0.0, 0.0);
+        }
+    }
 
 }
 
 
 /**
  * @details
+ * Fill the visibility matrix with visibilities required for calculating the
+ * point spread function.
  */
-void ZenithImagerDft::_setCellsizeFullSky()
+void ZenithImagerDft::_setPsfVisibilties(complex_t* vis, unsigned nAnt)
 {
-    _cellsizeL = -2.0 / _sizeL * math::rad2asec;
-    _cellsizeM = 2.0 / _sizeM * math::rad2asec;
+    if (vis == NULL)
+        throw QString("ZenithImagerDft::_setPsfVisibilties(): data not assigned");
+
+    for (unsigned j = 0; j < nAnt; j++) {
+        unsigned rowIndex = j * nAnt;
+        for (unsigned i = 0; i < nAnt; i++) {
+            unsigned index = rowIndex + i;
+            if (i == j) vis[index] = complex_t(0.0, 0.0);
+            else vis[index] = complex_t(1.0, 0.0);
+        }
+    }
 }
 
 
