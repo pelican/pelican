@@ -4,6 +4,7 @@
 #include <QString>
 #include <QStringList>
 #include <iostream>
+#include <iomanip>
 #include <limits>
 
 #ifdef USE_CBLAS
@@ -48,7 +49,6 @@ ZenithImagerDft::ZenithImagerDft(const ConfigNode& config)
     _coordM.resize(_sizeM);
     _calculateImageCoords(_cellsizeL, _sizeL, &_coordL[0]);
     _calculateImageCoords(_cellsizeM, _sizeM, &_coordM[0]);
-
 }
 
 
@@ -167,21 +167,29 @@ void ZenithImagerDft::run(QHash<QString, DataBlob*>& data)
             // Get pointers to the visibility data and image for the selected
             // channel and polarisation.
             complex_t* vis = _vis->ptr(channel, pol);
-            real_t* image = _image->ptr(p, c);
-            _zeroAutoCorrelations(vis, nAnt);
-//            _setPsfVisibilties(vis, nAnt);
 
+            if (_pointSpreadFunction) {
+                _setPsfVisibilties(vis, nAnt);
+            }
+            else {
+                _zeroAutoCorrelations(vis, nAnt);
+            }
+
+            real_t* image = _image->ptr(c, p);
             // Generate the image.
             _makeImageDft(nAnt, _antPos->xPtr(), _antPos->yPtr(), vis, frequency,
                     _sizeL, _sizeM, &_coordL[0], &_coordM[0], image);
 
+            _image->calculateMean(c, p);
+
             // Cut hemisphere.
-            if (_fullSky) {
+            if (_fullSky && _trimHemisphere) {
                 _cutHemisphere(image, _sizeL, _sizeM, &_coordL[0], &_coordM[0]);
             }
 
             // Find the amplitude range.
-            _image->findAmpRange(c, p);
+            _image->calculateAmplitudeRange(c, p);
+
             if (isnan(_image->max(c, p)) || isnan(_image->min(c, p)))
                 throw QString ("ZenithImagerDft: invalid Image range");
         }
@@ -201,6 +209,12 @@ void ZenithImagerDft::_getConfiguration(const ConfigNode& config)
     _sizeL = config.getOption("size", "l", "128").toUInt();
     _sizeM = config.getOption("size", "m", "128").toUInt();
     _fullSky = config.getOption("fullSky", "value", "true") == "true" ? true : false;
+    if (config.getOption("fullSky", "cutHemisphere", "true") == "true") {
+        _trimHemisphere = true;
+    }
+    else {
+        _trimHemisphere = false;
+    }
 
     // Full sky = set l and m cellsize for a full image ignoring other settings.
     if (_fullSky) {
@@ -227,6 +241,20 @@ void ZenithImagerDft::_getConfiguration(const ConfigNode& config)
 
     _nChannels = config.getOption("frequencies", "number", "512").toUInt();
     _maxFrequency = config.getOption("frequencies", "max", "1.0e8").toDouble();
+
+    if (config.getOption("pointSpreadFunction", "value", "false") == "true") {
+        _pointSpreadFunction = true;
+    }
+    else {
+        _pointSpreadFunction = false;
+    }
+
+    if (config.getOption("size", "pixelCentred", "false") == "true") {
+        _pixelCentred = true;
+    }
+    else {
+        _pixelCentred = false;
+    }
 }
 
 
@@ -247,10 +275,23 @@ void ZenithImagerDft::_getConfiguration(const ConfigNode& config)
 void ZenithImagerDft::_calculateImageCoords(const double cellsize,
         const unsigned nPixels, real_t* coords)
 {
+    if (coords == NULL)
+        throw QString("ZenithImagerDft::_calculateImageCoords(): coordinate array not assigned");
+
+    if (nPixels == 0)
+        throw QString("ZenithImagerDft::_calculateImageCoords(): Zero image pixels!");
+
+    if (nPixels == 1) {
+        coords[0] = 0.0;
+        return;
+    }
+
     double delta = cellsize * math::asec2rad;
     int centre = nPixels / 2;
+    double offset = (_pixelCentred) ? 0 : delta / 2.0;
+
     for (int i = 0; i < static_cast<int>(nPixels); i++) {
-        coords[i] = static_cast<double>(i - centre) * delta;
+        coords[i] = static_cast<double>(i - centre) * delta + offset;
     }
 }
 
@@ -281,12 +322,15 @@ void ZenithImagerDft::_fetchDataBlobs(QHash<QString, DataBlob*>& data)
  * @details
  * Calculates a matrix of complex weights for forming an image by
  * 2D DFT.
+ *
+ * @param[in]   nCoords Number
  */
 void ZenithImagerDft::_calculateWeights(const unsigned nAnt, real_t* antPos,
         const double frequency, const unsigned nCoords,
         real_t* imageCoord, complex_t* weights)
 {
     double k = (math::twoPi * frequency) / phy::c;
+
     for (unsigned i = 0; i < nCoords; i++) {
         unsigned index = i * nAnt;
         double arg1 = k * imageCoord[i];
@@ -310,9 +354,12 @@ void ZenithImagerDft::_makeImageDft(const unsigned nAnt, real_t* antPosX,
 {
     _weightsXL.resize(nAnt * nL);
     _weightsYM.resize(nAnt * nM);
+
     _calculateWeights(nAnt, antPosX, frequency, nL, coordsL, &_weightsXL[0]);
     _calculateWeights(nAnt, antPosY, frequency, nM, coordsM, &_weightsYM[0]);
 
+    // Set up buffers for sorting a vector of weights for one pixel
+    // and the temporary results of the per pixel matrix vector product
 #ifdef PELICAN_OPENMP
     unsigned nProcs = omp_get_num_procs();
     std::vector< std::vector<complex_t> > tempWeights;
@@ -338,9 +385,12 @@ void ZenithImagerDft::_makeImageDft(const unsigned nAnt, real_t* antPosX,
     int tid = 0;
     complex_t* weights = NULL;
     complex_t* buffer = NULL;
+    unsigned nNonZeroVis = nAnt * nAnt - nAnt;
 
+    // Loop over image pixels to calculate the image amplitude using a
+    // 2 sided matrix vector approach.
 #pragma omp parallel for private(tid, weights, buffer)
-    for (unsigned m = 0; m < nM; m++) {
+    for (int m = 0; m < static_cast<int>(nM); m++) {
 
             unsigned indexM = m * nL;
             complex_t *weightsYM = &_weightsYM[m * nAnt];
@@ -356,6 +406,7 @@ void ZenithImagerDft::_makeImageDft(const unsigned nAnt, real_t* antPosX,
 
         for (unsigned l = 0; l < nL; l++) {
             complex_t* weightsXL = &_weightsXL[l * nAnt];
+            unsigned index = indexM + l;
 
             _multWeights(nAnt, weightsXL, weightsYM, weights);
 
@@ -371,7 +422,11 @@ void ZenithImagerDft::_makeImageDft(const unsigned nAnt, real_t* antPosX,
 #endif
 
             /// TODO: Use some sort of cblas_zdot to replace this call.
-            image[indexM + l] = _vectorDotConj(nAnt, buffer, weights).real();
+            image[index] = _vectorDotConj(nAnt, buffer, weights).real();
+
+            // normalise - (as for each non zero vis/weight the sum gets an
+            // extra factor of 1 from from the e^(i...))
+            image[index] /= static_cast<double>(nNonZeroVis);
         }
     }
 }
@@ -469,7 +524,7 @@ void ZenithImagerDft::_setCellsizeFullSky()
  * @details
  * Zeros autocorrelations in the visibility matrix
  */
-void ZenithImagerDft::_zeroAutoCorrelations(complex_t* vis, unsigned nAnt)
+void ZenithImagerDft::_zeroAutoCorrelations(complex_t* vis, const unsigned nAnt)
 {
     for (unsigned j = 0; j < nAnt; j++) {
         unsigned rowIndex = j * nAnt;
@@ -478,7 +533,6 @@ void ZenithImagerDft::_zeroAutoCorrelations(complex_t* vis, unsigned nAnt)
             if (i == j) vis[index] = complex_t(0.0, 0.0);
         }
     }
-
 }
 
 
@@ -487,7 +541,7 @@ void ZenithImagerDft::_zeroAutoCorrelations(complex_t* vis, unsigned nAnt)
  * Fill the visibility matrix with visibilities required for calculating the
  * point spread function.
  */
-void ZenithImagerDft::_setPsfVisibilties(complex_t* vis, unsigned nAnt)
+void ZenithImagerDft::_setPsfVisibilties(complex_t* vis, const unsigned nAnt)
 {
     if (vis == NULL)
         throw QString("ZenithImagerDft::_setPsfVisibilties(): data not assigned");

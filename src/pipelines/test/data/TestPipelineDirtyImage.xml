@@ -24,9 +24,10 @@
 
 <modules>
     <ZenithImagerDft>
-        <size l="256" m="256"/>
-        <fullSky value="true"/>
+        <size l="256" m="256" pixelCentred="true"/>
+        <fullSky value="true" cutHemisphere="true"/>
         <polarisation value="x"/>
+        <pointSpreadFunction value="false"/>
         <channels>182</channels>
         <frequencies number="512" max="1e8"/>
     </ZenithImagerDft>

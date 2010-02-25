@@ -119,6 +119,9 @@ class ZenithImagerDft : public AbstractModule
           double _maxFrequency;
           unsigned _polarisation;             ///< Selection polarisation (enumeration).
           bool _fullSky;                      ///< Image the full sky (overrides cellsize)
+          bool _trimHemisphere;               ///< Cut the image to the full sky hemisphere
+          bool _pointSpreadFunction;          ///< Image the point spread function.
+          bool _pixelCentred;                 ///< Put the zero of the image in the middle of a pixel
           unsigned _sizeL;                    ///< Image size in l (x) pixels.
           unsigned _sizeM;                    ///< Image size in m (y) pixels.
           double _cellsizeL;                  ///< Image pixel increment in m (y) direction.

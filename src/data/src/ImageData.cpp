@@ -1,6 +1,8 @@
 #include "data/ImageData.h"
 #include <algorithm>
 #include <QString>
+#include <iomanip>
+#include <iostream>
 
 namespace pelican {
 
@@ -61,6 +63,7 @@ void ImageData::resize(const unsigned sizeL, const unsigned sizeM,
     _image.resize(_nPolarisations * _nChannels * _sizeL * _sizeM);
     _min.resize(_nPolarisations * _nChannels);
     _max.resize(_nPolarisations * _nChannels);
+    _mean.resize(_nPolarisations * _nChannels);
 }
 
 
@@ -82,18 +85,26 @@ void ImageData::clear()
     _refCoordL = 0.0;
     _refCoordM = 0.0;
     _image.clear();
+    _min.clear();
+    _max.clear();
+    _mean.clear();
 }
 
 
 /**
  * @details
+ * Calculate the minimum and maximum pixel amplitude for the image plane
+ * specified by channel \p c and polarisation \p p
+ *
+ * @param[in] c Channel.
+ * @paran[in] p Polaristation.
  */
-void ImageData::findAmpRange(const unsigned c, const unsigned p)
+void ImageData::calculateAmplitudeRange(const unsigned c, const unsigned p)
 {
     if (_image.empty())
         throw QString("ImageData::findAmpRange(): Image empty");
 
-    real_t *image = this->ptr(c, p);
+    const real_t *image = this->ptr(c, p);
     unsigned index = c * _nPolarisations + p;
     _min[index] = 1.0e99;
     _max[index] = -1.0e99;
@@ -102,6 +113,63 @@ void ImageData::findAmpRange(const unsigned c, const unsigned p)
         _min[index] = std::min(image[i], _min[index]);
         _max[index] = std::max(image[i], _max[index]);
     }
+}
+
+
+/**
+ * @details
+ * Calculate the mean image pixel amplitude for the image plane
+ * specified by channel \p c and polarisation \p p.
+ *
+ * Note: Needs to called before the cutting to the hemisphere to
+ * return the expected zero mean result.
+ *
+ * @param[in] c Channel.
+ * @paran[in] p Polaristation.
+ */
+void ImageData::calculateMean(const unsigned c, const unsigned p)
+{
+    if (_image.empty())
+        throw QString("ImageData::findAmpRange(): Image empty");
+
+    const real_t *image = this->ptr(c, p);
+    unsigned index = c * _nPolarisations + p;
+    _mean[index] = 0.0;
+    for (unsigned i = 0; i < _image.size(); i++) {
+        _mean[index] += image[i];
+    }
+    _mean[index] /= _image.size();
+
+//    std::vector<long double> rowMean(_sizeM);
+//
+//    for (unsigned m = 0; m < _sizeM; m++) {
+//        rowMean[m] = 0.0;
+//        for (unsigned l = 0; l < _sizeL; l++) {
+//            unsigned i = m * _sizeL + l;
+//             rowMean[m] += image[i];
+//        }
+//        _mean[index] += rowMean[m] / _sizeL;
+//    }
+//    _mean[index] /= _sizeM;
+
+//    std::vector<real_t> temp = _image;
+//    std::sort(temp.begin(), temp.end(), _absSort);
+//    for (unsigned i = 0; i < temp.size(); i++) {
+//        _mean[index] += temp[i];
+////        std::cout << std::scientific << std::setprecision(8);
+////        std::cout << i << " " << temp[i] << " " << _mean[index] << std::endl;
+//    }
+//    _mean[index] /= temp.size();
+}
+
+
+/**
+ * @details
+ * Sort by abs value
+ */
+bool ImageData::_absSort(const real_t a, const real_t b)
+{
+    return std::abs(a) < std::abs(b);
 }
 
 } // namespace pelican
