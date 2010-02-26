@@ -24,9 +24,10 @@
 
 <modules>
     <ZenithImagerDft>
-        <size l="256" m="256"/>
-        <fullSky value="true"/>
+        <size l="128" m="128" pixelCentred="true"/>
+        <fullSky value="true" cutHemisphere="true"/>
         <polarisation value="x"/>
+        <pointSpreadFunction value="true"/>
         <channels>182</channels>
         <frequencies number="512" max="1e8"/>
     </ZenithImagerDft>
@@ -47,6 +48,15 @@
         <reference value=""/>
          <equinox value="2000.0"/>
     </ImageWriterFits>
+
+    <ZenithModelVisibilities>
+        <source coord1="0" coord2="90" ampPolX="1" ampPolY="0.5" coordType="azel"/>
+        <channels>0</channels>
+        <frequencies number="512" max="1e8"/>
+        <polarisation value="x"/>
+        <noise ... ></noise>
+    </ZenithModelVisibilities>
+
 </modules>
 
 </configuration>

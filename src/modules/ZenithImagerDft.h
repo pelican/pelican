@@ -29,9 +29,6 @@ class ZenithImagerDft : public AbstractModule
         friend class ZenithImagerDftTest;
 
     public:
-        enum { POL_X, POL_Y, POL_BOTH };
-
-    public:
         /// Module constructor.
         ZenithImagerDft(const ConfigNode& config);
 
@@ -110,25 +107,30 @@ class ZenithImagerDft : public AbstractModule
         void _setPsfVisibilties(complex_t* vis, unsigned nAnt);
 
     private:
-          VisibilityData *_vis;               ///< Visibility amplitude matrix.
-          AntennaPositions *_antPos;          ///< Visibility positions matrix.
-          ImageData *_image;                  ///< Image amplitude matrix.
+        enum { POL_X, POL_Y, POL_BOTH };
 
-          std::vector<unsigned> _channels;    ///< Selected channel list.
-          unsigned _nChannels;
-          double _maxFrequency;
-          unsigned _polarisation;             ///< Selection polarisation (enumeration).
-          bool _fullSky;                      ///< Image the full sky (overrides cellsize)
-          unsigned _sizeL;                    ///< Image size in l (x) pixels.
-          unsigned _sizeM;                    ///< Image size in m (y) pixels.
-          double _cellsizeL;                  ///< Image pixel increment in m (y) direction.
-          double _cellsizeM;                  ///< Image pixel increment in l (x) direction.
+        VisibilityData *_vis;               ///< Visibility amplitude matrix.
+        AntennaPositions *_antPos;          ///< Visibility positions matrix.
+        ImageData *_image;                  ///< Image amplitude matrix.
 
-          std::vector<real_t> _coordL;        ///< Image l (x) coordinates in radians.
-          std::vector<real_t> _coordM;        ///< Image m (y) coordinates in radians.
+        std::vector<unsigned> _channels;    ///< Selected channel list.
+        unsigned _nChannels;
+        double _maxFrequency;
+        unsigned _polarisation;             ///< Selection polarisation (enumeration).
+        bool _fullSky;                      ///< Image the full sky (overrides cellsize)
+        bool _trimHemisphere;               ///< Cut the image to the full sky hemisphere
+        bool _pointSpreadFunction;          ///< Image the point spread function.
+        bool _pixelCentred;                 ///< Put the zero of the image in the middle of a pixel
+        unsigned _sizeL;                    ///< Image size in l (x) pixels.
+        unsigned _sizeM;                    ///< Image size in m (y) pixels.
+        double _cellsizeL;                  ///< Image pixel increment in m (y) direction.
+        double _cellsizeM;                  ///< Image pixel increment in l (x) direction.
 
-          std::vector<complex_t> _weightsXL;  ///< DFT weights for XL coordinates
-          std::vector<complex_t> _weightsYM;  ///< DFT weights for YM coordinates
+        std::vector<real_t> _coordL;        ///< Image l (x) coordinates in radians.
+        std::vector<real_t> _coordM;        ///< Image m (y) coordinates in radians.
+
+        std::vector<complex_t> _weightsXL;  ///< DFT weights for XL coordinates
+        std::vector<complex_t> _weightsYM;  ///< DFT weights for YM coordinates
 };
 
 } // namespace pelican

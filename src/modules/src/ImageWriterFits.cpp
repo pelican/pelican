@@ -62,7 +62,7 @@ void ImageWriterFits::run(QHash<QString, DataBlob*>& data)
     _writeHeader();
     for (unsigned c = 0; c < nChan; c++) {
         for (unsigned p = 0; p < nPol; p++) {
-            real_t* image = _image->ptr(p, c);
+            real_t* image = _image->ptr(c, p);
             _writeImage(image, nL, nM, c, p);
         }
     }
@@ -219,10 +219,10 @@ void ImageWriterFits::_writeHeader()
 
     // Amplitude range (only valid if not an image cube)
     if (_image->nChannels() == 1 && _image->nPolarisations() == 1) {
-        _image->findAmpRange(0,0);
         _writeKey("DATAMIN", _image->min(0, 0), "Minimum pixel value");
         _writeKey("DATAMAX", _image->max(0, 0), "Maximum pixel value");
     }
+//    _writeComment("DATAMEAN = " + QString::number(_image->mean(0, 0)));
 
     // x axis keywords
     double rotaX = 0.0;
@@ -403,7 +403,22 @@ void ImageWriterFits::_writeHistory(const QString& text)
     int err = 0;
     ffphis(_fits, (char*)text.toLatin1().data(), &err);
     if (err)
-        throw QString("ImageWriterFits::_writeKey(): Error writing FITS history.");
+        throw QString("ImageWriterFits::_writeHistory(): Error writing FITS history.");
+}
+
+
+/**
+ * @details
+ * Writes a comment tag to the FITS header.
+ *
+ * @param[in] text The comment line to write.
+ */
+void ImageWriterFits::_writeComment(const QString& text)
+{
+    int err = 0;
+    ffpcom(_fits, (char*)text.toLatin1().data(), &err);
+    if (err)
+        throw QString("ImageWriterFits::_writeComment(): Error writing FITS comment.");
 }
 
 

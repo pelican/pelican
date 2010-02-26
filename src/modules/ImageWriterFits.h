@@ -95,6 +95,9 @@ class ImageWriterFits : public AbstractModule
         /// Write a header history line.
         void _writeHistory(const QString& text);
 
+        /// Write a header comment line.
+        void _writeComment(const QString& text);
+
         /// Flip the image in the x-direction.
         void _flipXAxis(real_t* image, const unsigned nL, const unsigned nM);
 

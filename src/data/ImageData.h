@@ -48,7 +48,10 @@ class ImageData : public DataBlob
         void clear();
 
         /// Finds and sets the pixel amplitude range for the image data.
-        void findAmpRange(const unsigned c, const unsigned p);
+        void calculateAmplitudeRange(const unsigned c, const unsigned p);
+
+        /// Finds and sets the pixel amplitude range for the image data.
+        void calculateMean(const unsigned c, const unsigned p);
 
     public: // Accessor methods.
 
@@ -91,11 +94,14 @@ class ImageData : public DataBlob
         /// Returns a reference to the image amplitude vector
         std::vector<real_t>& amp() { return _image; }
 
+        /// Returns a reference to the image amplitude vector
+        const std::vector<real_t>& amp() const { return _image; }
+
         /// Dereferences the image amplitude array for image index (\p i)
         real_t& operator[](const unsigned i) { return _image[i]; }
 
         /// Dereferences the image amplitude array for image index (\p i)
-        const real_t& operator[](const unsigned i) const { return _image[i]; }
+        real_t operator[](const unsigned i) const { return _image[i]; }
 
         /// Dereference the image amplitude array for image coordinate
         /// (\p l, \p m), channel (\p c) and polarisation (\p p)
@@ -107,8 +113,8 @@ class ImageData : public DataBlob
 
         /// Dereference the image amplitude array for image coordinate
         /// (\p l, \p m), channel (\p c) and polarisation (\p p)
-        const real_t& operator()(const unsigned l, const unsigned m,
-                const unsigned c, const unsigned p) const {
+        real_t operator()(const unsigned l, const unsigned m, const unsigned c,
+                const unsigned p) const {
             unsigned index = l + _sizeL * (_sizeM * (c * _nPolarisations + p) + m);
             return _image[index];
         }
@@ -116,8 +122,19 @@ class ImageData : public DataBlob
         /// Return a pointer to the image cube.
         real_t* ptr() { return _image.size() > 0 ? &_image[0] : NULL; }
 
+        /// Return a pointer to the image cube.
+        const real_t* ptr() const {
+            return _image.size() > 0 ? &_image[0] : NULL;
+        }
+
         /// Return a pointer to the image for a specified channel (\p c)
         real_t* ptr(const unsigned c) {
+            unsigned index = c * _nPolarisations * _sizeL * _sizeM;
+            return _image.size() > 0 ? &_image[index] : NULL;
+        }
+
+        /// Return a pointer to the image for a specified channel (\p c)
+        const real_t* ptr(const unsigned c) const {
             unsigned index = c * _nPolarisations * _sizeL * _sizeM;
             return _image.size() > 0 ? &_image[index] : NULL;
         }
@@ -129,20 +146,37 @@ class ImageData : public DataBlob
             return _image.size() > 0 ? &_image[index] : NULL;
         }
 
+        /// Return a pointer to the image for a specified polarisation (\p p)
+        /// and channel (\p c)
+        const real_t* ptr(const unsigned c, const unsigned p) const {
+            unsigned index = _sizeL * _sizeM * (c * _nPolarisations + p);
+            return _image.size() > 0 ? &_image[index] : NULL;
+        }
+
+        /// Returns the minimum image pixel amplitude.
+        double min(const unsigned c, const unsigned p) const {
+            unsigned index = c * _nPolarisations + p;
+            return _min[index];
+        }
+
         /// Returns the maximum image pixel amplitude.
-        const double& max(const unsigned c, const unsigned p) const  {
+        double max(const unsigned c, const unsigned p) const  {
             unsigned index = c * _nPolarisations + p;
             return _max[index];
         }
 
         /// Returns the minimum image pixel amplitude.
-        const double& min(const unsigned c, const unsigned p) const {
+        double mean(const unsigned c, const unsigned p) const {
             unsigned index = c * _nPolarisations + p;
-            return _max[index];
+            return _mean[index];
         }
 
         /// Returns the amplitude units
         std::string& ampUnits() { return _ampUnits; }
+
+    private:
+        /// Sort by absolute value
+        static bool _absSort(const real_t a, const real_t b);
 
     private:
         std::vector<real_t> _image; ///< Image amplitude cube.
@@ -160,6 +194,7 @@ class ImageData : public DataBlob
         std::string _ampUnits;      ///< Amplitude unit.
         std::vector<double> _max;   ///< Maximum image pixel amplitude. (channel, polarisation)
         std::vector<double> _min;   ///< Minimum image pixel amplitude (channel, polarisation)
+        std::vector<double> _mean;  ///< Mean image pixel amplitude (channe, polarisation)
 };
 
 } // namespace pelican

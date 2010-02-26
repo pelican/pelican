@@ -14,14 +14,27 @@ namespace pelican {
  *
  * @brief
  * Class to define telescope visibility data.
- * 
+ *
  * @details
  * This class is used to store telescope visibility data
  * (matrices of complex correlation products).
  *
  * It is a typedef for AntennaMatrixData<complex_t>.
  */
-class VisibilityData : public AntennaMatrixData<complex_t> {};
+class VisibilityData : public AntennaMatrixData<complex_t>
+{
+    public:
+        /// Constructs an empty visibility data cube.
+        VisibilityData() : AntennaMatrixData<complex_t>() {}
+
+        /// Constructs an pre-sized visibility data cube.
+        VisibilityData(const unsigned antennas, const unsigned channels,
+                const unsigned polarisations)
+        : AntennaMatrixData<complex_t>(antennas, channels, polarisations) {}
+
+        /// Visibility data destructor.
+        ~VisibilityData() {}
+};
 
 } // namespace pelican
 
