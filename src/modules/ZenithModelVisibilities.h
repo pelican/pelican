@@ -12,7 +12,7 @@ namespace pelican {
 
 class ConfigNode;
 class DataBlob;
-class ModelVisibilities;
+class ModelVisibilityData;
 class AntennaPositions;
 class Source;
 
@@ -49,13 +49,14 @@ class ZenithModelVisibilities : public AbstractModule
 
     private:
         enum { POL_X, POL_Y, POL_BOTH };
-        ModelVisibilities* _modelVis;
+        ModelVisibilityData* _modelVis;
         AntennaPositions *_antPos;
         std::vector<Source> _sourcesPolXX;
         std::vector<Source> _sourcesPolYY;
         std::vector<unsigned> _channels;
-        unsigned _nChannels;    ///< Total number of channels
-        double _maxFrequency;   ///< Maximum frequency
+        int _freqRefChannel;                ///< Frequency reference channel
+        double _freqRef;                    ///< Reference frequency
+        double _freqDelta;                  ///< Frequency delta
         unsigned _polarisation;
 };
 

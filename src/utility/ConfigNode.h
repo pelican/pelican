@@ -29,7 +29,7 @@ class ConfigNode
         ConfigNode(const QDomElement& config);
 
         /// Destroys the configuration object.
-        ~ConfigNode();
+        ~ConfigNode() {}
 
     public:
         /// Returns a configuration option (attribute).

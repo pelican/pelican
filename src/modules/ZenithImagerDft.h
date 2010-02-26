@@ -1,19 +1,21 @@
 #ifndef ZENITHIMAGERDFT_H
 #define ZENITHIMAGERDFT_H
 
-#include "AbstractModule.h"
-#include "data/ImageData.h"
-#include "data/VisibilityData.h"
-#include "data/AntennaPositions.h"
-#include "data/FrequencyList.h"
-#include "utility/ConfigNode.h"
-
-
 /**
  * @file ZenithImagerDft.h
  */
 
+#include "modules/AbstractModule.h"
+#include <vector>
+
 namespace pelican {
+
+class AbstractModule;
+class ConfigNode;
+class VisibilityData;
+class ModelVisibilityData;
+class AntennaPositions;
+class ImageData;
 
 /**
  * @class ZenithImagerDft
@@ -33,7 +35,7 @@ class ZenithImagerDft : public AbstractModule
         ZenithImagerDft(const ConfigNode& config);
 
         /// Module destructor.
-        ~ZenithImagerDft();
+        ~ZenithImagerDft() {}
 
         /// Sets the channels (\p c) produce an image from.
         /// Method overrides the selected channels from the configuration
@@ -101,21 +103,24 @@ class ZenithImagerDft : public AbstractModule
         void _setCellsizeFullSky();
 
         /// Remove auto-correlations
-        void _zeroAutoCorrelations(complex_t* vis, unsigned nAnt);
+        void _zeroAutoCorrelations(complex_t* vis, const unsigned nAnt);
 
         /// Generate a set of visibilities for creating a point spread function
-        void _setPsfVisibilties(complex_t* vis, unsigned nAnt);
+        void _setPsfVisibilties(complex_t* vis, const unsigned nAnt);
 
     private:
         enum { POL_X, POL_Y, POL_BOTH };
 
-        VisibilityData *_vis;               ///< Visibility amplitude matrix.
-        AntennaPositions *_antPos;          ///< Visibility positions matrix.
-        ImageData *_image;                  ///< Image amplitude matrix.
+        VisibilityData* _vis;               ///< Visibility amplitude matrix.
+        AntennaPositions* _antPos;          ///< Visibility positions matrix.
+        ImageData* _image;                  ///< Image amplitude matrix.
 
+        bool _useModelVis;                  ///< Use model visibility data blob
         std::vector<unsigned> _channels;    ///< Selected channel list.
         unsigned _nChannels;
-        double _maxFrequency;
+        int _freqRefChannel;                ///< Frequency reference channel
+        double _freqRef;                    ///< Reference frequency
+        double _freqDelta;                  ///< Frequency delta
         unsigned _polarisation;             ///< Selection polarisation (enumeration).
         bool _fullSky;                      ///< Image the full sky (overrides cellsize)
         bool _trimHemisphere;               ///< Cut the image to the full sky hemisphere

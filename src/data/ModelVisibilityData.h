@@ -1,18 +1,18 @@
-#ifndef MODELVISIBILITIES_H_
-#define MODELVISIBILITIES_H_
+#ifndef MODELVISIBILITYDATA_H_
+#define MODELVISIBILITYDATA_H_
 
 #include "data/VisibilityData.h"
 #include "data/Source.h"
 #include <vector>
 
 /**
- * @file ModelVisibilities.h
+ * @file ModelVisibilityData.h
  */
 
 namespace pelican {
 
 /**
- * @class ModelVisibilities
+ * @class ModelVisibilityData
  *
  * @brief
  * Container class to hold visibilities for a model sky positions.
@@ -21,16 +21,16 @@ namespace pelican {
  * Inherits the visibility data blob and adds information pertaining to the
  * list of sources (in RA and Dec) used to construct the visibility set.
  */
-class ModelVisibilities : public VisibilityData
+class ModelVisibilityData : public VisibilityData
 {
     public:
         /// Constructs and resizes model visibility data blob
-        ModelVisibilities(const unsigned nAntennas = 0,
+        ModelVisibilityData(const unsigned nAntennas = 0,
                 const unsigned nChannels = 0,
                 const unsigned nPolarisations = 0)
         : VisibilityData(nAntennas, nChannels, nPolarisations) {}
 
-        ~ModelVisibilities() {}
+        ~ModelVisibilityData() {}
 
     public:
         /// Returns vector of model sources.
@@ -46,4 +46,4 @@ class ModelVisibilities : public VisibilityData
 
 } // namespace pelican
 
-#endif /* MODELVISIBILITIES_H_ */
+#endif /* MODELVISIBILITYDATA_H_ */

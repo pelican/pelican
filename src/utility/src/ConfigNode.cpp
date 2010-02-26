@@ -17,15 +17,6 @@ ConfigNode::ConfigNode(const QDomElement& config)
 
 /**
  * @details
- * Destroys the configuration node.
- */
-ConfigNode::~ConfigNode()
-{
-}
-
-
-/**
- * @details
  * Gets the configuration for the given \p tagName and \p attribute.
  * If the \p tagName and/or \p attribute do not exist, \p defValue is returned.
  */

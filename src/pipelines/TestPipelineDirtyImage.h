@@ -14,6 +14,7 @@ namespace pelican {
 class DataBlob;
 class ZenithImagerDft;
 class ImageWriterFits;
+class ZenithModelVisibilities;
 
 /**
  * @class MyPipeline
@@ -38,6 +39,7 @@ class TestPipelineDirtyImage : public AbstractPipeline
 
     private:
         ZenithImagerDft* _imager;
+        ZenithModelVisibilities* _modelVis;
         ImageWriterFits* _fitsWriter;
 
 };

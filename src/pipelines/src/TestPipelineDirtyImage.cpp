@@ -1,6 +1,7 @@
 #include "TestPipelineDirtyImage.h"
 #include "modules/ZenithImagerDft.h"
 #include "modules/ImageWriterFits.h"
+#include "modules/ZenithModelVisibilities.h"
 #include <iostream>
 
 #include "utility/memCheck.h"
@@ -33,6 +34,7 @@ void TestPipelineDirtyImage::init()
     setName("TestPipelineDirtyImage");
     _imager = static_cast<ZenithImagerDft*>(createModule("ZenithImagerDft"));
     _fitsWriter = static_cast<ImageWriterFits*>(createModule("ImageWriterFits"));
+    _modelVis = static_cast<ZenithModelVisibilities*>(createModule("ZenithModelVisibilities"));
 }
 
 
@@ -42,6 +44,7 @@ void TestPipelineDirtyImage::init()
 void TestPipelineDirtyImage::run(QHash<QString, DataBlob*>& data)
 {
     std::cout << "TestPipelineDirtyImage::run()\n";
+    _modelVis->run(data);
     _imager->run(data);
     _fitsWriter->run(data);
     stop();

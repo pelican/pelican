@@ -222,6 +222,7 @@ void ImageWriterFits::_writeHeader()
         _writeKey("DATAMIN", _image->min(0, 0), "Minimum pixel value");
         _writeKey("DATAMAX", _image->max(0, 0), "Maximum pixel value");
     }
+
 //    _writeComment("DATAMEAN = " + QString::number(_image->mean(0, 0)));
 
     // x axis keywords
