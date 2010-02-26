@@ -21,7 +21,7 @@ namespace pelican {
  *
  * It is a typedef for AntennaMatrixData<complex_t>.
  */
-typedef AntennaMatrixData<complex_t> VisibilityData;
+class VisibilityData : public AntennaMatrixData<complex_t> {};
 
 } // namespace pelican
 
