@@ -12,10 +12,10 @@ namespace pelican {
 
 /**
  * @class AntennaPositions
- *  
+ *
  * @brief
- * Antenna positions container class.
- * 
+ * Container class to hold Antenna positions.
+ *
  * @details
  * This class holds antenna positions for a telescope.
  */

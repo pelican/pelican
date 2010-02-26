@@ -15,7 +15,7 @@ namespace pelican {
  *
  * @brief
  * Class to define antenna matrix data.
- * 
+ *
  * @details
  * This class defines how antenna matrix data is held. It inherits
  * the DataBlob base class, and is used by the VisibilityData,
@@ -83,7 +83,7 @@ template<typename T> class AntennaMatrixData : public DataBlob
         }
 
         /// Matrix data destructor.
-        ~AntennaMatrixData() {}
+        virtual ~AntennaMatrixData() {}
 
         /// Returns the antenna index associated with a row and column.
         /// This method returns the real antenna index in row and column \p i

@@ -306,15 +306,20 @@ void ZenithImagerDft::_fetchDataBlobs(QHash<QString, DataBlob*>& data)
     _antPos = static_cast<AntennaPositions*>(data["AntennaPositions"]);
     _image = static_cast<ImageData*>(data["ImageData"]);
 
-    if (!_vis) throw QString("ZenithImagerDft: VisibilityData blob missing");
-    if (!_antPos) throw QString("ZenithImagerDft: AntennaPositiosn blob missing");
-    if (!_image) throw QString("ZenithImagerDft: ImageData blob missing");
+    if (!_vis)
+        throw QString("ZenithImagerDft: VisibilityData blob missing.");
+    if (!_antPos)
+        throw QString("ZenithImagerDft: AntennaPositiosn blob missing.");
+    if (!_image)
+        throw QString("ZenithImagerDft: ImageData blob missing.");
 
-    if (_vis->nAntennas() == 0) throw QString("Empty data blob: VisibilityData");
-    if (_antPos->nAntennas() == 0) throw QString("Empty data blob: AntennaPositions");
+    if (_vis->nAntennas() == 0)
+        throw QString("Empty data blob: VisibilityData.");
+    if (_antPos->nAntennas() == 0)
+        throw QString("Empty data blob: AntennaPositions.");
 
     if (_vis->nAntennas() != _antPos->nAntennas())
-        throw QString("ZenithImagerDft: data blob dimension mismatch");
+        throw QString("ZenithImagerDft: data blob dimension mismatch.");
 }
 
 
