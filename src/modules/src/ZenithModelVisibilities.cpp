@@ -9,6 +9,7 @@
 #include <QString>
 #include <QStringList>
 #include <iostream>
+#include <cmath>
 
 #include "utility/memCheck.h"
 
@@ -112,15 +113,17 @@ void ZenithModelVisibilities::_calculateModelVis(complex_t* vis,
     std::vector<double> mCoord(nSources);
     double* l = &lCoord[0];
     double* m = &mCoord[0];
+
     // (unless stored as ra/dec)
     // coord1 = az
     // coord2 = el
     for (unsigned i = 0; i < nSources; i++) {
-        double cosEl = cos(sources[i].coord2() * math::deg2rad);
-        l[i] = -cosEl * sin(sources[i].coord2());
-        m[i] = cosEl * cos(sources[i].coord2());
-
-
+        double az = sources[i].coord1();
+        double el = sources[i].coord2();
+//        std::cout << "s[" << i << "] az = " << az << " el = " << el << std::endl;
+        double cosEl = cos(el * math::deg2rad);
+        l[i] = -cosEl * sin(az * math::deg2rad);
+        m[i] = cosEl * cos(az * math::deg2rad);
     }
 
     for (unsigned j = 0; j < nAnt; j++) {
@@ -138,6 +141,28 @@ void ZenithModelVisibilities::_calculateModelVis(complex_t* vis,
             }
         }
     }
+
+//    std::vector<complex_t> antSignal(nAnt);
+//    complex_t* signal = &antSignal[0];
+//    for (unsigned i = 0; i < nAnt; i++) {
+//        double argx = antX[i] * k;
+//        double argy = antY[i] * k;
+//        for (unsigned s = 0; s < nSources; s++) {
+//            double arg = argx * l[s] + argy * m[s];
+//            complex_t weight = complex_t(cos(arg), sin(arg));
+//            signal[i] += sqrt(sources[s].amp()) * weight;
+//        }
+//    }
+//
+//
+//    for (unsigned j = 0; j < nAnt; j++) {
+//        unsigned rowIndex = j * nAnt;
+//        complex_t sj = signal[j];
+//        for (unsigned i = 0; i < nAnt; i++) {
+//            vis[rowIndex + i] = sj * std::conj(signal[i]);
+//        }
+//    }
+
 }
 
 

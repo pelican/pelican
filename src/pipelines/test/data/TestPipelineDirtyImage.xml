@@ -25,9 +25,10 @@
 <modules>
     <ZenithModelVisibilities>
         <!-- source coord1 = az/ra coord2 = el/dec coordType="azel" or "j2000" -->
-        <source coord1="45.0" coord2="45.0" ampPolX="1" ampPolY="0.5" coordType="azel"/>
-        <source coord1="0.0" coord2="90.0" ampPolX="1" ampPolY="0.5" coordType="azel"/>
-        <source coord1="180.0" coord2="10.0" ampPolX="2" ampPolY="0.5" coordType="azel"/>
+        <source coord1="0.0" coord2="80.0" ampPolX="1" ampPolY="0.5" coordType="azel"/>
+        <source coord1="90.0" coord2="10.0" ampPolX="0.75" ampPolY="0.5" coordType="azel"/>
+        <source coord1="180.0" coord2="60.0" ampPolX="1" ampPolY="0.5" coordType="azel"/>
+        <source coord1="270.0" coord2="50.5" ampPolX="0.8" ampPolY="0.5" coordType="azel"/>
         <channels>182</channels>
         <frequencies reference="0.0" referenceChannel="0" delta="195312.5"/>
         <polarisation value="x"/>
@@ -35,13 +36,13 @@
     </ZenithModelVisibilities>
 
     <ZenithImagerDft>
-        <size l="256" m="256" pixelCentred="true"/>
+        <size l="512" m="512" pixelCentred="true"/>
         <fullSky value="true" cutHemisphere="true"/>
         <polarisation value="x"/>
         <pointSpreadFunction value="false"/>
         <channels>182</channels>
         <frequencies reference="0.0" referenceChannel="0" delta="195312.5"/>
-        <useModelVis value="false"/>
+        <useModelVis value="true"/>
     </ZenithImagerDft>
 
     <ImageWriterFits>
