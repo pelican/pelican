@@ -47,10 +47,13 @@ class ZenithModelVisibilities : public AbstractModule
         /// Extract data from the data hash.
         void _fetchDataBlobs(QHash<QString, DataBlob*>& data);
 
+        /// Extract configuration from the xml node. setting some defaults.
+        void _getConfiguration(const ConfigNode& config);
+
     private:
         enum { POL_X, POL_Y, POL_BOTH };
         ModelVisibilityData* _modelVis;
-        AntennaPositions *_antPos;
+        AntennaPositions* _antPos;
         std::vector<Source> _sourcesPolXX;
         std::vector<Source> _sourcesPolYY;
         std::vector<unsigned> _channels;
