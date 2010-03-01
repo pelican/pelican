@@ -1,5 +1,7 @@
 SUBPACKAGE(modules data utility)
 set( modules_src
+     src/AbstractAstrometry.cpp
+     src/AstrometryFast.cpp
      src/VisibilityPrinter.cpp
      src/BasicFlagger.cpp
      src/EmptyModule.cpp
