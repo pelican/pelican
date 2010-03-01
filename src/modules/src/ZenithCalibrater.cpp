@@ -1,4 +1,6 @@
 #include "modules/ZenithCalibrater.h"
+#include "data/DataBlob.h"
+#include "utility/ConfigNode.h"
 
 #include "utility/memCheck.h"
 
@@ -20,5 +22,26 @@ ZenithCalibrater::ZenithCalibrater(const ConfigNode& config)
 ZenithCalibrater::~ZenithCalibrater()
 {
 }
+
+
+/**
+ * @detail
+ */
+void ZenithCalibrater::run(QHash<QString, DataBlob*>& data)
+{
+
+}
+
+
+/**
+ * @detail
+ */
+void ZenithCalibrater::_getConfiguration(const ConfigNode& config)
+{
+    _nEigenvalues = config.getOption("eigenvalues", "number", "10").toUInt();
+    _tolerance = config.getOption("tolerance", "value", "1.0e-4").toDouble();
+
+}
+
 
 } // namespace pelican

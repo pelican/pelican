@@ -10,6 +10,7 @@
 #include <QStringList>
 #include <iostream>
 #include <cmath>
+#include "utility/pelicanTimer.h"
 
 #include "utility/memCheck.h"
 
@@ -30,39 +31,8 @@ ZenithModelVisibilities::ZenithModelVisibilities(const ConfigNode& config)
     _modelVis = NULL;
     _antPos = NULL;
 
-    // Read sources from the configuration node.
-    QDomNodeList sourceNodes = config.getDomElement().elementsByTagName("source");
-    for (int i = 0; i < sourceNodes.size(); i++) {
-        QDomElement sourceElement = sourceNodes.at(i).toElement();
-        double coord1 = sourceElement.attribute("coord1", "0.0").toDouble();
-        double coord2 = sourceElement.attribute("coord2", "0.0").toDouble();
-        double ampPolX = sourceElement.attribute("ampPolX", "0.0").toDouble();
-        double ampPolY = sourceElement.attribute("ampPolY", "0.0").toDouble();
-        QString coordType = sourceElement.attribute("coordType", "J2000").toLower();
-        unsigned iCoordType = Source::J2000;
-        if (coordType == "azel") iCoordType = Source::AZEL;
-        _sourcesPolXX.push_back(Source(coord1, coord2, ampPolX, iCoordType));
-        _sourcesPolYY.push_back(Source(coord1, coord2, ampPolY, iCoordType));
-    }
-
-    // Read visibility blob dimension information from the configuration mode
-    // (the number of antennas is extracted from the antenna position data)
-    // Get the channels to image.
-    QString chan = config.getOptionText("channels", "0");
-    QStringList chanList = chan.split(",", QString::SkipEmptyParts);
-    _channels.resize(chanList.size());
-    for (int c = 0; c < chanList.size(); c++) {
-        _channels[c] = chanList.at(c).toUInt();
-    }
-
-    _freqRefChannel = config.getOption("frequencies", "referenceChannel","0").toInt();
-    _freqRef = config.getOption("frequencies", "reference", "1.0e8").toDouble();
-    _freqDelta = config.getOption("frequencies", "delta", "1.0e8").toDouble();
-
-    QString pol = config.getOption("polarisation", "value", "x").toLower();
-    if (pol == "x") _polarisation = POL_X;
-    else if (pol == "y") _polarisation = POL_Y;
-    else if (pol == "both") _polarisation = POL_BOTH;
+    // Extract the configuration.
+    _getConfiguration(config);
 }
 
 /**
@@ -76,6 +46,7 @@ ZenithModelVisibilities::~ZenithModelVisibilities()
 
 /**
  * @details
+ *
  */
 void ZenithModelVisibilities::run(QHash<QString, DataBlob*>& data)
 {
@@ -87,15 +58,18 @@ void ZenithModelVisibilities::run(QHash<QString, DataBlob*>& data)
     unsigned nAnt = _antPos->nAntennas();
     unsigned channel = _channels[0];
     double frequency = _freqRef + (channel - _freqRefChannel) * _freqDelta;
-//    std::cout << "frequency (model) = " << frequency << std::endl;
 
-    if (_polarisation == POL_X || _polarisation == POL_BOTH) {
-        _calculateModelVis(vis, nAnt, _antPos->xPtr(), _antPos->yPtr(),
-                &_sourcesPolXX[0], _sourcesPolXX.size(), frequency);
-    }
-    if (_polarisation == POL_Y || _polarisation == POL_BOTH) {
-        _calculateModelVis(vis, nAnt, _antPos->xPtr(), _antPos->yPtr(),
-                &_sourcesPolYY[0], _sourcesPolYY.size(), frequency);
+    // TODO: loop over freq here
+    {
+        if (_polarisation == POL_X || _polarisation == POL_BOTH) {
+            _calculateModelVis(vis, nAnt, _antPos->xPtr(), _antPos->yPtr(),
+                    &_sources[0], _sources.size(), frequency, POL_X);
+        }
+
+        if (_polarisation == POL_Y || _polarisation == POL_BOTH) {
+            _calculateModelVis(vis, nAnt, _antPos->xPtr(), _antPos->yPtr(),
+                    &_sources[0], _sources.size(), frequency, POL_Y);
+        }
     }
 }
 
@@ -104,8 +78,9 @@ void ZenithModelVisibilities::run(QHash<QString, DataBlob*>& data)
  * @details
  */
 void ZenithModelVisibilities::_calculateModelVis(complex_t* vis,
-        const unsigned nAnt, real_t* antX, real_t* antY, Source* sources,
-        const unsigned nSources, const double frequency)
+        const unsigned nAnt, const real_t* antPosX, const real_t* antPosY,
+        const Source* sources, const unsigned nSources, const double frequency,
+        const pol_t polarisation)
 {
     double k = (math::twoPi * frequency) / phy::c;
 
@@ -114,55 +89,40 @@ void ZenithModelVisibilities::_calculateModelVis(complex_t* vis,
     double* l = &lCoord[0];
     double* m = &mCoord[0];
 
-    // (unless stored as ra/dec)
-    // coord1 = az
-    // coord2 = el
+    // Calculate l and m values for the sources
     for (unsigned i = 0; i < nSources; i++) {
+        // TODO: convert from RA, Dec if needed
         double az = sources[i].coord1();
         double el = sources[i].coord2();
-//        std::cout << "s[" << i << "] az = " << az << " el = " << el << std::endl;
         double cosEl = cos(el * math::deg2rad);
-        l[i] = -cosEl * sin(az * math::deg2rad);
+        l[i] = cosEl * sin(az * math::deg2rad);
         m[i] = cosEl * cos(az * math::deg2rad);
     }
 
-    for (unsigned j = 0; j < nAnt; j++) {
-        unsigned rowIndex = j * nAnt;
-        double xj = antX[j];
-        double yj = antY[j];
+    // Calculate antenna signals for each source
+    std::vector<complex_t> antSignal(nAnt * nSources);
+    complex_t* signal = &antSignal[0];
+
+    for (unsigned s = 0; s < nSources; s++) {
         for (unsigned i = 0; i < nAnt; i++) {
-            unsigned index = rowIndex + i;
-            double twoPiU = (xj - antX[i]) * k;
-            double twoPiV = (yj - antY[i]) * k;
-            for (unsigned s = 0; s < nSources; s++) {
-                double arg = twoPiU * l[s] + twoPiV * m[s];
-                complex_t weight = complex_t(cos(arg), sin(arg));
-                vis[index] += sources[s].amp() * weight;
-            }
+            double arg = (antPosX[i] * l[s] + antPosY[i] * m[s]) * k;
+            complex_t weight = complex_t(cos(arg), sin(arg));
+            double amp = (polarisation == POL_X) ?
+                    sources[s].amp1() : sources[s].amp2();
+            signal[s * nAnt + i] = sqrt(amp) * weight;
         }
     }
 
-//    std::vector<complex_t> antSignal(nAnt);
-//    complex_t* signal = &antSignal[0];
-//    for (unsigned i = 0; i < nAnt; i++) {
-//        double argx = antX[i] * k;
-//        double argy = antY[i] * k;
-//        for (unsigned s = 0; s < nSources; s++) {
-//            double arg = argx * l[s] + argy * m[s];
-//            complex_t weight = complex_t(cos(arg), sin(arg));
-//            signal[i] += sqrt(sources[s].amp()) * weight;
-//        }
-//    }
-//
-//
-//    for (unsigned j = 0; j < nAnt; j++) {
-//        unsigned rowIndex = j * nAnt;
-//        complex_t sj = signal[j];
-//        for (unsigned i = 0; i < nAnt; i++) {
-//            vis[rowIndex + i] = sj * std::conj(signal[i]);
-//        }
-//    }
-
+    // Cross correlate the antenna signals (per source)
+    for (unsigned s = 0; s < nSources; s++) {
+        for (unsigned j = 0; j < nAnt; j++) {
+            for (unsigned i = 0; i < nAnt; i++) {
+                complex_t signalJ = signal[s * nAnt + j];
+                complex_t signalI = signal[s * nAnt + i];
+                vis[j * nAnt + i] += signalJ * std::conj(signalI);
+            }
+        }
+    }
 }
 
 
@@ -192,8 +152,68 @@ void ZenithModelVisibilities::_fetchDataBlobs(QHash<QString, DataBlob*>& data)
     if (nPol == 0)
         throw QString("ZenithModelVisibilities: No polarisations selected");
 
-    // resize the model visibilities
+    // Resize the model visibilities
     _modelVis->resize(nAnt, nChannels, nPol);
+
+    // Insert the source list into the model visibilities
+    _modelVis->sources() = _sources;
+}
+
+
+/**
+ * @details
+ */
+void ZenithModelVisibilities::_getConfiguration(const ConfigNode& config)
+{
+    // Read sources from the configuration node.
+     QDomNodeList sourceNodes = config.getDomElement().elementsByTagName("source");
+     for (int i = 0; i < sourceNodes.size(); i++) {
+         QDomElement sourceElement = sourceNodes.at(i).toElement();
+
+         QString cType = sourceElement.attribute("coordType", "J2000").toLower();
+         Source::coord_t coordType;
+         if (cType == "j2000")
+             coordType = Source::J2000;
+         else if (cType == "azel")
+             coordType = Source::AZEL;
+         else
+             throw QString("ZenithModelVisibilities: Unknown source coordinate type.");
+
+         double coord1 = sourceElement.attribute("coord1", "0.0").toDouble();
+         double coord2 = sourceElement.attribute("coord2", "0.0").toDouble();
+
+         QString aType = sourceElement.attribute("ampType", "polxy").toLower();
+         Source::amp_t ampType;
+         if (aType == "polxy")
+             ampType = Source::POL_XY;
+         else
+             throw QString("ZenithModelVisibilities: Unknown source amplitude type.");
+
+         double ampPolX = sourceElement.attribute("amp1", "0.0").toDouble();
+         double ampPolY = sourceElement.attribute("amp2", "0.0").toDouble();
+
+         Source s(coordType, coord1, coord2, ampType, ampPolX, ampPolY);
+         _sources.push_back(s);
+     }
+
+     // Read visibility blob dimension information from the configuration mode
+     // (the number of antennas is extracted from the antenna position data)
+     // Get the channels to image.
+     QString chan = config.getOptionText("channels", "0");
+     QStringList chanList = chan.split(",", QString::SkipEmptyParts);
+     _channels.resize(chanList.size());
+     for (int c = 0; c < chanList.size(); c++) {
+         _channels[c] = chanList.at(c).toUInt();
+     }
+
+     _freqRefChannel = config.getOption("frequencies", "referenceChannel","0").toInt();
+     _freqRef = config.getOption("frequencies", "reference", "0.0").toDouble();
+     _freqDelta = config.getOption("frequencies", "delta", "195312.5").toDouble();
+
+     QString pol = config.getOption("polarisation", "value", "x").toLower();
+     if (pol == "x") _polarisation = POL_X;
+     else if (pol == "y") _polarisation = POL_Y;
+     else if (pol == "both") _polarisation = POL_BOTH;
 }
 
 } // namespace pelican
