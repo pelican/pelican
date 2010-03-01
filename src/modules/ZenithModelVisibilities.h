@@ -39,10 +39,13 @@ class ZenithModelVisibilities : public AbstractModule
         void run(QHash<QString, DataBlob*>& data);
 
     private:
+        typedef enum { POL_X, POL_Y, POL_BOTH } pol_t;
+
         /// Calculate model visibilties
         void _calculateModelVis(complex_t* vis, const unsigned nAnt,
-                real_t* antX, real_t* antY, Source* sources,
-                const unsigned nSources, const double frequency);
+                const real_t* antPosX, const real_t* antPosY,
+                const Source* sources, const unsigned nSources,
+                const double frequency, const pol_t polarisation);
 
         /// Extract data from the data hash.
         void _fetchDataBlobs(QHash<QString, DataBlob*>& data);
@@ -51,11 +54,9 @@ class ZenithModelVisibilities : public AbstractModule
         void _getConfiguration(const ConfigNode& config);
 
     private:
-        enum { POL_X, POL_Y, POL_BOTH };
         ModelVisibilityData* _modelVis;
         AntennaPositions* _antPos;
-        std::vector<Source> _sourcesPolXX;
-        std::vector<Source> _sourcesPolYY;
+        std::vector<Source> _sources;
         std::vector<unsigned> _channels;
         int _freqRefChannel;                ///< Frequency reference channel
         double _freqRef;                    ///< Reference frequency
