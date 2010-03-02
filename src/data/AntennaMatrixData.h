@@ -260,6 +260,10 @@ template<typename T> class AntennaMatrixData : public DataBlob
         /// This method may be deprecated in due course.
         std::vector<T>& data() { return _data; }
 
+        /// Returns a reference to the data vector (use with caution!).
+        /// This method may be deprecated in due course.
+        const std::vector<T>& data() const { return _data; }
+
         /// Dereferences the data for antennas (\p ai, \p aj),
         /// channel (\p c) and polarisation (\p p).
         /// The index \p ai is the row number, and the index \p aj is the

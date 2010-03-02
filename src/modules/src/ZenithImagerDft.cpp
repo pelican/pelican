@@ -543,12 +543,8 @@ void ZenithImagerDft::_setCellsizeFullSky()
  */
 void ZenithImagerDft::_zeroAutoCorrelations(complex_t* vis, const unsigned nAnt)
 {
-    for (unsigned j = 0; j < nAnt; j++) {
-        unsigned rowIndex = j * nAnt;
-        for (unsigned i = 0; i < nAnt; i++) {
-            unsigned index = rowIndex + i;
-            if (i == j) vis[index] = complex_t(0.0, 0.0);
-        }
+    for (unsigned i = 0; i < nAnt; i++) {
+        vis[i * nAnt + i] = complex_t(0.0, 0.0);
     }
 }
 

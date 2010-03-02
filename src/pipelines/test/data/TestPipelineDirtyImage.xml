@@ -22,7 +22,6 @@
     </AdapterLofarStationVisibilities>
 </adapters>
 
-
 <varsets>
     <myVarset>
         <frequencies reference="0.0" referenceChannel="0" delta="195312.5"/>
@@ -30,7 +29,6 @@
         <polarisation value="x"/>
     </myVarset>
 </varsets>
-
 
 <modules>
 
@@ -74,7 +72,6 @@
         <file name="test.fits" prefix="" suffix=""/>
 
         <!-- <cube value="true"/> -->
-
         <dateObs value=""/>
         <origin value="Oxford e-Research Centre"/>
         <telescope value="LOFAR"/>

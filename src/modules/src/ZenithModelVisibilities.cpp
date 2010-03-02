@@ -142,15 +142,13 @@ void ZenithModelVisibilities::_fetchDataBlobs(QHash<QString, DataBlob*>& data)
 
     // Grab the number of antennas from the antenna position data
     unsigned nAnt = _antPos->nAntennas();
-    unsigned nPol = _polarisation == POL_BOTH ? 2 : 1;
     unsigned nChannels = _channels.size();
+    unsigned nPol = _polarisation == POL_BOTH ? 2 : 1;
 
     if (nAnt == 0)
         throw QString("ZenithModelVisibilities: No antennas found");
     if (nChannels == 0)
         throw QString("ZenithModelVisibilities: No channels selected");
-    if (nPol == 0)
-        throw QString("ZenithModelVisibilities: No polarisations selected");
 
     // Resize the model visibilities
     _modelVis->resize(nAnt, nChannels, nPol);
