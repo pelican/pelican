@@ -8,7 +8,7 @@
 
 namespace pelican {
 
-class Data;
+class LockableData;
 
 /**
  * @class WritableData
@@ -25,14 +25,14 @@ class Data;
 class WritableData 
 {
     public:
-        WritableData(Data* d);
+        WritableData(LockableData* d);
         ~WritableData();
-        Data* data();
+        LockableData* data();
         /// returns true if there is a valid Data object
         bool isValid() const;
 
     private:
-        Data* _data;
+        LockableData* _data;
 };
 
 } // namespace pelican

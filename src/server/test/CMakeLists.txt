@@ -9,13 +9,11 @@ set(
 set(
    serverTest_src
    src/serverTest.cpp
-   src/DataTest.cpp
    src/DataManagerTest.cpp
    src/LockedDataTest.cpp
    src/SessionTest.cpp
    src/ServiceDataBufferTest.cpp
    src/StreamDataBufferTest.cpp
-   src/StreamDataTest.cpp
    src/WritableDataTest.cpp
 )
 

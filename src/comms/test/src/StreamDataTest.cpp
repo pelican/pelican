@@ -1,6 +1,6 @@
 #include "StreamDataTest.h"
 #include "StreamData.h"
-#include "LockedData.h"
+#include "Data.h"
 
 
 #include "utility/memCheck.h"
@@ -32,14 +32,14 @@ void StreamDataTest::test_isValid()
         // Use Case:
         // Stream Data invalid, no associated data
         // expect invalid
-        StreamData sd((void*)0,10);
+        StreamData sd("",(void*)0,10);
         CPPUNIT_ASSERT( ! sd.isValid() );
     }
     {
         // Use Case:
         // Stream Data valid, no associated data
         // expect valid
-        StreamData sd((void*)1000,10);
+        StreamData sd("",(void*)1000,10);
         CPPUNIT_ASSERT( sd.isValid() );
     }
     {
@@ -48,11 +48,11 @@ void StreamDataTest::test_isValid()
         // expect invalid
         Data d; 
         {
-            StreamData sd((void*)1000,10);
+            StreamData sd("",(void*)1000,10);
             CPPUNIT_ASSERT( ! d.isValid() );
             CPPUNIT_ASSERT( sd.isValid() );
-            LockedData ld("test", &d);
-            sd.addAssociatedData( ld );
+            Data ld("test", &d);
+            sd.addAssociatedData( &ld );
             CPPUNIT_ASSERT( ! sd.isValid() );
         }
     }

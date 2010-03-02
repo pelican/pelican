@@ -9,6 +9,7 @@
 
 namespace pelican {
 
+class LockableData;
 class Data;
 
 /**
@@ -26,7 +27,7 @@ class Data;
 class LockedData
 {
     public:
-        LockedData(const QString& name, Data* data = 0);
+        LockedData(const QString& name, LockableData* data = 0);
         ~LockedData();
         /// copy constructor also locks the data also
         LockedData(const LockedData& data);
@@ -35,19 +36,19 @@ class LockedData
         bool isValid() const;
 
         /// add a data object
-        void setData(Data*);
+        void setData(LockableData*);
 
         /// returns the size of the data
         size_t size() const;
 
         /// return the data object
-        Data* data() { return _data; };
+        LockableData* data() const;
 
         /// return the name of the data
         QString name() const { return _name; };
 
     private:
-        Data* _data;
+        LockableData* _data;
         QString _name;
 };
 

@@ -1,18 +1,20 @@
-#ifndef DATA_H
-#define DATA_H
+#ifndef LOCKABLEDATA_H
+#define LOCKABLEDATA_H
 
 #include <cstring>
 #include <QMutex>
 #include <QObject>
 
 /**
- * @file Data.h
+ * @file LockableData.h
  */
 
 namespace pelican {
 
+class Data;
+
 /**
- * @class Data
+ * @class LockableData
  *  
  * @brief
  *    Primary interface to access Chunks of data in the server
@@ -20,20 +22,27 @@ namespace pelican {
  *    This class takes care of locking etc.
  */
 
-class Data : public QObject
+class LockableData : public QObject
 {
 
     Q_OBJECT
 
     public:
-        Data(void* data=0, size_t size=0, QObject* parent=0);
-        ~Data();
+        LockableData(const QString& name="", void* data=0, size_t size=0, QObject* parent=0);
+        ~LockableData();
         /// return the size of the stored data
-        size_t size() const;
+        //size_t size() const;
         /// sets the size of the stored data
-        void setSize(size_t);
+        //void setSize(size_t);
+
         /// returns a pointer to the beginning of the memory block
-        void* operator*();
+        void* memoryLocation();
+
+        /// returns the Data object
+        Data* data() const;
+
+        /// returns true if there isany valid data in the object
+        bool isValid() const;
 
         /// returns true if there is an active lock on the data
         bool isLocked() const;
@@ -52,14 +61,11 @@ class Data : public QObject
         //  emits the unlockedWrite signal when count returns to 0
         void writeUnlock();
 
-        /// indicates if there is any usable data
-        bool isValid() const;
-
         /// return the data id 
-        QString id() const { return _id; };
+        QString id() const;
 
         /// sets the id 
-        void setId(const QString& id) { _id = id; }
+        void setId(const QString& id);
 
     signals:
         void unlocked();
@@ -69,15 +75,14 @@ class Data : public QObject
         QMutex _mutex;
 
     private:
-        Data(const Data&); // disallow the copy constructor
+        LockableData(const LockableData&); // disallow the copy constructor
 
     private:
-        QString _id;
-        void* _data;
-        size_t _size;
+        //QString _id;
+        Data* _data;
         int _lock;
         int _wlock;
 };
 
 } // namespace pelican
-#endif // DATA_H 
+#endif // LOCKABLEDATA_H 

@@ -2,7 +2,7 @@
 #include "ServiceDataBuffer.h"
 #include "LockedData.h"
 #include "WritableData.h"
-#include "Data.h"
+#include "LockableData.h"
 #include <stdlib.h>
 
 
@@ -12,8 +12,8 @@ namespace pelican {
 
 
 // class ServiceDataBuffer 
-ServiceDataBuffer::ServiceDataBuffer()
-    : DataBuffer()
+ServiceDataBuffer::ServiceDataBuffer(const QString& type)
+    : DataBuffer(type)
 {
     _current = "";
     _newData = 0;
@@ -26,7 +26,7 @@ ServiceDataBuffer::ServiceDataBuffer()
 ServiceDataBuffer::~ServiceDataBuffer()
 {
     delete _newData;
-    foreach(Data* data, _data )
+    foreach(LockableData* data, _data )
     {
         delete data;
     }
@@ -62,7 +62,7 @@ WritableData ServiceDataBuffer::getWritable(size_t size)
             void* d = malloc(size);
             if( d ) {
                 _space -= size;
-                _newData = new Data(d, size);
+                _newData = new LockableData(_type,d, size);
                 Q_ASSERT(connect( _newData, SIGNAL(unlockedWrite()), this, SLOT(activateData() ) ));
                 return WritableData( _newData );
             }
@@ -73,10 +73,10 @@ WritableData ServiceDataBuffer::getWritable(size_t size)
 
 void ServiceDataBuffer::activateData()
 {
-    activateData( static_cast<Data*>( sender() ) );
+    activateData( static_cast<LockableData*>( sender() ) );
 }
 
-void ServiceDataBuffer::activateData(Data* data)
+void ServiceDataBuffer::activateData(LockableData* data)
 {
     QMutexLocker lock(&_mutex);
     if( data->isValid() )

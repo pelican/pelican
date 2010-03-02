@@ -4,6 +4,7 @@
 #include <QByteArray>
 #include <QString>
 class QCoreApplication;
+class QBuffer;
 //class QDataStream;
 #include <cppunit/extensions/HelperMacros.h>
 
@@ -54,13 +55,14 @@ class SessionTest : public CppUnit::TestFixture
         ~SessionTest();
 
     protected:
-        QString _injectData(DataBuffer* stream, const QString id = QString("") );
+        QString _injectData(DataBuffer* stream, const QString& id = QString("") );
 
     private:
         QCoreApplication* _app;
         QDataStream* _out;
         Session* _session;
         QByteArray* _block;
+        QBuffer* _device;
         TestProtocol* _proto;
         DataManager* _data;
 };

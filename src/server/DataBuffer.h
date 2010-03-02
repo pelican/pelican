@@ -2,7 +2,7 @@
 #define DATABUFFER_H
 #include <QObject>
 #include <QMutex>
-
+#include <QString>
 
 /**
  * @file DataBuffer.h
@@ -26,13 +26,14 @@ class DataBuffer : public QObject
     Q_OBJECT
 
     public:
-        DataBuffer(QObject* parent=0);
+        DataBuffer(const QString& type, QObject* parent=0);
         ~DataBuffer();
-        
+
         virtual WritableData getWritable(size_t size) = 0;
 
     protected:
         QMutex _mutex;
+        QString _type;
 
     private:
 };

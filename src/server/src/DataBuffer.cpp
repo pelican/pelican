@@ -7,8 +7,8 @@ namespace pelican {
 
 
 // class DataBuffer 
-DataBuffer::DataBuffer(QObject* parent)
-    : QObject(parent)
+DataBuffer::DataBuffer(const QString& type, QObject* parent)
+    : QObject(parent), _type(type)
 {
 }
 

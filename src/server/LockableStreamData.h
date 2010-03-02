@@ -1,12 +1,12 @@
-#ifndef STREAMDATA_H
-#define STREAMDATA_H
+#ifndef LOCKABLESTREAMDATA_H
+#define LOCKABLESTREAMDATA_H
 
 #include <QSet>
 #include <QString>
-#include "Data.h"
+#include "LockableData.h"
 
 /**
- * @file StreamData.h
+ * @file LockableStreamData.h
  */
 
 namespace pelican {
@@ -14,25 +14,23 @@ namespace pelican {
 class LockedData;
 
 /**
- * @class StreamData
+ * @class LockableStreamData
  *  
  * @brief
- *     Contains Pointers to Chunked Stream and a manifest of associated data
+ *     Contains Pointers to Chunked LockableStream and a manifest of associated data
  * @details
  *     As well as a pointer to and the size of the data this class
  *     also contains linking information to the service data
  */
 
-class StreamData : public Data
+class LockableStreamData : public LockableData
 {
-    Q_OBJECT
-
     public:
         typedef QList<LockedData> DataList_t;
 
     public:
-        StreamData(void* = 0, size_t  = 0);
-        ~StreamData();
+        LockableStreamData(const QString& name, void* = 0, size_t  = 0);
+        ~LockableStreamData();
         void reset();
 
         /// test validity of all data
@@ -41,15 +39,15 @@ class StreamData : public Data
         /// test validity of data only taking into account the named associates
         bool isValid(const QSet<QString>&) const;
 
-        /// associates a specific dataset with this StreamData chunk
+        /// associates a specific dataset with this LockableStreamData chunk
         void addAssociatedData(const LockedData&);
 
-        /// returns the datasets associated with this StreamData chunk
+        /// returns the datasets associated with this LockableStreamData chunk
         const DataList_t& associateData() const;
         const QSet<QString>& associateDataTypes() const;
 
     private:
-        StreamData(const StreamData&);
+        LockableStreamData(const LockableStreamData&);
 
     private:
         DataList_t _serviceData;
@@ -57,4 +55,4 @@ class StreamData : public Data
 };
 
 } // namespace pelican
-#endif // STREAMDATA_H 
+#endif // LOCKABLESTREAMDATA_H 

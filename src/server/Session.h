@@ -35,7 +35,7 @@ class Session : public QThread
         Session(int socketDescriptor, AbstractProtocol* proto, DataManager* data, QObject* parent=0 );
         ~Session();
         void run();
-        void processRequest(const ServerRequest&, QByteArray& );
+        void processRequest(const ServerRequest&, QIODevice& );
 
     protected:
         QList<LockedData> processStreamDataRequest(const StreamDataRequest& req );

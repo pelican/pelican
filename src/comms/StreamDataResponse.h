@@ -1,8 +1,8 @@
 #ifndef STREAMDATARESPONSE_H
 #define STREAMDATARESPONSE_H
 
-
 #include "ServerResponse.h"
+#include "StreamData.h"
 
 /**
  * @file StreamDataResponse.h
@@ -24,8 +24,10 @@ class StreamDataResponse : public ServerResponse
     public:
         StreamDataResponse();
         ~StreamDataResponse();
+        pelican::StreamData* streamData();
 
     private:
+        pelican::StreamData* _data;
 };
 
 } // namespace pelican

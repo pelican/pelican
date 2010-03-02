@@ -2,6 +2,8 @@ SUBPACKAGE(commsTest comms)
 set(
    commsTest_src
    src/commsTest.cpp
+   src/DataTest.cpp
+   src/StreamDataTest.cpp
    src/PelicanProtocolTest.cpp
 )
 add_executable(commsTest ${commsTest_src} )

@@ -11,7 +11,7 @@
 
 namespace pelican {
 
-class Data;
+class LockableData;
 class LockedData;
 
 /**
@@ -33,7 +33,7 @@ class ServiceDataBuffer : public DataBuffer
     Q_OBJECT
 
     public:
-        ServiceDataBuffer(  );
+        ServiceDataBuffer(const QString& type);
         ~ServiceDataBuffer();
         /// return a specific version of the data
         //  if this data is unavailable then return an invalid
@@ -54,11 +54,11 @@ class ServiceDataBuffer : public DataBuffer
         void activateData();
 
     protected:
-        void activateData(Data*);
+        void activateData(LockableData*);
 
     private:
-        QHash<QString,Data*> _data;
-        Data* _newData; // temporary store until activated
+        QHash<QString,LockableData*> _data;
+        LockableData* _newData; // temporary store until activated
         QString _current;
         size_t _max;
         size_t _maxChunkSize;

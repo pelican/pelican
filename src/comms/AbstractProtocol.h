@@ -3,7 +3,7 @@
 #include <boost/shared_ptr.hpp>
 #include <QMap>
 class QString;
-class QByteArray;
+class QIODevice;
 class QTcpSocket;
 
 /**
@@ -44,16 +44,16 @@ class AbstractProtocol
         virtual boost::shared_ptr<ServerRequest> request(QTcpSocket& socket) = 0;
 
         /// write StreamData to an outgoing datastream
-        virtual void send(QByteArray& stream, const StreamData_t& ) = 0;
+        virtual void send(QIODevice& stream, const StreamData_t& ) = 0;
 
         /// write Servicedata to an outgoing datastream
-        virtual void send(QByteArray& stream, const ServiceData_t& ) = 0;
+        virtual void send(QIODevice& stream, const ServiceData_t& ) = 0;
 
         /// write a non-error message to an outgoing datastream
-        virtual void send( QByteArray& stream, const QString& message ) = 0;
+        virtual void send( QIODevice& stream, const QString& message ) = 0;
 
         /// send an error to an outgoing datastream
-        virtual void sendError(QByteArray& stream, const QString&) = 0;
+        virtual void sendError(QIODevice& stream, const QString&) = 0;
 
     private:
 };
