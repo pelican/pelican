@@ -5,7 +5,7 @@
 #include "AcknowledgementRequest.h"
 #include "ServiceDataRequest.h"
 #include "StreamDataRequest.h"
-#include "server/StreamData.h"
+#include "StreamData.h"
 #include "data/DataRequirements.h"
 #include "utility/SocketTester.h"
 
@@ -64,6 +64,7 @@ void PelicanProtocolTest::test_sendStreamData()
 
 void PelicanProtocolTest::test_request()
 {
+    // Request Processing tests
     {
         // Use Case:
         // An Acknowledgement Request

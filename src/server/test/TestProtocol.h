@@ -3,7 +3,7 @@
 #include <QString>
 
 #include "comms/AbstractProtocol.h"
-#include <QByteArray>
+#include <QIODevice>
 
 /**
  * @file TestProtocol.h
@@ -28,10 +28,10 @@ class TestProtocol : public AbstractProtocol
         TestProtocol(const QString& id);
         ~TestProtocol();
         virtual boost::shared_ptr<ServerRequest> request(QTcpSocket& socket);
-        virtual void send( QByteArray& stream, const AbstractProtocol::StreamData_t& );
-        virtual void send( QByteArray& stream, const AbstractProtocol::ServiceData_t& );
-        virtual void send( QByteArray& stream, const QString& message );
-        virtual void sendError( QByteArray& stream, const QString&);
+        virtual void send( QIODevice& stream, const AbstractProtocol::StreamData_t& );
+        virtual void send( QIODevice& stream, const AbstractProtocol::ServiceData_t& );
+        virtual void send( QIODevice& stream, const QString& message );
+        virtual void sendError( QIODevice& stream, const QString&);
 
         QByteArray& lastBlock();
 

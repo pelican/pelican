@@ -23,33 +23,35 @@ QByteArray& TestProtocol::lastBlock()
 
 boost::shared_ptr<ServerRequest> TestProtocol::request(QTcpSocket& socket)
 {
-    QStringList tokens;
-    tokens.append(_id);
+    _last.clear();
     return boost::shared_ptr<ServerRequest>(new ServerRequest(ServerRequest::Acknowledge));
 }
 
-void TestProtocol::send( QByteArray& stream, const QString& message)
+void TestProtocol::send( QIODevice& stream, const QString& message)
 {
-    stream.append(msg);
-    stream.append(message);
-    _last = stream;
+    _last.clear();
+    _last.append(message);
+    stream.write(_last);
 }
 
-void TestProtocol::send( QByteArray& stream, const AbstractProtocol::StreamData_t& )
+void TestProtocol::send( QIODevice& stream, const AbstractProtocol::StreamData_t& )
 {
-    _last = stream;
+    _last.clear();
+    stream.write(_last);
 }
 
-void TestProtocol::send( QByteArray& stream, const AbstractProtocol::ServiceData_t& )
+void TestProtocol::send( QIODevice& stream, const AbstractProtocol::ServiceData_t& )
 {
-    _last = stream;
+    _last.clear();
+    stream.write(_last);
 }
 
-void TestProtocol::sendError( QByteArray& stream, const QString& msg)
+void TestProtocol::sendError( QIODevice& stream, const QString& msg)
 {
-    stream.append(error);
-    stream.append(msg);
-    _last = stream;
+    _last.clear();
+    _last.append(error);
+    _last.append(msg);
+    stream.write(_last);
 }
 
 } // namespace pelican

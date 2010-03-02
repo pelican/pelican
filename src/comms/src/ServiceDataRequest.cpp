@@ -26,9 +26,14 @@ QList<QString> ServiceDataRequest::types() const
     return _dataRequested.keys();
 }
 
-QString ServiceDataRequest::version(const QString& version) const
+QString ServiceDataRequest::version(const QString& type) const
 {
-    return _dataRequested.value(version);
+    return _dataRequested.value(type);
+}
+
+bool ServiceDataRequest::isEmpty() const
+{
+    return _dataRequested.isEmpty();
 }
 
 bool ServiceDataRequest::operator==(const ServiceDataRequest& req) const

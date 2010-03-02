@@ -1,7 +1,8 @@
 #include "DataManager.h"
 
-#include "Data.h"
-#include "StreamData.h"
+#include "LockableData.h"
+#include "LockableStreamData.h"
+#include "comms/StreamData.h"
 #include "WritableData.h"
 #include "utility/memCheck.h"
 
@@ -52,7 +53,7 @@ LockedData DataManager::getNext(const QString& type, const QSet<QString>& associ
     LockedData d = getNext(type);
     if( d.isValid() ) {
         // check it contains valid associateData
-        StreamData* sd = static_cast<StreamData*>(d.data());
+        LockableStreamData* sd = static_cast<LockableStreamData*>(d.data());
         QSet<QString> tst = sd->associateDataTypes();
         if(! ( associateData - tst ).isEmpty() ) {
             return LockedData(0);
@@ -79,7 +80,7 @@ LockedData DataManager::getServiceData(const QString& type, const QString& versi
     return ld;
 }
 
-void DataManager::associateServiceData(StreamData* data)
+void DataManager::associateServiceData(LockableStreamData* data)
 {
     QHashIterator<QString, ServiceDataBuffer*> i(_service);
     while (i.hasNext()) {

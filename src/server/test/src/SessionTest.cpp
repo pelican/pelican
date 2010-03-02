@@ -1,13 +1,15 @@
 #include "SessionTest.h"
+#include <QBuffer>
 #include <QByteArray>
 #include <QDataStream>
 #include <QCoreApplication>
 #include "Session.h"
 #include "DataManager.h"
-#include "StreamData.h"
+#include "LockableStreamData.h"
 #include "WritableData.h"
 #include "StreamDataBuffer.h"
 #include "data/DataRequirements.h"
+#include "comms/Data.h"
 #include "comms/ServerRequest.h"
 #include "comms/ServiceDataRequest.h"
 #include "comms/StreamDataRequest.h"
@@ -36,10 +38,12 @@ SessionTest::~SessionTest()
 void SessionTest::setUp()
 {
     QString id = "1";
+    _data=0, _session=0, _block=0, _device=0;
     _proto = new TestProtocol(id);
     _data = new DataManager;
     _session = new Session(0, _proto, _data);
     _block = new QByteArray;
+    _device = new QBuffer(_block);
 }
 
 void SessionTest::tearDown()
@@ -48,6 +52,7 @@ void SessionTest::tearDown()
     delete _proto;
     delete _session;
     delete _block;
+    delete _device;
 }
 
 void SessionTest::test_processRequest()
@@ -59,8 +64,8 @@ void SessionTest::test_processRequest()
         ServerRequest request(ServerRequest::Acknowledge);
 
         CPPUNIT_ASSERT_EQUAL( 0, _block->size() );
-        _session->processRequest(request, *_block);
-        CPPUNIT_ASSERT( *_block == _proto->lastBlock() );
+        _session->processRequest(request, *_device);
+        CPPUNIT_ASSERT( "ACK" ==  _proto->lastBlock() );
     }
 }
 
@@ -78,7 +83,7 @@ void SessionTest::test_serviceData()
         out.setVersion(QDataStream::Qt_4_0);
 
         ServiceDataRequest request;
-        _session->processRequest(request, *_block);
+        _session->processRequest(request, *_device);
     }
 }
 
@@ -95,11 +100,11 @@ void SessionTest::test_processServiceDataRequest()
     QString badversion("badv");
     QString badtype("bad");
     QString type1("type1");
-    ServiceDataBuffer servicebuffer1;
+    ServiceDataBuffer servicebuffer1("test");
     _data->serviceDataBuffer( type1, &servicebuffer1 );
     QString version1 = _injectData(&servicebuffer1, "version1");
     QString type2("type2");
-    ServiceDataBuffer servicebuffer2;
+    ServiceDataBuffer servicebuffer2("test");
     _data->serviceDataBuffer( type2, &servicebuffer2 );
     QString version2 = _injectData(&servicebuffer2, "version2");
     {
@@ -146,7 +151,7 @@ void SessionTest::test_streamData()
     }
     // Set up stream data for remaining tests
     QString stream1("Stream1");
-    StreamDataBuffer streambuffer;
+    StreamDataBuffer streambuffer("test");
     _data->streamDataBuffer( stream1, &streambuffer );
     {
         // Use Case:
@@ -188,7 +193,7 @@ void SessionTest::test_streamData()
     }
     // Set up service data stream for remaining tests
     QString service1("service1");
-    ServiceDataBuffer servicebuffer;
+    ServiceDataBuffer servicebuffer("test");
     _data->serviceDataBuffer( service1, &servicebuffer );
     {
         // Use Case:
@@ -223,7 +228,7 @@ void SessionTest::test_streamData()
     }
 }
 
-QString SessionTest::_injectData(DataBuffer* buffer, const QString id)
+QString SessionTest::_injectData(DataBuffer* buffer, const QString& id)
 {
     {
         WritableData d = buffer->getWritable(10);

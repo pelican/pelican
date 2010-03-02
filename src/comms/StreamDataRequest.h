@@ -35,6 +35,7 @@ class StreamDataRequest : public ServerRequest
         //  The first added option will be serviced if available
         //  otherwise the server will try to satisfy subsequent options
         void addDataOption(const DataRequirements& data);
+        void addDataOption(const QList<DataRequirements>& data);
 
         /// begin
         //  returns an iterator for the DataRequirements options

@@ -16,4 +16,15 @@ ServiceDataResponse::~ServiceDataResponse()
 {
 }
 
+const QList<QString>& ServiceDataResponse::types() const
+{
+    return _dataTypes;
+}
+
+long ServiceDataResponse::size(const QString& type) const
+{
+    return _sizes[type];
+}
+
+
 } // namespace pelican

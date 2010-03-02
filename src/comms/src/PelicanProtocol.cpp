@@ -1,11 +1,16 @@
 #include <QTcpSocket>
+#include <QByteArray>
 #include <QStringList>
 #include <QString>
+#include <QMapIterator>
+#include "Data.h"
 #include "PelicanProtocol.h"
 #include "ServerRequest.h"
+#include "ServerResponse.h"
 #include "AcknowledgementRequest.h"
 #include "ServiceDataRequest.h"
 #include "StreamDataRequest.h"
+#include "StreamData.h"
 #include "data/DataRequirements.h"
 #include "utility/memCheck.h"
 
@@ -82,32 +87,92 @@ boost::shared_ptr<ServerRequest> PelicanProtocol::request(QTcpSocket& socket)
     return boost::shared_ptr<ServerRequest>(new ServerRequest(ServerRequest::Error, "Unknown type Passed"));
 }
 
-void PelicanProtocol::send(QByteArray& stream, const AbstractProtocol::StreamData_t& ) 
+void PelicanProtocol::send(QIODevice& stream, const AbstractProtocol::StreamData_t& data ) 
 {
+    // construct the stream data header
+    // first integer is the number of Stream Data sets
+    // for each Stream Data set there is a name tag, version tag, and size integer
+    // following integer is the number of Service Data sets associated with the stream data
+    // for each Service Data set there is a name tag and version tag
+    // finally the binary data for the Stream itself is sent
+    QByteArray array;
+    QDataStream out(&array, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_4_0);
+    out << ServerResponse::StreamData;
+    out << data.size();
+    QMapIterator<QString, StreamData*> i(data);
+    // stream header info
+    while (i.hasNext()) {
+        i.next();
+        out << i.key() << (i.value())->id() << (quint64)(i.value())->size();
+        // service data info
+        out << (quint64) i.value()->associateData().size();
+        foreach(const Data* dat, i.value()->associateData())
+        {
+            out << dat->name() << dat->id();
+        }
+    }
+    stream.write(array);
+    // actual stream data
+    i.toFront();
+    while (i.hasNext())
+    {
+        i.next();
+        stream.write( (const char*)i.value()->operator*(), i.value()->size() );
+    }
 }
 
-void PelicanProtocol::send(QByteArray& stream, const AbstractProtocol::ServiceData_t& ) 
+void PelicanProtocol::send(QIODevice& stream, const AbstractProtocol::ServiceData_t& data ) 
 {
+    // construct the service data header
+    // first integer is the number of Service Data sets
+    // for each set there is a name tag, a version tag and size of data
+    // followed by the binary data itself
+    QByteArray array;
+    QDataStream out(&array, QIODevice::WriteOnly);
+    // header data
+    out.setVersion(QDataStream::Qt_4_0);
+    out << ServerResponse::ServiceData;
+    out << data.size();
+
+    QMapIterator<QString, Data*> i(data);
+    while (i.hasNext()) {
+        i.next();
+        out << i.key() << i.value()->id() << (quint64)i.value()->size();
+    }
+    stream.write(array);
+
+    // binary data
+    i.toFront();
+    while (i.hasNext())
+    {
+        i.next();
+        stream.write( (const char*)i.value()->operator*(), (quint64)i.value()->size() );
+    }
 }
 
-void PelicanProtocol::send(QByteArray& stream, const QString& msg )
+void PelicanProtocol::send(QIODevice& stream, const QString& msg )
 {
-    QDataStream out(&stream, QIODevice::WriteOnly);
+    QByteArray array;
+    QDataStream out(&array, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_4_0);
+    out << (quint16)0;
+    out << msg;
+    out.device()->seek(0);
+    out << (quint16)(array.size() - sizeof(quint16));
+    stream.write(array);
+}
+
+void PelicanProtocol::sendError(QIODevice& stream, const QString& msg)
+{
+    QByteArray array;
+    QDataStream out(&array, QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_4_0);
     out << (quint16)0;
     out << msg;
     out.device()->seek(0);
     out << (quint16)(stream.size() - sizeof(quint16));
-}
-
-void PelicanProtocol::sendError(QByteArray& stream, const QString& msg)
-{
-    QDataStream out(&stream, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_0);
-    out << (quint16)0;
-    out << msg;
-    out.device()->seek(0);
-    out << (quint16)(stream.size() - sizeof(quint16));
+    stream.write(array);
 }
 
 } // namespace pelican

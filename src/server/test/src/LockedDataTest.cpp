@@ -1,7 +1,7 @@
 #include "LockedDataTest.h"
 #include "LockedData.h"
-#include "Data.h"
-#include "StreamData.h"
+#include "LockableData.h"
+#include "LockableStreamData.h"
 
 
 #include "utility/memCheck.h"
@@ -40,7 +40,7 @@ void LockedDataTest::test_isValid()
         //Use Case:
         // contains a single data object which is invalid
         // Expect invalid
-        Data d;
+        LockableData d;
         LockedData ld("test",&d);
         CPPUNIT_ASSERT( ! d.isValid() );
         CPPUNIT_ASSERT( ! ld.isValid() );
@@ -53,7 +53,7 @@ void LockedDataTest::test_lock()
         // Use Case:
         // A valid lockeddata object is copied
         // Expect no unlock until last object is destroyed
-        Data d((void*)1000,100);
+        LockableData d("",(void*)1000,100);
         CPPUNIT_ASSERT( d.isValid() ); // sanity check
         CPPUNIT_ASSERT( ! d.isLocked() );
         {
@@ -73,7 +73,7 @@ void LockedDataTest::test_lock()
         // Use Case:
         // An invalid lockeddata object is copied
         // Expect no unlock until last object is destroyed
-        Data d((void*)0,100);
+        LockableData d("",(void*)0,100);
         CPPUNIT_ASSERT( ! d.isValid() ); // sanity check
         CPPUNIT_ASSERT( ! d.isLocked() );
         {
@@ -94,7 +94,7 @@ void LockedDataTest::test_lock()
         // A valid lockeddata object is copied but the lockeddata
         // are destroyed in the reverse order in which they are created
         // Expect no unlock until last object is destroyed
-        Data d((void*)1000,100);
+        LockableData d("",(void*)1000,100);
         CPPUNIT_ASSERT( d.isValid() ); // sanity check
         CPPUNIT_ASSERT( ! d.isLocked() );
         {
@@ -115,7 +115,7 @@ void LockedDataTest::test_lock()
         // are destroyed in the reverse order in which they are created
         // The data object is a derived type
         // Expect no unlock until last object is destroyed
-        StreamData d((void*)0,100);
+        LockableStreamData d("",(void*)0,100);
         CPPUNIT_ASSERT( ! d.isValid() ); // sanity check
         CPPUNIT_ASSERT( ! d.isLocked() );
         {
@@ -145,7 +145,7 @@ void LockedDataTest::test_size()
         //Use Case:
         // contains invalid data object
         // expect size = 0
-        Data d((void*)0,100);
+        LockableData d("",(void*)0,100);
         LockedData ld("test",&d);
         CPPUNIT_ASSERT_EQUAL( (size_t)0, ld.size());
     }
@@ -153,7 +153,7 @@ void LockedDataTest::test_size()
         //Use Case:
         // contains valid data object
         // expect size = size of data
-        Data d((void*)1000,100);
+        LockableData d("",(void*)1000,100);
         LockedData ld("test",&d);
         CPPUNIT_ASSERT_EQUAL( (size_t)100, ld.size());
     }

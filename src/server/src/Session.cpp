@@ -2,7 +2,8 @@
 #include "comms/AbstractProtocol.h"
 #include "DataManager.h"
 #include "LockedData.h"
-#include "StreamData.h"
+#include "LockableStreamData.h"
+#include "comms/StreamData.h"
 #include "comms/ServerRequest.h"
 #include "comms/StreamDataRequest.h"
 #include "comms/ServiceDataRequest.h"
@@ -36,9 +37,7 @@ void Session::run()
 
     boost::shared_ptr<ServerRequest> req = _proto->request(socket);
 
-    QByteArray block;
-    processRequest(*req, block);
-    socket.write(block); 
+    processRequest(*req, socket);
     socket.disconnectFromHost();
     socket.waitForDisconnected();
 }
@@ -48,11 +47,11 @@ void Session::run()
  * this routine processes a general ServerRequest, calling the appropriate
  * working and then passes this on to the protocol to be returned to the client
  */
-void Session::processRequest(const ServerRequest& req, QByteArray& out)
+void Session::processRequest(const ServerRequest& req, QIODevice& out)
 {
     try {
         switch(req.type()) {
-            case ServerRequest::DataSupport:
+            case ServerRequest::Acknowledge:
                 _proto->send(out,"ACK");
                 break;
             case ServerRequest::StreamData:
@@ -61,7 +60,7 @@ void Session::processRequest(const ServerRequest& req, QByteArray& out)
                     if( d.size() ) {
                         AbstractProtocol::StreamData_t data;
                         foreach( LockedData ld, d) {
-                            data.insert(ld.name(), static_cast<StreamData*>(ld.data()));
+                            data.insert(ld.name(), static_cast<StreamData*>(ld.data()->data()));
                         }
                         _proto->send( out, data );
                     }
@@ -73,7 +72,7 @@ void Session::processRequest(const ServerRequest& req, QByteArray& out)
                     if( d.size() ) {
                         AbstractProtocol::ServiceData_t data;
                         foreach( LockedData ld, d) {
-                            data.insert(ld.name(), ld.data());
+                            data.insert(ld.name(), ld.data()->data());
                         }
                         _proto->send( out, data );
                     }
