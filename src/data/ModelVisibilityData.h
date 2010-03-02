@@ -39,12 +39,8 @@ class ModelVisibilityData : public VisibilityData
         /// Returns vector of model sources.
         const std::vector<Source>& sources() const { return _sources; }
 
-        /// Returns the state of the noise flag
-        const bool hasApplied() { return _noiseApplied; }
-
     private:
         std::vector<Source> _sources;
-        bool _noiseApplied;
 
 };
 

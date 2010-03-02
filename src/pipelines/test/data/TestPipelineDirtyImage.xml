@@ -22,7 +22,6 @@
     </AdapterLofarStationVisibilities>
 </adapters>
 
-
 <varsets>
     <myVarset>
         <frequencies reference="0.0" referenceChannel="0" delta="195312.5"/>
@@ -30,7 +29,6 @@
         <polarisation value="x"/>
     </myVarset>
 </varsets>
-
 
 <modules>
 
@@ -74,7 +72,11 @@
         <file name="test.fits" prefix="" suffix=""/>
 
         <!-- <cube value="true"/> -->
+<<<<<<< HEAD:src/pipelines/test/data/TestPipelineDirtyImage.xml
 
+=======
+        <dateObs value=""/>
+>>>>>>> 22b15cf226737b12805a65e86ff16296728050b0:src/pipelines/test/data/TestPipelineDirtyImage.xml
         <origin value="Oxford e-Research Centre"/>
         <telescope value="LOFAR"/>
         <instrument value="Effelsberg"/>

@@ -42,6 +42,15 @@ class ZenithCalibrater : public AbstractModule
     private:
         enum pol_t { POL_X, POL_Y, POL_BOTH };
 
+        /// Calibration loop.
+        void _calibrate(complex_t* visTemp);
+
+        /// Zero diagonals of matrix
+        void _zeroDiagonals(complex_t* matrix, const unsigned size);
+
+        /// Extract and check data blobs from the data hash
+        void _fetchDataBlobs(QHash<QString, DataBlob*>& data);
+
         /// Grab configuration options from the config node
         void _getConfiguration(const ConfigNode& config);
 
@@ -58,7 +67,6 @@ class ZenithCalibrater : public AbstractModule
         double _freqRef;                    ///< Reference frequency
         double _freqDelta;                  ///< Frequency delta
         pol_t _polarisation;
-
 };
 
 } // namespace pelican
