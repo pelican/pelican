@@ -75,7 +75,6 @@
 
         <!-- <cube value="true"/> -->
 
-        <dateObs value=""/>
         <origin value="Oxford e-Research Centre"/>
         <telescope value="LOFAR"/>
         <instrument value="Effelsberg"/>
