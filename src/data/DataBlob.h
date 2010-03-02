@@ -1,6 +1,7 @@
 #ifndef DATABLOB_H
 #define DATABLOB_H
 
+#include <QString>
 #include <complex>
 
 /**
@@ -33,6 +34,7 @@ class DataBlob
         /// date (MJD). Note that MJD = JD - 2400000.5, and starts
         /// from midnight rather than midday.
         double _modifiedJulianDate;
+        QString _version;
 
     public:
         /// Data blob constructor.
@@ -49,6 +51,12 @@ class DataBlob
 
         /// Returns the MJD timestamp of the data blob.
         double timeStamp() const { return _modifiedJulianDate; }
+
+        /// set the version id of the DataBlob
+        void setVersion(const QString& v) { _version = v; };
+
+        /// Returns the version of the DataBlob
+        QString version() const { return _version; };
 };
 
 } // namespace pelican
