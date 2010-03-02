@@ -40,6 +40,8 @@ class ZenithCalibrater : public AbstractModule
         void run(QHash<QString, DataBlob*>& data);
 
     private:
+        enum pol_t { POL_X, POL_Y, POL_BOTH };
+
         /// Grab configuration options from the config node
         void _getConfiguration(const ConfigNode& config);
 
@@ -48,16 +50,14 @@ class ZenithCalibrater : public AbstractModule
         ModelVisibilityData* _modelVis;
         AntennaPositions* _antPos;
 
-        enum { POL_X, POL_Y, POL_BOTH };
         unsigned _nEigenvalues;
         double _tolerance;
-        std::vector<Source> _sourcesPolXX;
-        std::vector<Source> _sourcesPolYY;
+        std::vector<Source> _sources;
         std::vector<unsigned> _channels;
         int _freqRefChannel;                ///< Frequency reference channel
         double _freqRef;                    ///< Reference frequency
         double _freqDelta;                  ///< Frequency delta
-        unsigned _polarisation;
+        pol_t _polarisation;
 
 };
 

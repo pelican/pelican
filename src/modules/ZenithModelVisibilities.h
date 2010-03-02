@@ -39,7 +39,7 @@ class ZenithModelVisibilities : public AbstractModule
         void run(QHash<QString, DataBlob*>& data);
 
     private:
-        typedef enum { POL_X, POL_Y, POL_BOTH } pol_t;
+        enum  pol_t { POL_X, POL_Y, POL_BOTH } ;
 
         /// Calculate model visibilties
         void _calculateModelVis(complex_t* vis, const unsigned nAnt,

@@ -25,13 +25,13 @@ class Source
 
     public:
         /// Constructs a source.
-        Source(const coord_t coordType = J2000, const double coord1 = 0.0,
-                const double coord2 = 0.0, const amp_t ampType = POL_XY,
+        Source(const coord_t coordType = J2000, const double longitude = 0.0,
+                const double latitude = 0.0, const amp_t ampType = POL_XY,
                 const double amp1 = 0.0, const double amp2 = 0.0)
         {
             _coordType = coordType;
-            _coord1 = coord1;
-            _coord2 = coord2;
+            _longitude = longitude;
+            _latitude = latitude;
             _ampType = ampType;
             _amp1 = amp1;
             _amp2 = amp2;
@@ -48,16 +48,16 @@ class Source
         coord_t coordType() const { return _coordType; }
 
         /// Returns the first coordinate of the source (RA or Az.).
-        double& coord1() { return _coord1; }
+        double& longitude() { return _longitude; }
 
         /// Returns the first coordinate of the source (RA or Az.).
-        double coord1() const { return _coord1; }
+        double longitude() const { return _longitude; }
 
         /// Returns the second coordinate of the source (Dec. or El.).
-        double& coord2() { return _coord2; }
+        double& latitude() { return _latitude; }
 
         /// Returns the second coordinate of the source (Dec. or El.).
-        double coord2() const { return _coord2; }
+        double latitude() const { return _latitude; }
 
         // Returns the amplitude type
         amp_t& ampType() { return _ampType; }
@@ -79,8 +79,8 @@ class Source
 
     private:
         coord_t _coordType;
-        double _coord1;
-        double _coord2;
+        double _longitude;
+        double _latitude;
         amp_t _ampType;
         double _amp1;
         double _amp2;

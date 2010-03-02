@@ -92,8 +92,8 @@ void ZenithModelVisibilities::_calculateModelVis(complex_t* vis,
     // Calculate l and m values for the sources
     for (unsigned i = 0; i < nSources; i++) {
         // TODO: convert from RA, Dec if needed
-        double az = sources[i].coord1();
-        double el = sources[i].coord2();
+        double az = sources[i].longitude();
+        double el = sources[i].latitude();
         double cosEl = cos(el * math::deg2rad);
         l[i] = cosEl * sin(az * math::deg2rad);
         m[i] = cosEl * cos(az * math::deg2rad);
