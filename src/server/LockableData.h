@@ -29,7 +29,7 @@ class LockableData : public QObject
 
     public:
         LockableData(const QString& name="", void* data=0, size_t size=0, QObject* parent=0);
-        ~LockableData();
+        virtual ~LockableData();
         /// return the size of the stored data
         //size_t size() const;
         /// sets the size of the stored data
@@ -42,7 +42,7 @@ class LockableData : public QObject
         Data* data() const;
 
         /// returns true if there isany valid data in the object
-        bool isValid() const;
+        virtual bool isValid() const;
 
         /// returns true if there is an active lock on the data
         bool isLocked() const;

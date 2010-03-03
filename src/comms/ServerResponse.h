@@ -27,6 +27,7 @@ class ServerResponse
         ServerResponse(Response_t type = Error, const QString& msg = "" );
         ~ServerResponse();
         Response_t type() const;
+        const QString& message() const { return _msg; };
 
     private:
         Response_t _type;

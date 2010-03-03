@@ -1,4 +1,6 @@
 #include "PelicanClientProtocol.h"
+#include "Data.h"
+#include "StreamData.h"
 #include "ServerRequest.h"
 #include "ServerResponse.h"
 #include "ServiceDataResponse.h"
@@ -87,8 +89,24 @@ boost::shared_ptr<ServerResponse> PelicanClientProtocol::receive(QAbstractSocket
                 quint16 streams;
                 in >> streams;
                 for(int i=0; i < streams; ++i ) {
+
                     QString name;
                     in >> name;
+                    QString id;
+                    in >> id;
+                    quint16 size;
+                    in >> size;
+
+                    StreamData* sd = new StreamData(name, 0, (unsigned long)size);
+                    s->setStreamData(sd);
+                    sd->setId(id);
+
+                    // read in associate meta-data
+                    in >> size;
+                    for( unsigned int j=0; j < size; ++j ) {
+                        in >> name >> id;
+                        sd->addAssociatedData(new Data(name, id));
+                    }
                 }
                 return s;
             }

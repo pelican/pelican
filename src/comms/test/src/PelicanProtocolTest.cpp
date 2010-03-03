@@ -1,3 +1,4 @@
+#include <QBuffer>
 #include "PelicanProtocolTest.h"
 #include "PelicanProtocol.h"
 #include "ServerRequest.h"
@@ -5,6 +6,7 @@
 #include "AcknowledgementRequest.h"
 #include "ServiceDataRequest.h"
 #include "StreamDataRequest.h"
+#include "StreamDataResponse.h"
 #include "StreamData.h"
 #include "data/DataRequirements.h"
 #include "utility/SocketTester.h"
@@ -36,28 +38,59 @@ void PelicanProtocolTest::tearDown()
 
 void PelicanProtocolTest::test_sendStreamData()
 {
-    /*
     {
         // Use Case
         // Empty Data
         PelicanProtocol proto;
         AbstractProtocol::StreamData_t data;
-        QByteArray stream;
+        QByteArray block;
+        QBuffer stream(&block);
+        stream.open(QIODevice::WriteOnly);
         proto.send(stream, data);
-        boost::shared_ptr<ServerResponse> resp = _protocol.receive(_st->send(stream));
+        CPPUNIT_ASSERT( ! block.isEmpty() );
+        boost::shared_ptr<ServerResponse> resp = _protocol.receive(_st->send(block));
+        if( resp->type() == ServerResponse::Error ) {
+             CPPUNIT_FAIL( "Socket Error: " + resp->message().toStdString() );
+        }
         CPPUNIT_ASSERT( resp->type() == ServerResponse::StreamData );
     }
     {
         // Use Case
         // Single Stream Data with no service data
         PelicanProtocol proto;
-        StreamData sd;
+        StreamData sd("test");
+        sd.setId("testid");
         AbstractProtocol::StreamData_t data;
         data.insert(QString("teststream"), &sd);
-        QByteArray stream;
+        QByteArray block;
+        QBuffer stream(&block);
+        stream.open(QIODevice::WriteOnly);
         proto.send(stream, data);
-        boost::shared_ptr<ServerResponse> resp = _protocol.receive(_st->send(stream));
+        boost::shared_ptr<ServerResponse> resp = _protocol.receive(_st->send(block));
         CPPUNIT_ASSERT( resp->type() == ServerResponse::StreamData );
+        StreamDataResponse* sd2 = static_cast<StreamDataResponse*>(resp.get());
+        CPPUNIT_ASSERT( sd == *(sd2->streamData()) );
+    }
+    /*
+    {
+        // Use Case
+        // Single Stream Data with  service data
+        PelicanProtocol proto;
+        StreamData sd("test");
+        Data d1("d1",0,100);
+        d1.setId("d1id");
+        sd.addAssociatedData(&d1);
+
+        AbstractProtocol::StreamData_t data;
+        data.insert(QString("teststream"), &sd);
+        QByteArray block;
+        QBuffer stream(&block);
+        stream.open(QIODevice::WriteOnly);
+        proto.send(stream, data);
+        boost::shared_ptr<ServerResponse> resp = _protocol.receive(_st->send(block));
+        CPPUNIT_ASSERT( resp->type() == ServerResponse::StreamData );
+        StreamDataResponse* sd2 = static_cast<StreamDataResponse*>(resp.get());
+        CPPUNIT_ASSERT( sd == *(sd2->streamData()) );
     }
     */
 }

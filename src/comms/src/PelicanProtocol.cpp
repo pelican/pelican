@@ -54,10 +54,10 @@ boost::shared_ptr<ServerRequest> PelicanProtocol::request(QTcpSocket& socket)
                 in >> (quint16&)num;
                 for(int i=0; i < num; ++i )
                 {
-                    QString type;
+                    QString dtype;
                     QString version;
-                    in >> type >> version;
-                    s->request(type,version);
+                    in >> dtype >> version;
+                    s->request(dtype,version);
                 }
                 return s;
             }
@@ -98,15 +98,15 @@ void PelicanProtocol::send(QIODevice& stream, const AbstractProtocol::StreamData
     QByteArray array;
     QDataStream out(&array, QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_4_0);
-    out << ServerResponse::StreamData;
-    out << data.size();
+    out << (quint16)ServerResponse::StreamData;
+    out << (quint16)data.size();
     QMapIterator<QString, StreamData*> i(data);
     // stream header info
     while (i.hasNext()) {
         i.next();
-        out << i.key() << (i.value())->id() << (quint64)(i.value())->size();
+        out << (i.value())->name() << (i.value())->id() << (quint64)(i.value())->size();
         // service data info
-        out << (quint64) i.value()->associateData().size();
+        out << (quint16) i.value()->associateData().size();
         foreach(const Data* dat, i.value()->associateData())
         {
             out << dat->name() << dat->id();
@@ -132,7 +132,7 @@ void PelicanProtocol::send(QIODevice& stream, const AbstractProtocol::ServiceDat
     QDataStream out(&array, QIODevice::WriteOnly);
     // header data
     out.setVersion(QDataStream::Qt_4_0);
-    out << ServerResponse::ServiceData;
+    out << (quint16)ServerResponse::ServiceData;
     out << data.size();
 
     QMapIterator<QString, Data*> i(data);

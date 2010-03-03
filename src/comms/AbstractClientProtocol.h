@@ -27,7 +27,7 @@ class AbstractClientProtocol
 {
     public:
         AbstractClientProtocol(  );
-        ~AbstractClientProtocol();
+        virtual ~AbstractClientProtocol();
         virtual QByteArray serialise(const ServerRequest&) = 0;
         virtual boost::shared_ptr<ServerResponse> receive(QAbstractSocket&) = 0;
 
