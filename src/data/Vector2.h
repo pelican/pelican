@@ -21,18 +21,12 @@ template<class T> class Vector2
     public:
         /// The vector data.
         union {
-            T v[2];
-
-            struct {
-                union {
-                    T x;
-                    T cosine;
-                };
-                union {
-                    T y;
-                    T sine;
-                };
-            };
+            T x;
+            T cosine;
+        };
+        union {
+            T y;
+            T sine;
         };
 };
 
