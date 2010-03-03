@@ -24,6 +24,7 @@ class StreamDataResponse : public ServerResponse
     public:
         StreamDataResponse();
         ~StreamDataResponse();
+        void setStreamData(pelican::StreamData*);
         pelican::StreamData* streamData();
 
     private:

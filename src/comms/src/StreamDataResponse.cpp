@@ -13,6 +13,10 @@ StreamDataResponse::StreamDataResponse()
     _data = 0;
 }
 
+void StreamDataResponse::setStreamData( pelican::StreamData* data )
+{
+    _data = data;
+}
 
 StreamDataResponse::~StreamDataResponse()
 {

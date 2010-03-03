@@ -24,7 +24,8 @@ class Data
 
     public:
         Data(const QString& name="", void* data=0, size_t size=0);
-        ~Data();
+        Data(const QString& name, const QString& id, size_t size=0);
+        virtual ~Data();
 
         /// return the size of the stored data
         size_t size() const;
@@ -45,7 +46,11 @@ class Data
         void setId(const QString& id) { _id = id; }
 
         // returns true if any data exists
-        bool isValid() const;
+        virtual bool isValid() const;
+
+        // returns true if the objiect contain identical meta-data
+        bool operator==(const Data&) const;
+
 
     private:
         Data(const Data&); // disallow the copy constructor

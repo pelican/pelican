@@ -11,6 +11,11 @@ StreamData::StreamData(const QString& name, void* data, size_t size)
 {
 }
 
+StreamData::StreamData(const QString& name, QString& id, size_t size)
+    : Data(name, id, size)
+{
+}
+
 StreamData::~StreamData()
 {
 }
@@ -41,6 +46,13 @@ bool StreamData::isValid() const
     }
     return rv;
 }
+
+bool StreamData::operator==(const StreamData& sd) const {
+    bool rv = Data::operator==(sd);
+    rv &= _associateData == sd._associateData;
+    return rv;
+}
+
 
 void StreamData::reset()
 {

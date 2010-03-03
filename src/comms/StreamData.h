@@ -30,12 +30,14 @@ class StreamData : public Data
 
     public:
         StreamData(const QString& name, void* = 0, size_t  = 0);
-        ~StreamData();
+        StreamData(const QString& name, QString& id, size_t  = 0);
+        virtual ~StreamData();
 
         void addAssociatedData(const Data*);
         const DataList_t& associateData() const;
         const QSet<QString>& associateDataTypes() const;
-        bool isValid() const;
+        virtual bool isValid() const;
+        bool operator==(const StreamData& sd) const;
         void reset();
 
     private:
