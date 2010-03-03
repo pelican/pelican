@@ -1,8 +1,9 @@
 #ifndef PELICANSERVERCLIENT_H
 #define PELICANSERVERCLIENT_H
 
-#include "AbstractDataClient.h"
+#include <boost/shared_ptr.hpp>
 #include <QDomElement>
+#include "AbstractDataClient.h"
 
 /**
  * @file PelicanServerClient.h
@@ -13,6 +14,9 @@ namespace pelican {
 class AbstractClientProtocol;
 class ConfigNode;
 class AdapterFactory;
+class ServerResponse;
+class StreamData;
+class ServiceDataRequest;
 
 /**
  * @class PelicanServerClient
@@ -33,7 +37,9 @@ class PelicanServerClient : public AbstractDataClient
         virtual QHash<QString, DataBlob*> getData(QHash<QString, DataBlob*>& dataHash);
 
     protected:
-        void getServiceData(QHash<QString,QString> requirements, QHash<QString, DataBlob*>& datahash);
+        QHash<QString, DataBlob*> _getServiceData(const ServiceDataRequest& requirements, QHash<QString, DataBlob*>& dataHash);
+        QHash<QString, DataBlob*> _response(QIODevice&, boost::shared_ptr<ServerResponse> r, QHash<QString, DataBlob*>& );
+        QHash<QString, DataBlob*> _adaptStream(QIODevice& device, const StreamData*, QHash<QString, DataBlob*>& dataHash );
         void _connect();
 
     private:

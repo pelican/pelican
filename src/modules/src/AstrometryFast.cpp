@@ -114,25 +114,6 @@ void AstrometryFast::setCelestialParameters(CelestialData* c,
 
 /**
  * @details
- * Populates the site parameters data structure, given the site longitude
- * and latitude, air pressure, humidity, etc...
- *
- * @param[in,out] t          Structure containing site parameters.
- * @param[in]     longitude  Site longitude in radians.
- * @param[in]     latitude   Site latitude in radians.
- * @param[in]     pressure   Air pressure in millibars.
- */
-void AstrometryFast::setSiteParameters(SiteData* t,
-        double longitude, double latitude, double pressure)
-{
-    t->longitude = longitude;
-    t->latitude = latitude;
-    t->lat.cosine = cos(latitude);
-    t->lat.sine = sin(latitude);
-}
-
-/**
- * @details
  * Adds the aberration vector to the given position, given the solar longitude.
  * The aberration vector is approximated as:
  *

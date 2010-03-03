@@ -62,10 +62,6 @@ class AstrometryFast : public AbstractAstrometry
         void setCelestialParameters(CelestialData* c, const SiteData* t,
                 double UT1);
 
-        /// Populates the site parameters data structure.
-        void setSiteParameters(SiteData* t, double longitude, double latitude,
-                double pressure);
-
     private:
         /// Applies correction for relativistic aberration.
         void _aberrationVector(double f, Vector2d lambda, Vector3d* v);

@@ -41,8 +41,8 @@ ZenithCalibrater::~ZenithCalibrater()
 
 
 /**
- * @detail
- * Runs the module
+ * @details
+ * Runs the calibration module using the supplied hash of data blobs.
  */
 void ZenithCalibrater::run(QHash<QString, DataBlob*>& data)
 {
@@ -206,8 +206,8 @@ void ZenithCalibrater::_fetchDataBlobs(QHash<QString, DataBlob*>& data)
 
 
 /**
- * @detail
- * Grab the configuration from XML config node
+ * @details
+ * Obtains the module configuration options from the XML file.
  */
 void ZenithCalibrater::_getConfiguration(const ConfigNode& config)
 {
@@ -233,5 +233,8 @@ void ZenithCalibrater::_getConfiguration(const ConfigNode& config)
 
 }
 
+/**
+ * @details
+ */
 
 } // namespace pelican

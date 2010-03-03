@@ -11,7 +11,7 @@
 
 namespace pelican {
 
-class StreamData;
+class LockableStreamData;
 class Data;
 class DataManager;
 class LockedData;
@@ -32,7 +32,7 @@ class StreamDataBuffer : public DataBuffer
     Q_OBJECT
 
     public:
-        StreamDataBuffer(DataManager* manager=0, QObject* parent=0);
+        StreamDataBuffer(const QString& type, DataManager* manager=0, QObject* parent=0);
         ~StreamDataBuffer();
 
         /// get the next data object that is ready to be served
@@ -48,8 +48,8 @@ class StreamDataBuffer : public DataBuffer
         void activateData();
 
     protected:
-        void activateData(StreamData*);
-        StreamData* _getWritable(size_t size);
+        void activateData(LockableStreamData*);
+        LockableStreamData* _getWritable(size_t size);
 
     private:
         StreamDataBuffer(const StreamDataBuffer&); // disallow copying
@@ -58,9 +58,9 @@ class StreamDataBuffer : public DataBuffer
         size_t _max;
         size_t _maxChunkSize;
         size_t _space;
-        QList<StreamData*> _data;
-        QQueue<StreamData*> _serveQueue;
-        QQueue<StreamData*> _emptyQueue;
+        QList<LockableStreamData*> _data;
+        QQueue<LockableStreamData*> _serveQueue;
+        QQueue<LockableStreamData*> _emptyQueue;
         DataManager* _manager;
 };
 

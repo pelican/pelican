@@ -57,7 +57,7 @@ class DataManager
         WritableData getWritableData(const QString& type, size_t size);
 
         /// associateServiceData
-        void associateServiceData(StreamData* data);
+        void associateServiceData(LockableStreamData* data);
 
         /// serviceDataBuffer
         //  add a service data type to be managed

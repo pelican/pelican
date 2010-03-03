@@ -82,10 +82,9 @@ void ImageWriterFits::run(QHash<QString, DataBlob*>& data)
  *  - file       = The name of the output fits file (at present full path)
  *  - prefix     = File name prefix (NOT USED)
  *  - suffix     = File name suffix (NOT USED)
- *  - cube       = Option to control if image cubes or image slices are procuded (NOT USED)
+ *  - cube       = Option to control if image cubes or image slices are produced (NOT USED)
  *
- * - Fits Header Options (These options get insertded into the fits header):
- *  - dateObs    = The date of the observation
+ * - Fits Header Options (These options get inserted into the fits header):
  *  - origin     = The origin of the processed image
  *  - telesceope = The telescope use to make the observation
  *  - instrument = The instrument at the telescope
@@ -105,7 +104,6 @@ void ImageWriterFits::_getConfiguration(const ConfigNode &config)
     _suffix = config.getOption("file", "suffix");
     _cube = config.getOption("cube", "value", "true") == "true" ? true : false;
 
-    _dateObs = config.getOption("dateObs", "value");
     _origin = config.getOption("origin", "value");
     _telescope = config.getOption("telescope", "value");
     _instrument = config.getOption("instrument", "value");

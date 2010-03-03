@@ -26,10 +26,10 @@ class PelicanProtocol : public AbstractProtocol
         PelicanProtocol(  );
         ~PelicanProtocol();
         virtual boost::shared_ptr<ServerRequest> request(QTcpSocket& socket);
-        virtual void send(QByteArray& stream, const AbstractProtocol::StreamData_t& );
-        virtual void send(QByteArray& stream, const AbstractProtocol::ServiceData_t& );
-        virtual void send(QByteArray& stream, const QString& );
-        virtual void sendError(QByteArray& stream, const QString&);
+        virtual void send(QIODevice& stream, const AbstractProtocol::StreamData_t& );
+        virtual void send(QIODevice& stream, const AbstractProtocol::ServiceData_t& );
+        virtual void send(QIODevice& stream, const QString& );
+        virtual void sendError(QIODevice& stream, const QString&);
 
     private:
 };

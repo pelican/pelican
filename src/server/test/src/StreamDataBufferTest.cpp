@@ -1,10 +1,10 @@
 #include "DataManager.h"
-#include "StreamData.h"
+#include "comms/StreamData.h"
 #include "StreamDataBufferTest.h"
 #include "StreamDataBuffer.h"
 #include "WritableData.h"
-#include "Data.h"
 #include "LockedData.h"
+#include "LockableStreamData.h"
 #include <QCoreApplication>
 
 #include "utility/memCheck.h"
@@ -41,23 +41,23 @@ void StreamDataBufferTest::test_getWritable()
         // Use case:
         // getWritable() called with no service data
         // expect valid object with no associate data
-        StreamDataBuffer b(_dataManager);
+        StreamDataBuffer b("test",_dataManager);
         WritableData data = b.getWritable(1);
         CPPUNIT_ASSERT( data.isValid() );
-        CPPUNIT_ASSERT_EQUAL(0, static_cast<StreamData*>(data.data())->associateData().size() );
+        CPPUNIT_ASSERT_EQUAL(0, static_cast<LockableStreamData*>(data.data())->associateData().size() );
     }
     // setup data manager with a service data buffer for remaining test cases
-    ServiceDataBuffer serveBuffer;
+    ServiceDataBuffer serveBuffer("test");
     QString service1("Service1");
     _dataManager->serviceDataBuffer(service1,&serveBuffer);
     {
         // Use case:
         // getWritable() called with service data supported, but no data
         // expect valid object with no associate data
-        StreamDataBuffer b(_dataManager);
+        StreamDataBuffer b("test",_dataManager);
         WritableData data = b.getWritable(1);
         CPPUNIT_ASSERT( data.isValid() );
-        CPPUNIT_ASSERT_EQUAL(0, static_cast<StreamData*>(data.data())->associateData().size() );
+        CPPUNIT_ASSERT_EQUAL(0, static_cast<LockableStreamData*>(data.data())->associateData().size() );
     }
     // inject some data into the service buffer for remaining tests
     serveBuffer.getWritable(1);
@@ -66,10 +66,10 @@ void StreamDataBufferTest::test_getWritable()
         // Use case:
         // getWritable() called with service data supported, with data
         // expect valid object with associate data
-        StreamDataBuffer b(_dataManager);
+        StreamDataBuffer b("test",_dataManager);
         WritableData data = b.getWritable(1);
         CPPUNIT_ASSERT( data.isValid() );
-        CPPUNIT_ASSERT_EQUAL(1, static_cast<StreamData*>(data.data())->associateData().size() );
+        CPPUNIT_ASSERT_EQUAL(1, static_cast<LockableStreamData*>(data.data())->associateData().size() );
     }
 }
 
@@ -79,7 +79,7 @@ void StreamDataBufferTest::test_getNext()
         // Use case:
         // getNext called on an empty buffer
         // expect to return an invalid LockedData object
-        StreamDataBuffer b(_dataManager);
+        StreamDataBuffer b("test",_dataManager);
         LockedData data("test");
         b.getNext(data);
         CPPUNIT_ASSERT( ! data.isValid() );
@@ -88,7 +88,7 @@ void StreamDataBufferTest::test_getNext()
         // Use case:
         // getNext called on an non-empty buffer
         // expect to return an valid LockedData object
-        StreamDataBuffer b(_dataManager);
+        StreamDataBuffer b("test",_dataManager);
         b.getWritable(100);
         _app->processEvents();
         LockedData data("test");

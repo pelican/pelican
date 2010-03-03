@@ -36,7 +36,10 @@ class ServiceDataRequest : public ServerRequest
 
         // return the version of a specific type
         // n.b only one version per type allowed per request
-        QString version(const QString& version) const;
+        QString version(const QString& type) const;
+
+        // returns true if n valid requests() calls have been made
+        bool isEmpty() const;
 
         // test for equality between ServiceData objects
         bool operator==(const ServiceDataRequest&) const;

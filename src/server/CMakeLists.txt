@@ -2,7 +2,7 @@ INCLUDE_DIRECTORIES(${QT_INCLUDES})
 SUBPACKAGE(server comms utility)
 # files requireing mpp preprocessing (i.e. QObjects)
 set( server_moc_headers
-     Data.h
+     LockableData.h
      DataBuffer.h
      DataReceiver.h
      ServiceDataBuffer.h
@@ -10,11 +10,11 @@ set( server_moc_headers
      PelicanPortServer.h
      PelicanServer.h
      Session.h
-     StreamData.h
+     LockableStreamData.h
    )
 set( server_src
      src/AbstractChunker.cpp
-     src/Data.cpp
+     src/LockableData.cpp
      src/DataReceiver.cpp
      src/LockedData.cpp
      src/DataManager.cpp
@@ -22,7 +22,7 @@ set( server_src
      src/PelicanServer.cpp
      src/PelicanPortServer.cpp
      src/Session.cpp
-     src/StreamData.cpp
+     src/LockableStreamData.cpp
      src/StreamDataBuffer.cpp
      src/ServiceDataBuffer.cpp
      src/WritableData.cpp

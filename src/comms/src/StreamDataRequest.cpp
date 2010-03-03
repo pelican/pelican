@@ -21,6 +21,11 @@ void StreamDataRequest::addDataOption(const DataRequirements& data)
     _dataOptions.append(data);
 }
 
+void StreamDataRequest::addDataOption(const QList<DataRequirements>& data)
+{
+    _dataOptions += QVector<DataRequirements>::fromList(data);
+}
+
 StreamDataRequest::DataRequirementsIterator StreamDataRequest::begin() const
 {
     return _dataOptions.begin();

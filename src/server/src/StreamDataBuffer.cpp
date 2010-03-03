@@ -1,6 +1,6 @@
 #include "DataManager.h"
 #include "StreamDataBuffer.h"
-#include "StreamData.h"
+#include "LockableStreamData.h"
 #include "LockedData.h"
 #include "WritableData.h"
 #include <QMutexLocker>
@@ -13,8 +13,8 @@ namespace pelican {
 
 
 // class StreamDataBuffer 
-StreamDataBuffer::StreamDataBuffer(DataManager* manager, QObject* parent)
-    : DataBuffer(parent),_manager(manager)
+StreamDataBuffer::StreamDataBuffer(const QString& type, DataManager* manager, QObject* parent)
+    : DataBuffer(type, parent),_manager(manager)
 {
     _max = 10000; //TODO make configurable
     _maxChunkSize = _max;
@@ -23,7 +23,7 @@ StreamDataBuffer::StreamDataBuffer(DataManager* manager, QObject* parent)
 
 StreamDataBuffer::~StreamDataBuffer()
 {
-    foreach( StreamData* data, _data)
+    foreach( LockableStreamData* data, _data)
     {
         delete data;
     }
@@ -45,7 +45,7 @@ void StreamDataBuffer::getNext(LockedData& ld)
 WritableData StreamDataBuffer::getWritable(size_t size)
 {
     QMutexLocker locker(&_mutex);
-    StreamData* d = _getWritable(size);
+    LockableStreamData* d = _getWritable(size);
 
     // prepare the object for use
     // - add Service Data info
@@ -56,14 +56,14 @@ WritableData StreamDataBuffer::getWritable(size_t size)
     return WritableData( d );
 }
 
-StreamData* StreamDataBuffer::_getWritable(size_t size)
+LockableStreamData* StreamDataBuffer::_getWritable(size_t size)
 {
     if( ! _emptyQueue.isEmpty() )
     {
         // iterate through until we find a container big enough
-        QQueue<StreamData*> temp = _emptyQueue;
+        QQueue<LockableStreamData*> temp = _emptyQueue;
         do {
-            StreamData* d = temp.dequeue();
+            LockableStreamData* d = temp.dequeue();
             if( sizeof(*d) >= size ) {
                 // we found one - so our work is done
                 return d;
@@ -78,7 +78,7 @@ StreamData* StreamDataBuffer::_getWritable(size_t size)
         void* d = malloc(size);
         if( d ) {
             _space -= size;
-            StreamData* s = new StreamData(d, size);
+            LockableStreamData* s = new LockableStreamData(_type, d, size);
             _data.append(s);
             Q_ASSERT(connect( s, SIGNAL(unlockedWrite()), this, SLOT(activateData() ) ));
             return s;
@@ -89,10 +89,10 @@ StreamData* StreamDataBuffer::_getWritable(size_t size)
 
 void StreamDataBuffer::activateData()
 {
-    activateData(static_cast<StreamData*>( sender() ) );
+    activateData(static_cast<LockableStreamData*>( sender() ) );
 }
 
-void StreamDataBuffer::activateData(StreamData* data)
+void StreamDataBuffer::activateData(LockableStreamData* data)
 {
     QMutexLocker locker(&_mutex);
     if( data->isValid() )
