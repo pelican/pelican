@@ -25,6 +25,8 @@ class LockedData;
 
 class LockableStreamData : public LockableData
 {
+    Q_OBJECT
+
     public:
         typedef QList<LockedData> DataList_t;
 
