@@ -55,7 +55,7 @@
 		double _end = _t2.tv_sec + _t2.tv_usec * 1.0e-6; \
         fprintf(stdout, "\n"); \
         fprintf(stdout, __VA_ARGS__); \
-        fprintf(stdout, ": %.3f sec.\n", _end - _start);}
+        fprintf(stdout, ": %.3f sec.\n", _end - _start);};
 #else
     #define TIMER2_START ;
     #define TIMER2_STOP(...) ;

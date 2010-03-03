@@ -15,6 +15,7 @@ class DataBlob;
 class ZenithImagerDft;
 class ImageWriterFits;
 class ZenithModelVisibilities;
+class ZenithCalibrater;
 
 /**
  * @class MyPipeline
@@ -41,6 +42,7 @@ class TestPipelineDirtyImage : public AbstractPipeline
         ZenithImagerDft* _imager;
         ZenithModelVisibilities* _modelVis;
         ImageWriterFits* _fitsWriter;
+        ZenithCalibrater* _calibrate;
 
 };
 

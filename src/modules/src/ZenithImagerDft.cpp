@@ -39,11 +39,9 @@ ZenithImagerDft::ZenithImagerDft(const ConfigNode& config)
 
     // Register which data blobs are needed by the module
     if (_useModelVis) {
-        std::cout << "imager using model vis data...\n";
         addGeneratedData("ModelVisibilityData");
     }
     else {
-        std::cout << "imager using vis data...\n";
         addStreamData("VisibilityData");
     }
     addServiceData("AntennaPositions");
@@ -387,6 +385,7 @@ void ZenithImagerDft::_makeImageDft(const unsigned nAnt, real_t* antPosX,
         tempWeights[i].resize(nAnt);
         tempBuffer[i].resize(nAnt);
     }
+    int tid = 0;
 #else
     std::vector<complex_t> tempWeights(nAnt);
     std::vector<complex_t> tempBuffer(nAnt);
@@ -399,7 +398,6 @@ void ZenithImagerDft::_makeImageDft(const unsigned nAnt, real_t* antPosX,
     unsigned yInc = 1;
 #endif
 
-    int tid = 0;
     complex_t* weights = NULL;
     complex_t* buffer = NULL;
     unsigned nNonZeroVis = nAnt * nAnt - nAnt;

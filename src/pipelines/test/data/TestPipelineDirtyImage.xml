@@ -34,12 +34,12 @@
 
     <ZenithCalibrater name="default" varset="MyVarset">
         <!-- Calibration iterations -->
-        <eigenvalues number="10"/>
+        <eigenvalues number="2"/>
         <tolerance value="1.0e-4"/>
 
-        <frequencies reference="0.0" referenceChannel="0" delta="195312.5"/>
         <channels>182</channels>
         <polarisation value="x"/>
+        <frequencies reference="0.0" referenceChannel="0" delta="195312.5"/>
     </ZenithCalibrater>
 
 
@@ -62,7 +62,7 @@
         <pointSpreadFunction value="false"/>
         <channels>182</channels>
         <frequencies reference="0.0" referenceChannel="0" delta="195312.5"/>
-        <useModelVis value="true"/>
+        <useModelVis value="false"/>
     </ZenithImagerDft>
 
 

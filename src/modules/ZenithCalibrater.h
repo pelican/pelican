@@ -43,10 +43,16 @@ class ZenithCalibrater : public AbstractModule
         enum pol_t { POL_X, POL_Y, POL_BOTH };
 
         /// Calibration loop.
-        void _calibrate(complex_t* visTemp);
+        void _calibrate(complex_t* visTemp, const unsigned nAnt,
+                complex_t* autoCorrelations, complex_t* crossCorrelations,
+                const unsigned nEigenvalues);
 
         /// Zero diagonals of matrix
         void _zeroDiagonals(complex_t* matrix, const unsigned size);
+
+        /// Gets the diagonals of a square matrix
+        void _setDiagonals(complex_t* matrix, const unsigned size,
+                const complex_t* diagonals);
 
         /// Extract and check data blobs from the data hash
         void _fetchDataBlobs(QHash<QString, DataBlob*>& data);
