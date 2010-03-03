@@ -30,12 +30,6 @@ class CelestialData;
 class AbstractAstrometry
 {
     public:
-        /// Constructor.
-        AbstractAstrometry(  );
-
-        /// Destructor.
-        ~AbstractAstrometry();
-
         /// Converts ICRS equatorial to observed horizontal coordinates.
         virtual void icrsEquatorialToObserved(const SiteData* t,
                 const CelestialData* c, double ra, double dec,
