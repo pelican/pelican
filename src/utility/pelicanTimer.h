@@ -29,7 +29,7 @@
 #define TIMER_START {QTime _t; _t.start();
 #define TIMER_STOP(...) fprintf(stdout, "\n"); \
     fprintf(stdout, __VA_ARGS__); \
-    fprintf(stdout, ": %.2f sec.\n", _t.elapsed() / 1000.0);}
+    fprintf(stdout, ": %.3f sec.\n", _t.elapsed() / 1000.0);}
 #else
 #define TIMER_START ;
 #define TIMER_STOP(...) ;
