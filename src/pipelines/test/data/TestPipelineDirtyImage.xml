@@ -32,10 +32,10 @@
 
 <modules>
 
-    <ZenithCalibrater name="default" varset="MyVarset">
-        <!-- Calibration iterations -->
-        <eigenvalues number="2"/>
+    <ZenithCalibrater>
+        <eigenvalues number="4"/>
         <tolerance value="1.0e-4"/>
+        <iterations value="1"/>
 
         <channels>182</channels>
         <polarisation value="x"/>
@@ -72,11 +72,6 @@
         <file name="test.fits" prefix="" suffix=""/>
 
         <!-- <cube value="true"/> -->
-<<<<<<< HEAD:src/pipelines/test/data/TestPipelineDirtyImage.xml
-
-=======
-        <dateObs value=""/>
->>>>>>> 22b15cf226737b12805a65e86ff16296728050b0:src/pipelines/test/data/TestPipelineDirtyImage.xml
         <origin value="Oxford e-Research Centre"/>
         <telescope value="LOFAR"/>
         <instrument value="Effelsberg"/>

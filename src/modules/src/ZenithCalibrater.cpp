@@ -14,9 +14,10 @@
 namespace pelican {
 
 extern "C"{
-void zheev_(char* jobz, char* uplo, int* n, complex_t* a, int* lda, double* w,
-        complex_t* work, int* lwork, double* rwork, int* info);
+void zheev_(const char* jobz, const char* uplo, int* n, complex_t* a, int* lda,
+        double* w, complex_t* work, int* lwork, double* rwork, int* info);
 }
+
 
 /**
  * @details
@@ -30,6 +31,7 @@ ZenithCalibrater::ZenithCalibrater(const ConfigNode& config)
     _antPos = NULL;
     _getConfiguration(config);
 }
+
 
 /**
  * @details
@@ -50,6 +52,8 @@ void ZenithCalibrater::run(QHash<QString, DataBlob*>& data)
     _fetchDataBlobs(data);
 
     unsigned nAnt = _vis->nAntennas();
+    nAnt = 3;
+    _nEigenvalues = nAnt;
     unsigned nChan = _channels.size();
     unsigned nPol = _polarisation == POL_BOTH ? 2 : 1;
     unsigned nVis = nAnt * nAnt;    // number of vis per chan per pol
@@ -63,19 +67,91 @@ void ZenithCalibrater::run(QHash<QString, DataBlob*>& data)
     // Auto-correlations work array
     std::vector<complex_t> autoCorrelations(nAnt, complex_t(0.0, 0.0));
 
-    for (unsigned c = 0; c < nChan; c++) {
-        unsigned chan = _channels[c];
+    // zheev() Workspace array
+    std::vector<double> rWork(3 * nAnt);
 
-        for (unsigned p = 0; p < nPol; p++) {
-            unsigned pol = (nPol = 1 && _polarisation == POL_X) ? 1 : 2;
+    // Vector of eigenvalues produced in the calibration (all of them!)
+    std::vector<double> eigenValues(nAnt);
 
-            // Copy the input visibility data into the visibility work array
-            memcpy(&visTemp[0], _vis->ptr(chan, pol), nVis * sizeof(complex_t));
+    // Allocate optimal zheev() work array.
+    int info = 0;
+    int n = nAnt;   // order of matrix A
+    int lda = nAnt; // first dimension of the array a
+    int lWork = -1;
+    complex_t optWork;
+    zheev_("V", "U", &n, &visTemp[0], &lda, &eigenValues[0], &optWork, &lWork,
+            &rWork[0], &info);
+    lWork = static_cast<int>(optWork.real());
+    std::vector<complex_t> work(lWork);
 
-            _calibrate(&visTemp[0], nAnt, &autoCorrelations[0],
-                    &ww[0], _nEigenvalues);
+
+    visTemp[0] = 3;
+    visTemp[1] = 2;
+    visTemp[2] = -1;
+
+    visTemp[3] = 2;
+    visTemp[4] = 1;
+    visTemp[5] = 0;
+
+    visTemp[6] = -1;
+    visTemp[7] = 0;
+    visTemp[8] = 1;
+
+//    visTemp[0] = 0;
+//    visTemp[1] = 1;
+//    visTemp[2] = -5;
+//
+//    visTemp[3] = 2;
+//    visTemp[4] = 1;
+//    visTemp[5] = 0;
+//
+//    visTemp[6] = -1;
+//    visTemp[7] = 0;
+//    visTemp[8] = 1;
+
+
+
+
+    for (unsigned j = 0; j < nAnt; j++) {
+        for (unsigned i = 0; i < nAnt; i++) {
+//            visTemp[j * nAnt + i] = complex_t(nAnt - 1 - j, 0.0);
+//            visTemp[j * nAnt + i] = complex_t(nAnt - 1 - i, 0.0);
+//            visTemp[j * nAnt + i] = complex_t(j, 0.0);
+//            visTemp[j * nAnt + i] = complex_t(i, 0.0);
+            std::cout << visTemp[j * nAnt + i] << " ";
         }
+        std::cout << std::endl;
     }
+
+
+    _calibrate(&visTemp[0], nAnt, &autoCorrelations[0], &ww[0],
+            &rWork[0], &eigenValues[0], _nEigenvalues, &work[0], lWork,
+            _iterations);
+
+
+//
+//    for (unsigned c = 0; c < nChan; c++) {
+//        unsigned chan = _channels[c];
+//
+//        for (unsigned p = 0; p < nPol; p++) {
+//            unsigned pol = (nPol = 1 && _polarisation == POL_X) ? 0 : 1;
+//
+//            // Copy the input visibility data into the visibility work array
+//            complex_t* vis = _vis->ptr(chan, pol);
+//            memcpy(&visTemp[0], vis, nVis * sizeof(complex_t));
+//
+//            for (unsigned j = 0; j < nAnt; j++) {
+//                for (unsigned i = 0; i < nAnt; i++) {
+//                    visTemp[j * nAnt + i] = complex_t(1.0, 0.0);
+//                }
+//            }
+//
+//            _calibrate(&visTemp[0], nAnt, &autoCorrelations[0], &ww[0],
+//                    &rWork[0], &eigenValues[0], _nEigenvalues, &work[0], lWork,
+//                    _iterations);
+//
+//        }
+//    }
 }
 
 
@@ -84,70 +160,46 @@ void ZenithCalibrater::run(QHash<QString, DataBlob*>& data)
  * For reference on zheev() see: http://goo.gl/lPz1
  */
 void ZenithCalibrater::_calibrate(complex_t* visTemp, const unsigned nAnt,
-        complex_t* autoCorrelations, complex_t* ww,
-        const unsigned nEigenvalues)
+        complex_t* autoCorrelations, complex_t* ww, double* rWork,
+        double* eigenValues, const unsigned nEigenvaluesUsed, complex_t *work,
+        int lWork, const unsigned nIter)
 {
-    TIMER2_START
-
-    // zheev paramters and initialisation to find optimal workspace
-    // (move this outside the function or use 64 * nAnt for lWork size
-    // =========================================================================
+    int info = 0;
     int n = nAnt;   // order of matrix A
     int lda = nAnt; // first dimension of the array a
-    int info = 0;
-    int lWork = -1;
-    complex_t optimalWorkspace;
-    std::vector<double> rWork(3 * nAnt - 2); // Workspace array
-    std::vector<double> w(nAnt); // eigenvalues in ascending order
 
-    // Query and allocate the optimal workspace. If lWork = -1, the first value
-    // of work is the size of the optimal work array.
-    zheev_("Vectors","Lower", &n, visTemp, &lda, &w[0], &optimalWorkspace,
-            &lWork, &rWork[0], &info);
-
-    lWork = static_cast<int>(optimalWorkspace.real());
-    std::cout << lWork << std::endl;
-
-    std::vector<complex_t> work(lWork);
-    // =========================================================================
-
-//    return;
+    if (visTemp == NULL || autoCorrelations == NULL || ww == NULL ||
+            rWork == NULL || eigenValues == NULL || work == NULL)
+        throw QString("AAAAA");
 
     /// Calibration interation
-    for (unsigned k = 0; k < 1; k++) {
-
+    for (unsigned k = 0; k < nIter; k++) {
         // Set the diagonals of the vis work array
-        _setDiagonals(visTemp, nAnt, autoCorrelations);
+//        _setDiagonals(visTemp, nAnt, autoCorrelations);
 
         // Find eigenvalues and eigenvectors
-        zheev_("Vectors", "Lower", &n, &visTemp[0], &lda, &w[0], &work[0], &lWork, &rWork[0],
-                &info);
+        zheev_("V", "U", &n, visTemp, &lda, eigenValues, work, &lWork,
+                rWork, &info);
+        std::cout << "info = " << info << std::endl;
 
-//        std::cout << "info " << info << std::endl;
+        // print eigenvalues
+        for (unsigned e = 0; e < nEigenvaluesUsed; e++) {
+//            unsigned index = nAnt - 1 - e;
+            unsigned index = e;
+            std::cout << index << ". eigenvalue = " << eigenValues[index] << std::endl;
+            std::cout << "-----------------------" << std::endl;
+            for (unsigned a = 0; a < nAnt; a++) {
+                unsigned vindex = e * nAnt + a;
 
-        // ?? step
-        for (unsigned j = 0; j < nEigenvalues; j++) {
-//            double eigenValue = w[nEigenvalues- 1 - j];
-            double eigenValue = w[j];
-            std::cout << j << ". eigenvalue = " << eigenValue << std::endl;
-//            std::cout << "------------------------------\n";
-//            for (unsigned i = 0; i < nAnt; i++) {
-//                std::cout << visTemp[j * nAnt + i].real() << std::endl;
-//////                ww[j * nAnt + i] = w[nEigenvalues- 1 - j] *
-//            }
+                std::cout << vindex << " " << visTemp[vindex] << std::endl;
+            }
+
         }
 
-        // Compute new diagonal (autocorrelation)
-        for (unsigned j = 0; j < nAnt; j++) {
-            // form new autocorrelations
-        }
+        // TODO: Compute new diagonal (autocorrelation)
 
-        // Check convergence
-
-
+        // TODO: Check convergence
     }
-
-    TIMER2_STOP("_calibrate")
 }
 
 
@@ -211,8 +263,16 @@ void ZenithCalibrater::_fetchDataBlobs(QHash<QString, DataBlob*>& data)
  */
 void ZenithCalibrater::_getConfiguration(const ConfigNode& config)
 {
-    _nEigenvalues = config.getOption("eigenvalues", "number", "10").toUInt();
+    if (config.getDomElement().tagName() != "ZenithCalibrater")
+        throw QString("ZenithCalibrater: Configuration missing.");
+
+    _nEigenvalues = config.getOption("eigenvalues", "number").toUInt();
     _tolerance = config.getOption("tolerance", "value", "1.0e-4").toDouble();
+    _iterations = config.getOption("iterations", "value", "100").toUInt();
+
+    if (_nEigenvalues == 0)
+        throw QString("ZenithCalibrater: Have to select at least 1 eigenvalue to retain");
+
     _freqRefChannel = config.getOption("frequencies", "referenceChannel","0").toInt();
     _freqRef = config.getOption("frequencies", "reference", "0.0").toDouble();
     _freqDelta = config.getOption("frequencies", "delta", "195312.5").toDouble();
@@ -226,11 +286,14 @@ void ZenithCalibrater::_getConfiguration(const ConfigNode& config)
     // Get the channels to calibrate.
     QString chan = config.getOptionText("channels", "0");
     QStringList chanList = chan.split(",", QString::SkipEmptyParts);
+
+    if (chanList.size() == 0)
+        throw QString("ZenithCalibrater: No channels selected.");
+
     _channels.resize(chanList.size());
     for (int c = 0; c < chanList.size(); c++) {
         _channels[c] = chanList.at(c).toUInt();
     }
-
 }
 
 /**

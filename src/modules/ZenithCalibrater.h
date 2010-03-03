@@ -44,8 +44,9 @@ class ZenithCalibrater : public AbstractModule
 
         /// Calibration loop.
         void _calibrate(complex_t* visTemp, const unsigned nAnt,
-                complex_t* autoCorrelations, complex_t* crossCorrelations,
-                const unsigned nEigenvalues);
+                complex_t* autoCorrelations, complex_t* ww, double* rWork,
+                double* eignenvalues, const unsigned nEigenvaluesUsed,
+                complex_t *work, int lWork, const unsigned nIter);
 
         /// Zero diagonals of matrix
         void _zeroDiagonals(complex_t* matrix, const unsigned size);
@@ -67,6 +68,7 @@ class ZenithCalibrater : public AbstractModule
 
         unsigned _nEigenvalues;
         double _tolerance;
+        unsigned _iterations;
         std::vector<Source> _sources;
         std::vector<unsigned> _channels;
         int _freqRefChannel;                ///< Frequency reference channel

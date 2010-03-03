@@ -11,10 +11,10 @@ namespace pelican {
 
 /**
  * @class PipelineApplicationTest
- *  
+ *
  * @brief
  * CppUnit tests for PipelineApplication class.
- * 
+ *
  * @details
  * Tries to create a PipelineApplication:
  * - before a QCoreApplication
@@ -32,12 +32,12 @@ class PipelineApplicationTest : public CppUnit::TestFixture
 {
     public:
         CPPUNIT_TEST_SUITE(PipelineApplicationTest);
-        CPPUNIT_TEST(test_create_beforeQCoreApplication);
-        CPPUNIT_TEST(test_create_afterQCoreApplication);
-        CPPUNIT_TEST(test_commandLine_config);
-        CPPUNIT_TEST(test_commandLine_help);
-        CPPUNIT_TEST(test_registerPipeline_EmptyPipeline);
-        CPPUNIT_TEST(test_start);
+//        CPPUNIT_TEST(test_create_beforeQCoreApplication);
+//        CPPUNIT_TEST(test_create_afterQCoreApplication);
+//        CPPUNIT_TEST(test_commandLine_config);
+//        CPPUNIT_TEST(test_commandLine_help);
+//        CPPUNIT_TEST(test_registerPipeline_EmptyPipeline);
+//        CPPUNIT_TEST(test_start);
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -61,4 +61,4 @@ class PipelineApplicationTest : public CppUnit::TestFixture
 
 } // namespace pelican
 
-#endif // PIPELINEAPPLICATIONTEST_H 
+#endif // PIPELINEAPPLICATIONTEST_H
