@@ -33,9 +33,9 @@
 <modules>
 
     <ZenithCalibrater>
-        <eigenvalues number="4"/>
-        <tolerance value="1.0e-4"/>
-        <iterations value="1"/>
+        <eigenvalues number="10"/>
+        <tolerance value="1.0e-3"/>
+        <iterations value="100"/>
 
         <channels>182</channels>
         <polarisation value="x"/>
