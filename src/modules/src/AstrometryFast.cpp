@@ -18,10 +18,10 @@ namespace pelican {
  *
  * @param[in] t   Populated structure containing site data.
  * @param[in] c   Populated structure containing celestial data.
- * @param[in] ra  The ICRS (J2000) Right Ascension.
- * @param[in] dec The ICRS (J2000) Declination.
- * @param[out] a  The local azimuth.
- * @param[out] e  The local elevation.
+ * @param[in] ra  The ICRS (J2000) Right Ascension in radians.
+ * @param[in] dec The ICRS (J2000) Declination in radians.
+ * @param[out] a  The local azimuth in radians.
+ * @param[out] e  The local elevation in radians.
  */
 void AstrometryFast::icrsEquatorialToObserved(const SiteData* t,
         const CelestialData* c, double ra, double dec, double* a, double* e)
@@ -69,10 +69,10 @@ void AstrometryFast::icrsEquatorialToObserved(const SiteData* t,
  *
  * @param[in] t   Populated structure containing site data.
  * @param[in] c   Populated structure containing celestial data.
- * @param[in] az  The local azimuth.
- * @param[in] el  The local elevation.
- * @param[out] r  The ICRS (J2000) Right Ascension.
- * @param[out] d  The ICRS (J2000) Declination.
+ * @param[in] az  The local azimuth in radians.
+ * @param[in] el  The local elevation in radians.
+ * @param[out] r  The ICRS (J2000) Right Ascension in radians.
+ * @param[out] d  The ICRS (J2000) Declination in radians.
  */
 void AstrometryFast::icrsEquatorialFromObserved(const SiteData* t,
         const CelestialData* c, double az, double el, double* r, double* d)
