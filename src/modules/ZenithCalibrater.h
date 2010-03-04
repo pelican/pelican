@@ -42,14 +42,39 @@ class ZenithCalibrater : public AbstractModule
         enum pol_t { POL_X, POL_Y, POL_BOTH };
 
         /// Calibration loop.
-        void _calibrate(complex_t* visTemp, const unsigned nAnt,
-                complex_t* autoCorrelations, complex_t* ww, double* rWork,
-                double* eignenvalues, const unsigned nEigenvaluesUsed,
-                complex_t *work, int lWork, const unsigned nIter,
-                const double tolerance);
+        void _calibrate(
+                const unsigned nAnt,
+                const unsigned nEigenvaluesUsed,
+                const unsigned nIterations,
+                const double tolerance,
+                int lWork,
+                complex_t *work,
+                double* rWork,
+                complex_t* Vz,
+                complex_t* Dz
+        );
 
-        /// Zero diagonals of matrix
-        void _zeroDiagonals(complex_t* matrix, const unsigned size);
+        /// Computes the complex gains.
+        void _computeComplexGains(
+                const unsigned nAnt,
+                const unsigned ne,
+                complex_t* Dz,
+                complex_t* modelVis,
+                complex_t* Vz,
+                complex_t* work,
+                int lWork,
+                double* rWork,
+                complex_t* gains
+        );
+
+        /// Builds the corrected visibility set using the complex gains.
+        void _buildCorrectedVisibilities(
+                const unsigned nAnt,
+                const complex_t* rawVis,
+                const complex_t* antennaGain,
+                const complex_t* sigma_n,
+                complex_t* correctedVis
+        );
 
         /// Sets the diagonals of a square matrix
         void _setDiagonals(complex_t* matrix, const unsigned size,
@@ -65,42 +90,21 @@ class ZenithCalibrater : public AbstractModule
         /// Grab configuration options from the config node
         void _getConfiguration(const ConfigNode& config);
 
-        /// Computes the complex gains.
-        void _computeComplexGains (
-                const unsigned n_a,
-                const unsigned ne,
-                complex_t* Dz,
-                complex_t* model,
-                complex_t* Vz,
-                complex_t* work,
-                int lWork,
-                double* rWork,
-                complex_t* gains
-        );
-
-        /// Builds the corrected visibility set using the complex gains.
-        void _buildCorrectedVisibilities (
-                const unsigned n_a,
-                const complex_t* vis,
-                const complex_t* gains,
-                const complex_t* sigma_n,
-                complex_t* visCorrected
-        );
-
     private:
-        VisibilityData* _vis;
+        VisibilityData* _rawVis;
         ModelVisibilityData* _modelVis;
         CorrectedVisibilityData* _correctedVis;
 
-        unsigned _nEigenvalues;
+        unsigned _nEigenvaluesUsed;
         double _tolerance;
-        unsigned _iterations;
-        std::vector<Source> _sources;
+        unsigned _nIterations;
+
         std::vector<unsigned> _channels;
+        pol_t _polarisation;
+
         int _freqRefChannel;                ///< Frequency reference channel
         double _freqRef;                    ///< Reference frequency
         double _freqDelta;                  ///< Frequency delta
-        pol_t _polarisation;
 };
 
 } // namespace pelican
