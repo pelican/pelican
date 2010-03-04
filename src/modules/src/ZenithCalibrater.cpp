@@ -202,6 +202,93 @@ void ZenithCalibrater::_calibrate(complex_t* visTemp, const unsigned nAnt,
     }
 }
 
+/**
+ * @details
+ * Computes the complex antenna gain corrections.
+ */
+void ZenithCalibrater::_computeComplexGains (
+        const unsigned n_a,
+        const unsigned ne,
+        double* Dz,
+        complex_t* model,
+        complex_t* Vz,
+        complex_t* work,
+        int lWork,
+        double* rWork,
+        complex_t* gains
+){
+    std::vector<double> zz(n_a);
+    std::vector<double> zs(n_a);
+    std::vector<double> dabs(n_a);
+    for (unsigned i = 0; i < n_a; i++) {
+        zz[i] = 1.0 / sqrt(Dz[i]);
+        zs[i] = 1.0 / sqrt(model[i * n_a + i].real());
+        dabs[i] = zz[i] / zs[i];
+        Vz[i + n_a + i] += Dz[i];
+    }
+
+    for (unsigned j = 0; j < n_a; j++) {
+        for (unsigned i = 0; i < n_a; i++) {
+            const unsigned index = i + j * n_a;
+            model[index] *= std::conj(zs[j]) * zs[i];
+            Vz[index] *= std::conj(zz[j]) * zz[i];
+        }
+    }
+
+    int info = 0;
+    int n = n_a;   // order of matrix A
+    int lda = n_a; // first dimension of the array a
+    std::vector<double> Ds(n_a);
+    std::vector<double> Dz2(n_a);
+    zheev_("V", "U", &n, model, &lda, &Ds[0], work, &lWork,
+                    rWork, &info);
+
+    zheev_("V", "U", &n, Vz, &lda, &Dz2[0], work, &lWork,
+                    rWork, &info);
+
+    for (unsigned i = 0; i < n_a; i++) {
+        const unsigned biggest = n_a - 1;
+        complex_t top = Ds[biggest] * model[n_a * biggest + i];
+        complex_t bottom = Dz2[biggest] * Vz[n_a * biggest + i];
+        complex_t darg = top / bottom;
+        gains[i] = dabs[i] * darg;
+    }
+}
+
+/**
+ * @details
+ * Builds the corrected visibilities.
+ */
+void ZenithCalibrater::_buildCorrectedVisibilities (
+        const unsigned n_a,
+        const complex_t* vis,
+        const complex_t* gains,
+        const complex_t* sigma_n,
+        complex_t* visCorrected
+){
+    // Loop over columns in the visibility matrix.
+    for (unsigned j = 0; j < n_a; j++)
+    {
+        // Copy the column.
+        for (unsigned i = 0; i < n_a; i++)
+        {
+            const unsigned index = i + j * n_a;
+            visCorrected[index] = vis[index];
+        }
+
+        // Set the matrix diagonal.
+        const unsigned indexDiag = j + j * n_a;
+        visCorrected[indexDiag] = vis[indexDiag] - sigma_n[j];
+
+        // Multiply by the gains.
+        const complex_t gain = gains[j];
+        for (unsigned i = 0; i < n_a; i++)
+        {
+            const unsigned index = i + j * n_a;
+            visCorrected[index] = gain * visCorrected[index] * std::conj(gain);
+        }
+    }
+}
 
 /**
  * @details
