@@ -2,6 +2,7 @@ SUBPACKAGE(modulesTest modules utility)
 set(
    modulesTest_src
    src/modulesTest.cpp
+   src/AstrometryFastTest.cpp
    src/TestModule.cpp
    src/BasicFlaggerTest.cpp
    src/ZenithCalibraterTest.cpp
