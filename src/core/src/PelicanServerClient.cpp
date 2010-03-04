@@ -109,10 +109,11 @@ QHash<QString, DataBlob*> PelicanServerClient::_response(QIODevice& device, boos
             {
                 // service data
                 ServiceDataResponse* res = static_cast<ServiceDataResponse*>(r.get());
-                foreach( const QString& type, res->types() ) {
+                foreach( const Data* d, res->data() ) {
+                    QString type = d->name();
                     AbstractAdapter* ad = adapters().value(type);
                     AbstractServiceAdapter* adapter = static_cast<AbstractServiceAdapter*>(ad);
-                    adapter->config(dataHash[type], res->size(type) );
+                    adapter->config(dataHash[type], d->size() );
                     adapter->deserialise(&device);
                     validData.insert(type, dataHash.value(type));
                 }

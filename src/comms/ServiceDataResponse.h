@@ -11,6 +11,7 @@
  */
 
 namespace pelican {
+    class Data;
 
 /**
  * @class ServiceDataResponse
@@ -26,12 +27,16 @@ class ServiceDataResponse : public ServerResponse
     public:
         ServiceDataResponse(  );
         ~ServiceDataResponse();
-        const QList<QString>& types() const;
-        long size(const QString& type) const;
+        /// add a Data object to the response list
+        //  this class will take ownership of the Data 
+        //  object and delete it on destruction
+        void addData(Data*);
+
+        /// return a list of valid data objects
+        const QList<Data*>& data() const;
 
     private:
-         QList<QString> _dataTypes;
-         QMap<QString,long> _sizes;
+         QList<Data*> _data;
 };
 
 } // namespace pelican

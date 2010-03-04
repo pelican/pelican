@@ -23,6 +23,7 @@ class DataTest : public CppUnit::TestFixture
     public:
         CPPUNIT_TEST_SUITE( DataTest );
         CPPUNIT_TEST( test_valid );
+        CPPUNIT_TEST( test_pointer );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -31,6 +32,7 @@ class DataTest : public CppUnit::TestFixture
 
         // Test Methods
         void test_valid();
+        void test_pointer();
 
     public:
         DataTest(  );

@@ -117,11 +117,14 @@ boost::shared_ptr<ServerResponse> PelicanClientProtocol::receive(QAbstractSocket
                 boost::shared_ptr<ServiceDataResponse> s(new ServiceDataResponse);
                 quint16 sets;
                 in >> sets;
+                QString name;
+                QString version;
+                quint64 size;
                 for(int i=0; i < sets; ++i ) {
-                    QString name;
-                    QString version;
                     in >> name;
                     in >> version;
+                    in >> size;
+                    s->addData(new Data(name,version,size));
                 }
                 return s;
             }

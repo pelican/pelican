@@ -33,8 +33,8 @@ class Data;
 class AbstractProtocol
 {
     public:
-        typedef QMap<QString,StreamData*> StreamData_t;
-        typedef QMap<QString,Data*> ServiceData_t;
+       typedef QList<StreamData*> StreamData_t;
+       typedef QList<Data*> ServiceData_t;
 
     public:
         AbstractProtocol();
