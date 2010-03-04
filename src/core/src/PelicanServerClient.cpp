@@ -70,7 +70,7 @@ QHash<QString, DataBlob*> PelicanServerClient::_response(QIODevice& device, boos
                 StreamDataResponse* res = static_cast<StreamDataResponse*>(r.get());
                 // determine the associated service data
                 StreamData* sd = res->streamData();
-                foreach(const Data* d, sd->associateData() ) {
+                foreach(const boost::shared_ptr<Data>& d, sd->associateData() ) {
                     // do we already have it?
                     if( dataHash[d->name()]->version() == d->id() )
                     {

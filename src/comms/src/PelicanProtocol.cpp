@@ -107,9 +107,9 @@ void PelicanProtocol::send(QIODevice& stream, const AbstractProtocol::StreamData
         out << (i.value())->name() << (i.value())->id() << (quint64)(i.value())->size();
         // service data info
         out << (quint16) i.value()->associateData().size();
-        foreach(const Data* dat, i.value()->associateData())
+        foreach(boost::shared_ptr<Data> dat, i.value()->associateData())
         {
-            out << dat->name() << dat->id();
+            out << dat->name() << dat->id() << (quint64)(dat->size());
         }
     }
     stream.write(array);

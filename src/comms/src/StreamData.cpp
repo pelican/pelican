@@ -30,7 +30,7 @@ const QSet<QString>& StreamData::associateDataTypes() const
     return _associateDataTypes;
 }
 
-void StreamData::addAssociatedData(const Data* data)
+void StreamData::addAssociatedData(boost::shared_ptr<Data> data)
 {
     _associateData.append(data);
     _associateDataTypes.insert(data->name());
@@ -40,16 +40,22 @@ bool StreamData::isValid() const
 {
     bool rv = Data::isValid();
     if( rv ) {
-        foreach(const Data* d, _associateData) {
+        foreach(const boost::shared_ptr<Data>& d, _associateData) {
             rv &= d->isValid();
         }
     }
     return rv;
 }
 
-bool StreamData::operator==(const StreamData& sd) const {
+bool StreamData::operator==(const StreamData& sd) const 
+{
+    if( _associateData.size() != sd._associateData.size() )
+        return false;
     bool rv = Data::operator==(sd);
-    rv &= _associateData == sd._associateData;
+    for( int i = 0; i < _associateData.size(); ++i ) 
+    {
+        rv &= _associateData[i]->operator==(*(sd._associateData[i]));
+    }
     return rv;
 }
 

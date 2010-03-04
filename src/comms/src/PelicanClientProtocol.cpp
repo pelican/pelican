@@ -94,7 +94,7 @@ boost::shared_ptr<ServerResponse> PelicanClientProtocol::receive(QAbstractSocket
                     in >> name;
                     QString id;
                     in >> id;
-                    quint16 size;
+                    quint64 size;
                     in >> size;
 
                     StreamData* sd = new StreamData(name, 0, (unsigned long)size);
@@ -102,10 +102,11 @@ boost::shared_ptr<ServerResponse> PelicanClientProtocol::receive(QAbstractSocket
                     sd->setId(id);
 
                     // read in associate meta-data
-                    in >> size;
-                    for( unsigned int j=0; j < size; ++j ) {
-                        in >> name >> id;
-                        sd->addAssociatedData(new Data(name, id));
+                    quint16 associates;
+                    in >> associates;
+                    for( unsigned int j=0; j < associates; ++j ) {
+                        in >> name >> id >> size;
+                        sd->addAssociatedData( boost::shared_ptr<Data>(new Data(name, id, size)) );
                     }
                 }
                 return s;

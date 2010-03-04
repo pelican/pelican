@@ -71,15 +71,14 @@ void PelicanProtocolTest::test_sendStreamData()
         StreamDataResponse* sd2 = static_cast<StreamDataResponse*>(resp.get());
         CPPUNIT_ASSERT( sd == *(sd2->streamData()) );
     }
-    /*
     {
         // Use Case
         // Single Stream Data with  service data
         PelicanProtocol proto;
         StreamData sd("test");
-        Data d1("d1",0,100);
-        d1.setId("d1id");
-        sd.addAssociatedData(&d1);
+        boost::shared_ptr<Data> d1(new Data("d1",0,100) );
+        d1->setId("d1id");
+        sd.addAssociatedData(d1);
 
         AbstractProtocol::StreamData_t data;
         data.insert(QString("teststream"), &sd);
@@ -92,7 +91,6 @@ void PelicanProtocolTest::test_sendStreamData()
         StreamDataResponse* sd2 = static_cast<StreamDataResponse*>(resp.get());
         CPPUNIT_ASSERT( sd == *(sd2->streamData()) );
     }
-    */
 }
 
 void PelicanProtocolTest::test_request()
