@@ -35,6 +35,8 @@ class PelicanServerClient : public AbstractDataClient
                 QList<DataRequirements>& dataRequirements);
         ~PelicanServerClient();
         virtual QHash<QString, DataBlob*> getData(QHash<QString, DataBlob*>& dataHash);
+        void setPort(unsigned int port);
+        void setIP_Address(const QString& ipaddress);
 
     protected:
         QHash<QString, DataBlob*> _getServiceData(const ServiceDataRequest& requirements, QHash<QString, DataBlob*>& dataHash);
@@ -44,6 +46,10 @@ class PelicanServerClient : public AbstractDataClient
 
     private:
         AbstractClientProtocol* _protocol;
+        QString _ipadress;
+        unsigned int _port;
+
+    friend class PelicanServerClientTest;
 };
 
 } // namespace pelican

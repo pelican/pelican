@@ -21,7 +21,7 @@ void* operator new(std::size_t size, char const * file, int line)
     return p;
 }
 
-void operator delete(void * p, char const * file, int line)
+void operator delete(void * p, char const * , int )
 {
     //std::cout << "delete() :" << file << " line: " << line << std::endl;
     if (Tracer::ready)

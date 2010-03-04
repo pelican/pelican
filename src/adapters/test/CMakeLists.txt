@@ -8,6 +8,9 @@ set( adaptersTest_src
 
 set( adaptersTestLibrary_src
      src/VisGen.cpp
+     src/TestDataBlob.cpp
+     src/TestAdapter.cpp
+     src/TestAdapterFactory.cpp
 )
 add_library(adaptersTestUtilities ${adaptersTestLibrary_src} )
 SUBPACKAGE_ADD_LIBRARIES(adaptersTestUtilities)
