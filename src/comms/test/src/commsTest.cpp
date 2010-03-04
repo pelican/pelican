@@ -4,7 +4,7 @@
 #include <cppunit/ui/text/TestRunner.h>
 #include <QCoreApplication>
 
-int main(int argc, char* argv[])
+int main(int argc, char** argv)
 {
 
     QCoreApplication app(argc,argv);

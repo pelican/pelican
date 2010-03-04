@@ -12,6 +12,7 @@
 #include "data/VisibilityData.h"
 #include "data/VisibilityPositions.h"
 #include "data/ModelVisibilityData.h"
+#include "data/CorrectedVisibilityData.h"
 
 #include "utility/memCheck.h"
 
@@ -47,6 +48,8 @@ DataBlobFactory::~DataBlobFactory()
  * - ImageData
  * - VisibilityData
  * - VisibilityPositions
+ * - ModelVisibilityData
+ * - CorrectedVisibilityData
  *
  * @param[in] type A string containing the type of the data blob.
  *
@@ -76,6 +79,8 @@ DataBlob* DataBlobFactory::create(const QString& type)
         dataBlob = new VisibilityPositions;
     else if (type == "ModelVisibilityData")
         dataBlob = new ModelVisibilityData;
+    else if (type == "CorrectedVisibilityData")
+        dataBlob = new CorrectedVisibilityData;
 
     /* Return pointer to the blob */
     return dataBlob;

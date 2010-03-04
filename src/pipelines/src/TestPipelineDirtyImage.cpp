@@ -48,8 +48,8 @@ void TestPipelineDirtyImage::run(QHash<QString, DataBlob*>& data)
     std::cout << "TestPipelineDirtyImage::run()\n";
     _modelVis->run(data);
     _calibrate->run(data);
-//    _imager->run(data);
-//    _fitsWriter->run(data);
+    _imager->run(data);
+    _fitsWriter->run(data);
     stop();
 }
 

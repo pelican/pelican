@@ -8,7 +8,7 @@ namespace pelican {
  * @details
  * Creates a new abstract Pelican adapter with the given configuration.
  */
-AbstractAdapter::AbstractAdapter(const ConfigNode& config)
+AbstractAdapter::AbstractAdapter(const ConfigNode& /*config*/)
 {
     _chunkSize = 0;
     _data = NULL;

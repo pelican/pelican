@@ -63,6 +63,7 @@
         <channels>182</channels>
         <frequencies reference="0.0" referenceChannel="0" delta="195312.5"/>
         <useModelVis value="false"/>
+        <useRawVis value="false"/>
     </ZenithImagerDft>
 
 

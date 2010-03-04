@@ -48,7 +48,7 @@ ModuleFactory::~ModuleFactory()
  * Returns a pointer to the newly-created module.
  * The object is still owned by the factory.
  */
-AbstractModule* ModuleFactory::createModule(const QString& type, const QString& pipeline)
+AbstractModule* ModuleFactory::createModule(const QString& type, const QString& /*pipeline*/)
 {
     /* Create an index into the configuration file and get the configuration */
     Config::TreeAddress_t address = _configRoot;

@@ -249,7 +249,7 @@ void FlagTableTest::test_flag()
             for (unsigned c = 0; c < nChannels; ++c) {
                 for (unsigned aj = 0; aj < nAntennas; ++aj) {
                     for (unsigned ai = 0; ai < nAntennas; ++ai) {
-                        if (c >= sChannelStart && c <= sChannelEnd && p == sPol)
+                        if (p == sPol)
                             CPPUNIT_ASSERT( data.flags(ai, aj, c, p) == FlagTable::FLAG_RFI_BAD);
                         else
                             CPPUNIT_ASSERT( data.flags(ai, aj, c, p) == 0 );

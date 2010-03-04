@@ -116,6 +116,7 @@ class ZenithImagerDft : public AbstractModule
         ImageData* _image;                  ///< Image amplitude matrix.
 
         bool _useModelVis;                  ///< Use model visibility data blob
+        bool _useRawVis;                    ///< Use raw visibility data blob
         std::vector<unsigned> _channels;    ///< Selected channel list.
         unsigned _nChannels;
         int _freqRefChannel;                ///< Frequency reference channel
