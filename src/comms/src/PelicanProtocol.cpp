@@ -100,16 +100,16 @@ void PelicanProtocol::send(QIODevice& stream, const AbstractProtocol::StreamData
     out.setVersion(QDataStream::Qt_4_0);
     out << (quint16)ServerResponse::StreamData;
     out << (quint16)data.size();
-    QMapIterator<QString, StreamData*> i(data);
+    QListIterator<StreamData*> i(data);
     // stream header info
     while (i.hasNext()) {
-        i.next();
-        out << (i.value())->name() << (i.value())->id() << (quint64)(i.value())->size();
+        StreamData* sd = i.next();
+        out << sd->name() << sd->id() << (quint64)(sd->size());
         // service data info
-        out << (quint16) i.value()->associateData().size();
-        foreach(const Data* dat, i.value()->associateData())
+        out << (quint16) sd->associateData().size();
+        foreach(const boost::shared_ptr<Data>& dat, sd->associateData())
         {
-            out << dat->name() << dat->id();
+            out << dat->name() << dat->id() << (quint64)(dat->size());
         }
     }
     stream.write(array);
@@ -117,8 +117,8 @@ void PelicanProtocol::send(QIODevice& stream, const AbstractProtocol::StreamData
     i.toFront();
     while (i.hasNext())
     {
-        i.next();
-        stream.write( (const char*)i.value()->operator*(), i.value()->size() );
+        StreamData* sd = i.next();
+        stream.write( (const char*)sd->operator*(), sd->size() );
     }
 }
 
@@ -130,15 +130,16 @@ void PelicanProtocol::send(QIODevice& stream, const AbstractProtocol::ServiceDat
     // followed by the binary data itself
     QByteArray array;
     QDataStream out(&array, QIODevice::WriteOnly);
+
     // header data
     out.setVersion(QDataStream::Qt_4_0);
     out << (quint16)ServerResponse::ServiceData;
-    out << data.size();
+    out << (quint16)data.size();
 
-    QMapIterator<QString, Data*> i(data);
+    QListIterator<Data*> i(data);
     while (i.hasNext()) {
-        i.next();
-        out << i.key() << i.value()->id() << (quint64)i.value()->size();
+        Data* d = i.next();
+        out << d->name() << d->id() << (quint64)d->size();
     }
     stream.write(array);
 
@@ -146,8 +147,8 @@ void PelicanProtocol::send(QIODevice& stream, const AbstractProtocol::ServiceDat
     i.toFront();
     while (i.hasNext())
     {
-        i.next();
-        stream.write( (const char*)i.value()->operator*(), (quint64)i.value()->size() );
+        Data* d = i.next();
+        stream.write( (const char*)d->operator*(), (quint64)d->size() );
     }
 }
 

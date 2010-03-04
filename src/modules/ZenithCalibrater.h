@@ -46,14 +46,19 @@ class ZenithCalibrater : public AbstractModule
         void _calibrate(complex_t* visTemp, const unsigned nAnt,
                 complex_t* autoCorrelations, complex_t* ww, double* rWork,
                 double* eignenvalues, const unsigned nEigenvaluesUsed,
-                complex_t *work, int lWork, const unsigned nIter);
+                complex_t *work, int lWork, const unsigned nIter,
+                const double tolerance);
 
         /// Zero diagonals of matrix
         void _zeroDiagonals(complex_t* matrix, const unsigned size);
 
-        /// Gets the diagonals of a square matrix
+        /// Sets the diagonals of a square matrix
         void _setDiagonals(complex_t* matrix, const unsigned size,
                 const complex_t* diagonals);
+
+        /// Scales a vector.
+        void _sqrtScaleVector(complex_t* vector, const unsigned size,
+                const double value, complex_t* scaled);
 
         /// Extract and check data blobs from the data hash
         void _fetchDataBlobs(QHash<QString, DataBlob*>& data);

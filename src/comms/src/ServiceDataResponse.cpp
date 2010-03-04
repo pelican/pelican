@@ -1,6 +1,6 @@
 #include "ServiceDataResponse.h"
 
-
+#include "Data.h"
 #include "utility/memCheck.h"
 
 namespace pelican {
@@ -14,16 +14,18 @@ ServiceDataResponse::ServiceDataResponse()
 
 ServiceDataResponse::~ServiceDataResponse()
 {
+    foreach(Data* d, _data )
+        delete d;
 }
 
-const QList<QString>& ServiceDataResponse::types() const
+void ServiceDataResponse::addData(Data* d)
 {
-    return _dataTypes;
+    _data.append(d);
 }
 
-long ServiceDataResponse::size(const QString& type) const
+const QList<Data*>& ServiceDataResponse::data() const
 {
-    return _sizes[type];
+    return _data;
 }
 
 

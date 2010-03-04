@@ -60,7 +60,7 @@ void Session::processRequest(const ServerRequest& req, QIODevice& out)
                     if( d.size() ) {
                         AbstractProtocol::StreamData_t data;
                         foreach( LockedData ld, d) {
-                            data.insert(ld.name(), static_cast<StreamData*>(ld.data()->data()));
+                            data.append(static_cast<StreamData*>(ld.data()->data()));
                         }
                         _proto->send( out, data );
                     }
@@ -72,7 +72,7 @@ void Session::processRequest(const ServerRequest& req, QIODevice& out)
                     if( d.size() ) {
                         AbstractProtocol::ServiceData_t data;
                         foreach( LockedData ld, d) {
-                            data.insert(ld.name(), ld.data()->data());
+                            data.append(ld.data()->data());
                         }
                         _proto->send( out, data );
                     }

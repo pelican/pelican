@@ -3,6 +3,7 @@
 
 #include <QSet>
 #include <QString>
+#include <boost/shared_ptr.hpp>
 #include "Data.h"
 
 /**
@@ -26,14 +27,14 @@ class LockedData;
 class StreamData : public Data
 {
     public:
-        typedef QList<const Data*> DataList_t;
+        typedef QList<boost::shared_ptr<Data> > DataList_t;
 
     public:
         StreamData(const QString& name, void* = 0, size_t  = 0);
         StreamData(const QString& name, QString& id, size_t  = 0);
         virtual ~StreamData();
 
-        void addAssociatedData(const Data*);
+        void addAssociatedData(boost::shared_ptr<Data>);
         const DataList_t& associateData() const;
         const QSet<QString>& associateDataTypes() const;
         virtual bool isValid() const;
