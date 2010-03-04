@@ -51,8 +51,8 @@ void StreamDataTest::test_isValid()
             StreamData sd("",(void*)1000,10);
             CPPUNIT_ASSERT( ! d.isValid() );
             CPPUNIT_ASSERT( sd.isValid() );
-            Data ld("test", &d);
-            sd.addAssociatedData( &ld );
+            boost::shared_ptr<Data> ld( new Data("test", &d) );
+            sd.addAssociatedData( ld );
             CPPUNIT_ASSERT( ! sd.isValid() );
         }
     }

@@ -50,4 +50,12 @@ void DataTest::test_valid()
     }
 }
 
+void DataTest::test_pointer()
+{
+    QByteArray b;
+    b.resize(100);
+    Data d("test",b.data(),100);
+    CPPUNIT_ASSERT( b.data() == *d );
+}
+
 } // namespace pelican

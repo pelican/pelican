@@ -9,22 +9,6 @@ namespace pelican {
 
 /**
  * @details
- * AbstractAstrometry constructor.
- */
-AbstractAstrometry::AbstractAstrometry()
-{
-}
-
-/**
- * @details
- * AbstractAstrometry destructor.
- */
-AbstractAstrometry::~AbstractAstrometry()
-{
-}
-
-/**
- * @details
  * Sets the celestial parameter data structure required for coordinate
  * conversions.
  *

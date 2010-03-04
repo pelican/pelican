@@ -265,12 +265,10 @@ void ZenithImagerDftTest::test_makeImageDft()
     std::vector<real_t> coordM(nM);
     std::vector<real_t> image(nL * nM);
 
-    TIMER2_START
     TIMER_START
     imager._makeImageDft(nAnt, &antX[0], &antY[0], &vis[0], freq, nL, nM,
             &coordL[0], &coordM[0], &image[0]);
     TIMER_STOP("ZenithImagerDft::_makeImageDft()");
-    TIMER2_STOP("T2: ZenithImagerDft::_makeImageDft()")
 
 }
 
