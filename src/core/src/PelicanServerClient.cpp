@@ -34,6 +34,16 @@ PelicanServerClient::~PelicanServerClient()
     delete _protocol;
 }
 
+void PelicanServerClient::setPort(unsigned int port)
+{
+    _port = port;
+}
+
+void PelicanServerClient::setIP_Address(const QString& ipaddress)
+{
+    _ipadress = ipaddress;
+}
+
 QHash<QString, DataBlob*> PelicanServerClient::getData(QHash<QString, DataBlob*>& dataHash)
 {
     QHash<QString, DataBlob*> validData;

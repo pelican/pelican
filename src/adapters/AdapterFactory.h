@@ -37,7 +37,7 @@ class AdapterFactory
         ~AdapterFactory();
 
         /// Creates a new module.
-        AbstractAdapter* create(const QString& type, const QString& name = QString());
+        virtual AbstractAdapter* create(const QString& type, const QString& name = QString());
 
         /// Returns the tree node address that marks the start
         /// of the module configuration block.
@@ -47,10 +47,10 @@ class AdapterFactory
         /// Creates a new adapter.
         AbstractAdapter* _create(const QString& type, const ConfigNode& config);
 
-    private:
+    protected:
         const Config* _config; ///< Pointer to the configuration object.
-        Config::TreeAddress_t _configRoot;
         QVector<AbstractAdapter*> _adapters; ///< Holds pointers to the created adapters.
+        Config::TreeAddress_t _configRoot;
 };
 
 } // namespace pelican

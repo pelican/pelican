@@ -27,6 +27,8 @@ AbstractDataClient::AbstractDataClient(const ConfigNode& config,
     _configNode = &config;
     _adapterFactory = adapterFactory;
     _dataRequirements = dataRequirements;
+    if ( _dataRequirements.size() == 0 )
+        throw( QString("No data requirements specified") );
 
     /* Get the file-type to adapter mapping */
     _adapterNames = config.getOptionHash("data", "type", "adapter");
