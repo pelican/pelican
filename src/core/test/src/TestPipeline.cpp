@@ -20,7 +20,7 @@ TestPipeline::TestPipeline()
  *
  * @param[in] requirements The data requirements of the pipeline.
  */
-TestPipeline::TestPipeline(const DataRequirements& requirements)
+TestPipeline::TestPipeline(const DataRequirements& /*requirements*/)
     : AbstractPipeline()
 {
     _setDefaults();
@@ -60,7 +60,7 @@ void TestPipeline::reset()
  * Pipeline run method (overloaded virtual).
  * Defines a single iteration of the pipeline.
  */
-void TestPipeline::run(QHash<QString, DataBlob*>& dataHash)
+void TestPipeline::run(QHash<QString, DataBlob*>& /*dataHash*/)
 {
 //    if (dataRequired() == dataHash)
         ++_matchedCounter;
