@@ -34,8 +34,8 @@
 
     <ZenithCalibrater>
         <eigenvalues number="10"/>
-        <tolerance value="1.0e-3"/>
-        <iterations value="100"/>
+        <tolerance value="1.0e-6"/>
+        <iterations value="1"/>
 
         <channels>182</channels>
         <polarisation value="x"/>
@@ -45,10 +45,10 @@
 
     <ZenithModelVisibilities>
         <!-- source coord1 = az/ra coord2 = el/dec coordType="azel" or "j2000" -->
-        <source coordType="azel" coord1="0.0"   coord2="80.0" ampType="polxy" amp1="1.0"  amp2="0.5"/>
-        <source coordType="azel" coord1="90.0"  coord2="10.0" ampType="polxy" amp1="0.75" amp2="0.5"/>
-        <source coordType="azel" coord1="180.0" coord2="60.0" ampType="polxy" amp1="1.0"  amp2="0.5"/>
-        <source coordType="azel" coord1="270.0" coord2="50.5" ampType="polxy" amp1="0.8"  amp2="0.5"/>
+        <source coordType="azel" coord1="-4.71694127387953"   coord2="82.12031315483448" ampType="polxy" amp1="11000"  amp2="0.5"/>
+        <source coordType="azel" coord1="-85.19272496550460"   coord2="53.05074784160009" ampType="polxy" amp1="8100"  amp2="0.5"/>
+        <!-- <source coordType="azel" coord1="9.670555556"   coord2="80.37166667" ampType="polxy" amp1="11000"  amp2="0.5"/> -->
+        <!-- <source coordType="azel" coord1="268.031111"   coord2="56.174444" ampType="polxy" amp1="8100"  amp2="0.5"/> -->
         <channels>182</channels>
         <frequencies reference="0.0" referenceChannel="0" delta="195312.5"/>
         <polarisation value="x"/>
@@ -56,7 +56,7 @@
 
 
     <ZenithImagerDft>
-        <size l="512" m="512" pixelCentred="true"/>
+        <size l="256" m="256" pixelCentred="true"/>
         <fullSky value="true" cutHemisphere="true"/>
         <polarisation value="x"/>
         <pointSpreadFunction value="false"/>

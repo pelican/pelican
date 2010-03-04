@@ -96,6 +96,7 @@ void ZenithCalibrater::run(QHash<QString, DataBlob*>& data)
             &rWork[0], &info);
     if (info != 0) throw QString("_calibrate(): zheev() failed...");
     lWork = static_cast<int>(optWork.real());
+    std::cout << "Lwork: " << lWork << std::endl;
     std::vector<complex_t> work(lWork);
 
 
@@ -170,6 +171,7 @@ void ZenithCalibrater::run(QHash<QString, DataBlob*>& data)
             }
 
             _computeComplexGains(nAnt, _nEigenvalues, &autoCorrelations[0], &modelTemp[0], &visTemp[0], &work[0], lWork, &rWork[0], &gains[0]);
+//            _computeComplexGains(nAnt, _nEigenvalues, &autoCorrelations[0], visModel, &visTemp[0], &work[0], lWork, &rWork[0], &gains[0]);
 
             _buildCorrectedVisibilities(nAnt, vis, &gains[0], &sigma_n[0], visCorrected);
         }
@@ -199,11 +201,16 @@ void ZenithCalibrater::_calibrate(complex_t* visTemp, const unsigned nAnt,
     double oldMaxEig = 0.0; // Previous max eigenvalue
     unsigned loopsReqired = 0;
 
+    std::vector<complex_t> Vz(nAnt * nAnt);
+    memcpy(&Vz[0], visTemp, nAnt * nAnt * sizeof(complex_t));
+
     TIMER2_START
     /// Calibration interation
     for (unsigned k = 0; k < nIter; k++) {
         // Set the diagonals of the vis work array
-        _setDiagonals(visTemp, nAnt, autoCorrelations);
+        _setDiagonals(&Vz[0], nAnt, autoCorrelations);
+
+        memcpy(visTemp, &Vz[0], nAnt * nAnt * sizeof(complex_t));
 
         // Find eigenvalues and eigenvectors
         zheev_("V", "U", &n, visTemp, &lda, eigenValues, work, &lWork,
@@ -227,7 +234,7 @@ void ZenithCalibrater::_calibrate(complex_t* visTemp, const unsigned nAnt,
         for (unsigned e = 0; e < nEigenvaluesUsed; e++) {
             unsigned index = nAnt - 1 - e;
             double eigenvalue = eigenValues[index];
-//            std::cout << index << ". eigenvalue = " << eigenvalue << std::endl;
+            std::cout << index << ". eigenvalue = " << eigenvalue << std::endl;
             complex_t* eigenVector = &visTemp[nAnt * index];
             complex_t* scaledEigenVector = &ww[e * nAnt];
             _sqrtScaleVector(eigenVector, nAnt, eigenvalue, scaledEigenVector);
@@ -279,16 +286,24 @@ void ZenithCalibrater::_computeComplexGains (
         zz[i] = 1.0 / sqrt(Dz[i].real());
         zs[i] = 1.0 / sqrt(model[i * n_a + i].real());
         dabs[i] = zz[i] / zs[i];
-        Vz[i + n_a + i] += Dz[i];
+        Vz[i + n_a * i] = Dz[i]; // changed from matlab (was +=)
     }
+
+    std::cout << "zz[0] = " << zz[0] << std::endl;
+    std::cout << "Vz[0] = " << Vz[0] << std::endl;
 
     for (unsigned j = 0; j < n_a; j++) {
         for (unsigned i = 0; i < n_a; i++) {
             const unsigned index = i + j * n_a;
             model[index] *= std::conj(zs[j]) * zs[i];
             Vz[index] *= std::conj(zz[j]) * zz[i];
+//            model[index] = Vz[index];
         }
     }
+
+//    return;
+    std::cout << "Vz[0] (again) = " << Vz[0] << std::endl;
+
 
     int info = 0;
     int n = n_a;   // order of matrix A
@@ -302,9 +317,9 @@ void ZenithCalibrater::_computeComplexGains (
                     rWork, &info);
 
     for (unsigned i = 0; i < n_a; i++) {
-        const unsigned biggest = n_a - 1;
-        complex_t top = Ds[biggest] * model[n_a * biggest + i];
-        complex_t bottom = Dz2[biggest] * Vz[n_a * biggest + i];
+        const unsigned biggestIndex = n_a - 1;
+        complex_t top = Ds[biggestIndex] * model[n_a * biggestIndex + i];
+        complex_t bottom = Dz2[biggestIndex] * Vz[n_a * biggestIndex + i];
         complex_t darg = top / bottom;
         gains[i] = dabs[i] * darg;
     }
@@ -336,11 +351,10 @@ void ZenithCalibrater::_buildCorrectedVisibilities (
         visCorrected[indexDiag] = vis[indexDiag] - sigma_n[j];
 
         // Multiply by the gains.
-        const complex_t gain = gains[j];
         for (unsigned i = 0; i < n_a; i++)
         {
             const unsigned index = i + j * n_a;
-            visCorrected[index] = gain * visCorrected[index] * std::conj(gain);
+            visCorrected[index] = gains[i] * visCorrected[index] * std::conj(gains[j]);
         }
     }
 }
@@ -381,7 +395,7 @@ void ZenithCalibrater::_sqrtScaleVector(complex_t* v, const unsigned size,
         const double value, complex_t* scaled)
 {
     for (unsigned i = 0; i < size; i++) {
-        scaled[i] = sqrt(value * v[i]);
+        scaled[i] = sqrt(value) * v[i];
     }
 }
 
