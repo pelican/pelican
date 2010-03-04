@@ -15,8 +15,7 @@ namespace pelican {
 class ConfigNode;
 class VisibilityData;
 class ModelVisibilityData;
-class AntennaPositions;
-
+class CorrectedVisibilityData;
 
 /**
  * @class ZenithCalibrater
@@ -70,7 +69,7 @@ class ZenithCalibrater : public AbstractModule
         void _computeComplexGains (
                 const unsigned n_a,
                 const unsigned ne,
-                double* Dz,
+                complex_t* Dz,
                 complex_t* model,
                 complex_t* Vz,
                 complex_t* work,
@@ -91,7 +90,7 @@ class ZenithCalibrater : public AbstractModule
     private:
         VisibilityData* _vis;
         ModelVisibilityData* _modelVis;
-        AntennaPositions* _antPos;
+        CorrectedVisibilityData* _correctedVis;
 
         unsigned _nEigenvalues;
         double _tolerance;

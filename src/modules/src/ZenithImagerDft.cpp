@@ -41,8 +41,11 @@ ZenithImagerDft::ZenithImagerDft(const ConfigNode& config)
     if (_useModelVis) {
         addGeneratedData("ModelVisibilityData");
     }
-    else {
+    else if (_useRawVis) {
         addStreamData("VisibilityData");
+    }
+    else {
+        addGeneratedData("CorrectedVisibilityData");
     }
     addServiceData("AntennaPositions");
     addGeneratedData("ImageData");
@@ -259,6 +262,9 @@ void ZenithImagerDft::_getConfiguration(const ConfigNode& config)
 
     _useModelVis = (config.getOption("useModelVis", "value", "false") == "true") ?
             true : false;
+
+    _useRawVis = (config.getOption("useRawVis", "value", "false") == "true") ?
+            true : false;
 }
 
 
@@ -309,8 +315,11 @@ void ZenithImagerDft::_fetchDataBlobs(QHash<QString, DataBlob*>& data)
     if (_useModelVis) {
         _vis = static_cast<VisibilityData*>(data["ModelVisibilityData"]);
     }
-    else {
+    else if (_useRawVis) {
         _vis = static_cast<VisibilityData*>(data["VisibilityData"]);
+    }
+    else {
+        _vis = static_cast<VisibilityData*>(data["CorrectedVisibilityData"]);
     }
 
     _antPos = static_cast<AntennaPositions*>(data["AntennaPositions"]);

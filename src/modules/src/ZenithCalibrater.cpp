@@ -2,8 +2,8 @@
 #include "data/DataBlob.h"
 #include "utility/ConfigNode.h"
 #include "data/VisibilityData.h"
-#include "data/AntennaPositions.h"
 #include "data/ModelVisibilityData.h"
+#include "data/CorrectedVisibilityData.h"
 #include <QStringList>
 #include "utility/pelicanTimer.h"
 #include <iostream>
@@ -28,7 +28,13 @@ ZenithCalibrater::ZenithCalibrater(const ConfigNode& config)
 {
     _vis = NULL;
     _modelVis = NULL;
-    _antPos = NULL;
+    _correctedVis = NULL;
+
+    // Request the data blobs.
+    addStreamData("VisibilityData");
+    addGeneratedData("ModelVisibilityData");
+    addGeneratedData("CorrectedVisibilityData");
+
     _getConfiguration(config);
 }
 
@@ -60,6 +66,7 @@ void ZenithCalibrater::run(QHash<QString, DataBlob*>& data)
 
     // Visibility data work array used in the calibration iteration.
     std::vector<complex_t> visTemp(nAnt * nAnt);
+    std::vector<complex_t> modelTemp(nAnt * nAnt);
 
     // ?? work array
     std::vector<complex_t> ww(nAnt * _nEigenvalues);
@@ -72,6 +79,12 @@ void ZenithCalibrater::run(QHash<QString, DataBlob*>& data)
 
     // Vector of eigenvalues produced in the calibration (all of them!)
     std::vector<double> eigenValues(nAnt);
+
+    // Vector of complex antenna gains.
+    std::vector<complex_t> gains(nAnt);
+
+    // Sigma n
+    std::vector<complex_t> sigma_n(nAnt);
 
     // Allocate optimal zheev() work array.
     int info = 0;
@@ -127,7 +140,6 @@ void ZenithCalibrater::run(QHash<QString, DataBlob*>& data)
 //            _iterations, _tolerance);
 
 
-
     for (unsigned c = 0; c < nChan; c++) {
         unsigned chan = _channels[c];
 
@@ -136,7 +148,11 @@ void ZenithCalibrater::run(QHash<QString, DataBlob*>& data)
 
             // Copy the input visibility data into the visibility work array
             complex_t* vis = _vis->ptr(chan, pol);
+            complex_t* visModel = _modelVis->ptr(0, 0);
+            complex_t* visCorrected = _correctedVis->ptr(chan, pol);
+
             memcpy(&visTemp[0], vis, nVis * sizeof(complex_t));
+            memcpy(&modelTemp[0], visModel, nVis * sizeof(complex_t));
 
 //            for (unsigned j = 0; j < nAnt; j++) {
 //                for (unsigned i = 0; i < nAnt; i++) {
@@ -148,8 +164,18 @@ void ZenithCalibrater::run(QHash<QString, DataBlob*>& data)
                     &rWork[0], &eigenValues[0], _nEigenvalues, &work[0], lWork,
                     _iterations, _tolerance);
 
+            // Compute sigma_n.
+            for (unsigned i = 0; i < nAnt; i++) {
+                sigma_n[i] = vis[i + i * nAnt] - autoCorrelations[i];
+            }
+
+            _computeComplexGains(nAnt, _nEigenvalues, &autoCorrelations[0], &modelTemp[0], &visTemp[0], &work[0], lWork, &rWork[0], &gains[0]);
+
+            _buildCorrectedVisibilities(nAnt, vis, &gains[0], &sigma_n[0], visCorrected);
         }
     }
+//    std::cout << "Here" << std::endl;
+
 }
 
 
@@ -238,7 +264,7 @@ void ZenithCalibrater::_calibrate(complex_t* visTemp, const unsigned nAnt,
 void ZenithCalibrater::_computeComplexGains (
         const unsigned n_a,
         const unsigned ne,
-        double* Dz,
+        complex_t* Dz,
         complex_t* model,
         complex_t* Vz,
         complex_t* work,
@@ -250,7 +276,7 @@ void ZenithCalibrater::_computeComplexGains (
     std::vector<double> zs(n_a);
     std::vector<double> dabs(n_a);
     for (unsigned i = 0; i < n_a; i++) {
-        zz[i] = 1.0 / sqrt(Dz[i]);
+        zz[i] = 1.0 / sqrt(Dz[i].real());
         zs[i] = 1.0 / sqrt(model[i * n_a + i].real());
         dabs[i] = zz[i] / zs[i];
         Vz[i + n_a + i] += Dz[i];
@@ -367,29 +393,25 @@ void ZenithCalibrater::_fetchDataBlobs(QHash<QString, DataBlob*>& data)
 {
     _vis = static_cast<VisibilityData*>(data["VisibilityData"]);
     _modelVis = static_cast<ModelVisibilityData*>(data["ModelVisibilityData"]);
-    _antPos = static_cast<AntennaPositions*>(data["AntennaPositions"]);
+    _correctedVis = static_cast<CorrectedVisibilityData*>(data["CorrectedVisibilityData"]);
 
     if (!_vis)
         throw QString("ZenithCalibrater: VisibilityData blob missing.");
     if (!_modelVis)
         throw QString("ZenithCalibrater: ModelVisibilityData blob missing.");
-    if (!_antPos)
-        throw QString("ZenithCalibrater: AntennaPositions blob missing.");
-
-    if (_antPos->nAntennas() == 0)
-        throw QString("ZenithCalibrater: No antennas found.");
+    if (!_correctedVis)
+        throw QString("ZenithCalibrater: CorrectedVisibilityData blob missing.");
 
     if (_vis->nEntries() == 0)
         throw QString("ZenithCalibrater: Visibility data empty.");
 
-    if (_vis->nAntennas() != _antPos->nAntennas())
-        throw QString("ZenithCalibrater: Antenna dimension mismatch");
-
     if (_channels.size() == 0)
             throw QString("ZenithCalibrater: No channels selected.");
 
+    // Resize corrected visibilities.
+    _correctedVis->resize(_vis->nAntennas(), _vis->nChannels(),
+            _vis->nPolarisations());
 }
-
 
 
 /**
