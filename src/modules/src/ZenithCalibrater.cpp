@@ -7,9 +7,13 @@
 #include <QStringList>
 #include "utility/pelicanTimer.h"
 #include <iostream>
+#include <iomanip>
 
 #include "utility/memCheck.h"
 
+using std::cout;
+using std::endl;
+using std::vector;
 
 namespace pelican {
 
@@ -212,6 +216,14 @@ void ZenithCalibrater::_calibrate(complex_t* visTemp, const unsigned nAnt,
 
         memcpy(visTemp, &Vz[0], nAnt * nAnt * sizeof(complex_t));
 
+        // Print out Vz[1-4]
+        cout << std::setprecision(0);
+        cout << Vz[0] << " " << Vz[1] << " " << Vz[2] << " " << Vz[3] << endl;
+        cout << Vz[0 + nAnt] << " " << Vz[1 + nAnt] << " " << Vz[2 + nAnt] << " " << Vz[3 + nAnt] << endl;
+        cout << Vz[0 + 2*nAnt] << " " << Vz[1 + 2*nAnt] << " " << Vz[2 + 2*nAnt] << " " << Vz[3 + 2*nAnt] << endl;
+        cout << Vz[0 + 3*nAnt] << " " << Vz[1 + 3*nAnt] << " " << Vz[2 + 3*nAnt] << " " << Vz[3 + 3*nAnt] << endl;
+        cout << endl;
+
         // Find eigenvalues and eigenvectors
         zheev_("V", "U", &n, visTemp, &lda, eigenValues, work, &lWork,
                 rWork, &info);
@@ -231,6 +243,7 @@ void ZenithCalibrater::_calibrate(complex_t* visTemp, const unsigned nAnt,
 
         // Loop over eigenvalues in descending order and scale their
         // associated eigenVectors. (store the result in a row of ww)
+        cout << std::setprecision(3);
         for (unsigned e = 0; e < nEigenvaluesUsed; e++) {
             unsigned index = nAnt - 1 - e;
             double eigenvalue = eigenValues[index];
@@ -240,13 +253,17 @@ void ZenithCalibrater::_calibrate(complex_t* visTemp, const unsigned nAnt,
             _sqrtScaleVector(eigenVector, nAnt, eigenvalue, scaledEigenVector);
         }
 
+
         // Compute the new diagonal
         for (unsigned a = 0; a < nAnt; a++) {
+            autoCorrelations[a] = 0.0;
             for (unsigned e = 0; e < nEigenvaluesUsed; e++) {
                 unsigned index = a * nEigenvaluesUsed + e;
-                autoCorrelations[a] = real(ww[index] * std::conj(ww[index]));
+                autoCorrelations[a] += real(ww[index] * std::conj(ww[index]));
             }
         }
+
+
 
         // Check for convergence
         double maxEig = eigenValues[nAnt - 1];
@@ -300,6 +317,7 @@ void ZenithCalibrater::_computeComplexGains (
 //            model[index] = Vz[index];
         }
     }
+
 
 //    return;
     std::cout << "Vz[0] (again) = " << Vz[0] << std::endl;
