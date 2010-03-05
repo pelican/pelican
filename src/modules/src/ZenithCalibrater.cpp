@@ -277,6 +277,16 @@ void ZenithCalibrater::_buildCorrectedVisibilities(
         }
     }
 
+    //==========================================================================
+    // HACK to return either model, raw.
+    // ---------------------------------
+    // Uncomment below to return uncorrected vis. To return model vis pass
+    // the model vis in the raw vis argument and return.
+
+    // return
+    //==========================================================================
+
+
     // Update the diagonals for sigma_n ?? (whatever sigma_n is...)
     for (unsigned j = 0; j < nAnt; j++) {
         const unsigned indexDiag = j * nAnt + j;
