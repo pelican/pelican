@@ -8,6 +8,8 @@
 #include "utility/pelicanTimer.h"
 #include <iostream>
 #include <iomanip>
+#include <fstream>
+#include "cblas.h"
 
 #include "utility/memCheck.h"
 
@@ -63,39 +65,38 @@ void ZenithCalibrater::run(QHash<QString, DataBlob*>& data)
     _fetchDataBlobs(data);
 
     unsigned nAnt = _rawVis->nAntennas();
-    unsigned nChan = _channels.size();
-    unsigned nPol = _polarisation == POL_BOTH ? 2 : 1;
+    unsigned nChanCal = _channels.size(); // Number of channels to calibrate.
+    unsigned nPolCal = _polarisation == POL_BOTH ? 2 : 1; // Number of polarisations to calibrate.
     unsigned nVis = nAnt * nAnt;    // number of vis per chan per pol
 
     // zheev() work arrays.
     int lWork = 64 * nAnt;
-    std::vector<complex_t> work(64 * nAnt);
-    std::vector<double> rWork(3 * nAnt);
+    vector<complex_t> work(64 * nAnt);
+    vector<double> rWork(3 * nAnt);
 
     // Temporary copies of visibility data matrices.
-    std::vector<complex_t> Vz(nAnt * nAnt);
-    std::vector<complex_t> modelTemp(nAnt * nAnt);
+    vector<complex_t> Vz(nAnt * nAnt);
+    vector<complex_t> modelTemp(nAnt * nAnt);
 
     // (name ??)
-    std::vector<complex_t> Dz(nAnt, complex_t(0.0, 0.0));
+    vector<complex_t> Dz(nAnt, complex_t(0.0, 0.0));
 
     // Vector of complex antenna gains.
-    std::vector<complex_t> gains(nAnt);
+    vector<complex_t> gains(nAnt);
 
     // Sigma n (name ??)
-    std::vector<complex_t> sigma_n(nAnt);
+    vector<complex_t> sigma_n(nAnt);
 
-    for (unsigned c = 0; c < nChan; c++) {
+    for (unsigned c = 0; c < nChanCal; c++) {
         unsigned chan = _channels[c];
 
-        for (unsigned p = 0; p < nPol; p++) {
-
-            unsigned pol = (nPol = 1 && _polarisation == POL_X) ? 0 : 1;
+        for (unsigned p = 0; p < nPolCal; p++) {
+            unsigned pol = (nPolCal == 1 && _polarisation == POL_X) ? 0 : 1;
 
             // Copy the input visibility data into the visibility work array
             complex_t* rawVis = _rawVis->ptr(chan, pol);
             complex_t* correctedVis = _correctedVis->ptr(chan, pol);
-            complex_t* modelVis = _modelVis->ptr(c, pol);
+            complex_t* modelVis = _modelVis->ptr(c, p);
             memcpy(&Vz[0], rawVis, nVis * sizeof(complex_t));
             memcpy(&modelTemp[0], modelVis, nVis * sizeof(complex_t));
 
@@ -113,6 +114,8 @@ void ZenithCalibrater::run(QHash<QString, DataBlob*>& data)
 
             _buildCorrectedVisibilities(nAnt, rawVis, &gains[0], &sigma_n[0],
                     correctedVis);
+//            _buildCorrectedVisibilities(nAnt, modelVis, &gains[0], &sigma_n[0],
+//                    correctedVis);
         }
     }
 }
@@ -148,12 +151,12 @@ void ZenithCalibrater::_calibrate(
     int lda = nAnt; // first dimension of the array a
 
     // Vector of eigenvalues produced in the calibration (all of them!)
-    std::vector<double> eigenValues(nAnt);
+    vector<double> eigenValues(nAnt);
 
     // Work array used in calculating new diagonals
-    std::vector<complex_t> ww(nAnt * nEigenvaluesUsed);
+    vector<complex_t> ww(nAnt * nEigenvaluesUsed);
 
-    std::vector<complex_t> eigenVectors(nAnt * nAnt);
+    vector<complex_t> eigenVectors(nAnt * nAnt);
 
     double oldMaxEig = 0.0; // Previous max eigenvalue
     unsigned loopsReqired = 0;
@@ -169,34 +172,28 @@ void ZenithCalibrater::_calibrate(
         // Find eigenvalues and eigenvectors
         zheev_("V", "U", &n, &eigenVectors[0], &lda, &eigenValues[0], work,
                 &lWork, rWork, &info);
-
-        if (info != 0) throw QString("_calibrate(): zheev() failed...");
+        if (info != 0) throw QString("_calibrate(): zheev() failed (info = %1)").arg(info);
 
         // Loop over eigenvalues in descending order and scale their
         // associated eigenVectors. (store the result in a row of ww)
         cout << std::setprecision(3);
         for (unsigned e = 0; e < nEigenvaluesUsed; e++) {
-            unsigned index = nAnt - 1 - e;
-            double eigenvalue = eigenValues[index];
-            std::cout << e << ". eigenvalue = " << eigenvalue << std::endl;
-            complex_t* eigenVector = &eigenVectors[nAnt * index];
-            _sqrtScaleVector(eigenVector, nAnt, eigenvalue, &ww[e * nAnt]);
+            unsigned j = nAnt - e - 1;
+            cblas_zcopy(nAnt, &eigenVectors[j * nAnt], 1, &ww[e * nAnt], 1);
+            cblas_zdscal(nAnt, sqrt(eigenValues[j]), &ww[e * nAnt], 1);
         }
 
-
         // Compute the new diagonal
+        complex_t compTemp;
         for (unsigned a = 0; a < nAnt; a++) {
-            Dz[a] = 0.0;
-            for (unsigned e = 0; e < nEigenvaluesUsed; e++) {
-                unsigned index = a * nEigenvaluesUsed + e;
-                Dz[a] += real(ww[index] * std::conj(ww[index])); // This should have been +=.
-            }
+            cblas_zdotc_sub(nEigenvaluesUsed, &ww[a], nAnt, &ww[a], nAnt, &compTemp);
+            Dz[a] = compTemp.real();
         }
 
         // Check for convergence
         double maxEig = eigenValues[nAnt - 1];
-        std::cout << std::fabs(maxEig - oldMaxEig) << std::endl;
-        if (std::fabs(maxEig - oldMaxEig) <= tolerance * oldMaxEig) {
+        cout << fabs(maxEig - oldMaxEig) << endl;
+        if (fabs(maxEig - oldMaxEig) <= tolerance * oldMaxEig) {
             loopsReqired = k+1;
             break;
         }
@@ -207,7 +204,7 @@ void ZenithCalibrater::_calibrate(
     }
 
     TIMER2_STOP("Time taken")
-    std::cout << "= Converged after " << loopsReqired << " loops." << std::endl;
+    cout << "= Converged after " << loopsReqired << " loops." << endl;
 }
 
 /**
@@ -225,9 +222,9 @@ void ZenithCalibrater::_computeComplexGains(
         double* rWork,
         complex_t* gains
 ){
-    std::vector<double> zz(nAnt);
-    std::vector<double> zs(nAnt);
-    std::vector<double> dabs(nAnt);
+    vector<double> zz(nAnt);
+    vector<double> zs(nAnt);
+    vector<double> dabs(nAnt);
 
     for (unsigned i = 0; i < nAnt; i++) {
         zz[i] = 1.0 / sqrt(Dz[i].real());
@@ -239,21 +236,21 @@ void ZenithCalibrater::_computeComplexGains(
     for (unsigned j = 0; j < nAnt; j++) {
         for (unsigned i = 0; i < nAnt; i++) {
             const unsigned index = i + j * nAnt;
-            model[index] *= std::conj(zs[j]) * zs[i];
-            Vz[index] *= std::conj(zz[j]) * zz[i];
+            model[index] *= conj(zs[j]) * zs[i];
+            Vz[index] *= conj(zz[j]) * zz[i];
         }
     }
 
     int info = 0;
     int n = nAnt;   // order of matrix A
     int lda = nAnt; // first dimension of the array a
-    std::vector<double> Ds(nAnt);
-    std::vector<double> Dz2(nAnt);
+    vector<double> Ds(nAnt);
+    vector<double> Dz2(nAnt);
     zheev_("V", "U", &n, model, &lda, &Ds[0], work, &lWork, rWork, &info);
-    if (info != 0) throw QString("_calibrate(): zheev() failed...");
+    if (info != 0) throw QString("_calibrate(): zheev() failed (info = %1)").arg(info);
 
     zheev_("V", "U", &n, Vz, &lda, &Dz2[0], work, &lWork, rWork, &info);
-    if (info != 0) throw QString("_calibrate(): zheev() failed...");
+    if (info != 0) throw QString("_calibrate(): zheev() failed (info = %1)").arg(info);
 
     for (unsigned i = 0; i < nAnt; i++) {
         const unsigned biggestIndex = nAnt - 1;
@@ -290,7 +287,7 @@ void ZenithCalibrater::_buildCorrectedVisibilities(
     // Uncomment below to return uncorrected vis. To return model vis pass
     // the model vis in the raw vis argument and return.
 
-    // return
+//     return;
     //==========================================================================
 
 
@@ -304,9 +301,13 @@ void ZenithCalibrater::_buildCorrectedVisibilities(
     for (unsigned j = 0; j < nAnt; j++) {
         for (unsigned i = 0; i < nAnt; i++) {
             const unsigned index = j * nAnt + i;
-            correctedVis[index] = gain[i] * correctedVis[index] * std::conj(gain[j]);
+            correctedVis[index] = gain[i] * correctedVis[index] * conj(gain[j]);
         }
     }
+
+    std::ofstream outputstream("correctedVis.dat");
+    outputstream.write(reinterpret_cast<char*>(correctedVis),
+            nAnt * nAnt * sizeof(complex_t));
 }
 
 

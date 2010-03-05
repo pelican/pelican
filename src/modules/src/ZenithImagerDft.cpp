@@ -139,12 +139,12 @@ void ZenithImagerDft::run(QHash<QString, DataBlob*>& data)
     _fetchDataBlobs(data);
 
     unsigned nAnt = _antPos->nAntennas();
-    unsigned nPol = _polarisation == POL_BOTH ? 2 : 1;
-    unsigned nChan = _channels.size();
+    unsigned nPolImage = _polarisation == POL_BOTH ? 2 : 1;
+    unsigned nChanImage = _channels.size();
 
 
     // Assign memory for the image cube (only resizes if needed).
-    _image->resize(_sizeL, _sizeM, nChan, nPol);
+    _image->resize(_sizeL, _sizeM, nChanImage, nPolImage);
 
     // Set the image blob meta-data.
     _image->cellsizeL() = _cellsizeL;
@@ -156,17 +156,18 @@ void ZenithImagerDft::run(QHash<QString, DataBlob*>& data)
     complex_t* vis = NULL;
 
     // Loop over selected channels and polarisations to make images.
-    for (unsigned c = 0; c < nChan; c++) {
+    for (unsigned c = 0; c < nChanImage; c++) {
 
         // The channel ID selection
         unsigned channel = _channels[c];
         double frequency = _freqRef + (channel - _freqRefChannel) * _freqDelta;
 //        std::cout << "frequency (imager)= " << frequency <<std::endl;
 
-        for (unsigned p = 0; p < nPol; p++) {
+        for (unsigned p = 0; p < nPolImage; p++) {
 
             unsigned pol = p;
-            if (nPol == 1) pol = _polarisation;
+//            if (nPolImage == 1) pol = _polarisation; // old
+            pol = (nPolImage == 1 && _polarisation == POL_X) ? 0 : 1;
 
             // Get pointers to the visibility data and image for the selected
             // channel and polarisation.

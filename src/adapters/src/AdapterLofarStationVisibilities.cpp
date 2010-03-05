@@ -25,6 +25,8 @@ AdapterLofarStationVisibilities::AdapterLofarStationVisibilities(const ConfigNod
     _nAnt = config.getOption("antennas", "number", "96").toUInt();
     _nChan = config.getOption("channels", "number", "512").toUInt();
     _nPol = config.getOption("polarisations", "number", "2").toUInt();
+    QString rowMajor = config.getOption("rowMajor", "value", "true").toLower();
+    _rowMajor = (rowMajor.startsWith("t")) ? true : false;
     _dataBytes = config.getOption("dataBytes", "number", "8").toUInt();
 }
 
@@ -60,7 +62,6 @@ void AdapterLofarStationVisibilities::deserialise(QIODevice* in)
 
     std::vector<char> temp(_chunkSize);
     in->read(reinterpret_cast<char*>(&temp[0]), _chunkSize);
-//    unsigned nNonZero = 0;
 
     for (unsigned iRaw = 0, c = 0; c < _nChan; c++) {
         for (unsigned j = 0; j < _nAnt; j++) {
@@ -69,27 +70,28 @@ void AdapterLofarStationVisibilities::deserialise(QIODevice* in)
                     for (unsigned pi = 0; pi < _nPol; pi++) {
 
                         if (pi == pj) {
-                            unsigned index = pi * nPointsPerPol +
-                                    c * nPointsPerChan + j * _nAnt + i;
+                            unsigned index = 0;
+                            if (_rowMajor) {
+                                index = pi * nPointsPerPol +
+                                        c * nPointsPerChan + j * _nAnt + i;
+                            }
+                            else {
+                                index = pi * nPointsPerPol +
+                                        c * nPointsPerChan + i * _nAnt + j;
+                            }
                             char *t = &temp[iRaw];
                             if (_dataBytes == 8)
                                 vis[index] = *(reinterpret_cast< std::complex<double>* >(t));
                             else if (_dataBytes == 4)
                                 vis[index] = *(reinterpret_cast< std::complex<float>* >(t));
-
-//                            if (vis[index] != complex_t(0.0, 0.0)) nNonZero++;
                         }
 
-                        iRaw+= 2*_dataBytes;
+                        iRaw+= 2 * _dataBytes;
                     }
                 }
             }
         }
     }
-
-//    if (nNonZero == 0)
-//        throw QString("AdapterLofarStationVisibilities: All read visibilities are zero!");
-
 }
 
 
