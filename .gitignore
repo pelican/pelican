@@ -1,2 +1,4 @@
 # doxygen output directory
 doc/html
+# build directory
+build
