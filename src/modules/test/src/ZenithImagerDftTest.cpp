@@ -109,7 +109,6 @@ void ZenithImagerDftTest::test_inputDataBlobs()
         data["ImageData"] = &image;
         data["VisibilityData"] = &vis;
         data["AntennaPositions"] = &ant;
-        data["FrequencyList"] = &freqList;
         CPPUNIT_ASSERT_THROW(imager._fetchDataBlobs(data), QString);
     }
 
@@ -123,9 +122,8 @@ void ZenithImagerDftTest::test_inputDataBlobs()
         ant.resize(5);
         freqList.resize(2);
         data["ImageData"] = &image;
-        data["VisibilityData"] = &vis;
+        data["CorrectedVisibilityData"] = &vis;
         data["AntennaPositions"] = &ant;
-        data["FrequencyList"] = &freqList;
         CPPUNIT_ASSERT_NO_THROW(imager._fetchDataBlobs(data));
     }
 }
@@ -256,8 +254,8 @@ void ZenithImagerDftTest::test_makeImageDft()
     ZenithImagerDft imager(config);
     unsigned nAnt = 96;
     double freq = 1.0e8;
-    unsigned nL = 256;
-    unsigned nM = 256;
+    unsigned nL = 128;
+    unsigned nM = 128;
     std::vector<real_t> antX(nAnt);
     std::vector<real_t> antY(nAnt);
     std::vector<complex_t> vis(nAnt * nAnt);

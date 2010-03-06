@@ -7,7 +7,6 @@
 #include <QStringList>
 #include <QtGlobal>
 
-#include "adapters/AdapterFrequencyList.h"
 #include "adapters/AdapterAntennaList.h"
 #include "adapters/AdapterLofarStationVisibilities.h"
 
@@ -81,15 +80,13 @@ AbstractAdapter* AdapterFactory::_create(const QString& type, const ConfigNode& 
         adapter = new AdapterLofarStationVisibilities(config);
         _adapters.append(adapter);
     }
-    else if (type == "AdapterFrequencyList") {
-        adapter = new AdapterFrequencyList(config);
-        _adapters.append(adapter);
-    }
     else if (type == "AdapterAntennaList") {
         adapter = new AdapterAntennaList(config);
         _adapters.append(adapter);
     }
-    else throw QString("Unknown adapter type '" + type + "'");
+    else {
+        throw QString("AdapterFactory::_create(): Unknown adapter type '" + type + "'");
+    }
     return adapter;
 }
 

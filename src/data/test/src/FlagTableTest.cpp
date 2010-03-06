@@ -172,9 +172,9 @@ void FlagTableTest::test_flag()
                 for (unsigned aj = 0; aj < nAntennas; ++aj) {
                     for (unsigned ai = 0; ai < nAntennas; ++ai) {
                         if (ai == sAntennai && aj == sAntennaj && c == sChannel && p == sPol)
-                            CPPUNIT_ASSERT( data.flags(ai, aj, c, p) == FlagTable::FLAG_UVDIST);
+                            CPPUNIT_ASSERT(data.flags(ai, aj, c, p) == FlagTable::FLAG_UVDIST);
                         else
-                            CPPUNIT_ASSERT( data.flags(ai, aj, c, p) == 0 );
+                            CPPUNIT_ASSERT(data.flags(ai, aj, c, p) == 0 );
                     }
                 }
             }
@@ -197,12 +197,12 @@ void FlagTableTest::test_flag()
                     for (unsigned ai = 0; ai < nAntennas; ++ai) {
                         if (c == sChannel && p == sPol) {
                             if (ai == sAntenna || aj == sAntenna)
-                                CPPUNIT_ASSERT( data.flags(ai, aj, c, p) == FlagTable::FLAG_AUTOCORR);
+                                CPPUNIT_ASSERT(data.flags(ai, aj, c, p) == FlagTable::FLAG_AUTOCORR);
                             else
-                                CPPUNIT_ASSERT( data.flags(ai, aj, c, p) == 0 );
+                                CPPUNIT_ASSERT(data.flags(ai, aj, c, p) == 0);
                         }
                         else
-                            CPPUNIT_ASSERT( data.flags(ai, aj, c, p) == 0 );
+                            CPPUNIT_ASSERT(data.flags(ai, aj, c, p) == 0);
                     }
                 }
             }
@@ -223,9 +223,9 @@ void FlagTableTest::test_flag()
                 for (unsigned aj = 0; aj < nAntennas; ++aj) {
                     for (unsigned ai = 0; ai < nAntennas; ++ai) {
                         if (c == sChannel && p == sPol)
-                            CPPUNIT_ASSERT( data.flags(ai, aj, c, p) == FlagTable::FLAG_RFI_BAD);
+                            CPPUNIT_ASSERT(data.flags(ai, aj, c, p) == FlagTable::FLAG_RFI_BAD);
                         else
-                            CPPUNIT_ASSERT( data.flags(ai, aj, c, p) == 0 );
+                            CPPUNIT_ASSERT(data.flags(ai, aj, c, p) == 0 );
                     }
                 }
             }
@@ -250,9 +250,9 @@ void FlagTableTest::test_flag()
                 for (unsigned aj = 0; aj < nAntennas; ++aj) {
                     for (unsigned ai = 0; ai < nAntennas; ++ai) {
                         if (p == sPol)
-                            CPPUNIT_ASSERT( data.flags(ai, aj, c, p) == FlagTable::FLAG_RFI_BAD);
+                            CPPUNIT_ASSERT(data.flags(ai, aj, c, p) == FlagTable::FLAG_RFI_BAD);
                         else
-                            CPPUNIT_ASSERT( data.flags(ai, aj, c, p) == 0 );
+                            CPPUNIT_ASSERT(data.flags(ai, aj, c, p) == 0 );
                     }
                 }
             }

@@ -47,6 +47,7 @@ ZenithImagerDft::ZenithImagerDft(const ConfigNode& config)
     else {
         addGeneratedData("CorrectedVisibilityData");
     }
+
     addServiceData("AntennaPositions");
     addGeneratedData("ImageData");
 
