@@ -4,7 +4,7 @@
 
 <clients>
     <FileDataClient>
-        <data type="VisibilityData" adapter="AdapterLofarStationVisibilities" file="data/skybad.dat"/>
+        <data type="VisibilityData" adapter="AdapterLofarStationVisibilities" file="data/lofarVis.dat"/>
         <data type="AntennaPositions" adapter="AdapterAntennaList" file="data/antennaPositions.dat"/>
     </FileDataClient>
 </clients>
@@ -16,10 +16,10 @@
 
     <AdapterLofarStationVisibilities>
         <antennas number="96"/>
-        <channels number="1"/>
+        <channels number="512"/>
         <polarisations number="2"/>
         <dataBytes number="8"/>
-        <rowMajor value="false"/>
+        <rowMajor value="true"/>
     </AdapterLofarStationVisibilities>
 </adapters>
 
@@ -34,13 +34,14 @@
 <modules>
 
     <ZenithCalibrater>
-        <eigenvalues number="15"/>
-        <tolerance value="1.0e-4"/>
+        <eigenvalues number="10"/>
+        <tolerance value="1.0e-3"/>
         <iterations value="100"/>
 
-        <channels>0</channels>
+        <channels>182</channels>
         <polarisation value="x"/>
-        <frequencies reference="3.554687500e7" referenceChannel="0" delta="195312.5"/>
+        <frequencies reference="0.0" referenceChannel="0" delta="195312.5"/>
+        <!-- <frequencies reference="3.554687500e7" referenceChannel="0" delta="195312.5"/>  -->
     </ZenithCalibrater>
 
 
@@ -50,33 +51,35 @@
         <!-- <source coordType="azel" coord1="-4.71694127387953"   coord2="82.12031315483448" ampType="polxy" amp1="11000"  amp2="0.5"/> -->
         <!-- <source coordType="azel" coord1="-85.19272496550460"   coord2="53.05074784160009" ampType="polxy" amp1="8100"  amp2="0.5"/> -->
         
-        <!-- <source coordType="azel" coord1="9.670555556"   coord2="80.37166667" ampType="polxy" amp1="11000"  amp2="0.5"/> -->
-        <!-- <source coordType="azel" coord1="268.031111"   coord2="56.174444" ampType="polxy" amp1="8100"  amp2="0.5"/> -->
+        <source coordType="azel" coord1="9.670555556" coord2="80.37166667"  amp1="11000"  amp2="0.5"/>
+        <source coordType="azel" coord1="268.031111" coord2="56.174444" amp1="8100"  amp2="0.5"/>
         
         <!-- <source coordType="azel" coord1="0"   coord2="80" ampType="polxy" amp1="1000"  amp2="200"/>
         <source coordType="azel" coord1="0"   coord2="84" ampType="polxy" amp1="1000"  amp2="10"/>
         <source coordType="azel" coord1="-70"   coord2="70" ampType="polxy" amp1="1000"  amp2="0"/> -->
         
-        <source coordType="azel" coord1="35"   coord2="80" ampType="polxy" amp1="1000"  amp2="30"/>
-        <source coordType="azel" coord1="-35"   coord2="80" ampType="polxy" amp1="1000"  amp2="10"/>
+        <!-- <source coordType="azel" coord1="35"   coord2="80" ampType="polxy" amp1="1000"  amp2="30"/>
+        <source coordType="azel" coord1="-35"   coord2="80" ampType="polxy" amp1="1000"  amp2="10"/>  -->
         <!-- <source coordType="azel" coord1="-70"   coord2="70" ampType="polxy" amp1="1000"  amp2="0"/> -->
         
         
         <!-- <source coordType="azel" coord1="68"   coord2="40" ampType="polxy" amp1="100"  amp2="50"/> -->
-        <channels>0</channels>
-        <frequencies reference="3.554687500e7" referenceChannel="0" delta="195312.5"/>
+        <channels>182</channels>
+        <frequencies reference="0.0" referenceChannel="0" delta="195312.5"/>
+        <!-- <frequencies reference="3.554687500e7" referenceChannel="0" delta="195312.5"/>  -->
         <polarisation value="x"/>
     </ZenithModelVisibilities>
 
 
     <ZenithImagerDft>
-        <size l="256" m="256" pixelCentred="true"/>
+        <size l="1024" m="1024" pixelCentred="true"/>
         <fullSky value="true" cutHemisphere="true"/>
         <polarisation value="x"/>
         <pointSpreadFunction value="false"/>
-        <channels>0</channels>
-        <frequencies reference="3.554687500e7" referenceChannel="0" delta="195312.5"/>
-        <useModelVis value="true"/>
+        <channels>182</channels>
+        <frequencies reference="0.0" referenceChannel="0" delta="195312.5"/>
+        <!-- <frequencies reference="3.554687500e7" referenceChannel="0" delta="195312.5"/>  -->
+        <useModelVis value="false"/>
         <useRawVis value="false"/>
     </ZenithImagerDft>
 

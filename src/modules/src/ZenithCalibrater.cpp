@@ -114,8 +114,6 @@ void ZenithCalibrater::run(QHash<QString, DataBlob*>& data)
 
             _buildCorrectedVisibilities(nAnt, rawVis, &gains[0], &sigma_n[0],
                     correctedVis);
-//            _buildCorrectedVisibilities(nAnt, modelVis, &gains[0], &sigma_n[0],
-//                    correctedVis);
         }
     }
 }
@@ -172,7 +170,8 @@ void ZenithCalibrater::_calibrate(
         // Find eigenvalues and eigenvectors
         zheev_("V", "U", &n, &eigenVectors[0], &lda, &eigenValues[0], work,
                 &lWork, rWork, &info);
-        if (info != 0) throw QString("_calibrate(): zheev() failed (info = %1)").arg(info);
+        if (info != 0)
+            throw QString("_calibrate(): zheev() failed (info = %1)").arg(info);
 
         // Loop over eigenvalues in descending order and scale their
         // associated eigenVectors. (store the result in a row of ww)
@@ -204,8 +203,10 @@ void ZenithCalibrater::_calibrate(
     }
 
     TIMER2_STOP("Time taken")
+    // TODO: Write this into history...
     cout << "= Converged after " << loopsReqired << " loops." << endl;
 }
+
 
 /**
  * @details
@@ -247,10 +248,12 @@ void ZenithCalibrater::_computeComplexGains(
     vector<double> Ds(nAnt);
     vector<double> Dz2(nAnt);
     zheev_("V", "U", &n, model, &lda, &Ds[0], work, &lWork, rWork, &info);
-    if (info != 0) throw QString("_calibrate(): zheev() failed (info = %1)").arg(info);
+    if (info != 0)
+        throw QString("_calibrate(): zheev() failed (info = %1)").arg(info);
 
     zheev_("V", "U", &n, Vz, &lda, &Dz2[0], work, &lWork, rWork, &info);
-    if (info != 0) throw QString("_calibrate(): zheev() failed (info = %1)").arg(info);
+    if (info != 0)
+        throw QString("_calibrate(): zheev() failed (info = %1)").arg(info);
 
     for (unsigned i = 0; i < nAnt; i++) {
         const unsigned biggestIndex = nAnt - 1;
@@ -281,16 +284,6 @@ void ZenithCalibrater::_buildCorrectedVisibilities(
         }
     }
 
-    //==========================================================================
-    // HACK to return either model, raw.
-    // ---------------------------------
-    // Uncomment below to return uncorrected vis. To return model vis pass
-    // the model vis in the raw vis argument and return.
-
-//     return;
-    //==========================================================================
-
-
     // Update the diagonals for sigma_n ?? (whatever sigma_n is...)
     for (unsigned j = 0; j < nAnt; j++) {
         const unsigned indexDiag = j * nAnt + j;
@@ -304,10 +297,6 @@ void ZenithCalibrater::_buildCorrectedVisibilities(
             correctedVis[index] = gain[i] * correctedVis[index] * conj(gain[j]);
         }
     }
-
-    std::ofstream outputstream("correctedVis.dat");
-    outputstream.write(reinterpret_cast<char*>(correctedVis),
-            nAnt * nAnt * sizeof(complex_t));
 }
 
 
