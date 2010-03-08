@@ -2,9 +2,9 @@
 #define IMAGEDATA_H
 
 #include "data/DataBlob.h"
+#include <QString>
 #include <vector>
-#include <string>
-#define isnan(x) ((x) != (x))
+#define isnan(x) ((x) != (x)) //TODO: this is unsafe for floating point comarison.
 
 /**
  * @file ImageData.h
@@ -16,7 +16,7 @@ namespace pelican {
  * @class ImageData
  *
  * @brief
- * Image container class.
+ * Image data container class.
  *
  * @details
  * This class holds image data at a number of frequencies.
@@ -24,6 +24,28 @@ namespace pelican {
 
 class ImageData : public DataBlob
 {
+    public:
+        /// The coordinate type of the reference pixel.
+        typedef enum { COORD_RA_DEC, COORD_AZ_EL, COORD_UNDEF } coord_t;
+
+    private:
+        std::vector<real_t> _image; ///< Image amplitude cube.
+        unsigned _nChannels;        ///< Number of channels.
+        unsigned _nPolarisations;   ///< Number of polarisations.
+        unsigned _sizeL;            ///< Number of pixels along l (x).
+        unsigned _sizeM;            ///< Number of pixels along m (y).
+        double _cellsizeL;          ///< Pixel delta along l in arcseconds.
+        double _cellsizeM;          ///< Pixel delta along m in arcseconds.
+        double _refPixelL;          ///< Coordinate reference pixel for l axis.
+        double _refPixelM;          ///< Coordinate reference pixel for m axis.
+        coord_t _coordType;         ///< Reference pixel coordinate type (enum).
+        double _refCoordL;          ///< Reference coordinate in \p _coordType units.
+        double _refCoordM;          ///< Reference coordinate in \p _coordType units.
+        QString _ampUnits;          ///< Amplitude unit.
+        std::vector<double> _max;   ///< Maximum image pixel amplitude (channel, polarisation).
+        std::vector<double> _min;   ///< Minimum image pixel amplitude (channel, polarisation).
+        std::vector<double> _mean;  ///< Mean image pixel amplitude (channel, polarisation).
+
     public:
         /// Constructor.
         ImageData();
@@ -36,10 +58,7 @@ class ImageData : public DataBlob
         ~ImageData();
 
     public:
-        /// The coordinate type of the reference pixel.
-        enum { COORD_RA_DEC, COORD_AZ_EL };
 
-    public:
         /// Resize the image cube.
         void resize(const unsigned sizeL, const unsigned sizeM,
                 const unsigned nChannels, const unsigned nPolarisations);
@@ -70,54 +89,59 @@ class ImageData : public DataBlob
         /// Returns the image size (number of pixels) in the L direction.
         unsigned sizeM() const { return _sizeM; }
 
-        /// Returns a reference to the image pixel separation in the L direction in arcseconds.
+        /// Returns a reference to the image pixel separation at the reference
+        /// pixel in the L direction in units of arcseconds.
         double& cellsizeL() { return _cellsizeL; }
 
-        /// Returns a reference to the  image pixel separation in the M direction arcseconds.
+        /// Returns a reference to the image pixel separation at the reference
+        /// pixel in the M direction in units of arcseconds.
         double& cellsizeM() { return _cellsizeM; }
 
-        /// Returns a reference to the  reference pixel position in the L direction.
+        /// Returns a reference to the reference pixel index in the L direction.
         double& refPixelL()  { return _refPixelL; }
 
-        /// Returns a reference to the reference pixel in the M direction.
+        /// Returns a reference to the reference pixel index in the M direction.
         double& refPixelM() { return _refPixelM; }
 
-        /// Returns a reference to reference pixel coordinate type.
-        int& coordType() { return _coordType; }
+        /// Returns a reference to reference pixel coordinate type (enum).
+        coord_t& coordType() { return _coordType; }
 
-        /// Returns a reference to the reference pixel coordinate in units specified by the coordinate type
+        /// Returns a reference to the reference pixel coordinate in units
+        /// specified by the coordinate type
         double& refCoordL() { return _refCoordL; }
 
-        /// Returns a reference to the reference pixel coordinate in units specified by the coordinate type
+        /// Returns a reference to the reference pixel coordinate in units
+        /// specified by the coordinate type
         double& refCoordM() { return _refCoordM; }
+
+        /// Returns the amplitude units string.
+        QString& ampUnits() { return _ampUnits; }
+
+        /// Returns the minimum image pixel amplitude.
+        double min(const unsigned c, const unsigned p) const {
+            unsigned index = c * _nPolarisations + p;
+            return _min[index];
+        }
+
+        /// Returns the maximum image pixel amplitude.
+        double max(const unsigned c, const unsigned p) const {
+            unsigned index = c * _nPolarisations + p;
+            return _max[index];
+        }
+
+        /// Returns the minimum image pixel amplitude.
+        double mean(const unsigned c, const unsigned p) const {
+            unsigned index = c * _nPolarisations + p;
+            return _mean[index];
+        }
+
+    public: // Accessors to the image array
 
         /// Returns a reference to the image amplitude vector
         std::vector<real_t>& amp() { return _image; }
 
         /// Returns a reference to the image amplitude vector
         const std::vector<real_t>& amp() const { return _image; }
-
-        /// Dereferences the image amplitude array for image index (\p i)
-        real_t& operator[](const unsigned i) { return _image[i]; }
-
-        /// Dereferences the image amplitude array for image index (\p i)
-        real_t operator[](const unsigned i) const { return _image[i]; }
-
-        /// Dereference the image amplitude array for image coordinate
-        /// (\p l, \p m), channel (\p c) and polarisation (\p p)
-        real_t& operator()(const unsigned l, const unsigned m,
-                const unsigned c, const unsigned p) {
-            unsigned index = l + _sizeL * (_sizeM * (c * _nPolarisations + p) + m);
-            return _image[index];
-        }
-
-        /// Dereference the image amplitude array for image coordinate
-        /// (\p l, \p m), channel (\p c) and polarisation (\p p)
-        real_t operator()(const unsigned l, const unsigned m, const unsigned c,
-                const unsigned p) const {
-            unsigned index = l + _sizeL * (_sizeM * (c * _nPolarisations + p) + m);
-            return _image[index];
-        }
 
         /// Return a pointer to the image cube.
         real_t* ptr() { return _image.size() > 0 ? &_image[0] : NULL; }
@@ -153,48 +177,31 @@ class ImageData : public DataBlob
             return _image.size() > 0 ? &_image[index] : NULL;
         }
 
-        /// Returns the minimum image pixel amplitude.
-        double min(const unsigned c, const unsigned p) const {
-            unsigned index = c * _nPolarisations + p;
-            return _min[index];
+    public: // operators
+
+        /// Dereferences the image amplitude array for image index (\p i)
+        real_t& operator[] (const unsigned i) { return _image[i]; }
+
+        /// Dereferences the image amplitude array for image index (\p i)
+        real_t operator[] (const unsigned i) const { return _image[i]; }
+
+        /// Dereference the image amplitude array for image coordinate
+        /// (\p l, \p m), channel (\p c) and polarisation (\p p)
+        real_t& operator() (const unsigned l, const unsigned m,
+                const unsigned c, const unsigned p) {
+            return _image[l + _sizeL * (_sizeM * (c * _nPolarisations + p) + m)];
         }
 
-        /// Returns the maximum image pixel amplitude.
-        double max(const unsigned c, const unsigned p) const  {
-            unsigned index = c * _nPolarisations + p;
-            return _max[index];
+        /// Dereference the image amplitude array for image coordinate
+        /// (\p l, \p m), channel (\p c) and polarisation (\p p)
+        real_t operator() (const unsigned l, const unsigned m, const unsigned c,
+                const unsigned p) const {
+            return _image[l + _sizeL * (_sizeM * (c * _nPolarisations + p) + m)];
         }
-
-        /// Returns the minimum image pixel amplitude.
-        double mean(const unsigned c, const unsigned p) const {
-            unsigned index = c * _nPolarisations + p;
-            return _mean[index];
-        }
-
-        /// Returns the amplitude units
-        std::string& ampUnits() { return _ampUnits; }
 
     private:
-        /// Sort by absolute value
+        /// Comparison function for sorting by absolute value.
         static bool _absSort(const real_t a, const real_t b);
-
-    private:
-        std::vector<real_t> _image; ///< Image amplitude cube.
-        unsigned _nChannels;        ///< Number of channels.
-        unsigned _nPolarisations;   ///< Number of polarisations.
-        unsigned _sizeL;            ///< Number of pixels along l (x).
-        unsigned _sizeM;            ///< Number of pixels along m (y).
-        double _cellsizeL;          ///< Pixel delta along l in arcseconds.
-        double _cellsizeM;          ///< Pixel delta along m in arcseconds.
-        double _refPixelL;          ///< Coordinate reference pixel for l axis.
-        double _refPixelM;          ///< Coordinate reference pixel for m axis.
-        int _coordType;             ///< Reference pixel coordinate type (enum)
-        double _refCoordL;          ///< Reference coordinate in \p coordType units.
-        double _refCoordM;          ///< Reference coordinate in \p coordType units.
-        std::string _ampUnits;      ///< Amplitude unit.
-        std::vector<double> _max;   ///< Maximum image pixel amplitude. (channel, polarisation)
-        std::vector<double> _min;   ///< Minimum image pixel amplitude (channel, polarisation)
-        std::vector<double> _mean;  ///< Mean image pixel amplitude (channe, polarisation)
 };
 
 } // namespace pelican

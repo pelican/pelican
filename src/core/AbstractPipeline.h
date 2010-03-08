@@ -2,6 +2,7 @@
 #define ABSTRACTPIPELINE_H
 
 #include "data/DataRequirements.h"
+#include <QString>
 #include <QList>
 
 /**
@@ -80,7 +81,8 @@ class AbstractPipeline
 
     protected:
         /// Create a pipeline module using the module factory.
-        AbstractModule* createModule(const QString& type);
+        AbstractModule* createModule(const QString& type,
+                const QString& name = QString());
 
         /// Sets the name of the pipeline.
         void setName(const QString& name);

@@ -20,9 +20,10 @@ ImageData::ImageData() : DataBlob()
  * @details
  * Constructs and assigns memory for an image data blob.
  *
- * @param[in]   sizeL       The image size (pixels) in the L direction.
- * @param[in]   sizeM       The image size (pixels) in the M direction.
- * @param[in]   nChannels   The number of frequency channels in the image cube.
+ * @param[in]   sizeL           Image size (pixels) in the L direction.
+ * @param[in]   sizeM           Image size (pixels) in the M direction.
+ * @param[in]   nChannels       Number of frequency channels in the image cube.
+ * @param[in]   nPolarisations  Number of polarisations in the image cube.
  */
 ImageData::ImageData(const unsigned sizeL, const unsigned sizeM,
         const unsigned nChannels, const unsigned nPolarisations)
@@ -81,7 +82,7 @@ void ImageData::clear()
     _cellsizeM = 0.0;
     _refPixelL = 0.0;
     _refPixelM = 0.0;
-    _coordType = 0;
+    _coordType = COORD_UNDEF;
     _refCoordL = 0.0;
     _refCoordM = 0.0;
     _image.clear();
@@ -139,33 +140,12 @@ void ImageData::calculateMean(const unsigned c, const unsigned p)
         _mean[index] += image[i];
     }
     _mean[index] /= _image.size();
-
-//    std::vector<long double> rowMean(_sizeM);
-//
-//    for (unsigned m = 0; m < _sizeM; m++) {
-//        rowMean[m] = 0.0;
-//        for (unsigned l = 0; l < _sizeL; l++) {
-//            unsigned i = m * _sizeL + l;
-//             rowMean[m] += image[i];
-//        }
-//        _mean[index] += rowMean[m] / _sizeL;
-//    }
-//    _mean[index] /= _sizeM;
-
-//    std::vector<real_t> temp = _image;
-//    std::sort(temp.begin(), temp.end(), _absSort);
-//    for (unsigned i = 0; i < temp.size(); i++) {
-//        _mean[index] += temp[i];
-////        std::cout << std::scientific << std::setprecision(8);
-////        std::cout << i << " " << temp[i] << " " << _mean[index] << std::endl;
-//    }
-//    _mean[index] /= temp.size();
 }
 
 
 /**
  * @details
- * Sort by abs value
+ * Sort comparison function for sorting by absolute value value.
  */
 bool ImageData::_absSort(const real_t a, const real_t b)
 {

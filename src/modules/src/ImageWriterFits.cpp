@@ -195,10 +195,10 @@ void ImageWriterFits::_writeHeader()
     if (_image == NULL)
         throw QString("ImageWriterFits: Image data missing.");
 
-    // Write descriptive keys
+    // Write descriptive keys.
     _writeKey("DATE", _getDate());
     _writeKey("ORIGIN", _origin);
-    _writeKey("DATE-OBS", _dateObs);
+    //_writeKey("DATE-OBS", "----"); //TODO: Set DATE-OBS from datablob
     _writeKey("TELESCOP", _telescope);
     _writeKey("INSTRUME", _instrument);
     _writeKey("OBSERVER", _observer);
@@ -206,24 +206,21 @@ void ImageWriterFits::_writeHeader()
     _writeKey("AUTHOR", _author);
     _writeKey("REFERENC", _reference);
 
-    // Brightness scaling and coordinate
+    // Brightness scaling and coordinate.
     double bscale = 1.0;
     double bzero = 0.0;
     _writeKey("BSCALE", bscale);
     _writeKey("BZERO", bzero);
     _writeKey("EQUINOX", _equinox);
-    _writeKey("BUNIT", QString::fromStdString(_image->ampUnits()),
-            "Units of flux");
+    _writeKey("BUNIT", _image->ampUnits(), "Units of flux");
 
-    // Amplitude range (only valid if not an image cube)
+    // Amplitude range (only valid if not an image cube).
     if (_image->nChannels() == 1 && _image->nPolarisations() == 1) {
         _writeKey("DATAMIN", _image->min(0, 0), "Minimum pixel value");
         _writeKey("DATAMAX", _image->max(0, 0), "Maximum pixel value");
     }
 
-//    _writeComment("DATAMEAN = " + QString::number(_image->mean(0, 0)));
-
-    // x axis keywords
+    // x axis keywords.
     double rotaX = 0.0;
     _writeKey("CTYPE1", "RA---SIN");
     _writeKey("CUNIT1", "deg", "Axis unit (degrees)");
@@ -234,7 +231,7 @@ void ImageWriterFits::_writeHeader()
             "Coordinate increment at reference point");
     _writeKey("CROTA1", rotaX);
 
-    // y axis keywords
+    // y axis keywords.
     double rotaY = 0.0;
     _writeKey("CTYPE2", "DEC--SIN");
     _writeKey("CUNIT2", "deg", "Axis unit (degrees)");
@@ -245,14 +242,14 @@ void ImageWriterFits::_writeHeader()
             "Coordinate increment at reference point");
     _writeKey("CROTA2", rotaY);
 
-    // polarisation axis keywords
+    // Polarisation axis keywords. TODO: Set polarisation FITS axes
     _writeKey("CTYPE3", "POL", "XX / YY");
     _writeKey("CRVAL3", 0.0);
     _writeKey("CDELT3", 0.0);
     _writeKey("CRPIX3", 0.0);
     _writeKey("CROTA3", 0.0);
 
-    // channel axis keywords
+    // Channel axis keywords. TODO: Set channel FITS axes (including image cube channel table)
     _writeKey("CTYPE4", "FREQ");
     _writeKey("CRVAL4", 0.0);
     _writeKey("CDELT4", 0.0);
@@ -261,21 +258,30 @@ void ImageWriterFits::_writeHeader()
 
     _writeHistory("This image was created using PELICAN.");
     _writeHistory("- PELICAN: Pipeline for Extensible Lightweight Imaging and CAlibratioN");
-//    _writeHistory("- SEE: www.pelican.oerc.ox.ac.uk");
 }
 
 
 /**
  * @details
+ * Write image data to the FITS primary data array.
+ * See: http://heasarc.nasa.gov/docs/software/fitsio/c/c_user/node75.html#ffppr
+ *
+ * @param[in] image     Image amplitude data matrix.
+ * @param[in] nL        Number of pixels in the l (x) direction.
+ * @param[in] nM        Number of pixels in the m (y) direction.
+ * @param[in] chan      Image channel index.
+ * @param[in] pol       Image polarisation index.
  */
 void ImageWriterFits::_writeImage(real_t* image, const unsigned nL,
         const unsigned nM, const unsigned chan, const unsigned pol)
 {
     // Throw if the CFITSIO file handle isn't open.
-    if (_fits == NULL) throw QString("ImageWriterFits: Fits file not open.");
+    if (_fits == NULL)
+        throw QString("ImageWriterFits: Fits file handle not open.");
 
     // Throw if there is no image data.
-    if (_image == NULL) throw QString("ImageWriterFits: Image data missing.");
+    if (_image == NULL)
+        throw QString("ImageWriterFits: Image data array missing.");
 
     // Write out the image.
     long nPixels = nL * nM;
@@ -402,7 +408,7 @@ void ImageWriterFits::_writeHistory(const QString& text)
     int err = 0;
     ffphis(_fits, (char*)text.toLatin1().data(), &err);
     if (err)
-        throw QString("ImageWriterFits::_writeHistory(): Error writing FITS history.");
+        throw QString("ImageWriterFits::_writeHistory(): Error writing history.");
 }
 
 
@@ -417,102 +423,7 @@ void ImageWriterFits::_writeComment(const QString& text)
     int err = 0;
     ffpcom(_fits, (char*)text.toLatin1().data(), &err);
     if (err)
-        throw QString("ImageWriterFits::_writeComment(): Error writing FITS comment.");
-}
-
-
-/**
- * @details
- * Method to flip the image in the x-direction.
- *
- * @param[in] image Pointer to the start of the image.
- * @param[in] nL    Number of points along the x-axis.
- * @param[in] nM    Number of points along the y-axis.
- */
-void ImageWriterFits::_flipXAxis(real_t* image, const unsigned nL,
-        const unsigned nM)
-{
-    unsigned nPixels = nL * nM;
-    std::vector<real_t> temp(nPixels);
-    real_t* t = &temp[0];
-
-    // Flip x-direction.
-    for (unsigned i = 0, m = 0; m < nM; m++) {
-        for (int l = (nL - 1); l >= 0; l--) {
-            int index = m * nL + l;
-            t[i] = image[index];
-            i++;
-        }
-    }
-
-    // Write back into the image.
-    for (unsigned i = 0; i < nPixels; i++) {
-        image[i] = t[i];
-    }
-
-}
-
-
-/**
- * @details
- * Method to flip the image in the y-direction.
- *
- * @param[in] image Pointer to the start of the image.
- * @param[in] nL    Number of points along the x-axis.
- * @param[in] nM    Number of points along the y-axis.
- */
-void ImageWriterFits::_flipYAxis(real_t* image, const unsigned nL,
-                const unsigned nM)
-{
-    unsigned nPixels = nL * nM;
-    std::vector<real_t> temp(nPixels);
-    real_t* t = &temp[0];
-
-    // Flip y-direction.
-    for (int i = 0, m = nM - 1; m >= 0; m--) {
-        for (unsigned l = 0; l < nL; l++) {
-            unsigned index = m * nL + l;
-            t[i] = image[index];
-            i++;
-        }
-    }
-
-    // Write back into the image.
-    for (unsigned i = 0; i < nPixels; i++) {
-        image[i] = t[i];
-    }
-}
-
-
-
-/**
- * @details
- * Method to transpose the image (flip along the diagonal).
- *
- * @param[in] image Pointer to the start of the image.
- * @param[in] nL    Number of points along the x-axis.
- * @param[in] nM    Number of points along the y-axis.
- */
-void ImageWriterFits::_transpose(real_t* image, const unsigned nL,
-        const unsigned nM)
-{
-    unsigned nPixels = nL * nM;
-    std::vector<real_t> temp(nPixels);
-    real_t* t = &temp[0];
-
-    // Transpose into a temporary.
-    for (unsigned i = 0, m = 0; m < nM; m++) {
-        for (unsigned l = 0; l < nL; l++) {
-            unsigned index = l * nM + m;
-            t[i] = image[index];
-            i++;
-        }
-    }
-
-    // Write back into the image.
-    for (unsigned i = 0; i < nPixels; i++) {
-        image[i] = t[i];
-    }
+        throw QString("ImageWriterFits::_writeComment(): Error writing comment.");
 }
 
 
