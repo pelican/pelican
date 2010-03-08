@@ -16,7 +16,8 @@ ENDIF(CMAKE_SIZEOF_VOID_P EQUAL 8)
 SET(MKL_NAMES ${MKL_NAMES} mkl_core)
 #SET(MKL_NAMES ${MKL_NAMES} mkl_lapack)
 
-#SET(MKL_NAMES ${MKL_NAMES} mkl) # Library dispatcher for dynamic load of processor specific kernel
+# Library dispatcher for dynamic load of processor specific kernel
+#SET(MKL_NAMES ${MKL_NAMES} mkl)
 
 # Threading model
 # ==============================================================================
@@ -31,7 +32,7 @@ IF (MKL_THREADED)
         SET(MKL_NAMES ${MKL_NAMES} mkl_intel_thread)
     ENDIF (CMAKE_COMPILER_IS_GNUCXX)
 
-    FIND_PACKAGE( OpenMP REQUIRED)
+    FIND_PACKAGE(OpenMP REQUIRED)
     LIST(APPEND CMAKE_CXX_FLAGS ${OpenMP_CXX_FLAGS})
     LIST(APPEND CMAKE_C_FLAGS ${OpenMP_C_FLAGS})
 
@@ -58,20 +59,9 @@ FOREACH (MKL_NAME ${MKL_NAMES})
   ENDIF(TMP_LIBRARY)
 ENDFOREACH(MKL_NAME)
 
-IF (MKL_LIBRARIES)
-  SET(MKL_FOUND "YES")
-ELSE (MKL_LIBRARIES)
-  SET(MKL_FOUND "NO")
-ENDIF (MKL_LIBRARIES)
+# handle the QUIETLY and REQUIRED arguments and set MKL_FOUND to TRUE if
+# all listed variables are TRUE
+INCLUDE(FindPackageHandleStandardArgs)
+FIND_PACKAGE_HANDLE_STANDARD_ARGS(MKL DEFAULT_MSG MKL_LIBRARIES)
 
-IF (MKL_FOUND)
-  IF (NOT MKL_FIND_QUIETLY)
-    MESSAGE(STATUS "Found MKL libraries: ${MKL_LIBRARIES}")
-  ENDIF (NOT MKL_FIND_QUIETLY)
-ELSE (MKL_FOUND)
-  IF (MKL_FIND_REQUIRED)
-    MESSAGE(FATAL_ERROR "Could not find MKL libraries")
-  ENDIF (MKL_FIND_REQUIRED)
-ENDIF (MKL_FOUND)
-
-# MARK_AS_ADVANCED(MKL_LIBRARY)
+MARK_AS_ADVANCED(MKL_LIBRARY)
