@@ -11,6 +11,7 @@
 namespace pelican {
 
 class AbstractModule;
+class AbstractAstrometry;
 class ConfigNode;
 class VisibilityData;
 class ModelVisibilityData;
@@ -35,7 +36,7 @@ class ZenithImagerDft : public AbstractModule
         ZenithImagerDft(const ConfigNode& config);
 
         /// Module destructor.
-        ~ZenithImagerDft() {}
+        ~ZenithImagerDft();
 
         /// Sets the channels (\p c) produce an image from.
         /// Method overrides the selected channels from the configuration.
@@ -108,6 +109,9 @@ class ZenithImagerDft : public AbstractModule
         /// Generate a set of visibilities for creating a point spread function.
         void _setPsfVisibilties(complex_t* vis, const unsigned nAnt);
 
+        /// Sets the image meta-data.
+        void _setImageMetaData();
+
     private:
         enum { POL_X, POL_Y, POL_BOTH };
         enum { VIS_RAW, VIS_MODEL, VIS_CALIBRATED, VIS_PSF };
@@ -115,6 +119,7 @@ class ZenithImagerDft : public AbstractModule
         VisibilityData* _vis;               ///< Visibility amplitude matrix.
         AntennaPositions* _antPos;          ///< Visibility positions matrix.
         ImageData* _image;                  ///< Image amplitude matrix.
+        AbstractAstrometry* _astrometry;    ///< Astrometric conversion module.
 
         int _visUse;                        ///< Option to image raw, model or corrected.
         std::vector<unsigned> _channels;    ///< Selected channel list.

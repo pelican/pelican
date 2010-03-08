@@ -15,6 +15,7 @@
     </AdapterAntennaList>
 
     <AdapterLofarStationVisibilities>
+        <time start="" delta=""/>
         <antennas number="96"/>
         <channels number="512"/>
         <polarisations number="2"/>
@@ -29,6 +30,12 @@
         <channels>182</channels>
         <polarisation value="x"/>
     </myVarset>
+    <astrometry>
+        <siteLongitude value=""/>
+        <siteLatitude value=""/>
+        <deltaUT value=""/>
+        <pressure value=""/>
+    </astrometry>
 </varsets>
 
 <modules>
