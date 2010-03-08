@@ -38,20 +38,20 @@ class ZenithImagerDft : public AbstractModule
         ~ZenithImagerDft() {}
 
         /// Sets the channels (\p c) produce an image from.
-        /// Method overrides the selected channels from the configuration
+        /// Method overrides the selected channels from the configuration.
         void setChannels(const std::vector<unsigned>& c) { _channels = c; }
 
         /// Sets the polarisation selection.
-        /// Method overrides the selected channels from the configuration
+        /// Method overrides the selected channels from the configuration.
         void setPolarisation(const unsigned p) { _polarisation = p; }
 
-        /// Sets the image size
+        /// Sets the image size.
         void setSize(const unsigned sizeL, const unsigned sizeM);
 
-        /// Sets the image cellsize
+        /// Sets the image cellsize.
         void setCellsize(const double cellsizeL, const double cellsizeM);
 
-        /// Sets the image size and cellsize
+        /// Sets the image size and cellsize.
         void setDimensions(const unsigned sizeL, const unsigned sizeM,
                 const double cellsizeL, const double cellsizeM);
 
@@ -83,11 +83,11 @@ class ZenithImagerDft : public AbstractModule
                 const unsigned nL, const unsigned nM, real_t* coordL,
                 real_t* coordM, real_t *image);
 
-        /// Element wise multiplication of two complex weights vectors
+        /// Element wise multiplication of two complex weights vectors.
         void _multWeights(const unsigned nAnt, complex_t* weightsXL,
                 complex_t *weightsYM, complex_t *weights);
 
-        /// Matrix vector multiply of visibilities by a weights vector
+        /// Matrix vector multiply of visibilities by a weights vector.
         void _multMatrixVector(const unsigned nAnt, complex_t* visMatrix,
                 complex_t *weights, complex_t *result);
 
@@ -99,24 +99,24 @@ class ZenithImagerDft : public AbstractModule
         void _cutHemisphere(real_t* image, const unsigned nL, const unsigned nM,
                 real_t *l, real_t *m);
 
-        /// Sets the cellsize corresponding to a full sky image
+        /// Sets the cellsize corresponding to a full sky image.
         void _setCellsizeFullSky();
 
-        /// Remove auto-correlations
+        /// Remove auto-correlations.
         void _zeroAutoCorrelations(complex_t* vis, const unsigned nAnt);
 
-        /// Generate a set of visibilities for creating a point spread function
+        /// Generate a set of visibilities for creating a point spread function.
         void _setPsfVisibilties(complex_t* vis, const unsigned nAnt);
 
     private:
         enum { POL_X, POL_Y, POL_BOTH };
+        enum { VIS_RAW, VIS_MODEL, VIS_CALIBRATED, VIS_PSF };
 
         VisibilityData* _vis;               ///< Visibility amplitude matrix.
         AntennaPositions* _antPos;          ///< Visibility positions matrix.
         ImageData* _image;                  ///< Image amplitude matrix.
 
-        bool _useModelVis;                  ///< Use model visibility data blob
-        bool _useRawVis;                    ///< Use raw visibility data blob
+        int _visUse;                        ///< Option to image raw, model or corrected.
         std::vector<unsigned> _channels;    ///< Selected channel list.
         unsigned _nChannels;
         int _freqRefChannel;                ///< Frequency reference channel
@@ -125,7 +125,6 @@ class ZenithImagerDft : public AbstractModule
         unsigned _polarisation;             ///< Selection polarisation (enumeration).
         bool _fullSky;                      ///< Image the full sky (overrides cellsize)
         bool _trimHemisphere;               ///< Cut the image to the full sky hemisphere
-        bool _pointSpreadFunction;          ///< Image the point spread function.
         bool _pixelCentred;                 ///< Put the zero of the image in the middle of a pixel
         unsigned _sizeL;                    ///< Image size in l (x) pixels.
         unsigned _sizeM;                    ///< Image size in m (y) pixels.
