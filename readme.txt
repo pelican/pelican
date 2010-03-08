@@ -6,9 +6,11 @@ Code Build Dependencies
 =======================
 required:   Qt4
             boost_program_options
-optional:   openmp (compiler)
             blas (atlas, gsl or mkl)
+            lapack
             cfitsio
+
+optional:   openmp (compiler)
 
 Documentation Build Dependencies
 =================================
