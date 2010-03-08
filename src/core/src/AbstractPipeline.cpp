@@ -38,16 +38,21 @@ AbstractPipeline::~AbstractPipeline()
  *
  * @param[in] type The type-name of the module to create.
  *                 See the list of known module types in ModuleFactory.
+ * @param[in] name The name of the module to create. Name is used in the XML
+ *                 configuration to differentiate the use of several modules
+ *                 of the same type within a pipeline.
+ *
  *
  * @return The method returns a pointer to the newly-created module.
  */
-AbstractModule* AbstractPipeline::createModule(const QString& type)
+AbstractModule* AbstractPipeline::createModule(const QString& type,
+        const QString& name)
 {
     /* Check that the module factory exists */
     if (_moduleFactory == NULL)
-           throw QString("Module factory doesn't exist.");
+           throw QString("AbstractPipeline: Module factory doesn't exist.");
 
-    AbstractModule* module = _moduleFactory->createModule(type, name());
+    AbstractModule* module = _moduleFactory->createModule(type, name);
     _modules.append(module);
     return module;
 }

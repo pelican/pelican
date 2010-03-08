@@ -6,7 +6,7 @@
 #include <QHash>
 
 /**
- * @file MyPipeline.h
+ * @file TestPipelineDirtyImage.h
  */
 
 namespace pelican {
@@ -18,7 +18,7 @@ class ZenithModelVisibilities;
 class ZenithCalibrater;
 
 /**
- * @class MyPipeline
+ * @class TestPipelineDirtyImage
  *
  * @brief
  *
@@ -43,7 +43,6 @@ class TestPipelineDirtyImage : public AbstractPipeline
         ZenithModelVisibilities* _modelVis;
         ImageWriterFits* _fitsWriter;
         ZenithCalibrater* _calibrate;
-
 };
 
 } // namespace pelican

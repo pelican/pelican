@@ -59,7 +59,7 @@ void ZenithModelVisibilities::run(QHash<QString, DataBlob*>& data)
     unsigned channel = _channels[0];
     double frequency = _freqRef + (channel - _freqRefChannel) * _freqDelta;
 
-    // TODO: loop over freq here
+    // TODO: Zenith model needs to loop over freq's
     {
         if (_polarisation == POL_X || _polarisation == POL_BOTH) {
             _calculateModelVis(vis, nAnt, _antPos->xPtr(), _antPos->yPtr(),

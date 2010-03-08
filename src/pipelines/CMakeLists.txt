@@ -3,6 +3,7 @@ SUBPACKAGE(pipelines utility data modules core)
 set( pipelines_src
     src/TestPipelineVisibilityPrinter.cpp
     src/TestPipelineDirtyImage.cpp
+    src/TestPipelineMultipleImages.cpp
 )
 add_library(pipelines ${pipelines_src} )
 target_link_libraries(pipelines ${SUBPACKAGE_LIBRARIES} )

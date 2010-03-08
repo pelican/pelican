@@ -2,7 +2,6 @@
 #define IMAGERWRITERFITS_H_
 
 #include "modules/AbstractModule.h"
-#include <QStringList>
 #include <QString>
 #include <QHash>
 #include <fitsio.h>
@@ -70,7 +69,7 @@ class ImageWriterFits : public AbstractModule
         void _writeHeader();
 
         /// Write a FITS image.
-        void _writeImage(real_t *image, const unsigned nL, const unsigned nM,
+        void _writeImage(real_t* image, const unsigned nL, const unsigned nM,
                 const unsigned chan, const unsigned pol);
 
         /// Returns the system date and time as UTC.
@@ -98,15 +97,6 @@ class ImageWriterFits : public AbstractModule
         /// Write a header comment line.
         void _writeComment(const QString& text);
 
-        /// Flip the image in the x-direction.
-        void _flipXAxis(real_t* image, const unsigned nL, const unsigned nM);
-
-        /// Flip the image in the y-direction.
-        void _flipYAxis(real_t* image, const unsigned nL, const unsigned nM);
-
-        /// Transpose the image.
-        void _transpose(real_t* image, const unsigned nL, const unsigned nM);
-
     private:
         ImageData* _image;
         fitsfile* _fits;
@@ -121,7 +111,6 @@ class ImageWriterFits : public AbstractModule
 
         QString _date;
         QString _origin;
-        QString _dateObs;
         QString _telescope;
         QString _instrument;
         QString _observer;
