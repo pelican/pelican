@@ -2,6 +2,7 @@
 #include "modules/ZenithImagerDft.h"
 #include "utility/pelicanTimer.h"
 #include "utility/constants.h"
+#include "utility/ConfigNode.h"
 #include "data/ImageData.h"
 #include "data/VisibilityData.h"
 #include "data/FrequencyList.h"
@@ -45,7 +46,7 @@ void ZenithImagerDftTest::test_configuration()
     /// Pass an empty configuration node.
     /// Expect configuration defaults
     {
-        QDomElement config;
+        ConfigNode config;
         ZenithImagerDft imager(config);
         CPPUNIT_ASSERT(imager._sizeL == 128);
         CPPUNIT_ASSERT(imager._sizeM == 128);
@@ -65,7 +66,7 @@ void ZenithImagerDftTest::test_configuration()
  */
 void ZenithImagerDftTest::test_inputDataBlobs()
 {
-    QDomElement config;
+    ConfigNode config;
     ZenithImagerDft imager(config);
     ImageData image;
     VisibilityData vis;
@@ -139,7 +140,7 @@ void ZenithImagerDftTest::test_calculateImageCoords()
     // Setup a imager module. Time and check calculation of image coordinates
     // Expect predictable image coordinates and negligible time taken
     {
-        QDomElement config;
+        ConfigNode config;
         ZenithImagerDft imager(config);
         int sizeL = 256;
         int sizeM = 256;
@@ -181,7 +182,7 @@ void ZenithImagerDftTest::test_calculateImageCoords()
  */
 void ZenithImagerDftTest::test_calculateWeights()
 {
-    QDomElement config;
+    ConfigNode config;
     ZenithImagerDft imager(config);
 
     // Use case
@@ -250,7 +251,7 @@ void ZenithImagerDftTest::test_calculateWeights()
  */
 void ZenithImagerDftTest::test_makeImageDft()
 {
-    QDomElement config;
+    ConfigNode config;
     ZenithImagerDft imager(config);
     unsigned nAnt = 96;
     double freq = 1.0e8;

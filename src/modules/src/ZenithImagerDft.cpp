@@ -268,7 +268,7 @@ void ZenithImagerDft::_getConfiguration(const ConfigNode& config)
             true: false;
 
     // Get the visibility data type to image.
-    QString visUse = config.getOption("visibility", "type", "").toLower();
+    QString visUse = config.getOption("visibility", "type", "psf").toLower();
     if (visUse.startsWith("r"))
         _visUse = VIS_RAW;
     else if (visUse.startsWith("m"))
