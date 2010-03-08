@@ -24,8 +24,8 @@ class CorrectedVisibilityData;
  * Provides basic calibration routines for whole-sky views.
  *
  * @details
- *
  */
+
 class ZenithCalibrater : public AbstractModule
 {
     public:
@@ -39,25 +39,18 @@ class ZenithCalibrater : public AbstractModule
         void run(QHash<QString, DataBlob*>& data);
 
     private:
-        enum pol_t { POL_X, POL_Y, POL_BOTH };
+        typedef enum { POL_X, POL_Y, POL_BOTH } pol_t;
 
         /// Calibration loop.
-        void _calibrate(
-                const unsigned nAnt,
-                const unsigned nEigenvaluesUsed,
-                const unsigned nIterations,
-                const double tolerance,
-                int lWork,
-                complex_t *work,
-                double* rWork,
-                complex_t* Vz,
-                complex_t* Dz
-        );
+        void _calibrate(const unsigned nAnt, const unsigned nEigenvaluesUsed,
+                const unsigned nIterations, const double tolerance, int lWork,
+                complex_t *work, double* rWork, complex_t* Vz, complex_t* Dz);
+
 
         /// Computes the complex gains.
         void _computeComplexGains(
                 const unsigned nAnt,
-                const unsigned ne,
+                const unsigned /* nEigenvaluesUsed */,
                 complex_t* Dz,
                 complex_t* modelVis,
                 complex_t* Vz,
@@ -68,21 +61,13 @@ class ZenithCalibrater : public AbstractModule
         );
 
         /// Builds the corrected visibility set using the complex gains.
-        void _buildCorrectedVisibilities(
-                const unsigned nAnt,
-                const complex_t* rawVis,
-                const complex_t* antennaGain,
-                const complex_t* sigma_n,
-                complex_t* correctedVis
-        );
+        void _buildCorrectedVisibilities(const unsigned nAnt,
+                const complex_t* rawVis, const complex_t* antennaGain,
+                const complex_t* sigma_n, complex_t* correctedVis);
 
-        /// Sets the diagonals of a square matrix
-        void _setDiagonals(complex_t* matrix, const unsigned size,
-                const complex_t* diagonals);
-
-        /// Scales a vector.
-        void _sqrtScaleVector(complex_t* vector, const unsigned size,
-                const double value, complex_t* scaled);
+        /// Sets the diagonals of a square matrix.
+        void _setDiagonals(const unsigned size, const complex_t* diagonals,
+                complex_t* matrix);
 
         /// Extract and check data blobs from the data hash
         void _fetchDataBlobs(QHash<QString, DataBlob*>& data);
