@@ -72,15 +72,15 @@
 
 
     <ZenithImagerDft>
-        <size l="1024" m="1024" pixelCentred="true"/>
+        <size l="256" m="256" pixelCentred="true"/>
         <fullSky value="true" cutHemisphere="true"/>
         <polarisation value="x"/>
-        <pointSpreadFunction value="false"/>
         <channels>182</channels>
         <frequencies reference="0.0" referenceChannel="0" delta="195312.5"/>
         <!-- <frequencies reference="3.554687500e7" referenceChannel="0" delta="195312.5"/>  -->
-        <useModelVis value="false"/>
-        <useRawVis value="false"/>
+        
+        <!-- Visibility types are "raw", "model", "calibrated" or "psf" (only first letter required) -->
+        <visibility type="cal"/>
     </ZenithImagerDft>
 
 
