@@ -34,17 +34,17 @@ namespace pelican {
 ZenithImagerDft::ZenithImagerDft(const ConfigNode& config)
     : AbstractModule(config)
 {
-    // Extract configuration from the xml configuration node.
+    // Extract configuration from the XML configuration node.
     _getConfiguration(config);
 
-    // Register which data blobs are needed by the module
-    if (_useModelVis) {
-        addGeneratedData("ModelVisibilityData");
-    }
-    else if (_useRawVis) {
+    // Register which data blobs are needed by the module.
+    if (_visUse == VIS_RAW) {
         addStreamData("VisibilityData");
     }
-    else {
+    else if (_visUse == VIS_MODEL) {
+        addGeneratedData("ModelVisibilityData");
+    }
+    else if (_visUse == VIS_CALIBRATED) {
         addGeneratedData("CorrectedVisibilityData");
     }
 
@@ -143,6 +143,16 @@ void ZenithImagerDft::run(QHash<QString, DataBlob*>& data)
     unsigned nPolImage = _polarisation == POL_BOTH ? 2 : 1;
     unsigned nChanImage = _channels.size();
 
+    // Declare pointer to visibility data.
+    complex_t* vis = NULL;
+
+    // Set PSF visibilities if needed.
+    std::vector<complex_t> scratch;
+    if (_visUse == VIS_PSF) {
+        scratch.resize(nAnt * nAnt);
+        vis = &scratch[0];
+        _setPsfVisibilties(vis, nAnt);
+    }
 
     // Assign memory for the image cube (only resizes if needed).
     _image->resize(_sizeL, _sizeM, nChanImage, nPolImage);
@@ -154,12 +164,11 @@ void ZenithImagerDft::run(QHash<QString, DataBlob*>& data)
     _image->refCoordM() = 89.99; // Set the Dec at the image centre.
     _image->refPixelL() = _sizeL / 2;
     _image->refPixelM() = _sizeM / 2;
-    complex_t* vis = NULL;
 
     // Loop over selected channels and polarisations to make images.
     for (unsigned c = 0; c < nChanImage; c++) {
 
-        // The channel ID selection
+        // The channel ID selection.
         unsigned channel = _channels[c];
         double frequency = _freqRef + (channel - _freqRefChannel) * _freqDelta;
 //        std::cout << "frequency (imager)= " << frequency <<std::endl;
@@ -170,23 +179,21 @@ void ZenithImagerDft::run(QHash<QString, DataBlob*>& data)
 //            if (nPolImage == 1) pol = _polarisation; // old
             pol = (nPolImage == 1 && _polarisation == POL_X) ? 0 : 1;
 
-            // Get pointers to the visibility data and image for the selected
-            // channel and polarisation.
-            if (_useModelVis) vis = _vis->ptr(c, p);
-            else vis = _vis->ptr(channel, pol);
+            // Get pointer to visibility data for channel and polarisation.
+            if (_vis) {
+                if (_visUse == VIS_MODEL)
+                    vis = _vis->ptr(c, p);
+                else
+                    vis = _vis->ptr(channel, pol);
 
-            if (_pointSpreadFunction) {
-                _setPsfVisibilties(vis, nAnt);
-            }
-            else {
-                _zeroAutoCorrelations(vis, nAnt);
+                if (_visUse != VIS_PSF)
+                    _zeroAutoCorrelations(vis, nAnt);
             }
 
-            real_t* image = _image->ptr(c, p);
             // Generate the image.
-            _makeImageDft(nAnt, _antPos->xPtr(), _antPos->yPtr(), vis, frequency,
-                    _sizeL, _sizeM, &_coordL[0], &_coordM[0], image);
-
+            real_t* image = _image->ptr(c, p);
+            _makeImageDft(nAnt, _antPos->xPtr(), _antPos->yPtr(), vis,
+                    frequency, _sizeL, _sizeM, &_coordL[0], &_coordM[0], image);
             _image->calculateMean(c, p);
 
             // Cut hemisphere.
@@ -196,9 +203,8 @@ void ZenithImagerDft::run(QHash<QString, DataBlob*>& data)
 
             // Find the amplitude range.
             _image->calculateAmplitudeRange(c, p);
-
             if (isnan(_image->max(c, p)) || isnan(_image->min(c, p)))
-                throw QString ("ZenithImagerDft: invalid Image range");
+                throw QString ("ZenithImagerDft: Invalid image range");
         }
     }
 }
@@ -216,14 +222,12 @@ void ZenithImagerDft::_getConfiguration(const ConfigNode& config)
     _sizeL = config.getOption("size", "l", "128").toUInt();
     _sizeM = config.getOption("size", "m", "128").toUInt();
     _fullSky = config.getOption("fullSky", "value", "true") == "true" ? true : false;
-    if (config.getOption("fullSky", "cutHemisphere", "true") == "true") {
+    if (config.getOption("fullSky", "cutHemisphere", "true") == "true")
         _trimHemisphere = true;
-    }
-    else {
+    else
         _trimHemisphere = false;
-    }
 
-    // Full sky = set l and m cellsize for a full image ignoring other settings.
+    // If full sky, set l and m cellsize accordingly, ignoring other settings.
     if (_fullSky) {
         _setCellsizeFullSky();
     }
@@ -234,9 +238,14 @@ void ZenithImagerDft::_getConfiguration(const ConfigNode& config)
 
     // Get the polarisation selection.
     QString pol = config.getOption("polarisation", "value", "x").toLower();
-    if (pol == "x") _polarisation = POL_X;
-    else if (pol == "y") _polarisation = POL_Y;
-    else if (pol == "both") _polarisation = POL_BOTH;
+    if (pol.startsWith("x"))
+        _polarisation = POL_X;
+    else if (pol.startsWith("y"))
+        _polarisation = POL_Y;
+    else if (pol.startsWith("both"))
+        _polarisation = POL_BOTH;
+    else
+        throw QString("ZenithImagerDft: Unknown polarisation option.");
 
     // Get the channels to image.
     QString chan = config.getOptionText("channels", "0");
@@ -246,9 +255,8 @@ void ZenithImagerDft::_getConfiguration(const ConfigNode& config)
         _channels[c] = chanList.at(c).toUInt();
     }
 
-
-    /* A/D-converter – to be able to cope with expected interference levels – operating at either
-    160 or 200 MHz in the first, second or third Nyquist zone (i.e., 0 - 100, 100 - 200, or 200 -
+    /* A/D-converter - to be able to cope with expected interference levels - operating at either
+    160 or 200 MHz in the first, second or third Nyquist zone (i.e. 0 - 100, 100 - 200, or 200 -
     300MHz band respectively for 200MHz sampling). The data from the receptors is filtered
     in 512×195 kHz sub-bands (156 kHz subbands for 160MHz sampling) of which a total
     of 3MHz bandwidth (164 channels) can be used at any time */
@@ -256,17 +264,21 @@ void ZenithImagerDft::_getConfiguration(const ConfigNode& config)
     _freqRef = config.getOption("frequencies", "reference", "1.0e8").toDouble();
     _freqDelta = config.getOption("frequencies", "delta", "1.0e8").toDouble();
 
-    _pointSpreadFunction = (config.getOption("pointSpreadFunction", "value", "false") == "true") ?
-            true : false;
-
     _pixelCentred = (config.getOption("size", "pixelCentred", "false") == "true") ?
             true: false;
 
-    _useModelVis = (config.getOption("useModelVis", "value", "false") == "true") ?
-            true : false;
-
-    _useRawVis = (config.getOption("useRawVis", "value", "false") == "true") ?
-            true : false;
+    // Get the visibility data type to image.
+    QString visUse = config.getOption("visibility", "type", "").toLower();
+    if (visUse.startsWith("r"))
+        _visUse = VIS_RAW;
+    else if (visUse.startsWith("m"))
+        _visUse = VIS_MODEL;
+    else if (visUse.startsWith("c"))
+        _visUse = VIS_CALIBRATED;
+    else if (visUse.startsWith("p"))
+        _visUse = VIS_PSF;
+    else
+        throw QString("ZenithImagerDft: Unknown visibility option.");
 }
 
 
@@ -288,10 +300,10 @@ void ZenithImagerDft::_calculateImageCoords(const double cellsize,
         const unsigned nPixels, real_t* coords)
 {
     if (coords == NULL)
-        throw QString("ZenithImagerDft::_calculateImageCoords(): coordinate array not assigned");
+        throw QString("ZenithImagerDft::_calculateImageCoords(): Coordinate array not allocated");
 
     if (nPixels == 0)
-        throw QString("ZenithImagerDft::_calculateImageCoords(): Zero image pixels!");
+        throw QString("ZenithImagerDft::_calculateImageCoords(): No image pixels!");
 
     if (nPixels == 1) {
         coords[0] = 0.0;
@@ -310,37 +322,42 @@ void ZenithImagerDft::_calculateImageCoords(const double cellsize,
 
 /**
  * @details
- * Fetches named data blobs from the data blob hash into local local varibles.
+ * Fetches named data blobs from the data blob hash into local variables.
  */
 void ZenithImagerDft::_fetchDataBlobs(QHash<QString, DataBlob*>& data)
 {
-    if (_useModelVis) {
-        _vis = static_cast<VisibilityData*>(data["ModelVisibilityData"]);
-    }
-    else if (_useRawVis) {
-        _vis = static_cast<VisibilityData*>(data["VisibilityData"]);
-    }
-    else {
-        _vis = static_cast<VisibilityData*>(data["CorrectedVisibilityData"]);
-    }
-
+    // Get the data blob pointers.
     _antPos = static_cast<AntennaPositions*>(data["AntennaPositions"]);
     _image = static_cast<ImageData*>(data["ImageData"]);
 
-    if (!_vis)
-        throw QString("ZenithImagerDft: VisibilityData blob missing.");
+    if (_visUse == VIS_RAW) {
+        _vis = static_cast<VisibilityData*>(data["VisibilityData"]);
+    }
+    else if (_visUse == VIS_MODEL) {
+        _vis = static_cast<VisibilityData*>(data["ModelVisibilityData"]);
+    }
+    else if (_visUse == VIS_CALIBRATED) {
+        _vis = static_cast<VisibilityData*>(data["CorrectedVisibilityData"]);
+    }
+
+    // Check required blobs are present and correct.
     if (!_antPos)
-        throw QString("ZenithImagerDft: AntennaPositiosn blob missing.");
+        throw QString("ZenithImagerDft: AntennaPositions blob missing.");
     if (!_image)
         throw QString("ZenithImagerDft: ImageData blob missing.");
-
-    if (_vis->nAntennas() == 0)
-        throw QString("Empty data blob: VisibilityData.");
     if (_antPos->nAntennas() == 0)
-        throw QString("Empty data blob: AntennaPositions.");
+        throw QString("ZenithImagerDft: Empty data blob: AntennaPositions.");
 
-    if (_vis->nAntennas() != _antPos->nAntennas())
-        throw QString("ZenithImagerDft: data blob dimension mismatch.");
+    // Check visibility data is OK, if present.
+    if (!_vis && _visUse != VIS_PSF) {
+        throw QString("ZenithImagerDft: VisibilityData blob missing.");
+    }
+    else if (_vis) {
+        if (_vis->nAntennas() == 0)
+            throw QString("ZenithImagerDft: Empty data blob: VisibilityData.");
+        if (_vis->nAntennas() != _antPos->nAntennas())
+            throw QString("ZenithImagerDft: Data blob dimension mismatch.");
+    }
 }
 
 
@@ -566,7 +583,7 @@ void ZenithImagerDft::_zeroAutoCorrelations(complex_t* vis, const unsigned nAnt)
 void ZenithImagerDft::_setPsfVisibilties(complex_t* vis, const unsigned nAnt)
 {
     if (vis == NULL)
-        throw QString("ZenithImagerDft::_setPsfVisibilties(): data not assigned");
+        throw QString("ZenithImagerDft::_setPsfVisibilties(): Memory not allocated.");
 
     for (unsigned j = 0; j < nAnt; j++) {
         unsigned rowIndex = j * nAnt;
