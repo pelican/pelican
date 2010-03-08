@@ -98,7 +98,7 @@ QDomElement Config::_set(const TreeAddress_t &address)
 /**
  * @details
  * Returns a QDomElement at the specified address. The element returned is
- * null the address dosn't exist.
+ * null the address doesn't exist.
  */
 QDomElement Config::_get(const TreeAddress_t &address) const
 {
@@ -128,7 +128,7 @@ QDomElement Config::_get(const TreeAddress_t &address) const
             return QDomElement();
         }
 
-        /* Nodes exist of the specified tag - find the right one to return */
+        /* Nodes exist of the specified tag; find the right one to return */
         else {
 
             /* Find if the tag already exists with the name */
@@ -260,33 +260,27 @@ void Config::save(const QString& fileName) const
 void Config::_read()
 {
     QFile file(_fileName);
-
     if (_fileName.isEmpty()) {
         _document = QDomDocument("pelican");
         return;
     }
 
-    if (!file.exists()) {
-        QString err = "Configuration file does not exist: " + _fileName;
-        throw err;
-    }
+    if (!file.exists())
+        throw QString("Configuration file not present: (%1).").arg(_fileName);
 
-    if (!file.open(QFile::ReadOnly | QFile::Text)) {
+    if (!file.open(QFile::ReadOnly | QFile::Text))
         return;
-    }
 
-    /* Read the XML configuration file into the QDomdocument */
+    /* Read the XML configuration file into the QDomDocument */
     QString error;
     int line, column;
     if (!_document.setContent(&file, true, &error, &line, &column)) {
-        QString err = "Parse error (Line: " + QString::number(line)
-        + " Col: " + QString::number(column) + "): " + error;
-        throw err;
+        throw QString("Config: Parse error "
+                "(Line: %1 Col: %2): %3.").arg(line).arg(column).arg(error);
     }
 
-    if (_document.doctype().name() != "pelican") {
-        throw QString("Invalid doctype.");
-    }
+    if (_document.doctype().name() != "pelican")
+        throw QString("Config: Invalid doctype.");
 }
 
 
@@ -297,7 +291,7 @@ void Config::_read()
 void Config::_createChildNode(QDomElement &parent, const QString& tag, const QString& name)
 {
     if (parent.isNull()) {
-        throw QString("Unable to create child node on null parent");
+        throw QString("Config: Unable to create child node on null parent.");
     }
     QDomElement e = _document.createElement(tag);
     if (!name.isEmpty()) {
