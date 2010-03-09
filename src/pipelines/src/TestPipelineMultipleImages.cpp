@@ -48,13 +48,18 @@ void TestPipelineMultipleImages::init()
 void TestPipelineMultipleImages::run(QHash<QString, DataBlob*>& data)
 {
     _visModel->run(data);
+    std::cout << "model done\n";
+
     _imagerA->run(data);
-    _imagerB->run(data);
     _fitsWriterA->run(data);
+    std::cout << "A done\n";
+
+    _imagerB->run(data);
     _fitsWriterB->run(data);
+    std::cout << "B done\n";
+
     stop();
 }
-
 
 
 } // namespace pelican
