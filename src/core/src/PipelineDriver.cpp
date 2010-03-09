@@ -53,8 +53,6 @@ PipelineDriver::~PipelineDriver()
     }
     _dataHash.clear();
 
-    /* Delete the data client */
-    delete _dataClient;
 }
 
 /**
@@ -72,6 +70,9 @@ void PipelineDriver::registerPipeline(AbstractPipeline *pipeline)
         throw(QString("pipeline requiring no data has been passed") );
     }
     */
+    pipeline->setModuleFactory(_moduleFactory);
+    pipeline->setPipelineDriver(this);
+    pipeline->init();
     _allDataRequirements.append(pipeline->requiredDataRemote());
     _registeredPipelines.append(pipeline);
 }
@@ -261,11 +262,11 @@ void PipelineDriver::_initialisePipelines()
 
     foreach (AbstractPipeline* pipeline, _registeredPipelines) {
         /* Set the module factory and pipeline driver */
-        pipeline->setModuleFactory(_moduleFactory);
-        pipeline->setPipelineDriver(this);
+        //pipeline->setModuleFactory(_moduleFactory);
+        //pipeline->setPipelineDriver(this);
 
         /* Initialise the pipeline (create modules) */
-        pipeline->init();
+        //pipeline->init();
 
         /* Add the required data to the data requirements */
         _determineDataRequirements(pipeline);

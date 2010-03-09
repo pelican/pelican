@@ -45,12 +45,10 @@ QHash<QString, DataBlob*> FileDataClient::getData(QHash<QString, DataBlob*>& dat
 
     /* Loop over each pipeline's set of data requirements */
     foreach (DataRequirements req, dataRequirements()) {
-        std::cout << "here" << std::endl;
 
         /* Loop over service data requirements */
         foreach (QString type, req.serviceData()) {
             QString filename = _fileNames.value(type);
-        std::cout << "Reading from file " << filename.toStdString();
             if (!filename.isEmpty()) {
                 QFile file(filename);
                 if (!file.open(QIODevice::ReadOnly))

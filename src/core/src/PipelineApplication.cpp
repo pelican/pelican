@@ -72,9 +72,9 @@ PipelineApplication::~PipelineApplication()
     delete _config;
     delete _adapterFactory;
     delete _dataBlobFactory;
+    delete _clientFactory;
     delete _driver;
     delete _moduleFactory;
-    delete _clientFactory;
     _config = NULL;
     _adapterFactory = NULL;
     _dataBlobFactory = NULL;
