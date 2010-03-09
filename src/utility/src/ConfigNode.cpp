@@ -1,6 +1,7 @@
 #include "utility/ConfigNode.h"
 #include <QDomNode>
 #include <QDomNodeList>
+#include <QTextStream>
 
 namespace pelican {
 
@@ -12,6 +13,27 @@ namespace pelican {
 ConfigNode::ConfigNode(const QDomElement& config)
 {
     _config = config;
+}
+
+
+/**
+ * @details
+ * Creates a new configuration node.
+ */
+ConfigNode::ConfigNode(const QList<QDomElement>& config)
+{
+    /* Copy the base node */
+    _config = config[0];
+
+    /* Loop over each varset */
+    for (int i = 1; i < config.size(); i++) {
+
+        /* Loop over each child in the varset and append it */
+        QDomNodeList list = config[i].childNodes();
+        for (int j = 0; j < list.size(); j++) {
+            _config.appendChild(list.at(j).cloneNode());
+        }
+    }
 }
 
 

@@ -25,17 +25,18 @@
 </adapters>
 
 <varsets>
-    <myVarset>
+    <varset name="channels">
+        <!-- <frequencies reference="3.554687500e7" referenceChannel="0" delta="195312.5"/>  -->
         <frequencies reference="0.0" referenceChannel="0" delta="195312.5"/>
         <channels>182</channels>
         <polarisation value="x"/>
-    </myVarset>
-    <astrometry>
+    </varset>
+    <varset name="astrometry">
         <siteLongitude value=""/>
         <siteLatitude value=""/>
         <deltaUT value=""/>
         <pressure value=""/>
-    </astrometry>
+    </varset>
 </varsets>
 
 <modules>
@@ -44,11 +45,7 @@
         <eigenvalues number="10"/>
         <tolerance value="1.0e-3"/>
         <iterations value="100"/>
-
-        <channels>182</channels>
-        <polarisation value="x"/>
-        <frequencies reference="0.0" referenceChannel="0" delta="195312.5"/>
-        <!-- <frequencies reference="3.554687500e7" referenceChannel="0" delta="195312.5"/>  -->
+        <varset name="channels"/>
     </ZenithCalibrater>
 
 
@@ -71,20 +68,15 @@
         
         
         <!-- <source coordType="azel" coord1="68"   coord2="40" ampType="polxy" amp1="100"  amp2="50"/> -->
-        <channels>182</channels>
-        <frequencies reference="0.0" referenceChannel="0" delta="195312.5"/>
-        <!-- <frequencies reference="3.554687500e7" referenceChannel="0" delta="195312.5"/>  -->
-        <polarisation value="x"/>
+        
+        <varset name="channels"/>
     </ZenithModelVisibilities>
 
 
     <ZenithImagerDft>
         <size l="256" m="256" pixelCentred="true"/>
         <fullSky value="true" cutHemisphere="true"/>
-        <polarisation value="x"/>
-        <channels>182</channels>
-        <frequencies reference="0.0" referenceChannel="0" delta="195312.5"/>
-        <!-- <frequencies reference="3.554687500e7" referenceChannel="0" delta="195312.5"/>  -->
+        <varset name="channels"/>
         
         <!-- Visibility types are "raw", "model", "calibrated" or "psf" (only first letter required) -->
         <visibility type="cal"/>
