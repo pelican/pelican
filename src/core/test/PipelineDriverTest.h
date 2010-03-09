@@ -12,6 +12,9 @@ class QCoreApplication;
 namespace pelican {
 
 class PipelineDriver;
+class DataBlobFactory;
+class ModuleFactory;
+class DataClientFactory;
 
 /**
  * @class PipelineDriverTest
@@ -27,10 +30,10 @@ class PipelineDriverTest : public CppUnit::TestFixture
     public:
         CPPUNIT_TEST_SUITE( PipelineDriverTest );
 //        CPPUNIT_TEST( test_registerPipeline );
-//        CPPUNIT_TEST( test_emptyPipeline );
-//        CPPUNIT_TEST( test_singlePipeline );
-//        CPPUNIT_TEST( test_multiPipeline );
-//        CPPUNIT_TEST( test_singlePipelineInvalidData );
+        CPPUNIT_TEST( test_emptyPipeline );
+        CPPUNIT_TEST( test_singlePipeline );
+        CPPUNIT_TEST( test_multiPipeline );
+        CPPUNIT_TEST( test_singlePipelineInvalidData );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -50,8 +53,12 @@ class PipelineDriverTest : public CppUnit::TestFixture
 
     private:
         QCoreApplication *coreApp;
-        PipelineApplication *pipelineApp;
+        //PipelineApplication *pipelineApp;
         PipelineDriver *pipelineDriver;
+        DataBlobFactory* _dataBlobFactory;
+        ModuleFactory* _moduleFactory;
+        DataClientFactory* _clientFactory;
+
 };
 
 } // namespace pelican

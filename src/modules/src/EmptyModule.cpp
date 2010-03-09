@@ -21,4 +21,11 @@ EmptyModule::~EmptyModule()
 {
 }
 
+void EmptyModule::setDataRequirements(const DataRequirements& req)
+{
+    addStreamData(req.streamData());
+    addServiceData(req.serviceData());
+}
+
+
 } // namespace pelican

@@ -61,7 +61,9 @@ void PelicanServerClientTest::test_getData()
 
         // setup the test
         QList<DataRequirements> lreq;
-        CPPUNIT_ASSERT_THROW( new PelicanServerClient(configNode, &factory, lreq), QString );
+        DataTypes dt;
+        dt.addData(lreq);
+        CPPUNIT_ASSERT_THROW( new PelicanServerClient(configNode, dt), QString );
     }
     QString stream1("stream1");
     DataRequirements req;
@@ -73,7 +75,9 @@ void PelicanServerClientTest::test_getData()
 
         QList<DataRequirements> lreq;
         lreq.append(req);
-        PelicanServerClient client(configNode, &factory, lreq);
+        DataTypes dt;
+        dt.addData(lreq);
+        PelicanServerClient client(configNode, dt);
 
         QHash<QString, DataBlob*> dataHash;
         CPPUNIT_ASSERT_NO_THROW(client.getData(dataHash));
@@ -131,7 +135,9 @@ void PelicanServerClientTest::test_response()
 
         QList<DataRequirements> lreq;
         lreq.append(req);
-        PelicanServerClient client(configNode, &factory, lreq);
+        DataTypes dt;
+        dt.addData(lreq);
+        PelicanServerClient client(configNode, dt);
         TestDataBlob db;
         QHash<QString, DataBlob*> dataHash;
         dataHash.insert(stream1, &db);

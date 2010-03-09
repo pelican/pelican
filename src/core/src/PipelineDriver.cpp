@@ -1,6 +1,7 @@
 #include <QString>
 #include <QtGlobal>
 #include <QtDebug>
+#include "DataClientFactory.h"
 #include "core/AbstractDataClient.h"
 #include "core/FileDataClient.h"
 #include "core/AbstractPipeline.h"
@@ -19,17 +20,18 @@ namespace pelican {
  * PipelineDriver constructor, which takes pointers to the allocated factories.
  */
 PipelineDriver::PipelineDriver (
-        AdapterFactory* adapterFactory,
         DataBlobFactory* blobFactory,
-        ModuleFactory* moduleFactory
-){
+        ModuleFactory* moduleFactory,
+        DataClientFactory* clientFactory
+        )
+    :  _blobFactory(blobFactory), _moduleFactory(moduleFactory), _clientFactory(clientFactory)
+{
     /* Initialise member variables */
     _run = false;
-    _config = NULL;
     _dataClient = NULL;
-    _moduleFactory = moduleFactory;
-    _blobFactory = blobFactory;
-    _adapterFactory = adapterFactory;
+    Q_ASSERT(_moduleFactory != 0 );
+    Q_ASSERT(_blobFactory != 0 );
+    Q_ASSERT(_clientFactory != 0 );
 }
 
 /**
@@ -64,6 +66,13 @@ PipelineDriver::~PipelineDriver()
  */
 void PipelineDriver::registerPipeline(AbstractPipeline *pipeline)
 {
+    /*
+    if( pipeline->requiredDataAll().size() == 0 ) {
+        delete pipeline;
+        throw(QString("pipeline requiring no data has been passed") );
+    }
+    */
+    _allDataRequirements.append(pipeline->requiredDataRemote());
     _registeredPipelines.append(pipeline);
 }
 
@@ -77,12 +86,10 @@ void PipelineDriver::registerPipeline(AbstractPipeline *pipeline)
  * - FileDataClient
  *
  * @param[in] name The type of the data client to create.
- * @param[in] config The application's configuration object.
  */
-void PipelineDriver::setDataClient(QString name, Config* config)
+void PipelineDriver::setDataClient(QString name)
 {
     _dataClientName = name;
-    _config = config;
 }
 
 /**
@@ -101,7 +108,7 @@ void PipelineDriver::start()
     _createDataBlobs(_reqDataAll);
 
     /* Create the data client */
-    _createDataClient(_dataClientName, _config);
+    _createDataClient(_dataClientName);
 
     /* Enter main program loop */
     _run = true;
@@ -164,27 +171,32 @@ void PipelineDriver::_createDataBlobs(const DataRequirements& req)
  * Throws an exception of type QString if the data client is unknown.
  *
  * @param[in] type The type of the data client to create.
- * @param[in] config The application's configuration object.
  */
-void PipelineDriver::_createDataClient(QString type, Config* config)
+void PipelineDriver::_createDataClient(QString type)
 {
-    /* Check configuration object exists */
-    if (config == NULL)
-        throw QString("Configuration not set: call setDataClient() first.");
+    _dataClient = _clientFactory->create(type, dataRequirements() );
+}
 
-    /* Get the configuration address */
+/*
     Config::TreeAddress_t address;
     address.append(Config::NodeId_t("clients", ""));
     address.append(QPair<QString, QString>(type, ""));
     ConfigNode element = config->get(address);
 
-    /* Create the required data client */
     if (type == "FileDataClient") {
         _dataClient = new FileDataClient(element, _adapterFactory, _pipelines.keys());
+    }
+    if (type == "{PelicanServerClient") {
+        _dataClient = new PelicanServerClient(element, _adapterFactory, _pipelines.keys());
     }
     else {
         throw QString("Unknown data client type: ").arg(type);
     }
+*/
+
+const QList<DataRequirements>& PipelineDriver::dataRequirements() const
+{
+    return _allDataRequirements;
 }
 
 /**
@@ -197,6 +209,24 @@ void PipelineDriver::_determineDataRequirements(AbstractPipeline* pipeline)
     /* Check for an empty pipeline */
     if (pipeline->requiredDataAll() == DataRequirements())
         throw QString("Empty pipelines are not supported.");
+
+    // Loop over data requirements for each pipeline
+    /*
+    foreach (DataRequirements& req, dataRequirements) {
+        // Create a union of required data types for this pipeline 
+        QSet<QString> allDataReq = req.externalData();
+
+        // Loop over each data type to set up the adapters for each pipeline
+        foreach (const QString& type, allDataReq) 
+        {
+            if( ! adapterNames.contains(type) )
+                throw("Unable to find adapter for data type \"" + type + "\"");
+            AbstractAdapter* adapter = adapterFactory->create(_adapterNames.value(type), "");
+            req->setAdapter( type, adapter );
+            _adapters.insert(type, adapter);
+        }
+    }
+    */
 
     /* Check that the set of stream data required for this pipeline does not
      * intersect the set of stream data required by another.

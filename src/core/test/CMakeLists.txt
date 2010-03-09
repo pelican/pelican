@@ -1,10 +1,11 @@
 SUBPACKAGE(coreTest core data utility adaptersTest)
 set( coreTest_src
      src/coreTest.cpp
+     src/DataTypesTest.cpp
      src/ModuleFactoryTest.cpp
      src/PipelineApplicationTest.cpp
-     src/PipelineDriverTest.cpp
-     src/PelicanServerClientTest.cpp
+     #src/PipelineDriverTest.cpp
+     #     src/PelicanServerClientTest.cpp
 )
 set( coreTestLibrary_src
      src/TestPipeline.cpp

@@ -1,7 +1,7 @@
 #ifndef ABSTRACTDATACLIENT_H
 #define ABSTRACTDATACLIENT_H
 
-#include "data/DataRequirements.h"
+#include "DataTypes.h"
 #include <QHash>
 #include <QList>
 #include <QString>
@@ -12,7 +12,6 @@
 
 namespace pelican {
 
-class AdapterFactory;
 class AbstractAdapter;
 class ConfigNode;
 class DataBlob;
@@ -50,42 +49,29 @@ class DataBlob;
 class AbstractDataClient
 {
     private:
+        /// The DataTypeas and requirements.
+        DataTypes _dataReqs;
+
         /// The configuration node for the data client.
         const ConfigNode* _configNode;
-
-        /// Pointer to the adapter factory.
-        AdapterFactory* _adapterFactory;
-
-        /// List of data requirements for each pipeline.
-        QList<DataRequirements> _dataRequirements;
-
-        /// All the adapters created for each data type.
-        QHash<QString, AbstractAdapter*> _adapters;
-
-        /// The adapter names required for each data type.
-        QHash<QString, QString> _adapterNames;
 
     protected:
         /// Returns a pointer to the configuration node.
         const ConfigNode* configNode() {return _configNode;}
 
-        /// Returns a pointer to the adapter factory.
-        AdapterFactory* adapterFactory() {return _adapterFactory;}
-
         /// Returns the list of data requirements for each pipeline.
-        QList<DataRequirements>& dataRequirements() {return _dataRequirements;}
+        const QList<DataRequirements>& dataRequirements() { return _dataReqs.dataRequirements(); }
 
-        /// Returns the list of adapters for each data type.
-        QHash<QString, AbstractAdapter*>& adapters() {return _adapters;}
+        /// returns the appropriate adapter for service data of the required type
+        AbstractServiceAdapter* serviceAdapter(const QString& type) const;
 
-        /// Returns the adapter names required for each data type.
-        QHash<QString, QString> adapterNames() {return _adapterNames;}
+        /// returns the appropriate adapter for a stream of the required type
+        AbstractStreamAdapter* streamAdapter(const QString& type) const;
 
     public:
         /// Data client constructor.
         AbstractDataClient(const ConfigNode& config,
-                AdapterFactory* adapterFactory,
-                QList<DataRequirements> dataRequirements);
+                           const DataTypes& types );
 
         /// Data client destructor (virtual).
         virtual ~AbstractDataClient();

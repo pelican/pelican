@@ -15,6 +15,7 @@ class Config;
 class DataBlobFactory;
 class ModuleFactory;
 class PipelineDriver;
+class DataClientFactory;
 
 /**
  * @class PipelineApplication
@@ -24,11 +25,9 @@ class PipelineDriver;
  * 
  * @details
  * The PipelineApplication is the user-facing class which reads the
- * command-line arguments and creates:
+ * command-line arguments and creates the objects, including:
  * - the configuration object;
- * - the adapter factory;
- * - the data blob factory;
- * - the module factory;
+ * - the various factories;
  * - the pipeline driver.
  *
  * It also provides public methods to register pipelines and start them running.
@@ -84,6 +83,9 @@ class PipelineApplication
         /// Pointer to the application's module factory.
         ModuleFactory *_moduleFactory;
 
+        /// Pointer to the module factory.
+        DataClientFactory* _clientFactory;
+
         /// The pipeline driver object.
         PipelineDriver* _driver;
 
@@ -101,7 +103,7 @@ class PipelineApplication
         void registerPipeline(AbstractPipeline *pipeline);
 
         /// Sets the data client.
-        void setDataClient(QString name);
+        void setDataClient(const QString& name);
 
         /// Starts the pipeline driver.
         void start();

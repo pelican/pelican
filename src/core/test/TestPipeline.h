@@ -2,6 +2,7 @@
 #define TESTPIPELINE_H
 
 #include "core/AbstractPipeline.h"
+#include "data/DataRequirements.h"
 #include "utility/memCheck.h"
 
 /**
@@ -46,6 +47,9 @@ class TestPipeline : public AbstractPipeline
         /// Reads counter used to check that the data passed is the same as the expected data.
         int matchedCounter() const {return _matchedCounter;}
 
+        /// return the intitialised datarequiremets
+        const DataRequirements& dataRequired() const { return _data; };
+
         /// Reset counters.
         void reset();
 
@@ -58,6 +62,8 @@ class TestPipeline : public AbstractPipeline
     private:
         /// Sets the default member variables.
         void _setDefaults();
+
+        DataRequirements _data;
 };
 
 } // namespace pelican
