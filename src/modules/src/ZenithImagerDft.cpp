@@ -1,4 +1,5 @@
 #include "modules/ZenithImagerDft.h"
+#include "modules/AstrometryFast.h"
 #include "utility/constants.h"
 #include "utility/pelicanTimer.h"
 #include "data/VisibilityData.h"
@@ -53,12 +54,23 @@ ZenithImagerDft::ZenithImagerDft(const ConfigNode& config)
     _vis = NULL;
     _antPos = NULL;
     _image = NULL;
+    _astrometry = new AstrometryFast;
 
     // Generate image pixel coordinate vectors based on the configuration.
     _coordL.resize(_sizeL);
     _coordM.resize(_sizeM);
     _calculateImageCoords(_cellsizeL, _sizeL, &_coordL[0]);
     _calculateImageCoords(_cellsizeM, _sizeM, &_coordM[0]);
+}
+
+/**
+ * @details
+ * Module destructor.
+ */
+ZenithImagerDft::~ZenithImagerDft()
+{
+    // Delete the astrometry module.
+    delete _astrometry;
 }
 
 
@@ -156,12 +168,7 @@ void ZenithImagerDft::run(QHash<QString, DataBlob*>& data)
     _image->resize(_sizeL, _sizeM, nChanImage, nPolImage);
 
     // Set the image blob meta-data.
-    _image->cellsizeL() = _cellsizeL;
-    _image->cellsizeM() = _cellsizeM;
-    _image->refCoordL() = 0; // Set the RA at the image centre.
-    _image->refCoordM() = 89.99; // Set the Dec at the image centre.
-    _image->refPixelL() = _sizeL / 2;
-    _image->refPixelM() = _sizeM / 2;
+    _setImageMetaData();
 
     // Loop over selected channels and polarisations to make images.
     for (unsigned c = 0; c < nChanImage; c++) {
@@ -560,6 +567,22 @@ void ZenithImagerDft::_setPsfVisibilties(complex_t* vis, const unsigned nAnt)
             else vis[index] = complex_t(1.0, 0.0);
         }
     }
+}
+
+
+/**
+ * @details
+ * Sets the image meta-data, including the cellsize and the coordinate headers.
+ */
+void ZenithImagerDft::_setImageMetaData()
+{
+    // Get the image meta data into the blob.
+    _image->cellsizeL() = _cellsizeL;
+    _image->cellsizeM() = _cellsizeM;
+    _image->refCoordL() = 0; // Set the RA at the image centre.
+    _image->refCoordM() = 89.99; // Set the Dec at the image centre.
+    _image->refPixelL() = _sizeL / 2;
+    _image->refPixelM() = _sizeM / 2;
 }
 
 
