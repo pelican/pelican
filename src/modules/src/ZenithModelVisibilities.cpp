@@ -46,29 +46,41 @@ ZenithModelVisibilities::~ZenithModelVisibilities()
 
 /**
  * @details
+ * Run method for zenith model visibility generator.
+ * Calculates a set of visibilities for an ideal sky model defined in the
+ * configuration.
  *
+ * @param[in] data Hash of data blobs.
+ *
+ * @note
+ * At present the amplitude for each polarisation is assumed constant with
+ * frequency and assumed an ideal antenna model with antenna of unit collecting
+ * area/gain.
  */
 void ZenithModelVisibilities::run(QHash<QString, DataBlob*>& data)
 {
-    // grab model visibilities data blob from the hash and checks its assigned
+    // Fetch and check the required data blobs from the data hash.
     _fetchDataBlobs(data);
 
-    // calculate the model visibilities
-    complex_t* vis = _modelVis->ptr(0, 0);
+    // Dimensions for model visibility set.
     unsigned nAnt = _antPos->nAntennas();
-    unsigned channel = _channels[0];
-    double frequency = _freqRef + (channel - _freqRefChannel) * _freqDelta;
+    unsigned nChanModel = _channels.size();
+    unsigned nPolModel = _polarisation == POL_BOTH ? 2 : 1;
 
-    // TODO: Zenith model needs to loop over freq's
-    {
-        if (_polarisation == POL_X || _polarisation == POL_BOTH) {
-            _calculateModelVis(vis, nAnt, _antPos->xPtr(), _antPos->yPtr(),
-                    &_sources[0], _sources.size(), frequency, POL_X);
-        }
+    // Loop over channels and polarisations generating model visibilities.
+    for (unsigned c = 0; c < nChanModel; c++) {
+        unsigned channel = _channels[c];
+        double frequency = _freqRef + (channel - _freqRefChannel) * _freqDelta;
 
-        if (_polarisation == POL_Y || _polarisation == POL_BOTH) {
-            _calculateModelVis(vis, nAnt, _antPos->xPtr(), _antPos->yPtr(),
-                    &_sources[0], _sources.size(), frequency, POL_Y);
+        for (unsigned p = 0; p < nPolModel; p++) {
+
+            unsigned iPol = p;
+            iPol = (nPolModel == 1 && _polarisation == POL_X) ? 0 : 1;
+            pol_t pol = (iPol == 0) ? POL_X : POL_Y;
+
+            _calculateModelVis(_modelVis->ptr(c, iPol), nAnt, _antPos->xPtr(),
+                    _antPos->yPtr(), &_sources[0], _sources.size(), frequency,
+                    pol);
         }
     }
 }
@@ -76,6 +88,22 @@ void ZenithModelVisibilities::run(QHash<QString, DataBlob*>& data)
 
 /**
  * @details
+ * Calculates model visibilities for an array of sources and a set of antenna
+ * positions. This is performed by first generating a matrix of antenna signals
+ * for each source and then cross correlating these to form the visibility set.
+ * The same result can be achieved by a direct transform between sky position
+ * and Fourier (UV) space however this method has higher computational cost than
+ * the one used below.
+ *
+ * @param[out] vis          Model visibilities generated.
+ * @param[in]  nAnt         Number of antennas.
+ * @param[in]  antPosX      Array of antenna x coordinate positions (length nAnt).
+ * @param[in]  antPoxY      Array of antenna y coordinate positions (length nAnt).
+ * @param[in]  source       Array of source objects (length nSources).
+ * @param[in]  nSources     Number of sources.
+ * @param[in]  frequency    Frequency in Hz for which the model is calculated.
+ * @param[in]  polarisation Enumerator describing the polarisation for which
+ *                          model visibilities are calculated.
  */
 void ZenithModelVisibilities::_calculateModelVis(complex_t* vis,
         const unsigned nAnt, const real_t* antPosX, const real_t* antPosY,
@@ -99,10 +127,9 @@ void ZenithModelVisibilities::_calculateModelVis(complex_t* vis,
         m[i] = cosEl * cos(az * math::deg2rad);
     }
 
-    // Calculate antenna signals for each source
+    // Calculate a vector of antenna signals for each source.
     std::vector<complex_t> antSignal(nAnt * nSources);
     complex_t* signal = &antSignal[0];
-
     for (unsigned s = 0; s < nSources; s++) {
         for (unsigned i = 0; i < nAnt; i++) {
             double arg = (antPosX[i] * l[s] + antPosY[i] * m[s]) * k;
@@ -113,7 +140,7 @@ void ZenithModelVisibilities::_calculateModelVis(complex_t* vis,
         }
     }
 
-    // Cross correlate the antenna signals (per source)
+    // Cross correlate the antenna signals (per source) and accumulate.
     for (unsigned s = 0; s < nSources; s++) {
         for (unsigned j = 0; j < nAnt; j++) {
             for (unsigned i = 0; i < nAnt; i++) {
@@ -126,12 +153,18 @@ void ZenithModelVisibilities::_calculateModelVis(complex_t* vis,
 }
 
 
+
 /**
  * @details
+ * Gets the data blobs required for the module and resize the model data blob.
+ * Some sanity checking is performed to ensure that module will hopefully not
+ * die too horribly should bad data or options be given to it.
+ *
+ * @param[in] data  Hash of data blobs.
  */
 void ZenithModelVisibilities::_fetchDataBlobs(QHash<QString, DataBlob*>& data)
 {
-    // grab model visibilities data blob from the hash and checks its assigned
+    // Fetch model visibilities data blob from the hash and checks its assigned.
     _modelVis = static_cast<ModelVisibilityData*>(data["ModelVisibilityData"]);
     _antPos = static_cast<AntennaPositions*>(data["AntennaPositions"]);
 
@@ -140,26 +173,28 @@ void ZenithModelVisibilities::_fetchDataBlobs(QHash<QString, DataBlob*>& data)
     if (!_antPos)
         throw QString("ZenithModelVisibilities: AntennaPositions blob missing.");
 
-    // Grab the number of antennas from the antenna position data
+    // Dimensions of the model.
     unsigned nAnt = _antPos->nAntennas();
-    unsigned nChannels = _channels.size();
-    unsigned nPol = _polarisation == POL_BOTH ? 2 : 1;
+    unsigned nChanModel = _channels.size();
+    unsigned nPolModel = _polarisation == POL_BOTH ? 2 : 1;
 
     if (nAnt == 0)
         throw QString("ZenithModelVisibilities: No antennas found");
-    if (nChannels == 0)
+
+    if (nChanModel == 0)
         throw QString("ZenithModelVisibilities: No channels selected");
 
-    // Resize the model visibilities
-    _modelVis->resize(nAnt, nChannels, nPol);
+    // Resize the model visibilities.
+    _modelVis->resize(nAnt, nChanModel, nPolModel);
 
-    // Insert the source list into the model visibilities
+    // Copy the source list into the model visibility data blob.
     _modelVis->sources() = _sources;
 }
 
 
 /**
  * @details
+ * Extracts configuration for the module from the XML node.
  */
 void ZenithModelVisibilities::_getConfiguration(const ConfigNode& config)
 {

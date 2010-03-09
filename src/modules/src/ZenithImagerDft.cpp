@@ -11,12 +11,10 @@
 #include <iomanip>
 #include <limits>
 
-#ifdef USE_CBLAS
-    #ifdef USE_MKL
-        #include <mkl_cblas.h>
-    #else
-        #include "cblas.h"
-    #endif
+#ifdef USE_MKL
+    #include <mkl_cblas.h>
+#else
+    #include "cblas.h"
 #endif
 
 #ifdef PELICAN_OPENMP
@@ -178,12 +176,10 @@ void ZenithImagerDft::run(QHash<QString, DataBlob*>& data)
         // The channel ID selection.
         unsigned channel = _channels[c];
         double frequency = _freqRef + (channel - _freqRefChannel) * _freqDelta;
-//        std::cout << "frequency (imager)= " << frequency <<std::endl;
 
         for (unsigned p = 0; p < nPolImage; p++) {
 
             unsigned pol = p;
-//            if (nPolImage == 1) pol = _polarisation; // old
             pol = (nPolImage == 1 && _polarisation == POL_X) ? 0 : 1;
 
             // Get pointer to visibility data for channel and polarisation.
@@ -426,12 +422,10 @@ void ZenithImagerDft::_makeImageDft(const unsigned nAnt, real_t* antPosX,
     std::vector<complex_t> tempBuffer(nAnt);
 #endif
 
-#ifdef USE_CBLAS
     real_t alpha[2] = {1.0, 0.0};
     real_t beta[2]  = {0.0, 0.0};
     unsigned xInc = 1;
     unsigned yInc = 1;
-#endif
 
     complex_t* weights = NULL;
     complex_t* buffer = NULL;
@@ -460,16 +454,8 @@ void ZenithImagerDft::_makeImageDft(const unsigned nAnt, real_t* antPosX,
 
             _multWeights(nAnt, weightsXL, weightsYM, weights);
 
-#ifdef USE_CBLAS
-            // (y := alpha*A*x + beta*y)
-            // where: y = temp
-            //        A = vis
-            //        x = weights
             cblas_zgemv(CblasRowMajor, CblasNoTrans, nAnt, nAnt, alpha, vis,
                     nAnt, weights, xInc, beta, buffer, yInc);
-#else
-            _multMatrixVector(nAnt, vis, weights, buffer);
-#endif
 
             /// TODO: Use some sort of cblas_zdot to replace this call.
             image[index] = _vectorDotConj(nAnt, buffer, weights).real();
@@ -492,25 +478,6 @@ void ZenithImagerDft::_multWeights(const unsigned nAnt, complex_t* weightsXL,
 {
     for (unsigned i = 0; i < nAnt; i++) {
         weights[i] = weightsXL[i] * weightsYM[i];
-    }
-}
-
-
-/**
- * @details
- * Performs matrix vector multiply of a matrix of visibility amplitudes
- * by a vector of complex dft weights
- */
-void ZenithImagerDft::_multMatrixVector(const unsigned nAnt,
-        complex_t* visMatrix, complex_t *weights, complex_t* result)
-{
-    for (unsigned j = 0; j < nAnt; j++) {
-        unsigned rowIndex = j * nAnt;
-        result[j] = complex_t(0.0, 0.0);
-        for (unsigned i = 0; i < nAnt; i++) {
-            unsigned index = rowIndex + i;
-            result[j] += visMatrix[index] * weights[i];
-        }
     }
 }
 
