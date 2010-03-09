@@ -34,22 +34,22 @@
         <channels>182</channels>
         <polarisation value="x"/>
     </varset>
-    
-    
+
+
     <varset name="astrometry">
         <siteLongitude value="0"/>
         <siteLatitude value="0"/>
         <deltaUT value="0"/>
         <pressure value="1000"/>
     </varset>
-    
-    
+
+
     <varset name="sourcesSJW">
         <!-- Stefan's positions -->
         <source coordType="azel" coord1="-4.71694127387953" coord2="82.12031315483448" amp1="11000" amp2="0.5"/>
         <source coordType="azel" coord1="-85.19272496550460" coord2="53.05074784160009" amp1="8100" amp2="0.5"/>
     </varset>
-    
+
 </varsets>
 
 
@@ -73,7 +73,6 @@
         <size l="256" m="256" pixelCentred="true"/>
         <fullSky value="true" cutHemisphere="true"/>
         <varset name="channels"/>
-        
         <!-- Visibility types are "raw", "model", "calibrated" or "psf" (only first letter required) -->
         <visibility type="cal"/>
     </ZenithImagerDft>
@@ -84,7 +83,6 @@
         <directory value=""/>
         <file name="test.fits" prefix="" suffix=""/>
 
-        <!-- <cube value="true"/> -->
         <origin value="Oxford e-Research Centre"/>
         <telescope value="LOFAR"/>
         <instrument value="Effelsberg"/>
@@ -92,7 +90,6 @@
         <object value="full sky"/>
         <author value=""/>
         <reference value=""/>
-         <equinox value="2000.0"/>
     </ImageWriterFits>
 
 </modules>

@@ -7,7 +7,7 @@
 namespace pelican {
 
 CPPUNIT_TEST_SUITE_REGISTRATION( ImageDataTest );
-// class DataRequirementsTest 
+// class DataRequirementsTest
 ImageDataTest::ImageDataTest()
     : CppUnit::TestFixture()
 {
@@ -38,7 +38,10 @@ void ImageDataTest::test_accessorMethods()
     unsigned nM = 125;
     unsigned nChan = 2;
     unsigned nPol = 2;
-    ImageData image(nL, nM, nChan, nPol);
+    std::vector<unsigned> channels(2);
+    channels[0] = 0;
+    channels[1] = 1;
+    ImageData image(nL, nM, channels, ImageData::POL_BOTH);
     image.cellsizeL() = 1.0;
     image.cellsizeM() = 2.0;
     image.refPixelL() = 128.5;

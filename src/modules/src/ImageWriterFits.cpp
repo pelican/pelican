@@ -43,29 +43,44 @@ ImageWriterFits::~ImageWriterFits()
 
 /**
  * @details
- * Method called by the pipeline to create images of the visibility data.
+ * Method called by the pipeline to create write image data blobs to FITS format.
  *
  * @param[in] data  Hash of data blobs.
  */
 void ImageWriterFits::run(QHash<QString, DataBlob*>& data)
 {
-    // grab image pointer to write
+    // Get a pointer to the image data object.
     _image = static_cast<ImageData*>(data["ImageData"]);
-    if (!_image) throw QString("ImageWriterFits: Image data missing.");
+    if (!_image)
+        throw QString("ImageWriterFits: Image data missing.");
 
+    // Image dimensions.
     unsigned nL = _image->sizeL();
     unsigned nM = _image->sizeM();
     unsigned nChan = _image->nChannels();
     unsigned nPol = _image->nPolarisations();
 
+    // Open the FITS file handle.
     _open(_fileName, nL, nM, nChan, nPol, _overwrite);
+
+    // Write the FITS header.
     _writeHeader();
+
+    // Write a frequency table (needed for image cubes)
+    if (nChan > 1) {
+        _writeFrequencyTable(_image->channels());
+    }
+
+    // Loop over channels and polarisations in the image data writing
+    // planes of the FITS image.
     for (unsigned c = 0; c < nChan; c++) {
         for (unsigned p = 0; p < nPol; p++) {
             real_t* image = _image->ptr(c, p);
             _writeImage(image, nL, nM, c, p);
         }
     }
+
+    // Close the FITS file handle.
     _close();
 }
 
@@ -102,26 +117,27 @@ void ImageWriterFits::_getConfiguration(const ConfigNode &config)
     _fileName = config.getOption("file", "name", "pelican.fits");
     _prefix = config.getOption("file", "prefix");
     _suffix = config.getOption("file", "suffix");
-    _cube = config.getOption("cube", "value", "true") == "true" ? true : false;
 
     _origin = config.getOption("origin", "value");
     _telescope = config.getOption("telescope", "value");
     _instrument = config.getOption("instrument", "value");
     _object = config.getOption("object", "value");
     _author = config.getOption("author", "value");
-    _equinox = config.getOption("equinox", "value", "2000").toDouble();
 }
 
 
 /**
  * @details
  * Opens a FITS image file for writing, creating an empty image of the specified
- * dimensions ready for writing into.
+ * dimensions ready for writing.
  *
  * @param[in] fileName  The filename of the fits file to write to (a fits file suffix is appended if missing)
  * @param[in] nL        The number of pixels in the l (x) direction
  * @param[in] nM        The number of pixels in the m (y) direction
- *
+ * @param[in] nChan     The number of channels in the image cube.
+ * @param[in] nPol      The number of polarisations in the image cube.
+ * @param[in] overwrite Option flag to overwrite images files if they already
+ *                      exist.
  */
 void ImageWriterFits::_open(const QString& fileName, const unsigned nL,
         const unsigned nM, const unsigned nChan, const unsigned nPol,
@@ -211,7 +227,8 @@ void ImageWriterFits::_writeHeader()
     double bzero = 0.0;
     _writeKey("BSCALE", bscale);
     _writeKey("BZERO", bzero);
-    _writeKey("EQUINOX", _equinox);
+    if (_image->coordType() == ImageData::COORD_J2000)
+        _writeKey("EQUINOX", "2000");
     _writeKey("BUNIT", _image->ampUnits(), "Units of flux");
 
     // Amplitude range (only valid if not an image cube).
@@ -220,44 +237,56 @@ void ImageWriterFits::_writeHeader()
         _writeKey("DATAMAX", _image->max(0, 0), "Maximum pixel value");
     }
 
-    // x axis keywords.
-    double rotaX = 0.0;
+    // x (l) axis keywords.
     _writeKey("CTYPE1", "RA---SIN");
     _writeKey("CUNIT1", "deg", "Axis unit (degrees)");
-    _writeKey("CRPIX1", _image->refPixelL(), "Reference pixel");
     _writeKey("CRVAL1", _image->refCoordL(),
             "Coordinate value at reference point");
+    _writeKey("CRPIX1", _image->refPixelL(), "Reference pixel");
     _writeKey("CDELT1", _image->cellsizeL() * math::asec2deg,
             "Coordinate increment at reference point");
-    _writeKey("CROTA1", rotaX);
+    _writeKey("CROTA1", 0.0);
 
-    // y axis keywords.
-    double rotaY = 0.0;
+    // y (m) axis keywords.
     _writeKey("CTYPE2", "DEC--SIN");
     _writeKey("CUNIT2", "deg", "Axis unit (degrees)");
-    _writeKey("CRPIX2", _image->refPixelM(), "Reference pixel");
     _writeKey("CRVAL2", _image->refCoordM(),
             "Coordinate value at reference point");
+    _writeKey("CRPIX2", _image->refPixelM(), "Reference pixel");
     _writeKey("CDELT2", _image->cellsizeM() * math::asec2deg,
             "Coordinate increment at reference point");
-    _writeKey("CROTA2", rotaY);
+    _writeKey("CROTA2", 0.0);
 
-    // Polarisation axis keywords. TODO: Set polarisation FITS axes
+    // Polarisation axis keywords.
+    // TODO: Set polarisation FITS axes
     _writeKey("CTYPE3", "POL", "XX / YY");
-    _writeKey("CRVAL3", 0.0);
-    _writeKey("CDELT3", 0.0);
+    _writeKey("CRVAL3", 0.0); // 0.0 if x or both, 1.0 if y
+    _writeKey("CDELT3", 0.0); // 0.0 or 1.0 (if there is X and Y)
     _writeKey("CRPIX3", 0.0);
-    _writeKey("CROTA3", 0.0);
+    // _writeKey("CROTA3", 0.0);
 
-    // Channel axis keywords. TODO: Set channel FITS axes (including image cube channel table)
+    // Channel axis keywords.
+    // TODO: Set channel FITS axes (including image cube channel table)
     _writeKey("CTYPE4", "FREQ");
-    _writeKey("CRVAL4", 0.0);
-    _writeKey("CDELT4", 0.0);
-    _writeKey("CRPIX4", 0.0);
-    _writeKey("CROTA4", 0.0);
+    _writeKey("CRVAL4", 0.0); // _image->refFreq();
+    _writeKey("CDELT4", 0.0); // _image->deltaFreq();
+    _writeKey("CRPIX4", 0.0); // _image->refChannel();
+//    _writeKey("CROTA4", 0.0);
 
     _writeHistory("This image was created using PELICAN.");
     _writeHistory("- PELICAN: Pipeline for Extensible Lightweight Imaging and CAlibratioN");
+}
+
+
+/**
+ * @details
+ * Write a FITS frequency table extension holding the list of channels in the
+ * image data cube.
+ */
+void ImageWriterFits::_writeFrequencyTable(const std::vector<unsigned>& channels)
+{
+
+
 }
 
 

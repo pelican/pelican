@@ -4,7 +4,6 @@
 #include "utility/pelicanTimer.h"
 #include "data/VisibilityData.h"
 #include "data/AntennaPositions.h"
-#include "data/ImageData.h"
 #include <QString>
 #include <QStringList>
 #include <iostream>
@@ -150,7 +149,7 @@ void ZenithImagerDft::run(QHash<QString, DataBlob*>& data)
     _fetchDataBlobs(data);
 
     unsigned nAnt = _antPos->nAntennas();
-    unsigned nPolImage = _polarisation == POL_BOTH ? 2 : 1;
+    unsigned nPolImage = _polarisation == ImageData::POL_BOTH ? 2 : 1;
     unsigned nChanImage = _channels.size();
 
     // Declare pointer to visibility data.
@@ -165,7 +164,7 @@ void ZenithImagerDft::run(QHash<QString, DataBlob*>& data)
     }
 
     // Assign memory for the image cube (only resizes if needed).
-    _image->resize(_sizeL, _sizeM, nChanImage, nPolImage);
+    _image->resize(_sizeL, _sizeM, _channels, _polarisation);
 
     // Set the image blob meta-data.
     _setImageMetaData();
@@ -180,7 +179,7 @@ void ZenithImagerDft::run(QHash<QString, DataBlob*>& data)
         for (unsigned p = 0; p < nPolImage; p++) {
 
             unsigned pol = p;
-            pol = (nPolImage == 1 && _polarisation == POL_X) ? 0 : 1;
+            pol = (nPolImage == 1 && _polarisation == ImageData::POL_X) ? 0 : 1;
 
             // Get pointer to visibility data for channel and polarisation.
             if (_vis) {
@@ -242,11 +241,11 @@ void ZenithImagerDft::_getConfiguration(const ConfigNode& config)
     // Get the polarisation selection.
     QString pol = config.getOption("polarisation", "value", "x").toLower();
     if (pol.startsWith("x"))
-        _polarisation = POL_X;
+        _polarisation = ImageData::POL_X;
     else if (pol.startsWith("y"))
-        _polarisation = POL_Y;
+        _polarisation = ImageData::POL_Y;
     else if (pol.startsWith("both"))
-        _polarisation = POL_BOTH;
+        _polarisation = ImageData::POL_BOTH;
     else
         throw QString("ZenithImagerDft: Unknown polarisation option.");
 

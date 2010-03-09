@@ -26,12 +26,12 @@ ImageData::ImageData() : DataBlob()
  * @param[in]   nPolarisations  Number of polarisations in the image cube.
  */
 ImageData::ImageData(const unsigned sizeL, const unsigned sizeM,
-        const unsigned nChannels, const unsigned nPolarisations)
+        const std::vector<unsigned>& channels, const pol_t polarisation)
 : DataBlob()
 {
     clear();
     _ampUnits = "JY/PIXEL";
-    resize(sizeL, sizeM, nChannels, nPolarisations);
+    resize(sizeL, sizeM, channels, polarisation);
 }
 
 
@@ -54,13 +54,15 @@ ImageData::~ImageData()
  * @param[in] nPolaristaions    Number of polarisations in the image cube.
  */
 void ImageData::resize(const unsigned sizeL, const unsigned sizeM,
-        const unsigned nChannels, const unsigned nPolarisations)
+        const std::vector<unsigned>& channels, const pol_t polarisation)
 {
     _ampUnits = "JY/PIXEL";
     _sizeL = sizeL;
     _sizeM = sizeM;
-    _nChannels = nChannels;
-    _nPolarisations = nPolarisations;
+    _channels = channels;
+    _nChannels = channels.size();
+    _polarisation = polarisation;
+    _nPolarisations = (_polarisation == POL_BOTH) ? 2 : 1;
     _image.resize(_nPolarisations * _nChannels * _sizeL * _sizeM);
     _min.resize(_nPolarisations * _nChannels);
     _max.resize(_nPolarisations * _nChannels);
