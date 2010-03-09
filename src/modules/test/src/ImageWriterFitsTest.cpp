@@ -47,7 +47,8 @@ void ImageWriterFitsTest::test_openFile()
     QDomElement config;
     ImageWriterFits fits(config);
 
-    ImageData image(128, 128, 512, 2);
+    std::vector<unsigned> channels(512);
+    ImageData image(128, 128, channels, ImageData::POL_BOTH);
     fits._image = &image;
     fits._open("testEmpty", 128, 128, 1, 1, true);
     fits._writeHeader();
@@ -65,7 +66,8 @@ void ImageWriterFitsTest::test_createImage()
     unsigned nM = 128;
     unsigned nChan = 1;
     unsigned nPol = 1;
-    ImageData image(nL, nM, nChan, nPol);
+    std::vector<unsigned> channels(2);
+    ImageData image(nL, nM, channels, ImageData::POL_X);
     real_t* amp = image.ptr();
     for (unsigned m = 0; m < image.sizeM(); m++) {
         for (unsigned l = 0; l < image.sizeL(); l++) {
@@ -95,7 +97,8 @@ void ImageWriterFitsTest::test_createCube()
     unsigned nM = 128;
     unsigned nChan = 2;
     unsigned nPol = 2;
-    ImageData image(nL, nM, nChan, nPol);
+    std::vector<unsigned> channels(2);
+    ImageData image(nL, nM, channels, ImageData::POL_BOTH);
     real_t* amp = image.ptr();
     unsigned nPixelsPerPol = nM * nL;
     unsigned nPixelsPerChan = nM * nL * nPol;

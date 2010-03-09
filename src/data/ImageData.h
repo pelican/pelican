@@ -26,22 +26,35 @@ class ImageData : public DataBlob
 {
     public:
         /// The coordinate type of the reference pixel.
-        typedef enum { COORD_RA_DEC, COORD_AZ_EL, COORD_UNDEF } coord_t;
+        typedef enum { COORD_J2000, COORD_AZ_EL, COORD_UNDEF } coord_t;
+        typedef enum { POL_X, POL_Y, POL_BOTH } pol_t;
 
     private:
         std::vector<real_t> _image; ///< Image amplitude cube.
-        unsigned _nChannels;        ///< Number of channels.
-        unsigned _nPolarisations;   ///< Number of polarisations.
+
+        coord_t _coordType;         ///< Reference pixel coordinate type (enum).
+        QString _ampUnits;          ///< Amplitude unit.
+
         unsigned _sizeL;            ///< Number of pixels along l (x).
         unsigned _sizeM;            ///< Number of pixels along m (y).
-        double _cellsizeL;          ///< Pixel delta along l in arcseconds.
-        double _cellsizeM;          ///< Pixel delta along m in arcseconds.
-        double _refPixelL;          ///< Coordinate reference pixel for l axis.
-        double _refPixelM;          ///< Coordinate reference pixel for m axis.
-        coord_t _coordType;         ///< Reference pixel coordinate type (enum).
+        unsigned _nChannels;        ///< Number of channels in the image cube.
+        unsigned _nPolarisations;   ///< Number of polarisations in the image cube.
+
+        pol_t _polarisation;             ///< Image polarisation.
+        std::vector<unsigned> _channels; ///< List of frequency channels in the image.
+
+        double _refFreq;                 ///< Reference frequency;
+        unsigned _refChannel;            ///< Channel of the reference frequency.
+        unsigned _deltaFreq;             ///< Frequency increment;
+
         double _refCoordL;          ///< Reference coordinate in \p _coordType units.
+        double _refPixelL;          ///< Coordinate reference pixel for l axis.
+        double _cellsizeL;          ///< Pixel delta along l in arcseconds.
+
         double _refCoordM;          ///< Reference coordinate in \p _coordType units.
-        QString _ampUnits;          ///< Amplitude unit.
+        double _refPixelM;          ///< Coordinate reference pixel for m axis.
+        double _cellsizeM;          ///< Pixel delta along m in arcseconds.
+
         std::vector<double> _max;   ///< Maximum image pixel amplitude (channel, polarisation).
         std::vector<double> _min;   ///< Minimum image pixel amplitude (channel, polarisation).
         std::vector<double> _mean;  ///< Mean image pixel amplitude (channel, polarisation).
@@ -52,7 +65,8 @@ class ImageData : public DataBlob
 
         /// Constructor assigning memory for the image cube.
         ImageData(const unsigned sizeL, const unsigned sizeM,
-                const unsigned nChannels, const unsigned nPolarisations);
+                const std::vector<unsigned>& channels,
+                const pol_t polarisation);
 
         /// Image data destructor.
         ~ImageData();
@@ -61,7 +75,8 @@ class ImageData : public DataBlob
 
         /// Resize the image cube.
         void resize(const unsigned sizeL, const unsigned sizeM,
-                const unsigned nChannels, const unsigned nPolarisations);
+                const std::vector<unsigned>& channels,
+                const pol_t polarisations);
 
         /// Clears the image data blob.
         void clear();
@@ -77,11 +92,16 @@ class ImageData : public DataBlob
         /// Returns the number of pixels in the image.
         unsigned nPixels() const { return _image.size(); }
 
-        /// Returns the number of channels.
-        unsigned nChannels() const { return _nChannels; }
+        /// Returns the number of channels in the image.
+        unsigned nChannels() const { return _channels.size(); }
+
+        /// Returns the vector of channels in the image.
+        const std::vector<unsigned>& channels() const { return _channels; }
 
         /// Returns the number of polarisations.
-        unsigned nPolarisations() const { return _nPolarisations; }
+        unsigned nPolarisations() const {
+            return (_polarisation == POL_BOTH) ? 2 : 1;
+        }
 
         /// Returns the image size (number of pixels) in the L direction.
         unsigned sizeL() const { return _sizeL; }

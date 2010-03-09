@@ -5,6 +5,7 @@
 #include <QString>
 #include <QHash>
 #include <fitsio.h>
+#include <vector>
 
 /**
  * @file ImageWriterFits.h
@@ -67,6 +68,9 @@ class ImageWriterFits : public AbstractModule
 
         /// Write a FITS image header.
         void _writeHeader();
+
+        /// Write a frequency table extension.
+        void _writeFrequencyTable(const std::vector<unsigned>& channels);
 
         /// Write a FITS image.
         void _writeImage(real_t* image, const unsigned nL, const unsigned nM,
