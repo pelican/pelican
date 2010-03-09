@@ -3,6 +3,8 @@ SUBPACKAGE(core modules comms data adapters)
 set( core_src
      src/AbstractDataClient.cpp
      src/AbstractPipeline.cpp
+     src/DataClientFactory.cpp
+     src/DataTypes.cpp
      src/FileDataClient.cpp
      src/ModuleFactory.cpp
      src/PelicanServerClient.cpp

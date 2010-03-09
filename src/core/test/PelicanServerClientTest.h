@@ -23,7 +23,7 @@ class PelicanServerClientTest : public CppUnit::TestFixture
 {
     public:
         CPPUNIT_TEST_SUITE( PelicanServerClientTest );
-        //CPPUNIT_TEST( test_response );
+        CPPUNIT_TEST( test_response );
         CPPUNIT_TEST( test_getData );
         CPPUNIT_TEST_SUITE_END();
 

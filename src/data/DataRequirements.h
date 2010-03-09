@@ -55,17 +55,17 @@ class DataRequirements
         /// Test for compatibility with a data blob hash.
         bool isCompatible(const QHash<QString, DataBlob*>& d) const;
 
-        /// Adds the given service data as a requirement. (DEPRECATED)
+        /// Ensure that the specified data is marked as service data
         void setServiceData(const QString& string);
 
-        /// Adds the given stream data as a requirement. (DEPRECATED)
+        /// Ensure that the specified data is marked as stream data
         void setStreamData(const QString& string);
 
         /// Sets the required service data set.
-        void setServiceData(const QSet<QString>& list);
+        //void setServiceData(const QSet<QString>& list);
 
         /// Sets the required stream data set.
-        void setStreamData(const QSet<QString>& list);
+        //void setStreamData(const QSet<QString>& list);
 
         /// Returns the set of service data required.
         const QSet<QString>& serviceData() const {return _serviceData;}
@@ -84,6 +84,9 @@ class DataRequirements
 
         /// Merge two requirements objects and return the new result.
         const DataRequirements operator+(const DataRequirements&) const;
+
+        /// return the number of data types required
+        int size() const;
 
     private:
         mutable uint _hash;

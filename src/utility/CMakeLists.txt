@@ -5,6 +5,7 @@ set( utility_src
     src/ConfigNode.cpp
     src/Config.cpp
     src/SocketTester.cpp
+    src/AbstractFactory.cpp
 )
 # thread safe dummies
 set( dummyTracer_src

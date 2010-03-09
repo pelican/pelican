@@ -120,45 +120,46 @@ bool DataRequirements::isCompatible(const QHash<QString, DataBlob*>& d) const
 
 /**
  * @details
- * Adds the given parameter to the required service data.
- * TODO DEPRECATED: use addServiceData() instead.
  */
 void DataRequirements::setServiceData(const QString& string)
 {
     _hash = 0; // Mark for rehashing.
-    _serviceData.insert(string);
+    if( _streamData.contains(string) )
+        _streamData.remove(string);
+    if( ! _serviceData.contains(string) )
+        _serviceData.insert(string);
 }
 
 /**
  * @details
- * Adds the given parameter to the required stream data.
- * TODO DEPRECATED: use addStreamData() instead.
  */
 void DataRequirements::setStreamData(const QString& string)
 {
     _hash = 0; // Mark for rehashing.
-    _streamData.insert(string);
+    if( _serviceData.contains(string) )
+        _serviceData.remove(string);
+    if( ! _streamData.contains(string) )
+        _streamData.insert(string);
 }
 
 /**
  * @details
- * Sets the required service data string list.
- */
 void DataRequirements::setServiceData(const QSet<QString>& list)
 {
     _hash = 0; // Mark for rehashing.
     _serviceData = list;
 }
+ */
 
 /**
  * @details
  * Sets the required stream data string list.
- */
 void DataRequirements::setStreamData(const QSet<QString>& list)
 {
     _hash = 0; // Mark for rehashing.
     _streamData = list;
 }
+ */
 
 /**
  * @details
@@ -208,6 +209,11 @@ const DataRequirements DataRequirements::operator+(const DataRequirements& d) co
 bool operator==(const DataRequirements& r, const QHash<QString, DataBlob*>& hash)
 {
     return r.isCompatible(hash);
+}
+
+int DataRequirements::size() const
+{
+    return _streamData.size() + _serviceData.size();
 }
 
 /**

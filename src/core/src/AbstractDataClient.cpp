@@ -1,4 +1,5 @@
 #include "core/AbstractDataClient.h"
+#include "adapters/AdapterFactory.h"
 #include "data/DataRequirements.h"
 #include "utility/ConfigNode.h"
 #include <QtGlobal>
@@ -16,22 +17,15 @@ namespace pelican {
  * requirements for each pipeline (\p dataRequirements).
  *
  * @param[in] config Reference to the data client configuration node.
- * @param[in] adapterFactory Pointer to the adapter factory.
- * @param[in] dataRequirements List of data requirements required per pipeline.
+ * @param[in] dataType object containing the requirements and adappters for each pipeline.
  */
-AbstractDataClient::AbstractDataClient(const ConfigNode& config,
-        AdapterFactory* adapterFactory,
-        QList<DataRequirements> dataRequirements
-){
-    /* Store local copies */
-    _configNode = &config;
-    _adapterFactory = adapterFactory;
-    _dataRequirements = dataRequirements;
-    if ( _dataRequirements.size() == 0 )
+AbstractDataClient::AbstractDataClient(const ConfigNode& config, const DataTypes& types)
+    : _dataReqs( types ), _configNode(&config)
+{
+    // Quick sanity check
+    if ( _dataReqs.dataRequirements().size()== 0 )
         throw( QString("No data requirements specified") );
 
-    /* Get the file-type to adapter mapping */
-    _adapterNames = config.getOptionHash("data", "type", "adapter");
 }
 
 /**
@@ -40,6 +34,16 @@ AbstractDataClient::AbstractDataClient(const ConfigNode& config,
  */
 AbstractDataClient::~AbstractDataClient()
 {
+}
+
+AbstractServiceAdapter* AbstractDataClient::serviceAdapter(const QString& type) const
+{
+    return _dataReqs.serviceAdapter(type);
+}
+
+AbstractStreamAdapter* AbstractDataClient::streamAdapter(const QString& type) const
+{
+    return _dataReqs.streamAdapter(type);
 }
 
 } // namespace pelican

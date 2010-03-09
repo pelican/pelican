@@ -12,8 +12,8 @@
 namespace pelican {
 
 class DataBlob;
-class DataRequirements;
 class ConfigNode;
+class DataTypes;
 
 /**
  * @class FileDataClient
@@ -33,9 +33,7 @@ class FileDataClient : public AbstractDataClient
 
     public:
         /// Data client constructor.
-        FileDataClient(const ConfigNode& config,
-                AdapterFactory* adapterFactory,
-                QList<DataRequirements> dataRequirements);
+        FileDataClient(const ConfigNode& config, const DataTypes& types );
 
         /// Data client destructor
         ~FileDataClient();

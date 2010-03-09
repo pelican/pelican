@@ -74,8 +74,8 @@ boost::shared_ptr<ServerRequest> PelicanProtocol::request(QTcpSocket& socket)
                     in >> serviceData;
                     in >> streamData;
                     DataRequirements dr;
-                    dr.setServiceData(serviceData);
-                    dr.setStreamData(streamData);
+                    dr.addServiceData(serviceData);
+                    dr.addStreamData(streamData);
                     s->addDataOption(dr);
                 }
                 return s;

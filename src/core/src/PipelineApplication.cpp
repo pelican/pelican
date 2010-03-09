@@ -4,12 +4,14 @@
 #include "core/PipelineApplication.h"
 #include "core/PipelineDriver.h"
 #include "core/ModuleFactory.h"
+#include "core/DataClientFactory.h"
 #include "data/DataBlobFactory.h"
 #include "boost/program_options.hpp"
 #include <string>
 #include <iostream>
 
 #include "utility/Config.h"
+#include "utility/ConfigNode.h"
 #include "utility/memCheck.h"
 
 namespace pelican {
@@ -51,9 +53,13 @@ PipelineApplication::PipelineApplication(int argc, char** argv)
     /* Construct the module factory */
     _moduleFactory = new ModuleFactory(_config);
 
+    /* Construct the DataClient factory */
+    Config::TreeAddress_t clientsNode;
+    clientsNode.append(Config::NodeId_t("clients", ""));
+    _clientFactory = new DataClientFactory(_config, clientsNode, _adapterFactory );
+
     /* Construct the pipeline driver */
-    _driver = new PipelineDriver(_adapterFactory, _dataBlobFactory,
-            _moduleFactory);
+    _driver = new PipelineDriver( _dataBlobFactory, _moduleFactory, _clientFactory );
 
 }
 
@@ -66,6 +72,7 @@ PipelineApplication::~PipelineApplication()
     delete _config;
     delete _adapterFactory;
     delete _dataBlobFactory;
+    delete _clientFactory;
     delete _driver;
     delete _moduleFactory;
     _config = NULL;
@@ -97,9 +104,9 @@ void PipelineApplication::registerPipeline(AbstractPipeline *pipeline)
  *
  * @param[in] name The type of the data client to create.
  */
-void PipelineApplication::setDataClient(QString name)
+void PipelineApplication::setDataClient(const QString& name)
 {
-    _driver->setDataClient(name, _config);
+    _driver->setDataClient(name);
 }
 
 /**

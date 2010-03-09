@@ -30,6 +30,9 @@ class EmptyModule : public AbstractModule
 
         /// Runs the module.
         void run(QHash<QString, DataBlob*>& /*data*/) {}
+
+        /// sets some module data requirements
+        void setDataRequirements(const DataRequirements&);
 };
 
 } // namespace pelican

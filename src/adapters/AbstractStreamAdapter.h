@@ -41,7 +41,7 @@ class AbstractStreamAdapter : public AbstractAdapter
     public:
         /// Configures an abstract adapter for use with the stream operator
         AbstractStreamAdapter& config(DataBlob* data,
-                std::size_t size, QHash<QString, DataBlob*> serviceData);
+                std::size_t size, const QHash<QString, DataBlob*>& serviceData);
 
     protected:
         /// Hash of service data blobs associated adaption of the stream data

@@ -9,7 +9,7 @@ namespace pelican {
  * Creates a new abstract Pelican adapter with the given configuration.
  */
 AbstractStreamAdapter::AbstractStreamAdapter(const ConfigNode& config)
-: AbstractAdapter(config)
+: AbstractAdapter(AbstractAdapter::Stream, config)
 {
     _serviceData = QHash<QString, DataBlob*>();
 }
@@ -28,7 +28,7 @@ AbstractStreamAdapter::~AbstractStreamAdapter()
  * @details
  */
 AbstractStreamAdapter& AbstractStreamAdapter::config(DataBlob* data,
-        std::size_t size, QHash<QString, DataBlob*> serviceData)
+        std::size_t size, const QHash<QString, DataBlob*>& serviceData)
 {
     _data = data;
     _chunkSize = size;

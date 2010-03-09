@@ -1,9 +1,11 @@
 #include <QCoreApplication>
-#include "core/PipelineApplication.h"
+#include "ModuleFactory.h"
+#include "DataClientFactory.h"
 #include "core/PipelineDriver.h"
 #include "core/test/PipelineDriverTest.h"
 #include "core/test/TestPipeline.h"
 #include "data/DataRequirements.h"
+#include "data/DataBlobFactory.h"
 #include "utility/memCheck.h"
 
 namespace pelican {
@@ -13,7 +15,6 @@ CPPUNIT_TEST_SUITE_REGISTRATION( PipelineDriverTest );
 PipelineDriverTest::PipelineDriverTest()
     : CppUnit::TestFixture()
 {
-    pipelineApp = NULL;
     pipelineDriver = NULL;
 }
 
@@ -26,14 +27,19 @@ void PipelineDriverTest::setUp()
     int argc = 1;
     char *argv[] = {(char*)"pelican"};
     coreApp = new QCoreApplication(argc, argv);
-    pipelineApp = new PipelineApplication(argc, argv);
-//    pipelineDriver = new PipelineDriver();
+    _dataBlobFactory = new DataBlobFactory;
+    _moduleFactory = new ModuleFactory(0);
+    Config::TreeAddress_t clientsNode;
+    _clientFactory = new DataClientFactory(0,clientsNode, 0);
+    pipelineDriver = new PipelineDriver(_dataBlobFactory, _moduleFactory, _clientFactory);
 }
 
 void PipelineDriverTest::tearDown()
 {
+    delete _dataBlobFactory;
+    delete _moduleFactory;
+    delete _clientFactory;
     delete pipelineDriver;
-    delete pipelineApp;
     delete coreApp;
 }
 
@@ -83,29 +89,28 @@ void PipelineDriverTest::test_singlePipelineInvalidData()
 
 void PipelineDriverTest::test_singlePipeline()
 {
-    return;
     // Use Case:
     // Attempt to run a single registered pipeline.
     // Expect run method to be called with appropriate data on the test pipeline (repeatedly).
 
-//    QString wibble("wibble");
+    QString wibble("wibble");
 //    TestDataClient client;
 //    QSet<QString> set;
 //    set.insert(wibble);
 //    client.setSubset(set);
-//    pipelineDriver->setDataClient(&client);
-//
-//    DataRequirements req;
-//    req.setStreamData(wibble);
-//    TestPipeline *pipeline = new TestPipeline(req);
-//    pipeline->setPipelineDriver(pipelineDriver);
-//    CPPUNIT_ASSERT_NO_THROW(pipelineDriver->registerPipeline(pipeline));
-//    int num = 10;
-//    pipeline->setIterations(num);
-//    CPPUNIT_ASSERT_EQUAL(0, pipeline->count());
-//    CPPUNIT_ASSERT_NO_THROW(pipelineDriver->start());
-//    CPPUNIT_ASSERT_EQUAL(num, pipeline->count());
-//    CPPUNIT_ASSERT_EQUAL(pipeline->count(), pipeline->matchedCounter());
+    pipelineDriver->setDataClient("Test");
+
+    DataRequirements req;
+    req.setStreamData(wibble);
+    TestPipeline *pipeline = new TestPipeline(req);
+    pipeline->setPipelineDriver(pipelineDriver);
+    CPPUNIT_ASSERT_NO_THROW(pipelineDriver->registerPipeline(pipeline));
+    int num = 10;
+    pipeline->setIterations(num);
+    CPPUNIT_ASSERT_EQUAL(0, pipeline->count());
+    CPPUNIT_ASSERT_NO_THROW(pipelineDriver->start());
+    CPPUNIT_ASSERT_EQUAL(num, pipeline->count());
+    CPPUNIT_ASSERT_EQUAL(pipeline->count(), pipeline->matchedCounter());
 }
 
 void PipelineDriverTest::test_multiPipeline()

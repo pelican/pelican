@@ -21,10 +21,8 @@ namespace pelican {
 
 
 // class PelicanServerClient 
-PelicanServerClient::PelicanServerClient(const ConfigNode& config,
-        AdapterFactory* adapterFactory,
-        QList<DataRequirements>& dataRequirements)
-    : AbstractDataClient(config, adapterFactory, dataRequirements), _protocol(0)
+PelicanServerClient::PelicanServerClient(const ConfigNode& config, const DataTypes& types )
+    : AbstractDataClient(config, types ), _protocol(0)
 {
     _protocol = new PelicanClientProtocol; // hard code for now
 }
@@ -80,6 +78,7 @@ QHash<QString, DataBlob*> PelicanServerClient::_response(QIODevice& device, boos
                 StreamDataResponse* res = static_cast<StreamDataResponse*>(r.get());
                 // determine the associated service data
                 StreamData* sd = res->streamData();
+                Q_ASSERT( sd != 0 );
                 foreach(const boost::shared_ptr<Data>& d, sd->associateData() ) {
                     // do we already have it?
                     if( dataHash[d->name()]->version() == d->id() )
@@ -121,8 +120,8 @@ QHash<QString, DataBlob*> PelicanServerClient::_response(QIODevice& device, boos
                 ServiceDataResponse* res = static_cast<ServiceDataResponse*>(r.get());
                 foreach( const Data* d, res->data() ) {
                     QString type = d->name();
-                    AbstractAdapter* ad = adapters().value(type);
-                    AbstractServiceAdapter* adapter = static_cast<AbstractServiceAdapter*>(ad);
+                    AbstractServiceAdapter* adapter = serviceAdapter(type);
+                    Q_ASSERT(adapter != 0 );
                     adapter->config(dataHash[type], d->size() );
                     adapter->deserialise(&device);
                     validData.insert(type, dataHash.value(type));
@@ -140,10 +139,10 @@ QHash<QString, DataBlob*> PelicanServerClient::_adaptStream(QIODevice& device, c
     QHash<QString, DataBlob*> validData;
 
     const QString& type = sd->name();
-    AbstractAdapter* ad = adapters().value(type);
-    AbstractStreamAdapter* adapter = static_cast<AbstractStreamAdapter*>(ad);
+    AbstractStreamAdapter* adapter = streamAdapter(type);
+    Q_ASSERT( adapter != 0 );
     adapter->config( dataHash[type], sd->size(), dataHash );
-    adapter->deserialise(&device);
+    //adapter->deserialise(&device);
     validData.insert(type, dataHash.value(type));
 
     return validData;

@@ -31,11 +31,19 @@ class DataBlob;
 class AbstractAdapter
 {
     public:
+        enum private_AdapterType_t { Stream, Service };
+        typedef private_AdapterType_t AdapterType_t;
+
+    public:
         /// Constructs a new adapter.
-        AbstractAdapter(const ConfigNode& config);
+        AbstractAdapter(AdapterType_t type, const ConfigNode& config);
 
         /// Destroys the adapter (virtual).
         virtual ~AbstractAdapter();
+
+        /// return the type of Adapter
+        //  as passed in the constructor
+        AdapterType_t type() const;
 
     public:
         virtual void deserialise(QIODevice* in) = 0;
@@ -43,6 +51,7 @@ class AbstractAdapter
     protected:
         /// Data blob pointer to be by the adapter.
         DataBlob* _data;
+        AdapterType_t _type;
 
         /// Chunk size in bytes.
         std::size_t _chunkSize;

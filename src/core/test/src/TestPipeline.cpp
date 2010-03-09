@@ -1,4 +1,5 @@
 #include "core/test/TestPipeline.h"
+#include "modules/EmptyModule.h"
 #include "utility/memCheck.h"
 #include <iostream>
 
@@ -20,11 +21,11 @@ TestPipeline::TestPipeline()
  *
  * @param[in] requirements The data requirements of the pipeline.
  */
-TestPipeline::TestPipeline(const DataRequirements& /*requirements*/)
+TestPipeline::TestPipeline(const DataRequirements& requirements)
     : AbstractPipeline()
 {
     _setDefaults();
-//    _data = requirements;
+    _data = requirements;
 }
 
 /**
@@ -42,7 +43,8 @@ TestPipeline::~TestPipeline()
  */
 void TestPipeline::init()
 {
-    createModule("Test");
+    EmptyModule* testmodule = static_cast<EmptyModule*>(createModule("Empty"));
+    testmodule->setDataRequirements(_data);
 }
 
 /**
@@ -60,9 +62,9 @@ void TestPipeline::reset()
  * Pipeline run method (overloaded virtual).
  * Defines a single iteration of the pipeline.
  */
-void TestPipeline::run(QHash<QString, DataBlob*>& /*dataHash*/)
+void TestPipeline::run(QHash<QString, DataBlob*>& dataHash)
 {
-//    if (dataRequired() == dataHash)
+    if (dataRequired() == dataHash)
         ++_matchedCounter;
 
     /* Increment counter and test for completion */

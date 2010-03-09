@@ -10,7 +10,7 @@ namespace pelican {
  * Creates a new abstract Pelican adapter with the given configuration.
  */
 AbstractServiceAdapter::AbstractServiceAdapter(const ConfigNode& config)
-: AbstractAdapter(config)
+: AbstractAdapter(AbstractAdapter::Service, config)
 {
 }
 
@@ -30,6 +30,7 @@ AbstractServiceAdapter::~AbstractServiceAdapter()
 AbstractServiceAdapter& AbstractServiceAdapter::config(DataBlob* data,
         std::size_t size)
 {
+    Q_ASSERT( data != 0 );
     _data = data;
     _chunkSize = size;
     return *this;

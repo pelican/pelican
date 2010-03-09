@@ -18,25 +18,11 @@ namespace pelican {
  * @details
  * This creates a new file data client.
  */
-FileDataClient::FileDataClient(const ConfigNode& config,
-        AdapterFactory* adapterFactory,
-        QList<DataRequirements> dataRequirements)
-: AbstractDataClient(config, adapterFactory, dataRequirements)
+FileDataClient::FileDataClient(const ConfigNode& config, const DataTypes& types)
+    : AbstractDataClient(config, types )
 {
     /* Get the configuration options */
     _getConfig();
-
-    /* Loop over data requirements for each pipeline */
-    foreach (DataRequirements req, dataRequirements) {
-        /* Create a union of required data types for this pipeline */
-        QSet<QString> allDataReq = req.serviceData() + req.streamData();
-
-        /* Loop over each data type to set up the adapters for each pipeline */
-        foreach (QString type, allDataReq) {
-            AbstractAdapter* adapter = adapterFactory->create(adapterNames().value(type), "");
-            adapters().insert(type, adapter);
-        }
-    }
 }
 
 /**
@@ -67,8 +53,8 @@ QHash<QString, DataBlob*> FileDataClient::getData(QHash<QString, DataBlob*>& dat
                 QFile file(filename);
                 if (!file.open(QIODevice::ReadOnly))
                     throw QString("Cannot open file %1").arg(filename);
-                AbstractAdapter* ad = adapters().value(type);
-                AbstractServiceAdapter* adapter = static_cast<AbstractServiceAdapter*>(ad);
+                AbstractServiceAdapter* adapter = serviceAdapter(type);
+                Q_ASSERT( adapter != 0 );
                 adapter->config(dataHash[type], file.size());
                 adapter->deserialise(&file);
                 validHash.insert(type, dataHash.value(type));
@@ -78,12 +64,13 @@ QHash<QString, DataBlob*> FileDataClient::getData(QHash<QString, DataBlob*>& dat
         /* Loop over stream data requirements */
         foreach (QString type, req.streamData()) {
             QString filename = _fileNames.value(type);
+        std::cout << "Reading from stream file " << filename.toStdString();
             if (!filename.isEmpty()) {
                 QFile file(filename);
                 if (!file.open(QIODevice::ReadOnly))
                     throw QString("Cannot open file %1").arg(filename);
-                AbstractAdapter* ad = adapters().value(type);
-                AbstractStreamAdapter* adapter = static_cast<AbstractStreamAdapter*>(ad);
+                AbstractStreamAdapter* adapter = streamAdapter(type);
+                Q_ASSERT( adapter != 0 );
                 QHash<QString, DataBlob*> serviceHash;
                 adapter->config(dataHash[type], file.size(), serviceHash);
                 adapter->deserialise(&file);
