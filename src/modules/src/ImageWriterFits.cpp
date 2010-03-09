@@ -245,7 +245,7 @@ void ImageWriterFits::_writeHeader()
     _writeKey("CRPIX1", _image->refPixelL(), "Reference pixel");
     _writeKey("CDELT1", _image->cellsizeL() * math::asec2deg,
             "Coordinate increment at reference point");
-    _writeKey("CROTA1", 0.0);
+//    _writeKey("CROTA1", 0.0);
 
     // y (m) axis keywords.
     _writeKey("CTYPE2", "DEC--SIN");
@@ -255,22 +255,24 @@ void ImageWriterFits::_writeHeader()
     _writeKey("CRPIX2", _image->refPixelM(), "Reference pixel");
     _writeKey("CDELT2", _image->cellsizeM() * math::asec2deg,
             "Coordinate increment at reference point");
-    _writeKey("CROTA2", 0.0);
+//    _writeKey("CROTA2", 0.0);
 
     // Polarisation axis keywords.
     // TODO: Set polarisation FITS axes
     _writeKey("CTYPE3", "POL", "XX / YY");
-    _writeKey("CRVAL3", 0.0); // 0.0 if x or both, 1.0 if y
-    _writeKey("CDELT3", 0.0); // 0.0 or 1.0 (if there is X and Y)
+    int polType = (_image->polarisation() == ImageData::POL_Y) ? 0 : 1;
+    _writeKey("CRVAL3", polType); // 0.0 if x or both, 1.0 if y
+    int polDelta = (_image->polarisation() == ImageData::POL_BOTH) ? 1 : 0;
+    _writeKey("CDELT3", polDelta); // 0.0 or 1.0 (if there is X and Y)
     _writeKey("CRPIX3", 0.0);
     // _writeKey("CROTA3", 0.0);
 
     // Channel axis keywords.
     // TODO: Set channel FITS axes (including image cube channel table)
     _writeKey("CTYPE4", "FREQ");
-    _writeKey("CRVAL4", 0.0); // _image->refFreq();
-    _writeKey("CDELT4", 0.0); // _image->deltaFreq();
-    _writeKey("CRPIX4", 0.0); // _image->refChannel();
+    _writeKey("CRVAL4", _image->refFreq());
+    _writeKey("CDELT4", _image->deltaFreq());
+    _writeKey("CRPIX4", _image->refChannel());
 //    _writeKey("CROTA4", 0.0);
 
     _writeHistory("This image was created using PELICAN.");
@@ -282,9 +284,43 @@ void ImageWriterFits::_writeHeader()
  * @details
  * Write a FITS frequency table extension holding the list of channels in the
  * image data cube.
+ *
+ * @note
+ * See http://goo.gl/Es3S for reference on fits tables with cfitsio.
  */
 void ImageWriterFits::_writeFrequencyTable(const std::vector<unsigned>& channels)
 {
+    // Throw if the CFITSIO file handle isn't open.
+    if (_fits == NULL)
+        throw QString("ImageWriterFits: Fits file handle not open.");
+
+    // Throw if there is no image data.
+    if (_image == NULL)
+        throw QString("ImageWriterFits: Image data array missing.");
+
+    // The naxis2 parameter gives the initial number of rows to be created in
+    // the table, and should normally be set = 0. CFITSIO will automatically
+    // increase the size of the table as additional rows are written.
+    long initRows = 0;
+    char* extname = NULL;
+    char** tunit = NULL;
+    int status = 0;
+    int tfields = 1;
+    char *ttype[] = { (char*)"channels" };
+    char *tform[] = { (char*)"I6" };
+
+    ffcrtb(_fits, ASCII_TBL, initRows, tfields, ttype, tform, tunit, extname,
+            &status);
+
+    if (status)
+            throw QString("ImageWriterFits: Unable to create frequency table.");
+
+    long nRows = channels.size();
+    unsigned* c = const_cast<unsigned*>(&channels[0]);
+    ffpcl(_fits, TINT, 1, 1, 1, nRows, c, &status);
+
+    if (status)
+        throw QString("ImageWriterFits: Unable to create frequency table.");
 
 
 }

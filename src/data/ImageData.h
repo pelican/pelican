@@ -43,9 +43,9 @@ class ImageData : public DataBlob
         pol_t _polarisation;             ///< Image polarisation.
         std::vector<unsigned> _channels; ///< List of frequency channels in the image.
 
-        double _refFreq;                 ///< Reference frequency;
-        unsigned _refChannel;            ///< Channel of the reference frequency.
-        unsigned _deltaFreq;             ///< Frequency increment;
+        double _refFreq;            ///< Reference frequency;
+        unsigned _refChannel;       ///< Channel of the reference frequency.
+        double _deltaFreq;          ///< Frequency increment;
 
         double _refCoordL;          ///< Reference coordinate in \p _coordType units.
         double _refPixelL;          ///< Coordinate reference pixel for l axis.
@@ -98,10 +98,22 @@ class ImageData : public DataBlob
         /// Returns the vector of channels in the image.
         const std::vector<unsigned>& channels() const { return _channels; }
 
+        /// Returns the reference frequency.
+        double refFreq() const { return _refFreq; }
+
+        /// Returns the channel of the reference frequency.
+        unsigned refChannel() const { return _refChannel; }
+
+        /// Returns the frequency increment per channel.
+        double deltaFreq() const { return _deltaFreq; }
+
         /// Returns the number of polarisations.
         unsigned nPolarisations() const {
             return (_polarisation == POL_BOTH) ? 2 : 1;
         }
+
+        /// Returns the polarisation enum value.
+        pol_t polarisation() const { return _polarisation; }
 
         /// Returns the image size (number of pixels) in the L direction.
         unsigned sizeL() const { return _sizeL; }
