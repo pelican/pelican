@@ -10,6 +10,7 @@ set( adaptersTestLibrary_src
      src/VisGen.cpp
      src/TestDataBlob.cpp
      src/TestAdapter.cpp
+     src/TestStreamAdapter.cpp
      src/TestAdapterFactory.cpp
 )
 add_library(adaptersTestUtilities ${adaptersTestLibrary_src} )
