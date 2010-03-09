@@ -2,6 +2,8 @@
 #define ZENITHMODELVISIBILITIES_H
 
 #include "modules/AbstractModule.h"
+#include "data/SiteData.h"
+#include "data/CelestialData.h"
 #include <vector>
 
 /**
@@ -10,6 +12,7 @@
 
 namespace pelican {
 
+class AbstractAstrometry;
 class ConfigNode;
 class DataBlob;
 class ModelVisibilityData;
@@ -50,10 +53,13 @@ class ZenithModelVisibilities : public AbstractModule
         /// Extract data from the data hash.
         void _fetchDataBlobs(QHash<QString, DataBlob*>& data);
 
-        /// Extract configuration from the xml node. setting some defaults.
+        /// Extract configuration from the XML node. setting some defaults.
         void _getConfiguration(const ConfigNode& config);
 
     private:
+        AbstractAstrometry* _astrometry;
+        SiteData _siteData;
+        CelestialData _celestialData;
         ModelVisibilityData* _modelVis;
         AntennaPositions* _antPos;
         std::vector<Source> _sources;

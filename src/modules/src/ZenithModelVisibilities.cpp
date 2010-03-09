@@ -1,5 +1,6 @@
 #include "modules/ZenithModelVisibilities.h"
 
+#include "modules/AstrometryFast.h"
 #include "data/DataBlob.h"
 #include "data/ModelVisibilityData.h"
 #include "data/AntennaPositions.h"
@@ -31,6 +32,9 @@ ZenithModelVisibilities::ZenithModelVisibilities(const ConfigNode& config)
     _modelVis = NULL;
     _antPos = NULL;
 
+    // Create astrometry module.
+    _astrometry = new AstrometryFast;
+
     // Extract the configuration.
     _getConfiguration(config);
 }
@@ -41,6 +45,7 @@ ZenithModelVisibilities::ZenithModelVisibilities(const ConfigNode& config)
  */
 ZenithModelVisibilities::~ZenithModelVisibilities()
 {
+    delete _astrometry;
 }
 
 
@@ -66,6 +71,10 @@ void ZenithModelVisibilities::run(QHash<QString, DataBlob*>& data)
     unsigned nAnt = _antPos->nAntennas();
     unsigned nChanModel = _channels.size();
     unsigned nPolModel = _polarisation == POL_BOTH ? 2 : 1;
+
+    // Get time (UT1) and set up celestial data structure for astrometry.
+    double UT1 = 0; // TODO get the time from the data blob.
+    _astrometry->setCelestialParameters(&_celestialData, &_siteData, UT1);
 
     // Loop over channels and polarisations generating model visibilities.
     for (unsigned c = 0; c < nChanModel; c++) {
@@ -97,8 +106,8 @@ void ZenithModelVisibilities::run(QHash<QString, DataBlob*>& data)
  *
  * @param[out] vis          Model visibilities generated.
  * @param[in]  nAnt         Number of antennas.
- * @param[in]  antPosX      Array of antenna x coordinate positions (length nAnt).
- * @param[in]  antPoxY      Array of antenna y coordinate positions (length nAnt).
+ * @param[in]  antPosX      Array of antenna x coordinates (length nAnt).
+ * @param[in]  antPoxY      Array of antenna y coordinates (length nAnt).
  * @param[in]  source       Array of source objects (length nSources).
  * @param[in]  nSources     Number of sources.
  * @param[in]  frequency    Frequency in Hz for which the model is calculated.
@@ -119,9 +128,20 @@ void ZenithModelVisibilities::_calculateModelVis(complex_t* vis,
 
     // Calculate l and m values for the sources
     for (unsigned i = 0; i < nSources; i++) {
-        // TODO: convert from RA, Dec if needed
-        double az = sources[i].longitude();
-        double el = sources[i].latitude();
+        // Convert from RA, Dec if needed.
+        double lon = sources[i].longitude();
+        double lat = sources[i].latitude();
+        double az, el;
+
+        if (sources[i].coordType() == Source::J2000) {
+            _astrometry->icrsEquatorialToObserved(&_siteData, &_celestialData,
+                    lon, lat, &az, &el);
+        } else {
+            az = lon;
+            el = lat;
+        }
+
+        // Find direction cosines.
         double cosEl = cos(el * math::deg2rad);
         l[i] = cosEl * sin(az * math::deg2rad);
         m[i] = cosEl * cos(az * math::deg2rad);
@@ -247,6 +267,13 @@ void ZenithModelVisibilities::_getConfiguration(const ConfigNode& config)
      if (pol == "x") _polarisation = POL_X;
      else if (pol == "y") _polarisation = POL_Y;
      else if (pol == "both") _polarisation = POL_BOTH;
+
+     // Read astrometry site parameters and set the data structure.
+     double siteLongitude = config.getOption("siteLongitude", "value", "0").toDouble();
+     double siteLatitude = config.getOption("siteLatitude", "value", "0").toDouble();
+     double deltaUT = config.getOption("deltaUT", "value", "0").toDouble();
+     double pressure = config.getOption("pressure", "value", "1000").toDouble();
+     _astrometry->setSiteParameters(&_siteData, siteLongitude, siteLatitude, deltaUT, pressure);
 }
 
 } // namespace pelican
