@@ -57,19 +57,19 @@
         <!-- Stefan's positions -->
         <!-- <source coordType="azel" coord1="-4.71694127387953"   coord2="82.12031315483448" ampType="polxy" amp1="11000"  amp2="0.5"/> -->
         <!-- <source coordType="azel" coord1="-85.19272496550460"   coord2="53.05074784160009" ampType="polxy" amp1="8100"  amp2="0.5"/> -->
-        
+
         <source coordType="azel" coord1="9.670555556" coord2="80.37166667"  amp1="11000"  amp2="0.5"/>
         <source coordType="azel" coord1="268.031111" coord2="56.174444" amp1="8100"  amp2="0.5"/>
-        
+
         <!-- <source coordType="azel" coord1="0"   coord2="80" ampType="polxy" amp1="1000"  amp2="200"/>
         <source coordType="azel" coord1="0"   coord2="84" ampType="polxy" amp1="1000"  amp2="10"/>
         <source coordType="azel" coord1="-70"   coord2="70" ampType="polxy" amp1="1000"  amp2="0"/> -->
-        
+
         <!-- <source coordType="azel" coord1="35"   coord2="80" ampType="polxy" amp1="1000"  amp2="30"/>
         <source coordType="azel" coord1="-35"   coord2="80" ampType="polxy" amp1="1000"  amp2="10"/>  -->
         <!-- <source coordType="azel" coord1="-70"   coord2="70" ampType="polxy" amp1="1000"  amp2="0"/> -->
-        
-        
+
+
         <!-- <source coordType="azel" coord1="68"   coord2="40" ampType="polxy" amp1="100"  amp2="50"/> -->
         <channels>182</channels>
         <frequencies reference="0.0" referenceChannel="0" delta="195312.5"/>
@@ -85,7 +85,7 @@
         <channels>182</channels>
         <frequencies reference="0.0" referenceChannel="0" delta="195312.5"/>
         <!-- <frequencies reference="3.554687500e7" referenceChannel="0" delta="195312.5"/>  -->
-        
+
         <!-- Visibility types are "raw", "model", "calibrated" or "psf" (only first letter required) -->
         <visibility type="cal"/>
     </ZenithImagerDft>
@@ -96,7 +96,6 @@
         <directory value=""/>
         <file name="test.fits" prefix="" suffix=""/>
 
-        <!-- <cube value="true"/> -->
         <origin value="Oxford e-Research Centre"/>
         <telescope value="LOFAR"/>
         <instrument value="Effelsberg"/>
@@ -104,7 +103,6 @@
         <object value="full sky"/>
         <author value=""/>
         <reference value=""/>
-         <equinox value="2000.0"/>
     </ImageWriterFits>
 
 </modules>
