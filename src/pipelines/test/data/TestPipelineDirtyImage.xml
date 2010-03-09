@@ -9,6 +9,7 @@
     </FileDataClient>
 </clients>
 
+
 <adapters>
     <AdapterAntennaList>
         <antennas number="96"/>
@@ -24,19 +25,33 @@
     </AdapterLofarStationVisibilities>
 </adapters>
 
+
 <varsets>
-    <myVarset>
+
+    <varset name="channels">
+        <!-- <frequencies reference="3.554687500e7" delta="195312.5"/>  -->
         <frequencies reference="0.0" referenceChannel="0" delta="195312.5"/>
         <channels>182</channels>
         <polarisation value="x"/>
-    </myVarset>
-    <astrometry>
+    </varset>
+    
+    
+    <varset name="astrometry">
         <siteLongitude value=""/>
         <siteLatitude value=""/>
         <deltaUT value=""/>
         <pressure value=""/>
-    </astrometry>
+    </varset>
+    
+    
+    <varset name="sourcesSJW">
+        <!-- Stefan's positions -->
+        <source coordType="azel" coord1="-4.71694127387953" coord2="82.12031315483448" amp1="11000" amp2="0.5"/>
+        <source coordType="azel" coord1="-85.19272496550460" coord2="53.05074784160009" amp1="8100" amp2="0.5"/>
+    </varset>
+    
 </varsets>
+
 
 <modules>
 
@@ -44,47 +59,20 @@
         <eigenvalues number="10"/>
         <tolerance value="1.0e-3"/>
         <iterations value="100"/>
-
-        <channels>182</channels>
-        <polarisation value="x"/>
-        <frequencies reference="0.0" referenceChannel="0" delta="195312.5"/>
-        <!-- <frequencies reference="3.554687500e7" referenceChannel="0" delta="195312.5"/>  -->
+        <varset name="channels"/>
     </ZenithCalibrater>
 
 
     <ZenithModelVisibilities>
-        <!-- source coord1 = az/ra coord2 = el/dec coordType="azel" or "j2000" -->
-        <!-- Stefan's positions -->
-        <!-- <source coordType="azel" coord1="-4.71694127387953"   coord2="82.12031315483448" ampType="polxy" amp1="11000"  amp2="0.5"/> -->
-        <!-- <source coordType="azel" coord1="-85.19272496550460"   coord2="53.05074784160009" ampType="polxy" amp1="8100"  amp2="0.5"/> -->
-        
-        <source coordType="azel" coord1="9.670555556" coord2="80.37166667"  amp1="11000"  amp2="0.5"/>
-        <source coordType="azel" coord1="268.031111" coord2="56.174444" amp1="8100"  amp2="0.5"/>
-        
-        <!-- <source coordType="azel" coord1="0"   coord2="80" ampType="polxy" amp1="1000"  amp2="200"/>
-        <source coordType="azel" coord1="0"   coord2="84" ampType="polxy" amp1="1000"  amp2="10"/>
-        <source coordType="azel" coord1="-70"   coord2="70" ampType="polxy" amp1="1000"  amp2="0"/> -->
-        
-        <!-- <source coordType="azel" coord1="35"   coord2="80" ampType="polxy" amp1="1000"  amp2="30"/>
-        <source coordType="azel" coord1="-35"   coord2="80" ampType="polxy" amp1="1000"  amp2="10"/>  -->
-        <!-- <source coordType="azel" coord1="-70"   coord2="70" ampType="polxy" amp1="1000"  amp2="0"/> -->
-        
-        
-        <!-- <source coordType="azel" coord1="68"   coord2="40" ampType="polxy" amp1="100"  amp2="50"/> -->
-        <channels>182</channels>
-        <frequencies reference="0.0" referenceChannel="0" delta="195312.5"/>
-        <!-- <frequencies reference="3.554687500e7" referenceChannel="0" delta="195312.5"/>  -->
-        <polarisation value="x"/>
+        <varset name="sourcesSJW"/>
+        <varset name="channels"/>
     </ZenithModelVisibilities>
 
 
     <ZenithImagerDft>
         <size l="256" m="256" pixelCentred="true"/>
         <fullSky value="true" cutHemisphere="true"/>
-        <polarisation value="x"/>
-        <channels>182</channels>
-        <frequencies reference="0.0" referenceChannel="0" delta="195312.5"/>
-        <!-- <frequencies reference="3.554687500e7" referenceChannel="0" delta="195312.5"/>  -->
+        <varset name="channels"/>
         
         <!-- Visibility types are "raw", "model", "calibrated" or "psf" (only first letter required) -->
         <visibility type="cal"/>

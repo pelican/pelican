@@ -39,7 +39,7 @@ class ZenithModelVisibilities : public AbstractModule
         void run(QHash<QString, DataBlob*>& data);
 
     private:
-        enum  pol_t { POL_X, POL_Y, POL_BOTH } ;
+        typedef enum { POL_X, POL_Y, POL_BOTH } pol_t;
 
         /// Calculate model visibilties
         void _calculateModelVis(complex_t* vis, const unsigned nAnt,
@@ -61,7 +61,7 @@ class ZenithModelVisibilities : public AbstractModule
         int _freqRefChannel;                ///< Frequency reference channel
         double _freqRef;                    ///< Reference frequency
         double _freqDelta;                  ///< Frequency delta
-        unsigned _polarisation;
+        pol_t _polarisation;
 };
 
 } // namespace pelican

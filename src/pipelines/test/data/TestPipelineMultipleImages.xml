@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pelican>
+<configuration version="1.0">
+
+<clients>
+    <FileDataClient>
+        <data type="AntennaPositions" adapter="AdapterAntennaList" file="data/antennaPositions.dat"/>
+    </FileDataClient>
+</clients>
+
+<adapters>
+    <AdapterAntennaList>
+        <antennas number="96"/>
+    </AdapterAntennaList>
+</adapters>
+
+<modules>
+    <ZenithModelVisibilities>
+        <source coordType="azel" coord1="0.0"  coord2="80.0"  amp1="1.0"/>
+        <source coordType="azel" coord1="45.0" coord2="45.0"  amp1="1.5"/>
+        <channels>0</channels>
+        <polarisation value="x"/>
+        <frequencies reference="1.0e8" delta="2.0e6"/>
+    </ZenithModelVisibilities>
+
+    <ZenithImagerDft name="a">
+        <visibility type="psf"/>
+        <size l="256" m="256"/>
+        <channels>0</channels>
+        <polarisation value="x"/>
+        <frequencies reference="1.0e8" delta="2.0e6"/>
+    </ZenithImagerDft>
+
+    <ZenithImagerDft name="b">
+        <visibility type="model"/>
+        <size l="256" m="256"/>
+        <channels>0</channels>
+        <polarisation value="x"/>
+        <frequencies reference="1.0e8" delta="2.0e6"/>
+    </ZenithImagerDft>
+
+    <ImageWriterFits name="a">
+        <overwrite value="true"/>
+        <file name="testA.fits"/>
+    </ImageWriterFits>
+
+    <ImageWriterFits name="b">
+        <overwrite value="true"/>
+        <file name="testB.fits"/>
+    </ImageWriterFits>
+
+</modules>
+
+</configuration>

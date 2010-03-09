@@ -17,9 +17,9 @@ if(TIMER)
     ADD_DEFINITIONS(-DTIMER_ENABLE)
 endif(TIMER)
 
-if(NO_MKL)
-    set( IGNORE_MLK true)
-endif(NO_MKL)
+if(IGNORE_MKL)
+    set(IGNORE_MLK true)
+endif(IGNORE_MKL)
 
 if (OPENMP)
     FIND_PACKAGE(OpenMP REQUIRED)
@@ -53,9 +53,7 @@ set( ${PROJECT_NAME}_PATCH_LEVEL 0 )
 
 FIND_PACKAGE( Boost COMPONENTS program_options REQUIRED )
 
-if (NOT NO_CBLAS)
-    include(MathLibraries)
-endif (NOT NO_CBLAS)
+include(MathLibraries)
 
 # -- dependencies
 set(dependencies

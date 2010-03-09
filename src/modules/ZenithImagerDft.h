@@ -88,10 +88,6 @@ class ZenithImagerDft : public AbstractModule
         void _multWeights(const unsigned nAnt, complex_t* weightsXL,
                 complex_t *weightsYM, complex_t *weights);
 
-        /// Matrix vector multiply of visibilities by a weights vector.
-        void _multMatrixVector(const unsigned nAnt, complex_t* visMatrix,
-                complex_t *weights, complex_t *result);
-
         /// Vector-vector dot product taking the complex conjugate of the
         /// second vector.
         complex_t _vectorDotConj(const unsigned n, complex_t* a, complex_t* b);

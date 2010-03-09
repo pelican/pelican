@@ -18,10 +18,10 @@ class AbstractModule;
 
 /**
  * @class ModuleFactory
- *  
+ *
  * @brief
  * Factory to create pre-configured modules.
- * 
+ *
  * @details
  * Instantiates module objects and configures them with details taken
  * from the appropriate configuration file and/or command line.
@@ -38,7 +38,7 @@ class ModuleFactory
         ~ModuleFactory();
 
         /// Creates a new module.
-        AbstractModule* createModule(const QString& name, const QString& pipeline);
+        AbstractModule* createModule(const QString& type, const QString& name);
 
         /// Returns the tree node address that marks the start
         /// of the module configuration block.
@@ -56,4 +56,4 @@ class ModuleFactory
 
 } // namespace pelican
 
-#endif // MODULEFACTORY_H 
+#endif // MODULEFACTORY_H
