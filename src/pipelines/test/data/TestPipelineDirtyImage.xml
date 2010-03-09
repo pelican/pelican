@@ -37,10 +37,10 @@
 
 
     <varset name="astrometry">
-        <siteLongitude value=""/>
-        <siteLatitude value=""/>
-        <deltaUT value=""/>
-        <pressure value=""/>
+        <siteLongitude value="0"/>
+        <siteLatitude value="0"/>
+        <deltaUT value="0"/>
+        <pressure value="1000"/>
     </varset>
 
 
