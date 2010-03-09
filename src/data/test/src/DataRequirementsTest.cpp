@@ -31,7 +31,7 @@ void DataRequirementsTest::test_hash()
     // Ensure hash returns a non-zero value.
     {
         DataRequirements d;
-        d.setStreamData(QString("hello"));
+        d.addStreamData(QString("hello"));
         CPPUNIT_ASSERT(d.hash() != 0);
     }
 
@@ -39,9 +39,9 @@ void DataRequirementsTest::test_hash()
     // Ensure different DataRequirement objects return different hash values.
     {
         DataRequirements d1;
-        d1.setStreamData(QString("one"));
+        d1.addStreamData(QString("one"));
         DataRequirements d2;
-        d2.setStreamData(QString("two"));
+        d2.addStreamData(QString("two"));
         CPPUNIT_ASSERT(d1.hash() != d2.hash());
     }
 
@@ -51,12 +51,12 @@ void DataRequirementsTest::test_hash()
         DataRequirements d1;
         QSet<QString> list1;
         list1 << "one" << "two";
-        d1.setStreamData(list1);
+        d1.addStreamData(list1);
 
         DataRequirements d2;
         QSet<QString> list2;
         list2 << "two" << "one";
-        d2.setStreamData(list2);
+        d2.addStreamData(list2);
         CPPUNIT_ASSERT(d1.hash() == d2.hash());
     }
 }
@@ -68,13 +68,13 @@ void DataRequirementsTest::test_isCompatible()
     // expect true
     {
         DataRequirements req;
-        req.setServiceData("wibble1");
+        req.addServiceData("wibble1");
         QHash<QString, DataBlob*> hashData;
         hashData.insert("wibble1", NULL);
         CPPUNIT_ASSERT_EQUAL(true, req.isCompatible(hashData));
 
         DataRequirements reqdata;
-        reqdata.setServiceData("wibble1");
+        reqdata.addServiceData("wibble1");
         CPPUNIT_ASSERT_EQUAL(true, req.isCompatible(reqdata));
     }
 
@@ -83,15 +83,15 @@ void DataRequirementsTest::test_isCompatible()
     // expect true
     {
         DataRequirements req;
-        req.setServiceData("wibble1");
+        req.addServiceData("wibble1");
         QHash<QString, DataBlob*> hashData;
         hashData.insert("wibble1", NULL);
         hashData.insert("wibble2", NULL);
         CPPUNIT_ASSERT_EQUAL(true, req.isCompatible(hashData));
 
         DataRequirements reqdata;
-        reqdata.setServiceData("wibble1");
-        reqdata.setServiceData("wibble2");
+        reqdata.addServiceData("wibble1");
+        reqdata.addServiceData("wibble2");
         CPPUNIT_ASSERT_EQUAL(true, req.isCompatible(reqdata));
     }
 
@@ -103,15 +103,15 @@ void DataRequirementsTest::test_isCompatible()
         DataRequirements req;
         QSet<QString> dataTypes;
         dataTypes << "wibble1" << "other";
-        req.setServiceData(dataTypes);
+        req.addServiceData(dataTypes);
         QHash<QString, DataBlob*> hashData;
         hashData.insert("wibble1", NULL);
         hashData.insert("wibble2", NULL);
         CPPUNIT_ASSERT_EQUAL(false, req.isCompatible(hashData));
 
         DataRequirements reqdata;
-        reqdata.setServiceData("wibble1");
-        reqdata.setServiceData("wibble2");
+        reqdata.addServiceData("wibble1");
+        reqdata.addServiceData("wibble2");
         CPPUNIT_ASSERT_EQUAL(false, req.isCompatible(reqdata));
     }
 
@@ -123,9 +123,9 @@ void DataRequirementsTest::test_operator_equalTo()
     // Test for identical objects.
     {
         DataRequirements d1;
-        d1.setStreamData(QString("hello"));
+        d1.addStreamData(QString("hello"));
         DataRequirements d2;
-        d2.setStreamData(QString("hello"));
+        d2.addStreamData(QString("hello"));
         CPPUNIT_ASSERT(d1 == d2);
     }
 }
@@ -136,9 +136,9 @@ void DataRequirementsTest::test_operator_notEqualTo()
     // Test for non identical objects.
     {
         DataRequirements d1;
-        d1.setStreamData(QString("hello1"));
+        d1.addStreamData(QString("hello1"));
         DataRequirements d2;
-        d2.setStreamData(QString("hello2"));
+        d2.addStreamData(QString("hello2"));
         CPPUNIT_ASSERT(d1 != d2);
     }
 }
@@ -152,9 +152,9 @@ void DataRequirementsTest::test_operator_additiveAssignment()
         QStringList req;
         req << "one" << "two";
 
-        d1.setStreamData(req.at(0));
-        d2.setStreamData(req.at(1));
-        d3.setStreamData(req.toSet());
+        d1.addStreamData(req.at(0));
+        d2.addStreamData(req.at(1));
+        d3.addStreamData(req.toSet());
         d1 += d2;
         CPPUNIT_ASSERT(d1 == d3);
     }
@@ -166,9 +166,9 @@ void DataRequirementsTest::test_operator_additiveAssignment()
         QStringList req;
         req << "one" << "two";
 
-        d1.setStreamData(req.at(0));
-        d2.setStreamData(req.at(1));
-        d3.setStreamData(req.toSet());
+        d1.addStreamData(req.at(0));
+        d2.addStreamData(req.at(1));
+        d3.addStreamData(req.toSet());
         d2 += d1;
         CPPUNIT_ASSERT(d2 == d3);
     }
@@ -182,9 +182,9 @@ void DataRequirementsTest::test_operator_additiveAssignment()
         req1 << "one" << "two";
         req2 << "two" << "three";
 
-        d.setStreamData(req);
-        d1.setStreamData(req1);
-        d2.setStreamData(req2);
+        d.addStreamData(req);
+        d1.addStreamData(req1);
+        d2.addStreamData(req2);
         d2 += d1;
         CPPUNIT_ASSERT(d == d2);
     }
@@ -202,17 +202,17 @@ void DataRequirementsTest::test_operator_addition()
         l4 << "seven" << "eight";
 
         DataRequirements d1, d2, d3, d4;
-        d1.setStreamData(l1);
-        d1.setServiceData(l2);
-        d2.setStreamData(l3);
-        d2.setServiceData(l4);
+        d1.addStreamData(l1);
+        d1.addServiceData(l2);
+        d2.addStreamData(l3);
+        d2.addServiceData(l4);
 
         // Add the two objects together.
         d3 = d1 + d2;
 
-        d4.setStreamData(l1);
+        d4.addStreamData(l1);
         d4.addStreamData(l3);
-        d4.setServiceData(l2);
+        d4.addServiceData(l2);
         d4.addServiceData(l4);
         CPPUNIT_ASSERT(d3 == d4);
     }
