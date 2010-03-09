@@ -30,6 +30,38 @@ Config::~Config()
 
 /**
  * @details
+ * Return the specified configuration node together with any extra required
+ * varsets.
+ */
+ConfigNode Config::get(const TreeAddress_t &address) const
+{
+//    return ConfigNode(_get(address));
+
+    /* Declare the list of returned DOM elements */
+    QList<QDomElement> elementList;
+
+    /* Get the specified address and put it into index 0 */
+    QDomElement node = _get(address);
+    elementList.insert(0, node);
+
+    /* Check and get addresses for all varsets */
+    QDomNodeList varsetList = node.elementsByTagName("varset");
+    for (int i = 0; i < varsetList.size(); ++i) {
+        QString varsetName = varsetList.at(i).toElement().attribute("name");
+        Config::TreeAddress_t varsetAddress;
+        varsetAddress.append(Config::NodeId_t("varsets", ""));
+        varsetAddress.append(Config::NodeId_t("varset", varsetName));
+
+        /* Get the varset at the address */
+        elementList.insert(i + 1, _get(varsetAddress));
+    }
+
+    return ConfigNode(elementList);
+}
+
+
+/**
+ * @details
  * Sets and creates the specified address in the configuration document.
  *
  * @param[in]   address The address of the configuration node element to be set.
@@ -98,7 +130,7 @@ QDomElement Config::_set(const TreeAddress_t &address)
 /**
  * @details
  * Returns a QDomElement at the specified address. The element returned is
- * null the address doesn't exist.
+ * null if the address doesn't exist.
  */
 QDomElement Config::_get(const TreeAddress_t &address) const
 {

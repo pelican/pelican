@@ -43,9 +43,7 @@ class Config
         }
 
         /// Returns a pointer to the specified configuration node.
-        ConfigNode get(const TreeAddress_t &address) const {
-            return ConfigNode(_get(address));
-        }
+        ConfigNode get(const TreeAddress_t &address) const;
 
         /// Sets a configuration option attribute at the specified address.
         void setAttribute(const TreeAddress_t &address, const QString &key,

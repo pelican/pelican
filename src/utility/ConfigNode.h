@@ -4,6 +4,7 @@
 #include <QDomElement>
 #include <QString>
 #include <QHash>
+#include <QList>
 
 namespace pelican {
 
@@ -27,6 +28,9 @@ class ConfigNode
 
         /// Constructs the configuration node from the specified QDomElement.
         ConfigNode(const QDomElement& config);
+
+        /// Constructs the configuration node from the specified QDomElement list.
+        ConfigNode(const QList<QDomElement>& config);
 
         /// Destroys the configuration object.
         ~ConfigNode() {}
