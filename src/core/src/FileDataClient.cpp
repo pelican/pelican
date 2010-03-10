@@ -52,7 +52,8 @@ QHash<QString, DataBlob*> FileDataClient::getData(QHash<QString, DataBlob*>& dat
             if (!filename.isEmpty()) {
                 QFile file(filename);
                 if (!file.open(QIODevice::ReadOnly))
-                    throw QString("Cannot open file %1").arg(filename);
+                    throw QString("FileDataClient::getData(): "
+                            "Cannot open file %1").arg(filename);
                 AbstractServiceAdapter* adapter = serviceAdapter(type);
                 Q_ASSERT( adapter != 0 );
                 adapter->config(dataHash[type], file.size());
@@ -64,11 +65,11 @@ QHash<QString, DataBlob*> FileDataClient::getData(QHash<QString, DataBlob*>& dat
         /* Loop over stream data requirements */
         foreach (QString type, req.streamData()) {
             QString filename = _fileNames.value(type);
-        std::cout << "Reading from stream file " << filename.toStdString();
             if (!filename.isEmpty()) {
                 QFile file(filename);
                 if (!file.open(QIODevice::ReadOnly))
-                    throw QString("Cannot open file %1").arg(filename);
+                    throw QString("FileDataClient::getData(): "
+                            "Cannot open file %1").arg(filename);
                 AbstractStreamAdapter* adapter = streamAdapter(type);
                 Q_ASSERT( adapter != 0 );
                 QHash<QString, DataBlob*> serviceHash;
