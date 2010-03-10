@@ -1,3 +1,4 @@
+#include <vector>
 #include <QHash>
 #include <QTcpSocket>
 #include <QBuffer>
@@ -39,7 +40,7 @@ void PelicanServerClient::setPort(unsigned int port)
 
 void PelicanServerClient::setIP_Address(const QString& ipaddress)
 {
-    _ipadress = ipaddress;
+    _server = ipaddress;
 }
 
 QHash<QString, DataBlob*> PelicanServerClient::getData(QHash<QString, DataBlob*>& dataHash)
@@ -50,15 +51,9 @@ QHash<QString, DataBlob*> PelicanServerClient::getData(QHash<QString, DataBlob*>
     StreamDataRequest sr;
     sr.addDataOption(dataRequirements());
 
-    // send the request to the server
-    QTcpSocket sock;
-    //sock.connectToHost( _server, _port );
-    //sock.send( _protocol.serialise(sr) );
-    //sock.flush();
-    //
-    // interpret server response
-    boost::shared_ptr<ServerResponse> r = _protocol->receive(sock);
-    validData.unite( _response(sock, r, dataHash) );
+    validData.unite( _sendRequest(sr, dataHash) );
+    //boost::shared_ptr<ServerResponse> r = _protocol->receive(sock);
+    //validData.unite( _response(sock, r, dataHash) );
 
     return validData;
 
@@ -103,13 +98,15 @@ QHash<QString, DataBlob*> PelicanServerClient::_response(QIODevice& device, boos
                     // through the adpater, as the adpapter may require
                     // the contents of the service data to interpret the
                     // incoming data stream
-                    QByteArray tmp;
-                    tmp.reserve(sd->size() + 1 );
-                    device.read( tmp.data() , sd->size() );
-                    // fetch trhe service data
+                    std::vector<char> tmp;
+                    tmp.resize(sd->size());
+                    device.read( &tmp[0] , sd->size() );
+                    Q_ASSERT(tmp.size() == sd->size() );
+                    // fetch the service data
                     validData.unite( _getServiceData(req, dataHash) );
                     // now we can adapt the stream data
-                    QBuffer buf(&tmp);
+                    QByteArray tmp_array; tmp_array.fromRawData(&tmp[0], tmp.size());
+                    QBuffer buf(&tmp_array);
                     validData.unite(_adaptStream(buf, sd, dataHash ));
                 }
             }
@@ -122,6 +119,7 @@ QHash<QString, DataBlob*> PelicanServerClient::_response(QIODevice& device, boos
                     QString type = d->name();
                     AbstractServiceAdapter* adapter = serviceAdapter(type);
                     Q_ASSERT(adapter != 0 );
+                    dataHash[type]->setVersion(d->id());
                     adapter->config(dataHash[type], d->size() );
                     adapter->deserialise(&device);
                     validData.insert(type, dataHash.value(type));
@@ -139,10 +137,11 @@ QHash<QString, DataBlob*> PelicanServerClient::_adaptStream(QIODevice& device, c
     QHash<QString, DataBlob*> validData;
 
     const QString& type = sd->name();
+    dataHash[type]->setVersion(sd->id());
     AbstractStreamAdapter* adapter = streamAdapter(type);
     Q_ASSERT( adapter != 0 );
     adapter->config( dataHash[type], sd->size(), dataHash );
-    //adapter->deserialise(&device);
+    adapter->deserialise(&device);
     validData.insert(type, dataHash.value(type));
 
     return validData;
@@ -152,14 +151,22 @@ void PelicanServerClient::_connect()
 {
 }
 
-QHash<QString, DataBlob*> PelicanServerClient::_getServiceData(const ServiceDataRequest& requirements, QHash<QString, DataBlob*>& dataHash)
+QHash<QString, DataBlob*> PelicanServerClient::_getServiceData(const ServiceDataRequest& request, QHash<QString, DataBlob*>& dataHash)
+{
+    return _sendRequest(request, dataHash);
+}
+
+
+QHash<QString, DataBlob*> PelicanServerClient::_sendRequest(const ServerRequest& request, QHash<QString, DataBlob*>& dataHash)
 {
     QHash<QString, DataBlob*> validData;
 
     QTcpSocket sock;
-    //sock.connectToHost( _server, _port );
-    //sock.send( _protocol.serialise(sr) );
-    //sock.flush();
+    Q_ASSERT( _server != "" );
+    sock.connectToHost( _server, _port );
+
+    sock.write( _protocol->serialise(request) );
+    sock.flush();
     boost::shared_ptr<ServerResponse> r = _protocol->receive(sock);
     validData =  _response(sock, r, dataHash);
     return validData;
