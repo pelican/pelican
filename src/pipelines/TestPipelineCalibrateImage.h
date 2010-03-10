@@ -17,8 +17,6 @@ class ImageWriterFits;
 class ZenithModelVisibilities;
 class ZenithCalibrater;
 
-class AntennaPositions;
-class VisibilityData;
 class ModelVisibilityData;
 class CorrectedVisibilityData;
 class ImageData;
@@ -50,8 +48,6 @@ class TestPipelineCalibrateImage : public AbstractPipeline
         ImageWriterFits* _fitsWriter;
         ZenithCalibrater* _calibrate;
 
-        AntennaPositions* _antPos;
-        VisibilityData* _rawVis;
         ModelVisibilityData* _modelVis;
         CorrectedVisibilityData* _correctedVis;
         ImageData* _image;

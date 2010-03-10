@@ -38,12 +38,12 @@ TestPipelineMultipleImages::~TestPipelineMultipleImages()
  */
 void TestPipelineMultipleImages::init()
 {
-    setName("TestPipelineDirtyImage");
-    _visModel = static_cast<ZenithModelVisibilities*>(createModule("ZenithModelVisibilities"));
-    _imagerA = static_cast<ZenithImagerDft*>(createModule("ZenithImagerDft", "a"));
-    _imagerB = static_cast<ZenithImagerDft*>(createModule("ZenithImagerDft", "b"));
-    _fitsWriterA = static_cast<ImageWriterFits*>(createModule("ImageWriterFits", "a"));
-    _fitsWriterB = static_cast<ImageWriterFits*>(createModule("ImageWriterFits", "b"));
+    setName("TestPipelineMultipleImages");
+    _visModel = (ZenithModelVisibilities*) createModule("ZenithModelVisibilities");
+    _imagerA = (ZenithImagerDft*) createModule("ZenithImagerDft", "a");
+    _imagerB = (ZenithImagerDft*) createModule("ZenithImagerDft", "b");
+    _fitsWriterA = (ImageWriterFits*) createModule("ImageWriterFits", "a");
+    _fitsWriterB = (ImageWriterFits*) createModule("ImageWriterFits", "b");
 
     requestRemoteData("AntennaPositions");
 
@@ -59,18 +59,17 @@ void TestPipelineMultipleImages::init()
  */
 void TestPipelineMultipleImages::run(QHash<QString, DataBlob*>& remoteData)
 {
-    _antPos = static_cast<AntennaPositions*>(remoteData["AntennaPositions"]);
+    AntennaPositions* antPos = (AntennaPositions*) remoteData["AntennaPositions"];
 
-    _visModel->run(_antPos, _modelVis);
+    _visModel->run(antPos, _modelVis);
 
-    _imagerA->run(_imageA, _antPos, _modelVis);
-    _imagerB->run(_imageB, _antPos);
+    _imagerA->run(_imageA, antPos, _modelVis);
+    _imagerB->run(_imageB, antPos);
 
     _fitsWriterA->run(_imageA);
     _fitsWriterB->run(_imageB);
 
     stop();
 }
-
 
 } // namespace pelican

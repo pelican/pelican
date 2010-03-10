@@ -17,7 +17,6 @@ class ImageWriterFits;
 class ZenithModelVisibilities;
 class ImageData;
 class ModelVisibilityData;
-class AntennaPositions;
 
 /**
  * @class MyPipeline
@@ -34,10 +33,10 @@ class TestPipelineMultipleImages : public AbstractPipeline
         ~TestPipelineMultipleImages();
 
     public:
-        /// Creates the required modules
+        /// Creates the required modules.
         void init();
 
-        /// Run method for single iteration of the pipeline
+        /// Run method for single iteration of the pipeline.
         void run(QHash<QString, DataBlob*>& data);
 
     private:
@@ -47,7 +46,6 @@ class TestPipelineMultipleImages : public AbstractPipeline
         ImageWriterFits* _fitsWriterA;
         ImageWriterFits* _fitsWriterB;
 
-        AntennaPositions* _antPos;
         ImageData* _imageA;
         ImageData* _imageB;
         ModelVisibilityData* _modelVis;

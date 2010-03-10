@@ -41,7 +41,7 @@ TestPipelineCalibrateImage::~TestPipelineCalibrateImage()
  */
 void TestPipelineCalibrateImage::init()
 {
-    setName("TestPipelineDirtyImage");
+    setName("TestPipelineCalibrateImage");
     _imager = (ZenithImagerDft*) createModule("ZenithImagerDft");
     _fitsWriter = (ImageWriterFits*) createModule("ImageWriterFits");
     _modelGen = (ZenithModelVisibilities*) createModule("ZenithModelVisibilities");

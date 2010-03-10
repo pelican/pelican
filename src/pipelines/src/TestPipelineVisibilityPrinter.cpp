@@ -30,11 +30,10 @@ TestPipelineVisibilityPrinter::~TestPipelineVisibilityPrinter()
 void TestPipelineVisibilityPrinter::init()
 {
     setName("TestPipelineVisibilityPrinter");
-    _visPrinter = static_cast<VisibilityPrinter*>(createModule("VisibilityPrinter"));
+    _visPrinter = (VisibilityPrinter*) createModule("VisibilityPrinter");
 
     requestRemoteData("VisibilityData");
 }
-
 
 
 /**
@@ -42,13 +41,11 @@ void TestPipelineVisibilityPrinter::init()
  */
 void TestPipelineVisibilityPrinter::run(QHash<QString, DataBlob*>& remoteData)
 {
-    _vis = static_cast<VisibilityData*>(remoteData["VisibilityData"]);
-    _visPrinter->run(_vis);
+    VisibilityData* vis = (VisibilityData*) remoteData["VisibilityData"];
+    _visPrinter->run(vis);
 
-    /* Stop the pipeline driver */
+    // Stop the pipeline driver.
     stop();
 }
-
-
 
 } // namespace pelican
