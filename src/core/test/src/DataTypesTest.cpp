@@ -50,8 +50,8 @@ void DataTypesTest::test_method()
         dt.setAdapter("stream1", &stream_adapter);
         CPPUNIT_ASSERT_EQUAL(1, dt.dataRequirements().size() );
         DataRequirements out = dt.dataRequirements()[0];
-        CPPUNIT_ASSERT( req.streamData()[0] == out.streamData()[0] );
-        CPPUNIT_ASSERT( req.serviceData()[0] == out.serviceData()[0] );
+        CPPUNIT_ASSERT( req.streamData().values()[0] == out.streamData().values()[0] );
+        CPPUNIT_ASSERT( req.serviceData().values()[0] == out.serviceData().values()[0] );
     }
     {
         // Use case:
@@ -67,8 +67,8 @@ void DataTypesTest::test_method()
         dt.setAdapter("stream1", &stream_adapter);
         CPPUNIT_ASSERT_EQUAL(1, dt.dataRequirements().size() );
         DataRequirements out = dt.dataRequirements()[0];
-        CPPUNIT_ASSERT( req.streamData()[0] == out.serviceData()[0] );
-        CPPUNIT_ASSERT( req.serviceData()[0] == out.streamData()[0] );
+        CPPUNIT_ASSERT( req.streamData().values()[0] == out.serviceData().values()[0] );
+        CPPUNIT_ASSERT( req.serviceData().values()[0] == out.streamData().values()[0] );
     }
 }
 
