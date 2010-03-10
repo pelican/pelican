@@ -31,6 +31,9 @@ class ConfigNode;
 
 class AdapterLofarStationVisibilities : public AbstractStreamAdapter
 {
+    private:
+        friend class AdapterLofarStationVisibilitiesTest;
+
     public:
         /// Constructs the adapter
         AdapterLofarStationVisibilities(const ConfigNode& config);

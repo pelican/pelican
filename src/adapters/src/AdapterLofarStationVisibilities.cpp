@@ -155,7 +155,7 @@ void AdapterLofarStationVisibilities::_setData()
     if (dataSize != _chunkSize) {
         QString err = "AdapterLofarStationVisibilities::_setData() ";
         err += "Input data chunk size does not match expected data dimensions. ";
-        err += "dims = " + QString::number(dataSize) + " != chunksize = " + QString::number(_chunkSize);
+        err += "visibility blob size = " + QString::number(dataSize) + " != chunksize = " + QString::number(_chunkSize);
         throw err;
     }
 
