@@ -120,9 +120,11 @@ class ZenithImagerDft : public AbstractModule
         int _visUse;                        ///< Option to image raw, model or corrected.
         std::vector<unsigned> _channels;    ///< Selected channel list.
         unsigned _nChannels;
-        int _freqRefChannel;                ///< Frequency reference channel
+
+        double _freqRefChannel;             ///< Frequency reference channel
         double _freqRef;                    ///< Reference frequency
         double _freqDelta;                  ///< Frequency delta
+
         ImageData::pol_t _polarisation;     ///< Selection polarisation (enumeration).
         bool _fullSky;                      ///< Image the full sky (overrides cellsize)
         bool _trimHemisphere;               ///< Cut the image to the full sky hemisphere

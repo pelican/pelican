@@ -27,7 +27,7 @@ class ImageData : public DataBlob
     public:
         /// The coordinate type of the reference pixel.
         typedef enum { COORD_J2000, COORD_AZ_EL, COORD_UNDEF } coord_t;
-        typedef enum { POL_X, POL_Y, POL_BOTH } pol_t;
+        typedef enum { POL_X, POL_Y, POL_BOTH, POL_UNDEF } pol_t;
 
     private:
         std::vector<real_t> _image; ///< Image amplitude cube.
@@ -44,7 +44,7 @@ class ImageData : public DataBlob
         std::vector<unsigned> _channels; ///< List of frequency channels in the image.
 
         double _refFreq;            ///< Reference frequency;
-        unsigned _refChannel;       ///< Channel of the reference frequency.
+        double _refChannel;         ///< Channel of the reference frequency.
         double _deltaFreq;          ///< Frequency increment;
 
         double _refCoordL;          ///< Reference coordinate in \p _coordType units.
@@ -101,11 +101,20 @@ class ImageData : public DataBlob
         /// Returns the reference frequency.
         double refFreq() const { return _refFreq; }
 
+        /// Returns the reference frequency.
+        double& refFreq() { return _refFreq; }
+
         /// Returns the channel of the reference frequency.
-        unsigned refChannel() const { return _refChannel; }
+        double refChannel() const { return _refChannel; }
+
+        /// Returns the channel of the reference frequency.
+        double& refChannel() { return _refChannel; }
 
         /// Returns the frequency increment per channel.
         double deltaFreq() const { return _deltaFreq; }
+
+        /// Returns the frequency increment per channel.
+        double& deltaFreq() { return _deltaFreq; }
 
         /// Returns the number of polarisations.
         unsigned nPolarisations() const {

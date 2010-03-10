@@ -582,6 +582,9 @@ void ZenithImagerDft::_setImageMetaData()
     _image->refCoordM() = 89.99; // Set the Dec at the image centre.
     _image->refPixelL() = _sizeL / 2;
     _image->refPixelM() = _sizeM / 2;
+    _image->refChannel() = _freqRefChannel;
+    _image->deltaFreq() = _freqDelta;
+    _image->refFreq() = _freqRef;
 }
 
 

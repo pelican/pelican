@@ -260,10 +260,10 @@ void ImageWriterFits::_writeHeader()
     // Polarisation axis keywords.
     // TODO: Set polarisation FITS axes
     _writeKey("CTYPE3", "POL", "XX / YY");
-    int polType = (_image->polarisation() == ImageData::POL_Y) ? 0 : 1;
-    _writeKey("CRVAL3", polType); // 0.0 if x or both, 1.0 if y
+    int polType = (_image->polarisation() == ImageData::POL_Y) ? 1 : 0;
+    _writeKey("CRVAL3", polType, "0.0 if X or X and Y, 1.0 if Y only");
     int polDelta = (_image->polarisation() == ImageData::POL_BOTH) ? 1 : 0;
-    _writeKey("CDELT3", polDelta); // 0.0 or 1.0 (if there is X and Y)
+    _writeKey("CDELT3", polDelta, "0.0 or 1.0 (if there is X and Y)");
     _writeKey("CRPIX3", 0.0);
     // _writeKey("CROTA3", 0.0);
 
@@ -308,7 +308,7 @@ void ImageWriterFits::_writeFrequencyTable(const std::vector<unsigned>& channels
     int tfields = 1;
     char *ttype[] = { (char*)"channels" };
     // 4 wide so channel indices have to be in the range 0 - 9999
-    char *tform[] = { (char*)"I4" }; 
+    char *tform[] = { (char*)"I4" };
 
     ffcrtb(_fits, ASCII_TBL, initRows, tfields, ttype, tform, tunit, extname,
             &status);
