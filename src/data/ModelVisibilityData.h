@@ -24,11 +24,14 @@ namespace pelican {
 class ModelVisibilityData : public VisibilityData
 {
     public:
-        /// Constructs and resizes model visibility data blob
-        ModelVisibilityData(const unsigned nAntennas = 0,
-                const unsigned nChannels = 0,
-                const unsigned nPolarisations = 0)
-        : VisibilityData(nAntennas, nChannels, nPolarisations) {}
+        /// Constructs an empty model visibility data blob.
+        ModelVisibilityData() : VisibilityData() {}
+
+        /// Constructs and resizes model visibility data blob.
+        ModelVisibilityData(const unsigned nAntennas,
+                const std::vector<unsigned>& channels,
+                const pol_t polarisation)
+        : VisibilityData(nAntennas, channels, polarisation) {}
 
         ~ModelVisibilityData() {}
 

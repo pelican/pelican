@@ -77,56 +77,18 @@ void ZenithImagerDftTest::test_inputDataBlobs()
     // No data blobs
     // Expect to throw
     {
-        QHash<QString, DataBlob*> data;
-        CPPUNIT_ASSERT_THROW(imager._fetchDataBlobs(data), QString);
-    }
-
-    // Use case
-    // Missing data blobs
-    // Expect to throw
-    {
-        QHash<QString, DataBlob*> data;
-        data["ImageData"] = &image;
-        CPPUNIT_ASSERT_THROW(imager._fetchDataBlobs(data), QString);
-    }
-    {
-        QHash<QString, DataBlob*> data;
-        data["ImageData"] = &image;
-        data["VisibilityData"] = &vis;
-        CPPUNIT_ASSERT_THROW(imager._fetchDataBlobs(data), QString);
-    }
-    {
-        QHash<QString, DataBlob*> data;
-        data["ImageData"] = &image;
-        data["VisibilityData"] = &vis;
-        CPPUNIT_ASSERT_THROW(imager._fetchDataBlobs(data), QString);
-    }
-
-    // Use case
-    // Empty data blobs
-    // Expect to throw
-    {
-        QHash<QString, DataBlob*> data;
-        data["ImageData"] = &image;
-        data["VisibilityData"] = &vis;
-        data["AntennaPositions"] = &ant;
-        CPPUNIT_ASSERT_THROW(imager._fetchDataBlobs(data), QString);
+        CPPUNIT_ASSERT_THROW(imager.run(NULL, NULL, NULL), QString);
     }
 
     // Use case
     // Assigned data blobs
     // Expect not to throw
     {
-        QHash<QString, DataBlob*> data;
         std::vector<unsigned> channels(2);
         image.resize(10, 10, channels, ImageData::POL_X);
-        vis.resize(5,2,1);
+        vis.resize(5, channels, VisibilityData::POL_X);
         ant.resize(5);
-        freqList.resize(2);
-        data["ImageData"] = &image;
-        data["CorrectedVisibilityData"] = &vis;
-        data["AntennaPositions"] = &ant;
-        CPPUNIT_ASSERT_NO_THROW(imager._fetchDataBlobs(data));
+        CPPUNIT_ASSERT_NO_THROW(imager.run(&image, &ant, &vis));
     }
 }
 

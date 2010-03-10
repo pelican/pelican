@@ -31,6 +31,9 @@ class ConfigNode;
 
 class AdapterLofarStationVisibilities : public AbstractStreamAdapter
 {
+    private:
+        friend class AdapterLofarStationVisibilitiesTest;
+
     public:
         /// Constructs the adapter
         AdapterLofarStationVisibilities(const ConfigNode& config);
@@ -53,10 +56,12 @@ class AdapterLofarStationVisibilities : public AbstractStreamAdapter
     private:
         double _timeStart;      ///< Start time (Julian Day, UT1).
         double _timeDelta;      ///< Time delta (seconds).
-        unsigned _nAnt;         ///< Number of antennas in the chunk
-        unsigned _nChan;        ///< Number of channels in the chunk
-        unsigned _nPol;         ///< Number of polarisations in the chunk
-        unsigned _dataBytes;    ///< number of bytes per data point
+        unsigned _nAnt;         ///< Number of antennas in the chunk.
+        unsigned _nChan;        ///< Number of channels in the chunk.
+        unsigned _nPol;         ///< Number of polarisations in the chunk.
+        unsigned _dataBytes;    ///< Number of bytes per data point.
+        VisibilityData::pol_t _polarisation; ///< The polarisation.
+        std::vector<unsigned> _channels;     ///< List of channels in the data.
         bool _rowMajor;         ///< Set if the data is C-ordered (row major).
         VisibilityData* _vis;   ///< Pointer to visibility data blob being read into.
 };

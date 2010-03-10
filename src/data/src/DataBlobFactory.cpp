@@ -3,7 +3,6 @@
 #include "data/DataBlobFactory.h"
 
 // All data blob headers.
-#include "data/AntennaGains.h"
 #include "data/AntennaPositions.h"
 #include "data/DataBlob.h"
 #include "data/FlagTable.h"
@@ -61,9 +60,7 @@ DataBlob* DataBlobFactory::create(const QString& type)
     DataBlob* dataBlob = NULL;
 
     /* Check which type of blob to create */
-    if (type == "AntennaGains")
-        dataBlob = new AntennaGains;
-    else if (type == "AntennaPositions")
+    if (type == "AntennaPositions")
         dataBlob = new AntennaPositions;
     else if (type == "DataBlob")
         dataBlob = new DataBlob;

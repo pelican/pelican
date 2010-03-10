@@ -35,24 +35,7 @@ ZenithImagerDft::ZenithImagerDft(const ConfigNode& config)
     // Extract configuration from the XML configuration node.
     _getConfiguration(config);
 
-    // Register which data blobs are needed by the module.
-    if (_visUse == VIS_RAW) {
-        addStreamData("VisibilityData");
-    }
-    else if (_visUse == VIS_MODEL) {
-        addGeneratedData("ModelVisibilityData");
-    }
-    else if (_visUse == VIS_CALIBRATED) {
-        addGeneratedData("CorrectedVisibilityData");
-    }
-
-    addServiceData("AntennaPositions");
-    addGeneratedData("ImageData");
-
     // Initialise local data pointers
-    _vis = NULL;
-    _antPos = NULL;
-    _image = NULL;
     _astrometry = new AstrometryFast;
 
     // Generate image pixel coordinate vectors based on the configuration.
@@ -143,31 +126,44 @@ void ZenithImagerDft::setFullSky()
  * @details
  * Method called by the pipeline to create images of the visibility data.
  */
-void ZenithImagerDft::run(QHash<QString, DataBlob*>& data)
+void ZenithImagerDft::run(ImageData* image, AntennaPositions* antPos,
+        VisibilityData* vis)
 {
-    // Get the data blobs.
-    _fetchDataBlobs(data);
+    if (!image)
+        throw QString("ZenithImagerDft: ImageData blob missing.");
 
-    unsigned nAnt = _antPos->nAntennas();
+    if (!antPos)
+        throw QString("ZenithImagerDft: AntennaPositions blob missing.");
+
+    if (antPos->nAntennas() == 0)
+        throw QString("ZenithImagerDft: Empty data blob: AntennaPositions.");
+
+    if (vis != NULL) {
+        if (vis->nAntennas() == 0)
+            throw QString("ZenithImagerDft: Empty data blob: VisibilityData.");
+        if (vis->nAntennas() != antPos->nAntennas())
+            throw QString("ZenithImagerDft: Data blob dimension mismatch.");
+    }
+
+    unsigned nAnt = antPos->nAntennas();
     unsigned nPolImage = _polarisation == ImageData::POL_BOTH ? 2 : 1;
     unsigned nChanImage = _channels.size();
 
     // Declare pointer to visibility data.
-    complex_t* vis = NULL;
+    complex_t* visData = NULL;
 
     // Set PSF visibilities if needed.
-    std::vector<complex_t> scratch;
-    if (_visUse == VIS_PSF) {
-        scratch.resize(nAnt * nAnt);
-        vis = &scratch[0];
-        _setPsfVisibilties(vis, nAnt);
+    std::vector<complex_t> scratch(nAnt * nAnt);
+    if (vis == NULL) {
+        visData = &scratch[0];
+        _setPsfVisibilties(visData, nAnt);
     }
 
     // Assign memory for the image cube (only resizes if needed).
-    _image->resize(_sizeL, _sizeM, _channels, _polarisation);
+    image->resize(_sizeL, _sizeM, _channels, _polarisation);
 
     // Set the image blob meta-data.
-    _setImageMetaData();
+    _setImageMetaData(image);
 
     // Loop over selected channels and polarisations to make images.
     for (unsigned c = 0; c < nChanImage; c++) {
@@ -176,36 +172,46 @@ void ZenithImagerDft::run(QHash<QString, DataBlob*>& data)
         unsigned channel = _channels[c];
         double frequency = _freqRef + (channel - _freqRefChannel) * _freqDelta;
 
+        // TODO fix me.
+//        unsigned iChan = 0;
+//        for (iChan = 0; iChan < vis->nChannels(); ++iChan) {
+//            if (vis->channels()[iChan] == channel) break;
+//        }
+        //if (iChan >= vis->nChannels())
+
         for (unsigned p = 0; p < nPolImage; p++) {
 
             unsigned pol = p;
             pol = (nPolImage == 1 && _polarisation == ImageData::POL_X) ? 0 : 1;
 
             // Get pointer to visibility data for channel and polarisation.
-            if (_vis) {
-                if (_visUse == VIS_MODEL)
-                    vis = _vis->ptr(c, p);
-                else
-                    vis = _vis->ptr(channel, pol);
 
-                if (_visUse != VIS_PSF)
-                    _zeroAutoCorrelations(vis, nAnt);
+            // TODO: fix different indexing of model and raw data
+            if (vis != NULL) {
+                // model
+//                visData = vis->ptr(c, p);
+                // raw
+//                visData = vis->ptr(channel, pol);
+                // TODO: fix me.
+                visData = vis->ptr(0, 0);
+                _zeroAutoCorrelations(visData, nAnt);
             }
 
             // Generate the image.
-            real_t* image = _image->ptr(c, p);
-            _makeImageDft(nAnt, _antPos->xPtr(), _antPos->yPtr(), vis,
-                    frequency, _sizeL, _sizeM, &_coordL[0], &_coordM[0], image);
-            _image->calculateMean(c, p);
+            real_t* imData = image->ptr(c, p);
+            _makeImageDft(nAnt, antPos->xPtr(), antPos->yPtr(), visData,
+                    frequency, _sizeL, _sizeM, &_coordL[0], &_coordM[0], imData);
 
             // Cut hemisphere.
             if (_fullSky && _trimHemisphere) {
-                _cutHemisphere(image, _sizeL, _sizeM, &_coordL[0], &_coordM[0]);
+                _cutHemisphere(imData, _sizeL, _sizeM, &_coordL[0], &_coordM[0]);
             }
 
             // Find the amplitude range.
-            _image->calculateAmplitudeRange(c, p);
-            if (isnan(_image->max(c, p)) || isnan(_image->min(c, p)))
+            image->calculateAmplitudeRange(c, p);
+
+            // TODO: isnan is not float safe...
+            if (isnan(image->max(c, p)) || isnan(image->min(c, p)))
                 throw QString ("ZenithImagerDft: Invalid image range");
         }
     }
@@ -268,19 +274,6 @@ void ZenithImagerDft::_getConfiguration(const ConfigNode& config)
 
     _pixelCentred = (config.getOption("size", "pixelCentred", "false") == "true") ?
             true: false;
-
-    // Get the visibility data type to image.
-    QString visUse = config.getOption("visibility", "type", "psf").toLower();
-    if (visUse.startsWith("r"))
-        _visUse = VIS_RAW;
-    else if (visUse.startsWith("m"))
-        _visUse = VIS_MODEL;
-    else if (visUse.startsWith("c"))
-        _visUse = VIS_CALIBRATED;
-    else if (visUse.startsWith("p"))
-        _visUse = VIS_PSF;
-    else
-        throw QString("ZenithImagerDft: Unknown visibility option.");
 }
 
 
@@ -320,48 +313,6 @@ void ZenithImagerDft::_calculateImageCoords(const double cellsize,
         coords[i] = static_cast<double>(i - centre) * delta + offset;
     }
 }
-
-
-/**
- * @details
- * Fetches named data blobs from the data blob hash into local variables.
- */
-void ZenithImagerDft::_fetchDataBlobs(QHash<QString, DataBlob*>& data)
-{
-    // Get the data blob pointers.
-    _antPos = static_cast<AntennaPositions*>(data["AntennaPositions"]);
-    _image = static_cast<ImageData*>(data["ImageData"]);
-
-    if (_visUse == VIS_RAW) {
-        _vis = static_cast<VisibilityData*>(data["VisibilityData"]);
-    }
-    else if (_visUse == VIS_MODEL) {
-        _vis = static_cast<VisibilityData*>(data["ModelVisibilityData"]);
-    }
-    else if (_visUse == VIS_CALIBRATED) {
-        _vis = static_cast<VisibilityData*>(data["CorrectedVisibilityData"]);
-    }
-
-    // Check required blobs are present and correct.
-    if (!_antPos)
-        throw QString("ZenithImagerDft: AntennaPositions blob missing.");
-    if (!_image)
-        throw QString("ZenithImagerDft: ImageData blob missing.");
-    if (_antPos->nAntennas() == 0)
-        throw QString("ZenithImagerDft: Empty data blob: AntennaPositions.");
-
-    // Check visibility data is OK, if present.
-    if (!_vis && _visUse != VIS_PSF) {
-        throw QString("ZenithImagerDft: VisibilityData blob missing.");
-    }
-    else if (_vis) {
-        if (_vis->nAntennas() == 0)
-            throw QString("ZenithImagerDft: Empty data blob: VisibilityData.");
-        if (_vis->nAntennas() != _antPos->nAntennas())
-            throw QString("ZenithImagerDft: Data blob dimension mismatch.");
-    }
-}
-
 
 /**
  * @details
@@ -573,18 +524,18 @@ void ZenithImagerDft::_setPsfVisibilties(complex_t* vis, const unsigned nAnt)
  * @details
  * Sets the image meta-data, including the cellsize and the coordinate headers.
  */
-void ZenithImagerDft::_setImageMetaData()
+void ZenithImagerDft::_setImageMetaData(ImageData *image)
 {
     // Get the image meta data into the blob.
-    _image->cellsizeL() = _cellsizeL;
-    _image->cellsizeM() = _cellsizeM;
-    _image->refCoordL() = 0; // Set the RA at the image centre.
-    _image->refCoordM() = 89.99; // Set the Dec at the image centre.
-    _image->refPixelL() = _sizeL / 2;
-    _image->refPixelM() = _sizeM / 2;
-    _image->refChannel() = _freqRefChannel;
-    _image->deltaFreq() = _freqDelta;
-    _image->refFreq() = _freqRef;
+    image->cellsizeL() = _cellsizeL;
+    image->cellsizeM() = _cellsizeM;
+    image->refCoordL() = 0; // Set the RA at the image centre.
+    image->refCoordM() = 89.99; // Set the Dec at the image centre.
+    image->refPixelL() = _sizeL / 2;
+    image->refPixelM() = _sizeM / 2;
+    image->refChannel() = _freqRefChannel;
+    image->deltaFreq() = _freqDelta;
+    image->refFreq() = _freqRef;
 }
 
 

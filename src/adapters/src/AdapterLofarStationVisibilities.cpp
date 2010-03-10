@@ -4,6 +4,7 @@
 #include <QIODevice>
 #include <iostream>
 #include <iomanip>
+#include <QStringList>
 
 #include "utility/memCheck.h"
 
@@ -23,13 +24,43 @@ AdapterLofarStationVisibilities::AdapterLofarStationVisibilities(const ConfigNod
 {
     // Grab configuration for the adapter setting sensible defaults
     _nAnt = config.getOption("antennas", "number", "96").toUInt();
-    _nChan = config.getOption("channels", "number", "512").toUInt();
-    _nPol = config.getOption("polarisations", "number", "2").toUInt();
     QString rowMajor = config.getOption("rowMajor", "value", "true").toLower();
     _rowMajor = (rowMajor.startsWith("t")) ? true : false;
     _dataBytes = config.getOption("dataBytes", "number", "8").toUInt();
     _timeStart = config.getOption("time", "start", "0.0").toDouble();
     _timeDelta = config.getOption("time", "delta", "0.0").toDouble();
+
+    // Get the polarisation selection.
+    QString pol = config.getOption("polarisation", "value", "x").toLower();
+    if (pol.startsWith("x"))
+        _polarisation = VisibilityData::POL_X;
+    else if (pol.startsWith("y"))
+        _polarisation = VisibilityData::POL_Y;
+    else if (pol.startsWith("both"))
+        _polarisation = VisibilityData::POL_BOTH;
+    else
+        throw QString("AdapterLofarStationVisibilities: Unknown polarisation option.");
+    _nPol = (_polarisation == VisibilityData::POL_BOTH) ? 2 : 1;
+
+    // Get the channels to image.
+    int startChan = config.getOption("channels", "start", "-1").toInt();
+    int endChan = config.getOption("channels", "end", "-1").toInt();
+
+    if (startChan < 0 || endChan < 0) {
+        QString chan = config.getOptionText("channels", "0");
+        QStringList chanList = chan.split(",", QString::SkipEmptyParts);
+        _channels.resize(chanList.size());
+        for (int c = 0; c < chanList.size(); c++) {
+            _channels[c] = chanList.at(c).toUInt();
+        }
+    }
+    else {
+        _channels.resize(endChan - startChan + 1);
+        for (int i = startChan; i <= endChan; i++) {
+            _channels[i] = i;
+        }
+    }
+    _nChan = _channels.size();
 }
 
 /**
@@ -124,13 +155,19 @@ void AdapterLofarStationVisibilities::_setData()
     if (dataSize != _chunkSize) {
         QString err = "AdapterLofarStationVisibilities::_setData() ";
         err += "Input data chunk size does not match expected data dimensions. ";
-        err += "dims = " + QString::number(dataSize) + " != chunksize = " + QString::number(_chunkSize);
+        err += "visibility blob size = " + QString::number(dataSize) + " != chunksize = " + QString::number(_chunkSize);
         throw err;
     }
 
     // Resize the visibility data being read into to match the adapter dimensions
     _vis = static_cast<VisibilityData*>(_data);
-    _vis->resize(_nAnt, _nChan, _nPol);
+
+    std::vector<unsigned> channels(_nChan);
+    for (unsigned i = 0; i < _nChan; i++) {
+        channels[i] = i;
+    }
+
+    _vis->resize(_nAnt, channels, _polarisation);
 }
 
 

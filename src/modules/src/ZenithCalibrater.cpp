@@ -37,16 +37,6 @@ void zheev_(const char* jobz, const char* uplo, int* n, complex_t* A, int* lda,
 ZenithCalibrater::ZenithCalibrater(const ConfigNode& config)
     : AbstractModule(config)
 {
-    // Initialise data blob pointers.
-    _rawVis = NULL;
-    _modelVis = NULL;
-    _correctedVis = NULL;
-
-    // Request the data blobs.
-    addStreamData("VisibilityData");
-    addGeneratedData("ModelVisibilityData");
-    addGeneratedData("CorrectedVisibilityData");
-
     // Retrieve configuration options from the XML node.
     _getConfiguration(config);
 }
@@ -65,10 +55,14 @@ ZenithCalibrater::~ZenithCalibrater()
  * @details
  * Runs the calibration module using the supplied hash of data blobs.
  */
-void ZenithCalibrater::run(QHash<QString, DataBlob*>& data)
+void ZenithCalibrater::run(VisibilityData* _rawVis,
+        ModelVisibilityData* _modelVis, CorrectedVisibilityData* _correctedVis)
 {
     // Extract and check data blobs from the hash.
-    _fetchDataBlobs(data);
+    _checkDataBlobs(_rawVis, _modelVis, _correctedVis);
+
+    // Resize corrected visibilities.
+    _correctedVis->resize(_rawVis->nAntennas(), _channels, _polarisation);
 
     /// Data dimensions.
     unsigned nAnt = _rawVis->nAntennas();
@@ -94,18 +88,29 @@ void ZenithCalibrater::run(QHash<QString, DataBlob*>& data)
 
     // Number of channels & polarisations to calibrate.
     unsigned nChanCal = _channels.size();
-    unsigned nPolCal = _polarisation == POL_BOTH ? 2 : 1;
+    unsigned nPolCal = _polarisation == CorrectedVisibilityData::POL_BOTH ? 2 : 1;
+
 
     // Loop over selected channels and polarisations and calibrate.
     for (unsigned c = 0; c < nChanCal; c++) {
+
+        /// TODO: FIX for fancy channel dereference thing.
         unsigned chan = _channels[c];
 
+
         for (unsigned p = 0; p < nPolCal; p++) {
-            unsigned pol = (nPolCal == 1 && _polarisation == POL_X) ? 0 : 1;
+            unsigned pol = (nPolCal == 1 &&
+                    _polarisation == CorrectedVisibilityData::POL_X) ? 0 : 1;
 
             // Copy the input visibility data into the visibility work array
             complex_t* rawVis = _rawVis->ptr(chan, pol);
-            complex_t* correctedVis = _correctedVis->ptr(chan, pol);
+            if (rawVis == NULL)
+                throw QString("AARG1");
+
+            // TODO: FIX hardcoded p and c below
+            complex_t* correctedVis = _correctedVis->ptr(0, 0);
+            if (correctedVis == NULL)
+                throw QString("AARG2");
             complex_t* modelVis = _modelVis->ptr(c, p);
             memcpy(&Vz[0], rawVis, nVis * sizeof(complex_t));
             memcpy(&modelTemp[0], modelVis, nVis * sizeof(complex_t));
@@ -342,28 +347,22 @@ void ZenithCalibrater::_setDiagonals(const unsigned size,
 /**
  * @details
  */
-void ZenithCalibrater::_fetchDataBlobs(QHash<QString, DataBlob*>& data)
+void ZenithCalibrater::_checkDataBlobs(VisibilityData* rawVis,
+        ModelVisibilityData* modelVis,
+        CorrectedVisibilityData* correctedVis)
 {
-    _rawVis = static_cast<VisibilityData*>(data["VisibilityData"]);
-    _modelVis = static_cast<ModelVisibilityData*>(data["ModelVisibilityData"]);
-    _correctedVis = static_cast<CorrectedVisibilityData*>(data["CorrectedVisibilityData"]);
-
-    if (!_rawVis)
+    if (!rawVis)
         throw QString("ZenithCalibrater: VisibilityData blob missing.");
-    if (!_modelVis)
+    if (!modelVis)
         throw QString("ZenithCalibrater: ModelVisibilityData blob missing.");
-    if (!_correctedVis)
+    if (!correctedVis)
         throw QString("ZenithCalibrater: CorrectedVisibilityData blob missing.");
 
-    if (_rawVis->nEntries() == 0)
+    if (rawVis->nEntries() == 0)
         throw QString("ZenithCalibrater: Visibility data empty.");
 
     if (_channels.size() == 0)
             throw QString("ZenithCalibrater: No channels selected.");
-
-    // Resize corrected visibilities.
-    _correctedVis->resize(_rawVis->nAntennas(), _rawVis->nChannels(),
-            _rawVis->nPolarisations());
 }
 
 
@@ -389,9 +388,9 @@ void ZenithCalibrater::_getConfiguration(const ConfigNode& config)
 
     // Get polarisation to calibrate.
     QString pol = config.getOption("polarisation", "value", "x").toLower();
-    if (pol == "x") _polarisation = POL_X;
-    else if (pol == "y") _polarisation = POL_Y;
-    else if (pol == "both") _polarisation = POL_BOTH;
+    if (pol == "x") _polarisation = CorrectedVisibilityData::POL_X;
+    else if (pol == "y") _polarisation = CorrectedVisibilityData::POL_Y;
+    else if (pol == "both") _polarisation = CorrectedVisibilityData::POL_BOTH;
 
     // Get the channels to calibrate.
     QString chan = config.getOptionText("channels", "0");

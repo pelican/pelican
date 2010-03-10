@@ -7,6 +7,7 @@
 
 #include "modules/AbstractModule.h"
 #include "data/Source.h"
+#include "data/CorrectedVisibilityData.h"
 #include <vector>
 
 
@@ -15,7 +16,6 @@ namespace pelican {
 class ConfigNode;
 class VisibilityData;
 class ModelVisibilityData;
-class CorrectedVisibilityData;
 
 /**
  * @class ZenithCalibrater
@@ -36,11 +36,10 @@ class ZenithCalibrater : public AbstractModule
         ~ZenithCalibrater();
 
         /// Runs the module.
-        void run(QHash<QString, DataBlob*>& data);
+        void run(VisibilityData* rawVis, ModelVisibilityData* modelVis,
+                CorrectedVisibilityData* correctedVis);
 
     private:
-        typedef enum { POL_X, POL_Y, POL_BOTH } pol_t;
-
         /// Calibration loop.
         void _calibrate(const unsigned nAnt, const unsigned nEigenvaluesUsed,
                 const unsigned nIterations, const double tolerance, int lWork,
@@ -70,22 +69,20 @@ class ZenithCalibrater : public AbstractModule
                 complex_t* matrix);
 
         /// Extract and check data blobs from the data hash
-        void _fetchDataBlobs(QHash<QString, DataBlob*>& data);
+        void _checkDataBlobs(VisibilityData* rawVis,
+                ModelVisibilityData* modelVis,
+                CorrectedVisibilityData* correctedVis);
 
         /// Grab configuration options from the config node
         void _getConfiguration(const ConfigNode& config);
 
     private:
-        VisibilityData* _rawVis;
-        ModelVisibilityData* _modelVis;
-        CorrectedVisibilityData* _correctedVis;
-
         unsigned _nEigenvaluesUsed;
         double _tolerance;
         unsigned _nIterations;
 
         std::vector<unsigned> _channels;
-        pol_t _polarisation;
+        CorrectedVisibilityData::pol_t _polarisation;
 
         int _freqRefChannel;                ///< Frequency reference channel
         double _freqRef;                    ///< Reference frequency

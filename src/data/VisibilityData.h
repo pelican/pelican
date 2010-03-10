@@ -28,9 +28,10 @@ class VisibilityData : public AntennaMatrixData<complex_t>
         VisibilityData() : AntennaMatrixData<complex_t>() {}
 
         /// Constructs an pre-sized visibility data cube.
-        VisibilityData(const unsigned antennas, const unsigned channels,
-                const unsigned polarisations)
-        : AntennaMatrixData<complex_t>(antennas, channels, polarisations) {}
+        VisibilityData(const unsigned nAntennas,
+                const std::vector<unsigned>& channels,
+                const pol_t polarisation)
+        : AntennaMatrixData<complex_t>(nAntennas, channels, polarisation) {}
 
         /// Visibility data destructor.
         ~VisibilityData() {}

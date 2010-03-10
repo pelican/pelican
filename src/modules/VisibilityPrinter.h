@@ -2,7 +2,6 @@
 #define VISIBILITYPRINTER_H
 
 #include "modules/AbstractModule.h"
-#include "data/VisibilityData.h"
 #include <QHash>
 #include <QString>
 
@@ -13,6 +12,7 @@
 namespace pelican {
 
 class DataBlob;
+class VisibilityData;
 
 /**
  * @class VisibilityPrinter
@@ -32,10 +32,7 @@ class VisibilityPrinter : public AbstractModule
 
     public:
         /// Runs the module
-        void run(QHash<QString, DataBlob*>& data);
-
-    private:
-        VisibilityData* _vis;
+        void run(VisibilityData* vis);
 };
 
 } // namespace pelican

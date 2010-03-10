@@ -24,14 +24,6 @@ namespace pelican {
 ZenithModelVisibilities::ZenithModelVisibilities(const ConfigNode& config)
     : AbstractModule(config)
 {
-    // Register data requirement for model visibility generator.
-    addGeneratedData("ModelVisibilityData");
-    addServiceData("AntennaPositions");
-
-    // Initialise local pointers.
-    _modelVis = NULL;
-    _antPos = NULL;
-
     // Create astrometry module.
     _astrometry = new AstrometryFast;
 
@@ -62,20 +54,21 @@ ZenithModelVisibilities::~ZenithModelVisibilities()
  * frequency and assumed an ideal antenna model with antenna of unit collecting
  * area/gain.
  */
-void ZenithModelVisibilities::run(QHash<QString, DataBlob*>& data)
+void ZenithModelVisibilities::run(AntennaPositions* antPos,
+        ModelVisibilityData* modelVis)
 {
     // Fetch and check the required data blobs from the data hash.
-    _fetchDataBlobs(data);
+    _checkDataBlobs(antPos, modelVis);
 
     // Dimensions for model visibility set.
-    unsigned nAnt = _antPos->nAntennas();
+    unsigned nAnt = antPos->nAntennas();
     unsigned nChanModel = _channels.size();
-    unsigned nPolModel = _polarisation == POL_BOTH ? 2 : 1;
+    unsigned nPolModel = _polarisation == ModelVisibilityData::POL_BOTH ? 2 : 1;
 
     // Get time (UT1) and set up celestial data structure for astrometry.
     // FIXME remove the following line!
 //    double UT1 = data["VisibilityData"]->timeStamp();
-    double UT1 = _modelVis->timeStamp();
+    double UT1 = modelVis->timeStamp();
 
     // Convert to Modified Julian Date.
     UT1 -= 2400000.5;
@@ -94,11 +87,13 @@ void ZenithModelVisibilities::run(QHash<QString, DataBlob*>& data)
         for (unsigned p = 0; p < nPolModel; p++) {
 
             unsigned iPol = p;
-            iPol = (nPolModel == 1 && _polarisation == POL_X) ? 0 : 1;
-            pol_t pol = (iPol == 0) ? POL_X : POL_Y;
+            iPol = (nPolModel == 1 &&
+                    _polarisation == ModelVisibilityData::POL_X) ? 0 : 1;
+            ModelVisibilityData::pol_t pol = (iPol == 0) ?
+                    ModelVisibilityData::POL_X : ModelVisibilityData::POL_Y;
 
-            _calculateModelVis(_modelVis->ptr(c, iPol), nAnt, _antPos->xPtr(),
-                    _antPos->yPtr(), &_sources[0], nSources, frequency,
+            _calculateModelVis(modelVis->ptr(c, iPol), nAnt, antPos->xPtr(),
+                    antPos->yPtr(), &_sources[0], nSources, frequency,
                     pol, &l[0], &m[0]);
         }
     }
@@ -165,7 +160,8 @@ void ZenithModelVisibilities::_calculateDirectionCosines (
 void ZenithModelVisibilities::_calculateModelVis(complex_t* vis,
         const unsigned nAnt, const real_t* antPosX, const real_t* antPosY,
         const Source* sources, const unsigned nSources, const double frequency,
-        const pol_t polarisation, const double* l, const double* m)
+        const ModelVisibilityData::pol_t polarisation,
+        const double* l, const double* m)
 {
     double k = (math::twoPi * frequency) / phy::c;
 
@@ -176,7 +172,7 @@ void ZenithModelVisibilities::_calculateModelVis(complex_t* vis,
         for (unsigned i = 0; i < nAnt; i++) {
             double arg = (antPosX[i] * l[s] + antPosY[i] * m[s]) * k;
             complex_t weight = complex_t(cos(arg), sin(arg));
-            double amp = (polarisation == POL_X) ?
+            double amp = (polarisation == ModelVisibilityData::POL_X) ?
                     sources[s].amp1() : sources[s].amp2();
             signal[s * nAnt + i] = sqrt(amp) * weight;
         }
@@ -204,21 +200,19 @@ void ZenithModelVisibilities::_calculateModelVis(complex_t* vis,
  *
  * @param[in] data  Hash of data blobs.
  */
-void ZenithModelVisibilities::_fetchDataBlobs(QHash<QString, DataBlob*>& data)
+void ZenithModelVisibilities::_checkDataBlobs(AntennaPositions* antPos,
+        ModelVisibilityData* modelVis)
 {
-    // Fetch model visibilities data blob from the hash and checks its assigned.
-    _modelVis = static_cast<ModelVisibilityData*>(data["ModelVisibilityData"]);
-    _antPos = static_cast<AntennaPositions*>(data["AntennaPositions"]);
-
-    if (!_modelVis)
-        throw QString("ZenithModelVisibilities: ModelVisibilityData blob missing.");
-    if (!_antPos)
+    if (!antPos)
         throw QString("ZenithModelVisibilities: AntennaPositions blob missing.");
 
+    if (!modelVis)
+        throw QString("ZenithModelVisibilities: ModelVisibilityData blob missing.");
+
     // Dimensions of the model.
-    unsigned nAnt = _antPos->nAntennas();
+    unsigned nAnt = antPos->nAntennas();
     unsigned nChanModel = _channels.size();
-    unsigned nPolModel = _polarisation == POL_BOTH ? 2 : 1;
+    unsigned nPolModel = _polarisation == ModelVisibilityData::POL_BOTH ? 2 : 1;
 
     if (nAnt == 0)
         throw QString("ZenithModelVisibilities: No antennas found");
@@ -227,10 +221,10 @@ void ZenithModelVisibilities::_fetchDataBlobs(QHash<QString, DataBlob*>& data)
         throw QString("ZenithModelVisibilities: No channels selected");
 
     // Resize the model visibilities.
-    _modelVis->resize(nAnt, nChanModel, nPolModel);
+    modelVis->resize(nAnt, _channels, _polarisation);
 
     // Copy the source list into the model visibility data blob.
-    _modelVis->sources() = _sources;
+    modelVis->sources() = _sources;
 }
 
 
@@ -288,9 +282,9 @@ void ZenithModelVisibilities::_getConfiguration(const ConfigNode& config)
      _freqDelta = config.getOption("frequencies", "delta", "195312.5").toDouble();
 
      QString pol = config.getOption("polarisation", "value", "x").toLower();
-     if (pol == "x") _polarisation = POL_X;
-     else if (pol == "y") _polarisation = POL_Y;
-     else if (pol == "both") _polarisation = POL_BOTH;
+     if (pol == "x") _polarisation = ModelVisibilityData::POL_X;
+     else if (pol == "y") _polarisation = ModelVisibilityData::POL_Y;
+     else if (pol == "both") _polarisation = ModelVisibilityData::POL_BOTH;
 
      // Read astrometry site parameters and set the data structure.
      double siteLongitude = config.getOption("siteLongitude", "value", "0").toDouble();

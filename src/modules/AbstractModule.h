@@ -15,7 +15,7 @@ namespace pelican {
 
 /**
  * @class AbstractModule
- *  
+ *
  * @brief
  * Abstract base class for all pipeline modules.
  *
@@ -140,20 +140,8 @@ class AbstractModule
         const DataRequirements& requiredDataRemote() const {
             return _reqDataRemote;
         }
-
-        /// Runs the module (pure virtual).
-        /// This public method is called by the pipeline to run the module.
-        /// A reference to the complete hash of data blobs required for this iteration
-        /// of the pipeline is passed as a function argument.
-        ///
-        /// The module updates the contents of this hash while running.
-        ///
-        /// @param[in,out] data The hash of data blobs required to run the pipeline
-        ///                     module. The module updates the contents of the data
-        ///                     blobs in the hash as required.
-        virtual void run(QHash<QString, DataBlob*>& data) = 0;
 };
 
 } // namespace pelican
 
-#endif // ABSTRACTMODULE_H 
+#endif // ABSTRACTMODULE_H

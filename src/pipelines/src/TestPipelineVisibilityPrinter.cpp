@@ -1,5 +1,6 @@
 #include "TestPipelineVisibilityPrinter.h"
 #include "modules/VisibilityPrinter.h"
+#include "data/VisibilityData.h"
 
 #include "utility/memCheck.h"
 
@@ -30,6 +31,8 @@ void TestPipelineVisibilityPrinter::init()
 {
     setName("TestPipelineVisibilityPrinter");
     _visPrinter = static_cast<VisibilityPrinter*>(createModule("VisibilityPrinter"));
+
+    requestRemoteData("VisibilityData");
 }
 
 
@@ -37,9 +40,10 @@ void TestPipelineVisibilityPrinter::init()
 /**
  * @details
  */
-void TestPipelineVisibilityPrinter::run(QHash<QString, DataBlob*>& data)
+void TestPipelineVisibilityPrinter::run(QHash<QString, DataBlob*>& remoteData)
 {
-    _visPrinter->run(data);
+    _vis = static_cast<VisibilityData*>(remoteData["VisibilityData"]);
+    _visPrinter->run(_vis);
 
     /* Stop the pipeline driver */
     stop();

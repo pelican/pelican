@@ -15,6 +15,9 @@ class DataBlob;
 class ZenithImagerDft;
 class ImageWriterFits;
 class ZenithModelVisibilities;
+class ImageData;
+class ModelVisibilityData;
+class AntennaPositions;
 
 /**
  * @class MyPipeline
@@ -43,6 +46,12 @@ class TestPipelineMultipleImages : public AbstractPipeline
         ZenithImagerDft* _imagerB;
         ImageWriterFits* _fitsWriterA;
         ImageWriterFits* _fitsWriterB;
+
+        AntennaPositions* _antPos;
+        ImageData* _imageA;
+        ImageData* _imageB;
+        ModelVisibilityData* _modelVis;
+
 };
 
 } // namespace pelican

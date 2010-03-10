@@ -9,6 +9,7 @@
 #include "adapters/AbstractStreamAdapter.h"
 #include <iostream>
 #include <iomanip>
+#include <QString>
 #include "utility/pelicanTimer.h"
 
 
@@ -47,11 +48,17 @@ void AdapterLofarStationVisibilitiesTest::test_deserialise_buffer()
     const unsigned nAnt = 96;
     const unsigned nChan = 512;
     const unsigned nPol = 2;
-    VisibilityData *data = new VisibilityData(nAnt, nChan, nPol);
+    std::vector<unsigned> channels(nChan);
+    VisibilityData *data = new VisibilityData(nAnt, channels, VisibilityData::POL_BOTH);
 
     /* Create the adapter */
     ConfigNode config;
-    AbstractStreamAdapter* adapter = new AdapterLofarStationVisibilities(config);
+    AdapterLofarStationVisibilities* adapter = new AdapterLofarStationVisibilities(config);
+    adapter->_nChan = nChan;
+    adapter->_nPol = nPol;
+    adapter->_nAnt = nAnt;
+    adapter->_channels = channels;
+    adapter->_polarisation = VisibilityData::POL_BOTH;
 
     /* Generate data */
     VisGen generator;
@@ -71,21 +78,26 @@ void AdapterLofarStationVisibilitiesTest::test_deserialise_buffer()
             (float)buffer.size()/(1024*1024))
 
     /* Test some values in the visibility data blob */
+    complex_t* vis = NULL;
     unsigned ai = 0, aj = 0, c = 0, p = 0;
+    CPPUNIT_ASSERT(vis = data->ptr(c, p));
     CPPUNIT_ASSERT_DOUBLES_EQUAL(_dataVal(ai, aj, c, p),
-            (*data)(ai, aj, c, p).real(), 0.001);
+            vis[aj * nAnt + ai].real(), 0.001);
 
     ai = 1; aj = 2; c = 3; p = 1;
+    CPPUNIT_ASSERT(vis = data->ptr(c, p));
     CPPUNIT_ASSERT_DOUBLES_EQUAL(_dataVal(ai, aj, c, p),
-            (*data)(ai, aj, c, p).real(), 0.001);
+            vis[aj * nAnt + ai].real(), 0.001);
 
     ai = 12; aj = 34; c = 56; p = 0;
+    CPPUNIT_ASSERT(vis = data->ptr(c, p));
     CPPUNIT_ASSERT_DOUBLES_EQUAL(_dataVal(ai, aj, c, p),
-            (*data)(ai, aj, c, p).real(), 0.001);
+            vis[aj * nAnt + ai].real(), 0.001);
 
     ai = nAnt-1; aj = nAnt-2; c = nChan-1; p = nPol-1;
+    CPPUNIT_ASSERT(vis = data->ptr(c, p));
     CPPUNIT_ASSERT_DOUBLES_EQUAL(_dataVal(ai, aj, c, p),
-            (*data)(ai, aj, c, p).real(), 0.001);
+            vis[aj * nAnt + ai].real(), 0.001);
 
     /* Clean up */
     delete adapter;
@@ -98,11 +110,17 @@ void AdapterLofarStationVisibilitiesTest::test_deserialise_file()
     const unsigned nAnt = 96;
     const unsigned nChan = 512;
     const unsigned nPol = 2;
-    VisibilityData *data = new VisibilityData(nAnt, nChan, nPol);
+    std::vector<unsigned> channels(nChan);
+    VisibilityData *data = new VisibilityData(nAnt, channels, VisibilityData::POL_BOTH);
 
     /* Create the adapter */
     ConfigNode config;
-    AbstractStreamAdapter* adapter = new AdapterLofarStationVisibilities(config);
+    AdapterLofarStationVisibilities* adapter = new AdapterLofarStationVisibilities(config);
+    adapter->_nChan = nChan;
+    adapter->_nPol = nPol;
+    adapter->_nAnt = nAnt;
+    adapter->_channels = channels;
+    adapter->_polarisation = VisibilityData::POL_BOTH;
 
     /* Generate data */
     VisGen generator;
@@ -115,6 +133,7 @@ void AdapterLofarStationVisibilitiesTest::test_deserialise_file()
     file.open(QIODevice::ReadOnly);
     adapter->config(data, generator.size(), QHash<QString, DataBlob*>());
 
+
     /* Deserialise the data */
     TIMER_START
     CPPUNIT_ASSERT_NO_THROW(adapter->deserialise(&file));
@@ -122,21 +141,27 @@ void AdapterLofarStationVisibilitiesTest::test_deserialise_file()
             (float)file.size()/(1024*1024))
 
     /* Test some values in the visibility data blob */
+    complex_t* vis = NULL;
     unsigned ai = 0, aj = 0, c = 0, p = 0;
+    CPPUNIT_ASSERT(vis = data->ptr(c, p));
     CPPUNIT_ASSERT_DOUBLES_EQUAL(_dataVal(ai, aj, c, p),
-            (*data)(ai, aj, c, p).real(), 0.001);
+            vis[aj * nAnt + ai].real(), 0.001);
 
     ai = 1; aj = 2; c = 3; p = 1;
+    CPPUNIT_ASSERT(vis = data->ptr(c, p));
     CPPUNIT_ASSERT_DOUBLES_EQUAL(_dataVal(ai, aj, c, p),
-            (*data)(ai, aj, c, p).real(), 0.001);
+            vis[aj * nAnt + ai].real(), 0.001);
 
     ai = 12; aj = 34; c = 56; p = 0;
+    CPPUNIT_ASSERT(vis = data->ptr(c, p));
     CPPUNIT_ASSERT_DOUBLES_EQUAL(_dataVal(ai, aj, c, p),
-            (*data)(ai, aj, c, p).real(), 0.001);
+            vis[aj * nAnt + ai].real(), 0.001);
 
     ai = nAnt-1; aj = nAnt-2; c = nChan-1; p = nPol-1;
+    CPPUNIT_ASSERT(vis = data->ptr(c, p));
     CPPUNIT_ASSERT_DOUBLES_EQUAL(_dataVal(ai, aj, c, p),
-            (*data)(ai, aj, c, p).real(), 0.001);
+            vis[aj * nAnt + ai].real(), 0.001);
+
 
     /* Clean up */
     delete adapter;

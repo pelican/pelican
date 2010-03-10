@@ -1,7 +1,7 @@
-#include "TestPipelineDirtyImageTest.h"
+#include "TestPipelineCalibrateImageTest.h"
 #include "core/PipelineApplication.h"
 #include "core/AbstractPipeline.h"
-#include "pipelines/TestPipelineDirtyImage.h"
+#include "pipelines/TestPipelineCalibrateImage.h"
 #include <QCoreApplication>
 
 #include "utility/pelicanTimer.h"
@@ -9,11 +9,11 @@
 
 namespace pelican {
 
-CPPUNIT_TEST_SUITE_REGISTRATION( TestPipelineDirtyImageTest );
+CPPUNIT_TEST_SUITE_REGISTRATION( TestPipelineCalibrateImageTest );
 /**
  *@details TestPipelineDirtyImageTest
  */
-TestPipelineDirtyImageTest::TestPipelineDirtyImageTest()
+TestPipelineCalibrateImageTest::TestPipelineCalibrateImageTest()
     : CppUnit::TestFixture()
 {
 }
@@ -21,36 +21,36 @@ TestPipelineDirtyImageTest::TestPipelineDirtyImageTest()
 /**
  *@details
  */
-TestPipelineDirtyImageTest::~TestPipelineDirtyImageTest()
+TestPipelineCalibrateImageTest::~TestPipelineCalibrateImageTest()
 {
 }
 
-void TestPipelineDirtyImageTest::setUp()
+void TestPipelineCalibrateImageTest::setUp()
 {
     int ac = 0;
     _app = new QCoreApplication(ac, NULL);
 }
 
-void TestPipelineDirtyImageTest::tearDown()
+void TestPipelineCalibrateImageTest::tearDown()
 {
     delete _app;
 }
 
-void TestPipelineDirtyImageTest::test_method()
+void TestPipelineCalibrateImageTest::test_method()
 {
     TIMER_START
     int argc = 2;
     char *argv[] = {
             (char*)"pelican",
-            (char*)"--config=data/TestPipelineDirtyImage.xml"
+            (char*)"--config=data/TestPipelineCalibrateImage.xml"
     };
     QCoreApplication app(argc, argv);
 
     PipelineApplication pApp(argc, argv);
-    pApp.registerPipeline(new TestPipelineDirtyImage);
+    pApp.registerPipeline(new TestPipelineCalibrateImage);
     pApp.setDataClient("FileDataClient");
     pApp.start();
-    TIMER_STOP("TestPipelineDirtyImageTest");
+    TIMER_STOP("TestPipelineCalibrateImageTest");
 }
 
 } // namespace pelican

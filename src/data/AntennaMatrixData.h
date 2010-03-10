@@ -3,6 +3,7 @@
 
 #include "data/DataBlob.h"
 #include <vector>
+#include <iostream>
 
 /**
  * @file AntennaMatrixData.h
@@ -14,7 +15,8 @@ namespace pelican {
  * @class AntennaMatrixData
  *
  * @brief
- * Class to define antenna matrix data.
+ * Container class to holding a matrix of data indexed a pair of antennas,
+ * frequency channel and polarisation.
  *
  * @details
  * This class defines how antenna matrix data is held. It inherits
@@ -31,21 +33,15 @@ namespace pelican {
  * The data for each polarisation (p) is stored in separate, but contiguous,
  * data cubes.
  *
- * The memory layout is as shown in the figure below, using visibility data
- * or complex antenna gains as an example:
- *
- * \image html doc/VisibilityData.png
- * \image latex doc/VisibilityData.eps "AntennaMatrixData memory layout." width=10cm
- *
- * The matrix data is stored in column-major order for compatibility
- * with high-performance FORTRAN libraries like LAPACK.
- *
  * The antenna index data is stored separately, and is used to convert row and
  * column indices to a physical antenna index. The list of antenna index data is
  * stored for each channel and polarisation.
  */
 template<typename T> class AntennaMatrixData : public DataBlob
 {
+    public:
+        typedef enum { POL_X, POL_Y, POL_BOTH, POL_UNDEF } pol_t;
+
     protected: /* Data */
         /// The data.
         std::vector<T> _data;
@@ -62,28 +58,134 @@ template<typename T> class AntennaMatrixData : public DataBlob
         /// The number of polarisations.
         unsigned _nPolarisations;
 
+        /// Polarisation of the data.
+        pol_t _polarisation;
+
+        /// List of channels for which the data is held.
+        std::vector<unsigned> _channels;
+
     public:
         /// Constructs an empty data cube.
         /// The constructed data cube has zero size.
-        AntennaMatrixData() : DataBlob(),
-            _nAntennas(0), _nChannels(0), _nPolarisations(0) {}
+        AntennaMatrixData() : DataBlob() {
+            clear();
+        }
 
         /// Constructs a pre-sized, empty cube.
         /// The cube is pre-sized using the given parameters, and the antenna
         /// indices are initialised to increase along the rows and columns,
         /// for each polarisation and frequency.
         ///
-        /// @param[in] antennas The number of antennas in the visibility matrix.
-        /// @param[in] channels The number of frequency channels.
-        /// @param[in] polarisations The number of polarisations.
-        AntennaMatrixData(const unsigned antennas, const unsigned channels,
-                const unsigned polarisations) : DataBlob() {
-            resize(antennas, channels, polarisations);
+        /// @param[in] antennas      The number of antennas.
+        /// @param[in] channels      Vector of the channels sorted.
+        /// @param[in] polarisation  Polarisation of the data.
+        AntennaMatrixData(const unsigned nAntennas,
+                const std::vector<unsigned>& channels,
+                const pol_t polarisation) : DataBlob()
+        {
+            resize(nAntennas, channels, polarisation);
             initAntennaIndex();
         }
 
         /// Matrix data destructor.
         virtual ~AntennaMatrixData() {}
+
+    public:
+
+        /// Resizes the data container.
+        /// This method is used to resize the container using the
+        /// specified values.
+        ///
+        /// @param[in] antennas The number of antennas in the visibility matrix.
+        /// @param[in] channels The number of frequency channels.
+        /// @param[in] polarisations The number of polarisations.
+        void resize(const unsigned antennas,
+                const std::vector<unsigned>& channels,
+                const pol_t polarisation) {
+            _nAntennas = antennas;
+            _nChannels = channels.size();
+            _channels = channels;
+            _polarisation = polarisation;
+            _nPolarisations = (_polarisation == POL_BOTH) ? 2 : 1;
+            _data.resize(_nAntennas * _nAntennas * _nChannels * _nPolarisations);
+        }
+
+        /// Clears the data.
+        void clear() {
+            _data.clear();
+            _antIndex.clear();
+            _nAntennas = 0;
+            _nChannels = 0;
+            _nPolarisations = 0;
+            _polarisation = POL_UNDEF;
+            _channels.clear();
+        }
+
+
+    public: // accessor methods
+
+        /// Returns the number of entries in the antenna matrix data.
+        unsigned nEntries() const { return _data.size(); }
+
+        /// Returns the number of antennas.
+        unsigned nAntennas() const { return _nAntennas; }
+
+        /// Returns the number of frequency channels.
+        unsigned nChannels() const { return _channels.size(); }
+
+        /// Returns the vector of channels in the data.
+        const std::vector<unsigned>& channels() const { return _channels; }
+
+        /// Returns the number of polarisations.
+        unsigned nPolarisations() const {
+            return (_polarisation == POL_BOTH) ? 2 : 1;
+        }
+
+        /// Returns the polarisation of the data.
+        pol_t polarisation() const { return _polarisation; }
+
+        /// Returns a pointer to the first element of the data.
+        /// If the data cube has no size, a null pointer is returned.
+        T* ptr() { return _data.size() > 0 ? &_data[0] : NULL; }
+
+        /// Returns a pointer to the first element of the data.
+        /// If the data cube has no size, a null pointer is returned.
+        const T* ptr() const { return _data.size() > 0 ? &_data[0] : NULL; }
+
+        /// This method returns a pointer to the first element of the data
+        /// cube for the given polarisation \p p.
+        /// If the data cube has no size, a null pointer is returned.
+        T* ptr(const unsigned p) {
+            unsigned index = p * _nChannels * _nAntennas * _nAntennas;
+            return _data.size() > index ? &_data[index] : NULL;
+        }
+
+        /// Returns a pointer to the first element of the data
+        /// cube for the given polarisation \p p (const overload).
+        /// If the data cube has no size, a null pointer is returned.
+        const T* ptr(const unsigned p) const {
+            unsigned index = p * _nChannels * _nAntennas * _nAntennas;
+            return _data.size() > index ? &_data[index] : NULL;
+        }
+
+        /// Returns a pointer to the first element of the antenna
+        /// matrix for the given channel \p c and polarisation \p p.
+        /// If the data cube has no size, a null pointer is returned.
+        T* ptr(const unsigned c, const unsigned p) {
+            unsigned index = _nAntennas * _nAntennas * (p * _nChannels + c);
+            return _data.size() > index ? &_data[index] : NULL;
+        }
+
+        /// Returns a pointer to the first element of the antenna
+        /// matrix for the given channel \p c and polarisation \p p
+        /// (const overload).
+        /// If the data cube has no size, a null pointer is returned.
+        const T* ptr(const unsigned c, const unsigned p) const {
+            unsigned index = _nAntennas * _nAntennas * (p * _nChannels + c);
+            return _data.size() > index ? &_data[index] : NULL;
+        }
+
+    public: // utility methods
 
         /// Returns the antenna index associated with a row and column.
         /// This method returns the real antenna index in row and column \p i
@@ -127,88 +229,6 @@ template<typename T> class AntennaMatrixData : public DataBlob
                     }
                 }
             }
-        }
-
-        /// Returns the number of entries in the antenna matrix data.
-        unsigned nEntries() const { return _data.size(); }
-
-        /// Returns the number of antennas.
-        unsigned nAntennas() const { return _nAntennas; }
-
-        /// Returns the number of frequency channels.
-        unsigned nChannels() const { return _nChannels; }
-
-        /// Returns the number of polarisations.
-        unsigned nPolarisations() const { return _nPolarisations; }
-
-        /// Returns a pointer to the start of the memory block.
-        /// This method returns a pointer to the first element of the
-        /// memory block used for all matrix data.
-        ///
-        /// If the data cube has no size, a null pointer is returned.
-        T* ptr() { return _data.size() > 0 ? &_data[0] : NULL; }
-
-        /// Returns a pointer to the start of the memory block.
-        /// This method returns a pointer to the first element of the
-        /// memory block used for all matrix data (const overload).
-        ///
-        /// If the data cube has no size, a null pointer is returned.
-        const T* ptr() const { return _data.size() > 0 ? &_data[0] : NULL; }
-
-        /// Returns a pointer to the start of polarisation \p p.
-        /// This method returns a pointer to the first element of the data
-        /// cube for the given polarisation \p p.
-        ///
-        /// If the data cube has no size, a null pointer is returned.
-        T* ptr(const unsigned p) {
-            unsigned index = p * _nChannels * _nAntennas * _nAntennas;
-            return _data.size() > index ? &_data[index] : NULL;
-        }
-
-        /// Returns a pointer to the start of polarisation \p p.
-        /// This method returns a pointer to the first element of the data
-        /// cube for the given polarisation \p p (const overload).
-        ///
-        /// If the data cube has no size, a null pointer is returned.
-        const T* ptr(const unsigned p) const {
-            unsigned index = p * _nChannels * _nAntennas * _nAntennas;
-            return _data.size() > index ? &_data[index] : NULL;
-        }
-
-        /// Returns a pointer to the start of the antenna matrix.
-        /// This method returns a pointer to the first element of the antenna
-        /// matrix for the given channel \p c and polarisation \p p.
-        ///
-        /// If the data cube has no size, a null pointer is returned.
-        T* ptr(const unsigned c, const unsigned p) {
-            unsigned index = _nAntennas * _nAntennas * (p * _nChannels + c);
-            return _data.size() > index ? &_data[index] : NULL;
-        }
-
-        /// Returns a pointer to the start of the antenna matrix.
-        /// This method returns a pointer to the first element of the antenna
-        /// matrix for the given channel \p c and polarisation \p p
-        /// (const overload).
-        ///
-        /// If the data cube has no size, a null pointer is returned.
-        const T* ptr(const unsigned c, const unsigned p) const {
-            unsigned index = _nAntennas * _nAntennas * (p * _nChannels + c);
-            return _data.size() > index ? &_data[index] : NULL;
-        }
-
-        /// Resizes the data container.
-        /// This method is used to resize the container using the
-        /// specified values.
-        ///
-        /// @param[in] antennas The number of antennas in the visibility matrix.
-        /// @param[in] channels The number of frequency channels.
-        /// @param[in] polarisations The number of polarisations.
-        void resize(const unsigned antennas, const unsigned channels,
-                const unsigned polarisations) {
-            _nAntennas = antennas;
-            _nChannels = channels;
-            _nPolarisations = polarisations;
-            _data.resize(antennas * antennas * channels * polarisations);
         }
 
         /// Swaps the two rows and columns in the antenna matrix.
@@ -256,33 +276,9 @@ template<typename T> class AntennaMatrixData : public DataBlob
             _antIndex[a2] = tmp;
         }
 
-        /// Returns a reference to the data vector (use with caution!).
-        /// This method may be deprecated in due course.
-        std::vector<T>& data() { return _data; }
 
-        /// Returns a reference to the data vector (use with caution!).
-        /// This method may be deprecated in due course.
-        const std::vector<T>& data() const { return _data; }
 
-        /// Dereferences the data for antennas (\p ai, \p aj),
-        /// channel (\p c) and polarisation (\p p).
-        /// The index \p ai is the row number, and the index \p aj is the
-        /// column number (the matrix is column-major).
-        T& operator() (const unsigned ai, const unsigned aj,
-                const unsigned c, const unsigned p) {
-            unsigned index = ai + _nAntennas * (aj + _nAntennas * (c + _nChannels * p));
-            return _data[index];
-        }
-
-        /// Dereferences the data for antennas (\p ai, \p aj),
-        /// channel (\p c) and polarisation (\p p) (const overload).
-        /// The index \p ai is the row number, and the index \p aj is the
-        /// column number (the matrix is column-major).
-        const T& operator() (const unsigned ai, const unsigned aj,
-                const unsigned c, const unsigned p) const {
-            unsigned index = ai + _nAntennas * (aj + _nAntennas * (c + _nChannels * p));
-            return _data[index];
-        }
+    public: // operators
 
         /// Dereferences the data for the given index \p i.
         T& operator() (const unsigned i) { return _data[i]; }

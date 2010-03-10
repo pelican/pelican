@@ -1,21 +1,22 @@
-#ifndef MYPIPELINE_H
-#define MYPIPELINE_H
+#ifndef TESTPIPELINEVISIBILITYPRINTER_H
+#define TESTPIPELINEVISIBILITYPRINTER_H
 
 #include "core/AbstractPipeline.h"
 #include <QString>
 #include <QHash>
 
 /**
- * @file MyPipeline.h
+ * @file TestPipelineVisibilityPrinter.h
  */
 
 namespace pelican {
 
 class DataBlob;
 class VisibilityPrinter;
+class VisibilityData;
 
 /**
- * @class MyPipeline
+ * @class TestPipelineVisibilityPrinter
  *
  * @brief
  *
@@ -37,8 +38,9 @@ class TestPipelineVisibilityPrinter : public AbstractPipeline
 
     private:
         VisibilityPrinter* _visPrinter;
+        VisibilityData* _vis;
 
 };
 
 } // namespace pelican
-#endif // MYPIPELINE_H
+#endif // TESTPIPELINEVISIBILITYPRINTER_H

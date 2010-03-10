@@ -20,13 +20,10 @@ namespace pelican {
 ImageWriterFits::ImageWriterFits(const ConfigNode& config)
     : AbstractModule(config)
 {
-    // Register which data blobs are needed by the module.
-    addGeneratedData("ImageData");
-
     // Extract configuration from the XML configuration node.
     _getConfiguration(config);
 
-    _image = NULL;
+    // Initialise FITS file handle.
     _fits = NULL;
 }
 
@@ -47,37 +44,35 @@ ImageWriterFits::~ImageWriterFits()
  *
  * @param[in] data  Hash of data blobs.
  */
-void ImageWriterFits::run(QHash<QString, DataBlob*>& data)
+void ImageWriterFits::run(ImageData* image)
 {
-    // Get a pointer to the image data object.
-    _image = static_cast<ImageData*>(data["ImageData"]);
-    if (!_image)
+    if (!image)
         throw QString("ImageWriterFits: Image data missing.");
 
     // Image dimensions.
-    unsigned nL = _image->sizeL();
-    unsigned nM = _image->sizeM();
-    unsigned nChan = _image->nChannels();
-    unsigned nPol = _image->nPolarisations();
+    unsigned nL = image->sizeL();
+    unsigned nM = image->sizeM();
+    unsigned nChan = image->nChannels();
+    unsigned nPol = image->nPolarisations();
 
     // Open the FITS file handle.
     _open(_fileName, nL, nM, nChan, nPol, _overwrite);
 
     // Write the FITS header.
-    _writeHeader();
+    _writeHeader(image);
 
     // Loop over channels and polarisations in the image data writing
     // planes of the FITS image.
     for (unsigned c = 0; c < nChan; c++) {
         for (unsigned p = 0; p < nPol; p++) {
-            real_t* image = _image->ptr(c, p);
-            _writeImage(image, nL, nM, c, p);
+            real_t* data = image->ptr(c, p);
+            _writeImage(data, nL, nM, c, nPol, p);
         }
     }
 
     // Write a frequency table (needed for image cubes)
     if (nChan > 1) {
-        _writeFrequencyTable(_image->channels());
+        _writeFrequencyTable(image->channels());
     }
 
     // Close the FITS file handle.
@@ -201,14 +196,14 @@ void ImageWriterFits::_close()
  * @details
  * This private method writes all FITS header keywords into the file.
  */
-void ImageWriterFits::_writeHeader()
+void ImageWriterFits::_writeHeader(ImageData* image)
 {
     // Throw if the CFITSIO file handle isn't open.
     if (_fits == NULL)
         throw QString("ImageWriterFits: Fits file not open.");
 
     // Throw if there is no image data.
-    if (_image == NULL)
+    if (image == NULL)
         throw QString("ImageWriterFits: Image data missing.");
 
     // Write descriptive keys.
@@ -227,42 +222,42 @@ void ImageWriterFits::_writeHeader()
     double bzero = 0.0;
     _writeKey("BSCALE", bscale);
     _writeKey("BZERO", bzero);
-    if (_image->coordType() == ImageData::COORD_J2000)
+    if (image->coordType() == ImageData::COORD_J2000)
         _writeKey("EQUINOX", "2000");
-    _writeKey("BUNIT", _image->ampUnits(), "Units of flux");
+    _writeKey("BUNIT", image->ampUnits(), "Units of flux");
 
     // Amplitude range (only valid if not an image cube).
-    if (_image->nChannels() == 1 && _image->nPolarisations() == 1) {
-        _writeKey("DATAMIN", _image->min(0, 0), "Minimum pixel value");
-        _writeKey("DATAMAX", _image->max(0, 0), "Maximum pixel value");
+    if (image->nChannels() == 1 && image->nPolarisations() == 1) {
+        _writeKey("DATAMIN", image->min(0, 0), "Minimum pixel value");
+        _writeKey("DATAMAX", image->max(0, 0), "Maximum pixel value");
     }
 
     // x (l) axis keywords.
     _writeKey("CTYPE1", "RA---SIN");
     _writeKey("CUNIT1", "deg", "Axis unit (degrees)");
-    _writeKey("CRVAL1", _image->refCoordL(),
+    _writeKey("CRVAL1", image->refCoordL(),
             "Coordinate value at reference point");
-    _writeKey("CRPIX1", _image->refPixelL(), "Reference pixel");
-    _writeKey("CDELT1", _image->cellsizeL() * math::asec2deg,
+    _writeKey("CRPIX1", image->refPixelL(), "Reference pixel");
+    _writeKey("CDELT1", image->cellsizeL() * math::asec2deg,
             "Coordinate increment at reference point");
 //    _writeKey("CROTA1", 0.0);
 
     // y (m) axis keywords.
     _writeKey("CTYPE2", "DEC--SIN");
     _writeKey("CUNIT2", "deg", "Axis unit (degrees)");
-    _writeKey("CRVAL2", _image->refCoordM(),
+    _writeKey("CRVAL2", image->refCoordM(),
             "Coordinate value at reference point");
-    _writeKey("CRPIX2", _image->refPixelM(), "Reference pixel");
-    _writeKey("CDELT2", _image->cellsizeM() * math::asec2deg,
+    _writeKey("CRPIX2", image->refPixelM(), "Reference pixel");
+    _writeKey("CDELT2", image->cellsizeM() * math::asec2deg,
             "Coordinate increment at reference point");
 //    _writeKey("CROTA2", 0.0);
 
     // Polarisation axis keywords.
     // TODO: Set polarisation FITS axes
     _writeKey("CTYPE3", "POL", "XX / YY");
-    int polType = (_image->polarisation() == ImageData::POL_Y) ? 1 : 0;
+    int polType = (image->polarisation() == ImageData::POL_Y) ? 1 : 0;
     _writeKey("CRVAL3", polType, "0.0 if X or X and Y, 1.0 if Y only");
-    int polDelta = (_image->polarisation() == ImageData::POL_BOTH) ? 1 : 0;
+    int polDelta = (image->polarisation() == ImageData::POL_BOTH) ? 1 : 0;
     _writeKey("CDELT3", polDelta, "0.0 or 1.0 (if there is X and Y)");
     _writeKey("CRPIX3", 0.0);
     // _writeKey("CROTA3", 0.0);
@@ -270,9 +265,9 @@ void ImageWriterFits::_writeHeader()
     // Channel axis keywords.
     // TODO: Set channel FITS axes (including image cube channel table)
     _writeKey("CTYPE4", "FREQ");
-    _writeKey("CRVAL4", _image->refFreq());
-    _writeKey("CDELT4", _image->deltaFreq());
-    _writeKey("CRPIX4", _image->refChannel());
+    _writeKey("CRVAL4", image->refFreq());
+    _writeKey("CDELT4", image->deltaFreq());
+    _writeKey("CRPIX4", image->refChannel());
 //    _writeKey("CROTA4", 0.0);
 
     _writeHistory("This image was created using PELICAN.");
@@ -293,10 +288,6 @@ void ImageWriterFits::_writeFrequencyTable(const std::vector<unsigned>& channels
     // Throw if the CFITSIO file handle isn't open.
     if (_fits == NULL)
         throw QString("ImageWriterFits: Fits file handle not open.");
-
-    // Throw if there is no image data.
-    if (_image == NULL)
-        throw QString("ImageWriterFits: Image data array missing.");
 
     // The naxis2 parameter gives the initial number of rows to be created in
     // the table, and should normally be set = 0. CFITSIO will automatically
@@ -333,22 +324,24 @@ void ImageWriterFits::_writeFrequencyTable(const std::vector<unsigned>& channels
  * @param[in] nL        Number of pixels in the l (x) direction.
  * @param[in] nM        Number of pixels in the m (y) direction.
  * @param[in] chan      Image channel index.
+ * @param[in] nPol      Total number of polarisations in the image data.
  * @param[in] pol       Image polarisation index.
  */
 void ImageWriterFits::_writeImage(real_t* image, const unsigned nL,
-        const unsigned nM, const unsigned chan, const unsigned pol)
+        const unsigned nM, const unsigned chan, const unsigned nPol,
+        const unsigned pol)
 {
     // Throw if the CFITSIO file handle isn't open.
     if (_fits == NULL)
         throw QString("ImageWriterFits: Fits file handle not open.");
 
     // Throw if there is no image data.
-    if (_image == NULL)
+    if (image == NULL)
         throw QString("ImageWriterFits: Image data array missing.");
 
     // Write out the image.
     long nPixels = nL * nM;
-    unsigned nPixPerChan = _image->nPolarisations() * nPixels;
+    unsigned nPixPerChan = nPol * nPixels;
 
     long firstElement = chan * nPixPerChan + pol * nPixels + 1;
 

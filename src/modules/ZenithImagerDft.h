@@ -61,7 +61,8 @@ class ZenithImagerDft : public AbstractModule
         void setFullSky();
 
         /// Runs the module.
-        void run(QHash<QString, DataBlob*>& data);
+        void run(ImageData* image, AntennaPositions* antPos,
+                VisibilityData* vis = NULL);
 
     private:
         /// Extract the configuration from the XML node setting default where required.
@@ -70,9 +71,6 @@ class ZenithImagerDft : public AbstractModule
         /// Generates an array of image coordinates in radians.
         void _calculateImageCoords(const double cellsize, const unsigned nPixels,
                 real_t* coords);
-
-        /// Fetches data blob pointers from the blob hash.
-        void _fetchDataBlobs(QHash<QString, DataBlob*>& data);
 
         /// Calculate DFT weights for imaging.
         void _calculateWeights(const unsigned nAnt, real_t* antPos,
@@ -107,14 +105,11 @@ class ZenithImagerDft : public AbstractModule
         void _setPsfVisibilties(complex_t* vis, const unsigned nAnt);
 
         /// Sets the image meta-data.
-        void _setImageMetaData();
+        void _setImageMetaData(ImageData* image);
 
     private:
         enum { VIS_RAW, VIS_MODEL, VIS_CALIBRATED, VIS_PSF };
 
-        VisibilityData* _vis;               ///< Visibility amplitude matrix.
-        AntennaPositions* _antPos;          ///< Visibility positions matrix.
-        ImageData* _image;                  ///< Image amplitude matrix.
         AbstractAstrometry* _astrometry;    ///< Astrometric conversion module.
 
         int _visUse;                        ///< Option to image raw, model or corrected.

@@ -3,13 +3,10 @@ set(
    modulesTest_src
    src/modulesTest.cpp
    src/AstrometryFastTest.cpp
-   src/TestModule.cpp
    src/BasicFlaggerTest.cpp
    src/ZenithCalibraterTest.cpp
    src/ZenithImagerDftTest.cpp
    src/ZenithModelVisibilitiesTest.cpp
-   src/ImagerDftTest.cpp
-   src/ImagerFftTest.cpp
    src/ImageWriterFitsTest.cpp
 )
 add_executable(modulesTest ${modulesTest_src} )

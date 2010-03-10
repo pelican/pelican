@@ -15,10 +15,10 @@ namespace pelican {
 
 /**
  * @class FlagTable
- *  
+ *
  * @brief
  * Holds flag table data.
- * 
+ *
  * @details
  * This class holds flag table data. It inherits
  * the AntennaMatrixData<unsigned char> base class, which is used to define
@@ -93,10 +93,11 @@ class FlagTable : public AntennaMatrixData<unsigned char>
         /// @param[in] antennas The number of antennas in the visibility matrix.
         /// @param[in] channels The number of frequency channels.
         /// @param[in] polarisations The number of polarisations.
-        FlagTable(const unsigned antennas, const unsigned channels,
-                const unsigned polarisations) :
-                    AntennaMatrixData<unsigned char>(antennas, channels, polarisations) {
-            clear(antennas, channels, polarisations);
+        FlagTable(const unsigned antennas,
+                const std::vector<unsigned>& channels,
+                const pol_t polarisation)
+        : AntennaMatrixData<unsigned char>(antennas, channels, polarisation) {
+            clear();
         }
 
         /// Destructor.
@@ -115,18 +116,6 @@ class FlagTable : public AntennaMatrixData<unsigned char>
             unsigned len = _data.size();
             for (unsigned i = 0; i < len; i++) p[i] = 0;
             initAntennaIndex();
-        }
-
-        /// Resizes and clears the flag table.
-        /// Calls the base class method resize(), before clear().
-        ///
-        /// @param[in] antennas The number of antennas in the visibility matrix.
-        /// @param[in] channels The number of frequency channels.
-        /// @param[in] polarisations The number of polarisations.
-        void clear(const unsigned antennas, const unsigned channels,
-                const unsigned polarisations) {
-            resize(antennas, channels, polarisations);
-            clear();
         }
 
         /// Flags a single antenna pair.
@@ -218,7 +207,7 @@ class FlagTable : public AntennaMatrixData<unsigned char>
         /// pair (\p ai, \p aj), channel \p c and polarisation \p.
         unsigned flags(const unsigned ai, const unsigned aj,
                 const unsigned c, const unsigned p) const {
-            return (*this)(ai, aj, c, p);
+            return ptr(c, p)[ai + aj * _nAntennas];
         }
 
         /// Returns the flag table entry.
@@ -226,7 +215,7 @@ class FlagTable : public AntennaMatrixData<unsigned char>
         /// channel \p c and polarisation \p.
         unsigned flags(const unsigned a, const unsigned c,
                 const unsigned p) const {
-            return (*this)(a, a, c, p);
+            return ptr(c, p)[a + _nAntennas * a];
         }
 
         /// Returns the number of flagged antennas.
