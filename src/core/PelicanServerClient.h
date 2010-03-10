@@ -14,6 +14,7 @@ namespace pelican {
 class AbstractClientProtocol;
 class ConfigNode;
 class AdapterFactory;
+class ServerRequest;
 class ServerResponse;
 class StreamData;
 class ServiceDataRequest;
@@ -38,13 +39,14 @@ class PelicanServerClient : public AbstractDataClient
 
     protected:
         QHash<QString, DataBlob*> _getServiceData(const ServiceDataRequest& requirements, QHash<QString, DataBlob*>& dataHash);
+        QHash<QString, DataBlob*> _sendRequest(const ServerRequest& request, QHash<QString, DataBlob*>& dataHash);
         QHash<QString, DataBlob*> _response(QIODevice&, boost::shared_ptr<ServerResponse> r, QHash<QString, DataBlob*>& );
         QHash<QString, DataBlob*> _adaptStream(QIODevice& device, const StreamData*, QHash<QString, DataBlob*>& dataHash );
         void _connect();
 
     private:
         AbstractClientProtocol* _protocol;
-        QString _ipadress;
+        QString _server;
         unsigned int _port;
 
     friend class PelicanServerClientTest;

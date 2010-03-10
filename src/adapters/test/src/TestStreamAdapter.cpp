@@ -24,7 +24,9 @@ TestStreamAdapter::~TestStreamAdapter()
 
 void TestStreamAdapter::deserialise(QIODevice* in)
 {
-    in->read( static_cast<TestDataBlob*>(_data)->data(), (quint64)_chunkSize);
+    TestDataBlob* data = static_cast<TestDataBlob*>(_data);
+    data->resize(_chunkSize);
+    in->read( data->data(), (quint64)_chunkSize);
 }
 
 } // namespace pelican

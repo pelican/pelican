@@ -25,7 +25,7 @@ TestDataBlob::~TestDataBlob()
 void TestDataBlob::resize(size_t size)
 {
     _buf.resize(size + 1);
-    _buf[size] = '\0'; // add a safety if someone tries to print
+    _buf[size+1] = '\0'; // add a safety if someone tries to print
 }
 
 char* TestDataBlob::data()
