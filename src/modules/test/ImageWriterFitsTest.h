@@ -40,7 +40,6 @@ class ImageWriterFitsTest : public CppUnit::TestFixture
         void test_createImage();
         void test_createCube();
 
-
     public:
         ImageWriterFitsTest();
         ~ImageWriterFitsTest();

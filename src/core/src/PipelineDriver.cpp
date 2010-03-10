@@ -207,10 +207,6 @@ const QList<DataRequirements>& PipelineDriver::dataRequirements() const
  */
 void PipelineDriver::_determineDataRequirements(AbstractPipeline* pipeline)
 {
-    /* Check for an empty pipeline */
-    if (pipeline->requiredDataAll() == DataRequirements())
-        throw QString("Empty pipelines are not supported.");
-
     // Loop over data requirements for each pipeline
     /*
     foreach (DataRequirements& req, dataRequirements) {
@@ -244,8 +240,8 @@ void PipelineDriver::_determineDataRequirements(AbstractPipeline* pipeline)
     /* Store the remote data requirements for this pipeline */
     _pipelines.insert(pipeline->requiredDataRemote(), pipeline);
 
-    /* Accumulate all data requirements ready to create data blobs */
-    _reqDataAll += pipeline->requiredDataAll();
+    /* Accumulate all data requirements ready to create remote data blobs */
+    _reqDataAll += pipeline->requiredDataRemote();
 }
 
 /**

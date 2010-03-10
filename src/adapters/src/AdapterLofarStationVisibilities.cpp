@@ -12,9 +12,9 @@ namespace pelican {
 
 /**
  * @details
- * Constructs a stream adapter for a LOFAR station visibility amplidude data set.
+ * Constructs a stream adapter for a LOFAR station visibility amplitude data set.
  * Extracts the default data blob dimensions from the default configuration
- * setting some defaults if configuration options cant be found.
+ * setting some defaults if configuration options can't be found.
  *
  * @param[in]   config  Pelican XML configuration node object.
  */
@@ -28,6 +28,8 @@ AdapterLofarStationVisibilities::AdapterLofarStationVisibilities(const ConfigNod
     QString rowMajor = config.getOption("rowMajor", "value", "true").toLower();
     _rowMajor = (rowMajor.startsWith("t")) ? true : false;
     _dataBytes = config.getOption("dataBytes", "number", "8").toUInt();
+    _timeStart = config.getOption("time", "start", "0.0").toDouble();
+    _timeDelta = config.getOption("time", "delta", "0.0").toDouble();
 }
 
 /**
@@ -43,8 +45,6 @@ AdapterLofarStationVisibilities::~AdapterLofarStationVisibilities()
  * Method for deserialise a LOFAR station visibility data set
  * contained in a QDataStream into a pelican visibility data blob.
  *
- * !......ONLY AN EXAMPLE AT THE MOMENT....!
- *
  * @param[in] in QDataStream containing a serialised version of a LOFAR
  *               visibility data set.
  */
@@ -56,6 +56,9 @@ void AdapterLofarStationVisibilities::deserialise(QIODevice* in)
 
     // Read data from the stream
     complex_t* vis = _vis->ptr();
+
+    // TODO Set the time stamp properly.
+    _vis->setTimeStamp(_timeStart);
 
     unsigned nPointsPerPol = _nAnt * _nAnt * _nChan;
     unsigned nPointsPerChan = _nAnt * _nAnt;

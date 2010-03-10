@@ -28,14 +28,24 @@ class ModuleFactory;
  * 
  * Inherit from this class and implement the init() and run() virtual methods
  * to create a new pipeline. Set the name of the pipeline using setName(), and
- * call createModule() from init() to create the pipeline modules, for example:
+ * call createModule() from init() to create the pipeline modules.
+ *
+ * To request remote data obtained from the client, call requestRemoteData()
+ * with the type of data required. The requested data will be made available
+ * via the hash supplied to run().
+ *
+ * For example:
  *
  * \code
  * class MyPipeline : public AbstractPipeline
  * {
  *     private:
  *         // Module pointers.
- *         BasicFlagger* flagger;
+ *         ZenithImagerDft* imager;
+ *         ImageWriterFits *fitsWriter;
+ *
+ *         // Local data blobs.
+ *         ImageData* imageData;
  *
  *     public:
  *         void init()
@@ -44,16 +54,25 @@ class ModuleFactory;
  *             setName("MyPipeline");
  *
  *             // Create the pipeline modules.
- *             flagger = static_cast<BasicFlagger*>(createModule("BasicFlagger"));
- *             // ...
+ *             imager = (ZenithImagerDft*) createModule("ZenithImagerDft");
+ *             fitsWriter = (ImageWriterFits*) createModule("ImageWriterFits");
+ *
+ *             // Create the data blobs.
+ *             imageData = new ImageData;
+ *
+ *             // Request remote data.
+ *             requestRemoteData("VisibilityData");
  *             return;
  *         }
  *
  *         void run(QHash<QString, DataBlob*>& data)
  *         {
+ *             // Get the remote visibility data.
+ *             VisibilityData* visData = data["VisibilityData"];
+ *
  *             // Run each module as required.
- *             flagger->run(data);
- *             // ...
+ *             imager->run(visData, imageData);
+ *             fitsWriter->run(imageData);
  *             return;
  *         }
  * };
@@ -64,9 +83,13 @@ class ModuleFactory;
  */
 class AbstractPipeline
 {
+    private:
         friend class TestPipeline;
 
     private:
+        /// The data required by the pipeline.
+        DataRequirements _requiredDataRemote;
+
         /// Pointer to the PipelineApplication module factory (private, not protected).
         ModuleFactory* _moduleFactory;
 
@@ -108,14 +131,12 @@ class AbstractPipeline
         /// configuration settings for the pipeline modules.
         const QString& name() const {return _pipelineName;}
 
-        /// Compute and return the data requirements for the pipeline.
-        const DataRequirements requiredDataAll();
+        /// Requests remote data from the client.
+        /// This method requests a type of remote data from the client.
+        void requestRemoteData(QString type);
 
-        /// Compute and return the generated data requirements for the pipeline.
-        const DataRequirements requiredDataGenerated();
-
-        /// Compute and return the remote data requirements for the pipeline.
-        const DataRequirements requiredDataRemote();
+        /// Return the remote data requirements for the pipeline.
+        const DataRequirements& requiredDataRemote() const;
 
         /// Defines a single iteration of the pipeline (pure virtual).
         /// This method defines what happens when the pipeline is run once,

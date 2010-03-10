@@ -76,20 +76,26 @@ void ImageData::resize(const unsigned sizeL, const unsigned sizeM,
  */
 void ImageData::clear()
 {
-    _nChannels = 0;
-    _nPolarisations = 0;
+    _image.clear();
+    _coordType = COORD_UNDEF;
+    _ampUnits.clear();
     _sizeL = 0;
     _sizeM = 0;
-    _cellsizeL = 0.0;
-    _cellsizeM = 0.0;
-    _refPixelL = 0.0;
-    _refPixelM = 0.0;
-    _coordType = COORD_UNDEF;
+    _nChannels = 0;
+    _nPolarisations = 0;
+    _polarisation = POL_UNDEF;
+    _channels.clear();
+    _refFreq = 0.0;
+    _refChannel = 0;
+    _deltaFreq = 0.0;
     _refCoordL = 0.0;
+    _refPixelL = 0.0;
+    _cellsizeL = 0.0;
     _refCoordM = 0.0;
-    _image.clear();
-    _min.clear();
+    _refPixelM = 0.0;
+    _cellsizeM = 0.0;
     _max.clear();
+    _min.clear();
     _mean.clear();
 }
 
