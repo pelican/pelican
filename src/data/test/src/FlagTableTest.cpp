@@ -34,7 +34,7 @@ void FlagTableTest::test_accessorMethodsIndexed()
     // Use Case
     // Construct a flag data set and test each of the accessor methods.
     const unsigned nAntennas = 96;
-    const unsigned nChannels = 64;
+    const unsigned nChannels = 32;
     const unsigned nPols = 2;
     FlagTable data(nAntennas, nChannels, nPols);
 
@@ -113,7 +113,7 @@ void FlagTableTest::test_accessorMethodsLinear()
     // Use Case
     // Construct a flag data set and test each of the accessor methods.
     const unsigned nAntennas = 96;
-    const unsigned nChannels = 64;
+    const unsigned nChannels = 32;
     const unsigned nPols = 2;
     const unsigned nTotal = nPols * nChannels * nAntennas * nAntennas;
     FlagTable data(nAntennas, nChannels, nPols);
@@ -149,11 +149,7 @@ void FlagTableTest::test_flag()
 {
     // Initialise test.
     const unsigned nAntennas = 96;
-#ifdef TIMER_ENABLE
-    const unsigned nChannels = 512;
-#else
-    const unsigned nChannels = 10;
-#endif
+    const unsigned nChannels = 32;
     const unsigned nPols = 2;
 
     {

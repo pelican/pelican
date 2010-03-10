@@ -46,7 +46,7 @@ class PipelineDriver
         /// Pointer to the module factory.
         DataClientFactory* _clientFactory;
 
-        /// All data required by all pipelines.
+        /// All remote data required by all pipelines.
         DataRequirements _reqDataAll;
 
         /// Hash of pipelines with known remote data requirements.

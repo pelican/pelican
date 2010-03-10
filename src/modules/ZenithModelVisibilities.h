@@ -44,11 +44,16 @@ class ZenithModelVisibilities : public AbstractModule
     private:
         typedef enum { POL_X, POL_Y, POL_BOTH } pol_t;
 
-        /// Calculate model visibilties
+        /// Calculate source direction cosines.
+        void _calculateDirectionCosines(const unsigned nSources,
+                const Source* sources, double* l, double* m);
+
+        /// Calculate model visibilities.
         void _calculateModelVis(complex_t* vis, const unsigned nAnt,
                 const real_t* antPosX, const real_t* antPosY,
                 const Source* sources, const unsigned nSources,
-                const double frequency, const pol_t polarisation);
+                const double frequency, const pol_t polarisation,
+                const double* l, const double* m);
 
         /// Extract data from the data hash.
         void _checkDataBlobs(AntennaPositions* antPos,

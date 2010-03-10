@@ -51,6 +51,8 @@ class AdapterLofarStationVisibilities : public AbstractStreamAdapter
         void _updateDimensions();
 
     private:
+        double _timeStart;      ///< Start time (Julian Day, UT1).
+        double _timeDelta;      ///< Time delta (seconds).
         unsigned _nAnt;         ///< Number of antennas in the chunk
         unsigned _nChan;        ///< Number of channels in the chunk
         unsigned _nPol;         ///< Number of polarisations in the chunk

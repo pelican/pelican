@@ -44,7 +44,7 @@ TestPipeline::~TestPipeline()
 void TestPipeline::init()
 {
     EmptyModule* testmodule = static_cast<EmptyModule*>(createModule("Empty"));
-    testmodule->setDataRequirements(_data);
+//    testmodule->setDataRequirements(_data);
 }
 
 /**
