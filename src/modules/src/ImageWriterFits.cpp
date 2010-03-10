@@ -66,11 +66,6 @@ void ImageWriterFits::run(QHash<QString, DataBlob*>& data)
     // Write the FITS header.
     _writeHeader();
 
-    // Write a frequency table (needed for image cubes)
-    if (nChan > 1) {
-        _writeFrequencyTable(_image->channels());
-    }
-
     // Loop over channels and polarisations in the image data writing
     // planes of the FITS image.
     for (unsigned c = 0; c < nChan; c++) {
@@ -78,6 +73,11 @@ void ImageWriterFits::run(QHash<QString, DataBlob*>& data)
             real_t* image = _image->ptr(c, p);
             _writeImage(image, nL, nM, c, p);
         }
+    }
+
+    // Write a frequency table (needed for image cubes)
+    if (nChan > 1) {
+        _writeFrequencyTable(_image->channels());
     }
 
     // Close the FITS file handle.
@@ -307,22 +307,20 @@ void ImageWriterFits::_writeFrequencyTable(const std::vector<unsigned>& channels
     int status = 0;
     int tfields = 1;
     char *ttype[] = { (char*)"channels" };
-    char *tform[] = { (char*)"I6" };
+    // 4 wide so channel indices have to be in the range 0 - 9999
+    char *tform[] = { (char*)"I4" }; 
 
     ffcrtb(_fits, ASCII_TBL, initRows, tfields, ttype, tform, tunit, extname,
             &status);
-
     if (status)
             throw QString("ImageWriterFits: Unable to create frequency table.");
 
     long nRows = channels.size();
     unsigned* c = const_cast<unsigned*>(&channels[0]);
-    ffpcl(_fits, TINT, 1, 1, 1, nRows, c, &status);
+    ffpcl(_fits, TUINT, 1, 1, 1, nRows, c, &status);
 
     if (status)
         throw QString("ImageWriterFits: Unable to create frequency table.");
-
-
 }
 
 

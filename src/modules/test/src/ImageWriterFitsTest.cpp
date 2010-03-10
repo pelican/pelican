@@ -98,6 +98,8 @@ void ImageWriterFitsTest::test_createCube()
     unsigned nChan = 2;
     unsigned nPol = 2;
     std::vector<unsigned> channels(2);
+    channels[0] = 0;
+    channels[1] = 1;
     ImageData image(nL, nM, channels, ImageData::POL_BOTH);
     real_t* amp = image.ptr();
     unsigned nPixelsPerPol = nM * nL;
@@ -129,6 +131,7 @@ void ImageWriterFitsTest::test_createCube()
     fits._writeImage(image.ptr(0, 1), nL, nL, 0, 1);
     fits._writeImage(image.ptr(1, 0), nL, nL, 1, 0);
     fits._writeImage(image.ptr(1, 1), nL, nL, 1, 1);
+    fits._writeFrequencyTable(channels);
     TIMER_STOP("ImageWriterFitsTest::test_createCube()");
     fits._close();
 }
