@@ -31,6 +31,7 @@ class AdapterFactory;
  */
 class PipelineDriver
 {
+    private:
         friend class PipelineDriverTest;
 
     private: /* Data */
@@ -46,13 +47,10 @@ class PipelineDriver
         /// Pointer to the module factory.
         DataClientFactory* _clientFactory;
 
-        /// All remote data required by all pipelines.
-        DataRequirements _reqDataAll;
-
         /// Hash of pipelines with known remote data requirements.
         QMultiHash<DataRequirements, AbstractPipeline*> _pipelines;
 
-        /// list of all requirements objects form each pipeline
+        /// List of all requirements objects from each pipeline.
         QList<DataRequirements> _allDataRequirements;
 
         /// List of registered pipelines owned by the driver.
@@ -90,7 +88,7 @@ class PipelineDriver
         /// Starts the data flow through the pipelines.
         void start();
 
-        /// return the dataRequirements lists for each pipeline
+        /// Return the data requirements list for each pipeline.
         const QList<DataRequirements>& dataRequirements() const;
 
         /// Stops the data flow through the pipelines.
@@ -98,7 +96,7 @@ class PipelineDriver
 
     private:
         /// Creates all the data blobs required by the pipeline.
-        void _createDataBlobs(const DataRequirements&);
+        void _createDataBlobs();
 
         /// Creates the data client.
         void _createDataClient(QString name);
