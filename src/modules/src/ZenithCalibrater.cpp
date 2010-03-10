@@ -226,7 +226,6 @@ void ZenithCalibrater::_calibrate(const unsigned nAnt,
  * @param[out] gains            Complex antenna gains produced by the calibration.
  *
  * TODO:
- *  = Fix taking conj of real vectors...
  *  = Better checking on info return by zheev()?
  *  = Optimise use of temp arrays
  */
@@ -255,8 +254,8 @@ void ZenithCalibrater::_computeComplexGains(
     for (unsigned j = 0; j < nAnt; j++) {
         for (unsigned i = 0; i < nAnt; i++) {
             const unsigned index = i + j * nAnt;
-            modelVisTemp[index] *= conj(zs[j]) * zs[i]; // taking the conj of a double?
-            Vz[index] *= conj(zz[j]) * zz[i];    // (breaks with icc)
+            modelVisTemp[index] *= (zs[j] * zs[i]);
+            Vz[index] *= (zz[j] * zz[i]);
         }
     }
 
