@@ -36,7 +36,8 @@ class ZenithCalibrater : public AbstractModule
         ~ZenithCalibrater();
 
         /// Runs the module.
-        void run(QHash<QString, DataBlob*>& data);
+        void run(VisibilityData* rawVis, ModelVisibilityData* modelVis,
+                CorrectedVisibilityData* correctedVis);
 
     private:
         typedef enum { POL_X, POL_Y, POL_BOTH } pol_t;
@@ -70,7 +71,9 @@ class ZenithCalibrater : public AbstractModule
                 complex_t* matrix);
 
         /// Extract and check data blobs from the data hash
-        void _fetchDataBlobs(QHash<QString, DataBlob*>& data);
+        void _checkDataBlobs(VisibilityData* rawVis,
+                ModelVisibilityData* modelVis,
+                CorrectedVisibilityData* correctedVis);
 
         /// Grab configuration options from the config node
         void _getConfiguration(const ConfigNode& config);

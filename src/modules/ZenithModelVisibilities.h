@@ -39,7 +39,7 @@ class ZenithModelVisibilities : public AbstractModule
         ~ZenithModelVisibilities();
 
         /// Runs the module.
-        void run(QHash<QString, DataBlob*>& data);
+        void run(AntennaPositions* antPos, ModelVisibilityData* modelVis);
 
     private:
         typedef enum { POL_X, POL_Y, POL_BOTH } pol_t;
@@ -51,7 +51,8 @@ class ZenithModelVisibilities : public AbstractModule
                 const double frequency, const pol_t polarisation);
 
         /// Extract data from the data hash.
-        void _fetchDataBlobs(QHash<QString, DataBlob*>& data);
+        void _checkDataBlobs(AntennaPositions* antPos,
+                ModelVisibilityData* modelVis);
 
         /// Extract configuration from the XML node. setting some defaults.
         void _getConfiguration(const ConfigNode& config);

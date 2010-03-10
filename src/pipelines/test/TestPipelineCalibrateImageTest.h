@@ -1,10 +1,10 @@
-#ifndef TESTPIPELINEDIRTYIMAGETEST_H
-#define TESTPIPELINEDIRTYIMAGETEST_H
+#ifndef TESTPIPELINECALIBRATEIMAGETEST_H
+#define TESTPIPELINECALIBRATEIMAGETEST_H
 
 #include <cppunit/extensions/HelperMacros.h>
 
 /**
- * @file TestPipelineDirtyImageTest.h
+ * @file TestPipelineCalibrateImageTest.h
  */
 
 class QCoreApplication;
@@ -12,7 +12,7 @@ class QCoreApplication;
 namespace pelican {
 
 /**
- * @class TestPipelineDirtyImageTest
+ * @class TestPipelineCalibrateImageTest
  *
  * @brief
  *
@@ -20,10 +20,10 @@ namespace pelican {
  *
  */
 
-class TestPipelineDirtyImageTest : public CppUnit::TestFixture
+class TestPipelineCalibrateImageTest : public CppUnit::TestFixture
 {
     public:
-        CPPUNIT_TEST_SUITE( TestPipelineDirtyImageTest );
+        CPPUNIT_TEST_SUITE( TestPipelineCalibrateImageTest );
         CPPUNIT_TEST( test_method );
         CPPUNIT_TEST_SUITE_END();
 
@@ -35,12 +35,12 @@ class TestPipelineDirtyImageTest : public CppUnit::TestFixture
         void test_method();
 
     public:
-        TestPipelineDirtyImageTest();
-        ~TestPipelineDirtyImageTest();
+        TestPipelineCalibrateImageTest();
+        ~TestPipelineCalibrateImageTest();
 
     private:
         QCoreApplication *_app;
 };
 
 } // namespace pelican
-#endif // TESTPIPELINEDIRTYIMAGETEST_H
+#endif // TESTPIPELINECALIBRATEIMAGETEST_H

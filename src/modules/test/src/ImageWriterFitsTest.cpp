@@ -51,9 +51,9 @@ void ImageWriterFitsTest::test_openFile()
     ImageData image(128, 128, channels, ImageData::POL_BOTH);
     fits._image = &image;
     fits._open("testEmpty", 128, 128, 1, 1, true);
-    fits._writeHeader();
+    fits._writeHeader(&image);
     real_t* im = image.ptr();
-    fits._writeImage(im, 128, 128, 0, 0);
+    fits._writeImage(im, 128, 128, 0, 1, 0);
     fits._close();
 }
 
@@ -78,9 +78,9 @@ void ImageWriterFitsTest::test_createImage()
     fits._image = &image;
     TIMER_START
     fits._open("test", nL, nM, nChan, nPol, true);
-    fits._writeHeader();
+    fits._writeHeader(&image);
     real_t* im = image.ptr();
-    fits._writeImage(im, nL, nL, 0, 0);
+    fits._writeImage(im, nL, nL, 0, nPol,  0);
     TIMER_STOP("ImageWriterFitsTest::test_createImage()");
     fits._close();
 }
@@ -126,11 +126,11 @@ void ImageWriterFitsTest::test_createCube()
     fits._image = &image;
     TIMER_START
     fits._open("testCube", nL, nM, nChan, nPol, true);
-    fits._writeHeader();
-    fits._writeImage(image.ptr(0, 0), nL, nL, 0, 0);
-    fits._writeImage(image.ptr(0, 1), nL, nL, 0, 1);
-    fits._writeImage(image.ptr(1, 0), nL, nL, 1, 0);
-    fits._writeImage(image.ptr(1, 1), nL, nL, 1, 1);
+    fits._writeHeader(&image);
+    fits._writeImage(image.ptr(0, 0), nL, nL, 0, nPol, 0);
+    fits._writeImage(image.ptr(0, 1), nL, nL, 0, nPol, 1);
+    fits._writeImage(image.ptr(1, 0), nL, nL, 1, nPol, 0);
+    fits._writeImage(image.ptr(1, 1), nL, nL, 1, nPol, 1);
     fits._writeFrequencyTable(channels);
     TIMER_STOP("ImageWriterFitsTest::test_createCube()");
     fits._close();

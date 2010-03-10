@@ -3,7 +3,7 @@ SUBPACKAGE(pipelinesTest pipelines)
 set(pipelinesTest_src
     src/pipelinesTest.cpp
     src/TestPipelineVisibilityPrinterTest.cpp
-    src/TestPipelineDirtyImageTest.cpp
+    src/TestPipelineCalibrateImageTest.cpp
     src/TestPipelineMultipleImagesTest.cpp
 )
 
@@ -12,9 +12,9 @@ set(TestPipelineVisibilityPrinter_src
     src/TestPipelineVisibilityPrinterTest.cpp
 )
 
-set(TestPipelineDirtyImage_src
+set(TestPipelineCalibrateImage_src
     src/pipelinesTest.cpp
-    src/TestPipelineDirtyImageTest.cpp
+    src/TestPipelineCalibrateImageTest.cpp
 )
 
 set( TestPipelineMultipleImages_src
@@ -28,8 +28,8 @@ target_link_libraries(pipelinesTest ${SUBPACKAGE_LIBRARIES} ${CPPUNIT_LIBRARIES}
 add_executable(testPipelineVisibilityPrinter ${TestPipelineVisibilityPrinter_src})
 target_link_libraries(testPipelineVisibilityPrinter ${SUBPACKAGE_LIBRARIES} ${CPPUNIT_LIBRARIES} memoryTracer)
 
-add_executable(testPipelineDirtyImage ${TestPipelineDirtyImage_src})
-target_link_libraries(testPipelineDirtyImage ${SUBPACKAGE_LIBRARIES} ${CPPUNIT_LIBRARIES} memoryTracer)
+add_executable(testPipelineCalibrateImage ${TestPipelineCalibrateImage_src})
+target_link_libraries(testPipelineCalibrateImage ${SUBPACKAGE_LIBRARIES} ${CPPUNIT_LIBRARIES} memoryTracer)
 
 add_executable(testPipelineMultipleImages ${TestPipelineMultipleImages_src})
 target_link_libraries(testPipelineMultipleImages ${SUBPACKAGE_LIBRARIES} ${CPPUNIT_LIBRARIES} memoryTracer)

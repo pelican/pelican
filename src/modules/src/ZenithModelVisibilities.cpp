@@ -24,14 +24,6 @@ namespace pelican {
 ZenithModelVisibilities::ZenithModelVisibilities(const ConfigNode& config)
     : AbstractModule(config)
 {
-    // Register data requirement for model visibility generator.
-    addGeneratedData("ModelVisibilityData");
-    addServiceData("AntennaPositions");
-
-    // Initialise local pointers.
-    _modelVis = NULL;
-    _antPos = NULL;
-
     // Create astrometry module.
     _astrometry = new AstrometryFast;
 
@@ -62,13 +54,14 @@ ZenithModelVisibilities::~ZenithModelVisibilities()
  * frequency and assumed an ideal antenna model with antenna of unit collecting
  * area/gain.
  */
-void ZenithModelVisibilities::run(QHash<QString, DataBlob*>& data)
+void ZenithModelVisibilities::run(AntennaPositions* antPos,
+        ModelVisibilityData* modelVis)
 {
     // Fetch and check the required data blobs from the data hash.
-    _fetchDataBlobs(data);
+    _checkDataBlobs(antPos, modelVis);
 
     // Dimensions for model visibility set.
-    unsigned nAnt = _antPos->nAntennas();
+    unsigned nAnt = antPos->nAntennas();
     unsigned nChanModel = _channels.size();
     unsigned nPolModel = _polarisation == POL_BOTH ? 2 : 1;
 
@@ -87,8 +80,8 @@ void ZenithModelVisibilities::run(QHash<QString, DataBlob*>& data)
             iPol = (nPolModel == 1 && _polarisation == POL_X) ? 0 : 1;
             pol_t pol = (iPol == 0) ? POL_X : POL_Y;
 
-            _calculateModelVis(_modelVis->ptr(c, iPol), nAnt, _antPos->xPtr(),
-                    _antPos->yPtr(), &_sources[0], _sources.size(), frequency,
+            _calculateModelVis(modelVis->ptr(c, iPol), nAnt, antPos->xPtr(),
+                    antPos->yPtr(), &_sources[0], _sources.size(), frequency,
                     pol);
         }
     }
@@ -182,19 +175,16 @@ void ZenithModelVisibilities::_calculateModelVis(complex_t* vis,
  *
  * @param[in] data  Hash of data blobs.
  */
-void ZenithModelVisibilities::_fetchDataBlobs(QHash<QString, DataBlob*>& data)
+void ZenithModelVisibilities::_checkDataBlobs(AntennaPositions* antPos,
+        ModelVisibilityData* modelVis)
 {
-    // Fetch model visibilities data blob from the hash and checks its assigned.
-    _modelVis = static_cast<ModelVisibilityData*>(data["ModelVisibilityData"]);
-    _antPos = static_cast<AntennaPositions*>(data["AntennaPositions"]);
-
-    if (!_modelVis)
-        throw QString("ZenithModelVisibilities: ModelVisibilityData blob missing.");
-    if (!_antPos)
+    if (!antPos)
         throw QString("ZenithModelVisibilities: AntennaPositions blob missing.");
+    if (!modelVis)
+        throw QString("ZenithModelVisibilities: ModelVisibilityData blob missing.");
 
     // Dimensions of the model.
-    unsigned nAnt = _antPos->nAntennas();
+    unsigned nAnt = antPos->nAntennas();
     unsigned nChanModel = _channels.size();
     unsigned nPolModel = _polarisation == POL_BOTH ? 2 : 1;
 
@@ -205,10 +195,10 @@ void ZenithModelVisibilities::_fetchDataBlobs(QHash<QString, DataBlob*>& data)
         throw QString("ZenithModelVisibilities: No channels selected");
 
     // Resize the model visibilities.
-    _modelVis->resize(nAnt, nChanModel, nPolModel);
+    modelVis->resize(nAnt, nChanModel, nPolModel);
 
     // Copy the source list into the model visibility data blob.
-    _modelVis->sources() = _sources;
+    modelVis->sources() = _sources;
 }
 
 

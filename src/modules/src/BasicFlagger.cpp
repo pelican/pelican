@@ -14,10 +14,6 @@ namespace pelican {
 BasicFlagger::BasicFlagger(const ConfigNode& config)
     : AbstractModule(config)
 {
-    /* Set data requirements */
-    addStreamData("VisibilityData");
-    addGeneratedData("FlagTable");
-
     /* Get clipping levels */
     _minLevelMedian = config.getOption("min_level_median", "value", "0.25").toDouble();
     _maxLevelMedian = config.getOption("max_level_median", "value", "4.00").toDouble();
@@ -39,15 +35,11 @@ BasicFlagger::~BasicFlagger()
  *                     module. The module updates the contents of the data
  *                     blobs in the hash as required.
  */
-void BasicFlagger::run(QHash<QString, DataBlob*>& data)
+void BasicFlagger::run(VisibilityData* visibilityData, FlagTable* flagTable)
 {
-    /* Get a pointer to the visibility data */
-    VisibilityData *visibilityData = static_cast<VisibilityData*>(data.value("VisibilityData"));
     if (!visibilityData)
         throw QString("Visibility data not present.");
 
-    /* Get a pointer to the flag table */
-    FlagTable *flagTable = static_cast<FlagTable*>(data.value("FlagTable"));
     if (!flagTable)
         throw QString("Flag table not present.");
 

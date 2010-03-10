@@ -10,7 +10,7 @@
 namespace pelican {
 
 CPPUNIT_TEST_SUITE_REGISTRATION( BasicFlaggerTest );
-// class BasicFlaggerTest 
+// class BasicFlaggerTest
 BasicFlaggerTest::BasicFlaggerTest()
     : CppUnit::TestFixture()
 {
@@ -51,28 +51,16 @@ void BasicFlaggerTest::test_run_noData()
     // Pass an empty data blob hash.
     // Expect an exception.
     {
-        QHash<QString, DataBlob*> emptyData;
-        CPPUNIT_ASSERT_THROW(_basicFlagger->run(emptyData), QString);
-    }
-
-    // Use Case
-    // Pass a data blob hash containing no visibility data.
-    // Expect an exception.
-    {
-        QHash<QString, DataBlob*> data;
-        DataBlob blob;
-        data.insert("EmptyBlob", &blob);
-        CPPUNIT_ASSERT_THROW(_basicFlagger->run(data), QString);
+        CPPUNIT_ASSERT_THROW(_basicFlagger->run(NULL, NULL), QString);
     }
 
     // Use Case
     // Pass a data blob hash containing empty visibility data.
     // Expect an exception.
     {
-        QHash<QString, DataBlob*> data;
-        VisibilityData blob;
-        data.insert("VisibilityData", &blob);
-        CPPUNIT_ASSERT_THROW(_basicFlagger->run(data), QString);
+        VisibilityData vis;
+        FlagTable flagTable;
+        CPPUNIT_ASSERT_THROW(_basicFlagger->run(&vis, &flagTable), QString);
     }
 }
 
@@ -91,11 +79,7 @@ void BasicFlaggerTest::test_run_withData()
     VisibilityData visData(nAntennas, nChannels, nPols);
     FlagTable flagTable(nAntennas, nChannels, nPols);
 
-    QHash<QString, DataBlob*> data;
-    data.insert("VisibilityData", &visData);
-    data.insert("FlagTable", &flagTable);
-
-    CPPUNIT_ASSERT_NO_THROW(_basicFlagger->run(data));
+    CPPUNIT_ASSERT_NO_THROW(_basicFlagger->run(&visData, &flagTable));
 }
 
 /**

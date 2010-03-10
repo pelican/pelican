@@ -30,6 +30,8 @@ void TestPipelineVisibilityPrinter::init()
 {
     setName("TestPipelineVisibilityPrinter");
     _visPrinter = static_cast<VisibilityPrinter*>(createModule("VisibilityPrinter"));
+
+    requireRemoteData("VisibilityData");
 }
 
 
@@ -37,9 +39,10 @@ void TestPipelineVisibilityPrinter::init()
 /**
  * @details
  */
-void TestPipelineVisibilityPrinter::run(QHash<QString, DataBlob*>& data)
+void TestPipelineVisibilityPrinter::run(QHash<QString, DataBlob*>& remoteData)
 {
-    _visPrinter->run(data);
+    _vis = static_cast<VisibilityData*>(remoteData["VisibilityData"]);
+    _visPrinter->run(_vis);
 
     /* Stop the pipeline driver */
     stop();

@@ -39,7 +39,7 @@ class ImageWriterFits : public AbstractModule
         ~ImageWriterFits();
 
         /// Runs the module.
-        void run(QHash<QString, DataBlob*>& data);
+        void run(ImageData* image);
 
     public:
         /// Returns a reference to the image output directory.
@@ -67,14 +67,14 @@ class ImageWriterFits : public AbstractModule
         void _close();
 
         /// Write a FITS image header.
-        void _writeHeader();
+        void _writeHeader(ImageData* image);
 
         /// Write a frequency table extension.
         void _writeFrequencyTable(const std::vector<unsigned>& channels);
 
         /// Write a FITS image.
         void _writeImage(real_t* image, const unsigned nL, const unsigned nM,
-                const unsigned chan, const unsigned pol);
+                const unsigned chan, const unsigned nPol, const unsigned pol);
 
         /// Returns the system date and time as UTC.
         QString _getDate() const;

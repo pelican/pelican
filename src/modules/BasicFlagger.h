@@ -15,10 +15,10 @@ namespace pelican {
 
 /**
  * @class BasicFlagger
- *  
+ *
  * @brief
  * Provides basic flagging routines for visibility data.
- * 
+ *
  * @details
  * The BasicFlagger module
  */
@@ -42,11 +42,11 @@ class BasicFlagger : public AbstractModule
         ~BasicFlagger();
 
         /// Runs the module.
-        void run(QHash<QString, DataBlob*>& data);
+        void run(VisibilityData* visibilityData, FlagTable* flagTable);
 
     private:
         /// Flags the autocorrelations.
-        void _flagAutocorrelations (
+        void _flagAutocorrelations(
                 const VisibilityData* visData,
                 const complex_t* medians,
                 const real_t minFraction,
@@ -55,10 +55,11 @@ class BasicFlagger : public AbstractModule
         );
 
         /// Gets the autocorrelations.
-        void _getAutocorrelations(const VisibilityData* visData, complex_t* aptr);
+        void _getAutocorrelations(const VisibilityData* visData,
+                complex_t* aptr);
 
         /// Determines the median autocorrelation values.
-        void _getMedians (
+        void _getMedians(
                 const unsigned nAntennas,
                 const unsigned nChannels,
                 const unsigned nPols,
@@ -67,14 +68,11 @@ class BasicFlagger : public AbstractModule
         );
 
         /// Moves bad antennas to the end of the visibility matrix.
-        void _moveBadAntennas (
-                VisibilityData* visData,
-                FlagTable* flagTable
-        );
+        void _moveBadAntennas(VisibilityData* visData, FlagTable* flagTable);
 };
 
 bool complexCompareAbs(complex_t i, complex_t j);
 
 } // namespace pelican
 
-#endif // BASICFLAGGER_H 
+#endif // BASICFLAGGER_H

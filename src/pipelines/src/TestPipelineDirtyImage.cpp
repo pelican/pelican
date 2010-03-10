@@ -1,8 +1,14 @@
-#include "TestPipelineDirtyImage.h"
+#include "TestPipelineCalibrateImage.h"
 #include "modules/ZenithImagerDft.h"
 #include "modules/ImageWriterFits.h"
 #include "modules/ZenithModelVisibilities.h"
 #include "modules/ZenithCalibrater.h"
+#include "data/AntennaPositions.h"
+#include "data/ModelVisibilityData.h"
+#include "data/VisibilityData.h"
+#include "data/CorrectedVisibilityData.h"
+#include "data/ImageData.h"
+
 #include <iostream>
 
 #include "utility/memCheck.h"
@@ -13,7 +19,7 @@ namespace pelican {
 /**
  * @details
  */
-TestPipelineDirtyImage::TestPipelineDirtyImage()
+TestPipelineCalibrateImage::TestPipelineCalibrateImage()
     : AbstractPipeline()
 {
 }
@@ -22,7 +28,7 @@ TestPipelineDirtyImage::TestPipelineDirtyImage()
 /**
  * @details
  */
-TestPipelineDirtyImage::~TestPipelineDirtyImage()
+TestPipelineCalibrateImage::~TestPipelineCalibrateImage()
 {
 }
 
@@ -30,26 +36,40 @@ TestPipelineDirtyImage::~TestPipelineDirtyImage()
 /**
  * @details
  */
-void TestPipelineDirtyImage::init()
+void TestPipelineCalibrateImage::init()
 {
     setName("TestPipelineDirtyImage");
     _imager = static_cast<ZenithImagerDft*>(createModule("ZenithImagerDft"));
     _fitsWriter = static_cast<ImageWriterFits*>(createModule("ImageWriterFits"));
-    _modelVis = static_cast<ZenithModelVisibilities*>(createModule("ZenithModelVisibilities"));
+    _modelGen = static_cast<ZenithModelVisibilities*>(createModule("ZenithModelVisibilities"));
     _calibrate = static_cast<ZenithCalibrater*>(createModule("ZenithCalibrater"));
+
+    // Requests for remote data to be inserted in the data hash.
+    requireRemoteData("AntennaPositions");
+    requireRemoteData("VisibilityData");
+
+    _image = new ImageData;
+    _modelVis = new ModelVisibilityData;
+    _correctedVis = new CorrectedVisibilityData;
 }
 
 
 /**
  * @details
  */
-void TestPipelineDirtyImage::run(QHash<QString, DataBlob*>& data)
+void TestPipelineCalibrateImage::run(QHash<QString, DataBlob*>& remoteData)
 {
-    std::cout << "TestPipelineDirtyImage::run()\n";
-    _modelVis->run(data);
-    _calibrate->run(data);
-    _imager->run(data);
-    _fitsWriter->run(data);
+    _antPos = static_cast<AntennaPositions*>(remoteData["AntennaPositions"]);
+    _rawVis = static_cast<VisibilityData*>(remoteData["VisibilityData"]);
+
+    _modelVis->setTimeStamp(_rawVis->timeStamp());
+    _modelGen->run(_antPos, _modelVis);
+
+    _calibrate->run(_rawVis, _modelVis, _correctedVis);
+
+    _imager->run(_correctedVis, _antPos, _image);
+    _fitsWriter->run(_image);
+
     stop();
 }
 

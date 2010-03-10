@@ -37,16 +37,6 @@ void zheev_(const char* jobz, const char* uplo, int* n, complex_t* A, int* lda,
 ZenithCalibrater::ZenithCalibrater(const ConfigNode& config)
     : AbstractModule(config)
 {
-    // Initialise data blob pointers.
-    _rawVis = NULL;
-    _modelVis = NULL;
-    _correctedVis = NULL;
-
-    // Request the data blobs.
-    addStreamData("VisibilityData");
-    addGeneratedData("ModelVisibilityData");
-    addGeneratedData("CorrectedVisibilityData");
-
     // Retrieve configuration options from the XML node.
     _getConfiguration(config);
 }
@@ -65,10 +55,15 @@ ZenithCalibrater::~ZenithCalibrater()
  * @details
  * Runs the calibration module using the supplied hash of data blobs.
  */
-void ZenithCalibrater::run(QHash<QString, DataBlob*>& data)
+void ZenithCalibrater::run(VisibilityData* _rawVis,
+        ModelVisibilityData* _modelVis, CorrectedVisibilityData* _correctedVis)
 {
     // Extract and check data blobs from the hash.
-    _fetchDataBlobs(data);
+    _checkDataBlobs(_rawVis, _modelVis, _correctedVis);
+
+    // Resize corrected visibilities.
+    _correctedVis->resize(_rawVis->nAntennas(), _rawVis->nChannels(),
+            _rawVis->nPolarisations());
 
     /// Data dimensions.
     unsigned nAnt = _rawVis->nAntennas();
@@ -343,28 +338,22 @@ void ZenithCalibrater::_setDiagonals(const unsigned size,
 /**
  * @details
  */
-void ZenithCalibrater::_fetchDataBlobs(QHash<QString, DataBlob*>& data)
+void ZenithCalibrater::_checkDataBlobs(VisibilityData* rawVis,
+        ModelVisibilityData* modelVis,
+        CorrectedVisibilityData* correctedVis)
 {
-    _rawVis = static_cast<VisibilityData*>(data["VisibilityData"]);
-    _modelVis = static_cast<ModelVisibilityData*>(data["ModelVisibilityData"]);
-    _correctedVis = static_cast<CorrectedVisibilityData*>(data["CorrectedVisibilityData"]);
-
-    if (!_rawVis)
+    if (!rawVis)
         throw QString("ZenithCalibrater: VisibilityData blob missing.");
-    if (!_modelVis)
+    if (!modelVis)
         throw QString("ZenithCalibrater: ModelVisibilityData blob missing.");
-    if (!_correctedVis)
+    if (!correctedVis)
         throw QString("ZenithCalibrater: CorrectedVisibilityData blob missing.");
 
-    if (_rawVis->nEntries() == 0)
+    if (rawVis->nEntries() == 0)
         throw QString("ZenithCalibrater: Visibility data empty.");
 
     if (_channels.size() == 0)
             throw QString("ZenithCalibrater: No channels selected.");
-
-    // Resize corrected visibilities.
-    _correctedVis->resize(_rawVis->nAntennas(), _rawVis->nChannels(),
-            _rawVis->nPolarisations());
 }
 
 

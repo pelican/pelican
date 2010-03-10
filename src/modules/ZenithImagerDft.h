@@ -61,7 +61,8 @@ class ZenithImagerDft : public AbstractModule
         void setFullSky();
 
         /// Runs the module.
-        void run(QHash<QString, DataBlob*>& data);
+        void run(VisibilityData* vis, AntennaPositions* antPos,
+                ImageData* image);
 
     private:
         /// Extract the configuration from the XML node setting default where required.
@@ -70,9 +71,6 @@ class ZenithImagerDft : public AbstractModule
         /// Generates an array of image coordinates in radians.
         void _calculateImageCoords(const double cellsize, const unsigned nPixels,
                 real_t* coords);
-
-        /// Fetches data blob pointers from the blob hash.
-        void _fetchDataBlobs(QHash<QString, DataBlob*>& data);
 
         /// Calculate DFT weights for imaging.
         void _calculateWeights(const unsigned nAnt, real_t* antPos,
