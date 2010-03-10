@@ -9,10 +9,10 @@
 
 /**
  * @class VisibilityDataTest
- *  
+ *
  * @brief
  * Unit testing class for the visibility data blob.
- * 
+ *
  * @details
  * Performs unit tests on the visibility data blob object
  * using the CppUnit framework.
@@ -23,7 +23,7 @@ class VisibilityDataTest : public CppUnit::TestFixture
 {
     public:
         CPPUNIT_TEST_SUITE( VisibilityDataTest );
-        CPPUNIT_TEST( test_accessorMethodsIndexed );
+        CPPUNIT_TEST( test_accessorMethods );
         CPPUNIT_TEST( test_accessorMethodsLinear );
         CPPUNIT_TEST( test_emptyBlob );
         CPPUNIT_TEST( test_resize );
@@ -37,7 +37,7 @@ class VisibilityDataTest : public CppUnit::TestFixture
 
         // Test Methods
         /// Test indexed accessor methods for 2D visibility data blob.
-        void test_accessorMethodsIndexed();
+        void test_accessorMethods();
 
         /// Test linear accessor methods for 2D visibility data blob.
         void test_accessorMethodsLinear();

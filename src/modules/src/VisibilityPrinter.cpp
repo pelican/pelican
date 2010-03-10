@@ -46,9 +46,10 @@ void VisibilityPrinter::run(VisibilityData* vis)
     unsigned nPol = vis->nPolarisations();
     for (unsigned p = 0; p < nPol; p++) {
         for (unsigned c = 0; c < nChan; c++) {
+            complex_t* ptr = vis->ptr(c, p);
             for (unsigned j = 0; j < nAnt; j++) {
                 for (unsigned i = 0; i < nAnt; i++) {
-                    std::cout << "VisData: " << (*vis)(i, j, c, p) << std::endl;
+                    std::cout << "VisData: " << ptr[i + j * nAnt] << std::endl;
                 }
             }
         }

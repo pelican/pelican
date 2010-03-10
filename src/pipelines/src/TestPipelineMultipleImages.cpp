@@ -26,6 +26,9 @@ TestPipelineMultipleImages::TestPipelineMultipleImages()
  */
 TestPipelineMultipleImages::~TestPipelineMultipleImages()
 {
+    delete _imageA;
+    delete _imageB;
+    delete _modelVis;
 }
 
 
@@ -42,7 +45,7 @@ void TestPipelineMultipleImages::init()
     _fitsWriterA = static_cast<ImageWriterFits*>(createModule("ImageWriterFits", "a"));
     _fitsWriterB = static_cast<ImageWriterFits*>(createModule("ImageWriterFits", "b"));
 
-    requireRemoteData("AntennaPositions");
+    requestRemoteData("AntennaPositions");
 
     _modelVis = new ModelVisibilityData;
     _imageA = new ImageData;
@@ -60,8 +63,8 @@ void TestPipelineMultipleImages::run(QHash<QString, DataBlob*>& remoteData)
 
     _visModel->run(_antPos, _modelVis);
 
-    _imagerA->run(_modelVis, _antPos, _imageA);
-    _imagerB->run(_modelVis, _antPos, _imageB);
+    _imagerA->run(_imageA, _antPos, _modelVis);
+    _imagerB->run(_imageB, _antPos);
 
     _fitsWriterA->run(_imageA);
     _fitsWriterB->run(_imageB);

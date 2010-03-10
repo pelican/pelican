@@ -224,7 +224,7 @@ void ImageWriterFits::_writeHeader(ImageData* image)
     _writeKey("BZERO", bzero);
     if (image->coordType() == ImageData::COORD_J2000)
         _writeKey("EQUINOX", "2000");
-    _writeKey("BUNIT", _image->ampUnits(), "Units of flux");
+    _writeKey("BUNIT", image->ampUnits(), "Units of flux");
 
     // Amplitude range (only valid if not an image cube).
     if (image->nChannels() == 1 && image->nPolarisations() == 1) {
@@ -288,10 +288,6 @@ void ImageWriterFits::_writeFrequencyTable(const std::vector<unsigned>& channels
     // Throw if the CFITSIO file handle isn't open.
     if (_fits == NULL)
         throw QString("ImageWriterFits: Fits file handle not open.");
-
-    // Throw if there is no image data.
-    if (_image == NULL)
-        throw QString("ImageWriterFits: Image data array missing.");
 
     // The naxis2 parameter gives the initial number of rows to be created in
     // the table, and should normally be set = 0. CFITSIO will automatically

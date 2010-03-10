@@ -27,7 +27,8 @@ BasicFlaggerTest::~BasicFlaggerTest()
 void BasicFlaggerTest::setUp()
 {
     /* Create a new module with empty configuration before each test */
-    _basicFlagger = new BasicFlagger(QDomElement());
+    ConfigNode config;
+    _basicFlagger = new BasicFlagger(config);
 }
 
 /**
@@ -48,7 +49,7 @@ void BasicFlaggerTest::tearDown()
 void BasicFlaggerTest::test_run_noData()
 {
     // Use Case
-    // Pass an empty data blob hash.
+    // Pass null data blobs.
     // Expect an exception.
     {
         CPPUNIT_ASSERT_THROW(_basicFlagger->run(NULL, NULL), QString);
@@ -75,12 +76,12 @@ void BasicFlaggerTest::test_run_withData()
     // Create a set of test visibility data and pass it to the module.
     const unsigned nAntennas = 96;
     const unsigned nChannels = 512;
-    const unsigned nPols = 2;
-    VisibilityData visData(nAntennas, nChannels, nPols);
-    FlagTable flagTable(nAntennas, nChannels, nPols);
-
+    std::vector<unsigned> channels(nChannels);
+    VisibilityData visData(nAntennas, channels, VisibilityData::POL_BOTH);
+    FlagTable flagTable(nAntennas, channels, FlagTable::POL_BOTH);
     CPPUNIT_ASSERT_NO_THROW(_basicFlagger->run(&visData, &flagTable));
 }
+
 
 /**
  * @details
@@ -96,20 +97,22 @@ void BasicFlaggerTest::test__flagAutocorrelations()
     const unsigned nPols = 2;
     const real_t minFraction = 0.25;
     const real_t maxFraction = 1.25;
-    VisibilityData visData(nAntennas, nChannels, nPols);
-    FlagTable flagTable(nAntennas, nChannels, nPols);
+    std::vector<unsigned> channels(nChannels);
+    VisibilityData visData(nAntennas, channels, VisibilityData::POL_BOTH);
+    FlagTable flagTable(nAntennas, channels, FlagTable::POL_BOTH);
     std::vector<complex_t> medians(nChannels * nPols);
 
     // Fill the visibility matrix
     for (unsigned p = 0; p < nPols; p++) {
         for (unsigned c = 0; c < nChannels; c++) {
+            complex_t* vis = visData.ptr(c, p);
             for (unsigned aj = 0; aj < nAntennas; aj++) {
                 for (unsigned ai = 0; ai < nAntennas; ai++) {
                     std::complex<real_t> val( sqrt((ai+1)*(aj+1)) );
-                    visData(ai, aj, c, p) = val;
+                    vis[ai + aj * nAntennas] = val;
                 }
             }
-            medians[c + p * nChannels] = visData(nAntennas/2, nAntennas/2, c, p);
+            medians[c + p * nChannels] = vis[nAntennas/2 + nAntennas/2 * nAntennas];
         }
     }
 
@@ -133,16 +136,18 @@ void BasicFlaggerTest::test__getAutocorrelations()
     const unsigned nAntennas = 96;
     const unsigned nChannels = 512;
     const unsigned nPols = 2;
-    VisibilityData visData(nAntennas, nChannels, nPols);
+    std::vector<unsigned> channels(nChannels);
+    VisibilityData visData(nAntennas, channels, VisibilityData::POL_BOTH);
     std::vector<complex_t> autocorr(nAntennas * nChannels * nPols);
 
     // Fill the visibility matrix
     for (unsigned p = 0; p < nPols; p++) {
         for (unsigned c = 0; c < nChannels; c++) {
+            complex_t* vis = visData.ptr(c, p);
             for (unsigned aj = 0; aj < nAntennas; aj++) {
                 for (unsigned ai = 0; ai < nAntennas; ai++) {
                     std::complex<real_t> val( (ai+1)*(aj+1) );
-                    visData(ai, aj, c, p) = val;
+                    vis[ai + aj * nAntennas] = val;
                 }
             }
         }
@@ -227,20 +232,22 @@ void BasicFlaggerTest::test__moveBadAntennas()
     const unsigned nPols = 2;
     const real_t minFraction = 0.5;
     const real_t maxFraction = 1.5;
-    VisibilityData visData(nAntennas, nChannels, nPols);
-    FlagTable flagTable(nAntennas, nChannels, nPols);
+    std::vector<unsigned> channels(nChannels);
+    VisibilityData visData(nAntennas, channels, VisibilityData::POL_BOTH);
+    FlagTable flagTable(nAntennas, channels, FlagTable::POL_BOTH);
     std::vector<complex_t> medians(nChannels * nPols);
 
     // Fill the visibility matrix
     for (unsigned p = 0; p < nPols; p++) {
         for (unsigned c = 0; c < nChannels; c++) {
+            complex_t* vis = visData.ptr(c, p);
             for (unsigned aj = 0; aj < nAntennas; aj++) {
                 for (unsigned ai = 0; ai < nAntennas; ai++) {
                     std::complex<real_t> val( sqrt((ai+1)*(aj+1)) );
-                    visData(ai, aj, c, p) = val;
+                    vis[ai + aj * nAntennas] = val;
                 }
             }
-            medians[c + p * nChannels] = visData(nAntennas/2, nAntennas/2, c, p);
+            medians[c + p * nChannels] = vis[nAntennas/2 + nAntennas/2 * nAntennas];
         }
     }
 

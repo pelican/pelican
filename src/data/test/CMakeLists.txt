@@ -5,7 +5,6 @@ set(
    src/DataRequirementsTest.cpp
    src/ImageDataTest.cpp
    src/VisibilityDataTest.cpp
-   src/AntennaGainsTest.cpp
    src/FlagTableTest.cpp
    src/VisibilityPositionsTest.cpp
    src/AntennaPositionsTest.cpp

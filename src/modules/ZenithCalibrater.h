@@ -7,6 +7,7 @@
 
 #include "modules/AbstractModule.h"
 #include "data/Source.h"
+#include "data/CorrectedVisibilityData.h"
 #include <vector>
 
 
@@ -15,7 +16,6 @@ namespace pelican {
 class ConfigNode;
 class VisibilityData;
 class ModelVisibilityData;
-class CorrectedVisibilityData;
 
 /**
  * @class ZenithCalibrater
@@ -40,8 +40,6 @@ class ZenithCalibrater : public AbstractModule
                 CorrectedVisibilityData* correctedVis);
 
     private:
-        typedef enum { POL_X, POL_Y, POL_BOTH } pol_t;
-
         /// Calibration loop.
         void _calibrate(const unsigned nAnt, const unsigned nEigenvaluesUsed,
                 const unsigned nIterations, const double tolerance, int lWork,
@@ -79,16 +77,12 @@ class ZenithCalibrater : public AbstractModule
         void _getConfiguration(const ConfigNode& config);
 
     private:
-        VisibilityData* _rawVis;
-        ModelVisibilityData* _modelVis;
-        CorrectedVisibilityData* _correctedVis;
-
         unsigned _nEigenvaluesUsed;
         double _tolerance;
         unsigned _nIterations;
 
         std::vector<unsigned> _channels;
-        pol_t _polarisation;
+        CorrectedVisibilityData::pol_t _polarisation;
 
         int _freqRefChannel;                ///< Frequency reference channel
         double _freqRef;                    ///< Reference frequency

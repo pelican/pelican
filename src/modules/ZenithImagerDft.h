@@ -61,8 +61,8 @@ class ZenithImagerDft : public AbstractModule
         void setFullSky();
 
         /// Runs the module.
-        void run(VisibilityData* vis, AntennaPositions* antPos,
-                ImageData* image);
+        void run(ImageData* image, AntennaPositions* antPos,
+                VisibilityData* vis = NULL);
 
     private:
         /// Extract the configuration from the XML node setting default where required.
@@ -105,14 +105,11 @@ class ZenithImagerDft : public AbstractModule
         void _setPsfVisibilties(complex_t* vis, const unsigned nAnt);
 
         /// Sets the image meta-data.
-        void _setImageMetaData();
+        void _setImageMetaData(ImageData* image);
 
     private:
         enum { VIS_RAW, VIS_MODEL, VIS_CALIBRATED, VIS_PSF };
 
-        VisibilityData* _vis;               ///< Visibility amplitude matrix.
-        AntennaPositions* _antPos;          ///< Visibility positions matrix.
-        ImageData* _image;                  ///< Image amplitude matrix.
         AbstractAstrometry* _astrometry;    ///< Astrometric conversion module.
 
         int _visUse;                        ///< Option to image raw, model or corrected.

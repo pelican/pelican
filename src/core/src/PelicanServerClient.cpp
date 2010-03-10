@@ -20,7 +20,7 @@
 namespace pelican {
 
 
-// class PelicanServerClient 
+// class PelicanServerClient
 PelicanServerClient::PelicanServerClient(const ConfigNode& config, const DataTypes& types )
     : AbstractDataClient(config, types ), _protocol(0)
 {
@@ -83,7 +83,7 @@ QHash<QString, DataBlob*> PelicanServerClient::_response(QIODevice& device, boos
                     // do we already have it?
                     if( dataHash[d->name()]->version() == d->id() )
                     {
-                        // no need to fetch it, just mark the existing data as valid 
+                        // no need to fetch it, just mark the existing data as valid
                         validData[d->name()] = dataHash[ d->name() ];
                     }
                     else {

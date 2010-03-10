@@ -19,8 +19,8 @@
         <!-- The Julian date for CE 2009 April 23 08:35:05.0 UT is 2454944.85770 -->
         <time start="2454944.85770" delta="0"/>
         <antennas number="96"/>
-        <channels number="512"/>
-        <polarisations number="2"/>
+        <channels start="0" end="511"/>
+        <polarisation value="both"/>
         <dataBytes number="8"/>
         <rowMajor value="true"/>
     </AdapterLofarStationVisibilities>
@@ -32,7 +32,7 @@
     <varset name="channels">
         <!-- <frequencies reference="3.554687500e7" delta="195312.5"/>  -->
         <frequencies reference="0.0" referenceChannel="0" delta="195312.5"/>
-        <channels>182</channels>
+        <channels start="182" end="182">182</channels>
         <polarisation value="x"/>
     </varset>
 
@@ -56,16 +56,16 @@
     <varset name="sourcesSJW"> <!-- Stefan's positions -->
         <!-- Cas A -->
         <source coordType="AZEL" coord1="-4.71694127" coord2="82.12031315" amp1="11000" amp2="11000"/>
-        
+
         <!-- Cyg A -->
         <source coordType="AZEL" coord1="-85.1927250" coord2="53.0507478" amp1="8100" amp2="8100"/>
     </varset>
-    
-    
+
+
     <varset name="sourcesCat"> <!-- Catalogue positions -->
         <!-- Cas A -->
         <source coordType="J2000" coord1="350.850" coord2="58.815" amp1="11000" amp2="11000"/>
-        
+
         <!-- Cyg A -->
         <source coordType="J2000" coord1="299.8681525" coord2="40.7339156" amp1="8100" amp2="8100"/>
     </varset>

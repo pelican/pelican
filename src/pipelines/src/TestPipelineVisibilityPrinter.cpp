@@ -1,5 +1,6 @@
 #include "TestPipelineVisibilityPrinter.h"
 #include "modules/VisibilityPrinter.h"
+#include "data/VisibilityData.h"
 
 #include "utility/memCheck.h"
 
@@ -31,7 +32,7 @@ void TestPipelineVisibilityPrinter::init()
     setName("TestPipelineVisibilityPrinter");
     _visPrinter = static_cast<VisibilityPrinter*>(createModule("VisibilityPrinter"));
 
-    requireRemoteData("VisibilityData");
+    requestRemoteData("VisibilityData");
 }
 
 

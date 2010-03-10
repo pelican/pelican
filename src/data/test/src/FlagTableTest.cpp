@@ -36,17 +36,19 @@ void FlagTableTest::test_accessorMethodsIndexed()
     const unsigned nAntennas = 96;
     const unsigned nChannels = 32;
     const unsigned nPols = 2;
-    FlagTable data(nAntennas, nChannels, nPols);
+    std::vector<unsigned> channels(nChannels);
+    FlagTable data(nAntennas, channels, FlagTable::POL_BOTH);
 
     // Fill the flag matrix for timing purposes.
     TIMER_START
     for (unsigned p = 0; p < nPols; p++) {
         for (unsigned c = 0; c < nChannels; c++) {
+            unsigned char* ptr = data.ptr(c, p);
             for (unsigned aj = 0; aj < nAntennas; aj++) {
                 for (unsigned ai = 0; ai < nAntennas; ai++) {
                     unsigned index = ai + nAntennas * (aj + nAntennas * (c + nChannels * p));
                     unsigned char val = (index % 2 == 0) ? FlagTable::FLAG_AUTOCORR : 0;
-                    data(ai, aj, c, p) = val;
+                    ptr[aj * nAntennas + ai] = val;
                 }
             }
         }
@@ -56,12 +58,13 @@ void FlagTableTest::test_accessorMethodsIndexed()
     // Fill the flag matrix and read it out again.
     for (unsigned p = 0; p < nPols; p++) {
         for (unsigned c = 0; c < nChannels; c++) {
+            unsigned char* ptr = data.ptr(c, p);
             for (unsigned aj = 0; aj < nAntennas; aj++) {
                 for (unsigned ai = 0; ai < nAntennas; ai++) {
                     unsigned index = ai + nAntennas * (aj + nAntennas * (c + nChannels * p));
                     unsigned char val = (index % 2 == 0) ? FlagTable::FLAG_AUTOCORR : 0;
-                    data(ai, aj, c, p) = val;
-                    CPPUNIT_ASSERT_EQUAL( val, data(ai, aj, c, p) );
+                    ptr[aj * nAntennas + ai] = val;
+                    CPPUNIT_ASSERT_EQUAL( val, ptr[aj * nAntennas + ai]);
                     CPPUNIT_ASSERT_EQUAL( val, data(index) );
                 }
             }
@@ -116,7 +119,8 @@ void FlagTableTest::test_accessorMethodsLinear()
     const unsigned nChannels = 32;
     const unsigned nPols = 2;
     const unsigned nTotal = nPols * nChannels * nAntennas * nAntennas;
-    FlagTable data(nAntennas, nChannels, nPols);
+    std::vector<unsigned> channels(nChannels);
+    FlagTable data(nAntennas, channels, FlagTable::POL_BOTH);
 
     // Fill the flag matrix for timing purposes.
     TIMER_START
@@ -155,7 +159,8 @@ void FlagTableTest::test_flag()
     {
         // Use Case
         // Test flagging a single antenna pair.
-        FlagTable data(nAntennas, nChannels, nPols);
+        std::vector<unsigned> channels(nChannels);
+        FlagTable data(nAntennas, channels, FlagTable::POL_BOTH);
         const unsigned sAntennai = 45;
         const unsigned sAntennaj = 21;
         const unsigned sChannel = 1;
@@ -180,7 +185,8 @@ void FlagTableTest::test_flag()
     {
         // Use Case
         // Test flagging all data from an antenna.
-        FlagTable data(nAntennas, nChannels, nPols);
+        std::vector<unsigned> channels(nChannels);
+        FlagTable data(nAntennas, channels, FlagTable::POL_BOTH);
         const unsigned sAntenna = 67;
         const unsigned sChannel = 2;
         const unsigned sPol = 0;
@@ -208,7 +214,8 @@ void FlagTableTest::test_flag()
     {
         // Use Case
         // Test flagging all data from one channel.
-        FlagTable data(nAntennas, nChannels, nPols);
+        std::vector<unsigned> channels(nChannels);
+        FlagTable data(nAntennas, channels, FlagTable::POL_BOTH);
         const unsigned sChannel = 3;
         const unsigned sPol = 1;
         TIMER_START
@@ -231,7 +238,8 @@ void FlagTableTest::test_flag()
     {
         // Use Case
         // Test flagging all data from all channels.
-        FlagTable data(nAntennas, nChannels, nPols);
+        std::vector<unsigned> channels(nChannels);
+        FlagTable data(nAntennas, channels, FlagTable::POL_BOTH);
         const unsigned sChannelStart = 0;
         const unsigned sChannelEnd = nChannels-1;
         const unsigned sPol = 1;
@@ -279,13 +287,15 @@ void FlagTableTest::test_resize()
     // Use Case
     // Test trying to resize an empty blob.
     FlagTable data;
-    data.resize(96, 128, 2);
+    std::vector<unsigned> channels(128);
+    data.resize(96, channels, FlagTable::POL_BOTH);
     unsigned char* ptr = data.ptr(1);
     CPPUNIT_ASSERT( ptr  != NULL );
 
     // Use Case
     // Try to resize the blob again.
-    data.resize(96, 512, 2);
+    channels.resize(512);
+    data.resize(96, channels, FlagTable::POL_BOTH);
     ptr = data.ptr(255, 1);
     CPPUNIT_ASSERT( ptr  != NULL );
 }

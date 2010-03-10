@@ -86,9 +86,9 @@ void ZenithImagerDftTest::test_inputDataBlobs()
     {
         std::vector<unsigned> channels(2);
         image.resize(10, 10, channels, ImageData::POL_X);
-        vis.resize(5,2,1);
+        vis.resize(5, channels, VisibilityData::POL_X);
         ant.resize(5);
-        CPPUNIT_ASSERT_NO_THROW(imager.run(&vis, &ant, &image));
+        CPPUNIT_ASSERT_NO_THROW(imager.run(&image, &ant, &vis));
     }
 }
 

@@ -4,7 +4,9 @@
 #include "modules/AbstractModule.h"
 #include "data/SiteData.h"
 #include "data/CelestialData.h"
+#include "data/ModelVisibilityData.h"
 #include <vector>
+
 
 /**
  * @file ZenithModelVisibilities.h
@@ -15,7 +17,6 @@ namespace pelican {
 class AbstractAstrometry;
 class ConfigNode;
 class DataBlob;
-class ModelVisibilityData;
 class AntennaPositions;
 class Source;
 
@@ -42,8 +43,6 @@ class ZenithModelVisibilities : public AbstractModule
         void run(AntennaPositions* antPos, ModelVisibilityData* modelVis);
 
     private:
-        typedef enum { POL_X, POL_Y, POL_BOTH } pol_t;
-
         /// Calculate source direction cosines.
         void _calculateDirectionCosines(const unsigned nSources,
                 const Source* sources, double* l, double* m);
@@ -52,7 +51,8 @@ class ZenithModelVisibilities : public AbstractModule
         void _calculateModelVis(complex_t* vis, const unsigned nAnt,
                 const real_t* antPosX, const real_t* antPosY,
                 const Source* sources, const unsigned nSources,
-                const double frequency, const pol_t polarisation,
+                const double frequency,
+                const ModelVisibilityData::pol_t polarisation,
                 const double* l, const double* m);
 
         /// Extract data from the data hash.
@@ -66,14 +66,12 @@ class ZenithModelVisibilities : public AbstractModule
         AbstractAstrometry* _astrometry;
         SiteData _siteData;
         CelestialData _celestialData;
-        ModelVisibilityData* _modelVis;
-        AntennaPositions* _antPos;
         std::vector<Source> _sources;
         std::vector<unsigned> _channels;
         int _freqRefChannel;                ///< Frequency reference channel
         double _freqRef;                    ///< Reference frequency
         double _freqDelta;                  ///< Frequency delta
-        pol_t _polarisation;
+        ModelVisibilityData::pol_t _polarisation;
 };
 
 } // namespace pelican

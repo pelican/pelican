@@ -49,7 +49,6 @@ void ImageWriterFitsTest::test_openFile()
 
     std::vector<unsigned> channels(512);
     ImageData image(128, 128, channels, ImageData::POL_BOTH);
-    fits._image = &image;
     fits._open("testEmpty", 128, 128, 1, 1, true);
     fits._writeHeader(&image);
     real_t* im = image.ptr();
@@ -75,7 +74,6 @@ void ImageWriterFitsTest::test_createImage()
             amp[index] = static_cast<real_t>(m);
         }
     }
-    fits._image = &image;
     TIMER_START
     fits._open("test", nL, nM, nChan, nPol, true);
     fits._writeHeader(&image);
@@ -123,7 +121,6 @@ void ImageWriterFitsTest::test_createCube()
             }
         }
     }
-    fits._image = &image;
     TIMER_START
     fits._open("testCube", nL, nM, nChan, nPol, true);
     fits._writeHeader(&image);

@@ -102,7 +102,6 @@ class ImageWriterFits : public AbstractModule
         void _writeComment(const QString& text);
 
     private:
-        ImageData* _image;
         fitsfile* _fits;
 
         bool _overwrite;

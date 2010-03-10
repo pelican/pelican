@@ -30,6 +30,9 @@ TestPipelineCalibrateImage::TestPipelineCalibrateImage()
  */
 TestPipelineCalibrateImage::~TestPipelineCalibrateImage()
 {
+    delete _image;
+    delete _modelVis;
+    delete _correctedVis;
 }
 
 
@@ -45,8 +48,8 @@ void TestPipelineCalibrateImage::init()
     _calibrate = static_cast<ZenithCalibrater*>(createModule("ZenithCalibrater"));
 
     // Requests for remote data to be inserted in the data hash.
-    requireRemoteData("AntennaPositions");
-    requireRemoteData("VisibilityData");
+    requestRemoteData("AntennaPositions");
+    requestRemoteData("VisibilityData");
 
     _image = new ImageData;
     _modelVis = new ModelVisibilityData;
@@ -67,7 +70,7 @@ void TestPipelineCalibrateImage::run(QHash<QString, DataBlob*>& remoteData)
 
     _calibrate->run(_rawVis, _modelVis, _correctedVis);
 
-    _imager->run(_correctedVis, _antPos, _image);
+    _imager->run(_image, _antPos, _correctedVis);
     _fitsWriter->run(_image);
 
     stop();
