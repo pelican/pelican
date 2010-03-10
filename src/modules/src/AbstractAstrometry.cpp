@@ -12,7 +12,8 @@ namespace pelican {
  * Sets the celestial parameter data structure required for coordinate
  * conversions.
  *
- * The default implementation simply sets UT1.
+ * The default implementation simply sets UT1. The required Modified Julian Date
+ * is given by JD - 2400000.5.
  *
  * @param[in,out] c  Updated celestial parameters.
  * @param[in] t      Pointer to populated terrestrial parameters.

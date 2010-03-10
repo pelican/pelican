@@ -73,8 +73,18 @@ void ZenithModelVisibilities::run(QHash<QString, DataBlob*>& data)
     unsigned nPolModel = _polarisation == POL_BOTH ? 2 : 1;
 
     // Get time (UT1) and set up celestial data structure for astrometry.
-    double UT1 = 0; // TODO get the time from the data blob.
+    // FIXME remove the following line!
+    double UT1 = data["VisibilityData"]->timeStamp();
+    //double UT1 = _modelVis->timeStamp();
+
+    // Convert to Modified Julian Date.
+    UT1 -= 2400000.5;
     _astrometry->setCelestialParameters(&_celestialData, &_siteData, UT1);
+
+    // Calculate source direction cosines.
+    unsigned nSources = _sources.size();
+    std::vector<double> l(nSources), m(nSources);
+    _calculateDirectionCosines(nSources, &_sources[0], &l[0], &m[0]);
 
     // Loop over channels and polarisations generating model visibilities.
     for (unsigned c = 0; c < nChanModel; c++) {
@@ -88,9 +98,45 @@ void ZenithModelVisibilities::run(QHash<QString, DataBlob*>& data)
             pol_t pol = (iPol == 0) ? POL_X : POL_Y;
 
             _calculateModelVis(_modelVis->ptr(c, iPol), nAnt, _antPos->xPtr(),
-                    _antPos->yPtr(), &_sources[0], _sources.size(), frequency,
-                    pol);
+                    _antPos->yPtr(), &_sources[0], nSources, frequency,
+                    pol, &l[0], &m[0]);
         }
+    }
+}
+
+
+/**
+ * @details
+ * Calculates the local direction cosines (l, m positions) for all the
+ * sources in the model.
+ *
+ * @param[in]  nSources  Number of sources.
+ * @param[in]  source    Array of source objects (length nSources).
+ * @param[in,out] l      Preallocated array of l-positions (length nSources).
+ * @param[in,out] m      Preallocated array of m-positions (length nSources).
+ */
+void ZenithModelVisibilities::_calculateDirectionCosines (
+        const unsigned nSources, const Source* sources, double* l, double* m)
+{
+    // Calculate l and m values for the sources.
+    for (unsigned i = 0; i < nSources; i++) {
+        // Convert from ICRS equatorial if needed.
+        double lon = sources[i].longitude();
+        double lat = sources[i].latitude();
+        double az, el;
+
+        if (sources[i].coordType() == Source::J2000) {
+            _astrometry->icrsEquatorialToObserved(&_siteData, &_celestialData,
+                    lon, lat, &az, &el);
+        } else {
+            az = lon;
+            el = lat;
+        }
+
+        // Find direction cosines.
+        double cosEl = cos(el);
+        l[i] = cosEl * sin(az);
+        m[i] = cosEl * cos(az);
     }
 }
 
@@ -113,39 +159,15 @@ void ZenithModelVisibilities::run(QHash<QString, DataBlob*>& data)
  * @param[in]  frequency    Frequency in Hz for which the model is calculated.
  * @param[in]  polarisation Enumerator describing the polarisation for which
  *                          model visibilities are calculated.
+ * @param[in]  l            Array of source l-positions (length nSources).
+ * @param[in]  m            Array of source m-positions (length nSources).
  */
 void ZenithModelVisibilities::_calculateModelVis(complex_t* vis,
         const unsigned nAnt, const real_t* antPosX, const real_t* antPosY,
         const Source* sources, const unsigned nSources, const double frequency,
-        const pol_t polarisation)
+        const pol_t polarisation, const double* l, const double* m)
 {
     double k = (math::twoPi * frequency) / phy::c;
-
-    std::vector<double> lCoord(nSources);
-    std::vector<double> mCoord(nSources);
-    double* l = &lCoord[0];
-    double* m = &mCoord[0];
-
-    // Calculate l and m values for the sources
-    for (unsigned i = 0; i < nSources; i++) {
-        // Convert from RA, Dec if needed.
-        double lon = sources[i].longitude();
-        double lat = sources[i].latitude();
-        double az, el;
-
-        if (sources[i].coordType() == Source::J2000) {
-            _astrometry->icrsEquatorialToObserved(&_siteData, &_celestialData,
-                    lon, lat, &az, &el);
-        } else {
-            az = lon;
-            el = lat;
-        }
-
-        // Find direction cosines.
-        double cosEl = cos(el * math::deg2rad);
-        l[i] = cosEl * sin(az * math::deg2rad);
-        m[i] = cosEl * cos(az * math::deg2rad);
-    }
 
     // Calculate a vector of antenna signals for each source.
     std::vector<complex_t> antSignal(nAnt * nSources);
@@ -234,6 +256,8 @@ void ZenithModelVisibilities::_getConfiguration(const ConfigNode& config)
 
          double coord1 = sourceElement.attribute("coord1", "0.0").toDouble();
          double coord2 = sourceElement.attribute("coord2", "0.0").toDouble();
+         coord1 *= math::deg2rad;
+         coord2 *= math::deg2rad;
 
          QString aType = sourceElement.attribute("ampType", "polxy").toLower();
          Source::amp_t ampType;
@@ -271,6 +295,8 @@ void ZenithModelVisibilities::_getConfiguration(const ConfigNode& config)
      // Read astrometry site parameters and set the data structure.
      double siteLongitude = config.getOption("siteLongitude", "value", "0").toDouble();
      double siteLatitude = config.getOption("siteLatitude", "value", "0").toDouble();
+     siteLongitude *= math::deg2rad;
+     siteLatitude *= math::deg2rad;
      double deltaUT = config.getOption("deltaUT", "value", "0").toDouble();
      double pressure = config.getOption("pressure", "value", "1000").toDouble();
      _astrometry->setSiteParameters(&_siteData, siteLongitude, siteLatitude, deltaUT, pressure);
