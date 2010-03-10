@@ -74,8 +74,8 @@ void ZenithModelVisibilities::run(QHash<QString, DataBlob*>& data)
 
     // Get time (UT1) and set up celestial data structure for astrometry.
     // FIXME remove the following line!
-    double UT1 = data["VisibilityData"]->timeStamp();
-    //double UT1 = _modelVis->timeStamp();
+//    double UT1 = data["VisibilityData"]->timeStamp();
+    double UT1 = _modelVis->timeStamp();
 
     // Convert to Modified Julian Date.
     UT1 -= 2400000.5;
