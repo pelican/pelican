@@ -1,7 +1,7 @@
 #include "core/test/TestPipeline.h"
 #include "modules/EmptyModule.h"
+
 #include "utility/memCheck.h"
-#include <iostream>
 
 namespace pelican {
 
@@ -43,7 +43,6 @@ TestPipeline::~TestPipeline()
  */
 void TestPipeline::init()
 {
-    EmptyModule* testmodule = static_cast<EmptyModule*>(createModule("Empty"));
 }
 
 /**

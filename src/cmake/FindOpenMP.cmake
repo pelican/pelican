@@ -56,7 +56,6 @@ int main() {
 #endif
 }
 ")
-
 # use the same source for CXX as C for now
 set(OpenMP_CXX_TEST_SOURCE ${OpenMP_C_TEST_SOURCE})
 # if these are set then do not try to find them again,

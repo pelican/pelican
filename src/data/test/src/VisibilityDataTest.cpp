@@ -32,7 +32,7 @@ void VisibilityDataTest::test_accessorMethods()
 {
     const unsigned nAntennas = 96;
     const unsigned nChannels = 64;
-    const unsigned nPols = 2;
+//    const unsigned nPols = 2;
     std::vector<unsigned> channels(nChannels);
     VisibilityData data(nAntennas, channels, VisibilityData::POL_BOTH);
 
