@@ -37,8 +37,8 @@ PipelineDriver::PipelineDriver(DataBlobFactory* blobFactory,
 
 /**
  * @details
- * PipelineDriver destructor. This deletes all the registered pipelines,
- * the data blobs and the data client.
+ * PipelineDriver destructor. This deletes all the registered pipelines
+ * and the data blobs.
  */
 PipelineDriver::~PipelineDriver()
 {
@@ -106,7 +106,7 @@ void PipelineDriver::start()
 {
     // Check for at least one registered pipeline.
     if (_registeredPipelines.isEmpty())
-        throw QString("No pipelines.");
+        throw QString("PipelineDriver::start(): No pipelines.");
 
     // Store the remote data requirements for each pipeline.
     foreach (AbstractPipeline* pipeline, _registeredPipelines) {
@@ -118,26 +118,31 @@ void PipelineDriver::start()
     _createDataBlobs();
 
     // Create the data client.
-    _createDataClient(_dataClientName);
+    if (!_dataClientName.isEmpty())
+        _createDataClient(_dataClientName);
 
     // Enter main program loop.
     _run = true;
     while (_run) {
         // Get the data from the client.
-        QHash<QString, DataBlob*> validData = _dataClient->getData(_dataHash);
-
-        // Check for empty data.
-        if (validData.isEmpty()) {
-            throw QString("PipelineDriver::start(): No data returned from client.");
-        }
+        QHash<QString, DataBlob*> validData;
+        if (_dataClient)
+            validData = _dataClient->getData(_dataHash);
 
         // Run all the pipelines compatible with this data hash.
+        bool ranPipeline = false;
         QMultiHash<DataRequirements, AbstractPipeline*>::iterator i = _pipelines.begin();
         while (i != _pipelines.end()) {
-            if (i.key().isCompatible(validData))
+            if (i.key().isCompatible(validData)) {
+                ranPipeline = true;
                 i.value()->run(_dataHash);
+            }
             ++i;
         }
+
+        // Check if no pipelines were run.
+        if (!ranPipeline)
+            throw QString("PipelineDriver::start(): No pipelines run.");
     }
 }
 
