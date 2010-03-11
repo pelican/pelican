@@ -130,8 +130,6 @@ void ZenithCalibrater::run(VisibilityData* _rawVis,
         if (iChanRaw == -1)
             throw QString("ZenithCalibrater: Selected channel not in the visibility data");
 
-        std::cout << "Found selected raw channel " << selectedChannel << " at index " << iChanRaw << std::endl;
-
         int iChanModel = -1;
         for (unsigned i = 0; i < _modelVis->nChannels(); i++) {
             if (_modelVis->channels()[i] == selectedChannel) {
@@ -142,8 +140,6 @@ void ZenithCalibrater::run(VisibilityData* _rawVis,
         if (iChanModel == -1)
             throw QString("ZenithCalibrater: Selected channel not in the visibility data");
 
-        std::cout << "Found selected model channel " << selectedChannel << " at index " << iChanModel << std::endl;
-
         int iChanCorected = -1;
         for (unsigned i = 0; i < _correctedVis->nChannels(); i++) {
             if (_correctedVis->channels()[i] == selectedChannel) {
@@ -153,10 +149,6 @@ void ZenithCalibrater::run(VisibilityData* _rawVis,
         }
         if (iChanCorected == -1)
             throw QString("ZenithCalibrater: Selected channel not in the visibility data");
-
-        std::cout << "Found selected corrected channel " << selectedChannel << " at index " << iChanCorected << std::endl;
-
-
 
         for (unsigned p = 0; p < nPolCal; p++) {
 

@@ -46,6 +46,7 @@ void TestPipelineCalibrateImage::init()
 {
     setName("TestPipelineCalibrateImage");
     _imager = (ZenithImagerDft*) createModule("ZenithImagerDft");
+    _imagerModel = (ZenithImagerDft*) createModule("ZenithImagerDft", "model");
     _fitsWriter = (ImageWriterFits*) createModule("ImageWriterFits");
     _modelGen = (ZenithModelVisibilities*) createModule("ZenithModelVisibilities");
     _calibrate = (ZenithCalibrater*) createModule("ZenithCalibrater");
@@ -77,7 +78,7 @@ void TestPipelineCalibrateImage::run(QHash<QString, DataBlob*>& remoteData)
     _calibrate->run(rawVis, _modelVis, _correctedVis);
 
     _imager->run(_rawImage, antPos, rawVis);
-    _imager->run(_modelImage, antPos, _modelVis);
+    _imagerModel->run(_modelImage, antPos, _modelVis);
     _imager->run(_calImage, antPos, _correctedVis);
     _imager->run(_psfImage, antPos);
 

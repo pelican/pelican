@@ -44,6 +44,7 @@ class TestPipelineCalibrateImage : public AbstractPipeline
 
     private:
         ZenithImagerDft* _imager;
+        ZenithImagerDft* _imagerModel;
         ZenithModelVisibilities* _modelGen;
         ImageWriterFits* _fitsWriter;
         ZenithCalibrater* _calibrate;

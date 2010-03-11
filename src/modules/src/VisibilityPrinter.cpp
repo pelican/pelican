@@ -33,8 +33,6 @@ VisibilityPrinter::~VisibilityPrinter()
  */
 void VisibilityPrinter::run(VisibilityData* vis)
 {
-    std::cout << "Hello from VisibilityPrinter::run() method!\n";
-
     if (!vis)
         throw QString("Data blob missing: Visibility Data");
 
