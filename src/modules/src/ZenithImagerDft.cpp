@@ -195,7 +195,6 @@ void ZenithImagerDft::run(ImageData* image, AntennaPositions* antPos,
             if (iChan == -1)
                 throw QString("ZenithImagerDft: Selected channel not in the visibility data");
 
-            std::cout << "found selected vis channel " << selectedChannel << " at index " << iChan << std::endl;
         }
 
         for (unsigned p = 0; p < nPolImage; p++) {
@@ -229,7 +228,6 @@ void ZenithImagerDft::run(ImageData* image, AntennaPositions* antPos,
                 throw QString ("ZenithImagerDft: Invalid image range");
         }
     }
-    std::cout << "here" << std::endl;
 }
 
 
