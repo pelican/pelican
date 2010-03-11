@@ -61,8 +61,8 @@ class ZenithImagerDft : public AbstractModule
         void setFullSky();
 
         /// Runs the module.
-        void run(ImageData* image, AntennaPositions* antPos,
-                VisibilityData* vis = NULL);
+        void run(ImageData* image, const AntennaPositions* antPos,
+                const VisibilityData* vis = NULL);
 
     private:
         /// Extract the configuration from the XML node setting default where required.
@@ -73,15 +73,15 @@ class ZenithImagerDft : public AbstractModule
                 real_t* coords);
 
         /// Calculate DFT weights for imaging.
-        void _calculateWeights(const unsigned nAnt, real_t* antPos,
+        void _calculateWeights(const unsigned nAnt, const real_t* antPos,
                 const double frequency, const unsigned nCoords,
-                real_t* imageCoord, complex_t* weights);
+                const real_t* imageCoord, complex_t* weights);
 
         /// Construct the image by DFT.
-        void _makeImageDft(const unsigned nAnt, real_t* antPosX,
-                real_t* antPosY, complex_t* vis, const double frequency,
-                const unsigned nL, const unsigned nM, real_t* coordL,
-                real_t* coordM, real_t *image);
+        void _makeImageDft(const unsigned nAnt, const real_t* antPosX,
+                const real_t* antPosY, const complex_t* vis, const double frequency,
+                const unsigned nL, const unsigned nM, const real_t* coordL,
+                const real_t* coordM, real_t *image);
 
         /// Element wise multiplication of two complex weights vectors.
         void _multWeights(const unsigned nAnt, complex_t* weightsXL,

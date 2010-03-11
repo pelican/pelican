@@ -126,8 +126,8 @@ void ZenithImagerDft::setFullSky()
  * @details
  * Method called by the pipeline to create images of the visibility data.
  */
-void ZenithImagerDft::run(ImageData* image, AntennaPositions* antPos,
-        VisibilityData* vis)
+void ZenithImagerDft::run(ImageData* image, const AntennaPositions* antPos,
+        const VisibilityData* vis)
 {
     if (!image)
         throw QString("ZenithImagerDft: ImageData blob missing.");
@@ -151,12 +151,7 @@ void ZenithImagerDft::run(ImageData* image, AntennaPositions* antPos,
 
     if (vis != NULL) {
         // Check input data and selection polarisation for consistency.
-        if (vis->polarisation() != VisibilityData::POL_BOTH) {
-            if (_polarisation == VisibilityData::POL_X && vis->polarisation() != VisibilityData::POL_X)
-                throw QString("ZenithImagerDft: Polarisation selection X is inconsistent with input data");
-            if (_polarisation == VisibilityData::POL_Y && vis->polarisation() != VisibilityData::POL_Y)
-                throw QString("ZenithImagerDft: Polarisation selection Y is inconsistent with input data");
-        }
+        checkPolarisationConsitency(vis->polarisation(), _polarisation);
     }
 
     // Declare pointer to visibility data.
@@ -184,18 +179,7 @@ void ZenithImagerDft::run(ImageData* image, AntennaPositions* antPos,
 
         // Find out if the selected channel is available in the data and if so
         // get its index.
-        int iChan = -1;
-        if (vis != NULL) {
-            for (unsigned i = 0; i < vis->nChannels(); i++) {
-                if (vis->channels()[i] == selectedChannel) {
-                    iChan = i;
-                    break;
-                }
-            }
-            if (iChan == -1)
-                throw QString("ZenithImagerDft: Selected channel not in the visibility data");
-
-        }
+        unsigned iChan = (vis) ? findIndex(selectedChannel, vis->channels()) : 0;
 
         for (unsigned p = 0; p < nPolImage; p++) {
 
@@ -204,7 +188,7 @@ void ZenithImagerDft::run(ImageData* image, AntennaPositions* antPos,
 
             // Get pointer to visibility data for channel and polarisation.
             if (vis != NULL) {
-                visData = vis->ptr(iChan, iPol);
+                visData = const_cast<complex_t*>(vis->ptr(iChan, iPol));
                 if (visData == NULL)
                     throw QString("ZenithImagerDft: Visibility data missing for selected channel and polarisation");
                 _zeroAutoCorrelations(visData, nAnt);
@@ -212,6 +196,7 @@ void ZenithImagerDft::run(ImageData* image, AntennaPositions* antPos,
 
             // Generate the image. TODO fix c, p... as above
             real_t* imData = image->ptr(c, p);
+            Q_ASSERT(imData != NULL);
             _makeImageDft(nAnt, antPos->xPtr(), antPos->yPtr(), visData,
                     frequency, _sizeL, _sizeM, &_coordL[0], &_coordM[0], imData);
 
@@ -319,9 +304,9 @@ void ZenithImagerDft::_calculateImageCoords(const double cellsize,
  *
  * @param[in]   nCoords Number
  */
-void ZenithImagerDft::_calculateWeights(const unsigned nAnt, real_t* antPos,
+void ZenithImagerDft::_calculateWeights(const unsigned nAnt, const real_t* antPos,
         const double frequency, const unsigned nCoords,
-        real_t* imageCoord, complex_t* weights)
+        const real_t* imageCoord, complex_t* weights)
 {
     double k = (math::twoPi * frequency) / phy::c;
 
@@ -341,10 +326,10 @@ void ZenithImagerDft::_calculateWeights(const unsigned nAnt, real_t* antPos,
  * @details
  * Perform a discrete Fourier transform to form an image from the visibility data.
  */
-void ZenithImagerDft::_makeImageDft(const unsigned nAnt, real_t* antPosX,
-        real_t* antPosY, complex_t* vis, const double frequency,
+void ZenithImagerDft::_makeImageDft(const unsigned nAnt, const real_t* antPosX,
+        const real_t* antPosY, const complex_t* vis, const double frequency,
         const unsigned nL, const unsigned nM,
-        real_t* coordsL, real_t* coordsM, real_t *image)
+        const real_t* coordsL, const real_t* coordsM, real_t *image)
 {
     _weightsXL.resize(nAnt * nL);
     _weightsYM.resize(nAnt * nM);

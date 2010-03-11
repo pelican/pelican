@@ -3,6 +3,7 @@
 #include <QString>
 #include <iomanip>
 #include <iostream>
+#include <cfloat>
 
 namespace pelican {
 
@@ -106,7 +107,7 @@ void ImageData::clear()
  * specified by channel \p c and polarisation \p p
  *
  * @param[in] c Channel.
- * @paran[in] p Polaristation.
+ * @paran[in] p Polarisation.
  */
 void ImageData::calculateAmplitudeRange(const unsigned c, const unsigned p)
 {
@@ -114,10 +115,12 @@ void ImageData::calculateAmplitudeRange(const unsigned c, const unsigned p)
         throw QString("ImageData::findAmpRange(): Image empty");
 
     const real_t *image = this->ptr(c, p);
+    Q_ASSERT(image != NULL);
     unsigned index = c * _nPolarisations + p;
-    _min[index] = 1.0e99;
-    _max[index] = -1.0e99;
-    for (unsigned i = 0; i < _image.size(); i++) {
+    _min[index] = DBL_MAX;
+    _max[index] = -DBL_MAX;
+    unsigned nPixels = _sizeL * _sizeM;
+    for (unsigned i = 0; i < nPixels; i++) {
         if (isnan(image[i])) continue;
         _min[index] = std::min(image[i], _min[index]);
         _max[index] = std::max(image[i], _max[index]);
@@ -134,7 +137,7 @@ void ImageData::calculateAmplitudeRange(const unsigned c, const unsigned p)
  * return the expected zero mean result.
  *
  * @param[in] c Channel.
- * @paran[in] p Polaristation.
+ * @paran[in] p Polarisation.
  */
 void ImageData::calculateMean(const unsigned c, const unsigned p)
 {

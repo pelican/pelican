@@ -66,8 +66,6 @@ void ZenithModelVisibilities::run(AntennaPositions* antPos,
     unsigned nPolModel = _polarisation == ModelVisibilityData::POL_BOTH ? 2 : 1;
 
     // Get time (UT1) and set up celestial data structure for astrometry.
-    // FIXME remove the following line!
-//    double UT1 = data["VisibilityData"]->timeStamp();
     double UT1 = modelVis->timeStamp();
 
     // Convert to Modified Julian Date.
