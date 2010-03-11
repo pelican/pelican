@@ -96,19 +96,16 @@
         <fullSky value="true" cutHemisphere="true"/>
         <varset name="channels"/>
         <varset name="kso"/>
-
     </ZenithImagerDft>
 
 
     <ZenithImagerDft name="model">
         <size l="256" m="256" pixelCentred="true"/>
         <fullSky value="true" cutHemisphere="true"/>
+        <channels>182, 400</channels>
         <varset name="channels"/>
         <varset name="kso"/>
-        <channels>400, 182</channels>
     </ZenithImagerDft>
-
-
 
     <ImageWriterFits>
         <overwrite value="true"/>
