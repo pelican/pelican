@@ -91,27 +91,9 @@ void ZenithCalibrater::run(VisibilityData* _rawVis,
     unsigned nPolCal = _polarisation == CorrectedVisibilityData::POL_BOTH ? 2 : 1;
 
     // Check input data and selection polarisation for consistency.
-    if (_rawVis->polarisation() != VisibilityData::POL_BOTH) {
-        if (_polarisation == VisibilityData::POL_X && _rawVis->polarisation() != VisibilityData::POL_X)
-            throw QString("ZenithCalibrater: Polarisation selection X is inconsistent with input data");
-        if (_polarisation == VisibilityData::POL_Y && _rawVis->polarisation() != VisibilityData::POL_Y)
-            throw QString("ZenithCalibrater: Polarisation selection Y is inconsistent with input data");
-    }
-
-    if (_modelVis->polarisation() != VisibilityData::POL_BOTH) {
-        if (_polarisation == VisibilityData::POL_X && _modelVis->polarisation() != VisibilityData::POL_X)
-            throw QString("ZenithCalibrater: Polarisation selection X is inconsistent with input data");
-        if (_polarisation == VisibilityData::POL_Y && _modelVis->polarisation() != VisibilityData::POL_Y)
-            throw QString("ZenithCalibrater: Polarisation selection Y is inconsistent with input data");
-    }
-
-    if (_correctedVis->polarisation() != VisibilityData::POL_BOTH) {
-        if (_polarisation == VisibilityData::POL_X && _correctedVis->polarisation() != VisibilityData::POL_X)
-            throw QString("ZenithCalibrater: Polarisation selection X is inconsistent with input data");
-        if (_polarisation == VisibilityData::POL_Y && _correctedVis->polarisation() != VisibilityData::POL_Y)
-            throw QString("ZenithCalibrater: Polarisation selection Y is inconsistent with input data");
-    }
-
+    checkPolarisationConsitency(_rawVis->polarisation(), _polarisation, "ZenithCalibrater");
+    checkPolarisationConsitency(_modelVis->polarisation(), _polarisation, "ZenithCalibrater");
+    checkPolarisationConsitency(_correctedVis->polarisation(), _polarisation, "ZenithCalibrater");
 
     // Loop over selected channels and polarisations and calibrate.
     for (unsigned c = 0; c < nChanCal; c++) {
