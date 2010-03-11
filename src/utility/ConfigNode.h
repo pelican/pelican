@@ -14,7 +14,7 @@ namespace pelican {
  *
  * @brief
  * Wraps and handles extracting settings from a QDomElement
- * 
+ *
  * @details
  */
 
@@ -24,6 +24,7 @@ class ConfigNode
         QDomElement _config;
 
     public:
+
         /// Constructs an empty configuration node.
         ConfigNode() {}
 

@@ -85,6 +85,7 @@
 
     <ZenithModelVisibilities>
         <varset name="sourcesCat"/>
+        <channels>400, 182</channels>
         <varset name="channels"/>
         <varset name="kso"/>
     </ZenithModelVisibilities>
@@ -95,15 +96,24 @@
         <fullSky value="true" cutHemisphere="true"/>
         <varset name="channels"/>
         <varset name="kso"/>
-        <!-- Visibility types are "raw", "model", "calibrated" or "psf" (only first letter required) -->
-        <visibility type="model"/>
+
     </ZenithImagerDft>
+
+
+    <ZenithImagerDft name="model">
+        <size l="256" m="256" pixelCentred="true"/>
+        <fullSky value="true" cutHemisphere="true"/>
+        <varset name="channels"/>
+        <varset name="kso"/>
+        <channels>400, 182</channels>
+    </ZenithImagerDft>
+
 
 
     <ImageWriterFits>
         <overwrite value="true"/>
         <directory value=""/>
-        <file name="model-kso.fits" prefix="" suffix=""/>
+        <file name="calibrated.fits"/>
 
         <origin value="Oxford e-Research Centre"/>
         <telescope value="LOFAR"/>

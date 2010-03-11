@@ -14,7 +14,7 @@ namespace pelican {
  *
  * @brief
  * Handles reading and parsing of options for modules and server configuration.
- * 
+ *
  * @details
  */
 

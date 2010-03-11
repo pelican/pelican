@@ -7,6 +7,7 @@
 
 #include "modules/AbstractModule.h"
 #include "data/ImageData.h"
+#include "data/VisibilityData.h"
 #include <vector>
 
 namespace pelican {
@@ -14,7 +15,6 @@ namespace pelican {
 class AbstractModule;
 class AbstractAstrometry;
 class ConfigNode;
-class VisibilityData;
 class ModelVisibilityData;
 class AntennaPositions;
 
@@ -45,7 +45,7 @@ class ZenithImagerDft : public AbstractModule
 
         /// Sets the polarisation selection.
         /// Method overrides the selected channels from the configuration.
-        void setPolarisation(const ImageData::pol_t p) { _polarisation = p; }
+        void setPolarisation(const VisibilityData::pol_t p) { _polarisation = p; }
 
         /// Sets the image size.
         void setSize(const unsigned sizeL, const unsigned sizeM);
@@ -108,8 +108,6 @@ class ZenithImagerDft : public AbstractModule
         void _setImageMetaData(ImageData* image);
 
     private:
-        enum { VIS_RAW, VIS_MODEL, VIS_CALIBRATED, VIS_PSF };
-
         AbstractAstrometry* _astrometry;    ///< Astrometric conversion module.
 
         int _visUse;                        ///< Option to image raw, model or corrected.
@@ -120,7 +118,7 @@ class ZenithImagerDft : public AbstractModule
         double _freqRef;                    ///< Reference frequency
         double _freqDelta;                  ///< Frequency delta
 
-        ImageData::pol_t _polarisation;     ///< Selection polarisation (enumeration).
+        DataBlob::pol_t _polarisation;      ///< Selection polarisation (enumeration).
         bool _fullSky;                      ///< Image the full sky (overrides cellsize)
         bool _trimHemisphere;               ///< Cut the image to the full sky hemisphere
         bool _pixelCentred;                 ///< Put the zero of the image in the middle of a pixel

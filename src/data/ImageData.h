@@ -4,7 +4,7 @@
 #include "data/DataBlob.h"
 #include <QString>
 #include <vector>
-#define isnan(x) ((x) != (x)) //TODO: this is unsafe for floating point comarison.
+#define isnan(x) ((x) != (x)) //TODO: this is unsafe for floating point comparison.
 
 /**
  * @file ImageData.h
@@ -27,7 +27,6 @@ class ImageData : public DataBlob
     public:
         /// The coordinate type of the reference pixel.
         typedef enum { COORD_J2000, COORD_AZ_EL, COORD_UNDEF } coord_t;
-        typedef enum { POL_X, POL_Y, POL_BOTH, POL_UNDEF } pol_t;
 
     private:
         std::vector<real_t> _image; ///< Image amplitude cube.
