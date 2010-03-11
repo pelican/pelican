@@ -160,7 +160,7 @@ std::vector<unsigned> ConfigNode::getChannels() const
 
     // If start or end are negative, check for text content.
     if (beg < 0 || end < 0) {
-        QString channelStr = getOptionText(channelTag);
+        QString channelStr = getOptionText(channelTag, "0");
         QStringList chanList = channelStr.split(",", QString::SkipEmptyParts);
         unsigned size = chanList.size();
         channels.resize(size);
@@ -193,7 +193,7 @@ std::vector<unsigned> ConfigNode::getChannels() const
  */
 DataBlob::pol_t ConfigNode::getPolarisation() const
 {
-    QString pol = getOption("polarisation", "value").toLower();
+    QString pol = getOption("polarisation", "value", "x").toLower();
     if (pol.startsWith("x"))
         return DataBlob::POL_X;
     else if (pol.startsWith("y"))
