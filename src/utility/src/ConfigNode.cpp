@@ -6,6 +6,8 @@
 #include <QTextStream>
 #include <cstdlib>
 
+#include "utility/memCheck.h"
+
 namespace pelican {
 
 
