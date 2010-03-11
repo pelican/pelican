@@ -54,6 +54,8 @@ void TestPipelineRawImage::run(QHash<QString, DataBlob*>& remoteData)
 {
     AntennaPositions* antPos = (AntennaPositions*) remoteData["AntennaPositions"];
     VisibilityData* rawVis = (VisibilityData*) remoteData["VisibilityData"];
+    Q_ASSERT(antPos != NULL);
+    Q_ASSERT(rawVis != NULL);
 
     _imager->run(_image, antPos, rawVis);
     _fitsWriter->run(_image);

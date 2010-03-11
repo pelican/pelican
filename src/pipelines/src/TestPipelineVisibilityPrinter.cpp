@@ -42,6 +42,7 @@ void TestPipelineVisibilityPrinter::init()
 void TestPipelineVisibilityPrinter::run(QHash<QString, DataBlob*>& remoteData)
 {
     VisibilityData* vis = (VisibilityData*) remoteData["VisibilityData"];
+    Q_ASSERT(vis != NULL);
     _visPrinter->run(vis);
 
     // Stop the pipeline driver.

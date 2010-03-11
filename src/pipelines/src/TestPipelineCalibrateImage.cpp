@@ -71,23 +71,34 @@ void TestPipelineCalibrateImage::run(QHash<QString, DataBlob*>& remoteData)
 {
     AntennaPositions* antPos = (AntennaPositions*) remoteData["AntennaPositions"];
     VisibilityData* rawVis = (VisibilityData*) remoteData["VisibilityData"];
+    Q_ASSERT(antPos != NULL);
+    Q_ASSERT(rawVis != NULL);
 
     _modelVis->setTimeStamp(rawVis->timeStamp());
     _modelGen->run(antPos, _modelVis);
-
+    std::cout << "here\n";
     _calibrate->run(rawVis, _modelVis, _correctedVis);
+    std::cout << "here\n";
 
     _imager->run(_rawImage, antPos, rawVis);
+    std::cout << "here\n";
+
     _imagerModel->run(_modelImage, antPos, _modelVis);
+    std::cout << "here\n";
     _imager->run(_calImage, antPos, _correctedVis);
+    std::cout << "here\n";
     _imager->run(_psfImage, antPos);
+    std::cout << "here\n";
 
     _fitsWriter->fileName() = "calibPipe-raw";
     _fitsWriter->run(_rawImage);
+    std::cout << "here\n";
     _fitsWriter->fileName() = "calibPipe-model";
     _fitsWriter->run(_modelImage);
+    std::cout << "here\n";
     _fitsWriter->fileName() = "calibPipe-psf";
     _fitsWriter->run(_psfImage);
+    std::cout << "here\n";
     _fitsWriter->fileName() = "calibPipe-calibrated";
     _fitsWriter->run(_calImage);
 

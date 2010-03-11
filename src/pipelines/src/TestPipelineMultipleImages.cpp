@@ -60,6 +60,7 @@ void TestPipelineMultipleImages::init()
 void TestPipelineMultipleImages::run(QHash<QString, DataBlob*>& remoteData)
 {
     AntennaPositions* antPos = (AntennaPositions*) remoteData["AntennaPositions"];
+    Q_ASSERT(antPos != NULL);
 
     _visModel->run(antPos, _modelVis);
 
