@@ -183,7 +183,7 @@ std::vector<unsigned> ConfigNode::getChannels() const
 
     // Check and throw if there are no channels.
     if (channels.size() == 0)
-        throw QString("No channels specified.");
+        throw QString("%1: No channels specified.").arg(_config.tagName());
     return channels;
 }
 
@@ -191,6 +191,19 @@ std::vector<unsigned> ConfigNode::getChannels() const
  * @details
  * Returns the polarisation option.
  */
+DataBlob::pol_t ConfigNode::getPolarisation() const
+{
+    QString pol = getOption("polarisation", "value").toLower();
+    if (pol.startsWith("x"))
+        return DataBlob::POL_X;
+    else if (pol.startsWith("y"))
+        return DataBlob::POL_Y;
+    else if (pol.startsWith("both"))
+        return DataBlob::POL_BOTH;
+    else
+        throw QString("%1: Unknown polarisation.").arg(_config.tagName());
 
+    return DataBlob::POL_UNDEF;
+}
 
 } // namespace pelican

@@ -120,7 +120,6 @@ class ImageWriterFits : public AbstractModule
         QString _object;
         QString _author;
         QString _reference;
-        double _equinox;
 };
 
 } // namespace pelican

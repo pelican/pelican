@@ -450,23 +450,9 @@ void ZenithCalibrater::_getConfiguration(const ConfigNode& config)
     _freqRef = config.getOption("frequencies", "reference", "0.0").toDouble();
     _freqDelta = config.getOption("frequencies", "delta", "195312.5").toDouble();
 
-    // Get polarisation to calibrate.
-    QString pol = config.getOption("polarisation", "value", "x").toLower();
-    if (pol == "x") _polarisation = CorrectedVisibilityData::POL_X;
-    else if (pol == "y") _polarisation = CorrectedVisibilityData::POL_Y;
-    else if (pol == "both") _polarisation = CorrectedVisibilityData::POL_BOTH;
-
-    // Get the channels to calibrate.
-    QString chan = config.getOptionText("channels", "0");
-    QStringList chanList = chan.split(",", QString::SkipEmptyParts);
-
-    if (chanList.size() == 0)
-        throw QString("ZenithCalibrater: No channels selected.");
-
-    _channels.resize(chanList.size());
-    for (int c = 0; c < chanList.size(); c++) {
-        _channels[c] = chanList.at(c).toUInt();
-    }
+    // Get the channel and polarisation selection.
+    _channels = config.getChannels();
+    _polarisation = config.getPolarisation();
 }
 
 

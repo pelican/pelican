@@ -1,6 +1,7 @@
 #ifndef CONFIGNODE_H_
 #define CONFIGNODE_H_
 
+#include "data/DataBlob.h"
 #include <QDomElement>
 #include <QString>
 #include <QHash>
@@ -63,6 +64,9 @@ class ConfigNode
 
         /// Returns the list of channels, if any.
         std::vector<unsigned> getChannels() const;
+
+        /// Returns the polarisation, if any.
+        DataBlob::pol_t getPolarisation() const;
 };
 
 } /* namespace pelican */
