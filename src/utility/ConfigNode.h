@@ -1,10 +1,12 @@
 #ifndef CONFIGNODE_H_
 #define CONFIGNODE_H_
 
+#include "data/DataBlob.h"
 #include <QDomElement>
 #include <QString>
 #include <QHash>
 #include <QList>
+#include <vector>
 
 namespace pelican {
 
@@ -59,6 +61,12 @@ class ConfigNode
 
         /// Returns the QDomElement that this class wraps.
         const QDomElement getDomElement() const {return _config;}
+
+        /// Returns the list of channels, if any.
+        std::vector<unsigned> getChannels() const;
+
+        /// Returns the polarisation, if any.
+        DataBlob::pol_t getPolarisation() const;
 };
 
 } /* namespace pelican */

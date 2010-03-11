@@ -30,36 +30,10 @@ AdapterLofarStationVisibilities::AdapterLofarStationVisibilities(const ConfigNod
     _timeStart = config.getOption("time", "start", "0.0").toDouble();
     _timeDelta = config.getOption("time", "delta", "0.0").toDouble();
 
-    // Get the polarisation selection.
-    QString pol = config.getOption("polarisation", "value", "x").toLower();
-    if (pol.startsWith("x"))
-        _polarisation = VisibilityData::POL_X;
-    else if (pol.startsWith("y"))
-        _polarisation = VisibilityData::POL_Y;
-    else if (pol.startsWith("both"))
-        _polarisation = VisibilityData::POL_BOTH;
-    else
-        throw QString("AdapterLofarStationVisibilities: Unknown polarisation option.");
+    // Get the channel and polarisation selection.
+    _channels = config.getChannels();
+    _polarisation = config.getPolarisation();
     _nPol = (_polarisation == VisibilityData::POL_BOTH) ? 2 : 1;
-
-    // Get the channels to image.
-    int startChan = config.getOption("channels", "start", "-1").toInt();
-    int endChan = config.getOption("channels", "end", "-1").toInt();
-
-    if (startChan < 0 || endChan < 0) {
-        QString chan = config.getOptionText("channels", "0");
-        QStringList chanList = chan.split(",", QString::SkipEmptyParts);
-        _channels.resize(chanList.size());
-        for (int c = 0; c < chanList.size(); c++) {
-            _channels[c] = chanList.at(c).toUInt();
-        }
-    }
-    else {
-        _channels.resize(endChan - startChan + 1);
-        for (int i = startChan; i <= endChan; i++) {
-            _channels[i] = i;
-        }
-    }
     _nChan = _channels.size();
 }
 

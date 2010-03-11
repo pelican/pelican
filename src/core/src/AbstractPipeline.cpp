@@ -50,7 +50,7 @@ AbstractModule* AbstractPipeline::createModule(const QString& type,
 {
     /* Check that the module factory exists */
     if (_moduleFactory == NULL)
-           throw QString("AbstractPipeline: Module factory doesn't exist.");
+           throw QString("AbstractPipeline::createModule(): No module factory.");
 
     AbstractModule* module = _moduleFactory->createModule(type, name);
     _modules.append(module);
@@ -120,7 +120,7 @@ void AbstractPipeline::setPipelineDriver(PipelineDriver* driver)
 void AbstractPipeline::stop()
 {
     if (_pipelineDriver == NULL)
-        throw QString("No pipeline driver.");
+        throw QString("AbstractPipeline::stop(): No pipeline driver.");
 
     _pipelineDriver->stop();
 }

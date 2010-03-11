@@ -257,24 +257,9 @@ void ZenithImagerDft::_getConfiguration(const ConfigNode& config)
         _cellsizeM = config.getOption("cellsize", "m", "10.0").toDouble();
     }
 
-    // Get the polarisation selection.
-    QString pol = config.getOption("polarisation", "value", "x").toLower();
-    if (pol.startsWith("x"))
-        _polarisation = VisibilityData::POL_X;
-    else if (pol.startsWith("y"))
-        _polarisation = VisibilityData::POL_Y;
-    else if (pol.startsWith("both"))
-        _polarisation = VisibilityData::POL_BOTH;
-    else
-        throw QString("ZenithImagerDft: Unknown polarisation option.");
-
-    // Get the channels to image.
-    QString chan = config.getOptionText("channels", "0");
-    QStringList chanList = chan.split(",", QString::SkipEmptyParts);
-    _channels.resize(chanList.size());
-    for (int c = 0; c < chanList.size(); c++) {
-        _channels[c] = chanList.at(c).toUInt();
-    }
+    // Get the channel and polarisation selection.
+    _channels = config.getChannels();
+    _polarisation = config.getPolarisation();
 
     /* A/D-converter - to be able to cope with expected interference levels - operating at either
     160 or 200 MHz in the first, second or third Nyquist zone (i.e. 0 - 100, 100 - 200, or 200 -

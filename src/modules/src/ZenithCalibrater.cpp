@@ -91,46 +91,19 @@ void ZenithCalibrater::run(VisibilityData* _rawVis,
     unsigned nPolCal = _polarisation == CorrectedVisibilityData::POL_BOTH ? 2 : 1;
 
     // Check input data and selection polarisation for consistency.
-    checkPolarisationConsitency(_rawVis->polarisation(), _polarisation, "ZenithCalibrater");
-    checkPolarisationConsitency(_modelVis->polarisation(), _polarisation, "ZenithCalibrater");
-    checkPolarisationConsitency(_correctedVis->polarisation(), _polarisation, "ZenithCalibrater");
+    checkPolarisationConsitency(_rawVis->polarisation(), _polarisation);
+    checkPolarisationConsitency(_modelVis->polarisation(), _polarisation);
+    checkPolarisationConsitency(_correctedVis->polarisation(), _polarisation);
 
     // Loop over selected channels and polarisations and calibrate.
     for (unsigned c = 0; c < nChanCal; c++) {
 
-        unsigned selectedChannel = _channels[c];
-
+        unsigned chanSelected = _channels[c];
         // Find out if the selected channel is available in the data and if so
         // get its index.
-        int iChanRaw = -1;
-        for (unsigned i = 0; i < _rawVis->nChannels(); i++) {
-            if (_rawVis->channels()[i] == selectedChannel) {
-                iChanRaw = i;
-                break;
-            }
-        }
-        if (iChanRaw == -1)
-            throw QString("ZenithCalibrater: Selected channel not in the visibility data");
-
-        int iChanModel = -1;
-        for (unsigned i = 0; i < _modelVis->nChannels(); i++) {
-            if (_modelVis->channels()[i] == selectedChannel) {
-                iChanModel = i;
-                break;
-            }
-        }
-        if (iChanModel == -1)
-            throw QString("ZenithCalibrater: Selected channel not in the visibility data");
-
-        int iChanCorected = -1;
-        for (unsigned i = 0; i < _correctedVis->nChannels(); i++) {
-            if (_correctedVis->channels()[i] == selectedChannel) {
-                iChanCorected = i;
-                break;
-            }
-        }
-        if (iChanCorected == -1)
-            throw QString("ZenithCalibrater: Selected channel not in the visibility data");
+        unsigned iChanRaw = findIndex(chanSelected, _rawVis->channels());
+        unsigned iChanModel = findIndex(chanSelected, _modelVis->channels());
+        unsigned iChanCorected = findIndex(chanSelected, _correctedVis->channels());
 
         for (unsigned p = 0; p < nPolCal; p++) {
 
@@ -424,23 +397,9 @@ void ZenithCalibrater::_getConfiguration(const ConfigNode& config)
     _freqRef = config.getOption("frequencies", "reference", "0.0").toDouble();
     _freqDelta = config.getOption("frequencies", "delta", "195312.5").toDouble();
 
-    // Get polarisation to calibrate.
-    QString pol = config.getOption("polarisation", "value", "x").toLower();
-    if (pol == "x") _polarisation = CorrectedVisibilityData::POL_X;
-    else if (pol == "y") _polarisation = CorrectedVisibilityData::POL_Y;
-    else if (pol == "both") _polarisation = CorrectedVisibilityData::POL_BOTH;
-
-    // Get the channels to calibrate.
-    QString chan = config.getOptionText("channels", "0");
-    QStringList chanList = chan.split(",", QString::SkipEmptyParts);
-
-    if (chanList.size() == 0)
-        throw QString("ZenithCalibrater: No channels selected.");
-
-    _channels.resize(chanList.size());
-    for (int c = 0; c < chanList.size(); c++) {
-        _channels[c] = chanList.at(c).toUInt();
-    }
+    // Get the channel and polarisation selection.
+    _channels = config.getChannels();
+    _polarisation = config.getPolarisation();
 }
 
 

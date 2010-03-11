@@ -269,22 +269,14 @@ void ZenithModelVisibilities::_getConfiguration(const ConfigNode& config)
 
      // Read visibility blob dimension information from the configuration mode
      // (the number of antennas is extracted from the antenna position data)
-     // Get the channels to image.
-     QString chan = config.getOptionText("channels", "0");
-     QStringList chanList = chan.split(",", QString::SkipEmptyParts);
-     _channels.resize(chanList.size());
-     for (int c = 0; c < chanList.size(); c++) {
-         _channels[c] = chanList.at(c).toUInt();
-     }
 
      _freqRefChannel = config.getOption("frequencies", "referenceChannel","0").toInt();
      _freqRef = config.getOption("frequencies", "reference", "0.0").toDouble();
      _freqDelta = config.getOption("frequencies", "delta", "195312.5").toDouble();
 
-     QString pol = config.getOption("polarisation", "value", "x").toLower();
-     if (pol == "x") _polarisation = ModelVisibilityData::POL_X;
-     else if (pol == "y") _polarisation = ModelVisibilityData::POL_Y;
-     else if (pol == "both") _polarisation = ModelVisibilityData::POL_BOTH;
+     // Get the channel and polarisation selection.
+     _channels = config.getChannels();
+     _polarisation = config.getPolarisation();
 
      // Read astrometry site parameters and set the data structure.
      double siteLongitude = config.getOption("siteLongitude", "value", "0").toDouble();

@@ -1,5 +1,6 @@
 SUBPACKAGE(modules data utility)
 set( modules_src
+     src/AbstractModule.cpp
      src/AbstractAstrometry.cpp
      src/EmptyModule.cpp
      src/AstrometryFast.cpp
