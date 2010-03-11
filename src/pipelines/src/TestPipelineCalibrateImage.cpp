@@ -30,7 +30,10 @@ TestPipelineCalibrateImage::TestPipelineCalibrateImage()
  */
 TestPipelineCalibrateImage::~TestPipelineCalibrateImage()
 {
-    delete _image;
+    delete _calImage;
+    delete _rawImage;
+    delete _psfImage;
+    delete _modelImage;
     delete _modelVis;
     delete _correctedVis;
 }
@@ -51,7 +54,10 @@ void TestPipelineCalibrateImage::init()
     requestRemoteData("AntennaPositions");
     requestRemoteData("VisibilityData");
 
-    _image = new ImageData;
+    _calImage = new ImageData;
+    _psfImage = new ImageData;
+    _rawImage = new ImageData;
+    _modelImage = new ImageData;
     _modelVis = new ModelVisibilityData;
     _correctedVis = new CorrectedVisibilityData;
 }
@@ -70,8 +76,19 @@ void TestPipelineCalibrateImage::run(QHash<QString, DataBlob*>& remoteData)
 
     _calibrate->run(rawVis, _modelVis, _correctedVis);
 
-    _imager->run(_image, antPos, _correctedVis);
-    _fitsWriter->run(_image);
+    _imager->run(_rawImage, antPos, rawVis);
+    _imager->run(_modelImage, antPos, _modelVis);
+    _imager->run(_calImage, antPos, _correctedVis);
+    _imager->run(_psfImage, antPos);
+
+    _fitsWriter->fileName() = "calibPipe-raw";
+    _fitsWriter->run(_rawImage);
+    _fitsWriter->fileName() = "calibPipe-model";
+    _fitsWriter->run(_modelImage);
+    _fitsWriter->fileName() = "calibPipe-psf";
+    _fitsWriter->run(_psfImage);
+    _fitsWriter->fileName() = "calibPipe-calibrated";
+    _fitsWriter->run(_calImage);
 
     stop();
 }

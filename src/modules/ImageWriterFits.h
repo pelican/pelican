@@ -42,16 +42,16 @@ class ImageWriterFits : public AbstractModule
         void run(ImageData* image);
 
     public:
-        /// Returns a reference to the image output directory.
+        /// Returns a reference to the image output directory.  // TODO use this
         QString& directory() { return _directory; }
 
         /// Returns a reference to the filename.
         QString& fileName() { return _fileName; }
 
-        /// Returns a reference to the filename prefix.
+        /// Returns a reference to the filename prefix.   // TODO use this
         QString& prefix() { return _prefix; }
 
-        /// Returns a reference to the filename suffix.
+        /// Returns a reference to the filename suffix.   // TODO use this
         QString& suffix() { return _suffix; }
 
     private:

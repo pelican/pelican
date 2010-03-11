@@ -39,9 +39,6 @@ namespace pelican {
  */
 template<typename T> class AntennaMatrixData : public DataBlob
 {
-    public:
-        typedef enum { POL_X, POL_Y, POL_BOTH, POL_UNDEF } pol_t;
-
     protected: /* Data */
         /// The data.
         std::vector<T> _data;

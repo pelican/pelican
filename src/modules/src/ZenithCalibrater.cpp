@@ -90,28 +90,92 @@ void ZenithCalibrater::run(VisibilityData* _rawVis,
     unsigned nChanCal = _channels.size();
     unsigned nPolCal = _polarisation == CorrectedVisibilityData::POL_BOTH ? 2 : 1;
 
+    // Check input data and selection polarisation for consistency.
+    if (_rawVis->polarisation() != VisibilityData::POL_BOTH) {
+        if (_polarisation == VisibilityData::POL_X && _rawVis->polarisation() != VisibilityData::POL_X)
+            throw QString("ZenithCalibrater: Polarisation selection X is inconsistent with input data");
+        if (_polarisation == VisibilityData::POL_Y && _rawVis->polarisation() != VisibilityData::POL_Y)
+            throw QString("ZenithCalibrater: Polarisation selection Y is inconsistent with input data");
+    }
+
+    if (_modelVis->polarisation() != VisibilityData::POL_BOTH) {
+        if (_polarisation == VisibilityData::POL_X && _modelVis->polarisation() != VisibilityData::POL_X)
+            throw QString("ZenithCalibrater: Polarisation selection X is inconsistent with input data");
+        if (_polarisation == VisibilityData::POL_Y && _modelVis->polarisation() != VisibilityData::POL_Y)
+            throw QString("ZenithCalibrater: Polarisation selection Y is inconsistent with input data");
+    }
+
+    if (_correctedVis->polarisation() != VisibilityData::POL_BOTH) {
+        if (_polarisation == VisibilityData::POL_X && _correctedVis->polarisation() != VisibilityData::POL_X)
+            throw QString("ZenithCalibrater: Polarisation selection X is inconsistent with input data");
+        if (_polarisation == VisibilityData::POL_Y && _correctedVis->polarisation() != VisibilityData::POL_Y)
+            throw QString("ZenithCalibrater: Polarisation selection Y is inconsistent with input data");
+    }
+
 
     // Loop over selected channels and polarisations and calibrate.
     for (unsigned c = 0; c < nChanCal; c++) {
 
-        /// TODO: FIX for fancy channel dereference thing.
-        unsigned chan = _channels[c];
+        unsigned selectedChannel = _channels[c];
+
+        // Find out if the selected channel is available in the data and if so
+        // get its index.
+        int iChanRaw = -1;
+        for (unsigned i = 0; i < _rawVis->nChannels(); i++) {
+            if (_rawVis->channels()[i] == selectedChannel) {
+                iChanRaw = i;
+                break;
+            }
+        }
+        if (iChanRaw == -1)
+            throw QString("ZenithCalibrater: Selected channel not in the visibility data");
+
+        std::cout << "Found selected raw channel " << selectedChannel << " at index " << iChanRaw << std::endl;
+
+        int iChanModel = -1;
+        for (unsigned i = 0; i < _modelVis->nChannels(); i++) {
+            if (_modelVis->channels()[i] == selectedChannel) {
+                iChanModel = i;
+                break;
+            }
+        }
+        if (iChanModel == -1)
+            throw QString("ZenithCalibrater: Selected channel not in the visibility data");
+
+        std::cout << "Found selected model channel " << selectedChannel << " at index " << iChanModel << std::endl;
+
+        int iChanCorected = -1;
+        for (unsigned i = 0; i < _correctedVis->nChannels(); i++) {
+            if (_correctedVis->channels()[i] == selectedChannel) {
+                iChanCorected = i;
+                break;
+            }
+        }
+        if (iChanCorected == -1)
+            throw QString("ZenithCalibrater: Selected channel not in the visibility data");
+
+        std::cout << "Found selected corrected channel " << selectedChannel << " at index " << iChanCorected << std::endl;
+
 
 
         for (unsigned p = 0; p < nPolCal; p++) {
-            unsigned pol = (nPolCal == 1 &&
+
+            unsigned iPol = (nPolCal == 1 &&
                     _polarisation == CorrectedVisibilityData::POL_X) ? 0 : 1;
 
             // Copy the input visibility data into the visibility work array
-            complex_t* rawVis = _rawVis->ptr(chan, pol);
+            complex_t* rawVis = _rawVis->ptr(iChanRaw, iPol);
             if (rawVis == NULL)
-                throw QString("AARG1");
+                throw QString("ZenithCalibrater: Raw visibility data missing for selected channel and polarisation");
 
-            // TODO: FIX hardcoded p and c below
-            complex_t* correctedVis = _correctedVis->ptr(0, 0);
+            complex_t* correctedVis = _correctedVis->ptr(iChanCorected, p);
             if (correctedVis == NULL)
-                throw QString("AARG2");
-            complex_t* modelVis = _modelVis->ptr(c, p);
+                throw QString("ZenithCalibrater: Corrected visibility data missing for selected channel and polarisation");
+
+            complex_t* modelVis = _modelVis->ptr(iChanModel, p);
+            if (correctedVis == NULL)
+                throw QString("ZenithCalibrater: Model visibility data missing for selected channel and polarisation");
+
             memcpy(&Vz[0], rawVis, nVis * sizeof(complex_t));
             memcpy(&modelTemp[0], modelVis, nVis * sizeof(complex_t));
 

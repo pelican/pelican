@@ -50,7 +50,10 @@ class TestPipelineCalibrateImage : public AbstractPipeline
 
         ModelVisibilityData* _modelVis;
         CorrectedVisibilityData* _correctedVis;
-        ImageData* _image;
+        ImageData* _calImage;
+        ImageData* _rawImage;
+        ImageData* _psfImage;
+        ImageData* _modelImage;
 };
 
 } // namespace pelican

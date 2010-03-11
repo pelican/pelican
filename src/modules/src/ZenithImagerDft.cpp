@@ -146,8 +146,18 @@ void ZenithImagerDft::run(ImageData* image, AntennaPositions* antPos,
     }
 
     unsigned nAnt = antPos->nAntennas();
-    unsigned nPolImage = _polarisation == ImageData::POL_BOTH ? 2 : 1;
+    unsigned nPolImage = _polarisation == VisibilityData::POL_BOTH ? 2 : 1;
     unsigned nChanImage = _channels.size();
+
+    if (vis != NULL) {
+        // Check input data and selection polarisation for consistency.
+        if (vis->polarisation() != VisibilityData::POL_BOTH) {
+            if (_polarisation == VisibilityData::POL_X && vis->polarisation() != VisibilityData::POL_X)
+                throw QString("ZenithImagerDft: Polarisation selection X is inconsistent with input data");
+            if (_polarisation == VisibilityData::POL_Y && vis->polarisation() != VisibilityData::POL_Y)
+                throw QString("ZenithImagerDft: Polarisation selection Y is inconsistent with input data");
+        }
+    }
 
     // Declare pointer to visibility data.
     complex_t* visData = NULL;
@@ -169,35 +179,39 @@ void ZenithImagerDft::run(ImageData* image, AntennaPositions* antPos,
     for (unsigned c = 0; c < nChanImage; c++) {
 
         // The channel ID selection.
-        unsigned channel = _channels[c];
-        double frequency = _freqRef + (channel - _freqRefChannel) * _freqDelta;
+        unsigned selectedChannel = _channels[c];
+        double frequency = _freqRef + (selectedChannel - _freqRefChannel) * _freqDelta;
 
-        // TODO fix me.
-//        unsigned iChan = 0;
-//        for (iChan = 0; iChan < vis->nChannels(); ++iChan) {
-//            if (vis->channels()[iChan] == channel) break;
-//        }
-        //if (iChan >= vis->nChannels())
+        // Find out if the selected channel is available in the data and if so
+        // get its index.
+        int iChan = -1;
+        if (vis != NULL) {
+            for (unsigned i = 0; i < vis->nChannels(); i++) {
+                if (vis->channels()[i] == selectedChannel) {
+                    iChan = i;
+                    break;
+                }
+            }
+            if (iChan == -1)
+                throw QString("ZenithImagerDft: Selected channel not in the visibility data");
+
+            std::cout << "found selected vis channel " << selectedChannel << " at index " << iChan << std::endl;
+        }
 
         for (unsigned p = 0; p < nPolImage; p++) {
 
-            unsigned pol = p;
-            pol = (nPolImage == 1 && _polarisation == ImageData::POL_X) ? 0 : 1;
+            unsigned iPol = p;
+            iPol = (nPolImage == 1 && _polarisation == VisibilityData::POL_X) ? 0 : 1;
 
             // Get pointer to visibility data for channel and polarisation.
-
-            // TODO: fix different indexing of model and raw data
             if (vis != NULL) {
-                // model
-//                visData = vis->ptr(c, p);
-                // raw
-//                visData = vis->ptr(channel, pol);
-                // TODO: fix me.
-                visData = vis->ptr(0, 0);
+                visData = vis->ptr(iChan, iPol);
+                if (visData == NULL)
+                    throw QString("ZenithImagerDft: Visibility data missing for selected channel and polarisation");
                 _zeroAutoCorrelations(visData, nAnt);
             }
 
-            // Generate the image.
+            // Generate the image. TODO fix c, p... as above
             real_t* imData = image->ptr(c, p);
             _makeImageDft(nAnt, antPos->xPtr(), antPos->yPtr(), visData,
                     frequency, _sizeL, _sizeM, &_coordL[0], &_coordM[0], imData);
@@ -215,6 +229,7 @@ void ZenithImagerDft::run(ImageData* image, AntennaPositions* antPos,
                 throw QString ("ZenithImagerDft: Invalid image range");
         }
     }
+    std::cout << "here" << std::endl;
 }
 
 
@@ -247,11 +262,11 @@ void ZenithImagerDft::_getConfiguration(const ConfigNode& config)
     // Get the polarisation selection.
     QString pol = config.getOption("polarisation", "value", "x").toLower();
     if (pol.startsWith("x"))
-        _polarisation = ImageData::POL_X;
+        _polarisation = VisibilityData::POL_X;
     else if (pol.startsWith("y"))
-        _polarisation = ImageData::POL_Y;
+        _polarisation = VisibilityData::POL_Y;
     else if (pol.startsWith("both"))
-        _polarisation = ImageData::POL_BOTH;
+        _polarisation = VisibilityData::POL_BOTH;
     else
         throw QString("ZenithImagerDft: Unknown polarisation option.");
 

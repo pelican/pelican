@@ -16,12 +16,13 @@ typedef double real_t;
 /// Complex floating point data type.
 typedef std::complex<real_t> complex_t;
 
+
 /**
  * @class DataBlob
- *  
+ *
  * @brief
  * Base class for all Pelican data blobs.
- * 
+ *
  * @details
  * This is the base class used for all Pelican data blobs required by
  * pipeline modules. It provides a timestamp using the Modified
@@ -29,6 +30,9 @@ typedef std::complex<real_t> complex_t;
  */
 class DataBlob
 {
+    public:
+        typedef enum { POL_X, POL_Y, POL_BOTH, POL_UNDEF} pol_t;
+
     private:
         /// The timestamp of the data blob, stored as a modified Julian
         /// date (MJD). Note that MJD = JD - 2400000.5, and starts
@@ -61,4 +65,4 @@ class DataBlob
 
 } // namespace pelican
 
-#endif // DATABLOB_H 
+#endif // DATABLOB_H
