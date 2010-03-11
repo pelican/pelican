@@ -71,13 +71,15 @@ void TestPipelineCalibrateImage::run(QHash<QString, DataBlob*>& remoteData)
 {
     AntennaPositions* antPos = (AntennaPositions*) remoteData["AntennaPositions"];
     VisibilityData* rawVis = (VisibilityData*) remoteData["VisibilityData"];
+    Q_ASSERT(antPos != NULL);
+    Q_ASSERT(rawVis != NULL);
 
     _modelVis->setTimeStamp(rawVis->timeStamp());
     _modelGen->run(antPos, _modelVis);
-
     _calibrate->run(rawVis, _modelVis, _correctedVis);
 
     _imager->run(_rawImage, antPos, rawVis);
+
     _imagerModel->run(_modelImage, antPos, _modelVis);
     _imager->run(_calImage, antPos, _correctedVis);
     _imager->run(_psfImage, antPos);

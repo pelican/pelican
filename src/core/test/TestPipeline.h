@@ -3,7 +3,6 @@
 
 #include "core/AbstractPipeline.h"
 #include "data/DataRequirements.h"
-#include "utility/memCheck.h"
 
 /**
  * @file TestPipeline.h

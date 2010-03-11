@@ -73,6 +73,15 @@ class AntennaPositions : public DataBlob
         /// Returns a pointer to the z antenna positions.
         real_t* zPtr() { return _z.size() > 0 ? &_z[0] : NULL; }
 
+        /// Returns a pointer to the x antenna positions.
+        const real_t* xPtr() const { return _x.size() > 0 ? &_x[0] : NULL; }
+
+        /// Returns a pointer to the y antenna positions.
+        const real_t* yPtr() const { return _y.size() > 0 ? &_y[0] : NULL; }
+
+        /// Returns a pointer to the z antenna positions.
+        const real_t* zPtr() const { return _z.size() > 0 ? &_z[0] : NULL; }
+
     private:
         std::vector<real_t> _x; ///< x coordinate of antenna position in metres.
         std::vector<real_t> _y; ///< y coordinate of antenna position in metres.
