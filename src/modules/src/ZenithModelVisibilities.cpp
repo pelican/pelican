@@ -212,7 +212,6 @@ void ZenithModelVisibilities::_checkDataBlobs(AntennaPositions* antPos,
     // Dimensions of the model.
     unsigned nAnt = antPos->nAntennas();
     unsigned nChanModel = _channels.size();
-    unsigned nPolModel = _polarisation == ModelVisibilityData::POL_BOTH ? 2 : 1;
 
     if (nAnt == 0)
         throw QString("ZenithModelVisibilities: No antennas found");
