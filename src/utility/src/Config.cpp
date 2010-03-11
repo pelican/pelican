@@ -35,16 +35,14 @@ Config::~Config()
  */
 ConfigNode Config::get(const TreeAddress_t &address) const
 {
-//    return ConfigNode(_get(address));
-
-    /* Declare the list of returned DOM elements */
+    // Declare the list of returned DOM elements.
     QList<QDomElement> elementList;
 
-    /* Get the specified address and put it into index 0 */
+    // Get the specified address and put it into index 0.
     QDomElement node = _get(address);
     elementList.insert(0, node);
 
-    /* Check and get addresses for all varsets */
+    // Check and get addresses for all varsets.
     QDomNodeList varsetList = node.elementsByTagName("varset");
     for (int i = 0; i < varsetList.size(); ++i) {
         QString varsetName = varsetList.at(i).toElement().attribute("name");
@@ -52,7 +50,7 @@ ConfigNode Config::get(const TreeAddress_t &address) const
         varsetAddress.append(Config::NodeId_t("varsets", ""));
         varsetAddress.append(Config::NodeId_t("varset", varsetName));
 
-        /* Get the varset at the address */
+        // Get the varset at the address.
         elementList.insert(i + 1, _get(varsetAddress));
     }
 

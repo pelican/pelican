@@ -1,7 +1,10 @@
 #include "utility/ConfigNode.h"
+#include "data/DataBlob.h"
 #include <QDomNode>
 #include <QDomNodeList>
+#include <QStringList>
 #include <QTextStream>
+#include <cstdlib>
 
 namespace pelican {
 
@@ -22,13 +25,13 @@ ConfigNode::ConfigNode(const QDomElement& config)
  */
 ConfigNode::ConfigNode(const QList<QDomElement>& config)
 {
-    /* Copy the base node */
+    // Copy the base node.
     _config = config[0];
 
-    /* Loop over each varset */
+    // Loop over each varset.
     for (int i = 1; i < config.size(); i++) {
 
-        /* Loop over each child in the varset and append it */
+        // Loop over each child in the varset and append it.
         QDomNodeList list = config[i].childNodes();
         for (int j = 0; j < list.size(); j++) {
             _config.appendChild(list.at(j).cloneNode());
@@ -86,7 +89,7 @@ QString ConfigNode::getOptionText(const QString& tagName,
     if (node.isNull()) return defValue;
 
     QDomNodeList children = node.childNodes();
-    QString text = QString();
+    QString text;
 
     for (int c = 0; c < children.size(); c++) {
         if (children.at(c).nodeType() == QDomNode::TextNode) {
@@ -129,5 +132,65 @@ QHash<QString, QString> ConfigNode::getOptionHash(const QString& tagName,
     }
     return hash;
 }
+
+/**
+ * @details
+ * Returns a vector containing the list of channels, if any.
+ * Channels are specified in the XML configuration as
+ *
+ * \verbatim
+      <channels>1,5,182</channels>
+ * \endverbatim
+ *
+ * or, for many contiguous channels,
+ *
+ * \verbatim
+      <channels start="0" end="511"/>
+ * \endverbatim
+ */
+std::vector<unsigned> ConfigNode::getChannels() const
+{
+    // Declare channel vector.
+    std::vector<unsigned> channels;
+
+    // Check if "start" and "end" tags are present.
+    const QString channelTag("channels");
+    const int beg = getOption(channelTag, "start", "-1").toInt();
+    const int end = getOption(channelTag, "end", "-1").toInt();
+
+    // If start or end are negative, check for text content.
+    if (beg < 0 || end < 0) {
+        QString channelStr = getOptionText(channelTag);
+        QStringList chanList = channelStr.split(",", QString::SkipEmptyParts);
+        unsigned size = chanList.size();
+        channels.resize(size);
+        for (unsigned i = 0; i < size; ++i) {
+            channels[i] = chanList.at(i).toUInt();
+        }
+    }
+
+    // Otherwise use start and end channels.
+    else {
+        const unsigned size = 1 + abs(end - beg);
+        const int dir = (end - beg >= 0) ? 1 : -1;
+        channels.resize(size);
+
+        // Fill the channel indices.
+        for (unsigned i = 0; i < size; ++i) {
+            channels[i] = beg + (i * dir);
+        }
+    }
+
+    // Check and throw if there are no channels.
+    if (channels.size() == 0)
+        throw QString("No channels specified.");
+    return channels;
+}
+
+/**
+ * @details
+ * Returns the polarisation option.
+ */
+
 
 } // namespace pelican
