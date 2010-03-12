@@ -289,7 +289,7 @@ void ConfigTest::test_testConfig()
     // Expect not to throw.
     {
         CPPUNIT_ASSERT_NO_THROW(TestConfig("testConfig.xml", "utility"));
-        TestConfig c("myXml.xml", "utility");
+        TestConfig c("testConfig.xml", "utility");
     }
 
     // Use case:
