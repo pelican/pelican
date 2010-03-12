@@ -31,6 +31,9 @@ class DataRequirements
         /// Destroys the data requirements object.
         ~DataRequirements();
 
+        /// Returns a set containing all required data types.
+        QSet<QString> allData() const {return _serviceData + _streamData;}
+
         /// Adds the required service data type.
         void addServiceData(const QString& type);
 

@@ -51,7 +51,7 @@ class PipelineDriver
         QMultiHash<DataRequirements, AbstractPipeline*> _pipelines;
 
         /// List of all requirements objects from each pipeline.
-        QList<DataRequirements> _allDataRequirements;
+        QList<DataRequirements> _allDataReq;
 
         /// List of registered pipelines owned by the driver.
         QList<AbstractPipeline*> _registeredPipelines;
@@ -88,24 +88,12 @@ class PipelineDriver
         /// Starts the data flow through the pipelines.
         void start();
 
-        /// Return the data requirements list for each pipeline.
-        const QList<DataRequirements>& dataRequirements() const;
-
         /// Stops the data flow through the pipelines.
         void stop();
 
     private:
-        /// Creates all the data blobs required by the pipeline.
-        void _createDataBlobs();
-
-        /// Creates the data client.
-        void _createDataClient(QString name);
-
-        /// Find the data requirements of the given \p pipeline.
-        void _determineDataRequirements(AbstractPipeline *pipeline);
-
-        /// Initialise pipelines.
-        void _initialisePipelines();
+        /// Checks that the data requirements of all pipelines are compatible.
+        void _checkDataRequirements();
 };
 
 } // namespace pelican

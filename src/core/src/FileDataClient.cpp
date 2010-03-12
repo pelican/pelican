@@ -90,7 +90,7 @@ QHash<QString, DataBlob*> FileDataClient::getData(QHash<QString, DataBlob*>& dat
 void FileDataClient::_getConfig()
 {
     /* Get all the filenames for each data type */
-    _fileNames = configNode()->getOptionHash("data", "type", "file");
+    _fileNames = configNode().getOptionHash("data", "type", "file");
 }
 
 } // namespace pelican

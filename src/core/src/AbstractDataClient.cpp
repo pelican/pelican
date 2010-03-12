@@ -12,15 +12,13 @@ namespace pelican {
  * @details
  * This creates a new abstract data client.
  * The abstract data client constructor takes a reference to the data
- * client configuration node (\p config), a pointer to the data
- * adapter factory (\p adapterFactory), and a list of data
- * requirements for each pipeline (\p dataRequirements).
+ * client configuration node (\p config).
  *
  * @param[in] config Reference to the data client configuration node.
- * @param[in] dataType object containing the requirements and adappters for each pipeline.
+ * @param[in] types  Object containing the requirements and adapters for each pipeline.
  */
 AbstractDataClient::AbstractDataClient(const ConfigNode& config, const DataTypes& types)
-    : _dataReqs( types ), _configNode(&config)
+    : _dataReqs( types ), _configNode(config)
 {
     // Quick sanity check
     if ( _dataReqs.dataRequirements().size()== 0 )

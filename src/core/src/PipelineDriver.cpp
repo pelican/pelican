@@ -42,13 +42,13 @@ PipelineDriver::PipelineDriver(DataBlobFactory* blobFactory,
  */
 PipelineDriver::~PipelineDriver()
 {
-    /* Delete the pipelines */
+    // Delete the pipelines.
     foreach (AbstractPipeline* pipeline, _registeredPipelines) {
         delete pipeline;
     }
     _registeredPipelines.clear();
 
-    /* Delete the data blobs */
+    // Delete the data blobs.
     foreach (DataBlob* dataBlob, _dataHash) {
         delete dataBlob;
     }
@@ -76,7 +76,7 @@ void PipelineDriver::registerPipeline(AbstractPipeline *pipeline)
     pipeline->init();
 
     // Store the remote data requirements.
-    _allDataRequirements.append(pipeline->requiredDataRemote());
+    _allDataReq.append(pipeline->requiredDataRemote());
 }
 
 /**
@@ -110,16 +110,23 @@ void PipelineDriver::start()
 
     // Store the remote data requirements for each pipeline.
     foreach (AbstractPipeline* pipeline, _registeredPipelines) {
-        _determineDataRequirements(pipeline);
         _pipelines.insert(pipeline->requiredDataRemote(), pipeline);
     }
 
-    // Create the data blobs.
-    _createDataBlobs();
+    // Create data blobs for all pipelines.
+    foreach ( DataRequirements req, _allDataReq ) {
+        foreach ( QString type, req.allData() ) {
+            if ( ! _dataHash.contains(type) )
+                _dataHash.insert(type, _blobFactory->create(type));
+        }
+    }
 
     // Create the data client.
     if (!_dataClientName.isEmpty())
-        _createDataClient(_dataClientName);
+        _dataClient = _clientFactory->create(_dataClientName, _allDataReq);
+
+    // Check the data requirements.
+    _checkDataRequirements();
 
     // Enter main program loop.
     _run = true;
@@ -158,69 +165,21 @@ void PipelineDriver::stop()
 
 /**
  * @details
- * This method allocates all the required data blobs and inserts pointers to
- * them into the data hash.
- *
- * This private method is called by start().
- */
-void PipelineDriver::_createDataBlobs()
-{
-    // Data required by all pipelines.
-    QSet<QString> allData;
-    foreach (DataRequirements req, _allDataRequirements) {
-        allData += req.serviceData() + req.streamData();
-    }
-
-    /* Iterate over data requirements to create blobs if they don't exist */
-    foreach (QString type, allData) {
-        if ( ! _dataHash.contains(type) )
-            _dataHash.insert(type, _blobFactory->create(type));
-    }
-}
-
-/**
- * @details
- * Creates the data client after a call to the public method setDataClient()
- * sets the client type.
- *
- * Throws an exception of type QString if the data client is unknown.
- *
- * @param[in] type The type of the data client to create.
- */
-void PipelineDriver::_createDataClient(QString type)
-{
-    _dataClient = _clientFactory->create(type, dataRequirements() );
-}
-
-
-/**
- * @details
- * Returns the list of remote data required for each pipeline.
- *
- * @return
- */
-const QList<DataRequirements>& PipelineDriver::dataRequirements() const
-{
-    return _allDataRequirements;
-}
-
-/**
- * @details
  * Private method to find the data requirements of the given pipeline.
- * This is called by _initialisePipelines().
+ * This is called by start().
  */
-void PipelineDriver::_determineDataRequirements(AbstractPipeline* pipeline)
+void PipelineDriver::_checkDataRequirements()
 {
-    /* Check that the set of stream data required for this pipeline does not
+    /* Check that the set of stream data required for each pipeline does not
      * intersect the set of stream data required by another.
      * Data is not currently copied, so this ensures that two pipelines do not
      * try to modify the same data. */
-    QMultiHash<DataRequirements, AbstractPipeline*>::iterator i = _pipelines.begin();
-    while (i != _pipelines.end()) {
-        if ((i.key().streamData() & pipeline->requiredDataRemote().streamData()).size() > 0) {
+    DataRequirements totalReq;
+    foreach (DataRequirements req, _dataClient->dataRequirements()) {
+        if ((totalReq.streamData() & req.streamData()).size() > 0) {
             throw QString("Multiple pipelines requiring the same remote stream data are not supported.");
         }
-        ++i;
+        totalReq += req;
     }
 }
 

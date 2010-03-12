@@ -52,13 +52,11 @@ class PipelineDriverTest : public CppUnit::TestFixture
         ~PipelineDriverTest();
 
     private:
-        QCoreApplication *coreApp;
-        //PipelineApplication *pipelineApp;
-        PipelineDriver *pipelineDriver;
+        QCoreApplication *_coreApp;
+        PipelineDriver *_pipelineDriver;
         DataBlobFactory* _dataBlobFactory;
         ModuleFactory* _moduleFactory;
         DataClientFactory* _clientFactory;
-
 };
 
 } // namespace pelican

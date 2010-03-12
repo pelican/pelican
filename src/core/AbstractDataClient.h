@@ -2,6 +2,7 @@
 #define ABSTRACTDATACLIENT_H
 
 #include "DataTypes.h"
+#include "utility/ConfigNode.h"
 #include <QHash>
 #include <QList>
 #include <QString>
@@ -13,7 +14,6 @@
 namespace pelican {
 
 class AbstractAdapter;
-class ConfigNode;
 class DataBlob;
 
 /**
@@ -53,14 +53,11 @@ class AbstractDataClient
         DataTypes _dataReqs;
 
         /// The configuration node for the data client.
-        const ConfigNode* _configNode;
+        ConfigNode _configNode;
 
     protected:
         /// Returns a pointer to the configuration node.
-        const ConfigNode* configNode() {return _configNode;}
-
-        /// Returns the list of data requirements for each pipeline.
-        const QList<DataRequirements>& dataRequirements() { return _dataReqs.dataRequirements(); }
+        const ConfigNode& configNode() {return _configNode;}
 
         /// returns the appropriate adapter for service data of the required type
         AbstractServiceAdapter* serviceAdapter(const QString& type) const;
@@ -75,6 +72,9 @@ class AbstractDataClient
 
         /// Data client destructor (virtual).
         virtual ~AbstractDataClient();
+
+        /// Returns the list of data requirements for each pipeline.
+        const QList<DataRequirements>& dataRequirements() { return _dataReqs.dataRequirements(); }
 
         /// Gets the requested data from the data server.
         /// This method gets tFills the given data hash, and returns another hash of valid data.

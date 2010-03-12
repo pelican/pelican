@@ -23,9 +23,11 @@ DataTypes::~DataTypes()
 {
 }
 
-/// @details
-//  adds a data requirement. All data must be added before
-//  any adapters are set.
+/**
+ * @details
+ * adds a data requirement. All data must be added before
+ * any adapters are set.
+ */
 void DataTypes::addData(const DataRequirements& data)
 {
     _dataRequirements.append(data);
@@ -35,13 +37,16 @@ void DataTypes::addData(const QList<DataRequirements>& data)
 {
     _dataRequirements += data;
 }
-/// @details
-//  Sets a particular adapter for a particular type of data. All data added 
-//  with addData will be made consistent with the adpater
+
+/**
+ * @details
+ * Sets a particular adapter for a particular type of data. All data added
+ * with addData will be made consistent with the adpater
+ */
 void DataTypes::setAdapter(const QString& type, AbstractAdapter* adapter)
 {
     _adapters[type] = adapter;
-    // ensure each datarequirement is of the correct type
+    // ensure each data requirement is of the correct type
     for(int i=0; i < _dataRequirements.size(); ++i )
     {
         DataRequirements& req = _dataRequirements[i];
