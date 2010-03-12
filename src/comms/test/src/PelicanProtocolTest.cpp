@@ -83,9 +83,10 @@ void PelicanProtocolTest::test_sendServiceData()
         ServiceDataResponse* sd = static_cast<ServiceDataResponse*>(resp.get());
         CPPUNIT_ASSERT_EQUAL( 1, sd->data().size() );
         CPPUNIT_ASSERT( d1 == *(sd->data()[0]) );
-        QByteArray buf(0,d1.size());
-        CPPUNIT_ASSERT_EQUAL( (long)d1.size(), (long)socket.read( buf.data(), d1.size() ) );
-        CPPUNIT_ASSERT_EQUAL( std::string(data1.data()), std::string(buf.data()));
+        std::vector<char> buf1(d1.size()+1);
+        buf1[d1.size()+1] = '\0';
+        CPPUNIT_ASSERT_EQUAL( (long)d1.size(), (long)socket.read( &buf1[0], d1.size() ) );
+        CPPUNIT_ASSERT_EQUAL( std::string(data1.data()), std::string(&buf1[0]));
     }
     {
         // Use Case
@@ -120,13 +121,15 @@ void PelicanProtocolTest::test_sendServiceData()
         CPPUNIT_ASSERT( d2 == *( sd->data()[1]) );
 
         // check we have the actual data
-        QByteArray buf(0,d1.size());
-        CPPUNIT_ASSERT_EQUAL( (long)d1.size(), (long)socket.read( buf.data(), d1.size() ) );
-        CPPUNIT_ASSERT_EQUAL( std::string(data1.data()), std::string(buf.data()));
-        buf.clear();
-        buf.resize(d2.size());
-        CPPUNIT_ASSERT_EQUAL( (long)d2.size(), (long)socket.read( buf.data(), d2.size() ) );
-        CPPUNIT_ASSERT_EQUAL( std::string(data2.data()), std::string(buf.data()));
+        CPPUNIT_ASSERT_EQUAL((long)data1.size(), (long)d1.size());
+        std::vector<char> buf1(d1.size()+1);
+        buf1[d1.size()+1] = '\0';
+        CPPUNIT_ASSERT_EQUAL( (long)d1.size(), (long)socket.read( &buf1[0], d1.size() ) );
+        CPPUNIT_ASSERT_EQUAL( std::string(data1.data()), std::string(&buf1[0]));
+        std::vector<char> buf2(d2.size()+1);
+        buf2[d2.size()+1] = '\0';
+        CPPUNIT_ASSERT_EQUAL( (long)d2.size(), (long)socket.read( &buf2[0], d2.size() ) );
+        CPPUNIT_ASSERT_EQUAL( std::string(data2.data()), std::string(&buf2[0]) );
     }
 }
 

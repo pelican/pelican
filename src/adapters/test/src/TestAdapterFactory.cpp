@@ -1,5 +1,6 @@
 #include "TestAdapterFactory.h"
 #include "TestAdapter.h"
+#include "TestStreamAdapter.h"
 
 #include "utility/memCheck.h"
 
@@ -15,7 +16,11 @@ TestAdapterFactory::TestAdapterFactory(const pelican::Config& config)
 
 AbstractAdapter* TestAdapterFactory::create(const QString& type, const QString& name)
 {
-    TestAdapter* adapter = new TestAdapter;
+    AbstractAdapter* adapter = 0;
+    if( type == "service" ) 
+        adapter = new TestAdapter;
+    else
+        adapter = new TestStreamAdapter;
     _adapters.append(adapter);
     return adapter;
 }
