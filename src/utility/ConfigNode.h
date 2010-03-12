@@ -14,7 +14,8 @@ namespace pelican {
  * @class ConfigNode
  *
  * @brief
- * Wraps and handles extracting settings from a QDomElement
+ * Wraps and handles extracting settings from a settings node in a pelican XML
+ * configuration file.
  *
  * @details
  */
@@ -39,6 +40,12 @@ class ConfigNode
         ~ConfigNode() {}
 
     public:
+        /// Returns the configuration node type.
+        QString type() const { return _config.tagName(); }
+
+        /// Returns the configuration node name.
+        QString name() const { return _config.attribute("name"); }
+
         /// Returns a configuration option (attribute).
         /// i.e. the attribute for the XML: <tagName attribute=""/>
         QString getOption(const QString& tagName, const QString& attribute,

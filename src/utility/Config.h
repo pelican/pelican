@@ -65,15 +65,21 @@ class Config
         /// Saves the configuration to the specified file name
         void save(const QString& fileName) const;
 
+        /// Sets the configuration from the QString text.
+        /// Warning: This method is added for testing only and will destroy
+        /// any previous configuration.
+        void setFromString(const QString& text);
+
+    protected:
+        /// Reads and parses the configuration file.
+        void read(QString fileName);
+
     private:
         /// Returns a pointer to the specified configuration node.
         QDomElement _get(const TreeAddress_t &address) const;
 
         /// Creates and returns a configuration option at the specified address.
         QDomElement _set(const TreeAddress_t &address);
-
-        /// Reads and parses the configuration file.
-        void _read();
 
         /// Creates a child configuration node
         void _createChildNode(QDomElement &parent, const QString& tag,

@@ -1,16 +1,19 @@
-#include "ConfigTest.h"
-#include "Config.h"
+#include "utility/test/ConfigTest.h"
+#include "utility/TestConfig.h"
+#include "utility/Config.h"
+#include "utility/ConfigNode.h"
 #include <QCoreApplication>
 #include <QTextStream>
 #include <QFile>
 #include <QDir>
+#include <iostream>
 
 #include "utility/memCheck.h"
 
 namespace pelican {
 
 CPPUNIT_TEST_SUITE_REGISTRATION( ConfigTest );
-// class ConfigTest 
+// class ConfigTest
 ConfigTest::ConfigTest()
     : CppUnit::TestFixture()
 {
@@ -245,5 +248,60 @@ void ConfigTest::test_configFileRead()
     }
 }
 
+
+/**
+ * @details
+ * Test for setting the configuration xml from a QString.
+ */
+void ConfigTest::test_configFromString()
+{
+    QString xml =
+    "<configuration>"
+    "    <modules>"
+    "        <moduleType name=\"test\">"
+    "            <param value=\"2.0\"/>"
+    "        </moduleType>"
+    "    </modules>"
+    "</configuration>";
+
+    Config config;
+    config.setFromString(xml);
+
+    Config::TreeAddress_t address;
+    address << Config::NodeId_t("modules", "");
+    address << Config::NodeId_t("moduleType", "test");
+    ConfigNode configNode = config.get(address);
+
+    CPPUNIT_ASSERT(configNode.type() == "moduleType");
+    CPPUNIT_ASSERT(configNode.name() == "test");
+    CPPUNIT_ASSERT_EQUAL(2.0, configNode.getOption("param", "value").toDouble());
+}
+
+
+/**
+ * @details
+ * Test for the TestConfig test class.
+ */
+void ConfigTest::test_testConfig()
+{
+    // Use case:
+    // Test configuration file that exists
+    // Expect not to throw.
+    {
+        CPPUNIT_ASSERT_NO_THROW(TestConfig("testConfig.xml", "utility"));
+        TestConfig c("myXml.xml", "utility");
+    }
+
+    // Use case:
+    // Test configuration file that doesn't exist.
+    // Expect to throw with useful message.
+    {
+        CPPUNIT_ASSERT_THROW_MESSAGE(
+                "TestConfig: Configuration file noConfig.xml not found.",
+                TestConfig("noConfig.xml", "utility"),
+                QString
+        );
+    }
+}
 
 } // namespace pelican

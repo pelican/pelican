@@ -15,7 +15,7 @@ namespace pelican {
 Config::Config(const QString &fileName)
 {
     _fileName = fileName;
-    _read();
+    read(_fileName);
 }
 
 
@@ -55,6 +55,123 @@ ConfigNode Config::get(const TreeAddress_t &address) const
     }
 
     return ConfigNode(elementList);
+}
+
+
+/**
+ * @details
+ * Set the the attribute at the specified address to the key, value.
+ */
+void Config::setAttribute(const TreeAddress_t &address, const QString &key,
+        const QString &value)
+{
+    QDomElement e = _set(address);
+    e.setAttribute(key, value);
+}
+
+
+/**
+ * @details
+ * Returns the attribute at the address with the specified key. An empty string
+ * is returned if the address or key doesn't exist.
+ */
+QString Config::getAttribute(const TreeAddress_t& address, const QString& key) const
+{
+    QDomElement e = _get(address);
+    if (e.isNull()) {
+        return QString();
+    }
+    else {
+        return e.attribute(key);
+    }
+}
+
+
+/**
+ * @details
+ * Sets the text node at the address.
+ */
+void Config::setText(const TreeAddress_t& address, const QString& text)
+{
+    QDomElement e = _set(address);
+    QDomText t = _document.createTextNode(text);
+    e.appendChild(t);
+}
+
+
+/**
+ * @details
+ * Gets value of the text node at the address. If multiple text nodes are
+ * found at the same level they will be concatenated.
+ */
+QString Config::getText(const TreeAddress_t& address) const
+{
+    QDomElement e = _get(address);
+    QDomNodeList children = e.childNodes();
+    QString text = QString();
+    if (children.isEmpty()) {
+        return text;
+    }
+    else {
+        for (int c = 0; c < children.size(); c++) {
+            if (children.at(c).nodeType() == QDomNode::TextNode) {
+                text += children.at(c).nodeValue();
+            }
+        }
+    }
+    return text;
+}
+
+
+/**
+ * @details
+ * Prints a summary of the configuration tree to STDOUT.
+ */
+void Config::summary() const
+{
+    std::cout << std::endl;
+    std::cout << QString(70, QChar('=')).toStdString() << std::endl;
+    std::cout << _document.toString(4).toStdString();
+    std::cout << QString(70, QChar('=')).toStdString() << std::endl;
+    std::cout << std::endl;
+}
+
+
+/**
+ * @details
+ * Save the Configuration to specified file name
+ */
+void Config::save(const QString& fileName) const
+{
+    if (fileName.isEmpty()) return;
+
+    QFile file(fileName);
+
+    if (!file.open(QFile::WriteOnly | QFile::Truncate)) {
+        return;
+    }
+    QTextStream out(&file);
+    out << _document.toByteArray(4);
+}
+
+
+/**
+ * @details
+ * Sets the content of the configuration QDomDocument from the QString /p text.
+ *
+ * @param[in] text  QString containing the XML configuration.
+ */
+void Config::setFromString(const QString& text)
+{
+    _document.clear();
+
+    /* Read the XML configuration file into the QDomDocument */
+    QString error;
+    int line, column;
+    if (!_document.setContent(text, true, &error, &line, &column)) {
+        throw QString("Config: Parse error "
+                "(Line: %1 Col: %2): %3.").arg(line).arg(column).arg(error);
+    }
 }
 
 
@@ -187,116 +304,20 @@ QDomElement Config::_get(const TreeAddress_t &address) const
 
 /**
  * @details
- * Set the the attribute at the specified address to the key, value.
- */
-void Config::setAttribute(const TreeAddress_t &address, const QString &key,
-        const QString &value)
-{
-    QDomElement e = _set(address);
-    e.setAttribute(key, value);
-}
-
-
-/**
- * @details
- * Returns the attribute at the address with the specified key. An empty string
- * is returned if the address or key doesn't exist.
- */
-QString Config::getAttribute(const TreeAddress_t& address, const QString& key) const
-{
-    QDomElement e = _get(address);
-    if (e.isNull()) {
-        return QString();
-    }
-    else {
-        return e.attribute(key);
-    }
-}
-
-
-/**
- * @details
- * Sets the text node at the address.
- */
-void Config::setText(const TreeAddress_t& address, const QString& text)
-{
-    QDomElement e = _set(address);
-    QDomText t = _document.createTextNode(text);
-    e.appendChild(t);
-}
-
-
-/**
- * @details
- * Gets value of the text node at the address. If multiple text nodes are
- * found at the same level they will be concatenated.
- */
-QString Config::getText(const TreeAddress_t& address) const
-{
-    QDomElement e = _get(address);
-    QDomNodeList children = e.childNodes();
-    QString text = QString();
-    if (children.isEmpty()) {
-        return text;
-    }
-    else {
-        for (int c = 0; c < children.size(); c++) {
-            if (children.at(c).nodeType() == QDomNode::TextNode) {
-                text += children.at(c).nodeValue();
-            }
-        }
-    }
-    return text;
-}
-
-
-/**
- * @details
- * Prints a summary of the configuration tree to STDOUT.
- */
-void Config::summary() const
-{
-    std::cout << std::endl;
-    std::cout << QString(70, QChar('=')).toStdString() << std::endl;
-    std::cout << _document.toString(4).toStdString();
-    std::cout << QString(70, QChar('=')).toStdString() << std::endl;
-    std::cout << std::endl;
-}
-
-
-/**
- * @details
- * Save the Configuration to specified file name
- */
-void Config::save(const QString& fileName) const
-{
-    if (fileName.isEmpty()) return;
-
-    QFile file(fileName);
-
-    if (!file.open(QFile::WriteOnly | QFile::Truncate)) {
-        return;
-    }
-    QTextStream out(&file);
-    out << _document.toByteArray(4);
-}
-
-
-/**
- * @details
  * Read a configuration from the Pelican XML file specified when the
  * configuration object is instantiated.
  */
-void Config::_read()
+void Config::read(const QString fileName)
 {
-    QFile file(_fileName);
-    if (_fileName.isEmpty()) {
+    QFile file(fileName);
+
+    if (fileName.isEmpty()) {
         _document = QDomDocument("pelican");
         return;
     }
 
     if (!file.exists())
-        throw QString("Configuration file not present: (%1).").arg(_fileName);
+        throw QString("Configuration file not present: (%1).").arg(fileName);
 
     if (!file.open(QFile::ReadOnly | QFile::Text))
         return;

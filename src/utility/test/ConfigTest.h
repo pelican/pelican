@@ -9,10 +9,10 @@
 
 /**
  * @class ConfigTest
- *  
+ *
  * @brief
  * Class to test the configuration object.
- * 
+ *
  * @details
  *
  * @note Created as a QCoreApplication for Qt garbage collection.
@@ -21,8 +21,6 @@
 class QCoreApplication;
 
 namespace pelican {
-
-class Config;
 
 class ConfigTest : public CppUnit::TestFixture
 {
@@ -34,6 +32,8 @@ class ConfigTest : public CppUnit::TestFixture
         CPPUNIT_TEST( test_setConfiguration );
         CPPUNIT_TEST( test_getConfiguration );
         CPPUNIT_TEST( test_configFileRead );
+        CPPUNIT_TEST( test_configFromString );
+        CPPUNIT_TEST( test_testConfig );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -51,9 +51,12 @@ class ConfigTest : public CppUnit::TestFixture
         void test_setConfiguration();
         /// Test for returning configuration options
         void test_getConfiguration();
-        /// Test for reading a xml config from file
+        /// Test for reading a XML config from file
         void test_configFileRead();
-
+        /// Test creating configuration from a QString
+        void test_configFromString();
+        /// Test using the TestConfig class.
+        void test_testConfig();
 
     public:
         ConfigTest();
@@ -62,7 +65,6 @@ class ConfigTest : public CppUnit::TestFixture
     private:
         QCoreApplication *app;
 };
-
 } // namespace pelican
 
-#endif // CONFIGTEST_H 
+#endif // CONFIGTEST_H
