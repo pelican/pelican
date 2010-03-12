@@ -48,7 +48,7 @@ class TestConfig : public Config
             if (!file.exists()) {
                 throw QString("TestConfig: Configuration file %1 not found.").arg(fileName);
             }
-            read(QFileInfo(file).absolutePath());
+            read(QFileInfo(file).absoluteFilePath());
         }
 
         ~TestConfig() {}

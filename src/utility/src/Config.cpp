@@ -12,10 +12,9 @@ namespace pelican {
  * @details
  * Configuration constructor.
  */
-Config::Config(const QString &fileName)
+Config::Config(const QString& fileName)
 {
-    _fileName = fileName;
-    read(_fileName);
+    read(fileName);
 }
 
 
@@ -309,6 +308,8 @@ QDomElement Config::_get(const TreeAddress_t &address) const
  */
 void Config::read(const QString fileName)
 {
+    _fileName = fileName;
+
     QFile file(fileName);
 
     if (fileName.isEmpty()) {

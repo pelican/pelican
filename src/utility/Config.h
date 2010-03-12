@@ -35,7 +35,7 @@ class Config
         ~Config();
 
         /// Returns the configuration file name
-        QString getFileName() const { return _fileName; }
+        QString fileName() const { return _fileName; }
 
         /// Creates and returns a configuration option at the specified address.
         ConfigNode set(const TreeAddress_t &address) {

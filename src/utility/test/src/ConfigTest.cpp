@@ -155,24 +155,17 @@ void ConfigTest::test_getConfiguration()
  */
 void ConfigTest::test_configFileRead()
 {
-    QDir dir("utility/test/data");
-    if (!dir.exists()) dir = QDir("test/data");
-    else if (!dir.exists()) dir = QDir("data");
-    else if (!dir.exists()) return;
 
     // Use case
     // Ask for the address of a module node in the test config file and check
     // that its children and their attributes are correct.
     // Expect that all of the parameters are found
     {
-        QString fileName = dir.path() + "/testConfig.xml";
-        if (!QFile(fileName).exists()) return;
-        Config config(fileName);
+        TestConfig config("testConfig.xml", "utility");
         Config::TreeAddress_t address;
         address << Config::NodeId_t("modules", "");
         address << Config::NodeId_t("moduleType", "testA");
         QDomElement e = config._get(address);
-
         CPPUNIT_ASSERT(e.parentNode().nodeName() == "modules");
         CPPUNIT_ASSERT(e.childNodes().count() == 3);
         CPPUNIT_ASSERT(e.childNodes().at(0).nodeName() == "paramA");
@@ -190,9 +183,7 @@ void ConfigTest::test_configFileRead()
     // Ask for the address of another module to to check this exists too.
     // Expect that the module node is found but has no children.
     {
-        QString fileName = dir.path() + "/testConfig.xml";
-        if (!QFile(fileName).exists()) return;
-        Config config(fileName);
+        TestConfig config("testConfig.xml", "utility");
         Config::TreeAddress_t address;
         address << Config::NodeId_t("modules", "");
         address << Config::NodeId_t("moduleType", "default::testA");
@@ -207,11 +198,10 @@ void ConfigTest::test_configFileRead()
     // Expect that a parse error exception is thrown
     {
         try {
-            QString fileName = dir.path() + "/emptyConfig.xml";
-            Config config(fileName);
+            TestConfig config("emptyConfig.xml", "utility");
         }
         catch (QString err) {
-            CPPUNIT_ASSERT(err.startsWith("Parse error"));
+            CPPUNIT_ASSERT(err.startsWith("Config: Parse error"));
         }
     }
 
@@ -220,12 +210,10 @@ void ConfigTest::test_configFileRead()
     // Expect to throw an exception.
     {
         try {
-            QString fileName = dir.path() + "/badConfig.xml";
-            if (!QFile(fileName).exists()) return;
-            Config config(fileName);
+            TestConfig config("badConfig.xml", "utility");
         }
         catch (QString err) {
-            CPPUNIT_ASSERT(err == "Invalid doctype.");
+            CPPUNIT_ASSERT(err.startsWith("Config: Invalid doctype"));
         }
     }
 
@@ -233,9 +221,7 @@ void ConfigTest::test_configFileRead()
     // Try to extract the named parameters.
     // Expect that all the parameters are found.
     {
-        QString fileName = dir.path() + "/testConfig.xml";
-        if (!QFile(fileName).exists()) return;
-        Config config(fileName);
+        TestConfig config("testConfig.xml", "utility");
         Config::TreeAddress_t address;
         address << Config::NodeId_t("modules", "");
         address << Config::NodeId_t("moduleType", "testA");
@@ -289,7 +275,6 @@ void ConfigTest::test_testConfig()
     // Expect not to throw.
     {
         CPPUNIT_ASSERT_NO_THROW(TestConfig("testConfig.xml", "utility"));
-        TestConfig c("testConfig.xml", "utility");
     }
 
     // Use case:
