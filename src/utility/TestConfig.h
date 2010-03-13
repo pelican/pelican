@@ -65,25 +65,31 @@ class TestConfig : public Config
             return _argv;
         }
 
+        void saveTestConfig(const QString& fileName, const QString& package)
+        {
+            QString path = findTestFile(".", package);
+            save(path + "/" +fileName);
+        }
+
     public:
         /// Returns the file path to a test file /p fileName for the specified
         /// package library /p package.
         static QString findTestFile(const QString& fileName, const QString& package)
         {
             QStringList searchPaths;
-            searchPaths << "data";
-            searchPaths << "test/data";
-            searchPaths << package + "/test/data";
-            searchPaths << "../" + package + "/test/data";
-            searchPaths << "../../" + package + "/test/data";
             searchPaths << "../../../" + package + "/test/data";
+            searchPaths << "../../" + package + "/test/data";
+            searchPaths << "../" + package + "/test/data";
+            searchPaths << package + "/test/data";
+            searchPaths << "test/data";
+            searchPaths << "data";
             QDir::setSearchPaths("testData", searchPaths);
             QString name = "testData:" + fileName;
             QFile file(name);
             if (!file.exists()) {
                 throw QString("TestConfig: Configuration file %1 not found.").arg(fileName);
             }
-            return QFileInfo(file).absoluteFilePath();
+            return QFileInfo(file).filePath(); // absoluteFilePath() better ?
         }
 
     private:
