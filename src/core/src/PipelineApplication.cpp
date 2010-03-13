@@ -7,11 +7,11 @@
 #include "core/DataClientFactory.h"
 #include "data/DataBlobFactory.h"
 #include "boost/program_options.hpp"
+#include "utility/Config.h"
+#include "utility/ConfigNode.h"
 #include <string>
 #include <iostream>
 
-#include "utility/Config.h"
-#include "utility/ConfigNode.h"
 #include "utility/memCheck.h"
 
 namespace pelican {
@@ -29,36 +29,36 @@ namespace opts = boost::program_options;
  */
 PipelineApplication::PipelineApplication(int argc, char** argv)
 {
-    /* Initialise member variables */
+    // Initialise member variables
     _config = NULL;
     _adapterFactory = NULL;
     _moduleFactory = NULL;
     _dataBlobFactory = NULL;
     _driver = NULL;
 
-    /* Check for QCoreApplication */
+    // Check for QCoreApplication
     if (QCoreApplication::instance() == NULL)
         throw QString("Create a QCoreApplication before the pipeline application.");
 
-    /* Set configuration using command line arguments */
+    // Set configuration using command line arguments
     if (!_createConfig(argc, argv))
-        throw QString("Cannot create configuration object.\n");
+        throw QString("Cannot create configuration object.");
 
-    /* Construct the adapter factory */
+    // Construct the adapter factory
     _adapterFactory = new AdapterFactory(_config);
 
-    /* Construct the data blob factory */
+    // Construct the data blob factory
     _dataBlobFactory = new DataBlobFactory;
 
-    /* Construct the module factory */
+    // Construct the module factory
     _moduleFactory = new ModuleFactory(_config);
 
-    /* Construct the DataClient factory */
+    // Construct the DataClient factory
     Config::TreeAddress_t clientsNode;
     clientsNode.append(Config::NodeId_t("clients", ""));
     _clientFactory = new DataClientFactory(_config, clientsNode, _adapterFactory );
 
-    /* Construct the pipeline driver */
+    // Construct the pipeline driver
     _driver = new PipelineDriver( _dataBlobFactory, _moduleFactory, _clientFactory );
 
 }
@@ -134,7 +134,7 @@ void PipelineApplication::start()
  */
 bool PipelineApplication::_createConfig(int argc, char** argv)
 {
-    /* Check that argc and argv are nonzero */
+    // Check that argc and argv are nonzero
     if (argc == 0 || argv == NULL)
         throw QString("No command line.");
 
@@ -164,7 +164,8 @@ bool PipelineApplication::_createConfig(int argc, char** argv)
     /* Construct the configuration object */
     try {
         _config = new Config(QString::fromStdString(configFilename));
-    } catch (QString error) {
+    }
+    catch (QString error) {
         delete _config;
         std::cerr << error.toLatin1().data() << std::endl;
         return false;

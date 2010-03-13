@@ -85,7 +85,7 @@ AbstractAdapter* AdapterFactory::_create(const QString& type, const ConfigNode& 
         _adapters.append(adapter);
     }
     else {
-        throw QString("AdapterFactory::_create(): Unknown adapter type '" + type + "'");
+        throw QString("AdapterFactory: Unknown adapter type '" + type + "'");
     }
     return adapter;
 }
