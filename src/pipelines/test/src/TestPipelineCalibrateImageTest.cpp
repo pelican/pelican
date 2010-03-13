@@ -53,13 +53,4 @@ void TestPipelineCalibrateImageTest::test_method()
     TIMER_STOP("TestPipelineCalibrateImageTest");
 }
 
-/**
- * @details
- * Create the configuration XML for the test pipeline.
- */
-void TestPipelineCalibrateImageTest::_createConfig()
-{
-
-}
-
 } // namespace pelican
