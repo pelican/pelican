@@ -242,13 +242,11 @@ void ConfigTest::test_configFileRead()
 void ConfigTest::test_configFromString()
 {
     QString xml =
-    "<configuration>"
-    "    <modules>"
-    "        <moduleType name=\"test\">"
-    "            <param value=\"2.0\"/>"
-    "        </moduleType>"
-    "    </modules>"
-    "</configuration>";
+    "<modules>"
+    "   <moduleType name=\"test\">"
+    "       <param value=\"2.0\"/>"
+    "   </moduleType>"
+    "</modules>";
 
     Config config;
     config.setFromString(xml);

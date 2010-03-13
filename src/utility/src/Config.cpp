@@ -3,6 +3,7 @@
 #include <QTextStream>
 #include <QFile>
 #include <iostream>
+#include <QDomDocumentType>
 
 #include "utility/memCheck.h"
 
@@ -133,7 +134,8 @@ void Config::summary() const
  */
 void Config::save(const QString& fileName) const
 {
-    if (fileName.isEmpty()) return;
+    if (fileName.isEmpty())
+        return;
 
     QFile file(fileName);
 
@@ -154,11 +156,19 @@ void Config::save(const QString& fileName) const
 void Config::setFromString(const QString& text)
 {
     _document.clear();
-
+    _document = QDomDocument("pelican");
     /* Read the XML configuration file into the QDomDocument */
     QString error;
     int line, column;
-    if (!_document.setContent(text, true, &error, &line, &column)) {
+
+    QString xmlDoc =
+    "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+    "<!DOCTYPE pelican>"
+    "<configuration version=\"1.0\">"
+    "" + text + ""
+    "</configuration>";
+
+    if (!_document.setContent(xmlDoc, true, &error, &line, &column)) {
         throw QString("Config: Parse error "
                 "(Line: %1 Col: %2): %3.").arg(line).arg(column).arg(error);
     }
