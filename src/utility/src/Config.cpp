@@ -20,15 +20,6 @@ Config::Config(const QString& fileName)
 
 /**
  * @details
- * Configuration destructor.
- */
-Config::~Config()
-{
-}
-
-
-/**
- * @details
  * Return the specified configuration node together with any extra required
  * varsets.
  */
@@ -318,7 +309,7 @@ void Config::read(const QString fileName)
     }
 
     if (!file.exists())
-        throw QString("Configuration file not present: (%1).").arg(fileName);
+        throw QString("Config: Configuration file \"%1\" not found.").arg(fileName);
 
     if (!file.open(QFile::ReadOnly | QFile::Text))
         return;

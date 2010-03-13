@@ -32,8 +32,9 @@ class Config
         Config(const QString &fileName = "");
 
         /// Destroys the configuration object.
-        ~Config();
+        virtual ~Config() {};
 
+    public:
         /// Returns the configuration file name
         QString fileName() const { return _fileName; }
 
