@@ -2,9 +2,10 @@
 #include "core/PipelineApplication.h"
 #include "core/AbstractPipeline.h"
 #include "pipelines/TestPipelineRawImage.h"
+#include "utility/pelicanTimer.h"
+#include "utility/TestConfig.h"
 #include <QCoreApplication>
 
-#include "utility/pelicanTimer.h"
 #include "utility/memCheck.h"
 
 namespace pelican {
@@ -38,14 +39,12 @@ void TestPipelineRawImageTest::tearDown()
 
 void TestPipelineRawImageTest::test_method()
 {
-    TIMER_START
+    TestConfig config;
     int argc = 2;
-    char *argv[] = {
-            (char*)"pelican",
-            (char*)"--config=data/TestPipelineRawImage.xml"
-    };
-    QCoreApplication app(argc, argv);
+    char** argv = config.argv("TestPipelineRawImage.xml", "pipelines");
 
+    TIMER_START
+    QCoreApplication app(argc, argv);
     PipelineApplication pApp(argc, argv);
     pApp.registerPipeline(new TestPipelineRawImage);
     pApp.setDataClient("FileDataClient");

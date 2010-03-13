@@ -5,6 +5,7 @@
 #include "pipelines/TestPipelineMultipleImages.h"
 #include <QCoreApplication>
 #include "utility/pelicanTimer.h"
+#include "utility/TestConfig.h"
 
 #include "utility/memCheck.h"
 
@@ -45,12 +46,11 @@ void TestPipelineMultipleImagesTest::tearDown()
 
 void TestPipelineMultipleImagesTest::test_method()
 {
-    TIMER_START
+    TestConfig config;
     int argc = 2;
-    char *argv[] = {
-            (char*)"pelican",
-            (char*)"--config=data/TestPipelineMultipleImages.xml"
-    };
+    char** argv = config.argv("TestPipelineMultipleImages.xml", "pipelines");
+
+    TIMER_START
     QCoreApplication app(argc, argv);
     PipelineApplication pApp(argc, argv);
     pApp.registerPipeline(new TestPipelineMultipleImages);

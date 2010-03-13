@@ -2,6 +2,8 @@
 #include "core/PipelineApplication.h"
 #include "core/AbstractPipeline.h"
 #include "pipelines/TestPipelineVisibilityPrinter.h"
+#include "utility/pelicanTimer.h"
+#include "utility/TestConfig.h"
 #include <QCoreApplication>
 
 #include "utility/memCheck.h"
@@ -32,10 +34,11 @@ void TestPipelineVisibilityPrinterTest::tearDown()
 
 void TestPipelineVisibilityPrinterTest::test_method()
 {
+    TestConfig config;
     int argc = 2;
-    char *argv[] = {(char*)"pelican", (char*)"--config=data/TestPipelineVisibilityPrinter.xml"};
-    QCoreApplication app(argc, argv);
+    char** argv = config.argv("TestPipelineVisibilityPrinter.xml", "pipelines");
 
+    QCoreApplication app(argc, argv);
     PipelineApplication pApp(argc, argv);
     pApp.registerPipeline(new TestPipelineVisibilityPrinter);
     pApp.setDataClient("FileDataClient");
