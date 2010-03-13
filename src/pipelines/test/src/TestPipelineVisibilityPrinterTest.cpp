@@ -13,7 +13,7 @@ namespace pelican {
 CPPUNIT_TEST_SUITE_REGISTRATION( TestPipelineVisibilityPrinterTest );
 // class TestPipelineVisibilityPrinterTest
 TestPipelineVisibilityPrinterTest::TestPipelineVisibilityPrinterTest()
-    : CppUnit::TestFixture()
+: CppUnit::TestFixture()
 {
 }
 
@@ -34,6 +34,7 @@ void TestPipelineVisibilityPrinterTest::tearDown()
 
 void TestPipelineVisibilityPrinterTest::test_method()
 {
+    _createConfig();
     TestConfig config;
     int argc = 2;
     char** argv = config.argv("TestPipelineVisibilityPrinter.xml", "pipelines");
@@ -43,6 +44,31 @@ void TestPipelineVisibilityPrinterTest::test_method()
     pApp.registerPipeline(new TestPipelineVisibilityPrinter);
     pApp.setDataClient("FileDataClient");
     pApp.start();
+}
+
+
+void TestPipelineVisibilityPrinterTest::_createConfig()
+{
+    TestConfig config;
+    QString testVis = config.findTestFile("testVis.dat", "pipelines");
+
+    QString xml =
+    "<clients>"
+    "   <FileDataClient>"
+    "       <data type=\"VisibilityData\" adapter=\"AdapterLofarStationVisibilities\" file=\"" + testVis + "\"/>"
+    "   </FileDataClient>"
+    "</clients>"
+    "<adapters>"
+    "   <AdapterLofarStationVisibilities>"
+    "       <antennas number=\"2\"/>"
+    "       <channels start=\"0\" end=\"1\"/>"
+    "       <polarisation value=\"both\"/>"
+    "       <dataBytes number=\"8\"/>"
+    "   </AdapterLofarStationVisibilities>"
+    "</adapters>";
+
+    config.setFromString(xml);
+    config.saveTestConfig("TestPipelineVisibilityPrinter.xml", "pipelines");
 }
 
 } // namespace pelican

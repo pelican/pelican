@@ -27,12 +27,17 @@ class TestPipelineVisibilityPrinterTest : public CppUnit::TestFixture
         CPPUNIT_TEST( test_method );
         CPPUNIT_TEST_SUITE_END();
 
+
     public:
         void setUp();
         void tearDown();
 
         // Test Methods
         void test_method();
+
+    private:
+        // Create xml configuration
+        void _createConfig();
 
     public:
         TestPipelineVisibilityPrinterTest();
