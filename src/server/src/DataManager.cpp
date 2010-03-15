@@ -16,6 +16,14 @@ DataManager::DataManager()
 
 DataManager::~DataManager()
 {
+    foreach(StreamDataBuffer* s, _streams)
+    {
+        delete s;
+    }
+    foreach(ServiceDataBuffer* s, _service)
+    {
+        delete s;
+    }
 }
 
 const DataRequirements& DataManager::dataSpec() const 
@@ -30,6 +38,24 @@ WritableData DataManager::getWritableData( const QString& type, size_t size)
     if( _service.contains(type) )
         return _service[type]->getWritable(size);
     return WritableData(0);
+}
+
+StreamDataBuffer* DataManager::getStreamBuffer(const QString& type)
+{
+    if( _streams.contains(type) )
+    {
+        streamDataBuffer(type, new StreamDataBuffer(type) );
+    }
+    return _streams[type];
+}
+
+ServiceDataBuffer* DataManager::getServiceBuffer(const QString& type)
+{
+    if( _service.contains(type) )
+    {
+        serviceDataBuffer(type, new ServiceDataBuffer(type) );
+    }
+    return _service[type];
 }
 
 void DataManager::streamDataBuffer( const QString& name, StreamDataBuffer* buffer)

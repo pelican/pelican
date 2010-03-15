@@ -6,8 +6,8 @@ namespace pelican {
 
 
 // class TestChunker 
-TestChunker::TestChunker( DataManager* dm, bool badSocket )
-    : AbstractChunker(dm), _badSocket(badSocket)
+TestChunker::TestChunker( DataManager* dm,  const QString& name, bool badSocket )
+    : AbstractChunker(name, dm), _badSocket(badSocket)
 {
     _nextCount = 0;
 }

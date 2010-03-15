@@ -53,7 +53,7 @@ class Data
 
 
     private:
-        Data(const Data&); // disallow the copy constructor
+//        Data(const Data&); // disallow the copy constructor
 
     private:
         QString _name;

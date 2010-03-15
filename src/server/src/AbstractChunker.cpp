@@ -8,8 +8,8 @@ namespace pelican {
 
 
 // class AbstractChunker 
-AbstractChunker::AbstractChunker(DataManager* dm)
-    : _dm(dm)
+AbstractChunker::AbstractChunker(const QString& type, DataManager* dm)
+    : _dm(dm), _type(type)
 {
 }
 
@@ -17,10 +17,15 @@ AbstractChunker::~AbstractChunker()
 {
 }
 
-/* Methods to interact with the server */
-WritableData AbstractChunker::getDataStorage(const QString& type, size_t size) const
+const QString& AbstractChunker::type() const
 {
-    return _dm->getWritableData(type, size);
+    return _type;
+}
+
+/* Methods to interact with the server */
+WritableData AbstractChunker::getDataStorage(size_t size) const
+{
+    return _dm->getWritableData(_type, size);
 }
 
 /* Default imlementations */

@@ -100,13 +100,13 @@ void SessionTest::test_processServiceDataRequest()
     QString badversion("badv");
     QString badtype("bad");
     QString type1("type1");
-    ServiceDataBuffer servicebuffer1("test");
-    _data->serviceDataBuffer( type1, &servicebuffer1 );
-    QString version1 = _injectData(&servicebuffer1, "version1");
+    ServiceDataBuffer* servicebuffer1 = new ServiceDataBuffer("test");
+    _data->serviceDataBuffer( type1, servicebuffer1 );
+    QString version1 = _injectData(servicebuffer1, "version1");
     QString type2("type2");
-    ServiceDataBuffer servicebuffer2("test");
-    _data->serviceDataBuffer( type2, &servicebuffer2 );
-    QString version2 = _injectData(&servicebuffer2, "version2");
+    ServiceDataBuffer* servicebuffer2 = new ServiceDataBuffer("test");
+    _data->serviceDataBuffer( type2, servicebuffer2 );
+    QString version2 = _injectData(servicebuffer2, "version2");
     {
         // Use Case:
         // ServiceDataRequest for data that does not exist
@@ -151,8 +151,8 @@ void SessionTest::test_streamData()
     }
     // Set up stream data for remaining tests
     QString stream1("Stream1");
-    StreamDataBuffer streambuffer("test");
-    _data->streamDataBuffer( stream1, &streambuffer );
+    StreamDataBuffer* streambuffer = new StreamDataBuffer("test");
+    _data->streamDataBuffer( stream1, streambuffer );
     {
         // Use Case:
         // Request StreamData for a stream that is not supported by the server
@@ -185,7 +185,7 @@ void SessionTest::test_streamData()
         req.setStreamData(stream1);
         StreamDataRequest request;
         request.addDataOption(req);
-        _injectData(&streambuffer);
+        _injectData(streambuffer);
         QList<LockedData> dataList = _session->processStreamDataRequest(request);
         foreach(LockedData data, dataList) {
             CPPUNIT_ASSERT( data.isValid() );
@@ -193,8 +193,8 @@ void SessionTest::test_streamData()
     }
     // Set up service data stream for remaining tests
     QString service1("service1");
-    ServiceDataBuffer servicebuffer("test");
-    _data->serviceDataBuffer( service1, &servicebuffer );
+    ServiceDataBuffer* servicebuffer = new ServiceDataBuffer("test");
+    _data->serviceDataBuffer( service1, servicebuffer );
     {
         // Use Case:
         // Request StreamData for a stream that is supported and the data exists
@@ -205,7 +205,7 @@ void SessionTest::test_streamData()
         req.setServiceData(service1);
         StreamDataRequest request;
         request.addDataOption(req);
-        _injectData(&streambuffer);
+        _injectData(streambuffer);
         QList<LockedData> dataList = _session->processStreamDataRequest(request);
         foreach(LockedData data, dataList) {
             CPPUNIT_ASSERT( ! data.isValid() );
@@ -219,8 +219,8 @@ void SessionTest::test_streamData()
         DataRequirements req;
         StreamDataRequest request;
         request.addDataOption(req);
-        _injectData(&streambuffer);
-        _injectData(&servicebuffer);
+        _injectData(streambuffer);
+        _injectData(servicebuffer);
         QList<LockedData> dataList = _session->processStreamDataRequest(request);
         foreach(LockedData data, dataList) {
             CPPUNIT_ASSERT( data.isValid() );

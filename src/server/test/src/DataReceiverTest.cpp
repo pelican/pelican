@@ -45,7 +45,7 @@ void DataReceiverTest::test_listen()
          * Null Socket returned by Chunker
          * Expect : do nothing and return
          */
-        TestChunker testChunker(_dm, true);
+        TestChunker testChunker(_dm, "test", true);
         DataReceiver dr(&testChunker,_dm);
         dr.listen(_testHost,_testPort);
     }

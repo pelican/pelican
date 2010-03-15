@@ -25,8 +25,12 @@ class AbstractChunker
 {
 
     public:
-        AbstractChunker(DataManager*);
+        AbstractChunker(const QString& type, DataManager*);
         virtual ~AbstractChunker();
+
+        /// return the type name to be associated with this data
+        const QString& type() const;
+
         /// create a new socket appropriate to the type expected
         //  on the data stream
         //  by default this will be a UDP socket
@@ -42,10 +46,11 @@ class AbstractChunker
         //  The WritableData object should always be checked with its isValid() method
         //  before use. When the WritableData object goes out of scope the data 
         //  will become available to be served automatically if it is valid.
-        WritableData getDataStorage(const QString& type, size_t size ) const;
+        WritableData getDataStorage( size_t size ) const;
 
     private:
         DataManager* _dm;
+        QString _type;
 };
 
 } // namespace pelican

@@ -47,9 +47,9 @@ void StreamDataBufferTest::test_getWritable()
         CPPUNIT_ASSERT_EQUAL(0, static_cast<LockableStreamData*>(data.data())->associateData().size() );
     }
     // setup data manager with a service data buffer for remaining test cases
-    ServiceDataBuffer serveBuffer("test");
+    ServiceDataBuffer* serveBuffer = new ServiceDataBuffer("test");
     QString service1("Service1");
-    _dataManager->serviceDataBuffer(service1,&serveBuffer);
+    _dataManager->serviceDataBuffer(service1,serveBuffer);
     {
         // Use case:
         // getWritable() called with service data supported, but no data
@@ -60,7 +60,7 @@ void StreamDataBufferTest::test_getWritable()
         CPPUNIT_ASSERT_EQUAL(0, static_cast<LockableStreamData*>(data.data())->associateData().size() );
     }
     // inject some data into the service buffer for remaining tests
-    serveBuffer.getWritable(1);
+    serveBuffer->getWritable(1);
     _app->processEvents();
     {
         // Use case:
