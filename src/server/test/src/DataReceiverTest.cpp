@@ -2,6 +2,8 @@
 #include "DataReceiver.h"
 #include "TestChunker.h"
 #include "DataManager.h"
+#include "utility/pelicanTimer.h"
+#include <QThread>
 
 #include "utility/memCheck.h"
 
@@ -84,7 +86,8 @@ void DataReceiverTest::test_listen()
         std::cout << "---------------\n";
         DataReceiver dr(_testChunker,_dm);
         dr.listen(_testHost, _testPort);
-
+        std::cout << "After listen()\n";
+        while (!dr.isFinished()) {_app->processEvents();}
 
         // TODO
 //        TestSocketServer ts(_testHost, _testPort);
