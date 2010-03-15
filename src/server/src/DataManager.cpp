@@ -42,7 +42,7 @@ WritableData DataManager::getWritableData( const QString& type, size_t size)
 
 StreamDataBuffer* DataManager::getStreamBuffer(const QString& type)
 {
-    if( _streams.contains(type) )
+    if( ! _streams.contains(type) )
     {
         streamDataBuffer(type, new StreamDataBuffer(type) );
     }
@@ -51,7 +51,7 @@ StreamDataBuffer* DataManager::getStreamBuffer(const QString& type)
 
 ServiceDataBuffer* DataManager::getServiceBuffer(const QString& type)
 {
-    if( _service.contains(type) )
+    if( ! _service.contains(type) )
     {
         serviceDataBuffer(type, new ServiceDataBuffer(type) );
     }
