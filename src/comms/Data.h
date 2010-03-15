@@ -3,6 +3,7 @@
 
 #include <cstring>
 #include <QObject>
+class QByteArray;
 
 /**
  * @file Data.h
@@ -25,6 +26,7 @@ class Data
     public:
         Data(const QString& name="", void* data=0, size_t size=0);
         Data(const QString& name, const QString& id, size_t size=0);
+        Data(const QString& name, const QString& id, QByteArray& );
         virtual ~Data();
 
         /// return the size of the stored data

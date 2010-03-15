@@ -11,6 +11,11 @@ StreamData::StreamData(const QString& name, void* data, size_t size)
 {
 }
 
+StreamData::StreamData(const QString& name, QString& id, QByteArray& d )
+    : Data(name, id, d)
+{
+}
+
 StreamData::StreamData(const QString& name, QString& id, size_t size)
     : Data(name, id, size)
 {

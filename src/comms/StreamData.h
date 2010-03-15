@@ -6,6 +6,7 @@
 #include <boost/shared_ptr.hpp>
 #include "Data.h"
 
+
 /**
  * @file StreamData.h
  */
@@ -32,6 +33,7 @@ class StreamData : public Data
     public:
         StreamData(const QString& name, void* = 0, size_t  = 0);
         StreamData(const QString& name, QString& id, size_t  = 0);
+        StreamData(const QString& name, QString& id, QByteArray& d);
         virtual ~StreamData();
 
         void addAssociatedData(boost::shared_ptr<Data>);

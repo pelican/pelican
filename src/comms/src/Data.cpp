@@ -16,6 +16,13 @@ Data::Data(const QString& name, const QString& id, size_t size)
 {
 }
 
+Data::Data(const QString& name, const QString& id, QByteArray& ba )
+    : _name(name), _id(id)
+{
+    _data = ba.data();
+    _size = ba.size();
+}
+
 Data::~Data()
 {
 }
