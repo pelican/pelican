@@ -1,6 +1,6 @@
 #ifndef TESTCHUNKER_H
 #define TESTCHUNKER_H
-
+#include <QString>
 #include "AbstractChunker.h"
 
 /**
@@ -23,7 +23,7 @@ class DataManager;
 class TestChunker : public AbstractChunker
 {
     public:
-        TestChunker(DataManager* dm, bool badSocket=false);
+        TestChunker(DataManager* dm, const QString& name="test", bool badSocket=false);
         ~TestChunker();
         virtual QAbstractSocket* newSocket() const;
         virtual void next(QAbstractSocket*);

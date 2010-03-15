@@ -21,7 +21,7 @@ QByteArray& TestProtocol::lastBlock()
     return _last;
 }
 
-boost::shared_ptr<ServerRequest> TestProtocol::request(QTcpSocket& socket)
+boost::shared_ptr<ServerRequest> TestProtocol::request(QTcpSocket& )
 {
     _last.clear();
     return boost::shared_ptr<ServerRequest>(new ServerRequest(ServerRequest::Acknowledge));

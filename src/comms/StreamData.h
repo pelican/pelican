@@ -42,7 +42,7 @@ class StreamData : public Data
         void reset();
 
     private:
-        StreamData(const StreamData&);
+//        StreamData(const StreamData&);
 
     private:
         DataList_t _associateData;

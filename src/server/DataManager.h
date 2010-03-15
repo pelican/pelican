@@ -30,7 +30,7 @@ class DataManager
 {
     public:
         DataManager();
-        ~DataManager();
+        virtual ~DataManager();
 
         /// returns the data types handled by this manager
         const DataRequirements& dataSpec() const;
@@ -58,6 +58,11 @@ class DataManager
 
         /// associateServiceData
         void associateServiceData(LockableStreamData* data);
+
+        /// getBuffer mehtods
+        //  setup a buffer for the specified type if it does not already exist
+        StreamDataBuffer* getStreamBuffer(const QString& type);
+        ServiceDataBuffer* getServiceBuffer(const QString& type);
 
         /// serviceDataBuffer
         //  add a service data type to be managed

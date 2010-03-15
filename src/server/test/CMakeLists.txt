@@ -4,6 +4,7 @@ set(
    src/TestChunker.cpp
    src/TestProtocol.cpp
    src/PelicanTestClient.cpp
+   src/TestServer.cpp
 )
 
 set(
@@ -11,9 +12,9 @@ set(
    src/serverTest.cpp
    src/DataManagerTest.cpp
    src/LockedDataTest.cpp
-   src/SessionTest.cpp
    src/ServiceDataBufferTest.cpp
    src/StreamDataBufferTest.cpp
+   src/SessionTest.cpp
    src/WritableDataTest.cpp
 )
 
@@ -23,8 +24,8 @@ set(
 set(
    serverTestMT_src
    src/serverTest.cpp
-   src/PelicanServerTest.cpp
-   #src/DataReceiverTest.cpp
+   #src/PelicanServerTest.cpp
+   src/DataReceiverTest.cpp
 )
 
 add_library( serverTestUtilities ${serverTestlib_src} )
