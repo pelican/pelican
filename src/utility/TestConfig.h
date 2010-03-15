@@ -11,6 +11,8 @@
 #include <QStringList>
 #include <QString>
 #include <iostream>
+#include <cstdlib>
+#include <cstring>
 #include <QFileInfo>
 
 namespace pelican {
@@ -32,28 +34,30 @@ class TestConfig : public Config
 {
     public:
         /// Constructs a test configuration object for the test configuration
-        /// file of name /p fileName in the specified pelican pacakge folder
-        /// /p package
+        /// file of name \p fileName in the specified Pelican package folder
+        /// \p package.
         TestConfig(const QString& fileName, const QString& package) : Config() {
             read(findTestFile(fileName, package));
+            _argc = 0;
             _argv = NULL;
         }
 
         /// Constructs an empty test configuration object.
         TestConfig() : Config() {
+            _argc = 0;
             _argv = NULL;
         }
 
         /// Destroys the test configuration.
         ~TestConfig() {
-            if (_argv) free(_argv);
+            _freeArgv();
         }
 
     public:
         /// Returns command line options for a given XML filename and package.
         char** argv(const QString& fileName, const QString& package)
         {
-            if (_argv) free(_argv);
+            _freeArgv();
             QString path = findTestFile(fileName, package);
             QStringList args = QStringList() << "pelican" << "--config=" + path;
             int argc = args.count();
@@ -72,8 +76,8 @@ class TestConfig : public Config
         }
 
     public:
-        /// Returns the file path to a test file /p fileName for the specified
-        /// package library /p package.
+        /// Returns the file path to a test file \p fileName for the specified
+        /// package library \p package.
         static QString findTestFile(const QString& fileName, const QString& package)
         {
             QStringList searchPaths;
@@ -93,6 +97,19 @@ class TestConfig : public Config
         }
 
     private:
+        /// Frees the memory used by argv.
+        void _freeArgv() {
+            for (int i = 0; i < _argc; i++) {
+                free(_argv[i]);
+                _argv[i] = NULL;
+            }
+            free(_argv);
+            _argv = NULL;
+            _argc = 0;
+        }
+
+    private:
+        int _argc;
         char** _argv;
 };
 
