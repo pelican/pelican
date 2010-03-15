@@ -12,7 +12,7 @@
 
 namespace pelican {
 
-// class PelicanServer 
+// class PelicanServer
 PelicanServer::PelicanServer(QObject* parent)
     : QThread(parent)
 {
@@ -26,14 +26,17 @@ PelicanServer::~PelicanServer()
         delete p;
 }
 
+
 void PelicanServer::addProtocol(AbstractProtocol* proto, quint16 port)
 {
     if( _protocolPortMap.contains(port) ) {
         delete proto;
-        throw QString("Cannot map multiple protocols to the same port (" + QString().setNum(port));
+        throw QString("Cannot map multiple protocols to the same port ("
+                + QString().setNum(port)) + ")";
     }
     _protocolPortMap[port] = proto;
 }
+
 
 void PelicanServer::addChunker(AbstractChunker* chunker, const QString& host, quint16 port)
 {
@@ -41,7 +44,8 @@ void PelicanServer::addChunker(AbstractChunker* chunker, const QString& host, qu
         QPair<QString,quint16> pair(host,port);
         if( _chunkerPortMap.contains(pair) ) {
             delete chunker;
-            throw QString("Cannot map multiple chunkers to the same host/port (" + host + "/" + QString().setNum(port)) + ")";
+            throw QString("Cannot map multiple chunkers to the same host/port ("
+                    + host + "/" + QString().setNum(port)) + ")";
         }
         _chunkerPortMap[pair] = chunker;
     }
