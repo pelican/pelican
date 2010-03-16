@@ -122,7 +122,7 @@ QString ConfigNode::getOptionText(const QString& tagName,
  * \endverbatim
  */
 QHash<QString, QString> ConfigNode::getOptionHash(const QString& tagName,
-                const QString& attr1, const QString& attr2) const
+        const QString& attr1, const QString& attr2) const
 {
     QHash<QString, QString> hash;
     QDomNodeList list = _config.elementsByTagName(tagName);
@@ -133,6 +133,39 @@ QHash<QString, QString> ConfigNode::getOptionHash(const QString& tagName,
         }
     }
     return hash;
+}
+
+/**
+ * @details
+ * Gets attributes for a list of \p tagname items.
+ * The list is created using the values of the given attribute \p attr.
+ *
+ * Using this XML with tagName="data" and attr="adapter",
+ *
+ * \verbatim
+      <data type="VisibilityData" adapter="VisibilityAdapter" file="vis.dat"/>
+      <data type="AntennaPositions" adapter="PositionAdapter" file="pos.dat"/>
+ * \endverbatim
+ *
+ * would produce a list containing the following strings:
+ *
+ * \verbatim
+      VisibilityAdapter
+      PositionAdapter
+ * \endverbatim
+ */
+QStringList ConfigNode::getOptionList(const QString& tagName,
+        const QString& attr) const
+{
+    QStringList optionList;
+    QDomNodeList list = _config.elementsByTagName(tagName);
+    for (int i = 0; i < list.size(); ++i) {
+        QDomElement element = list.at(i).toElement();
+        if (element.hasAttribute(attr)) {
+            optionList.append(element.attribute(attr));
+        }
+    }
+    return optionList;
 }
 
 /**
@@ -150,19 +183,18 @@ QHash<QString, QString> ConfigNode::getOptionHash(const QString& tagName,
       <channels start="0" end="511"/>
  * \endverbatim
  */
-std::vector<unsigned> ConfigNode::getChannels() const
+std::vector<unsigned> ConfigNode::getChannels(const QString& tagName) const
 {
     // Declare channel vector.
     std::vector<unsigned> channels;
 
-    // Check if "start" and "end" tags are present.
-    const QString channelTag("channels");
-    const int beg = getOption(channelTag, "start", "-1").toInt();
-    const int end = getOption(channelTag, "end", "-1").toInt();
+    // Check if "start" and "end" attributes are present.
+    const int beg = getOption(tagName, "start", "-1").toInt();
+    const int end = getOption(tagName, "end", "-1").toInt();
 
     // If start or end are negative, check for text content.
     if (beg < 0 || end < 0) {
-        QString channelStr = getOptionText(channelTag, "0");
+        QString channelStr = getOptionText(tagName, "0");
         QStringList chanList = channelStr.split(",", QString::SkipEmptyParts);
         unsigned size = chanList.size();
         channels.resize(size);
@@ -193,9 +225,9 @@ std::vector<unsigned> ConfigNode::getChannels() const
  * @details
  * Returns the polarisation option.
  */
-DataBlob::pol_t ConfigNode::getPolarisation() const
+DataBlob::pol_t ConfigNode::getPolarisation(const QString& tagName) const
 {
-    QString pol = getOption("polarisation", "value", "x").toLower();
+    QString pol = getOption(tagName, "value", "x").toLower();
     if (pol.startsWith("x"))
         return DataBlob::POL_X;
     else if (pol.startsWith("y"))

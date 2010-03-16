@@ -5,6 +5,7 @@
 #include <QDomElement>
 #include <QString>
 #include <QHash>
+#include <QStringList>
 #include <QList>
 #include <vector>
 
@@ -66,14 +67,20 @@ class ConfigNode
         QHash<QString, QString> getOptionHash(const QString& tagName,
                 const QString& attr1, const QString& attr2) const;
 
+        /// Returns a list of attributes.
+        QStringList getOptionList(const QString& tagName,
+                const QString& attr) const;
+
         /// Returns the QDomElement that this class wraps.
         const QDomElement getDomElement() const {return _config;}
 
         /// Returns the list of channels, if any.
-        std::vector<unsigned> getChannels() const;
+        std::vector<unsigned> getChannels(
+                const QString& tagName = QString("channels")) const;
 
         /// Returns the polarisation, if any.
-        DataBlob::pol_t getPolarisation() const;
+        DataBlob::pol_t getPolarisation(
+                const QString& tagName = QString("polarisation")) const;
 };
 
 } /* namespace pelican */
