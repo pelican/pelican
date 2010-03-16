@@ -16,6 +16,7 @@ class ZenithImagerDft;
 class ImageWriterFits;
 class ZenithModelVisibilities;
 class ZenithCalibrater;
+class ImageCombiner;
 
 class ModelVisibilityData;
 class CorrectedVisibilityData;
@@ -48,6 +49,7 @@ class TestPipelineCalibrateImage : public AbstractPipeline
         ZenithModelVisibilities* _modelGen;
         ImageWriterFits* _fitsWriter;
         ZenithCalibrater* _calibrate;
+        ImageCombiner* _imageCombiner;
 
         ModelVisibilityData* _modelVis;
         CorrectedVisibilityData* _correctedVis;
@@ -55,6 +57,7 @@ class TestPipelineCalibrateImage : public AbstractPipeline
         ImageData* _rawImage;
         ImageData* _psfImage;
         ImageData* _modelImage;
+        ImageData* _diffImage;
 };
 
 } // namespace pelican

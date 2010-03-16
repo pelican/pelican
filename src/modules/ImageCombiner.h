@@ -3,14 +3,13 @@
 
 #include "AbstractModule.h"
 #include "utility/ConfigNode.h"
+#include "data/ImageData.h"
 
 /**
  * @file ImageCombiner.h
  */
 
 namespace pelican {
-
-class ImageData;
 
 /**
  * @class ImageCombiner
@@ -38,21 +37,42 @@ class ImageCombiner : public AbstractModule
         /// Grab configuration options from the config node.
         void _getConfiguration(const ConfigNode& config);
 
-        /// Perform a summation of the two images.
+        /// Compute the sum of the two images.
         void _operationSum(unsigned width, unsigned height,
                 const real_t* in1, const real_t* in2, real_t* out);
 
-        /// Perform a summation of the two images.
+        /// Compute the sum of the two images.
         void _operationSumm(unsigned width, unsigned height,
+                const real_t* in1, const real_t* in2, real_t* out);
+
+        /// Compute the mean of the two images.
+        void _operationMean(unsigned width, unsigned height,
+                const real_t* in1, const real_t* in2, real_t* out);
+
+        /// Multiply the two images.
+        void _operationMult(unsigned width, unsigned height,
+                const real_t* in1, const real_t* in2, real_t* out);
+
+        /// Divide the two images.
+        void _operationDiv(unsigned width, unsigned height,
                 const real_t* in1, const real_t* in2, real_t* out);
 
     private:
         enum {SUM, SUMM, MEAN, MULT, DIV};
+        static const unsigned CHANNEL_UNDEF = 100000;
         int _opcode; ///< Type of image operation.
 
-        double _a1; ///< First image coefficient.
-        double _a2; ///< Second image coefficient.
-        double _a3; ///< Third image coefficient.
+        real_t _a1; ///< First image coefficient.
+        real_t _a2; ///< Second image coefficient.
+        real_t _a3; ///< Third image coefficient.
+        unsigned _nChannels;      ///< Number of channels to output.
+        unsigned _nPolarisations; ///< Number of polarisations to output.
+        std::vector<unsigned> _channelsInput1;
+        std::vector<unsigned> _channelsInput2;
+        std::vector<unsigned> _channelsOutput;
+        ImageData::pol_t _polInput1;
+        ImageData::pol_t _polInput2;
+        ImageData::pol_t _polOutput;
 };
 
 } // namespace pelican

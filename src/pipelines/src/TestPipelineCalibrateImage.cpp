@@ -3,6 +3,7 @@
 #include "modules/ImageWriterFits.h"
 #include "modules/ZenithModelVisibilities.h"
 #include "modules/ZenithCalibrater.h"
+#include "modules/ImageCombiner.h"
 #include "data/AntennaPositions.h"
 #include "data/ModelVisibilityData.h"
 #include "data/VisibilityData.h"
@@ -34,6 +35,7 @@ TestPipelineCalibrateImage::~TestPipelineCalibrateImage()
     delete _rawImage;
     delete _psfImage;
     delete _modelImage;
+    delete _diffImage;
     delete _modelVis;
     delete _correctedVis;
 }
@@ -50,6 +52,7 @@ void TestPipelineCalibrateImage::init()
     _fitsWriter = (ImageWriterFits*) createModule("ImageWriterFits");
     _modelGen = (ZenithModelVisibilities*) createModule("ZenithModelVisibilities");
     _calibrate = (ZenithCalibrater*) createModule("ZenithCalibrater");
+    _imageCombiner = (ImageCombiner*) createModule("ImageCombiner");
 
     // Requests for remote data to be inserted in the data hash.
     requestRemoteData("AntennaPositions");
@@ -59,6 +62,7 @@ void TestPipelineCalibrateImage::init()
     _psfImage = new ImageData;
     _rawImage = new ImageData;
     _modelImage = new ImageData;
+    _diffImage = new ImageData;
     _modelVis = new ModelVisibilityData;
     _correctedVis = new CorrectedVisibilityData;
 }
@@ -84,6 +88,8 @@ void TestPipelineCalibrateImage::run(QHash<QString, DataBlob*>& remoteData)
     _imager->run(_calImage, antPos, _correctedVis);
     _imager->run(_psfImage, antPos);
 
+    _imageCombiner->run(_calImage, _modelImage, _diffImage);
+
     _fitsWriter->fileName() = "calibPipe-raw";
     _fitsWriter->run(_rawImage);
     _fitsWriter->fileName() = "calibPipe-model";
@@ -92,6 +98,8 @@ void TestPipelineCalibrateImage::run(QHash<QString, DataBlob*>& remoteData)
     _fitsWriter->run(_psfImage);
     _fitsWriter->fileName() = "calibPipe-calibrated";
     _fitsWriter->run(_calImage);
+    _fitsWriter->fileName() = "calibPipe-diff_cal-model";
+    _fitsWriter->run(_diffImage);
 
     stop();
 }

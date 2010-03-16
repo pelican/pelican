@@ -106,6 +106,18 @@
         <varset name="channels"/>
         <varset name="kso"/>
     </ZenithImagerDft>
+    
+
+    <ImageCombiner>
+        <operation type="sum"/>
+        <coefficients a1="1.0" a2="-1.0"/>
+        <channelsInput1>182</channelsInput1>
+        <channelsInput2>182</channelsInput2>
+        <polarisationInput1 value="x"/>
+        <polarisationInput2 value="x"/>
+        <polarisationOutput value="x"/>
+    </ImageCombiner>
+
 
     <ImageWriterFits>
         <overwrite value="true"/>
