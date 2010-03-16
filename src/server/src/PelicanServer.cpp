@@ -9,6 +9,7 @@
 #include "comms/PelicanProtocol.h"
 #include "PelicanPortServer.h"
 #include "utility/memCheck.h"
+#include <iostream>
 
 namespace pelican {
 
@@ -20,7 +21,8 @@ PelicanServer::PelicanServer(QObject* parent)
 
 PelicanServer::~PelicanServer()
 {
-    terminate();
+    std::cout << "Destroying server" << std::endl;
+    quit(); // TODO Check! Don't use terminate!
     wait();
     foreach(AbstractProtocol* p, _protocolPortMap)
         delete p;

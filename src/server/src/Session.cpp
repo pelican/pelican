@@ -29,6 +29,7 @@ Session::~Session()
 
 void Session::run()
 {
+    std::cout << "Session::run()" << std::endl;
     QTcpSocket socket;
     if (!socket.setSocketDescriptor(_socketDescriptor)) {
         emit error(socket.error());
@@ -40,11 +41,12 @@ void Session::run()
     processRequest(*req, socket);
     socket.disconnectFromHost();
     socket.waitForDisconnected();
+    std::cout << "Session::run() end." << std::endl;
 }
 
-/*
+/**
  * @details
- * this routine processes a general ServerRequest, calling the appropriate
+ * This routine processes a general ServerRequest, calling the appropriate
  * working and then passes this on to the protocol to be returned to the client
  */
 void Session::processRequest(const ServerRequest& req, QIODevice& out)
@@ -53,6 +55,7 @@ void Session::processRequest(const ServerRequest& req, QIODevice& out)
         switch(req.type()) {
             case ServerRequest::Acknowledge:
                 _proto->send(out,"ACK");
+                std::cout << "Sent acknowledgement" << std::endl;
                 break;
             case ServerRequest::StreamData:
                 {
@@ -63,6 +66,7 @@ void Session::processRequest(const ServerRequest& req, QIODevice& out)
                             data.append(static_cast<StreamData*>(ld.data()->data()));
                         }
                         _proto->send( out, data );
+                        std::cout << "Sent stream data" << std::endl;
                     }
                 }
                 break;
@@ -75,6 +79,7 @@ void Session::processRequest(const ServerRequest& req, QIODevice& out)
                             data.append(ld.data()->data());
                         }
                         _proto->send( out, data );
+                        std::cout << "Sent service data" << std::endl;
                     }
                 }
                 break;
@@ -88,10 +93,10 @@ void Session::processRequest(const ServerRequest& req, QIODevice& out)
     }
 }
 
-/*
+/**
  * @details
- * iterates over the list of data options provided in the request
- * It will take the first dataset that matches and that has data.
+ * Iterates over the list of data options provided in the request
+ * It will take the first data set that matches and that has data.
  * The data will be returned as a locked container to ensure access
  * by other threads will be blocked.
  */
@@ -119,10 +124,10 @@ QList<LockedData> Session::processStreamDataRequest(const StreamDataRequest& req
     return data;
 }
 
-/*
+/**
  * @details
- * returns all the datasets mentioned in the list (or throws if any one is missing)
- * The data will be returned as a locked containeris to ensure access
+ * Returns all the data sets mentioned in the list (or throws if any one is missing).
+ * The data will be returned as a locked container to ensure access
  * by other threads will be blocked.
  */
 QList<LockedData> Session::processServiceDataRequest(const ServiceDataRequest& req )

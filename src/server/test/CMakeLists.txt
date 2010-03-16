@@ -24,7 +24,7 @@ set(
 set(
    serverTestMT_src
    src/serverTest.cpp
-   #src/PelicanServerTest.cpp
+   src/PelicanServerTest.cpp
    src/DataReceiverTest.cpp
 )
 

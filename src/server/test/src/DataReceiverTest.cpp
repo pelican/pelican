@@ -36,7 +36,6 @@ void DataReceiverTest::tearDown()
 
 void DataReceiverTest::test_listen()
 {
-    std::cout << "DataReceiverTest::test_listenA" << std::endl;
     {
         /* Use Case:
          * Null data Chunker
@@ -44,7 +43,6 @@ void DataReceiverTest::test_listen()
          */
         CPPUNIT_ASSERT_THROW(new DataReceiver(NULL,_dm), QString);
     }
-    std::cout << "DataReceiverTest::test_listenB" << std::endl;
 
     {
         /* Use Case:
@@ -55,7 +53,7 @@ void DataReceiverTest::test_listen()
         DataReceiver dr(&testChunker,_dm);
         dr.listen(_testHost,_testPort);
     }
-    std::cout << "DataReceiverTest::test_listenC" << std::endl;
+
     {
         /* Use Case:
          * Unspecified host
@@ -64,7 +62,7 @@ void DataReceiverTest::test_listen()
         DataReceiver dr(_testChunker,_dm);
         dr.listen("",_testPort);
     }
-    std::cout << "DataReceiverTest::test_listenD" << std::endl;
+
     {
         /* Use Case:
          * Unspecified port
@@ -73,7 +71,7 @@ void DataReceiverTest::test_listen()
         DataReceiver dr(_testChunker,_dm);
         dr.listen("", 0);
     }
-    std::cout << "DataReceiverTest::test_listenE" << std::endl;
+
     {
         /* Use Case:
          * All OK, data sent
@@ -82,7 +80,6 @@ void DataReceiverTest::test_listen()
          */
         DataReceiver dr(_testChunker,_dm);
         dr.listen(_testHost, _testPort);
-        //while (!dr.isFinished()) {_app->processEvents();}
 
         // TODO
 //        TestSocketServer ts(_testHost, _testPort);
@@ -90,7 +87,6 @@ void DataReceiverTest::test_listen()
 //        _app->processEvents();
 //        CPPUNIT_ASSERT_EQUAL(1, _testChunker->nextCalled());
     }
-//    std::cout << "DataReceiverTest::test_listen Done!" << std::endl;
 }
 
 } // namespace pelican

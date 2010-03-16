@@ -58,7 +58,7 @@ void DataReceiver::run()
         exec(); // Enter event loop here.
     }
     delete _socket;
-    _socket = NULL;
+    _socket = NULL; // Must be set to null here.
 }
 
 /**
