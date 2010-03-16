@@ -3,7 +3,6 @@
 
 #include <QString>
 #include <cppunit/extensions/HelperMacros.h>
-#include <QCoreApplication>
 
 /**
  * @file DataReceiverTest.h
@@ -42,7 +41,6 @@ class DataReceiverTest : public CppUnit::TestFixture
         ~DataReceiverTest();
 
     private:
-        QCoreApplication* _app;
         TestChunker* _testChunker;
         DataManager* _dm;
         QString _testHost;

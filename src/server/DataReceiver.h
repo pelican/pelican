@@ -11,6 +11,7 @@ class QAbstractSocket;
  */
 
 namespace pelican {
+
 class DataManager;
 class AbstractChunker;
 
@@ -18,30 +19,31 @@ class AbstractChunker;
  * @class DataReceiver
  *
  * @brief
- *   Connects incoming data streams to the Chunker inside a separate thread
+ * Connects incoming data streams to the Chunker inside a separate thread.
+ *
  * @details
  *
  */
-
 class DataReceiver : public QThread
 {
     Q_OBJECT
 
     public:
+        /// Constructor.
         DataReceiver( AbstractChunker* chunker, DataManager* dm, QObject* parent=0 );
+
+        /// Destructor.
         ~DataReceiver();
 
-        /// connect to the specified host and listen
-        //  for incoming data
+        /// Connect to the specified host and listen for incoming data.
         void listen(const QString& host, quint16 port);
 
-    public slots:
-        void die();
-
     protected slots:
+        /// TODO Write brief description.
         void processIncomingData();
 
     protected:
+        /// Creates and runs the thread for the data receiver.
         void run();
 
     private:
@@ -50,8 +52,8 @@ class DataReceiver : public QThread
         DataManager* _dm;
         QString _host;
         quint16 _port;
-
 };
 
 } // namespace pelican
+
 #endif // DATARECEIVER_H

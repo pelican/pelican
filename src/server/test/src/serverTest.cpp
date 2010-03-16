@@ -19,12 +19,12 @@ int main(int argc, char** argv)
                 std::cerr ) );
 
     // Set up a QCore object to ensure data management is OK
-//    QCoreApplication* app = new QCoreApplication(argc, argv);
+    QCoreApplication* app = new QCoreApplication(argc, argv);
 
     // Run the tests.
     bool wasSucessful = runner.run();
 
-//    delete app;
+    delete app;
 
     // Return error code 1 if the one of test failed.
 
