@@ -3,6 +3,7 @@
 #include <QTcpSocket>
 #include <QBuffer>
 #include <QByteArray>
+#include <QDebug>
 #include "PelicanServerClient.h"
 #include "adapters/AbstractServiceAdapter.h"
 #include "adapters/AbstractStreamAdapter.h"
@@ -25,7 +26,13 @@ namespace pelican {
 PelicanServerClient::PelicanServerClient(const ConfigNode& config, const DataTypes& types )
     : AbstractDataClient(config, types ), _protocol(0)
 {
-    _protocol = new PelicanClientProtocol; // hard code for now
+
+    _protocol = new PelicanClientProtocol; 
+
+    setIP_Address(config.getOption("server","host"));
+    QString port = config.getOption("server","port");
+    if( port != "" )
+        setPort(port.toUInt());
 }
 
 PelicanServerClient::~PelicanServerClient()
@@ -46,10 +53,13 @@ void PelicanServerClient::setIP_Address(const QString& ipaddress)
 QHash<QString, DataBlob*> PelicanServerClient::getData(QHash<QString, DataBlob*>& dataHash)
 {
     QHash<QString, DataBlob*> validData;
+    QSet<QString> reqs = _requireSet;
+    if( ! reqs.subtract(QSet<QString>::fromList(dataHash.keys())).isEmpty() )
+        throw(QString("PelicanServerClient::getData() data hash does not contain objects for all possible requests"));
 
     // construct the request
     StreamDataRequest sr;
-    sr.addDataOption(dataRequirements());
+    sr.addDataOption( dataRequirements() );
 
     validData.unite( _sendRequest(sr, dataHash) );
     //boost::shared_ptr<ServerResponse> r = _protocol->receive(sock);
@@ -163,10 +173,14 @@ QHash<QString, DataBlob*> PelicanServerClient::_sendRequest(const ServerRequest&
 
     QTcpSocket sock;
     Q_ASSERT( _server != "" );
-    sock.connectToHost( _server, _port );
+    sock.connectToHost( _server, _port , QIODevice::ReadWrite);
+    sock.waitForConnected();
 
     sock.write( _protocol->serialise(request) );
     sock.flush();
+
+    sock.waitForReadyRead();
+
     boost::shared_ptr<ServerResponse> r = _protocol->receive(sock);
     validData =  _response(sock, r, dataHash);
     return validData;
