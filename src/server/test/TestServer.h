@@ -3,6 +3,7 @@
 
 #include <QList>
 #include <QString>
+#include <QThread>
 #include "server/DataManager.h"
 
 /**
@@ -27,18 +28,26 @@ namespace pelican {
  *    infrastructure except wil a specialist DataManager.
  */
 
-class TestServer
+class TestServer : public QThread
 {
+    Q_OBJECT
+
     public:
-        TestServer( AbstractProtocol* proto = 0 );
+        TestServer( AbstractProtocol* proto = 0 , QObject* parent =0);
         ~TestServer();
 
         /// return the port number the server is listening on
         quint16 port() const;
+        bool isListening() const;
 
         /// Set Data to be Served
         void serveStreamData(const QList<StreamData>& );
+        void serveStreamData(const StreamData& );
         void serveServiceData(const QList<Data>& );
+        void serveServiceData(const Data&);
+
+   protected:
+        virtual void run();
 
     private:
         bool _protoOwner; // flag to indicate ownership of the 
