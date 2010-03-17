@@ -1,3 +1,5 @@
+#include <string>
+#include "comms/Data.h"
 #include "WritableData.h"
 #include "LockableData.h"
 
@@ -22,6 +24,12 @@ WritableData::~WritableData()
 LockableData* WritableData::data()
 {
     return _data;
+}
+
+void WritableData::write(const void* buf, size_t size)
+{
+    Q_ASSERT( size <= _data->data()->size() );
+    std::memcpy(_data->data()->operator*(), buf, size);
 }
 
 bool WritableData::isValid() const

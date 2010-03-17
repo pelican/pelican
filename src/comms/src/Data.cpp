@@ -37,6 +37,11 @@ void* Data::operator*()
     return _data;
 }
 
+const void* Data::operator*() const
+{
+    return _data;
+}
+
 void Data::setSize(size_t s)
 {
     _size = s;
