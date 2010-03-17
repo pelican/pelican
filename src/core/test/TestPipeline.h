@@ -22,7 +22,7 @@ namespace pelican {
  */
 class TestPipeline : public AbstractPipeline
 {
-    private: /* Data */
+    private:
         int _iterations;
         int _counter;
         int _matchedCounter;
@@ -46,9 +46,6 @@ class TestPipeline : public AbstractPipeline
         /// Reads counter used to check that the data passed is the same as the expected data.
         int matchedCounter() const {return _matchedCounter;}
 
-        /// return the intitialised datarequiremets
-        const DataRequirements& dataRequired() const { return _data; };
-
         /// Reset counters.
         void reset();
 
@@ -61,8 +58,6 @@ class TestPipeline : public AbstractPipeline
     private:
         /// Sets the default member variables.
         void _setDefaults();
-
-        DataRequirements _data;
 };
 
 } // namespace pelican

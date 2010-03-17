@@ -25,7 +25,7 @@ TestPipeline::TestPipeline(const DataRequirements& requirements)
     : AbstractPipeline()
 {
     _setDefaults();
-    _data = requirements;
+    _requiredDataRemote = requirements;
 }
 
 /**
@@ -62,10 +62,10 @@ void TestPipeline::reset()
  */
 void TestPipeline::run(QHash<QString, DataBlob*>& dataHash)
 {
-    if (dataRequired() == dataHash)
+    if (_requiredDataRemote == dataHash)
         ++_matchedCounter;
 
-    /* Increment counter and test for completion */
+    // Increment counter and test for completion.
     if (++_counter >= _iterations)
         stop(); // Stop the pipeline driver.
 }
