@@ -13,8 +13,11 @@
 #include "utility/Config.h"
 #include "utility/ConfigNode.h"
 #include "utility/SocketTester.h"
+#include "comms/StreamData.h"
+#include "comms/Data.h"
 #include "comms/StreamDataResponse.h"
 #include "comms/ServiceDataResponse.h"
+#include "server/test/TestServer.h"
 
 
 #include "utility/memCheck.h"
@@ -52,7 +55,14 @@ void PelicanServerClientTest::tearDown()
 void PelicanServerClientTest::test_getData()
 {
     Config config;
-    ConfigNode configNode;
+    config.setFromString(
+            "<testconfig>"
+            "   <server host=\"127.0.0.1\"/>"
+            "</testconfig>"
+            );
+    Config::TreeAddress_t address;
+    address << Config::NodeId_t("testconfig", "");
+    ConfigNode configNode = config.get(address);
     {
         // Use Case:
         //    Empty data requirements
@@ -65,12 +75,13 @@ void PelicanServerClientTest::test_getData()
         CPPUNIT_ASSERT_THROW( new PelicanServerClient(configNode, dt), QString );
     }
     QString stream1("stream1");
+    QString version1("version1");
     DataRequirements req;
     req.addStreamData(stream1);
     {
         // Use Case:
         //    data requirements are set, empty hash passed
-        // Expect: silently do nothing
+        // Expect: throw
 
         QList<DataRequirements> lreq;
         lreq.append(req);
@@ -79,9 +90,8 @@ void PelicanServerClientTest::test_getData()
         PelicanServerClient client(configNode, dt);
 
         QHash<QString, DataBlob*> dataHash;
-        CPPUNIT_ASSERT_NO_THROW(client.getData(dataHash));
+        CPPUNIT_ASSERT_THROW(client.getData(dataHash), QString );
     }
-    /*
     {
         // Use Case:
         //    Data Requirements do not match DataBlobs
@@ -91,7 +101,9 @@ void PelicanServerClientTest::test_getData()
         // setup the test
         QList<DataRequirements> lreq;
         lreq.append(req);
-        PelicanServerClient client(configNode, &factory, lreq);
+        DataTypes dt;
+        dt.addData(lreq);
+        PelicanServerClient client(configNode, dt);
 
         QHash<QString, DataBlob*> dataHash;
         DataBlob db;
@@ -99,20 +111,31 @@ void PelicanServerClientTest::test_getData()
 
         CPPUNIT_ASSERT_THROW(client.getData(dataHash), QString);
     }
+    /*
+    // set up the TestServer 
+    TestServer server; 
+    QByteArray data1("data1");
+    unsigned int port = server.port();
     {
         // Use Case:
         // Single Request for an existing single dataset
         //
+        StreamData sd(stream1, version1, data1 );
+        server.serveStreamData(sd);
 
         // setup the test
         QList<DataRequirements> lreq;
         lreq.append(req);
-        PelicanServerClient client(configNode, &factory, lreq);
+        DataTypes dt;
+        dt.addData(lreq);
+        PelicanServerClient client(configNode, dt);
+        client.setPort(port);
 
         QHash<QString, DataBlob*> dataHash;
         DataBlob db;
         dataHash.insert(stream1, &db);
         client.getData(dataHash);
+        CPPUNIT_ASSERT_EQUAL(version1.toStdString(), db.version().toStdString() );
     }
     */
 }
