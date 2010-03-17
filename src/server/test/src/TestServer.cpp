@@ -25,13 +25,14 @@ TestServer::TestServer(AbstractProtocol* proto,  QObject* parent)
       _proto(proto), _server(0)
 {
     // set up the protocol
-    if(_proto) {
+    if(! _proto) {
         _proto = new PelicanProtocol;
         _protoOwner = true;
     }
     start();
     // wait until we have a server object
     while( ! _server ) {}
+    while( ! _server->isListening() ) {};
 }
 
 /**
@@ -44,6 +45,7 @@ TestServer::~TestServer()
     if(_protoOwner)
         delete _proto;
     delete _server;
+    wait();
 }
 
 void TestServer::run()
@@ -56,7 +58,6 @@ void TestServer::run()
         std::cerr << msg.toStdString() << std::endl;
         return;
     }
-    Q_ASSERT(isListening());
     exec();
 }
 
@@ -75,24 +76,31 @@ bool TestServer::isListening() const
 
 void TestServer::serveStreamData(const QList<StreamData>& data)
 {
-    foreach( StreamData d, data )
+    for(int i=0; i<data.size(); ++i) 
     {
-        serveStreamData(d);
+        serveStreamData(data[i]);
     }
 }
 
 void TestServer::serveStreamData(const StreamData& d)
 {
     StreamDataBuffer* buf = _dm.getStreamBuffer(d.name()); // ensures the StreamData buffer exists
-    WritableData wd = buf->getWritable(d.size());
-    *(wd.data()->data()) = d;
+    WritableData wd = buf->getWritable(d.size() );
+    if( ! wd.isValid() ) 
+        throw("unable to add StreamBuffer Data");
+    // copy the object
+    StreamData* data = static_cast<StreamData*>(wd.data()->data());
+    data->setId(d.id());
+    wd.write(d.operator*(), d.size());
+    for(int i=0; i< d.associateData().size(); ++i )
+        data->addAssociatedData(d.associateData()[i]);
 }
 
 void TestServer::serveServiceData(const QList<Data>& data )
 {
-    foreach( Data d, data )
+    for(int i=0; i<data.size(); ++i) 
     {
-        serveServiceData(d);
+        serveServiceData(data[i]);
     }
 }
 
@@ -100,7 +108,10 @@ void TestServer::serveServiceData(const Data& d )
 {
     ServiceDataBuffer* buf = _dm.getServiceBuffer(d.name()); // ensures the ServiceData buffer exists
     WritableData wd = buf->getWritable(d.size());
-    *(wd.data()->data()) = d;
+    if( ! wd.isValid() ) 
+        throw("unable to add ServiceBuffer Data");
+    wd.data()->data()->setId(d.id());
+    wd.write(d.operator*(),d.size());
 }
 
 } // namespace pelican

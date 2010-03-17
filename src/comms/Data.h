@@ -37,6 +37,7 @@ class Data
 
         /// returns a pointer to the beginning of the memory block
         void* operator*();
+        const void* operator*() const;
 
         const QString& name() const { return _name; }
         void setName(const QString& name );
@@ -55,7 +56,7 @@ class Data
 
 
     private:
-//        Data(const Data&); // disallow the copy constructor
+        Data(const Data&); // disallow the copy constructor
 
     private:
         QString _name;

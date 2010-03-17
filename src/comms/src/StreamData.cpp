@@ -37,6 +37,7 @@ const QSet<QString>& StreamData::associateDataTypes() const
 
 void StreamData::addAssociatedData(boost::shared_ptr<Data> data)
 {
+    Q_ASSERT( data.get() );
     _associateData.append(data);
     _associateDataTypes.insert(data->name());
 }
