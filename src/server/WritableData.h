@@ -27,7 +27,7 @@ class WritableData
     public:
         WritableData(LockableData* d);
         ~WritableData();
-        void write(const void* dataBuffer, size_t size);
+        void write(const void* dataBuffer, size_t size, size_t offset = 0);
         LockableData* data();
         /// returns true if there is a valid Data object
         bool isValid() const;

@@ -26,10 +26,11 @@ LockableData* WritableData::data()
     return _data;
 }
 
-void WritableData::write(const void* buf, size_t size)
+void WritableData::write(const void* buf, size_t size, size_t offset )
 {
-    Q_ASSERT( size <= _data->data()->size() );
-    std::memcpy(_data->data()->operator*(), buf, size);
+    Q_ASSERT( size + offset <= _data->data()->size() );
+    void* mem = (char*)(_data->data()->operator*()) + offset;
+    std::memcpy( mem, buf , size);
 }
 
 bool WritableData::isValid() const
