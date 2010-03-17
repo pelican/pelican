@@ -48,4 +48,4 @@ class DataReceiverTest : public CppUnit::TestFixture
 };
 
 } // namespace pelican
-#endif // DATARECEIVERTEST_H 
+#endif // DATARECEIVERTEST_H

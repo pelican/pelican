@@ -11,6 +11,7 @@
 #include "modules/ZenithImagerDft.h"
 #include "modules/ZenithModelVisibilities.h"
 #include "modules/ImageWriterFits.h"
+#include "modules/ImageCombiner.h"
 
 #include "utility/memCheck.h"
 
@@ -100,6 +101,10 @@ AbstractModule* ModuleFactory::_createModule(const QString& name, const ConfigNo
     }
     else if (name == "ImageWriterFits") {
         module = new ImageWriterFits(config);
+        _modules.append(module);
+    }
+    else if (name == "ImageCombiner") {
+        module = new ImageCombiner(config);
         _modules.append(module);
     }
     else {

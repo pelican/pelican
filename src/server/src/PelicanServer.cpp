@@ -9,10 +9,11 @@
 #include "comms/PelicanProtocol.h"
 #include "PelicanPortServer.h"
 #include "utility/memCheck.h"
+#include <iostream>
 
 namespace pelican {
 
-// class PelicanServer 
+// class PelicanServer
 PelicanServer::PelicanServer(QObject* parent)
     : QThread(parent)
 {
@@ -20,20 +21,24 @@ PelicanServer::PelicanServer(QObject* parent)
 
 PelicanServer::~PelicanServer()
 {
-    terminate();
+    std::cout << "Destroying server" << std::endl;
+    quit(); // TODO Check! Don't use terminate!
     wait();
     foreach(AbstractProtocol* p, _protocolPortMap)
         delete p;
 }
 
+
 void PelicanServer::addProtocol(AbstractProtocol* proto, quint16 port)
 {
     if( _protocolPortMap.contains(port) ) {
         delete proto;
-        throw QString("Cannot map multiple protocols to the same port (" + QString().setNum(port));
+        throw QString("Cannot map multiple protocols to the same port ("
+                + QString().setNum(port)) + ")";
     }
     _protocolPortMap[port] = proto;
 }
+
 
 void PelicanServer::addStreamChunker( AbstractChunker* chunker, const QString& host, quint16 port)
 {
@@ -47,6 +52,7 @@ void PelicanServer::addServiceChunker( AbstractChunker* chunker, const QString& 
     _serviceDataTypes.insert( chunker->type() );
 }
 
+
 void PelicanServer::_addChunker( AbstractChunker* chunker, const QString& host, quint16 port)
 {
     if( chunker ) {
@@ -56,7 +62,8 @@ void PelicanServer::_addChunker( AbstractChunker* chunker, const QString& host, 
         QPair<QString,quint16> pair(host,port);
         if( _chunkerPortMap.contains(pair) ) {
             delete chunker;
-            throw QString("Cannot map multiple chunkers to the same host/port (" + host + "/" + QString().setNum(port)) + ")";
+            throw QString("Cannot map multiple chunkers to the same host/port ("
+                    + host + "/" + QString().setNum(port)) + ")";
         }
         _chunkerPortMap[pair] = chunker;
     }

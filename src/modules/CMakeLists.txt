@@ -10,6 +10,7 @@ set( modules_src
      src/ZenithModelVisibilities.cpp
      src/ZenithImagerDft.cpp
      src/ImageWriterFits.cpp
+     src/ImageCombiner.cpp
 )
 
 add_library(modules ${modules_src} )

@@ -2,13 +2,15 @@
 #include "DataReceiver.h"
 #include "TestChunker.h"
 #include "DataManager.h"
+#include "utility/pelicanTimer.h"
+#include <QThread>
 
 #include "utility/memCheck.h"
 
 namespace pelican {
 
 CPPUNIT_TEST_SUITE_REGISTRATION( DataReceiverTest );
-// class DataReceiverTest 
+// class DataReceiverTest
 DataReceiverTest::DataReceiverTest()
     : CppUnit::TestFixture()
 {
@@ -29,6 +31,7 @@ void DataReceiverTest::setUp()
 void DataReceiverTest::tearDown()
 {
     delete _dm;
+    delete _testChunker;
 }
 
 void DataReceiverTest::test_listen()
@@ -40,6 +43,7 @@ void DataReceiverTest::test_listen()
          */
         CPPUNIT_ASSERT_THROW(new DataReceiver(NULL,_dm), QString);
     }
+
     {
         /* Use Case:
          * Null Socket returned by Chunker
@@ -49,6 +53,7 @@ void DataReceiverTest::test_listen()
         DataReceiver dr(&testChunker,_dm);
         dr.listen(_testHost,_testPort);
     }
+
     {
         /* Use Case:
          * Unspecified host
@@ -57,6 +62,7 @@ void DataReceiverTest::test_listen()
         DataReceiver dr(_testChunker,_dm);
         dr.listen("",_testPort);
     }
+
     {
         /* Use Case:
          * Unspecified port
@@ -65,6 +71,7 @@ void DataReceiverTest::test_listen()
         DataReceiver dr(_testChunker,_dm);
         dr.listen("", 0);
     }
+
     {
         /* Use Case:
          * All OK, data sent
@@ -73,12 +80,12 @@ void DataReceiverTest::test_listen()
          */
         DataReceiver dr(_testChunker,_dm);
         dr.listen(_testHost, _testPort);
-        /* TODO
-        TestSocketServer ts(_testHost, _testPort);
-        CPPUNIT_ASSERT(ts.send("abcd"));
-        _app->processEvents();
-        CPPUNIT_ASSERT_EQUAL(1, _testChunker->nextCalled());
-        */
+
+        // TODO
+//        TestSocketServer ts(_testHost, _testPort);
+//        CPPUNIT_ASSERT(ts.send("abcd"));
+//        _app->processEvents();
+//        CPPUNIT_ASSERT_EQUAL(1, _testChunker->nextCalled());
     }
 }
 
