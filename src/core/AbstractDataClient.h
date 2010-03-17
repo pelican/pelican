@@ -5,6 +5,7 @@
 #include "utility/ConfigNode.h"
 #include <QHash>
 #include <QList>
+#include <QSet>
 #include <QString>
 
 /**
@@ -54,6 +55,9 @@ class AbstractDataClient
 
         /// The configuration node for the data client.
         ConfigNode _configNode;
+
+    protected:
+        QSet<QString> _requireSet;
 
     protected:
         /// Returns a pointer to the configuration node.

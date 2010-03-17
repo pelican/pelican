@@ -24,6 +24,11 @@ AbstractDataClient::AbstractDataClient(const ConfigNode& config, const DataTypes
     if ( _dataReqs.dataRequirements().size()== 0 )
         throw( QString("No data requirements specified") );
 
+    // construct the totla set of requirements
+    foreach( const DataRequirements dr, dataRequirements() )
+    {
+        _requireSet += dr.allData();
+    }
 }
 
 /**
