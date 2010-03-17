@@ -25,13 +25,14 @@ TestServer::TestServer(AbstractProtocol* proto,  QObject* parent)
       _proto(proto), _server(0)
 {
     // set up the protocol
-    if(_proto) {
+    if(! _proto) {
         _proto = new PelicanProtocol;
         _protoOwner = true;
     }
     start();
     // wait until we have a server object
     while( ! _server ) {}
+    while( ! _server->isListening() ) {};
 }
 
 /**
@@ -43,6 +44,7 @@ TestServer::~TestServer()
     if(_protoOwner)
         delete _proto;
     delete _server;
+    wait();
 }
 
 void TestServer::run()
@@ -53,9 +55,8 @@ void TestServer::run()
     {
         QString msg = QString("unable to start TestServer :") + _server->errorString();
         std::cerr << msg.toStdString() << std::endl;
-        quit();
+        return;
     }
-    Q_ASSERT(isListening());
     exec();
 }
 
