@@ -39,7 +39,8 @@ TestServer::TestServer(AbstractProtocol* proto,  QObject* parent)
  */
 TestServer::~TestServer()
 {
-    quit();
+    while (!isFinished()) quit();
+    wait();
     if(_protoOwner)
         delete _proto;
     delete _server;
@@ -53,7 +54,7 @@ void TestServer::run()
     {
         QString msg = QString("unable to start TestServer :") + _server->errorString();
         std::cerr << msg.toStdString() << std::endl;
-        quit();
+        return;
     }
     Q_ASSERT(isListening());
     exec();
