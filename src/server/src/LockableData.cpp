@@ -77,14 +77,12 @@ QString LockableData::id() const {
     return _data->id(); 
 }
 
-//void LockableData::setSize(size_t s)
-//{
-//    _data->setSize(s);
-//}
+QString LockableData::name() const {
+    return _data->name();
+}
 
-//size_t LockableData::size() const
-//{
-//    return _data->size();
-//}
+size_t LockableData::size() const {
+    return _data->size();
+}
 
 } // namespace pelican

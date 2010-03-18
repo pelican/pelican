@@ -5,6 +5,7 @@
 #include "ServiceDataBuffer.h"
 #include "WritableData.h"
 #include "LockableData.h"
+#include "LockableStreamData.h"
 #include "comms/PelicanProtocol.h"
 #include "comms/StreamData.h"
 #include "comms/Data.h"
@@ -85,15 +86,23 @@ void TestServer::serveStreamData(const QList<StreamData>& data)
 void TestServer::serveStreamData(const StreamData& d)
 {
     StreamDataBuffer* buf = _dm.getStreamBuffer(d.name()); // ensures the StreamData buffer exists
+
+    // The Associated Data should be registered
+    // before we register the stream data
+    // to ensure that the server can make the correct associations
+    for(int i=0; i< d.associateData().size(); ++i )
+        serveServiceData(*(d.associateData()[i].get()));
+
+    // Now aded the Stream Data
     WritableData wd = buf->getWritable(d.size() );
     if( ! wd.isValid() ) 
         throw("unable to add StreamBuffer Data");
     // copy the object
-    StreamData* data = static_cast<StreamData*>(wd.data()->data());
-    data->setId(d.id());
+    LockableStreamData* data = static_cast<LockableStreamData*>(wd.data());
+    StreamData* datas = static_cast<StreamData*>(data->data());
+    datas->setId(d.id());
     wd.write(d.operator*(), d.size());
-    for(int i=0; i< d.associateData().size(); ++i )
-        data->addAssociatedData(d.associateData()[i]);
+    Q_ASSERT( datas->size() == d.size() );
 }
 
 void TestServer::serveServiceData(const QList<Data>& data )
