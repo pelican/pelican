@@ -31,12 +31,15 @@ class LockableData : public QObject
         LockableData(const QString& name="", void* data=0, size_t size=0, QObject* parent=0);
         virtual ~LockableData();
         /// return the size of the stored data
-        //size_t size() const;
+        size_t size() const;
         /// sets the size of the stored data
         //void setSize(size_t);
 
         /// returns a pointer to the beginning of the memory block
         void* memoryLocation();
+
+        /// return the name of the data
+        QString name() const;
 
         /// returns the Data object
         Data* data() const;
