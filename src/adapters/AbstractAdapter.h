@@ -31,8 +31,7 @@ class DataBlob;
 class AbstractAdapter
 {
     public:
-        enum private_AdapterType_t { Stream, Service };
-        typedef private_AdapterType_t AdapterType_t;
+        typedef enum { Stream, Service } AdapterType_t;
 
     public:
         /// Constructs a new adapter.

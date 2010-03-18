@@ -62,7 +62,7 @@ WritableData StreamDataBuffer::getWritable(size_t size)
  *
  * @return Returns a pointer to the LockableStreamData object to use.
  *
- * @param[in] size The size of the requested block of writable memory (number of bytes).
+ * @param[in] size The size in bytes of the requested block of writable memory.
  */
 LockableStreamData* StreamDataBuffer::_getWritable(size_t size)
 {

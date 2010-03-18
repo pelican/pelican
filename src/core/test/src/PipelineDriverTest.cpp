@@ -11,79 +11,111 @@
 namespace pelican {
 
 CPPUNIT_TEST_SUITE_REGISTRATION( PipelineDriverTest );
-// class PipelineDriverTest 
+
+/**
+ * @details
+ * PipelineDriverTest constructor.
+ */
 PipelineDriverTest::PipelineDriverTest()
     : CppUnit::TestFixture()
 {
+    _coreApp = NULL;
     _pipelineDriver = NULL;
+    _dataBlobFactory = NULL;
+    _moduleFactory = NULL;
+    _clientFactory = NULL;
 }
 
+/**
+ * @details
+ * PipelineDriverTest destructor.
+ */
 PipelineDriverTest::~PipelineDriverTest()
 {
 }
 
+/**
+ * @details
+ * Set-up routine executed before each test method.
+ */
 void PipelineDriverTest::setUp()
 {
+    // Create the QCoreApplication.
     int argc = 1;
     char *argv[] = {(char*)"pelican"};
     _coreApp = new QCoreApplication(argc, argv);
+
+    // Create the factories.
     _dataBlobFactory = new DataBlobFactory;
     Config config;
     _moduleFactory = new ModuleFactory(&config);
     Config::TreeAddress_t clientsNode;
-    _clientFactory = new DataClientFactory(0,clientsNode, 0);
-    _pipelineDriver = new PipelineDriver(_dataBlobFactory, _moduleFactory, _clientFactory);
+    _clientFactory = new DataClientFactory(0, clientsNode, 0);
+
+    // Create the pipeline driver.
+    _pipelineDriver = new PipelineDriver(_dataBlobFactory, _moduleFactory,
+            _clientFactory);
 }
 
+/**
+ * @details
+ * Clean-up routine executed after each test method.
+ */
 void PipelineDriverTest::tearDown()
 {
+    // Delete the pipeline driver.
+    delete _pipelineDriver;
+
+    // Delete the factories.
     delete _dataBlobFactory;
     delete _moduleFactory;
     delete _clientFactory;
-    delete _pipelineDriver;
+
+    // Delete the QCoreApplication.
     delete _coreApp;
 }
 
+/**
+ * @details
+ * Tests the registerPipeline() method with a pipeline that requires no data,
+ * and with a pipeline that requires data.
+ *
+ * No exceptions should be thrown in either case.
+ */
 void PipelineDriverTest::test_registerPipeline()
 {
-    // Use Case:
-    // Pipeline requiring no data.
-    // Expected to throw an exception and delete the passed object.
-    CPPUNIT_ASSERT_THROW(_pipelineDriver->registerPipeline(new TestPipeline), QString);
+    CPPUNIT_ASSERT_NO_THROW(_pipelineDriver->registerPipeline(new TestPipeline));
 
-    // Use Case:
-    // Pipeline requiring some data.
-    // Expected to not throw any exceptions.
     DataRequirements req;
-    req.setStreamData("wibble");
+    req.setStreamData("requiredData");
     CPPUNIT_ASSERT_NO_THROW(_pipelineDriver->registerPipeline(new TestPipeline(req)));
-
-    // Use Case:
-    // Try to register two pipelines requiring the same stream data.
-    // Expect an exception to be thrown.
-    DataRequirements req1;
-    req1.setStreamData("wibble");
-    CPPUNIT_ASSERT_THROW(_pipelineDriver->registerPipeline(new TestPipeline(req1)), QString);
 }
 
-void PipelineDriverTest::test_emptyPipeline()
+/**
+ * @details
+ * Tests the start() method when no pipelines have been registered.
+ *
+ * An exception of type QString should be thrown.
+ */
+void PipelineDriverTest::test_start_noPipelinesRegistered()
 {
-    return;
-    // Use Case:
-    // Attempt to run a pipeline which has not been set up with registerPipeline.
-    // Expected to throw an exception with a message.
     CPPUNIT_ASSERT_THROW(_pipelineDriver->start(), QString);
 }
 
-void PipelineDriverTest::test_singlePipelineInvalidData()
+/**
+ * @details
+ * Tests the start() method when the data returned by the client via getData()
+ * is not compatible with any registered pipeline.
+ *
+ * An exception of type QString should be thrown.
+ */
+void PipelineDriverTest::test_start_noPipelinesRun()
 {
-    // Use Case:
-    // Attempt to run a pipeline which has been set up
-    // but the data returned by getData() does not match any of the pipelines.
-    // Expected to throw an exception with a message.
     DataRequirements req;
-    req.setStreamData("wibble");
-    CPPUNIT_ASSERT_NO_THROW(_pipelineDriver->registerPipeline(new TestPipeline(req)));
+    req.setStreamData("requiredData");
+    _pipelineDriver->registerPipeline(new TestPipeline(req));
+
+    // No data client set, so no data will be returned.
     CPPUNIT_ASSERT_THROW(_pipelineDriver->start(), QString);
 }
 
@@ -93,7 +125,7 @@ void PipelineDriverTest::test_singlePipeline()
     // Attempt to run a single registered pipeline.
     // Expect run method to be called with appropriate data on the test pipeline (repeatedly).
 
-    QString wibble("wibble");
+//    QString wibble("wibble");
 //    TestDataClient client;
 //    QSet<QString> set;
 //    set.insert(wibble);
