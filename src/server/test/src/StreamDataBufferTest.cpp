@@ -37,12 +37,15 @@ void StreamDataBufferTest::tearDown()
 
 void StreamDataBufferTest::test_getWritable()
 {
+    QByteArray data1("data1");
     {
         // Use case:
         // getWritable() called with no service data
         // expect valid object with no associate data
         StreamDataBuffer b("test",_dataManager);
-        WritableData data = b.getWritable(1);
+        WritableData data = b.getWritable(data1.size());
+        CPPUNIT_ASSERT( data.isValid() );
+        data.write(data1.data(),data1.size());
         CPPUNIT_ASSERT( data.isValid() );
         CPPUNIT_ASSERT_EQUAL(0, static_cast<LockableStreamData*>(data.data())->associateData().size() );
     }
@@ -55,7 +58,9 @@ void StreamDataBufferTest::test_getWritable()
         // getWritable() called with service data supported, but no data
         // expect valid object with no associate data
         StreamDataBuffer b("test",_dataManager);
-        WritableData data = b.getWritable(1);
+        WritableData data = b.getWritable(data1.size());
+        CPPUNIT_ASSERT( data.isValid() );
+        data.write(data1.data(),data1.size());
         CPPUNIT_ASSERT( data.isValid() );
         CPPUNIT_ASSERT_EQUAL(0, static_cast<LockableStreamData*>(data.data())->associateData().size() );
     }
@@ -67,7 +72,9 @@ void StreamDataBufferTest::test_getWritable()
         // getWritable() called with service data supported, with data
         // expect valid object with associate data
         StreamDataBuffer b("test",_dataManager);
-        WritableData data = b.getWritable(1);
+        WritableData data = b.getWritable(data1.size());
+        CPPUNIT_ASSERT( data.isValid() );
+        data.write(data1.data(),data1.size());
         CPPUNIT_ASSERT( data.isValid() );
         CPPUNIT_ASSERT_EQUAL(1, static_cast<LockableStreamData*>(data.data())->associateData().size() );
     }
