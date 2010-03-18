@@ -74,7 +74,7 @@ LockableStreamData* StreamDataBuffer::_getWritable(size_t size)
         // Iterate through until we find a container big enough.
         do {
             LockableStreamData* lockableData = temp.dequeue();
-            if( sizeof(*lockableData) >= size ) {
+            if( lockableData->size() >= size ) {
                 // We found one - so our work is done.
                 return lockableData;
             }
