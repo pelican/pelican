@@ -30,9 +30,10 @@ class PipelineDriverTest : public CppUnit::TestFixture
     public:
         CPPUNIT_TEST_SUITE( PipelineDriverTest );
         CPPUNIT_TEST( test_registerPipeline );
+        CPPUNIT_TEST( test_registerPipeline_null );
         CPPUNIT_TEST( test_start_noPipelinesRegistered );
         CPPUNIT_TEST( test_start_noPipelinesRun );
-        CPPUNIT_TEST( test_singlePipeline );
+        CPPUNIT_TEST( test_start_singlePipelineNoClient );
         CPPUNIT_TEST( test_multiPipeline );
         CPPUNIT_TEST_SUITE_END();
 
@@ -42,9 +43,10 @@ class PipelineDriverTest : public CppUnit::TestFixture
 
         // Test Methods
         void test_registerPipeline();
+        void test_registerPipeline_null();
         void test_start_noPipelinesRegistered();
         void test_start_noPipelinesRun();
-        void test_singlePipeline();
+        void test_start_singlePipelineNoClient();
         void test_multiPipeline();
 
     public:

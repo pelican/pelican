@@ -70,6 +70,10 @@ PipelineDriver::~PipelineDriver()
  */
 void PipelineDriver::registerPipeline(AbstractPipeline *pipeline)
 {
+    // Check the pipeline exists.
+    if (!pipeline)
+        throw QString("PipelineDriver::registerPipeline(): Null pipeline.");
+
     // Store the pointer to the registered pipeline.
     _registeredPipelines.append(pipeline);
 
