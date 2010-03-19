@@ -6,6 +6,7 @@
 #include "comms/Data.h"
 #include "adapters/test/TestAdapter.h"
 #include "adapters/test/TestStreamAdapter.h"
+#include "adapters/test/TestDataBlob.h"
 #include "utility/Config.h"
 #include "utility/ConfigNode.h"
 
@@ -107,7 +108,7 @@ void PelicanServerClientTestMT::test_getData()
         client.setPort(port);
 
         QHash<QString, DataBlob*> dataHash;
-        DataBlob db;
+        TestDataBlob db;
         dataHash.insert(stream1, &db);
         client.getData(dataHash);
         CPPUNIT_ASSERT_EQUAL(version1.toStdString(), db.version().toStdString() );

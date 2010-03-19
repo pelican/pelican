@@ -30,7 +30,6 @@ Session::~Session()
 
 void Session::run()
 {
-    std::cout << "Session::run()" << std::endl;
     QTcpSocket socket;
     if (!socket.setSocketDescriptor(_socketDescriptor)) {
         emit error(socket.error());
@@ -42,7 +41,6 @@ void Session::run()
     processRequest(*req, socket);
     socket.disconnectFromHost();
     socket.waitForDisconnected();
-    std::cout << "Session::run() end." << std::endl;
 }
 
 /**
@@ -81,7 +79,6 @@ void Session::processRequest(const ServerRequest& req, QIODevice& out)
                             data.append(lockedData->data());
                         }
                         _proto->send( out, data );
-                        std::cout << "Sent service data" << std::endl;
                     }
                 }
                 break;
