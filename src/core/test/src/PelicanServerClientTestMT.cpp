@@ -4,6 +4,8 @@
 #include "server/test/TestServer.h"
 #include "comms/StreamData.h"
 #include "comms/Data.h"
+#include "adapters/test/TestAdapter.h"
+#include "adapters/test/TestStreamAdapter.h"
 #include "utility/Config.h"
 #include "utility/ConfigNode.h"
 
@@ -40,6 +42,8 @@ void PelicanServerClientTestMT::test_getData()
 {
     try{
     // set up the test server
+    TestAdapter serviceAdapter;
+    TestStreamAdapter streamAdapter;
     TestServer server;
     QString stream1("stream1");
     QString service1("service1");
@@ -98,6 +102,7 @@ void PelicanServerClientTestMT::test_getData()
         lreq.append(req);
         DataTypes dt;
         dt.addData(lreq);
+        dt.setAdapter(stream1, &streamAdapter);
         PelicanServerClient client(configNode, dt);
         client.setPort(port);
 

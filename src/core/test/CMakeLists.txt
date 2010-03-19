@@ -24,3 +24,4 @@ add_executable(coreTestMT ${coreTestMT_src} )
 target_link_libraries(coreTestMT ${SUBPACKAGE_LIBRARIES} ${CPPUNIT_LIBRARIES} memoryTracerDummy )
 
 add_test(coreTest coreTest )
+add_test(coreTestMT coreTestMT )
