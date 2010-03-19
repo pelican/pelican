@@ -148,8 +148,8 @@ void PelicanServerClientTestMT::test_getData()
         client.getData(dataHash);
         CPPUNIT_ASSERT_EQUAL( version1.toStdString(), db.version().toStdString() );
         CPPUNIT_ASSERT_EQUAL( version2.toStdString(), db_service.version().toStdString() );
-        CPPUNIT_ASSERT_EQUAL( std::string(data1.data()), std::string(db.data()) );
         CPPUNIT_ASSERT_EQUAL( std::string(data2.data()), std::string(db_service.data()) );
+        CPPUNIT_ASSERT_EQUAL( std::string(data1.data()), std::string(db.data()) );
     }
     }
     catch(const QString& e)

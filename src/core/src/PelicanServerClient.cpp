@@ -116,13 +116,31 @@ QHash<QString, DataBlob*> PelicanServerClient::_response(QIODevice& device, boos
                     // incoming data stream
                     std::vector<char> tmp;
                     tmp.resize(sd->size());
-                    device.read( &tmp[0] , sd->size() );
+                    int timeout = 2000;
+                    unsigned long bytesRead = 0;
+                    while( bytesRead != sd->size() )
+                    {
+                        while (device.bytesAvailable() < 1 )
+                        {
+                            if ( !device.waitForReadyRead(timeout) ) {
+                                log(QString("timed out from server") + device.errorString() );
+                                return validData;
+                            }
+                        }
+                        int res = device.read( &tmp[0 + bytesRead] , sd->size() );
+                        if( res == -1 ) {
+                            log(QString("problem reading from server") + device.errorString() );
+                            return validData;
+                        }
+                        bytesRead += res; 
+                    }
                     Q_ASSERT(tmp.size() == sd->size() );
                     // fetch the service data
                     validData.unite( _getServiceData(req, dataHash) );
                     // now we can adapt the stream data
-                    QByteArray tmp_array; tmp_array.fromRawData(&tmp[0], tmp.size());
+                    QByteArray tmp_array =  QByteArray::fromRawData(&tmp[0], tmp.size());
                     QBuffer buf(&tmp_array);
+                    buf.open(QIODevice::ReadOnly);
                     validData.unite(_adaptStream(buf, sd, dataHash ));
                 }
             }
@@ -170,7 +188,6 @@ void PelicanServerClient::_connect()
 
 QHash<QString, DataBlob*> PelicanServerClient::_getServiceData(const ServiceDataRequest& request, QHash<QString, DataBlob*>& dataHash)
 {
-    std::cout << "gfetServiceData" << std::endl;
     return _sendRequest(request, dataHash);
 }
 

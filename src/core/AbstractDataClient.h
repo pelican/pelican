@@ -58,6 +58,7 @@ class AbstractDataClient
 
     protected:
         QSet<QString> _requireSet;
+        void log(const QString& msg);
 
     protected:
         /// Returns a pointer to the configuration node.

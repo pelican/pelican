@@ -1,3 +1,4 @@
+#include <iostream>
 #include "core/AbstractDataClient.h"
 #include "adapters/AdapterFactory.h"
 #include "data/DataRequirements.h"
@@ -49,4 +50,8 @@ AbstractStreamAdapter* AbstractDataClient::streamAdapter(const QString& type) co
     return _dataReqs.streamAdapter(type);
 }
 
+void AbstractDataClient::log(const QString& msg)
+{
+    std::cerr << msg.toStdString() << std::endl;
+}
 } // namespace pelican
