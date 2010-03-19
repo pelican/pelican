@@ -73,7 +73,6 @@ void PelicanServerClientTestMT::test_getData()
         // throw
         Data sd(service1, version1, data1 );
         CPPUNIT_ASSERT_EQUAL( (long)data1.size(), (long)sd.size() );
-        server.serveServiceData(sd);
 
         // setup the test
         DataRequirements req;
@@ -146,13 +145,11 @@ void PelicanServerClientTestMT::test_getData()
         TestDataBlob db_service;
         dataHash.insert(stream1, &db);
         dataHash.insert(service1, &db_service);
-        /*
         client.getData(dataHash);
-        CPPUNIT_ASSERT_EQUAL(version1.toStdString(), db.version().toStdString() );
-        CPPUNIT_ASSERT_EQUAL( std::string(data1.data()), std::string(db.data()) );
+        CPPUNIT_ASSERT_EQUAL( version1.toStdString(), db.version().toStdString() );
         CPPUNIT_ASSERT_EQUAL( version2.toStdString(), db_service.version().toStdString() );
+        CPPUNIT_ASSERT_EQUAL( std::string(data1.data()), std::string(db.data()) );
         CPPUNIT_ASSERT_EQUAL( std::string(data2.data()), std::string(db_service.data()) );
-        */
     }
     }
     catch(const QString& e)
