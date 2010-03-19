@@ -9,7 +9,7 @@ namespace pelican {
 
 // class LockableStreamData 
 LockableStreamData::LockableStreamData(const QString& name, void* data, size_t size, QObject* parent)
-    : AbstractLockableData(parent)
+    : AbstractLockableData(size, parent)
 {
     _data = new StreamData(name,data,size);
 }

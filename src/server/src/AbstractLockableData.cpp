@@ -9,9 +9,10 @@ namespace pelican {
 /**
  *@details AbstractLockableData 
  */
-AbstractLockableData::AbstractLockableData(QObject* parent)
+AbstractLockableData::AbstractLockableData(quint64 maxSize, QObject* parent)
     : AbstractLockable(parent), _data(0)
 {
+    _maxSize = maxSize;
 }
 
 /**

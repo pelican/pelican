@@ -25,7 +25,7 @@ class AbstractLockableData : public AbstractLockable
     Q_OBJECT
 
     public:
-        AbstractLockableData( QObject* parent );
+        AbstractLockableData( quint64 maxSize, QObject* parent );
         virtual ~AbstractLockableData();
 
         /// return the data id 

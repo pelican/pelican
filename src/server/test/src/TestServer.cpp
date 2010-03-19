@@ -32,8 +32,8 @@ TestServer::TestServer(AbstractProtocol* proto,  QObject* parent)
     }
     start();
     // wait until we have a server object
-    while( ! _server ) {}
-    while( ! _server->isListening() ) {};
+    while( ! _server ) {msleep(1);}
+    while( ! _server->isListening() ) {msleep(1);};
 }
 
 /**
@@ -42,7 +42,6 @@ TestServer::TestServer(AbstractProtocol* proto,  QObject* parent)
 TestServer::~TestServer()
 {
     while (!isFinished()) quit();
-    wait();
     if(_protoOwner)
         delete _proto;
     delete _server;
@@ -51,8 +50,9 @@ TestServer::~TestServer()
 
 void TestServer::run()
 {
-    if( ! _server  )
+    if( ! _server  ) {
         _server = new PelicanPortServer(_proto,&_dm);
+    }
     if( !_server->listen(QHostAddress::Any, 0 ) )
     {
         QString msg = QString("unable to start TestServer :") + _server->errorString();
