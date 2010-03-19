@@ -1,13 +1,12 @@
 #include "LockedData.h"
-#include "LockableData.h"
-#include "comms/Data.h"
+#include "AbstractLockable.h"
 #include "utility/memCheck.h"
 
 namespace pelican {
 
 
 // class LockedData 
-LockedData::LockedData( const QString& name, LockableData* data )
+LockedData::LockedData( const QString& name, AbstractLockable* data )
     : _name(name)
 {
     _data = 0;
@@ -27,39 +26,25 @@ LockedData::LockedData( const LockedData& data )
     setData(data._data);
 }
 
-void LockedData::setData(LockableData* data)
+void LockedData::setData(AbstractLockable* data)
 {
     if( data ) {
         _data=data;
-        data->data()->setName(_name);
         data->lock();
     }
 }
 
-LockableData* LockedData::data() const
+AbstractLockable* LockedData::object() const
 {
     return _data; 
 }
 
 bool LockedData::isValid() const
 {
-    //bool rv=( _data.isEmpty())?false:true;
-    //foreach (Data* data, _data ) {
-    //    rv = rv && data->isValid();
-    //}
-    //return rv;
     bool rv = false;
-    if ( _data && _data->data() )
-        rv = _data->data()->isValid();
+    if ( _data  )
+        rv = _data->isValid();
     return rv;
-}
-
-size_t LockedData::size() const
-{
-    size_t s = 0;
-    if( isValid() )
-           s = _data->data()->size();
-    return s;
 }
 
 } // namespace pelican

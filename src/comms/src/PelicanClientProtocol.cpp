@@ -68,7 +68,7 @@ QByteArray PelicanClientProtocol::serialise(const ServerRequest& req)
 
 boost::shared_ptr<ServerResponse> PelicanClientProtocol::receive(QAbstractSocket& socket)
 {
-    int timeout = 1000;
+    int timeout = 2000;
     ServerResponse::Response_t type = ServerResponse::Error;
     while (socket.bytesAvailable() < (int)sizeof(quint16)) {
         if ( !socket.waitForReadyRead(timeout) ) {

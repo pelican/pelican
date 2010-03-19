@@ -132,6 +132,7 @@ void LockedDataTest::test_lock()
     }
 }
 
+/*
 void LockedDataTest::test_size()
 {
     {
@@ -157,6 +158,6 @@ void LockedDataTest::test_size()
         LockedData ld("test",&d);
         CPPUNIT_ASSERT_EQUAL( (size_t)100, ld.size());
     }
-}
+}*/
 
 } // namespace pelican

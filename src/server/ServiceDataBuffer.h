@@ -50,11 +50,13 @@ class ServiceDataBuffer : public DataBuffer
         //  will become the current.
         WritableData getWritable(size_t size);
 
-    public slots:
+    protected slots:
         void activateData();
+        void deactivateData();
 
     protected:
         void activateData(LockableData*);
+        void deactivateData(LockableData*);
 
     private:
         QHash<QString,LockableData*> _data;

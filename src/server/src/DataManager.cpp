@@ -79,7 +79,7 @@ LockedData DataManager::getNext(const QString& type, const QSet<QString>& associ
     LockedData d = getNext(type);
     if( d.isValid() ) {
         // check it contains valid associateData
-        LockableStreamData* sd = static_cast<LockableStreamData*>(d.data());
+        LockableStreamData* sd = static_cast<LockableStreamData*>(d.object());
         QSet<QString> tst = sd->associateDataTypes();
         if(! ( associateData - tst ).isEmpty() ) {
             return LockedData(0);

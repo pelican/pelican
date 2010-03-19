@@ -1,14 +1,17 @@
 #include "LockableStreamData.h"
+#include "LockableData.h"
 #include "LockedData.h"
 #include "comms/Data.h"
+#include "comms/StreamData.h"
 #include "utility/memCheck.h"
 
 namespace pelican {
 
 // class LockableStreamData 
-LockableStreamData::LockableStreamData(const QString& name, void* data, size_t size)
-    : LockableData(name, data,size)
+LockableStreamData::LockableStreamData(const QString& name, void* data, size_t size, QObject* parent)
+    : AbstractLockableData(parent)
 {
+    _data = new StreamData(name,data,size);
 }
 
 LockableStreamData::~LockableStreamData()
@@ -62,6 +65,10 @@ bool LockableStreamData::isValid(const QSet<QString>& associates) const
         }
     }
     return rv;
+}
+
+StreamData* LockableStreamData::streamData() const { 
+    return static_cast<StreamData*>(_data); 
 }
 
 } // namespace pelican

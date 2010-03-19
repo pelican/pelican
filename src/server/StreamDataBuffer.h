@@ -46,9 +46,11 @@ class StreamDataBuffer : public DataBuffer
 
     protected slots:
         void activateData();
+        void deactivateData();
 
     protected:
         void activateData(LockableStreamData*);
+        void deactivateData(LockableStreamData*);
         LockableStreamData* _getWritable(size_t size);
 
     private:

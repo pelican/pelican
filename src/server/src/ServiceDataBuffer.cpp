@@ -64,6 +64,7 @@ WritableData ServiceDataBuffer::getWritable(size_t size)
                 _space -= size;
                 _newData = new LockableData(_type,d, size);
                 Q_ASSERT(connect( _newData, SIGNAL(unlockedWrite()), this, SLOT(activateData() ) ));
+                Q_ASSERT(connect( _newData, SIGNAL(unlocked()), this, SLOT(deactivateData() ) ));
                 return WritableData( _newData );
             }
         }
@@ -74,6 +75,16 @@ WritableData ServiceDataBuffer::getWritable(size_t size)
 void ServiceDataBuffer::activateData()
 {
     activateData( static_cast<LockableData*>( sender() ) );
+}
+
+void ServiceDataBuffer::deactivateData()
+{
+    deactivateData( static_cast<LockableData*>( sender() ) );
+}
+
+void ServiceDataBuffer::deactivateData(LockableData* )
+{
+    // TODO
 }
 
 void ServiceDataBuffer::activateData(LockableData* data)

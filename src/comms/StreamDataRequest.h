@@ -35,7 +35,6 @@ class StreamDataRequest : public ServerRequest
         //  The first added option will be serviced if available
         //  otherwise the server will try to satisfy subsequent options
         void addDataOption(const DataRequirements& data);
-        void addDataOption(const QList<DataRequirements>& data);
 
         /// begin
         //  returns an iterator for the DataRequirements options
@@ -48,6 +47,12 @@ class StreamDataRequest : public ServerRequest
         //  DataRequirements options
         DataRequirementsIterator end() const;
 
+        /// isEmpty
+        //  returns true if there are no stream data
+        //  in any of the requirements passed
+        bool isEmpty() const;
+
+        /// the number of requirements
         int size() const;
 
         // test for equality between ServiceData objects

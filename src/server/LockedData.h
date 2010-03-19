@@ -9,25 +9,23 @@
 
 namespace pelican {
 
-class LockableData;
-class Data;
+class AbstractLockable;
 
 /**
  * @class LockedData
  *  
  * @brief
- *    A container that automatically locks and unlocks any data object
+ *    A container that automatically locks and unlocks any AbstractLockable object
  *    added to it
  * @details
- *    On addition to this container, the Data will be locked. On destruction
- *    the Data will be unlocked.
+ *    On destruction the AbstractLockable read lock count will be less by one.
  * 
  */
 
 class LockedData
 {
     public:
-        LockedData(const QString& name, LockableData* data = 0);
+        LockedData(const QString& name, AbstractLockable* data = 0);
         ~LockedData();
         /// copy constructor also locks the data also
         LockedData(const LockedData& data);
@@ -36,19 +34,16 @@ class LockedData
         bool isValid() const;
 
         /// add a data object
-        void setData(LockableData*);
+        void setData(AbstractLockable*);
 
-        /// returns the size of the data
-        size_t size() const;
-
-        /// return the data object
-        LockableData* data() const;
+        /// return the locked object
+        AbstractLockable* object() const;
 
         /// return the name of the data
         QString name() const { return _name; };
 
     private:
-        LockableData* _data;
+        AbstractLockable* _data;
         QString _name;
 };
 

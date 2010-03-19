@@ -2,6 +2,7 @@
 #include "ServiceDataBuffer.h"
 #include "WritableData.h"
 #include "LockedData.h"
+#include "LockableData.h"
 #include <QCoreApplication>
 
 
@@ -51,8 +52,9 @@ void ServiceDataBufferTest::test_getWritable()
         ServiceDataBuffer b("test");
         {
             LockableData* d = 0;
-            d = b.getWritable(1).data();
+            d = static_cast<LockableData*>(b.getWritable(1).data());
             CPPUNIT_ASSERT( d != 0 );
+            CPPUNIT_ASSERT( d->isValid() );
             //CPPUNIT_ASSERT( b.getCurrent().data()[0] == d );
         }
         _app->processEvents();

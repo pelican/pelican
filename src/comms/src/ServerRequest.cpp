@@ -36,5 +36,4 @@ bool ServerRequest::operator==(const ServerRequest& req) const
     return _type == req._type;
 }
 
-
 } // namespace pelican

@@ -18,12 +18,8 @@ StreamDataRequest::~StreamDataRequest()
 
 void StreamDataRequest::addDataOption(const DataRequirements& data)
 {
-    _dataOptions.append(data);
-}
-
-void StreamDataRequest::addDataOption(const QList<DataRequirements>& data)
-{
-    _dataOptions += QVector<DataRequirements>::fromList(data);
+    if( data.streamData().size() != 0 )
+        _dataOptions.append(data);
 }
 
 StreamDataRequest::DataRequirementsIterator StreamDataRequest::begin() const
@@ -50,4 +46,10 @@ bool StreamDataRequest::operator==(const ServerRequest& req) const
     }
     return r;
 }
+
+bool StreamDataRequest::isEmpty() const
+{
+    return _dataOptions.size()==0;
+}
+
 } // namespace pelican

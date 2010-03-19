@@ -1,14 +1,14 @@
 #include <string>
 #include "comms/Data.h"
 #include "WritableData.h"
-#include "LockableData.h"
+#include "AbstractLockableData.h"
 
 #include "utility/memCheck.h"
 
 namespace pelican {
 
 // class WritableData 
-WritableData::WritableData(LockableData* data)
+WritableData::WritableData(AbstractLockableData* data)
     : _data(data)
 {
     if( _data )
@@ -21,7 +21,7 @@ WritableData::~WritableData()
         _data->writeUnlock();
 }
 
-LockableData* WritableData::data()
+AbstractLockableData* WritableData::data()
 {
     return _data;
 }

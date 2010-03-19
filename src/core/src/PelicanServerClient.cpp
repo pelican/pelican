@@ -59,11 +59,16 @@ QHash<QString, DataBlob*> PelicanServerClient::getData(QHash<QString, DataBlob*>
 
     // construct the request
     StreamDataRequest sr;
-    sr.addDataOption( dataRequirements() );
-
-    validData.unite( _sendRequest(sr, dataHash) );
-    //boost::shared_ptr<ServerResponse> r = _protocol->receive(sock);
-    //validData.unite( _response(sock, r, dataHash) );
+    foreach(const DataRequirements& d, dataRequirements())
+    {
+        sr.addDataOption( d );
+    }
+    if( ! sr.isEmpty() ) {
+        validData.unite( _sendRequest(sr, dataHash) );
+    }
+    else {
+        throw(QString("Request for non-stream data"));
+    }
 
     return validData;
 
@@ -76,6 +81,7 @@ QHash<QString, DataBlob*> PelicanServerClient::_response(QIODevice& device, boos
 
     switch( r->type() ) {
         case ServerResponse::Error:
+            std::cerr << "Server Error: " << r->message().toStdString() << std::endl;
             break;
         case ServerResponse::StreamData:
             {
@@ -137,6 +143,7 @@ QHash<QString, DataBlob*> PelicanServerClient::_response(QIODevice& device, boos
             }
             break;
         default:
+            std::cerr << "Unknown Response" << std::endl;
             break;
     }
     return validData;
@@ -174,7 +181,10 @@ QHash<QString, DataBlob*> PelicanServerClient::_sendRequest(const ServerRequest&
     QTcpSocket sock;
     Q_ASSERT( _server != "" );
     sock.connectToHost( _server, _port , QIODevice::ReadWrite);
-    sock.waitForConnected();
+    if( ! sock.waitForConnected(-1) )
+    {
+        throw(QString("PelicanServerClient: unable to connect to host ") + _server );
+    }
 
     sock.write( _protocol->serialise(request) );
     sock.flush();

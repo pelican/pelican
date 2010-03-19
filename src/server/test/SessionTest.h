@@ -33,10 +33,10 @@ class SessionTest : public CppUnit::TestFixture
     public:
         CPPUNIT_TEST_SUITE( SessionTest );
         CPPUNIT_TEST( test_processServiceDataRequest );
-        CPPUNIT_TEST( test_processRequest );
         CPPUNIT_TEST( test_dataReport );
         CPPUNIT_TEST( test_serviceData );
         CPPUNIT_TEST( test_streamData );
+        CPPUNIT_TEST( test_processRequest );
         CPPUNIT_TEST_SUITE_END();
 
     public:

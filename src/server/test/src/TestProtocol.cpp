@@ -34,9 +34,10 @@ void TestProtocol::send( QIODevice& stream, const QString& message)
     stream.write(_last);
 }
 
-void TestProtocol::send( QIODevice& stream, const AbstractProtocol::StreamData_t& )
+void TestProtocol::send( QIODevice& stream, const AbstractProtocol::StreamData_t& d)
 {
     _last.clear();
+    _lastStreamData = d;
     stream.write(_last);
 }
 

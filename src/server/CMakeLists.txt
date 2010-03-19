@@ -2,18 +2,22 @@ INCLUDE_DIRECTORIES(${QT_INCLUDES})
 SUBPACKAGE(server comms utility)
 # files requireing mpp preprocessing (i.e. QObjects)
 set( server_moc_headers
-     LockableData.h
-     DataBuffer.h
-     DataReceiver.h
-     ServiceDataBuffer.h
-     StreamDataBuffer.h
-     PelicanPortServer.h
-     PelicanServer.h
-     Session.h
-     LockableStreamData.h
+    AbstractLockable.h
+    AbstractLockableData.h
+    LockableData.h
+    DataBuffer.h
+    DataReceiver.h
+    ServiceDataBuffer.h
+    StreamDataBuffer.h
+    PelicanPortServer.h
+    PelicanServer.h
+    Session.h
+    LockableStreamData.h
    )
 set( server_src
      src/AbstractChunker.cpp
+     src/AbstractLockable.cpp
+     src/AbstractLockableData.cpp
      src/LockableData.cpp
      src/DataReceiver.cpp
      src/LockedData.cpp

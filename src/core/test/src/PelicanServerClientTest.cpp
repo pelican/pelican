@@ -111,33 +111,6 @@ void PelicanServerClientTest::test_getData()
 
         CPPUNIT_ASSERT_THROW(client.getData(dataHash), QString);
     }
-    /*
-    // set up the TestServer 
-    TestServer server; 
-    QByteArray data1("data1");
-    unsigned int port = server.port();
-    {
-        // Use Case:
-        // Single Request for an existing single dataset
-        //
-        StreamData sd(stream1, version1, data1 );
-        server.serveStreamData(sd);
-
-        // setup the test
-        QList<DataRequirements> lreq;
-        lreq.append(req);
-        DataTypes dt;
-        dt.addData(lreq);
-        PelicanServerClient client(configNode, dt);
-        client.setPort(port);
-
-        QHash<QString, DataBlob*> dataHash;
-        DataBlob db;
-        dataHash.insert(stream1, &db);
-        client.getData(dataHash);
-        CPPUNIT_ASSERT_EQUAL(version1.toStdString(), db.version().toStdString() );
-    }
-    */
 }
 
 void PelicanServerClientTest::test_response()

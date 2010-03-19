@@ -3,6 +3,7 @@
 #include "LockableStreamData.h"
 #include "LockedData.h"
 #include "WritableData.h"
+#include "comms/StreamData.h"
 #include <QMutexLocker>
 #include <stdlib.h>
 
@@ -64,7 +65,7 @@ LockableStreamData* StreamDataBuffer::_getWritable(size_t size)
         QQueue<LockableStreamData*> temp = _emptyQueue;
         do {
             LockableStreamData* d = temp.dequeue();
-            if( sizeof(*d) >= size ) {
+            if( d->data()->size() >= size ) {
                 // we found one - so our work is done
                 return d;
             }
@@ -81,6 +82,7 @@ LockableStreamData* StreamDataBuffer::_getWritable(size_t size)
             LockableStreamData* s = new LockableStreamData(_type, d, size);
             _data.append(s);
             Q_ASSERT(connect( s, SIGNAL(unlockedWrite()), this, SLOT(activateData() ) ));
+            Q_ASSERT(connect( s, SIGNAL(unlocked()), this, SLOT(deactivateData() ) ));
             return s;
         }
     }
@@ -90,6 +92,17 @@ LockableStreamData* StreamDataBuffer::_getWritable(size_t size)
 void StreamDataBuffer::activateData()
 {
     activateData(static_cast<LockableStreamData*>( sender() ) );
+}
+
+void StreamDataBuffer::deactivateData()
+{
+    deactivateData(static_cast<LockableStreamData*>( sender() ) );
+}
+
+void StreamDataBuffer::deactivateData(LockableStreamData* data)
+{
+    // data->reset(); TODO
+    _emptyQueue.enqueue(data);
 }
 
 void StreamDataBuffer::activateData(LockableStreamData* data)

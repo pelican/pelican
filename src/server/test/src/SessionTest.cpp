@@ -10,6 +10,7 @@
 #include "StreamDataBuffer.h"
 #include "data/DataRequirements.h"
 #include "comms/Data.h"
+#include "comms/StreamData.h"
 #include "comms/ServerRequest.h"
 #include "comms/ServiceDataRequest.h"
 #include "comms/StreamDataRequest.h"
@@ -67,6 +68,41 @@ void SessionTest::test_processRequest()
         _session->processRequest(request, *_device);
         CPPUNIT_ASSERT( "ACK" ==  _proto->lastBlock() );
     }
+    // Set up stream data for remaining tests
+    QString stream1("test");
+    StreamDataBuffer* streambuffer = new StreamDataBuffer(stream1);
+    _data->streamDataBuffer( stream1, streambuffer );
+    {
+        // Use Case:
+        // Request a single StreamData, no data available
+        // Expect send StreamData on protocol not to be called
+        DataRequirements req;
+        req.setStreamData(stream1);
+        StreamDataRequest request;
+        request.addDataOption(req);
+        CPPUNIT_ASSERT_EQUAL( 0, _block->size() );
+        _session->processRequest(request, *_device);
+        AbstractProtocol::StreamData_t data = _proto->lastStreamData();
+        CPPUNIT_ASSERT_EQUAL( 0, data.size() );
+    }
+    QString version1 = _injectData(streambuffer, "version1");
+    {
+        // Use Case:
+        // Request a single StreamData, with data available
+        // Expect send StreamData on protocol to be called
+        DataRequirements req;
+        req.setStreamData(stream1);
+        StreamDataRequest request;
+        request.addDataOption(req);
+        CPPUNIT_ASSERT_EQUAL( 0, _block->size() );
+        _session->processRequest(request, *_device);
+        AbstractProtocol::StreamData_t data = _proto->lastStreamData();
+        CPPUNIT_ASSERT_EQUAL( 1, data.size() );
+        CPPUNIT_ASSERT_EQUAL( stream1.toStdString(), data[0]->name().toStdString() );
+        CPPUNIT_ASSERT_EQUAL( 10 , (int)data[0]->size() );
+        CPPUNIT_ASSERT_EQUAL( 0 , (int)data[0]->associateData().size() );
+    }
+
 }
 
 void SessionTest::test_dataReport()
@@ -151,7 +187,7 @@ void SessionTest::test_streamData()
     }
     // Set up stream data for remaining tests
     QString stream1("Stream1");
-    StreamDataBuffer* streambuffer = new StreamDataBuffer("test");
+    StreamDataBuffer* streambuffer = new StreamDataBuffer(stream1);
     _data->streamDataBuffer( stream1, streambuffer );
     {
         // Use Case:
@@ -189,6 +225,8 @@ void SessionTest::test_streamData()
         QList<LockedData> dataList = _session->processStreamDataRequest(request);
         foreach(LockedData data, dataList) {
             CPPUNIT_ASSERT( data.isValid() );
+            CPPUNIT_ASSERT_EQUAL( 0 , (int)static_cast<LockableStreamData*>(data.object())->associateData().size() );
+            CPPUNIT_ASSERT_EQUAL( 0 , (int)(static_cast<LockableStreamData*>(data.object())->streamData()->associateData().size()) );
         }
     }
     // Set up service data stream for remaining tests
@@ -224,6 +262,8 @@ void SessionTest::test_streamData()
         QList<LockedData> dataList = _session->processStreamDataRequest(request);
         foreach(LockedData data, dataList) {
             CPPUNIT_ASSERT( data.isValid() );
+            CPPUNIT_ASSERT_EQUAL( 1 , (int)static_cast<LockableStreamData*>(data.object())->associateData().size() );
+            CPPUNIT_ASSERT_EQUAL( 1 , (int)(static_cast<LockableStreamData*>(data.object())->streamData()->associateData().size()) );
         }
     }
 }

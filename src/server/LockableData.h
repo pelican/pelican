@@ -2,8 +2,7 @@
 #define LOCKABLEDATA_H
 
 #include <cstring>
-#include <QMutex>
-#include <QObject>
+#include "AbstractLockableData.h"
 
 /**
  * @file LockableData.h
@@ -22,7 +21,7 @@ class Data;
  *    This class takes care of locking etc.
  */
 
-class LockableData : public QObject
+class LockableData : public AbstractLockableData
 {
 
     Q_OBJECT
@@ -41,50 +40,12 @@ class LockableData : public QObject
         /// return the name of the data
         QString name() const;
 
-        /// returns the Data object
-        Data* data() const;
-
         /// returns true if there isany valid data in the object
         virtual bool isValid() const;
-
-        /// returns true if there is an active lock on the data
-        bool isLocked() const;
-
-        /// marks the data as locked (increases count on unlimited semaphore)
-        void lock();
-
-        /// marks the data as unlocked (decreases count on semaphore)
-        //  emits the unlocked signal when count returns to 0
-        void unlock();
-
-        /// marks the data as locked (increases count on unlimited semaphore)
-        void writeLock();
-
-        /// marks the data as unlocked (decreases count on semaphore)
-        //  emits the unlockedWrite signal when count returns to 0
-        void writeUnlock();
-
-        /// return the data id 
-        QString id() const;
-
-        /// sets the id 
-        void setId(const QString& id);
-
-    signals:
-        void unlocked();
-        void unlockedWrite();
-
-    protected:
-        QMutex _mutex;
 
     private:
         LockableData(const LockableData&); // disallow the copy constructor
 
-    private:
-        //QString _id;
-        Data* _data;
-        int _lock;
-        int _wlock;
 };
 
 } // namespace pelican

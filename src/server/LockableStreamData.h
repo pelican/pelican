@@ -3,7 +3,7 @@
 
 #include <QSet>
 #include <QString>
-#include "LockableData.h"
+#include "AbstractLockableData.h"
 
 /**
  * @file LockableStreamData.h
@@ -11,6 +11,7 @@
 
 namespace pelican {
 
+class StreamData;
 class LockedData;
 
 /**
@@ -23,7 +24,7 @@ class LockedData;
  *     also contains linking information to the service data
  */
 
-class LockableStreamData : public LockableData
+class LockableStreamData : public AbstractLockableData
 {
     Q_OBJECT
 
@@ -31,9 +32,11 @@ class LockableStreamData : public LockableData
         typedef QList<LockedData> DataList_t;
 
     public:
-        LockableStreamData(const QString& name, void* = 0, size_t  = 0);
+        LockableStreamData(const QString& name, void* = 0, size_t  = 0, QObject* parent = 0);
         ~LockableStreamData();
         void reset();
+
+        StreamData* streamData() const;
 
         /// test validity of all data
         bool isValid() const;

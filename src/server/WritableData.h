@@ -8,7 +8,7 @@
 
 namespace pelican {
 
-class LockableData;
+class AbstractLockableData;
 
 /**
  * @class WritableData
@@ -25,15 +25,15 @@ class LockableData;
 class WritableData 
 {
     public:
-        WritableData(LockableData* d);
+        WritableData(AbstractLockableData* d);
         ~WritableData();
         void write(const void* dataBuffer, size_t size, size_t offset = 0);
-        LockableData* data();
+        AbstractLockableData* data();
         /// returns true if there is a valid Data object
         bool isValid() const;
 
     private:
-        LockableData* _data;
+        AbstractLockableData* _data;
 };
 
 } // namespace pelican

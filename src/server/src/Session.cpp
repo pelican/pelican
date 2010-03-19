@@ -3,6 +3,7 @@
 #include "DataManager.h"
 #include "LockedData.h"
 #include "LockableStreamData.h"
+#include "LockableData.h"
 #include "comms/StreamData.h"
 #include "comms/ServerRequest.h"
 #include "comms/StreamDataRequest.h"
@@ -55,28 +56,29 @@ void Session::processRequest(const ServerRequest& req, QIODevice& out)
         switch(req.type()) {
             case ServerRequest::Acknowledge:
                 _proto->send(out,"ACK");
-                std::cout << "Sent acknowledgement" << std::endl;
                 break;
             case ServerRequest::StreamData:
                 {
                     QList<LockedData> d = processStreamDataRequest(static_cast<const StreamDataRequest&>(req) );
-                    if( d.size() ) {
+                    if( d.size() > 0 ) {
                         AbstractProtocol::StreamData_t data;
-                        foreach( LockedData ld, d) {
-                            data.append(static_cast<StreamData*>(ld.data()->data()));
+                        for( int i=0; i < d.size(); ++i ) {
+                            //StreamData* mydata = static_cast<StreamData*>(d[i].data()->data());
+                            LockableStreamData* lockedData = static_cast<LockableStreamData*>(d[i].object());
+                            data.append(static_cast<StreamData*>(lockedData->streamData()));
                         }
                         _proto->send( out, data );
-                        std::cout << "Sent stream data" << std::endl;
                     }
                 }
                 break;
             case ServerRequest::ServiceData:
                 {
                     QList<LockedData> d = processServiceDataRequest(static_cast<const ServiceDataRequest&>(req) );
-                    if( d.size() ) {
+                    if( d.size() > 0 ) {
                         AbstractProtocol::ServiceData_t data;
-                        foreach( LockedData ld, d) {
-                            data.append(ld.data()->data());
+                        for( int i=0; i < d.size(); ++i ) {
+                            LockableData* lockedData = static_cast<LockableData*>(d[i].object());
+                            data.append(lockedData->data());
                         }
                         _proto->send( out, data );
                         std::cout << "Sent service data" << std::endl;

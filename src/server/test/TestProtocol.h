@@ -34,8 +34,11 @@ class TestProtocol : public AbstractProtocol
         virtual void sendError( QIODevice& stream, const QString&);
 
         QByteArray& lastBlock();
+        AbstractProtocol::StreamData_t lastStreamData() const { return _lastStreamData; };
+
 
     private:
+        AbstractProtocol::StreamData_t _lastStreamData;
         QByteArray _last;
         QString _id;
 };
