@@ -92,6 +92,7 @@ void PelicanServerClientTestMT::test_getData()
     {
         // Use Case:
         // Single Request for an existing stream dataset
+        // no service data
         // Expect:
         // return the required data stream
         StreamData sd(stream1, version1, data1 );
@@ -112,6 +113,7 @@ void PelicanServerClientTestMT::test_getData()
         dataHash.insert(stream1, &db);
         client.getData(dataHash);
         CPPUNIT_ASSERT_EQUAL(version1.toStdString(), db.version().toStdString() );
+        CPPUNIT_ASSERT_EQUAL( std::string(data1.data())  , std::string(db.data()) );
     }
     }
     catch(const QString& e)
