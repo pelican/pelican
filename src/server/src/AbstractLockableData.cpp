@@ -10,7 +10,7 @@ namespace pelican {
  *@details AbstractLockableData 
  */
 AbstractLockableData::AbstractLockableData(quint64 maxSize, QObject* parent)
-    : AbstractLockable(parent), _data(0)
+    : AbstractLockable(parent)
 {
     _maxSize = maxSize;
 }
@@ -20,7 +20,6 @@ AbstractLockableData::AbstractLockableData(quint64 maxSize, QObject* parent)
  */
 AbstractLockableData::~AbstractLockableData()
 {
-    delete _data;
 }
 
 void AbstractLockableData::setId(const QString& id)

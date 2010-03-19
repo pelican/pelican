@@ -61,7 +61,6 @@ void Session::processRequest(const ServerRequest& req, QIODevice& out)
                     if( d.size() > 0 ) {
                         AbstractProtocol::StreamData_t data;
                         for( int i=0; i < d.size(); ++i ) {
-                            //StreamData* mydata = static_cast<StreamData*>(d[i].data()->data());
                             LockableStreamData* lockedData = static_cast<LockableStreamData*>(d[i].object());
                             data.append(static_cast<StreamData*>(lockedData->streamData()));
                         }
@@ -76,7 +75,7 @@ void Session::processRequest(const ServerRequest& req, QIODevice& out)
                         AbstractProtocol::ServiceData_t data;
                         for( int i=0; i < d.size(); ++i ) {
                             LockableData* lockedData = static_cast<LockableData*>(d[i].object());
-                            data.append(lockedData->data());
+                            data.append(lockedData->data().get());
                         }
                         _proto->send( out, data );
                     }

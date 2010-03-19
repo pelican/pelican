@@ -170,6 +170,7 @@ void PelicanServerClient::_connect()
 
 QHash<QString, DataBlob*> PelicanServerClient::_getServiceData(const ServiceDataRequest& request, QHash<QString, DataBlob*>& dataHash)
 {
+    std::cout << "gfetServiceData" << std::endl;
     return _sendRequest(request, dataHash);
 }
 

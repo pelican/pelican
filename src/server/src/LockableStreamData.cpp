@@ -11,7 +11,7 @@ namespace pelican {
 LockableStreamData::LockableStreamData(const QString& name, void* data, size_t size, QObject* parent)
     : AbstractLockableData(size, parent)
 {
-    _data = new StreamData(name,data,size);
+    _data.reset( new StreamData(name,data,size) );
 }
 
 LockableStreamData::~LockableStreamData()
@@ -32,11 +32,9 @@ void LockableStreamData::addAssociatedData(const LockedData& data)
 {
     _serviceDataTypes.insert(data.name());
     _serviceData.append(data);
-}
-
-void LockableStreamData::reset()
-{
-    _serviceData.clear();
+    LockableData* lockable = static_cast<LockableData*>(data.object());
+    boost::shared_ptr<Data> dataPtr( lockable->data() );
+    streamData()->addAssociatedData( dataPtr );
 }
 
 bool LockableStreamData::isValid() const
@@ -67,8 +65,15 @@ bool LockableStreamData::isValid(const QSet<QString>& associates) const
     return rv;
 }
 
+void LockableStreamData::reset()
+{
+    _serviceData.clear();
+    _serviceDataTypes.clear();
+    streamData()->reset();
+}
+
 StreamData* LockableStreamData::streamData() const { 
-    return static_cast<StreamData*>(_data); 
+    return static_cast<StreamData*>(_data.get()); 
 }
 
 } // namespace pelican

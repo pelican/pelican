@@ -119,7 +119,8 @@ void StreamDataBuffer::deactivateData()
 
 void StreamDataBuffer::deactivateData(LockableStreamData* data)
 {
-    // data->reset(); TODO
+    QMutexLocker locker(&_mutex);
+    data->reset();
     _emptyQueue.enqueue(data);
 }
 

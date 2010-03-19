@@ -14,8 +14,9 @@ set( serverTestLib_moc_sources
 set(
    serverTest_src
    src/serverTest.cpp
-   src/DataManagerTest.cpp
+   src/LockableStreamDataTest.cpp
    src/LockedDataTest.cpp
+   src/DataManagerTest.cpp
    src/ServiceDataBufferTest.cpp
    src/StreamDataBufferTest.cpp
    src/SessionTest.cpp
