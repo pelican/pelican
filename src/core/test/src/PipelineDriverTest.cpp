@@ -93,6 +93,17 @@ void PipelineDriverTest::test_registerPipeline()
 
 /**
  * @details
+ * Tests the registerPipeline() method with a null pointer.
+ *
+ * An exception of type QString should be thrown.
+ */
+void PipelineDriverTest::test_registerPipeline_null()
+{
+    CPPUNIT_ASSERT_THROW(_pipelineDriver->registerPipeline(0), QString);
+}
+
+/**
+ * @details
  * Tests the start() method when no pipelines have been registered.
  *
  * An exception of type QString should be thrown.
@@ -119,33 +130,23 @@ void PipelineDriverTest::test_start_noPipelinesRun()
     CPPUNIT_ASSERT_THROW(_pipelineDriver->start(), QString);
 }
 
-void PipelineDriverTest::test_singlePipeline()
+/**
+ * @details
+ * Tests the start() method, running a single registered pipeline requiring
+ * no remote data, with no data client.
+ *
+ * Expect the pipeline's run() method to be called repeatedly.
+ */
+void PipelineDriverTest::test_start_singlePipelineNoClient()
 {
-    // Use Case:
-    // Attempt to run a single registered pipeline.
-    // Expect run method to be called with appropriate data on the test pipeline (repeatedly).
-
-//    QString wibble("wibble");
-//    TestDataClient client;
-//    QSet<QString> set;
-//    set.insert(wibble);
-//    client.setSubset(set);
-//    
-/*
-    _pipelineDriver->setDataClient("Test");
-
-    DataRequirements req;
-    req.setStreamData(wibble);
-    TestPipeline *pipeline = new TestPipeline(req);
-    pipeline->setPipelineDriver(_pipelineDriver);
-    CPPUNIT_ASSERT_NO_THROW(_pipelineDriver->registerPipeline(pipeline));
     int num = 10;
+    TestPipeline *pipeline = new TestPipeline;
     pipeline->setIterations(num);
+    CPPUNIT_ASSERT_NO_THROW(_pipelineDriver->registerPipeline(pipeline));
     CPPUNIT_ASSERT_EQUAL(0, pipeline->count());
     CPPUNIT_ASSERT_NO_THROW(_pipelineDriver->start());
     CPPUNIT_ASSERT_EQUAL(num, pipeline->count());
     CPPUNIT_ASSERT_EQUAL(pipeline->count(), pipeline->matchedCounter());
-    */
 }
 
 void PipelineDriverTest::test_multiPipeline()
