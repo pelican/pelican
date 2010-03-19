@@ -17,6 +17,7 @@ namespace pelican {
 StreamDataBuffer::StreamDataBuffer(const QString& type, DataManager* manager, QObject* parent)
     : DataBuffer(type, parent),_manager(manager)
 {
+    // These are in bytes:
     _max = 10000; //TODO make configurable
     _maxChunkSize = _max;
     _space = _max; 
@@ -105,24 +106,42 @@ LockableStreamData* StreamDataBuffer::_getWritable(size_t size)
 /**
  * @details
  * This protected slot is called when the lockable data object
- * emits the unlockedWrite() signal.
+ * emits the unlockedWrite() signal. It calls the method to activate the data
+ * chunk that emitted the signal by putting it onto the serve queue.
  */
 void StreamDataBuffer::activateData()
 {
     activateData( static_cast<LockableStreamData*>(sender()) );
 }
 
+/**
+ * @details
+ * This protected slot is called when the lockable data object
+ * emits the unlocked() signal. It calls the method to deactivate the data
+ * chunk that emitted the signal by putting it onto the empty queue.
+ */
 void StreamDataBuffer::deactivateData()
 {
     deactivateData(static_cast<LockableStreamData*>( sender() ) );
 }
 
+/**
+ * @details
+ * Puts the specified chunk of data on the empty queue, which allows its
+ * space to be reused.
+ *
+ * TODO Must implement a reset method on data() to de-associate the service data.
+ */
 void StreamDataBuffer::deactivateData(LockableStreamData* data)
 {
     // data->reset(); TODO
     _emptyQueue.enqueue(data);
 }
 
+/**
+ * @details
+ * Puts the specified chunk of data on the queue ready to be served.
+ */
 void StreamDataBuffer::activateData(LockableStreamData* data)
 {
     QMutexLocker locker(&_mutex);
