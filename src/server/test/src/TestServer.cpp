@@ -99,7 +99,7 @@ void TestServer::serveStreamData(const StreamData& d)
         throw("unable to add StreamBuffer Data");
     // copy the object
     LockableStreamData* data = static_cast<LockableStreamData*>(wd.data());
-    StreamData* datas = static_cast<StreamData*>(data->data());
+    StreamData* datas = data->streamData();
     datas->setId(d.id());
     wd.write(d.operator*(), d.size());
     Q_ASSERT( datas->size() == d.size() );
@@ -119,7 +119,8 @@ void TestServer::serveServiceData(const Data& d )
     WritableData wd = buf->getWritable(d.size());
     if( ! wd.isValid() ) 
         throw("unable to add ServiceBuffer Data");
-    wd.data()->data()->setId(d.id());
+    Data* data = wd.data()->data().get();
+    data->setId(d.id());
     wd.write(d.operator*(),d.size());
 }
 

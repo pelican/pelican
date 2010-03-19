@@ -49,6 +49,7 @@ void PelicanServerClientTestMT::test_getData()
     QString stream1("stream1");
     QString service1("service1");
     QString version1("version1");
+    QString version2("version2");
     DataRequirements req;
     req.addStreamData(stream1);
     QByteArray data1("data1");
@@ -113,7 +114,45 @@ void PelicanServerClientTestMT::test_getData()
         dataHash.insert(stream1, &db);
         client.getData(dataHash);
         CPPUNIT_ASSERT_EQUAL(version1.toStdString(), db.version().toStdString() );
-        CPPUNIT_ASSERT_EQUAL( std::string(data1.data())  , std::string(db.data()) );
+        CPPUNIT_ASSERT_EQUAL( std::string(data1.data()), std::string(db.data()) );
+    }
+    {
+        // Use Case:
+        // Single Request for an existing stream dataset
+        // with existing service data
+        // Expect:
+        // return the required data stream
+        Data servd(service1, version2, data2 );
+        server.serveServiceData(servd);
+        StreamData sd(stream1, version1, data1 );
+        CPPUNIT_ASSERT_EQUAL( (long)data1.size(), (long)sd.size() );
+        server.serveStreamData(sd);
+
+        // setup the test
+        DataRequirements req;
+        req.addServiceData(service1);
+        req.addStreamData(stream1);
+        QList<DataRequirements> lreq;
+        lreq.append(req);
+        DataTypes dt;
+        dt.addData(lreq);
+        dt.setAdapter(stream1, &streamAdapter);
+        dt.setAdapter(service1, &serviceAdapter);
+        PelicanServerClient client(configNode, dt);
+        client.setPort(port);
+
+        QHash<QString, DataBlob*> dataHash;
+        TestDataBlob db;
+        TestDataBlob db_service;
+        dataHash.insert(stream1, &db);
+        dataHash.insert(service1, &db_service);
+        /*
+        client.getData(dataHash);
+        CPPUNIT_ASSERT_EQUAL(version1.toStdString(), db.version().toStdString() );
+        CPPUNIT_ASSERT_EQUAL( std::string(data1.data()), std::string(db.data()) );
+        CPPUNIT_ASSERT_EQUAL( version2.toStdString(), db_service.version().toStdString() );
+        CPPUNIT_ASSERT_EQUAL( std::string(data2.data()), std::string(db_service.data()) );
+        */
     }
     }
     catch(const QString& e)

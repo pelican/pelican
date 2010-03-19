@@ -9,7 +9,7 @@ namespace pelican {
 LockableData::LockableData(const QString& name, void* data, size_t size, QObject* parent)
     : AbstractLockableData(size, parent)
 {
-    _data = new Data(name, data, size);
+    _data.reset( new Data(name, data, size) );
 }
 
 LockableData::~LockableData()

@@ -34,7 +34,6 @@ class LockableStreamData : public AbstractLockableData
     public:
         LockableStreamData(const QString& name, void* = 0, size_t  = 0, QObject* parent = 0);
         ~LockableStreamData();
-        void reset();
 
         StreamData* streamData() const;
 
@@ -50,6 +49,9 @@ class LockableStreamData : public AbstractLockableData
         /// returns the datasets associated with this LockableStreamData chunk
         const DataList_t& associateData() const;
         const QSet<QString>& associateDataTypes() const;
+
+        /// reset the objects data
+        void reset();
 
     private:
         LockableStreamData(const LockableStreamData&);

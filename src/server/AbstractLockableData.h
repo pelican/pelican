@@ -2,6 +2,7 @@
 #define ABSTRACTLOCKABLEDATA_H
 
 
+#include <boost/shared_ptr.hpp>
 #include "AbstractLockable.h"
 
 /**
@@ -35,13 +36,13 @@ class AbstractLockableData : public AbstractLockable
         void setId(const QString&);
 
         /// return the underlying data object
-        Data* data() const { return _data; } ;
+        boost::shared_ptr<Data> data() const { return _data; } ;
 
         /// Return the maximum size.
         quint64 maxSize() {return _maxSize;}
 
     protected:
-        Data* _data;
+        boost::shared_ptr<Data> _data;
 
     private:
         quint64 _maxSize;
