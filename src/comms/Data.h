@@ -15,48 +15,55 @@ namespace pelican {
  * @class Data
  *  
  * @brief
- *    Primary interface to access Chunks of data in the server
+ * Primary interface to access chunks of data in the server.
+ *
  * @details
- *    This class takes care of locking etc.
+ * Holds the pointer to the memory location for the data chunk,
+ * the size of the valid data contained within the data chunk, and the name
+ * and the version of the data.
+ *
+ * The stream data object inherits this class.
  */
-
 class Data
 {
-
     public:
         Data(const QString& name="", void* data=0, size_t size=0);
         Data(const QString& name, const QString& id, size_t size=0);
         Data(const QString& name, const QString& id, QByteArray& );
         virtual ~Data();
 
-        /// return the size of the stored data
+        /// Returns the size of the stored data.
         size_t size() const;
 
-        /// sets the size of the stored data
+        /// Sets the size of the stored data.
         void setSize(size_t);
 
-        /// returns a pointer to the beginning of the memory block
+        /// Returns a pointer to the beginning of the memory block.
         void* operator*();
+
+        /// Returns a pointer to the beginning of the memory block.
         const void* operator*() const;
 
+        /// Returns the name of the data.
         const QString& name() const { return _name; }
+
+        /// Sets the name of the data.
         void setName(const QString& name );
 
-        /// return the data id 
+        /// Returns the data ID.
         QString id() const { return _id; }
 
-        /// sets the id 
+        /// Sets the ID.
         void setId(const QString& id) { _id = id; }
 
-        // returns true if any data exists
+        /// Returns true if any data exists.
         virtual bool isValid() const;
 
-        // returns true if the objiect contain identical meta-data
+        /// Returns true if the object contains identical meta-data.
         bool operator==(const Data&) const;
 
-
     private:
-        Data(const Data&); // disallow the copy constructor
+        Data(const Data&); // Disallow the copy constructor.
 
     private:
         QString _name;
@@ -66,4 +73,5 @@ class Data
 };
 
 } // namespace pelican
+
 #endif // DATA_H 
