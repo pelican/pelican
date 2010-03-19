@@ -42,8 +42,8 @@ void StreamDataBufferTest::test_getWritable()
         // Use case:
         // getWritable() called with no service data
         // expect valid object with no associate data
-        StreamDataBuffer b("test",_dataManager);
-        WritableData data = b.getWritable(data1.size());
+        StreamDataBuffer buffer("test",_dataManager);
+        WritableData data = buffer.getWritable(data1.size());
         CPPUNIT_ASSERT( data.isValid() );
         data.write(data1.data(),data1.size());
         CPPUNIT_ASSERT( data.isValid() );

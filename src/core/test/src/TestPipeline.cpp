@@ -1,5 +1,6 @@
 #include "core/test/TestPipeline.h"
 #include "modules/EmptyModule.h"
+#include <iostream>
 
 #include "utility/memCheck.h"
 
@@ -25,7 +26,7 @@ TestPipeline::TestPipeline(const DataRequirements& requirements)
     : AbstractPipeline()
 {
     _setDefaults();
-    _data = requirements;
+    _requiredDataRemote = requirements;
 }
 
 /**
@@ -57,15 +58,19 @@ void TestPipeline::reset()
 
 /**
  * @details
- * Pipeline run method (overloaded virtual).
+ * Pipeline run method (overridden virtual).
  * Defines a single iteration of the pipeline.
  */
 void TestPipeline::run(QHash<QString, DataBlob*>& dataHash)
 {
-    if (dataRequired() == dataHash)
+    // Print message.
+    std::cout << "Running TestPipeline, iteration " << _counter << std::endl;
+
+    // Check the data is correct.
+    if (_requiredDataRemote == dataHash)
         ++_matchedCounter;
 
-    /* Increment counter and test for completion */
+    // Increment counter and test for completion.
     if (++_counter >= _iterations)
         stop(); // Stop the pipeline driver.
 }

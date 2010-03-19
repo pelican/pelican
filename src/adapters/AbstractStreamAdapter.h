@@ -16,7 +16,7 @@ class ConfigNode;
 class DataBlob;
 
 /**
- * @class AbstractAdapter
+ * @class AbstractStreamAdapter
  *
  * @brief
  * Abstract base class for all stream data adapters.

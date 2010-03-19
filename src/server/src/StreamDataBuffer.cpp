@@ -35,12 +35,12 @@ void StreamDataBuffer::setDataManager(DataManager* manager)
     _manager = manager;
 }
 
-void StreamDataBuffer::getNext(LockedData& ld)
+void StreamDataBuffer::getNext(LockedData& lockedData)
 {
     QMutexLocker locker(&_mutex);
     if( ! _serveQueue.isEmpty() )
-        ld.setData(_serveQueue.dequeue());
-    ld.setData(0);
+        lockedData.setData(_serveQueue.dequeue());
+    lockedData.setData(0);
 }
 
 WritableData StreamDataBuffer::getWritable(size_t size)
@@ -57,41 +57,59 @@ WritableData StreamDataBuffer::getWritable(size_t size)
     return WritableData( d );
 }
 
+/**
+ * @details
+ * Private method to get a writable block of memory of the given size.
+ *
+ * @return Returns a pointer to the LockableStreamData object to use.
+ *
+ * @param[in] size The size in bytes of the requested block of writable memory.
+ */
 LockableStreamData* StreamDataBuffer::_getWritable(size_t size)
 {
     if( ! _emptyQueue.isEmpty() )
     {
-        // iterate through until we find a container big enough
+        // Make a copy of the empty queue.
         QQueue<LockableStreamData*> temp = _emptyQueue;
+
+        // Iterate through until we find a container big enough.
         do {
-            LockableStreamData* d = temp.dequeue();
-            if( d->data()->size() >= size ) {
+            LockableStreamData* lockableData = temp.dequeue();
+            if( lockableData->data()->size() >= size ) {
                 // we found one - so our work is done
-                return d;
+                return lockableData;
             }
         }
         while( ! temp.isEmpty() );
     }
-    // There are no empty containers already available so we
-    // create a new data Object if we have enough space
+
+    // There are no empty containers already available, so we
+    // create a new data object if we have enough space.
     if(size <= _space && size <= _maxChunkSize )
     {
-        void* d = malloc(size);
-        if( d ) {
+        void* memory = malloc(size);
+        if( memory ) {
             _space -= size;
-            LockableStreamData* s = new LockableStreamData(_type, d, size);
-            _data.append(s);
-            Q_ASSERT(connect( s, SIGNAL(unlockedWrite()), this, SLOT(activateData() ) ));
-            Q_ASSERT(connect( s, SIGNAL(unlocked()), this, SLOT(deactivateData() ) ));
-            return s;
+            LockableStreamData* lockableData = new LockableStreamData(_type, memory, size);
+            _data.append(lockableData);
+            Q_ASSERT(connect( lockableData, SIGNAL(unlockedWrite()), this, SLOT(activateData() ) ));
+            Q_ASSERT(connect( lockableData, SIGNAL(unlocked()), this, SLOT(deactivateData() ) ));
+            return lockableData;
         }
     }
-    return 0; // no free containers so we return an invalid
+
+    // No free containers and no space left, so we return an invalid pointer.
+    return 0;
 }
 
+/**
+ * @details
+ * This protected slot is called when the lockable data object
+ * emits the unlockedWrite() signal.
+ */
 void StreamDataBuffer::activateData()
 {
-    activateData(static_cast<LockableStreamData*>( sender() ) );
+    activateData( static_cast<LockableStreamData*>(sender()) );
 }
 
 void StreamDataBuffer::deactivateData()

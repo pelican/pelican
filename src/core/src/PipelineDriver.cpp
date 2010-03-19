@@ -11,7 +11,10 @@
 #include "data/DataBlobFactory.h"
 #include "utility/Config.h"
 #include "utility/ConfigNode.h"
+#include <iostream>
+
 #include "utility/memCheck.h"
+
 
 namespace pelican {
 
@@ -106,7 +109,7 @@ void PipelineDriver::start()
 {
     // Check for at least one registered pipeline.
     if (_registeredPipelines.isEmpty())
-        throw QString("PipelineDriver::start(): No pipelines.");
+        throw QString("PipelineDriver::start(): No pipelines registered.");
 
     // Store the remote data requirements for each pipeline.
     foreach (AbstractPipeline* pipeline, _registeredPipelines) {
@@ -170,6 +173,9 @@ void PipelineDriver::stop()
  */
 void PipelineDriver::_checkDataRequirements()
 {
+    if (!_dataClient)
+        return;
+
     /* Check that the set of stream data required for each pipeline does not
      * intersect the set of stream data required by another.
      * Data is not currently copied, so this ensures that two pipelines do not

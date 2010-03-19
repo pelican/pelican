@@ -41,7 +41,8 @@ TestServer::TestServer(AbstractProtocol* proto,  QObject* parent)
  */
 TestServer::~TestServer()
 {
-    quit();
+    while (!isFinished()) quit();
+    wait();
     if(_protoOwner)
         delete _proto;
     delete _server;
