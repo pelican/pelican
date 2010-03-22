@@ -37,8 +37,8 @@ class AbstractProtocol
        typedef QList<Data*> ServiceData_t;
 
     public:
-        AbstractProtocol();
-        virtual ~AbstractProtocol();
+        AbstractProtocol() {}
+        virtual ~AbstractProtocol() {}
 
         /// processes an incomming request
         virtual boost::shared_ptr<ServerRequest> request(QTcpSocket& socket) = 0;
