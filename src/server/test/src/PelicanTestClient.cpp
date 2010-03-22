@@ -1,5 +1,6 @@
 #include "PelicanTestClient.h"
-#include <QtNetwork>
+#include <QTcpSocket>
+//#include <QtNetwork>
 #include <iostream>
 
 #include "utility/memCheck.h"
@@ -9,12 +10,16 @@ namespace pelican {
 
 // class PelicanTestClient
 PelicanTestClient::PelicanTestClient( unsigned long port, const QString& host )
-    : _port(port), _host(host)
 {
+    _host = host;
+    _port = port;
+    _socket = new QTcpSocket;
 }
 
 PelicanTestClient::~PelicanTestClient()
 {
+    _socket->abort();
+    delete _socket;
 }
 
 /**
@@ -26,25 +31,26 @@ QString PelicanTestClient::processAcknowledgement() const
     int timeout = 5000;
 
     // send request
-    QTcpSocket socket;
-    socket.connectToHost(_host,_port);
+    _socket->connectToHost(_host,_port);
 
-    if (!socket.waitForConnected(timeout)) {
-        throw QString(socket.errorString());
+    if (!_socket->waitForConnected(timeout)) {
+        throw QString("PelicanTestClient: Wait for connected: " +
+                _socket->errorString());
     }
 
     std::cout << "PelicanTestClient: Connected to " << _host.toStdString()
               << ":" << _port << std::endl;
-    while (socket.bytesAvailable() < (int)sizeof(quint16)) {
-        if (!socket.waitForReadyRead(timeout)) {
-            throw QString(socket.errorString());
+    while (_socket->bytesAvailable() < (int)sizeof(quint16)) {
+        if (!_socket->waitForReadyRead(timeout)) {
+            throw QString("PelicanTestClient: Wait for ready read: " +
+                    _socket->errorString());
         }
     }
     std::cout << "PelicanTestClient: Ready to read " << _host.toStdString()
               << ":" << _port << std::endl;
 
     QByteArray ack;
-    ack = socket.readAll();
+    ack = _socket->readAll();
     std::cout << "PelicanTestClient: Got string ("
               << _host.toStdString() << ":" << _port << ") = "
               << ack.data() <<std::endl;

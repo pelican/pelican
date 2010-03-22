@@ -2,6 +2,7 @@
 #include "PelicanPortServer.h"
 #include "Session.h"
 #include "comms/AbstractProtocol.h"
+#include <iostream>
 #include "utility/memCheck.h"
 
 namespace pelican {

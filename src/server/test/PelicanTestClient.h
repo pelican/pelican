@@ -1,6 +1,7 @@
 #ifndef PELICANTESTCLIENT_H
 #define PELICANTESTCLIENT_H
 #include <QString>
+#include <QTcpSocket>
 
 /**
  * @file PelicanTestClient.h
@@ -26,8 +27,9 @@ class PelicanTestClient
         QString processAcknowledgement() const;
 
     private:
-        unsigned long _port;
+        quint16 _port;
         QString _host;
+        QTcpSocket* _socket;
 };
 
 } // namespace pelican

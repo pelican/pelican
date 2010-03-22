@@ -34,6 +34,7 @@ class PelicanPortServer : public QTcpServer
         ~PelicanPortServer();
 
     protected:
+        /// Reimplemented from QTcpServer.
         void incomingConnection(int socketDescriptor);
 
     private:

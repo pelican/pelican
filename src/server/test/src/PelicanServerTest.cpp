@@ -34,29 +34,27 @@ void PelicanServerTest::tearDown()
 {
 }
 
-void PelicanServerTest::test_singleProtocol()
+void PelicanServerTest::test_singleProtocolAcknowledge()
 {
     // Use Case:
     // Attach to Server with a single protocol.
     // Expect response to the correct port
     try {
-        PelicanServer s;
+        PelicanServer server;
         quint16 port = 2000;
-        QString id("1");
-        s.addProtocol(new TestProtocol(id), port);
-        CPPUNIT_ASSERT_NO_THROW(s.start());
+        server.addProtocol(new TestProtocol(""), port);
+        CPPUNIT_ASSERT_NO_THROW(server.start());
+        while (!server.isReady()) {}
         PelicanTestClient client(port);
-        QString result;
-        try {
-            client.processAcknowledgement();
-        }
-        catch (QString e) {
-            std::cout << "=== " << e.toStdString() << std::endl;
-        }
-        return; // TODO remove!
+//        QString result;
+//        try {
+//            client.processAcknowledgement();
+//        }
+//        catch (QString e) {
+//            std::cout << "=== " << e.toStdString() << std::endl;
+//        }
 
         CPPUNIT_ASSERT_NO_THROW(client.processAcknowledgement());
-        CPPUNIT_ASSERT_EQUAL(id.toStdString(), result.toStdString());
     }
     catch(QString e)
     {

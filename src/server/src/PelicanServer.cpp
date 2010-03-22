@@ -17,12 +17,12 @@ namespace pelican {
 PelicanServer::PelicanServer(QObject* parent)
     : QThread(parent)
 {
+    _ready = false;
 }
 
 PelicanServer::~PelicanServer()
 {
-    std::cout << "Destroying server" << std::endl;
-    quit(); // TODO Check! Don't use terminate!
+    if (isRunning()) while (!isFinished()) quit();
     wait();
     foreach(AbstractProtocol* p, _protocolPortMap)
         delete p;
@@ -103,6 +103,9 @@ void PelicanServer::run()
             throw QString(QString("Unable to start pelicanServer on port='") + QString().setNum(ports[i])+ QString("'"));
         }
     }
+    _mutex.lock();
+    _ready = true;
+    _mutex.unlock();
     exec();
 }
 

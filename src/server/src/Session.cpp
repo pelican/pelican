@@ -26,6 +26,7 @@ Session::Session(int socketDescriptor, AbstractProtocol* proto, DataManager* dat
 
 Session::~Session()
 {
+    if (isRunning()) wait();
 }
 
 void Session::run()

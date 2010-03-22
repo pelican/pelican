@@ -23,7 +23,7 @@ class PelicanServerTest : public CppUnit::TestFixture
 {
     public:
         CPPUNIT_TEST_SUITE( PelicanServerTest );
-        CPPUNIT_TEST( test_singleProtocol );
+        CPPUNIT_TEST( test_singleProtocolAcknowledge );
 //        CPPUNIT_TEST( test_multiProtocol );
         CPPUNIT_TEST_SUITE_END();
 
@@ -32,7 +32,7 @@ class PelicanServerTest : public CppUnit::TestFixture
         void tearDown();
 
         // Test Methods
-        void test_singleProtocol();
+        void test_singleProtocolAcknowledge();
         void test_multiProtocol();
 
     public:

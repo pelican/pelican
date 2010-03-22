@@ -7,6 +7,8 @@
 #include <QSet>
 #include <QPair>
 #include <QThread>
+#include <QMutex>
+#include <QMutexLocker>
 
 /**
  * @file PelicanServer.h
@@ -48,6 +50,7 @@ class PelicanServer : public QThread
         //  transferred to this class.
         void addStreamChunker(AbstractChunker*, const QString& host, quint16 port);
         void addServiceChunker(AbstractChunker*, const QString& host, quint16 port);
+        bool isReady() {QMutexLocker locker(&_mutex); return _ready;}
 
     protected:
         // code to be executed in the thread ( via start() )
@@ -59,6 +62,8 @@ class PelicanServer : public QThread
         QMap<QPair<QString,quint16>,AbstractChunker* > _chunkerPortMap;
         QSet<QString> _streamDataTypes;
         QSet<QString> _serviceDataTypes;
+        QMutex _mutex;
+        bool _ready;
 };
 
 } // namespace pelican
