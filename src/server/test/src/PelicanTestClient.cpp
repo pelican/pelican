@@ -17,14 +17,13 @@ PelicanTestClient::~PelicanTestClient()
 {
 }
 
-
 /**
  * @details
- * Some description of what this does?!
+ * Reads an acknowledgement from the server.
  */
-QString PelicanTestClient::request() const
+QString PelicanTestClient::processAcknowledgement() const
 {
-    int timeout = 500000000;
+    int timeout = 5000;
 
     // send request
     QTcpSocket socket;
@@ -44,29 +43,13 @@ QString PelicanTestClient::request() const
     std::cout << "PelicanTestClient: Ready to read " << _host.toStdString()
               << ":" << _port << std::endl;
 
-    quint16 blockSize;
-    QDataStream in(&socket);
-    in.setVersion(QDataStream::Qt_4_0);
-    in >> blockSize;
-    std::cout << "PelicanTestClient: Got Blocksize ("
+    QByteArray ack;
+    ack = socket.readAll();
+    std::cout << "PelicanTestClient: Got string ("
               << _host.toStdString() << ":" << _port << ") = "
-              << blockSize <<std::endl;
+              << ack.data() <<std::endl;
 
-    if (in.atEnd())
-        return QString("");
-
-    while (socket.bytesAvailable() < blockSize) {
-        if (!socket.waitForReadyRead(timeout)) {
-            throw QString("PelicanTestClient: !ERROR! " + socket.errorString());
-        }
-    }
-
-    QString result;
-    in >> result;
-    std::cout << "PelicanTestClient: Got result (" << _host.toStdString()
-              << ":" << _port << ") = " << result.toStdString() <<std::endl;
-
-    return result;
+    return QString("");
 }
 
 } // namespace pelican

@@ -12,18 +12,18 @@ namespace pelican {
  * @class PelicanTestClient
  *  
  * @brief
- *    Class for establishing a connection to the PelicanServer
- *    for testing purposes
+ * Class for establishing a connection to the PelicanServer
+ * for testing purposes.
+ *
  * @details
- *    Designed to work with the TestProtocol
+ * Designed to work with the TestProtocol.
  */
-
 class PelicanTestClient
 {
     public:
         PelicanTestClient( unsigned long port, const QString& host="127.0.0.1" );
         ~PelicanTestClient();
-        QString request() const;
+        QString processAcknowledgement() const;
 
     private:
         unsigned long _port;
@@ -31,4 +31,5 @@ class PelicanTestClient
 };
 
 } // namespace pelican
+
 #endif // PELICANTESTCLIENT_H 

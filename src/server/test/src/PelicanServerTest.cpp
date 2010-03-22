@@ -48,14 +48,14 @@ void PelicanServerTest::test_singleProtocol()
         PelicanTestClient client(port);
         QString result;
         try {
-            client.request();
+            client.processAcknowledgement();
         }
         catch (QString e) {
             std::cout << "=== " << e.toStdString() << std::endl;
         }
         return; // TODO remove!
 
-        CPPUNIT_ASSERT_NO_THROW(client.request());
+        CPPUNIT_ASSERT_NO_THROW(client.processAcknowledgement());
         CPPUNIT_ASSERT_EQUAL(id.toStdString(), result.toStdString());
     }
     catch(QString e)
@@ -92,15 +92,15 @@ void PelicanServerTest::test_multiProtocol()
         CPPUNIT_ASSERT_NO_THROW(s.start());
         PelicanTestClient client1(porta);
         try {
-            client1.request();
+            client1.processAcknowledgement();
         }
         catch (QString e) {
             std::cout << e.toStdString() << std::endl;
         }
-        return;
-        CPPUNIT_ASSERT_EQUAL(id1.toStdString(), client1.request().toStdString());
+        return; // TODO remove.
+        CPPUNIT_ASSERT_EQUAL(id1.toStdString(), client1.processAcknowledgement().toStdString());
         PelicanTestClient client2(portb);
-        CPPUNIT_ASSERT_EQUAL(id2.toStdString(), client2.request().toStdString());
+        CPPUNIT_ASSERT_EQUAL(id2.toStdString(), client2.processAcknowledgement().toStdString());
     }
 }
 

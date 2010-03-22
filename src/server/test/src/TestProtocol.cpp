@@ -29,6 +29,7 @@ boost::shared_ptr<ServerRequest> TestProtocol::request(QTcpSocket& )
 
 void TestProtocol::send( QIODevice& stream, const QString& message)
 {
+    std::cout << "TestProtocol::send(): '" << message.toStdString() << "'" << std::endl;
     _last.clear();
     _last.append(message);
     stream.write(_last);
