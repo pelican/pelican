@@ -30,25 +30,25 @@ class Data
         Data(const QString& name="", void* data=0, size_t size=0);
         Data(const QString& name, const QString& id, size_t size=0);
         Data(const QString& name, const QString& id, QByteArray& );
-        virtual ~Data();
+        virtual ~Data() {}
 
         /// Returns the size of the stored data.
-        size_t size() const;
+        size_t size() const {return _size;}
 
         /// Sets the size of the stored data.
-        void setSize(size_t);
+        void setSize(size_t s) {_size = s;}
 
         /// Returns a pointer to the beginning of the memory block.
-        void* operator*();
+        void* operator*() {return _data;}
 
         /// Returns a pointer to the beginning of the memory block.
-        const void* operator*() const;
+        const void* operator*() const {return _data;}
 
         /// Returns the name of the data.
         const QString& name() const { return _name; }
 
         /// Sets the name of the data.
-        void setName(const QString& name );
+        void setName(const QString& name ) {_name = name;}
 
         /// Returns the data ID.
         QString id() const { return _id; }
@@ -57,7 +57,7 @@ class Data
         void setId(const QString& id) { _id = id; }
 
         /// Returns true if any data exists.
-        virtual bool isValid() const;
+        virtual bool isValid() const {return !( _data == 0 || _size == 0);}
 
         /// Returns true if the object contains identical meta-data.
         bool operator==(const Data&) const;

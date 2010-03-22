@@ -3,6 +3,7 @@
 #include "PelicanServer.h"
 #include "PelicanTestClient.h"
 #include "TestProtocol.h"
+#include "data/DataRequirements.h"
 #include <QCoreApplication>
 #include <QThread>
 #include <iostream>
@@ -43,22 +44,34 @@ void PelicanServerTest::test_singleProtocolAcknowledge()
         PelicanServer server;
         quint16 port = 2000;
         server.addProtocol(new TestProtocol(""), port);
-        CPPUNIT_ASSERT_NO_THROW(server.start());
+        server.start();
         while (!server.isReady()) {}
         PelicanTestClient client(port);
-//        QString result;
-//        try {
-//            client.processAcknowledgement();
-//        }
-//        catch (QString e) {
-//            std::cout << "=== " << e.toStdString() << std::endl;
-//        }
-
-        CPPUNIT_ASSERT_NO_THROW(client.processAcknowledgement());
+        client.processAcknowledgement();
     }
-    catch(QString e)
+    catch (QString e)
     {
-        CPPUNIT_FAIL("unexpected exception :  " +  e.toStdString());
+        CPPUNIT_FAIL("Unexpected exception: " +  e.toStdString());
+    }
+}
+
+void PelicanServerTest::test_singleProtocolStream()
+{
+    // Use Case:
+    // Attach to Server with a single protocol.
+    // Expect response to the correct port
+    try {
+        PelicanServer server;
+        quint16 port = 2000;
+        server.addProtocol(new TestProtocol("", ServerRequest::StreamData), port);
+        server.start();
+        while (!server.isReady()) {}
+        PelicanTestClient client(port);
+        client.processStreamData();
+    }
+    catch (QString e)
+    {
+        CPPUNIT_FAIL("Unexpected exception: " +  e.toStdString());
     }
 }
 
@@ -71,10 +84,10 @@ void PelicanServerTest::test_multiProtocol()
     // Assign multiple protocols to the same port
     // Expect an exception
     {
-        PelicanServer s;
+        PelicanServer server;
         quint16 port = 20000;
-        CPPUNIT_ASSERT_NO_THROW(s.addProtocol(new TestProtocol(id1), port));
-        CPPUNIT_ASSERT_THROW(s.addProtocol(new TestProtocol(id2), port), QString);
+        CPPUNIT_ASSERT_NO_THROW(server.addProtocol(new TestProtocol(id1), port));
+        CPPUNIT_ASSERT_THROW(server.addProtocol(new TestProtocol(id2), port), QString);
     }
 
     // Use Case:
@@ -82,23 +95,26 @@ void PelicanServerTest::test_multiProtocol()
     // Expect no exceptions and client calls to be routed through
     // to the appropriate protocol object
     {
-        PelicanServer s;
-        quint16 porta = 20000;
-        quint16 portb = 20001;
-        CPPUNIT_ASSERT_NO_THROW(s.addProtocol(new TestProtocol(id1), porta));
-        CPPUNIT_ASSERT_NO_THROW(s.addProtocol(new TestProtocol(id2), portb));
-        CPPUNIT_ASSERT_NO_THROW(s.start());
-        PelicanTestClient client1(porta);
         try {
+            PelicanServer server;
+            quint16 porta = 20000;
+            quint16 portb = 20001;
+            server.addProtocol(new TestProtocol(id1), porta);
+            server.addProtocol(new TestProtocol(id2), portb);
+            server.start();
+            while (!server.isReady()) {}
+            PelicanTestClient client1(porta);
+            PelicanTestClient client2(portb);
             client1.processAcknowledgement();
+            client2.processAcknowledgement();
         }
         catch (QString e) {
-            std::cout << e.toStdString() << std::endl;
+            CPPUNIT_FAIL("Unexpected exception: " +  e.toStdString());
         }
-        return; // TODO remove.
-        CPPUNIT_ASSERT_EQUAL(id1.toStdString(), client1.processAcknowledgement().toStdString());
-        PelicanTestClient client2(portb);
-        CPPUNIT_ASSERT_EQUAL(id2.toStdString(), client2.processAcknowledgement().toStdString());
+
+        // TODO Understand what the ID means!
+//        CPPUNIT_ASSERT_EQUAL(id1.toStdString(), client1.processAcknowledgement().toStdString());
+//        CPPUNIT_ASSERT_EQUAL(id2.toStdString(), client2.processAcknowledgement().toStdString());
     }
 }
 

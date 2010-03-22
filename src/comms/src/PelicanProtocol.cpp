@@ -31,7 +31,7 @@ boost::shared_ptr<ServerRequest> PelicanProtocol::request(QTcpSocket& socket)
 {
 
     int timeout = 1000;
-    ServerRequest::Request_t type = ServerRequest::Error;
+    ServerRequest::Request type = ServerRequest::Error;
     while (socket.bytesAvailable() < (int)sizeof(quint16)) {
         if ( !socket.waitForReadyRead(timeout) ) {
             return boost::shared_ptr<ServerRequest>(new ServerRequest(type,  socket.errorString() ));

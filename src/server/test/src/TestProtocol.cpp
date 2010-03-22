@@ -1,5 +1,6 @@
 #include "TestProtocol.h"
 #include "comms/ServerRequest.h"
+#include "comms/StreamDataRequest.h"
 
 #include <iostream>
 #include "utility/memCheck.h"
@@ -7,8 +8,8 @@
 namespace pelican {
 
 // class TestProtocol 
-TestProtocol::TestProtocol(const QString& id)
-    : AbstractProtocol(), _id(id)
+TestProtocol::TestProtocol(const QString& id, ServerRequest::Request request)
+    : AbstractProtocol(), _id(id), _request(request)
 {
 }
 
@@ -24,36 +25,42 @@ QByteArray& TestProtocol::lastBlock()
 boost::shared_ptr<ServerRequest> TestProtocol::request(QTcpSocket& )
 {
     _last.clear();
-    return boost::shared_ptr<ServerRequest>(new ServerRequest(ServerRequest::Acknowledge));
+    if (_request == ServerRequest::Acknowledge)
+        return boost::shared_ptr<ServerRequest>(new ServerRequest(_request));
+    else if (_request == ServerRequest::StreamData)
+        return boost::shared_ptr<ServerRequest>(new StreamDataRequest);
+    else if (_request == ServerRequest::ServiceData)
+        return boost::shared_ptr<ServerRequest>(new ServerRequest(_request));
+
+    return boost::shared_ptr<ServerRequest>(new ServerRequest(_request));
 }
 
-void TestProtocol::send( QIODevice& stream, const QString& message)
+void TestProtocol::send( QIODevice& device, const QString& message)
 {
-    std::cout << "TestProtocol::send(): '" << message.toStdString() << "'" << std::endl;
     _last.clear();
     _last.append(message);
-    stream.write(_last);
+    device.write(_last);
 }
 
-void TestProtocol::send( QIODevice& stream, const AbstractProtocol::StreamData_t& d)
+void TestProtocol::send( QIODevice& device, const AbstractProtocol::StreamData_t& d)
 {
     _last.clear();
     _lastStreamData = d;
-    stream.write(_last);
+    device.write(_last);
 }
 
-void TestProtocol::send( QIODevice& stream, const AbstractProtocol::ServiceData_t& )
+void TestProtocol::send( QIODevice& device, const AbstractProtocol::ServiceData_t& )
 {
     _last.clear();
-    stream.write(_last);
+    device.write(_last);
 }
 
-void TestProtocol::sendError( QIODevice& stream, const QString& msg)
+void TestProtocol::sendError( QIODevice& device, const QString& msg)
 {
     _last.clear();
     _last.append(error);
     _last.append(msg);
-    stream.write(_last);
+    device.write(_last);
 }
 
 } // namespace pelican

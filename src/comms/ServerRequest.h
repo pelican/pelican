@@ -23,21 +23,20 @@ namespace pelican {
 class ServerRequest
 {
     public:
-        enum private_Request_t { Error, Acknowledge, StreamData, ServiceData, DataSupport };
-        typedef private_Request_t Request_t;
+        typedef enum { Error, Acknowledge, StreamData, ServiceData, DataSupport } Request;
 
     public:
 
-        ServerRequest(Request_t type = Error, const QString& msg = "");
+        ServerRequest(Request type = Error, const QString& msg = "");
         ~ServerRequest();
-        Request_t type() const;
+        Request type() const;
 
         void error(const QString& msg);
         QString message() const;
         virtual bool operator==(const ServerRequest&) const;
 
     private:
-        Request_t _type;
+        Request _type;
         QString _error;
 };
 

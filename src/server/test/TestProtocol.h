@@ -3,6 +3,7 @@
 #include <QString>
 
 #include "comms/AbstractProtocol.h"
+#include "comms/ServerRequest.h"
 #include <QIODevice>
 
 /**
@@ -15,33 +16,34 @@ namespace pelican {
  * @class TestProtocol
  *  
  * @brief
- *     A dummy protocol for testing
+ * A dummy protocol for testing.
+ *
  * @details
  * 
  */
-
 class TestProtocol : public AbstractProtocol
 {
         enum sendType_t {ack, msg,error};
 
     public:
-        TestProtocol(const QString& id);
+        TestProtocol(const QString& id, ServerRequest::Request request = ServerRequest::Acknowledge);
         ~TestProtocol();
         virtual boost::shared_ptr<ServerRequest> request(QTcpSocket& socket);
-        virtual void send( QIODevice& stream, const AbstractProtocol::StreamData_t& );
-        virtual void send( QIODevice& stream, const AbstractProtocol::ServiceData_t& );
-        virtual void send( QIODevice& stream, const QString& message );
-        virtual void sendError( QIODevice& stream, const QString&);
+        virtual void send( QIODevice& device, const AbstractProtocol::StreamData_t& );
+        virtual void send( QIODevice& device, const AbstractProtocol::ServiceData_t& );
+        virtual void send( QIODevice& device, const QString& message );
+        virtual void sendError( QIODevice& device, const QString&);
 
         QByteArray& lastBlock();
         AbstractProtocol::StreamData_t lastStreamData() const { return _lastStreamData; };
-
 
     private:
         AbstractProtocol::StreamData_t _lastStreamData;
         QByteArray _last;
         QString _id;
+        ServerRequest::Request _request;
 };
 
 } // namespace pelican
+
 #endif // TESTPROTOCOL_H 

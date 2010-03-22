@@ -25,6 +25,7 @@ class PelicanTestClient
         PelicanTestClient( unsigned long port, const QString& host="127.0.0.1" );
         ~PelicanTestClient();
         QString processAcknowledgement() const;
+        QString processStreamData() const;
 
     private:
         quint16 _port;

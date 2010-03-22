@@ -14,6 +14,9 @@
 #include <iostream>
 #include "utility/memCheck.h"
 
+using std::cout;
+using std::endl;
+
 namespace pelican {
 
 // class Session 
@@ -41,7 +44,7 @@ void Session::run()
 
     processRequest(*req, socket);
     socket.disconnectFromHost();
-    socket.waitForDisconnected();
+    if (socket.isValid()) socket.waitForDisconnected();
 }
 
 /**
@@ -58,15 +61,17 @@ void Session::processRequest(const ServerRequest& req, QIODevice& out)
                 break;
             case ServerRequest::StreamData:
                 {
-                    QList<LockedData> d = processStreamDataRequest(static_cast<const StreamDataRequest&>(req) );
-                    if( d.size() > 0 ) {
+                    QList<LockedData> dataList = processStreamDataRequest(static_cast<const StreamDataRequest&>(req) );
+                    if( dataList.size() > 0 ) {
                         AbstractProtocol::StreamData_t data;
-                        for( int i=0; i < d.size(); ++i ) {
-                            LockableStreamData* lockedData = static_cast<LockableStreamData*>(d[i].object());
+                        for( int i=0; i < dataList.size(); ++i ) {
+                            LockableStreamData* lockedData = static_cast<LockableStreamData*>(dataList[i].object());
                             data.append(static_cast<StreamData*>(lockedData->streamData()));
                         }
                         _proto->send( out, data );
+                        cout << "Sent stream data" << endl;
                     }
+                    cout << "DONNNNNEE" << endl;
                 }
                 break;
             case ServerRequest::ServiceData:

@@ -24,7 +24,8 @@ class PelicanServerTest : public CppUnit::TestFixture
     public:
         CPPUNIT_TEST_SUITE( PelicanServerTest );
         CPPUNIT_TEST( test_singleProtocolAcknowledge );
-//        CPPUNIT_TEST( test_multiProtocol );
+        CPPUNIT_TEST( test_singleProtocolStream );
+        CPPUNIT_TEST( test_multiProtocol );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -33,6 +34,7 @@ class PelicanServerTest : public CppUnit::TestFixture
 
         // Test Methods
         void test_singleProtocolAcknowledge();
+        void test_singleProtocolStream();
         void test_multiProtocol();
 
     public:

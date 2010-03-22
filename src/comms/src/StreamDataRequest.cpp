@@ -10,6 +10,10 @@ namespace pelican {
 StreamDataRequest::StreamDataRequest()
     : ServerRequest(ServerRequest::StreamData)
 {
+    std::cout << "Constructor" << std::endl;
+    _dataOptions.clear();
+    _dataOptions.end();
+    std::cout << "Constructor Done" << std::endl;
 }
 
 StreamDataRequest::~StreamDataRequest()
@@ -22,21 +26,6 @@ void StreamDataRequest::addDataOption(const DataRequirements& data)
         _dataOptions.append(data);
 }
 
-StreamDataRequest::DataRequirementsIterator StreamDataRequest::begin() const
-{
-    return _dataOptions.begin();
-}
-
-StreamDataRequest::DataRequirementsIterator StreamDataRequest::end() const
-{
-    return _dataOptions.end();
-}
-
-int StreamDataRequest::size() const
-{
-    return _dataOptions.size();
-}
-
 bool StreamDataRequest::operator==(const ServerRequest& req) const
 {
     bool r = ServerRequest::operator==(req);
@@ -45,11 +34,6 @@ bool StreamDataRequest::operator==(const ServerRequest& req) const
         return _dataOptions == sr._dataOptions;
     }
     return r;
-}
-
-bool StreamDataRequest::isEmpty() const
-{
-    return _dataOptions.size()==0;
 }
 
 } // namespace pelican

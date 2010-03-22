@@ -6,7 +6,7 @@ namespace pelican {
 
 
 // class ServerRequest 
-ServerRequest::ServerRequest(Request_t type, const QString& msg)
+ServerRequest::ServerRequest(Request type, const QString& msg)
     : _type(type), _error(msg)
 {
 }
@@ -15,7 +15,7 @@ ServerRequest::~ServerRequest()
 {
 }
 
-ServerRequest::Request_t ServerRequest::type() const
+ServerRequest::Request ServerRequest::type() const
 {
     return _type;
 }
