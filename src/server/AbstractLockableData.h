@@ -4,49 +4,56 @@
 
 #include <boost/shared_ptr.hpp>
 #include "AbstractLockable.h"
+#include "comms/Data.h"
 
 /**
  * @file AbstractLockableData.h
  */
 
 namespace pelican {
-    class Data;
+
+class Data;
 
 /**
  * @class AbstractLockableData
  *  
  * @brief
- *    Interface for data classes that can be locked
+ * Interface for data classes that can be locked.
+ *
  * @details
- * 
+ * TODO Detailed description for AbstractLockableData.
  */
-
 class AbstractLockableData : public AbstractLockable
 {
     Q_OBJECT
-
-    public:
-        AbstractLockableData( quint64 maxSize, QObject* parent );
-        virtual ~AbstractLockableData();
-
-        /// return the data id 
-        QString id() const;
-
-        /// set the object identity
-        void setId(const QString&);
-
-        /// return the underlying data object
-        boost::shared_ptr<Data> data() const { return _data; } ;
-
-        /// Return the maximum size.
-        quint64 maxSize() {return _maxSize;}
 
     protected:
         boost::shared_ptr<Data> _data;
 
     private:
         quint64 _maxSize;
+
+    public:
+        /// Constructs a new AbstractLockableData object.
+        AbstractLockableData( quint64 maxSize, QObject* parent )
+        : AbstractLockable(parent), _maxSize(maxSize) {}
+
+        /// Destroys the AbstractLockableData object.
+        virtual ~AbstractLockableData() {}
+
+        /// Return the data ID.
+        QString id() const {return _data->id();}
+
+        /// Set the object identity.
+        void setId(const QString& id) {_data->setId(id);}
+
+        /// Return the underlying data object.
+        boost::shared_ptr<Data> data() const {return _data;}
+
+        /// Return the maximum size.
+        quint64 maxSize() {return _maxSize;}
 };
 
 } // namespace pelican
+
 #endif // ABSTRACTLOCKABLEDATA_H 
