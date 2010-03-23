@@ -28,23 +28,27 @@ class DataBlob;
  * Inherit this class and implement the stream operator method to create a new
  * adapter.
  */
-
 class AbstractStreamAdapter : public AbstractAdapter
 {
     public:
-        /// Constructs a new adapter.
-        AbstractStreamAdapter(const ConfigNode& config);
+        /// Constructs a new stream adapter with the given configuration.
+        AbstractStreamAdapter(const ConfigNode& config)
+        : AbstractAdapter(AbstractAdapter::Stream, config) {}
 
-        /// Destroys the adapter (virtual).
-        virtual ~AbstractStreamAdapter();
+        /// Destroys the stream adapter (virtual).
+        virtual ~AbstractStreamAdapter() {}
 
     public:
-        /// Configures an abstract adapter for use with the stream operator
-        AbstractStreamAdapter& config(DataBlob* data,
-                std::size_t size, const QHash<QString, DataBlob*>& serviceData);
+        /// Configures the abstract stream adapter.
+        void config(DataBlob* data, std::size_t size,
+                const QHash<QString, DataBlob*>& serviceData) {
+            _data = data;
+            _chunkSize = size;
+            _serviceData = serviceData;
+        }
 
     protected:
-        /// Hash of service data blobs associated adaption of the stream data
+        /// Hash of service data blobs associated with the stream data.
         /// e.g. Service data containing updated dimensions of the stream data.
         QHash<QString, DataBlob*> _serviceData;
 };

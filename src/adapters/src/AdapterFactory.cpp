@@ -17,7 +17,7 @@ namespace pelican {
 
 /**
  * @details
- * ModuleFactory constructor.
+ * AdapterFactory constructor.
  */
 AdapterFactory::AdapterFactory(const Config *config)
 {
@@ -28,7 +28,7 @@ AdapterFactory::AdapterFactory(const Config *config)
 
 /**
  * @details
- * ModuleFactory destructor.
+ * AdapterFactory destructor.
  */
 AdapterFactory::~AdapterFactory()
 {
@@ -51,12 +51,12 @@ AdapterFactory::~AdapterFactory()
  */
 AbstractAdapter* AdapterFactory::create(const QString& type, const QString& name)
 {
-    /* Create an index into the configuration file and get the configuration */
+    // Create an index into the configuration file and get the configuration.
     Config::TreeAddress_t address = _configRoot;
     address.append(QPair<QString, QString>(type, name));
     ConfigNode config = _config->get(address);
 
-    /* Create the module */
+    // Create the adapter.
     return _create(type, config);
 }
 
@@ -89,6 +89,5 @@ AbstractAdapter* AdapterFactory::_create(const QString& type, const ConfigNode& 
     }
     return adapter;
 }
-
 
 } // namespace pelican

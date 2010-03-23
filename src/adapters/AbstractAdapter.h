@@ -2,7 +2,6 @@
 #define ABSTRACTADAPTER_H
 
 #include "utility/ConfigNode.h"
-//#include <QDataStream>
 #include <QIODevice>
 #include <iostream>
 
@@ -22,38 +21,34 @@ class DataBlob;
  *
  * @details
  * This class is the base class for all Pelican data adapters, which
- * de-serialise data from an input stream.
+ * de-serialise data from an input device.
  *
- * Inherit this class and implement the stream operator method to create a new
+ * Inherit this class and implement the deserialise method to create a new
  * adapter.
  */
-
 class AbstractAdapter
 {
     public:
         typedef enum { Stream, Service } AdapterType_t;
 
+    protected:
+        AdapterType_t _type;    ///< Type of adapter.
+        std::size_t _chunkSize; ///< Chunk size in bytes.
+        DataBlob* _data;        ///< Pointer to data blob to be filled.
+
     public:
-        /// Constructs a new adapter.
-        AbstractAdapter(AdapterType_t type, const ConfigNode& config);
+        /// Constructs an adapter of the given type and configuration.
+        AbstractAdapter(AdapterType_t type, const ConfigNode&)
+        : _type(type), _chunkSize(0), _data(0) {}
 
         /// Destroys the adapter (virtual).
-        virtual ~AbstractAdapter();
+        virtual ~AbstractAdapter() {}
 
-        /// return the type of Adapter
-        //  as passed in the constructor
-        AdapterType_t type() const;
+        /// Return the type of adapter as passed in the constructor.
+        AdapterType_t type() const {return _type;}
 
-    public:
+        /// Deserialises the data from the input device.
         virtual void deserialise(QIODevice* in) = 0;
-
-    protected:
-        /// Data blob pointer to be by the adapter.
-        DataBlob* _data;
-        AdapterType_t _type;
-
-        /// Chunk size in bytes.
-        std::size_t _chunkSize;
 };
 
 } // namespace pelican

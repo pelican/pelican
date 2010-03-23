@@ -26,14 +26,13 @@ class AbstractAdapter;
  * The adapters are owned by the factory and will be destroyed with
  * the factory.
  */
-
 class AdapterFactory
 {
     public:
         /// Adapter factory constructor.
         AdapterFactory(const Config *config);
 
-        /// Module factory destructor.
+        /// Adapter factory destructor.
         ~AdapterFactory();
 
         /// Creates a new module.

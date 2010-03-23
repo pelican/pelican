@@ -22,22 +22,23 @@ class DataBlob;
  * This class is the base class for all Pelican service data adapters, which
  * de-serialise data from an input stream.
  *
- * Inherit this class and implement the stream operator method to create a new
+ * Inherit this class and implement the deserialise() method to create a new
  * adapter.
  */
-
 class AbstractServiceAdapter : public AbstractAdapter
 {
     public:
-        /// Constructs a new adapter.
-        AbstractServiceAdapter(const ConfigNode& config);
+        /// Constructs a new service data adapter with the given configuration.
+        AbstractServiceAdapter(const ConfigNode& config)
+        : AbstractAdapter(AbstractAdapter::Service, config) {}
 
-        /// Destroys the adapter (virtual).
-        virtual ~AbstractServiceAdapter();
+        /// Destroys the service adapter (virtual).
+        virtual ~AbstractServiceAdapter() {}
 
-    public:
-        /// Configures an abstract adapter for use with the service operator
-        AbstractServiceAdapter& config(DataBlob* data, std::size_t size);
+        /// Configures the service adapter.
+        void config(DataBlob* data, std::size_t size) {
+            _data = data; _chunkSize = size;
+        }
 };
 
 } // namespace pelican

@@ -14,7 +14,7 @@ TestAdapterFactory::TestAdapterFactory(const pelican::Config& config)
 {
 }
 
-AbstractAdapter* TestAdapterFactory::create(const QString& type, const QString& name)
+AbstractAdapter* TestAdapterFactory::create(const QString& type, const QString&)
 {
     AbstractAdapter* adapter = 0;
     if( type == "service" ) 
