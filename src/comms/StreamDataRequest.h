@@ -52,7 +52,7 @@ class StreamDataRequest : public ServerRequest
         /// The number of requirements.
         int size() const {return _dataOptions.size();}
 
-        // Test for equality between ServiceData objects.
+        /// Test for equality between ServiceData objects.
         virtual bool operator==(const ServerRequest&) const;
 };
 

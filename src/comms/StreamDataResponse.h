@@ -14,22 +14,30 @@ namespace pelican {
  * @class StreamDataResponse
  *  
  * @brief
- *    class to represent a data stream returned from the server
+ * Class to represent a set of stream data returned from the server.
+ *
  * @details
  * 
  */
-
 class StreamDataResponse : public ServerResponse
 {
-    public:
-        StreamDataResponse();
-        ~StreamDataResponse();
-        void setStreamData(pelican::StreamData*);
-        pelican::StreamData* streamData();
-
     private:
         pelican::StreamData* _data;
+
+    public:
+        /// Constructs a StreamDataResponse object.
+        StreamDataResponse();
+
+        /// Destroys the StreamDataResponse object.
+        ~StreamDataResponse();
+
+        /// Sets the pointer to the StreamData object.
+        void setStreamData(pelican::StreamData* data) {_data = data;}
+
+        /// Returns the pointer to the StreamData object.
+        pelican::StreamData* streamData() {return _data;}
 };
 
 } // namespace pelican
+
 #endif // STREAMDATARESPONSE_H 

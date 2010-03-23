@@ -12,27 +12,34 @@ namespace pelican {
  * @class ServerResponse
  *  
  * @brief
- *    Base class to manage all responses from the pelican server
+ * Base class to manage all responses from the pelican server.
+ *
  * @details
- * 
  */
-
 class ServerResponse
 {
     public:
-        enum private_Response_t { Error, Acknowledge, StreamData, ServiceData };
-        typedef private_Response_t Response_t;
-
-    public:
-        ServerResponse(Response_t type = Error, const QString& msg = "" );
-        ~ServerResponse();
-        Response_t type() const;
-        const QString& message() const { return _msg; };
+        typedef enum { Error, Acknowledge, StreamData, ServiceData } Response;
 
     private:
-        Response_t _type;
+        Response _type;
         QString _msg;
+
+    public:
+        /// Constructs a new ServerResponse object.
+        ServerResponse(Response type = Error, const QString& msg = "" )
+        : _type(type), _msg(msg) {}
+
+        /// Destroys the ServerResponse object.
+        ~ServerResponse() {}
+
+        /// Returns the response type.
+        Response type() const {return _type;}
+
+        /// Returns the message.
+        const QString& message() const {return _msg;};
 };
 
 } // namespace pelican
+
 #endif // SERVERRESPONSE_H 

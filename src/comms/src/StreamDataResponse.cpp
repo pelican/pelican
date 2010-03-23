@@ -1,31 +1,26 @@
 #include "StreamDataResponse.h"
 
-
 #include "utility/memCheck.h"
 
 namespace pelican {
 
-
-// class StreamDataResponse 
+/**
+ * @details
+ * Creates a new StreamDataResponse object.
+ */
 StreamDataResponse::StreamDataResponse()
-    : ServerResponse( ServerResponse::StreamData )
+    : ServerResponse( ServerResponse::StreamData ), _data(0)
 {
-    _data = 0;
 }
 
-void StreamDataResponse::setStreamData( pelican::StreamData* data )
-{
-    _data = data;
-}
-
+/**
+ * @details
+ * Destroys the StreamDataResponse object, deleting the StreamData
+ * object that this class contains.
+ */
 StreamDataResponse::~StreamDataResponse()
 {
     delete _data;
-}
-
-StreamData* StreamDataResponse::streamData()
-{
-    return _data;
 }
 
 } // namespace pelican

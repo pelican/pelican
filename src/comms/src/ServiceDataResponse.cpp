@@ -5,28 +5,36 @@
 
 namespace pelican {
 
-
-// class ServiceDataResponse 
+/**
+ * @details
+ * Constructs a new ServiceDataResponse object.
+ */
 ServiceDataResponse::ServiceDataResponse()
     : ServerResponse(ServerResponse::ServiceData)
 {
 }
 
+/**
+ * @details
+ * Destroys the ServiceDataResponse object.
+ *
+ * The destructor deletes all the Data objects known to it.
+ */
 ServiceDataResponse::~ServiceDataResponse()
 {
     foreach(Data* d, _data )
         delete d;
 }
 
+/**
+ * @details
+ * Adds a Data object to the list known to this class.
+ * This class takes ownership of the Data object and will delete it
+ * on destruction.
+ */
 void ServiceDataResponse::addData(Data* d)
 {
     _data.append(d);
 }
-
-const QList<Data*>& ServiceDataResponse::data() const
-{
-    return _data;
-}
-
 
 } // namespace pelican

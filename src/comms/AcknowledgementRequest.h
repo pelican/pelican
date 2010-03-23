@@ -1,7 +1,6 @@
 #ifndef ACKNOWLEDGEMENTREQUEST_H
 #define ACKNOWLEDGEMENTREQUEST_H
 
-
 #include "ServerRequest.h"
 
 /**
@@ -14,19 +13,21 @@ namespace pelican {
  * @class AcknowledgementRequest
  *  
  * @brief
- *    Request for an Acknowledgement from the server
+ * Request for an acknowledgement from the server.
+ *
  * @details
  * 
  */
-
 class AcknowledgementRequest : public ServerRequest
 {
     public:
-        AcknowledgementRequest(  );
-        ~AcknowledgementRequest();
+        /// Creates the AcknowledgementRequest object.
+        AcknowledgementRequest() : ServerRequest(ServerRequest::Acknowledge) {}
 
-    private:
+        /// Destroys the AcknowledgementRequest object.
+        ~AcknowledgementRequest() {}
 };
 
 } // namespace pelican
+
 #endif // ACKNOWLEDGEMENTREQUEST_H 

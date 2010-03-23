@@ -1,11 +1,7 @@
 SUBPACKAGE(comms data utility)
 set( comms_src
-     src/AbstractClientProtocol.cpp
      src/PelicanClientProtocol.cpp
      src/PelicanProtocol.cpp
-     src/AcknowledgementRequest.cpp
-     src/ServerRequest.cpp
-     src/ServerResponse.cpp
      src/ServiceDataRequest.cpp
      src/ServiceDataResponse.cpp
      src/StreamData.cpp
