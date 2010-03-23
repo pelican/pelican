@@ -21,40 +21,50 @@ class WritableData;
  * @class StreamDataBuffer
  *  
  * @brief
- *    Maintain StreamData and memory access
+ * Maintain StreamData and memory access.
+ *
  * @details
- *    Encapsulates memory allocation for streams, with locking and data 
- *    consistency checking
+ * Encapsulates memory allocation for streams, with locking and data
+ * consistency checking.
  */
-
 class StreamDataBuffer : public DataBuffer
 {
     Q_OBJECT
 
     public:
-        StreamDataBuffer(const QString& type, DataManager* manager=0, QObject* parent=0);
+        /// StreamDataBuffer constructor.
+        StreamDataBuffer(const QString& type, DataManager* manager = 0,
+                QObject* parent = 0);
+
+        /// StreamDataBuffer destructor.
         ~StreamDataBuffer();
 
-        /// get the next data object that is ready to be served
+        /// Get the next data object that is ready to be served.
         void getNext(LockedData&);
 
-        /// get a data object that is ready to be written to
+        /// Get a data object that is ready to be written to.
         WritableData getWritable(size_t size);
 
-        /// set the data manager to use
-        void setDataManager(DataManager* manager);
+        /// Set the data manager to use.
+        void setDataManager(DataManager* manager) {_manager = manager;}
 
     protected slots:
+        /// Places the data chunk that emitted the signal on the serve queue.
         void activateData();
+
+        /// Places the data chunk that emitted the signal on the empty queue.
         void deactivateData();
 
     protected:
+        /// Places the given data chunk on the serve queue.
         void activateData(LockableStreamData*);
+
+        /// Places the given data chunk on the empty queue.
         void deactivateData(LockableStreamData*);
         LockableStreamData* _getWritable(size_t size);
 
     private:
-        StreamDataBuffer(const StreamDataBuffer&); // disallow copying
+        StreamDataBuffer(const StreamDataBuffer&); // Disallow copying.
 
     private:
         size_t _max;
@@ -67,4 +77,5 @@ class StreamDataBuffer : public DataBuffer
 };
 
 } // namespace pelican
+
 #endif // STREAMDATABUFFER_H 

@@ -7,25 +7,18 @@
 
 namespace pelican {
 
-// class LockableStreamData 
-LockableStreamData::LockableStreamData(const QString& name, void* data, size_t size, QObject* parent)
-    : AbstractLockableData(size, parent)
+/**
+ * @details
+ * LockableStreamData constructor.
+ */
+LockableStreamData::LockableStreamData(const QString& name, void* memory,
+        size_t size, QObject* parent) : AbstractLockableData(size, parent)
 {
-    _data.reset( new StreamData(name,data,size) );
+    _data.reset( new StreamData(name, memory, size) );
 }
 
 LockableStreamData::~LockableStreamData()
 {
-}
-
-const LockableStreamData::DataList_t& LockableStreamData::associateData() const
-{
-    return _serviceData;
-}
-
-const QSet<QString>& LockableStreamData::associateDataTypes() const
-{
-    return _serviceDataTypes;
 }
 
 void LockableStreamData::addAssociatedData(const LockedData& data)

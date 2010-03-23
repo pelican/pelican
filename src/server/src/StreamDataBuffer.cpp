@@ -26,9 +26,7 @@ StreamDataBuffer::StreamDataBuffer(const QString& type, DataManager* manager, QO
 StreamDataBuffer::~StreamDataBuffer()
 {
     foreach( LockableStreamData* data, _data)
-    {
         delete data;
-    }
 }
 
 void StreamDataBuffer::setDataManager(DataManager* manager)
@@ -44,6 +42,12 @@ void StreamDataBuffer::getNext(LockedData& lockedData)
     lockedData.setData(0);
 }
 
+/**
+ * @details
+ * Gets a writable data object of the given size and returns it.
+ *
+ * @param[in] size The size of the writable data to return.
+ */
 WritableData StreamDataBuffer::getWritable(size_t size)
 {
     QMutexLocker locker(&_mutex);
@@ -77,7 +81,7 @@ LockableStreamData* StreamDataBuffer::_getWritable(size_t size)
         do {
             LockableStreamData* lockableData = temp.dequeue();
             if( lockableData->maxSize() >= size ) {
-                // we found one - so our work is done
+                // We found one, so our work is done.
                 return lockableData;
             }
         }
@@ -89,7 +93,7 @@ LockableStreamData* StreamDataBuffer::_getWritable(size_t size)
     if(size <= _space && size <= _maxChunkSize )
     {
         void* memory = malloc(size);
-        if( memory ) {
+        if (memory) {
             _space -= size;
             LockableStreamData* lockableData = new LockableStreamData(_type, memory, size);
             _data.append(lockableData);
@@ -147,13 +151,9 @@ void StreamDataBuffer::activateData(LockableStreamData* data)
 {
     QMutexLocker locker(&_mutex);
     if( data->isValid() )
-    {
         _serveQueue.enqueue(data);
-    }
     else
-    {
         _emptyQueue.enqueue(data);
-    }
 }
 
 } // namespace pelican

@@ -3,6 +3,7 @@
 #include <cstring>
 #include <QObject>
 #include <QMutex>
+#include <QMutexLocker>
 
 /**
  * @file AbstractLockable.h
@@ -14,56 +15,63 @@ namespace pelican {
  * @class AbstractLockable
  *  
  * @brief
- *   Wrapper for objects to Lock/unlock with a LockedData
- *   Emits signals when unlocked
+ * Wrapper for objects to lock/unlock with a LockedData.
+ *
  * @details
- *   Two types of lock are supported, write and read
- * 
+ * Two types of lock are supported, write and read.
+ * This class emits signals when unlocked.
+ *
+ * Inherited by the AbstractLockableData class.
  */
-
 class AbstractLockable : public QObject
 {
     Q_OBJECT
 
-    public:
-        AbstractLockable( QObject* parent=0 );
-        ~AbstractLockable();
-
-        /// returns true if there is an active lock on the data
-        bool isLocked() const;
-
-        /// marks the data as locked (increases count on unlimited semaphore)
-        void lock();
-
-        /// marks the data as unlocked (decreases count on semaphore)
-        //  emits the unlocked signal when count returns to 0
-        void unlock();
-
-        /// marks the data as locked (increases count on unlimited semaphore)
-        void writeLock();
-
-        /// marks the data as unlocked (decreases count on semaphore)
-        //  emits the unlockedWrite signal when count returns to 0
-        void writeUnlock();
-
-        /// returns true if the object is correctly initialised
-        //  and can be used
-        virtual bool isValid() const = 0;
-
     private:
-        AbstractLockable(const AbstractLockable&); // disallow the copy constructor
-
-    signals:
-        void unlocked();
-        void unlockedWrite();
+        int _lock;  ///< Counts the number of times the lock has been applied.
+        int _wlock; ///< Counts the number of times the write lock has been applied.
 
     protected:
         QMutex _mutex;
 
+    public:
+        /// AbstractLockable constructor.
+        AbstractLockable(QObject* parent = 0)
+        : QObject(parent), _lock(0), _wlock(0) {}
+
+        /// AbstractLockable destructor.
+        ~AbstractLockable() {}
+
+        /// Returns true if there is an active lock on the data.
+        bool isLocked() const {return bool(_lock || _wlock);}
+
+        /// Returns true if the object is initialised and ready for use.
+        virtual bool isValid() const = 0;
+
+        /// Marks the data as locked (increases count on unlimited semaphore).
+        void lock() {QMutexLocker locker(&_mutex); ++_lock;}
+
+        /// Marks the data as unlocked (decreases count on semaphore).
+        void unlock();
+
+        /// Marks the data as locked (increases count on unlimited semaphore).
+        void writeLock() {QMutexLocker locker(&_mutex); ++_wlock;}
+
+        /// Marks the data as unlocked (decreases count on semaphore).
+        void writeUnlock();
+
     private:
-        int _lock;
-        int _wlock;
+        /// Disallow the copy constructor.
+        AbstractLockable(const AbstractLockable&);
+
+    signals:
+        /// Signal emitted when the lock count reaches zero.
+        void unlocked();
+
+        /// Signal emitted when the write lock count reaches zero.
+        void unlockedWrite();
 };
 
 } // namespace pelican
+
 #endif // ABSTRACTLOCKABLE_H 

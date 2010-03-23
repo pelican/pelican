@@ -7,6 +7,7 @@
 #include "ServiceDataBuffer.h"
 #include "LockedData.h"
 #include "data/DataRequirements.h"
+
 /**
  * @file DataManager.h
  */
@@ -20,64 +21,62 @@ class StreamData;
  * @class DataManager
  *  
  * @brief
- *   Main class for accessing data in the server
+ * Main class for accessing data in the server.
+ *
  * @details
- *   Class to control access to the internal server data to ensure 
- *   locking etc.
+ * Class to control access to the internal server data to ensure
+ * locking etc.
  */
-
 class DataManager
 {
-    public:
-        DataManager();
-        virtual ~DataManager();
-
-        /// returns the data types handled by this manager
-        const DataRequirements& dataSpec() const;
-
-        /// getNext
-        //  return the next unlocked data block from Stream Data
-        LockedData getNext(const QString& type);
-
-        /// getNext
-        //  return the next unlocked data block from Stream Data, 
-        //  If the associate data requested is unavailable then
-        //  LockedData will be invalid
-        LockedData getNext(const QString& type, const QSet<QString>& associateData );
-
-        /// getServiceData
-        //  return the requested Service Data
-        LockedData getServiceData(const QString& type, const QString& version);
-
-        /// getWritableData
-        //  return a Wriatble data object that represents
-        //  a space in the buffer of a minimum size specified  
-        //  An invalid Writable object will be returned if
-        //  the space is not available
-        WritableData getWritableData(const QString& type, size_t size);
-
-        /// associateServiceData
-        void associateServiceData(LockableStreamData* data);
-
-        /// getBuffer mehtods
-        //  setup a buffer for the specified type if it does not already exist
-        StreamDataBuffer* getStreamBuffer(const QString& type);
-        ServiceDataBuffer* getServiceBuffer(const QString& type);
-
-        /// serviceDataBuffer
-        //  add a service data type to be managed
-        void serviceDataBuffer(const QString& name, ServiceDataBuffer* buffer);
-
-        /// streamDataBuffer
-        //  add a stream data type to be managed
-        void streamDataBuffer(const QString& name, StreamDataBuffer* buffer);
-
     private:
         QHash<QString,StreamDataBuffer*> _streams;
         QHash<QString,ServiceDataBuffer*> _service;
         DataRequirements _specs;
 
+    public:
+        /// DataManager constructor.
+        DataManager() {}
+
+        /// DataManager destructor.
+        virtual ~DataManager();
+
+        /// AssociateServiceData
+        void associateServiceData(LockableStreamData* data);
+
+        /// Returns the data types handled by this manager.
+        const DataRequirements& dataSpec() const {return _specs;}
+
+        /// Return the next unlocked data block from Stream Data.
+        LockedData getNext(const QString& type);
+
+        /// Return the next unlocked data block from Stream Data.
+        /// If the associate data requested is unavailable,
+        /// LockedData will be invalid.
+        LockedData getNext(const QString& type, const QSet<QString>& associateData);
+
+        /// Return the requested Service Data.
+        LockedData getServiceData(const QString& type, const QString& version);
+
+        /// Set up a stream buffer for the specified type.
+        StreamDataBuffer* getStreamBuffer(const QString& type);
+
+        /// Set up a service buffer for the specified type.
+        ServiceDataBuffer* getServiceBuffer(const QString& type);
+
+        /// Return a WritableData object that represents
+        /// a space in the buffer of a minimum size specified
+        /// An invalid Writable object will be returned if
+        /// the space is not available.
+        WritableData getWritableData(const QString& type, size_t size);
+
+        /// Add a service data type to be managed.
+        void serviceDataBuffer(const QString& name, ServiceDataBuffer* buffer);
+
+        /// Add a stream data type to be managed.
+        void streamDataBuffer(const QString& name, StreamDataBuffer* buffer);
 };
 
 } // namespace pelican
+
 #endif // DATAMANAGER_H 

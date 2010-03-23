@@ -24,13 +24,13 @@ namespace pelican {
 class AbstractChunker
 {
     private:
-        DataManager* _dm;
+        DataManager* _dataManager;
         QString _type;
 
     public:
         /// Constructs a new AbstractChunker.
-        AbstractChunker(const QString& type, DataManager* dm)
-            : _dm(dm), _type(type) {}
+        AbstractChunker(const QString& type, DataManager* dataManager)
+            : _dataManager(dataManager), _type(type) {}
 
         /// Destroys the AbstractChunker.
         virtual ~AbstractChunker() {}
@@ -53,8 +53,8 @@ class AbstractChunker
         /// isValid() method before use. When the WritableData object goes
         /// out of scope the data will become available to be served
         /// automatically if it is valid.
-        WritableData getDataStorage( size_t size ) const {
-            return _dm->getWritableData(_type, size);
+        WritableData getDataStorage(size_t size) const {
+            return _dataManager->getWritableData(_type, size);
         }
 };
 

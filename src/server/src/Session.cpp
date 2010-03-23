@@ -21,7 +21,7 @@ namespace pelican {
 
 // class Session 
 Session::Session(int socketDescriptor, AbstractProtocol* proto, DataManager* data, QObject* parent)
-    : QThread(parent), _data(data)
+    : QThread(parent), _dataManager(data)
 {
     _proto = proto;
     _socketDescriptor = socketDescriptor;
@@ -62,6 +62,7 @@ void Session::processRequest(const ServerRequest& req, QIODevice& out)
             case ServerRequest::StreamData:
                 {
                     QList<LockedData> dataList = processStreamDataRequest(static_cast<const StreamDataRequest&>(req) );
+                    cout << "List size: " << dataList.size() << endl;
                     if( dataList.size() > 0 ) {
                         AbstractProtocol::StreamData_t data;
                         for( int i=0; i < dataList.size(); ++i ) {
@@ -110,13 +111,14 @@ QList<LockedData> Session::processStreamDataRequest(const StreamDataRequest& req
     DataRequirementsIterator it=req.begin();
     while( it != req.end() && data.size() == 0 )
     {
-        if( ! it->isCompatible( _data->dataSpec() ) )
-            throw QString("data requested not supported by server");
+        if( ! it->isCompatible( _dataManager->dataSpec() ) )
+            throw QString("Session::processStreamDataRequest(): "
+                    "Data requested not supported by server");
         // attempt to get the required stream data
         foreach (const QString stream, it->streamData() )
         {
-            //std::cout << "stream: " << stream.toStdString() << std::endl;
-            LockedData d = _data->getNext(stream, it->serviceData() );
+            std::cout << "stream: " << stream.toStdString() << std::endl;
+            LockedData d = _dataManager->getNext(stream, it->serviceData() );
             if( ! d.isValid() ) {
                 data.clear();
                 break; // one invalid stream invalidates the request
@@ -138,7 +140,7 @@ QList<LockedData> Session::processServiceDataRequest(const ServiceDataRequest& r
 {
     QList<LockedData> data;
     foreach( QString type, req.types() ) {
-        LockedData d = _data->getServiceData(type, req.version(type));
+        LockedData d = _dataManager->getServiceData(type, req.version(type));
         if( ! d.isValid() )
         {
             throw QString("Data Requested does not exist :" + type + " " + req.version(type));

@@ -10,10 +10,8 @@ namespace pelican {
 StreamDataRequest::StreamDataRequest()
     : ServerRequest(ServerRequest::StreamData)
 {
-    std::cout << "Constructor" << std::endl;
     _dataOptions.clear();
     _dataOptions.end();
-    std::cout << "Constructor Done" << std::endl;
 }
 
 StreamDataRequest::~StreamDataRequest()

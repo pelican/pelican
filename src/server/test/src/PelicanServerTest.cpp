@@ -3,6 +3,8 @@
 #include "PelicanServer.h"
 #include "PelicanTestClient.h"
 #include "TestProtocol.h"
+#include "DataManager.h"
+#include "TestChunker.h"
 #include "data/DataRequirements.h"
 #include <QCoreApplication>
 #include <QThread>
@@ -64,6 +66,8 @@ void PelicanServerTest::test_singleProtocolStream()
         PelicanServer server;
         quint16 port = 2000;
         server.addProtocol(new TestProtocol("", ServerRequest::StreamData), port);
+        DataManager dataManager;
+        server.addStreamChunker(new TestChunker(&dataManager, "TestStream"), "127.0.0.1", port+1);
         server.start();
         while (!server.isReady()) {}
         PelicanTestClient client(port);

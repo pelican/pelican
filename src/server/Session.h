@@ -46,7 +46,7 @@ class Session : public QThread
 
     private:
         int _socketDescriptor;
-        DataManager* _data;
+        DataManager* _dataManager;
         AbstractProtocol* _proto;
         static int _n;
 

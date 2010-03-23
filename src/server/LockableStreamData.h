@@ -18,12 +18,13 @@ class LockedData;
  * @class LockableStreamData
  *  
  * @brief
- *     Contains Pointers to Chunked LockableStream and a manifest of associated data
+ * Contains pointers to chunked LockableStream and a manifest of
+ * associated data.
+ *
  * @details
- *     As well as a pointer to and the size of the data this class
- *     also contains linking information to the service data
+ * As well as a pointer to and the size of the data this class
+ * also contains linking information to the service data
  */
-
 class LockableStreamData : public AbstractLockableData
 {
     Q_OBJECT
@@ -32,28 +33,33 @@ class LockableStreamData : public AbstractLockableData
         typedef QList<LockedData> DataList_t;
 
     public:
-        LockableStreamData(const QString& name, void* = 0, size_t  = 0, QObject* parent = 0);
+        /// LockableStreamData constructor.
+        LockableStreamData(const QString& name, void* memory = 0,
+                size_t = 0, QObject* parent = 0);
+
+        /// LockableStreamData destructor.
         ~LockableStreamData();
 
         StreamData* streamData() const;
 
-        /// test validity of all data
+        /// Test validity of all data.
         bool isValid() const;
 
-        /// test validity of data only taking into account the named associates
+        /// Test validity of data only taking into account the named associates.
         bool isValid(const QSet<QString>&) const;
 
-        /// associates a specific dataset with this LockableStreamData chunk
+        /// Associates a specific dataset with this LockableStreamData chunk.
         void addAssociatedData(const LockedData&);
 
-        /// returns the datasets associated with this LockableStreamData chunk
-        const DataList_t& associateData() const;
-        const QSet<QString>& associateDataTypes() const;
+        /// Returns the datasets associated with this LockableStreamData chunk.
+        const DataList_t& associateData() const {return _serviceData;}
+        const QSet<QString>& associateDataTypes() const {return _serviceDataTypes;}
 
-        /// reset the objects data
+        /// Reset the object's data.
         void reset();
 
     private:
+        /// Disable copy constructor.
         LockableStreamData(const LockableStreamData&);
 
     private:
@@ -62,4 +68,5 @@ class LockableStreamData : public AbstractLockableData
 };
 
 } // namespace pelican
+
 #endif // LOCKABLESTREAMDATA_H 
