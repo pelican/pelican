@@ -8,7 +8,6 @@ set( comms_src
      src/ServerResponse.cpp
      src/ServiceDataRequest.cpp
      src/ServiceDataResponse.cpp
-     src/Data.cpp
      src/StreamData.cpp
      src/StreamDataRequest.cpp
      src/StreamDataResponse.cpp
