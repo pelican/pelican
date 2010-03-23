@@ -20,7 +20,6 @@ set( server_src
      src/DataReceiver.cpp
      src/LockedData.cpp
      src/DataManager.cpp
-     src/DataBuffer.cpp
      src/PelicanServer.cpp
      src/PelicanPortServer.cpp
      src/Session.cpp

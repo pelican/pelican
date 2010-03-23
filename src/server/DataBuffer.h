@@ -20,23 +20,25 @@ class WritableData;
  * @details
  * 
  */
-
 class DataBuffer : public QObject
 {
     Q_OBJECT
 
     public:
-        DataBuffer(const QString& type, QObject* parent=0);
-        ~DataBuffer();
+        /// Constructs a new DataBuffer object.
+        DataBuffer(const QString& type, QObject* parent = 0)
+        : QObject(parent), _type(type) {}
+
+        /// Destroys the DataBuffer object.
+        ~DataBuffer() {}
 
         virtual WritableData getWritable(size_t size) = 0;
 
     protected:
         QMutex _mutex;
         QString _type;
-
-    private:
 };
 
 } // namespace pelican
+
 #endif // DATABUFFER_H 
