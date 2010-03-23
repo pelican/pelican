@@ -10,8 +10,14 @@
 #include "data/CorrectedVisibilityData.h"
 #include <vector>
 
-
 namespace pelican {
+
+extern "C" {
+/// Prototype for LAPACK function zheev():
+/// Find all the eigenvalues and vectors of Hermitian matrix A.
+void zheev_(const char* jobz, const char* uplo, int* n, complex_t* A, int* lda,
+        double* w, complex_t* work, int* lwork, double* rwork, int* info);
+}
 
 class ConfigNode;
 class VisibilityData;
@@ -44,7 +50,6 @@ class ZenithCalibrater : public AbstractModule
         void _calibrate(const unsigned nAnt, const unsigned nEigenvaluesUsed,
                 const unsigned nIterations, const double tolerance, int lWork,
                 complex_t *work, double* rWork, complex_t* Vz, complex_t* Dz);
-
 
         /// Computes the complex gains.
         void _computeComplexGains(

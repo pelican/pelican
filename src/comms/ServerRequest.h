@@ -13,7 +13,7 @@ namespace pelican {
 
 /**
  * @class ServerRequest
- *  
+ *
  * @brief
  *   Encapsulates the data requests to the server.
  * @details
@@ -28,7 +28,7 @@ class ServerRequest
     public:
 
         ServerRequest(Request type = Error, const QString& msg = "");
-        ~ServerRequest();
+        virtual ~ServerRequest();
         Request type() const;
 
         void error(const QString& msg);
@@ -41,4 +41,4 @@ class ServerRequest
 };
 
 } // namespace pelican
-#endif // SERVERREQUEST_H 
+#endif // SERVERREQUEST_H

@@ -12,20 +12,20 @@ namespace pelican {
 
 /**
  * @class AbstractFactory
- *  
+ *
  * @brief
  *    An Abstract Factory Class for use is Pelican Factories
  * @details
  *    Intended for constructing objects that take a Config
  *    class in their constructor
- * 
+ *
  */
 
 class AbstractFactory
 {
     public:
         AbstractFactory(const Config* config, const Config::TreeAddress_t& base);
-        ~AbstractFactory();
+        virtual ~AbstractFactory();
 
         /// Returns the tree node address that marks the start
         /// of the module configuration block.
@@ -43,4 +43,4 @@ class AbstractFactory
 };
 
 } // namespace pelican
-#endif // ABSTRACTFACTORY_H 
+#endif // ABSTRACTFACTORY_H

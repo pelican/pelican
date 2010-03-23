@@ -12,11 +12,11 @@ namespace pelican {
 
 /**
  * @class StreamDataResponse
- *  
+ *
  * @brief
  *    class to represent a data stream returned from the server
  * @details
- * 
+ *
  */
 
 class StreamDataResponse : public ServerResponse
@@ -32,4 +32,4 @@ class StreamDataResponse : public ServerResponse
 };
 
 } // namespace pelican
-#endif // STREAMDATARESPONSE_H 
+#endif // STREAMDATARESPONSE_H

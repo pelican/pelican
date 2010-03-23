@@ -14,6 +14,13 @@ set( modules_src
 )
 
 add_library(modules ${modules_src} )
+add_library(modules_static STATIC ${modules_src})
+SET_TARGET_PROPERTIES(modules_static PROPERTIES OUTPUT_NAME "modules")
+SET_TARGET_PROPERTIES(modules_static PROPERTIES PREFIX "lib")
+SET_TARGET_PROPERTIES(modules PROPERTIES CLEAN_DIRECT_OUTPUT 1)
+SET_TARGET_PROPERTIES(modules_static PROPERTIES CLEAN_DIRECT_OUTPUT 1)
+
+
 target_link_libraries(modules ${SUBPACKAGE_LIBRARIES} )
 install(TARGETS modules DESTINATION ${LIBRARY_INSTALL_DIR} )
 SUBPACKAGE_ADD_LIBRARIES(modules
@@ -21,7 +28,5 @@ SUBPACKAGE_ADD_LIBRARIES(modules
     ${PELICAN_LAPACK_LIBS}
     ${CFITSIO_LIBRARIES}
 )
-
-#/usr/lib/libpthread.so
 
 add_subdirectory(test)

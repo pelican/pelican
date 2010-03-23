@@ -7,26 +7,31 @@
 namespace pelican {
 
 /**
- *@details TestAdapterFactory 
+ *@details TestAdapterFactory
  */
 TestAdapterFactory::TestAdapterFactory(const pelican::Config& config)
     : AdapterFactory(&config)
 {
 }
 
-AbstractAdapter* TestAdapterFactory::create(const QString& type, const QString& name)
+
+AbstractAdapter* TestAdapterFactory::create(const QString& type,
+        const QString& /* name */)
 {
     AbstractAdapter* adapter = 0;
-    if( type == "service" ) 
+    if (type == "service") {
         adapter = new TestAdapter;
-    else
+    }
+    else {
         adapter = new TestStreamAdapter;
+    }
     _adapters.append(adapter);
     return adapter;
 }
 
+
 /**
- *@details
+ * @details
  */
 TestAdapterFactory::~TestAdapterFactory()
 {

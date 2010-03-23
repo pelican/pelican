@@ -1,10 +1,8 @@
 #include "modules/ImageCombiner.h"
+#include <boost/math/special_functions/fpclassify.hpp>
 
 #include "utility/memCheck.h"
 
-#ifndef isnan
-#define isnan(x) ((x) != (x))
-#endif
 
 namespace pelican {
 

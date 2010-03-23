@@ -2,7 +2,7 @@
 project(Pelican CXX C)
 
 # -- cmake setup info
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 2.6.4 FATAL_ERROR)
 list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_SOURCE_DIR}/cmake)
 include(cmake/packagemacros.cmake)
 include_directories(${PROJECT_SOURCE_DIR})
@@ -69,9 +69,9 @@ IF (CMAKE_COMPILER_IS_GNUCC)
     add_definitions(-Wall -Wextra -pedantic -std=c++0x)
     add_definitions(-Wno-deprecated -Wno-unknown-pragmas)
     list(APPEND CPP_PLATFORM_LIBS util dl)
-ELSE (CMAKE_COMPILER_IS_GNUCC)
+ELSE (CMAKE_COMPILER_IS_GNUCC) #assume compiler is intel ?!
     SET(CMAKE_CXX_FLAGS_RELEASE "-O2")
-    add_definitions(-Wall)
+    add_definitions(-Wall -Wcheck)
     add_definitions(-wd383 -wd981)  # suppress remark/warning
     add_definitions(-ww111 -ww1572) # promote remark to warning
 ENDIF (CMAKE_COMPILER_IS_GNUCC)
@@ -90,4 +90,14 @@ set(DOXYFILE_LATEX "NO")
 add_doxygen_target(code DoxyfileCode)
 add_doxygen_target(user DoxyfileUser)
 add_doxygen_target(developer DoxyfileDeveloper)
+
+# --- libpelican.so build target
+#add_library(pelican SHARED
+    #${CMAKE_CURRENT_BUILD_DIR}/adapters/libadapters.a
+    #${CMAKE_CURRENT_BUILD_DIR}/comms/libcomms.a
+#)
+#set_target_properties(pelican PROPERTIES LINKER_LANGUAGE CXX)
+#target_link_libraries(pelican ${SUBPACKAGE_LIBRARIES} memoryTracer)
+#install(TARGETS pelican DESTINATION ${LIBRARY_INSTALL_DIR})
+
 

@@ -11,7 +11,7 @@
 namespace pelican {
 
 /**
- *@details DataClientFactory 
+ *@details DataClientFactory
  */
 DataClientFactory::DataClientFactory(const Config* config, const Config::TreeAddress_t& base, AdapterFactory* afactory)
     : AbstractFactory(config, base), _adapterFactory(afactory)
@@ -27,49 +27,78 @@ DataClientFactory::~DataClientFactory()
         delete client;
 }
 
-AbstractDataClient* DataClientFactory::create( const QString& type, const QList<DataRequirements>& requirements, const QString& name)
+
+/**
+ * @details
+ * Method to create a pointer to a data client of the specified /p type.
+ *
+ * TODO: ??! DOC GOES HERE ??!!
+ *
+ * @param[in] type ?? DOC!!
+ * @param[in] requirements ?? DOC!!
+ * @param[in] name ?? DOC!!
+ */
+AbstractDataClient* DataClientFactory::create(const QString& type,
+        const QList<DataRequirements>& requirements, const QString& name)
 {
     // Create a DataTypes Object from the DataRequirements
-    DataTypes dt;
-    foreach( const DataRequirements& req, requirements )
+    DataTypes dataTypes;
+    foreach (const DataRequirements& req, requirements)
     {
-        dt.addData(req);
+        dataTypes.addData(req);
     }
 
-    // find the configuration information for adapters
+    // Find the configuration information for adapters
     Config::TreeAddress_t address = configRoot();
     address.append(QPair<QString, QString>(type, ""));
     ConfigNode element = _config->get(address);
-    QHash<QString, QString> adapterNames = element.getOptionHash("data", "type", "adapter");
+    QHash<QString, QString> adapterNames = element.getOptionHash("data",
+            "type", "adapter");
 
-    // construct the adapters and add them to the DataTypes structure
-    foreach( const DataRequirements& req, requirements )
+    // Construct the adapters and add them to the DataTypes structure
+    foreach (const DataRequirements& req, requirements)
     {
         QSet<QString> all = req.streamData();
-        all.unite( req.serviceData() );
-        foreach( const QString& type, all )
+        all.unite(req.serviceData());
+        foreach (const QString& dataType, all)
         {
-            if( ! adapterNames.contains(type) )
-                throw("DataClientFactory: Unable to find adapter for data type \"" + type + "\"");
-            AbstractAdapter* adapter = _adapterFactory->create(adapterNames.value(type), "");
-            dt.setAdapter( type, adapter );
+            if(!adapterNames.contains(dataType))
+                throw("DataClientFactory: Unable to find adapter for data"
+                        " type \"" + dataType + "\"");
+            AbstractAdapter* adapter =
+                    _adapterFactory->create(adapterNames.value(dataType), "");
+            dataTypes.setAdapter(dataType, adapter);
         }
     }
 
-    return create( type, dt, name);
+    return create(type, dataTypes, name);
 }
 
-AbstractDataClient* DataClientFactory::create( const QString& type, const DataTypes& requirements, const QString& name)
+
+/**
+ * @details
+ * Method to create a pointer to a data client of the specified /p type
+ *
+ * ??! DOC GOES HERE ??!!
+ *
+ * @param[in] type ?? DOC!!
+ * @param[in] requirements ?? DOC!!
+ * @param[in] name ?? DOC!!
+ */
+AbstractDataClient* DataClientFactory::create(const QString& type,
+        const DataTypes& requirements, const QString& name)
 {
-    /* Create the required data client */
+    // Create the required data client
     if (type == "FileDataClient" ) {
-        _clients.append( new FileDataClient( configuration( type, name ), requirements ) );
+        _clients.append(new FileDataClient(configuration( type, name),
+                requirements));
     }
     else if (type == "PelicanServerClient" ) {
-        _clients.append( new PelicanServerClient( configuration( type, name ), requirements ) );
+        _clients.append(new PelicanServerClient(configuration( type, name),
+                requirements));
     }
     else {
-        throw QString("Unknown data client type: ") + type;
+        throw QString("DataClientFactory: Unknown data client type: ") + type;
     }
     return _clients.last();
 }

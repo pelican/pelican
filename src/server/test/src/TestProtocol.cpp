@@ -7,7 +7,7 @@
 
 namespace pelican {
 
-// class TestProtocol 
+// class TestProtocol
 TestProtocol::TestProtocol(const QString& id, ServerRequest::Request request)
     : AbstractProtocol(), _id(id), _request(request)
 {
@@ -48,6 +48,7 @@ void TestProtocol::send( QIODevice& device, const QString& message)
 
 void TestProtocol::send( QIODevice& device, const AbstractProtocol::StreamData_t& d)
 {
+    std::cout << "TestProtocol::send()" << std::endl;
     _last.clear();
     _lastStreamData = d;
     device.write(_last);

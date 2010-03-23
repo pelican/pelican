@@ -10,11 +10,11 @@ namespace pelican {
 
 /**
  * @class ServerResponse
- *  
+ *
  * @brief
  *    Base class to manage all responses from the pelican server
  * @details
- * 
+ *
  */
 
 class ServerResponse
@@ -24,8 +24,8 @@ class ServerResponse
         typedef private_Response_t Response_t;
 
     public:
-        ServerResponse(Response_t type = Error, const QString& msg = "" );
-        ~ServerResponse();
+        ServerResponse(Response_t type = Error, const QString& msg = "");
+        virtual ~ServerResponse();
         Response_t type() const;
         const QString& message() const { return _msg; };
 
@@ -35,4 +35,4 @@ class ServerResponse
 };
 
 } // namespace pelican
-#endif // SERVERRESPONSE_H 
+#endif // SERVERRESPONSE_H

@@ -25,7 +25,7 @@ namespace pelican {
 class ServiceDataResponse : public ServerResponse
 {
     public:
-        ServiceDataResponse(  );
+        ServiceDataResponse();
         ~ServiceDataResponse();
         /// add a Data object to the response list
         //  this class will take ownership of the Data 

@@ -16,10 +16,10 @@ class AbstractAdapter;
 
 /**
  * @class AdapterFactory
- *  
+ *
  * @brief
  * Factory to create pre-configured adapters.
- * 
+ *
  * @details
  * Instantiates adapter objects and configures them with details taken
  * from the appropriate configuration file and/or command line.
@@ -34,7 +34,7 @@ class AdapterFactory
         AdapterFactory(const Config *config);
 
         /// Module factory destructor.
-        ~AdapterFactory();
+        virtual ~AdapterFactory();
 
         /// Creates a new module.
         virtual AbstractAdapter* create(const QString& type, const QString& name = QString());

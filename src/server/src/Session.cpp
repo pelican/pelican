@@ -19,7 +19,7 @@ using std::endl;
 
 namespace pelican {
 
-// class Session 
+// class Session
 Session::Session(int socketDescriptor, AbstractProtocol* proto, DataManager* data, QObject* parent)
     : QThread(parent), _dataManager(data)
 {

@@ -2,9 +2,10 @@
 #define IMAGEDATA_H
 
 #include "data/DataBlob.h"
+#include <boost/math/special_functions/fpclassify.hpp>
 #include <QString>
 #include <vector>
-#define isnan(x) ((x) != (x)) //TODO: this is unsafe for floating point comparison.
+#include <cmath>
 
 /**
  * @file ImageData.h
