@@ -44,7 +44,8 @@ void Session::run()
 
     processRequest(*req, socket);
     socket.disconnectFromHost();
-    if (socket.isValid()) socket.waitForDisconnected();
+    if (socket.state() != QAbstractSocket::UnconnectedState)
+        socket.waitForDisconnected();
 }
 
 /**
@@ -72,7 +73,7 @@ void Session::processRequest(const ServerRequest& req, QIODevice& out)
                         _proto->send( out, data );
                         cout << "Sent stream data" << endl;
                     }
-                    cout << "DONNNNNEE" << endl;
+                    cout << "Finished stream data request" << endl;
                 }
                 break;
             case ServerRequest::ServiceData:
@@ -117,7 +118,7 @@ QList<LockedData> Session::processStreamDataRequest(const StreamDataRequest& req
         // attempt to get the required stream data
         foreach (const QString stream, it->streamData() )
         {
-            std::cout << "stream: " << stream.toStdString() << std::endl;
+            //std::cout << "stream: " << stream.toStdString() << std::endl;
             LockedData d = _dataManager->getNext(stream, it->serviceData() );
             if( ! d.isValid() ) {
                 data.clear();
