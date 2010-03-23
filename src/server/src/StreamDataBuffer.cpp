@@ -29,11 +29,6 @@ StreamDataBuffer::~StreamDataBuffer()
         delete data;
 }
 
-void StreamDataBuffer::setDataManager(DataManager* manager)
-{
-    _manager = manager;
-}
-
 void StreamDataBuffer::getNext(LockedData& lockedData)
 {
     QMutexLocker locker(&_mutex);
