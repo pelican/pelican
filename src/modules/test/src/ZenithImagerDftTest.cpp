@@ -51,8 +51,10 @@ void ZenithImagerDftTest::test_configuration()
         CPPUNIT_ASSERT(imager._sizeL == 128);
         CPPUNIT_ASSERT(imager._sizeM == 128);
         CPPUNIT_ASSERT(imager._fullSky == true);
-        CPPUNIT_ASSERT(imager._cellsizeL == -(2.0 / 128.0) * math::rad2asec);
-        CPPUNIT_ASSERT(imager._cellsizeM == (2.0 / 128.0) * math::rad2asec);
+        CPPUNIT_ASSERT_DOUBLES_EQUAL(-(2.0 / 128.0) * math::rad2asec,
+                imager._cellsizeL, 1.0e-5);
+        CPPUNIT_ASSERT_DOUBLES_EQUAL((2.0 / 128.0) * math::rad2asec,
+                imager._cellsizeM, 1.0e-5);
         CPPUNIT_ASSERT(imager._polarisation == ImageData::POL_X);
         CPPUNIT_ASSERT(imager._channels.size() == 1);
         CPPUNIT_ASSERT(imager._channels[0] == 0);
@@ -114,8 +116,8 @@ void ZenithImagerDftTest::test_calculateImageCoords()
         // Check we have the right image dimensions
         CPPUNIT_ASSERT(imager._sizeL == static_cast<unsigned>(sizeL));
         CPPUNIT_ASSERT(imager._sizeM == static_cast<unsigned>(sizeM));
-        CPPUNIT_ASSERT(imager._cellsizeL == -cellsizeL);
-        CPPUNIT_ASSERT(imager._cellsizeM == cellsizeM);
+        CPPUNIT_ASSERT_DOUBLES_EQUAL(-cellsizeL, imager._cellsizeL, 1.0e-5);
+        CPPUNIT_ASSERT_DOUBLES_EQUAL(cellsizeM, imager._cellsizeM, 1.0e-5);
 
         // Time generation of image coordinates
         TIMER_START
@@ -130,11 +132,11 @@ void ZenithImagerDftTest::test_calculateImageCoords()
         double minM = -(sizeM / 2.0) * 0.1;
         double maxL = (sizeL / 2.0) - 1.0;
         double maxM = ((sizeM / 2.0) - 1.0) * 0.1;
-        double err = 1.0e10;
-        CPPUNIT_ASSERT(imager._coordL[0] - minL < err);
-        CPPUNIT_ASSERT(imager._coordL[sizeL - 1] - maxL < err);
-        CPPUNIT_ASSERT(imager._coordM[0] - minM < err);
-        CPPUNIT_ASSERT(imager._coordM[sizeM - 1] - maxM < err);
+        double delta = 1.0e10;
+        CPPUNIT_ASSERT_DOUBLES_EQUAL(minL, imager._coordL[0], delta);
+        CPPUNIT_ASSERT_DOUBLES_EQUAL(maxL, imager._coordL[sizeL - 1], delta);
+        CPPUNIT_ASSERT_DOUBLES_EQUAL(minM, imager._coordM[0], delta);
+        CPPUNIT_ASSERT_DOUBLES_EQUAL(maxM, imager._coordM[sizeM - 1], delta);
     }
 }
 
@@ -205,7 +207,6 @@ void ZenithImagerDftTest::test_calculateWeights()
             CPPUNIT_ASSERT(weights[a] == weightsXL[a] * weightsYM[a]);
         }
     }
-
 }
 
 
@@ -231,7 +232,6 @@ void ZenithImagerDftTest::test_makeImageDft()
     imager._makeImageDft(nAnt, &antX[0], &antY[0], &vis[0], freq, nL, nM,
             &coordL[0], &coordM[0], &image[0]);
     TIMER_STOP("ZenithImagerDft::_makeImageDft()");
-
 }
 
 

@@ -6,10 +6,11 @@
 #include "data/CorrectedVisibilityData.h"
 #include <QStringList>
 #include "utility/pelicanTimer.h"
-#include <iostream>
-#include <iomanip>
 #include <fstream>
 #include <cblas.h>
+
+#include <iostream>
+#include <iomanip>
 
 #include "utility/memCheck.h"
 
@@ -19,15 +20,6 @@ using std::vector;
 using std::conj;
 
 namespace pelican {
-
-
-extern "C"{
-/// Prototype for LAPACK function to find all the eigenvalues and vectors
-/// of Hermitian matrix A.
-void zheev_(const char* jobz, const char* uplo, int* n, complex_t* A, int* lda,
-        double* w, complex_t* work, int* lwork, double* rwork, int* info);
-}
-
 
 /**
  * @details

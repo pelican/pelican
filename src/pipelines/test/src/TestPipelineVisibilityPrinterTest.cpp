@@ -1,4 +1,4 @@
-#include "TestPipelineVisibilityPrinterTest.h"
+#include "pipelines/test/TestPipelineVisibilityPrinterTest.h"
 #include "core/PipelineApplication.h"
 #include "core/AbstractPipeline.h"
 #include "pipelines/TestPipelineVisibilityPrinter.h"

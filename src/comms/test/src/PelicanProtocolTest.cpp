@@ -12,12 +12,15 @@
 #include "data/DataRequirements.h"
 #include "utility/SocketTester.h"
 
+#include <iostream>
+#include <cstdlib>
+
 #include "utility/memCheck.h"
 
 namespace pelican {
 
 CPPUNIT_TEST_SUITE_REGISTRATION( PelicanProtocolTest );
-// class PelicanProtocolTest 
+// class PelicanProtocolTest
 PelicanProtocolTest::PelicanProtocolTest()
     : CppUnit::TestFixture()
 {
@@ -156,25 +159,26 @@ void PelicanProtocolTest::test_sendStreamData()
         // Single Stream Data with no service data
         PelicanProtocol proto;
         QByteArray data1("data1");
-        StreamData sd("d1",data1.data(),data1.size());
-        CPPUNIT_ASSERT_EQUAL( (long)data1.size(), (long)sd.size() );
-        sd.setId("testid");
+        StreamData streamData("d1", data1.data(), data1.size());
+        CPPUNIT_ASSERT_EQUAL( (long)data1.size(), (long)streamData.size() );
+        streamData.setId("testid");
         AbstractProtocol::StreamData_t data;
-        data.append(&sd);
+        data.append(&streamData);
         QByteArray block;
         QBuffer stream(&block);
         stream.open(QIODevice::WriteOnly);
         proto.send(stream, data);
         QTcpSocket& socket = _st->send(block);
+
         boost::shared_ptr<ServerResponse> resp = _protocol.receive(socket);
         CPPUNIT_ASSERT( resp->type() == ServerResponse::StreamData );
         StreamDataResponse* sd2 = static_cast<StreamDataResponse*>(resp.get());
-        CPPUNIT_ASSERT( sd == *(sd2->streamData()) );
+        CPPUNIT_ASSERT( streamData == *(sd2->streamData()) );
 
-        // check we have the actual data
-        QByteArray buf(0,sd.size());
-        CPPUNIT_ASSERT_EQUAL( (long)sd.size(), (long)socket.read( buf.data(), sd.size() ) );
-        CPPUNIT_ASSERT_EQUAL( std::string(data1.data()), std::string(buf.data()));
+        // Check we have the actual data.
+        QByteArray buf(streamData.size(), 0);
+        CPPUNIT_ASSERT_EQUAL( (long)streamData.size(), (long)socket.read( buf.data(), streamData.size() ));
+        CPPUNIT_ASSERT_EQUAL( std::string(data1.data()), std::string(buf.data() ));
     }
     {
         // Use Case
@@ -201,7 +205,7 @@ void PelicanProtocolTest::test_sendStreamData()
         CPPUNIT_ASSERT( sd == *(sd2->streamData()) );
 
         // check we have the actual data
-        QByteArray buf(0,sd.size());
+        QByteArray buf(sd.size(), 0);
         CPPUNIT_ASSERT_EQUAL( (long)sd.size(), (long)socket.read( buf.data(), sd.size() ) );
         CPPUNIT_ASSERT_EQUAL( std::string(data1.data()), std::string(buf.data()));
     }

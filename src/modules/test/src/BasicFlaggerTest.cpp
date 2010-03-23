@@ -120,7 +120,7 @@ void BasicFlaggerTest::test__flagAutocorrelations()
     TIMER_START
     _basicFlagger->_flagAutocorrelations(&visData, &medians[0],
             minFraction, maxFraction, &flagTable);
-    TIMER_STOP("BasicFlagger::_flagAutocorrelations (%d/%d ant in %d chan, %d pol)",
+    TIMER_STOP("BasicFlagger::_flagAutocorrelations (%u/%u ant in %u chan, %u pol)",
             flagTable.nFlaggedAntennas(0, 0), nAntennas, nChannels, nPols)
 }
 
@@ -156,7 +156,7 @@ void BasicFlaggerTest::test__getAutocorrelations()
     // Get the autocorrelations.
     TIMER_START
     _basicFlagger->_getAutocorrelations(&visData, &autocorr[0]);
-    TIMER_STOP("BasicFlagger::_getAutocorrelations (%d ant, %d chan, %d pol)",
+    TIMER_STOP("BasicFlagger::_getAutocorrelations (%u ant, %u chan, %u pol)",
             nAntennas, nChannels, nPols)
 
     // Check the autocorrelations.
@@ -205,7 +205,7 @@ void BasicFlaggerTest::test__getMedians()
     // Get the medians.
     TIMER_START
     _basicFlagger->_getMedians(nAntennas, nChannels, nPols, &autocorr[0], &medians[0]);
-    TIMER_STOP("BasicFlagger::_getMedians (%d ant, %d chan, %d pol)",
+    TIMER_STOP("BasicFlagger::_getMedians (%u ant, %u chan, %u pol)",
             nAntennas, nChannels, nPols)
 
     // Check the medians.
@@ -258,7 +258,7 @@ void BasicFlaggerTest::test__moveBadAntennas()
     // Move the bad antennas.
     TIMER_START
     _basicFlagger->_moveBadAntennas(&visData, &flagTable);
-    TIMER_STOP("BasicFlagger::_moveBadAntennas (%d/%d ant in %d chan, %d pol)",
+    TIMER_STOP("BasicFlagger::_moveBadAntennas (%u/%u ant in %u chan, %u pol)",
             flagTable.nFlaggedAntennas(0, 0), nAntennas, nChannels, nPols)
 }
 

@@ -13,11 +13,11 @@ namespace pelican {
 
 /**
  * @class TestAdapterFactory
- *  
+ *
  * @brief
  *    Generate test adapters
  * @details
- * 
+ *
  */
 
 class TestAdapterFactory : public AdapterFactory
@@ -25,10 +25,11 @@ class TestAdapterFactory : public AdapterFactory
     public:
         TestAdapterFactory( const Config& = Config() );
         ~TestAdapterFactory();
-        virtual AbstractAdapter* create(const QString& type, const QString& name = QString());
+        virtual AbstractAdapter* create(const QString& type,
+                const QString& name = QString());
 
     private:
 };
 
 } // namespace pelican
-#endif // TESTADAPTERFACTORY_H 
+#endif // TESTADAPTERFACTORY_H

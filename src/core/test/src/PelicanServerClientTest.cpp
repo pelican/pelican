@@ -122,8 +122,8 @@ void PelicanServerClientTest::test_response()
     QString version1("v1");
     QString service1("service1");
     QString serviceVersion1("sv1");
-    DataRequirements req;
-    req.addStreamData(stream1);
+    DataRequirements reqStream1;
+    reqStream1.addStreamData(stream1);
     QByteArray data1("data1");
     {
         // Use Case
@@ -133,7 +133,7 @@ void PelicanServerClientTest::test_response()
 
         // set up the adapters and client
         QList<DataRequirements> lreq;
-        lreq.append(req);
+        lreq.append(reqStream1);
         DataTypes dt;
         dt.addData(lreq);
         dt.setAdapter(stream1,&streamAdapter);

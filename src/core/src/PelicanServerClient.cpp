@@ -27,7 +27,7 @@ PelicanServerClient::PelicanServerClient(const ConfigNode& config, const DataTyp
     : AbstractDataClient(config, types ), _protocol(0)
 {
 
-    _protocol = new PelicanClientProtocol; 
+    _protocol = new PelicanClientProtocol;
 
     setIP_Address(config.getOption("server","host"));
     QString port = config.getOption("server","port");
@@ -74,7 +74,8 @@ QHash<QString, DataBlob*> PelicanServerClient::getData(QHash<QString, DataBlob*>
 
 }
 
-QHash<QString, DataBlob*> PelicanServerClient::_response(QIODevice& device, boost::shared_ptr<ServerResponse> r, QHash<QString, DataBlob*>& dataHash)
+QHash<QString, DataBlob*> PelicanServerClient::_response(QIODevice& device,
+        boost::shared_ptr<ServerResponse> r, QHash<QString, DataBlob*>& dataHash)
 {
 
     QHash<QString, DataBlob*> validData;
@@ -86,20 +87,20 @@ QHash<QString, DataBlob*> PelicanServerClient::_response(QIODevice& device, boos
         case ServerResponse::StreamData:
             {
                 ServiceDataRequest req;
-                StreamDataResponse* res = static_cast<StreamDataResponse*>(r.get());
+                StreamDataResponse* response = static_cast<StreamDataResponse*>(r.get());
                 // determine the associated service data
-                StreamData* sd = res->streamData();
+                StreamData* sd = response->streamData();
                 Q_ASSERT( sd != 0 );
-                foreach(const boost::shared_ptr<Data>& d, sd->associateData() ) {
+                foreach (const boost::shared_ptr<Data>& d, sd->associateData()) {
                     // do we already have it?
-                    if( dataHash[d->name()]->version() == d->id() )
+                    if( dataHash[d->name()]->version() == d->id())
                     {
                         // no need to fetch it, just mark the existing data as valid
-                        validData[d->name()] = dataHash[ d->name() ];
+                        validData[d->name()] = dataHash[ d->name()];
                     }
                     else {
                         // need to fetch it from the server
-                        req.request( d->name(), d->id() );
+                        req.request( d->name(), d->id());
                     }
                 }
                 // get the stream data
@@ -117,8 +118,8 @@ QHash<QString, DataBlob*> PelicanServerClient::_response(QIODevice& device, boos
                     std::vector<char> tmp;
                     tmp.resize(sd->size());
                     int timeout = 2000;
-                    unsigned long bytesRead = 0;
-                    while( bytesRead != sd->size() )
+                    unsigned long bytesReadTotal = 0;
+                    while( bytesReadTotal != sd->size() )
                     {
                         while (device.bytesAvailable() < 1 )
                         {
@@ -127,17 +128,17 @@ QHash<QString, DataBlob*> PelicanServerClient::_response(QIODevice& device, boos
                                 return validData;
                             }
                         }
-                        int res = device.read( &tmp[0 + bytesRead] , sd->size() );
-                        if( res == -1 ) {
+                        int bytesRead = device.read(&tmp[0 + bytesReadTotal], sd->size());
+                        if(bytesRead == -1) {
                             log(QString("problem reading from server") + device.errorString() );
                             return validData;
                         }
-                        bytesRead += res; 
+                        bytesReadTotal += bytesRead;
                     }
-                    Q_ASSERT(tmp.size() == sd->size() );
-                    // fetch the service data
-                    validData.unite( _getServiceData(req, dataHash) );
-                    // now we can adapt the stream data
+                    Q_ASSERT(tmp.size() == sd->size());
+                    // Fetch the service data
+                    validData.unite(_getServiceData(req, dataHash));
+                    // Now we can adapt the stream data
                     QByteArray tmp_array =  QByteArray::fromRawData(&tmp[0], tmp.size());
                     QBuffer buf(&tmp_array);
                     buf.open(QIODevice::ReadOnly);
@@ -147,7 +148,7 @@ QHash<QString, DataBlob*> PelicanServerClient::_response(QIODevice& device, boos
             break;
         case ServerResponse::ServiceData:
             {
-                // service data
+                // Service data
                 ServiceDataResponse* res = static_cast<ServiceDataResponse*>(r.get());
                 foreach( const Data* d, res->data() ) {
                     QString type = d->name();

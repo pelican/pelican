@@ -5,7 +5,7 @@
 namespace pelican {
 
 CPPUNIT_TEST_SUITE_REGISTRATION( VisibilityPositionsTest );
-// class DataRequirementsTest 
+// class DataRequirementsTest
 VisibilityPositionsTest::VisibilityPositionsTest()
     : CppUnit::TestFixture()
 {
@@ -30,7 +30,7 @@ void VisibilityPositionsTest::tearDown()
  */
 void VisibilityPositionsTest::test_accessorMethods()
 {
-    int nAnt = 96;
+    unsigned nAnt = 96;
     double c = 299792458.0;
     double refFreq = 1.0e8;
     double freqInc = 1.0e6;
@@ -39,8 +39,8 @@ void VisibilityPositionsTest::test_accessorMethods()
     visPos.refFreq() = refFreq;
     visPos.freqInc() = freqInc;
 
-    for (int j = 0; j < nAnt; j++) {
-        for (int i = 0; i < nAnt; i++) {
+    for (unsigned j = 0; j < nAnt; j++) {
+        for (unsigned i = 0; i < nAnt; i++) {
             visPos.u(i, j) = static_cast<real_t>((j - i) * (refFreq / c));
             visPos.v(i, j) = static_cast<real_t>((2 * j - i) * (refFreq / c));
             visPos.w(i, j) = static_cast<real_t>(j * (refFreq / c));
@@ -48,22 +48,23 @@ void VisibilityPositionsTest::test_accessorMethods()
     }
 
     real_t* u = visPos.uPtr();
-    real_t* v = visPos.uPtr();
-    real_t* w = visPos.uPtr();
-    CPPUNIT_ASSERT(visPos.freqScaleFactor(1) == 1.01);
-    CPPUNIT_ASSERT(visPos.freqScaleFactor(20) == 1.2);
+    real_t* v = visPos.vPtr();
+    real_t* w = visPos.wPtr();
+    double delta = 1.0e-5;
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(1.01, visPos.freqScaleFactor(1), delta);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(1.2, visPos.freqScaleFactor(20), delta);
 
-    for (int j = 0; j < nAnt; j++) {
-        for (int i = 0; i < nAnt; i++) {
+    for (unsigned j = 0; j < nAnt; j++) {
+        for (unsigned i = 0; i < nAnt; i++) {
             real_t uval = static_cast<real_t>((j - i) * (refFreq / c));
             real_t vval = static_cast<real_t>((2 * j - i) * (refFreq / c));
             real_t wval = static_cast<real_t>(j * (refFreq / c));
-            CPPUNIT_ASSERT(visPos.u(i,j) == uval);
-            CPPUNIT_ASSERT(u[j * nAnt + i] == uval);
-            CPPUNIT_ASSERT(visPos.v(i,j) == vval);
-            CPPUNIT_ASSERT(v[j * nAnt + i] == uval);
-            CPPUNIT_ASSERT(visPos.w(i,j) == wval);
-            CPPUNIT_ASSERT(w[j * nAnt + i] == uval);
+            CPPUNIT_ASSERT_DOUBLES_EQUAL(uval, visPos.u(i, j), delta);
+            CPPUNIT_ASSERT_DOUBLES_EQUAL(uval, u[j * nAnt + i], delta);
+            CPPUNIT_ASSERT_DOUBLES_EQUAL(vval, visPos.v(i, j), delta);
+            CPPUNIT_ASSERT_DOUBLES_EQUAL(vval, v[j * nAnt + i], delta);
+            CPPUNIT_ASSERT_DOUBLES_EQUAL(wval, visPos.w(i, j), delta);
+            CPPUNIT_ASSERT_DOUBLES_EQUAL(wval, w[j * nAnt + i], delta);
         }
     }
 }

@@ -125,14 +125,16 @@ void FlagTableTest::test_accessorMethodsLinear()
     // Fill the flag matrix for timing purposes.
     TIMER_START
     for (unsigned index = 0; index < nTotal; index++) {
-        unsigned char val = (index % 2 == 0) ? FlagTable::FLAG_AUTOCORR : 0;
+        unsigned char val = (index % 2 == 0) ?
+                FlagTable::FLAG_AUTOCORR : 0;
         data[index] = val;
     }
     TIMER_STOP("FlagTable::operator[]. Linear data write time")
 
     // Fill the flag matrix and read it out again.
     for (unsigned index = 0; index < nTotal; index++) {
-        unsigned char val = (index % 2 == 0) ? FlagTable::FLAG_AUTOCORR : 0;
+        unsigned char val = (index % 2 == 0) ?
+                FlagTable::FLAG_AUTOCORR : 0;
         data[index] = val;
         CPPUNIT_ASSERT_EQUAL( val, data(index) );
         CPPUNIT_ASSERT_EQUAL( val, data[index] );
@@ -220,7 +222,7 @@ void FlagTableTest::test_flag()
         const unsigned sPol = 1;
         TIMER_START
         data.flag(sChannel, sPol, FlagTable::FLAG_RFI_BAD);
-        TIMER_STOP("FlagTable::flag(). One channel, all %d antennas", nAntennas)
+        TIMER_STOP("FlagTable::flag(). One channel, all %u antennas", nAntennas)
         for (unsigned p = 0; p < nPols; ++p) {
             for (unsigned c = 0; c < nChannels; ++c) {
                 for (unsigned aj = 0; aj < nAntennas; ++aj) {
@@ -247,8 +249,8 @@ void FlagTableTest::test_flag()
         for (unsigned c = sChannelStart; c <= sChannelEnd; c++) {
             data.flag(c, sPol, FlagTable::FLAG_RFI_BAD);
         }
-        TIMER_STOP("FlagTable::flag(). One pol, all %d channels, "
-                "all %d antennas", nChannels, nAntennas)
+        TIMER_STOP("FlagTable::flag(). One pol, all %u channels, "
+                "all %u antennas", nChannels, nAntennas)
         for (unsigned p = 0; p < nPols; ++p) {
             for (unsigned c = 0; c < nChannels; ++c) {
                 for (unsigned aj = 0; aj < nAntennas; ++aj) {

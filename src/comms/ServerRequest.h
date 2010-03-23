@@ -12,7 +12,7 @@ namespace pelican {
 
 /**
  * @class ServerRequest
- *  
+ *
  * @brief
  * Encapsulates the data requests to the server.
  *
@@ -34,7 +34,7 @@ class ServerRequest
         : _type(type), _error(msg) {}
 
         /// Destroys the ServerRequest object.
-        ~ServerRequest() {}
+        virtual ~ServerRequest() {}
 
         /// Returns the request type.
         Request type() const {return _type;}
@@ -53,4 +53,4 @@ class ServerRequest
 
 } // namespace pelican
 
-#endif // SERVERREQUEST_H 
+#endif // SERVERREQUEST_H

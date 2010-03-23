@@ -1,7 +1,7 @@
-#include "TestPipelineCalibrateImageTest.h"
+#include "pipelines/TestPipelineCalibrateImage.h"
+#include "pipelines/test/TestPipelineCalibrateImageTest.h"
 #include "core/PipelineApplication.h"
 #include "core/AbstractPipeline.h"
-#include "pipelines/TestPipelineCalibrateImage.h"
 #include "utility/pelicanTimer.h"
 #include "utility/TestConfig.h"
 #include <QCoreApplication>

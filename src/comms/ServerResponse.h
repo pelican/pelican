@@ -10,7 +10,7 @@ namespace pelican {
 
 /**
  * @class ServerResponse
- *  
+ *
  * @brief
  * Base class to manage all responses from the pelican server.
  *
@@ -31,7 +31,7 @@ class ServerResponse
         : _type(type), _msg(msg) {}
 
         /// Destroys the ServerResponse object.
-        ~ServerResponse() {}
+        virtual ~ServerResponse() {}
 
         /// Returns the response type.
         Response type() const {return _type;}
@@ -42,4 +42,4 @@ class ServerResponse
 
 } // namespace pelican
 
-#endif // SERVERRESPONSE_H 
+#endif // SERVERRESPONSE_H

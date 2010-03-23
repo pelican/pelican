@@ -193,10 +193,10 @@ QDomElement Config::_set(const TreeAddress_t &address)
         parent = e;
     }
 
-    for (int i = 0; i < address.size(); i++) {
+    for (int a = 0; a < address.size(); a++) {
 
-        QString tag  = address.at(i).first;
-        QString name = address.at(i).second;
+        QString tag  = address.at(a).first;
+        QString name = address.at(a).second;
 
         /* Find child nodes of the specified tag type */
         QDomNodeList children = parent.childNodes();
@@ -256,10 +256,10 @@ QDomElement Config::_get(const TreeAddress_t &address) const
         return QDomElement();
     }
 
-    for (int i = 0; i < address.size(); i++) {
+    for (int a = 0; a < address.size(); a++) {
 
-        QString tag  = address.at(i).first;
-        QString name = address.at(i).second;
+        QString tag  = address.at(a).first;
+        QString name = address.at(a).second;
 
         /* Find child nodes of the specified tag type */
         QDomNodeList children = parent.childNodes();

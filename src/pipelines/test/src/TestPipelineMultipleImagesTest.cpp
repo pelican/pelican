@@ -1,5 +1,4 @@
-#include "TestPipelineMultipleImagesTest.h"
-
+#include "pipelines/test/TestPipelineMultipleImagesTest.h"
 #include "core/PipelineApplication.h"
 #include "core/AbstractPipeline.h"
 #include "pipelines/TestPipelineMultipleImages.h"

@@ -23,7 +23,7 @@
 namespace pelican {
 
 CPPUNIT_TEST_SUITE_REGISTRATION( SessionTest );
-// class SessionTest 
+// class SessionTest
 SessionTest::SessionTest()
     : CppUnit::TestFixture()
 {
@@ -39,7 +39,6 @@ SessionTest::~SessionTest()
 void SessionTest::setUp()
 {
     QString id = "1";
-    _data=0, _session=0, _block=0, _device=0;
     _proto = new TestProtocol(id);
     _data = new DataManager;
     _session = new Session(0, _proto, _data);
@@ -49,8 +48,8 @@ void SessionTest::setUp()
 
 void SessionTest::tearDown()
 {
-    delete _data;
     delete _proto;
+    delete _data;
     delete _session;
     delete _block;
     delete _device;
@@ -85,7 +84,7 @@ void SessionTest::test_processRequest()
         AbstractProtocol::StreamData_t data = _proto->lastStreamData();
         CPPUNIT_ASSERT_EQUAL( 0, data.size() );
     }
-    QString version1 = _injectData(streambuffer, "version1");
+    _injectData(streambuffer, "version1");
     {
         // Use Case:
         // Request a single StreamData, with data available
@@ -102,7 +101,6 @@ void SessionTest::test_processRequest()
         CPPUNIT_ASSERT_EQUAL( 10 , (int)data[0]->size() );
         CPPUNIT_ASSERT_EQUAL( 0 , (int)data[0]->associateData().size() );
     }
-
 }
 
 void SessionTest::test_dataReport()

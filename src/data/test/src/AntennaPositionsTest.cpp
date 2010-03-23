@@ -6,7 +6,7 @@
 namespace pelican {
 
 CPPUNIT_TEST_SUITE_REGISTRATION( AntennaPositionsTest );
-// class DataRequirementsTest 
+// class DataRequirementsTest
 AntennaPositionsTest::AntennaPositionsTest()
     : CppUnit::TestFixture()
 {
@@ -52,17 +52,18 @@ void AntennaPositionsTest::test_accessorMethods()
         real_t ypos = static_cast<real_t>(i + 0.5);
         real_t zpos = static_cast<real_t>(i + 0.75);
 
-        CPPUNIT_ASSERT(antPos.x(i) == xpos);
-        CPPUNIT_ASSERT(xPtr[i] == xpos);
-        CPPUNIT_ASSERT(x[i] == xpos);
+        double delta = 1.0e-5;
+        CPPUNIT_ASSERT_DOUBLES_EQUAL(xpos, antPos.x(i), delta);
+        CPPUNIT_ASSERT_DOUBLES_EQUAL(xpos, xPtr[i], delta);
+        CPPUNIT_ASSERT_DOUBLES_EQUAL(xpos, x[i], delta);
 
-        CPPUNIT_ASSERT(antPos.y(i) == ypos);
-        CPPUNIT_ASSERT(yPtr[i] == ypos);
-        CPPUNIT_ASSERT(y[i] == ypos);
+        CPPUNIT_ASSERT_DOUBLES_EQUAL(ypos, antPos.y(i), delta);
+        CPPUNIT_ASSERT_DOUBLES_EQUAL(ypos, yPtr[i], delta);
+        CPPUNIT_ASSERT_DOUBLES_EQUAL(ypos, y[i], delta);
 
-        CPPUNIT_ASSERT(antPos.z(i) == zpos);
-        CPPUNIT_ASSERT(zPtr[i] == zpos);
-        CPPUNIT_ASSERT(z[i] == zpos);
+        CPPUNIT_ASSERT_DOUBLES_EQUAL(zpos, antPos.z(i), delta);
+        CPPUNIT_ASSERT_DOUBLES_EQUAL(zpos, zPtr[i], delta);
+        CPPUNIT_ASSERT_DOUBLES_EQUAL(zpos, z[i], delta);
     }
 }
 

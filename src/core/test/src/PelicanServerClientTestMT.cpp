@@ -50,8 +50,8 @@ void PelicanServerClientTestMT::test_getData()
     QString service1("service1");
     QString version1("version1");
     QString version2("version2");
-    DataRequirements req;
-    req.addStreamData(stream1);
+    DataRequirements reqStream1;
+    reqStream1.addStreamData(stream1);
     QByteArray data1("data1");
     QByteArray data2("data2");
     unsigned int port = server.port();
@@ -101,7 +101,7 @@ void PelicanServerClientTestMT::test_getData()
 
         // setup the test
         QList<DataRequirements> lreq;
-        lreq.append(req);
+        lreq.append(reqStream1);
         DataTypes dt;
         dt.addData(lreq);
         dt.setAdapter(stream1, &streamAdapter);

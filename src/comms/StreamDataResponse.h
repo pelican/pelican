@@ -12,12 +12,12 @@ namespace pelican {
 
 /**
  * @class StreamDataResponse
- *  
+ *
  * @brief
  * Class to represent a set of stream data returned from the server.
  *
  * @details
- * 
+ *
  */
 class StreamDataResponse : public ServerResponse
 {
@@ -40,4 +40,4 @@ class StreamDataResponse : public ServerResponse
 
 } // namespace pelican
 
-#endif // STREAMDATARESPONSE_H 
+#endif // STREAMDATARESPONSE_H
