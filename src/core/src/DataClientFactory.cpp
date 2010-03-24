@@ -5,6 +5,7 @@
 #include "data/DataRequirements.h"
 #include "adapters/AdapterFactory.h"
 
+#include <iostream>
 
 #include "utility/memCheck.h"
 

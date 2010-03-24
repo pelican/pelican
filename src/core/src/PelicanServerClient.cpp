@@ -55,7 +55,8 @@ QHash<QString, DataBlob*> PelicanServerClient::getData(QHash<QString, DataBlob*>
     QHash<QString, DataBlob*> validData;
     QSet<QString> reqs = _requireSet;
     if( ! reqs.subtract(QSet<QString>::fromList(dataHash.keys())).isEmpty() )
-        throw(QString("PelicanServerClient::getData() data hash does not contain objects for all possible requests"));
+        throw(QString("PelicanServerClient::getData() data hash does not "
+                "contain objects for all possible requests"));
 
     // construct the request
     StreamDataRequest sr;
@@ -67,7 +68,8 @@ QHash<QString, DataBlob*> PelicanServerClient::getData(QHash<QString, DataBlob*>
         validData.unite( _sendRequest(sr, dataHash) );
     }
     else {
-        throw(QString("Request for non-stream data"));
+        throw(QString("PelicanServerClient::getData(): "
+                "Request for non-stream data"));
     }
 
     return validData;
@@ -82,7 +84,7 @@ QHash<QString, DataBlob*> PelicanServerClient::_response(QIODevice& device,
 
     switch( r->type() ) {
         case ServerResponse::Error:
-            std::cerr << "Server Error: " << r->message().toStdString() << std::endl;
+            std::cerr << "PelicanServerClient: Server Error: " << r->message().toStdString() << std::endl;
             break;
         case ServerResponse::StreamData:
             {
@@ -124,13 +126,13 @@ QHash<QString, DataBlob*> PelicanServerClient::_response(QIODevice& device,
                         while (device.bytesAvailable() < 1 )
                         {
                             if ( !device.waitForReadyRead(timeout) ) {
-                                log(QString("timed out from server") + device.errorString() );
+                                log(QString("PelicanServerClient: Timed out from server.") + device.errorString() );
                                 return validData;
                             }
                         }
                         int bytesRead = device.read(&tmp[0 + bytesReadTotal], sd->size());
                         if(bytesRead == -1) {
-                            log(QString("problem reading from server") + device.errorString() );
+                            log(QString("PelicanServerClient: Problem reading from server.") + device.errorString() );
                             return validData;
                         }
                         bytesReadTotal += bytesRead;
@@ -162,7 +164,7 @@ QHash<QString, DataBlob*> PelicanServerClient::_response(QIODevice& device,
             }
             break;
         default:
-            std::cerr << "Unknown Response" << std::endl;
+            std::cerr << "PelicanServerClient: Unknown Response" << std::endl;
             break;
     }
     return validData;

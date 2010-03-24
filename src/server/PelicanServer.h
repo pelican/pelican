@@ -55,7 +55,7 @@ class PelicanServer : public QThread
     protected:
         // code to be executed in the thread ( via start() )
         void run();
-        void _addChunker(AbstractChunker*, const QString& host, quint16 port);
+        void _addChunker(AbstractChunker*);
 
     private:
         QMap<quint16,AbstractProtocol* > _protocolPortMap;

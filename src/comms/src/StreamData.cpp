@@ -1,5 +1,6 @@
 #include "StreamData.h"
 #include "Data.h"
+#include <iostream>
 
 #include "utility/memCheck.h"
 
@@ -44,6 +45,7 @@ void StreamData::addAssociatedData(boost::shared_ptr<Data> data)
 
 bool StreamData::isValid() const
 {
+    std::cout << "HELLO AGAIN" << std::endl;
     bool rv = Data::isValid();
     if( rv ) {
         foreach(const boost::shared_ptr<Data>& d, _associateData) {

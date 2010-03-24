@@ -42,28 +42,30 @@ void PelicanServer::addProtocol(AbstractProtocol* proto, quint16 port)
 
 void PelicanServer::addStreamChunker( AbstractChunker* chunker, const QString& host, quint16 port)
 {
-    _addChunker(chunker,host,port);
+    _addChunker(chunker);
     _streamDataTypes.insert( chunker->type() );
 }
 
 void PelicanServer::addServiceChunker( AbstractChunker* chunker, const QString& host, quint16 port)
 {
-    _addChunker(chunker,host,port);
+    _addChunker(chunker);
     _serviceDataTypes.insert( chunker->type() );
 }
 
 
-void PelicanServer::_addChunker( AbstractChunker* chunker, const QString& host, quint16 port)
+void PelicanServer::_addChunker( AbstractChunker* chunker)
 {
     if( chunker ) {
         if( _streamDataTypes.contains(chunker->type()) || _serviceDataTypes.contains(chunker->type()) ) {
             throw( QString("PelicanServer:  input stream \"") + chunker->type() + "\" is already assigned");
         }
-        QPair<QString,quint16> pair(host,port);
-        if( _chunkerPortMap.contains(pair) ) {
-            delete chunker;
-            throw QString("Cannot map multiple chunkers to the same host/port ("
-                    + host + "/" + QString().setNum(port)) + ")";
+        QPair<QString,quint16> pair(chunker->host(), chunker->port());
+        if (!chunker->host().isEmpty()) {
+            if( _chunkerPortMap.contains(pair) ) {
+                delete chunker;
+                throw QString("Cannot map multiple chunkers to the same host/port ("
+                        + chunker->host() + "/" + QString().setNum(chunker->port())) + ")";
+            }
         }
         _chunkerPortMap[pair] = chunker;
     }
@@ -91,7 +93,7 @@ void PelicanServer::run()
     for (int i = 0; i < inputPorts.size(); ++i) {
         boost::shared_ptr<DataReceiver> listener( new DataReceiver(_chunkerPortMap[inputPorts[i]], &dataManager ) );
         chunkers.append(listener);
-        listener->listen( inputPorts[i].first, inputPorts[i].second );
+        listener->listen();
     }
 
     // set up listening servers
@@ -100,7 +102,7 @@ void PelicanServer::run()
         boost::shared_ptr<PelicanPortServer> server( new PelicanPortServer(_protocolPortMap[ports[i]], &dataManager ) );
         servers.append(server);
         if ( !server->listen(QHostAddress::Any, ports[i] )) {
-            throw QString(QString("Unable to start pelicanServer on port='") + QString().setNum(ports[i])+ QString("'"));
+            throw QString(QString("Unable to start PelicanServer on port='") + QString().setNum(ports[i])+ QString("'"));
         }
     }
     _mutex.lock();

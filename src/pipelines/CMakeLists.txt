@@ -1,7 +1,8 @@
 INCLUDE_DIRECTORIES(${QT_INCLUDES})
-SUBPACKAGE(pipelines utility data modules core)
+SUBPACKAGE(pipelines utility data modules core server serverTest)
 set( pipelines_src
     src/TestPipelineVisibilityPrinter.cpp
+    src/TestPipelineServer.cpp
     src/TestPipelineRawImage.cpp
     src/TestPipelineCalibrateImage.cpp
     src/TestPipelineMultipleImages.cpp

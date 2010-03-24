@@ -70,7 +70,7 @@ void SessionTest::test_processRequest()
     // Set up stream data for remaining tests
     QString stream1("test");
     StreamDataBuffer* streambuffer = new StreamDataBuffer(stream1);
-    _data->streamDataBuffer( stream1, streambuffer );
+    _data->setStreamDataBuffer( stream1, streambuffer );
     {
         // Use Case:
         // Request a single StreamData, no data available
@@ -135,11 +135,11 @@ void SessionTest::test_processServiceDataRequest()
     QString badtype("bad");
     QString type1("type1");
     ServiceDataBuffer* servicebuffer1 = new ServiceDataBuffer("test");
-    _data->serviceDataBuffer( type1, servicebuffer1 );
+    _data->setServiceDataBuffer( type1, servicebuffer1 );
     QString version1 = _injectData(servicebuffer1, "version1");
     QString type2("type2");
     ServiceDataBuffer* servicebuffer2 = new ServiceDataBuffer("test");
-    _data->serviceDataBuffer( type2, servicebuffer2 );
+    _data->setServiceDataBuffer( type2, servicebuffer2 );
     QString version2 = _injectData(servicebuffer2, "version2");
     {
         // Use Case:
@@ -186,7 +186,7 @@ void SessionTest::test_streamData()
     // Set up stream data for remaining tests
     QString stream1("Stream1");
     StreamDataBuffer* streambuffer = new StreamDataBuffer(stream1);
-    _data->streamDataBuffer( stream1, streambuffer );
+    _data->setStreamDataBuffer( stream1, streambuffer );
     {
         // Use Case:
         // Request StreamData for a stream that is not supported by the server
@@ -230,7 +230,7 @@ void SessionTest::test_streamData()
     // Set up service data stream for remaining tests
     QString service1("service1");
     ServiceDataBuffer* servicebuffer = new ServiceDataBuffer("test");
-    _data->serviceDataBuffer( service1, servicebuffer );
+    _data->setServiceDataBuffer( service1, servicebuffer );
     {
         // Use Case:
         // Request StreamData for a stream that is supported and the data exists

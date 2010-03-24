@@ -1,7 +1,7 @@
 #ifndef TESTCHUNKER_H
 #define TESTCHUNKER_H
 #include <QString>
-#include "AbstractChunker.h"
+#include "server/AbstractChunker.h"
 
 /**
  * @file TestChunker.h
@@ -14,19 +14,29 @@ class DataManager;
  * @class TestChunker
  *
  * @brief
- *   Implemnetation of an AbstractChunker to monitor
- *   calling
+ * Implemnetation of an AbstractChunker to monitor calling.
+ *
  * @details
  * 
  */
-
 class TestChunker : public AbstractChunker
 {
     public:
-        TestChunker(DataManager* dm, const QString& name="test", bool badSocket=false);
-        ~TestChunker();
-        virtual QAbstractSocket* newSocket() const;
-        virtual void next(QAbstractSocket*);
+        /// Constructs a new TestChunker.
+        TestChunker(DataManager* dm, const QString& type = "ChunkType",
+                bool badSocket = false, size_t size = 0, QString host = "",
+                quint16 port = 0)
+        : AbstractChunker(type, dm, host, port), _badSocket(badSocket),
+        _nextCount(0), _size(size) {}
+
+        /// Destroys the TestChunker.
+        ~TestChunker() {}
+
+        /// Creates the socket to use for the incoming data stream.
+        virtual QIODevice* newDevice();
+
+        ///
+        virtual void next(QIODevice*);
 
         /// return the number of times that the next method has been called
         //  will also reset the counter
@@ -35,7 +45,9 @@ class TestChunker : public AbstractChunker
     private:
         bool _badSocket;
         unsigned int _nextCount;
+        size_t _size;
 };
 
 } // namespace pelican
+
 #endif // TESTCHUNKER_H 

@@ -6,6 +6,7 @@
 #include "comms/StreamData.h"
 #include <QMutexLocker>
 #include <stdlib.h>
+#include <iostream>
 
 
 #include "utility/memCheck.h"
@@ -29,11 +30,20 @@ StreamDataBuffer::~StreamDataBuffer()
         delete data;
 }
 
+/**
+ * @details
+ * TODO please!
+ */
 void StreamDataBuffer::getNext(LockedData& lockedData)
 {
     QMutexLocker locker(&_mutex);
-    if( ! _serveQueue.isEmpty() )
+    if( ! _serveQueue.isEmpty() ) {
+        std::cout << "Serve queue not empty."  << std::endl;
         lockedData.setData(_serveQueue.dequeue());
+        return;
+    } else {
+        std::cout << "Serve queue empty."  << std::endl;
+    }
     lockedData.setData(0);
 }
 
@@ -52,6 +62,8 @@ WritableData StreamDataBuffer::getWritable(size_t size)
     // - add Service Data info
     if( d ) {
         d->reset();
+        if (!_manager)
+            throw QString("StreamDataBuffer::getWritable(): No data manager.");
         _manager->associateServiceData(d);
     }
     return WritableData( d );
@@ -88,10 +100,12 @@ LockableStreamData* StreamDataBuffer::_getWritable(size_t size)
     if(size <= _space && size <= _maxChunkSize )
     {
         void* memory = malloc(size);
+        std::cout << "Allocated memory" << std::endl;
         if (memory) {
             _space -= size;
             LockableStreamData* lockableData = new LockableStreamData(_type, memory, size);
             _data.append(lockableData);
+            std::cout << "Appended the data to the list" << std::endl;
             Q_ASSERT(connect( lockableData, SIGNAL(unlockedWrite()), this, SLOT(activateData() ) ));
             Q_ASSERT(connect( lockableData, SIGNAL(unlocked()), this, SLOT(deactivateData() ) ));
             return lockableData;
@@ -110,6 +124,7 @@ LockableStreamData* StreamDataBuffer::_getWritable(size_t size)
  */
 void StreamDataBuffer::activateData()
 {
+    std::cout << "Activate data slot" << std::endl;
     activateData( static_cast<LockableStreamData*>(sender()) );
 }
 
@@ -144,11 +159,15 @@ void StreamDataBuffer::deactivateData(LockableStreamData* data)
  */
 void StreamDataBuffer::activateData(LockableStreamData* data)
 {
+    std::cout << "Activate data" << std::endl;
     QMutexLocker locker(&_mutex);
-    if( data->isValid() )
+    if( data->isValid() ) {
+        std::cout << "Activate data: is valid" << std::endl;
         _serveQueue.enqueue(data);
-    else
+    } else {
+        std::cout << "Activate data not valid" << std::endl;
         _emptyQueue.enqueue(data);
+    }
 }
 
 } // namespace pelican

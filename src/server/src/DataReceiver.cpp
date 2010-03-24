@@ -1,5 +1,5 @@
 #include "DataReceiver.h"
-#include <QAbstractSocket>
+#include <QIODevice>
 #include <QTimer>
 #include <iostream>
 #include "AbstractChunker.h"
@@ -19,7 +19,7 @@ DataReceiver::DataReceiver(AbstractChunker* chunker, DataManager* dm, QObject* p
 {
     Q_ASSERT( dm != 0 );
     if ( !chunker ) throw QString("DataReceiver: Invalid Chunker");
-    _socket = 0;
+    _device = 0;
     _port = 0;
 }
 
@@ -33,8 +33,8 @@ DataReceiver::~DataReceiver()
     // If the thread has started, call quit() to exit the event loop.
     if (isRunning()) while (!isFinished()) quit();
     wait();
-    if( _socket )
-        delete _socket;
+    if( _device )
+        delete _device;
 }
 
 /**
@@ -48,43 +48,42 @@ DataReceiver::~DataReceiver()
  */
 void DataReceiver::run()
 {
-    // Open up a socket.
-    _socket = _chunker->newSocket();
-    if( _socket )
+    // Open up the device to use.
+    _device = _chunker->newDevice();
+    std::cout << "DataReceiver::run" << std::endl;
+    if( _device )
     {
-        Q_ASSERT( connect(_socket, SIGNAL( readyRead() ),
+        std::cout << "DataReceiver::run(): Socket OK" << std::endl;
+        Q_ASSERT( connect(_device, SIGNAL( readyRead() ),
                     this, SLOT(processIncomingData()) ) );
-        _socket->connectToHost( _host, _port );
+        _device->write("hello");
         exec(); // Enter event loop here.
     }
-    delete _socket;
-    _socket = NULL; // Must be set to null here.
+    delete _device;
+    _device = NULL; // Must be set to null here.
 }
 
 /**
  * @details
- * Starts the DataReceiver thread if the host name and port number
- * have been set.
- *
- * @param[in] host A string containing the host name.
- * @param[in] port The port number to use.
+ * Starts the DataReceiver thread.
  */
-void DataReceiver::listen(const QString& host, quint16 port)
+void DataReceiver::listen()
 {
-    _host = host;
-    if ( ! _host.isEmpty() && port > 0 ) {
-        _port = port;
+//    _host = host;
+//    if ( ! _host.isEmpty() && port > 0 ) {
+//        _port = port;
         start();
-    }
+//    }
 }
 
 /**
  * @details
- * TODO Write a description of what this does, please!
+ * This slot is called when data is available on the
  */
 void DataReceiver::processIncomingData()
 {
-    _chunker->next( _socket );
+    std::cout << "Processing data in slot" << std::endl;
+    _chunker->next( _device );
 }
 
 } // namespace pelican

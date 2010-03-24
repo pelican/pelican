@@ -80,6 +80,9 @@ boost::shared_ptr<ServerResponse> PelicanClientProtocol::receive(QAbstractSocket
     in.setVersion(QDataStream::Qt_4_0);
     in >> (quint16&)type;
 
+    std::cout << "Type: " << type << std::endl;
+
+
     switch(type) {
         case ServerResponse::Acknowledge:
             break;
@@ -132,7 +135,7 @@ boost::shared_ptr<ServerResponse> PelicanClientProtocol::receive(QAbstractSocket
         default:
             break; 
     }
-    return boost::shared_ptr<ServerResponse>(new ServerResponse(ServerResponse::Error, "Unknown type Passed"));
+    return boost::shared_ptr<ServerResponse>(new ServerResponse(ServerResponse::Error, "PelicanClientProtocol: Unknown type passed"));
 }
 
 void PelicanClientProtocol::_serializeDataRequirements(QDataStream& stream, const DataRequirements& req) const

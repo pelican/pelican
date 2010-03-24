@@ -16,37 +16,43 @@ class Data;
  * @class LockableData
  *  
  * @brief
- *    Primary interface to access Chunks of data in the server
+ * Primary interface to access chunks of data in the server.
+ *
  * @details
- *    This class takes care of locking etc.
+ * This class takes care of locking etc.
  */
-
 class LockableData : public AbstractLockableData
 {
-
     Q_OBJECT
 
     public:
-        LockableData(const QString& name="", void* data=0, size_t size=0, QObject* parent=0);
-        virtual ~LockableData();
-        /// return the size of the stored data
-        size_t size() const;
-        /// sets the size of the stored data
+        /// Constructs a new LockableData object.
+        LockableData(const QString& name = "", void* data = 0,
+                size_t size = 0, QObject* parent = 0);
+
+        /// Destroys the LockableData object.
+        virtual ~LockableData() {}
+
+        /// Return the size of the stored data.
+        size_t size() const {return _data->size();}
+
+        /// Sets the size of the stored data.
         //void setSize(size_t);
 
-        /// returns a pointer to the beginning of the memory block
-        void* memoryLocation();
+        /// Returns a pointer to the beginning of the memory block.
+        void* memoryLocation() {return _data->operator*();}
 
-        /// return the name of the data
-        QString name() const;
+        /// Return the name of the data.
+        QString name() const {return _data->name();}
 
-        /// returns true if there isany valid data in the object
-        virtual bool isValid() const;
+        /// Returns true if there isany valid data in the object.
+        virtual bool isValid() const {return _data->isValid();}
 
     private:
-        LockableData(const LockableData&); // disallow the copy constructor
-
+        /// Disallow the copy constructor.
+        LockableData(const LockableData&);
 };
 
 } // namespace pelican
+
 #endif // LOCKABLEDATA_H 

@@ -19,10 +19,12 @@ namespace pelican {
  */
 DataManager::~DataManager()
 {
-    foreach(StreamDataBuffer* s, _streams)
+    foreach(StreamDataBuffer* s, _streams) {
         delete s;
-    foreach(ServiceDataBuffer* s, _service)
+    }
+    foreach(ServiceDataBuffer* s, _service) {
         delete s;
+    }
 }
 
 /**
@@ -48,7 +50,7 @@ WritableData DataManager::getWritableData(const QString& type, size_t size)
 StreamDataBuffer* DataManager::getStreamBuffer(const QString& type)
 {
     if ( ! _streams.contains(type) )
-        streamDataBuffer( type, new StreamDataBuffer(type) );
+        setStreamDataBuffer( type, new StreamDataBuffer(type) );
     return _streams[type];
 }
 
@@ -62,18 +64,28 @@ StreamDataBuffer* DataManager::getStreamBuffer(const QString& type)
 ServiceDataBuffer* DataManager::getServiceBuffer(const QString& type)
 {
     if ( ! _service.contains(type) )
-        serviceDataBuffer( type, new ServiceDataBuffer(type) );
+        setServiceDataBuffer( type, new ServiceDataBuffer(type) );
     return _service[type];
 }
 
-void DataManager::streamDataBuffer( const QString& name, StreamDataBuffer* buffer)
+/**
+ * @details
+ * Note that the DataManager takes ownership of the StreamDataBuffer, and will
+ * delete it on destruction.
+ */
+void DataManager::setStreamDataBuffer( const QString& name, StreamDataBuffer* buffer)
 {
     _specs.setStreamData(name);
     buffer->setDataManager(this);
     _streams[name]=buffer;
 }
 
-void DataManager::serviceDataBuffer(const QString& name, ServiceDataBuffer* buffer )
+/**
+ * @details
+ * Note that the DataManager takes ownership of the ServiceDataBuffer, and will
+ * delete it on destruction.
+ */
+void DataManager::setServiceDataBuffer(const QString& name, ServiceDataBuffer* buffer )
 {
     _specs.setServiceData(name);
     _service[name]=buffer;
@@ -82,13 +94,17 @@ void DataManager::serviceDataBuffer(const QString& name, ServiceDataBuffer* buff
 /**
  * @details
  *
+ * TODO Please write a description of this!
+ *
  * We make the assumption that this method will not be called with an
  * invalid type. No checking in order to speed things up.
  */
 LockedData DataManager::getNext(const QString& type, const QSet<QString>& associateData )
 {
+    std::cout << "DataManager::getNext()" << std::endl;
     LockedData lockedData = getNext(type);
     if( lockedData.isValid() ) {
+        std::cout << "Valid locked data" << std::endl;
         // check it contains valid associateData
         LockableStreamData* streamData =
                 static_cast<LockableStreamData*>(lockedData.object());
@@ -102,6 +118,8 @@ LockedData DataManager::getNext(const QString& type, const QSet<QString>& associ
 
 /**
  * @details
+ *
+ * TODO Please write a description of this!
  *
  * We make the assumption that this method will not be called with an
  * invalid type. No checking in order to speed things up.

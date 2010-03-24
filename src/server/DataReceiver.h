@@ -4,7 +4,7 @@
 
 #include <QThread>
 #include <QString>
-class QAbstractSocket;
+class QIODevice;
 
 /**
  * @file DataReceiver.h
@@ -36,7 +36,7 @@ class DataReceiver : public QThread
         ~DataReceiver();
 
         /// Connect to the specified host and listen for incoming data.
-        void listen(const QString& host, quint16 port);
+        void listen();
 
     protected slots:
         /// TODO Write brief description.
@@ -48,7 +48,7 @@ class DataReceiver : public QThread
 
     private:
         AbstractChunker* _chunker;
-        QAbstractSocket* _socket;
+        QIODevice* _device; // This is usually a UDP socket.
         DataManager* _dm;
         QString _host;
         quint16 _port;

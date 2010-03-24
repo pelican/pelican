@@ -59,6 +59,7 @@ void Session::processRequest(const ServerRequest& req, QIODevice& out)
         switch(req.type()) {
             case ServerRequest::Acknowledge:
                 _proto->send(out,"ACK");
+                cout << "Sent acknowledgement" << endl;
                 break;
             case ServerRequest::StreamData:
                 {
@@ -86,6 +87,7 @@ void Session::processRequest(const ServerRequest& req, QIODevice& out)
                             data.append(lockedData->data().get());
                         }
                         _proto->send( out, data );
+                        cout << "Sent service data" << endl;
                     }
                 }
                 break;
@@ -96,6 +98,7 @@ void Session::processRequest(const ServerRequest& req, QIODevice& out)
     catch( const QString& e )
     {
         _proto->sendError( out, e );
+        cout << "Sent error: " << e.toStdString() << endl;
     }
 }
 
@@ -118,9 +121,10 @@ QList<LockedData> Session::processStreamDataRequest(const StreamDataRequest& req
         // attempt to get the required stream data
         foreach (const QString stream, it->streamData() )
         {
-            //std::cout << "stream: " << stream.toStdString() << std::endl;
+            std::cout << "stream: " << stream.toStdString() << std::endl;
             LockedData d = _dataManager->getNext(stream, it->serviceData() );
             if( ! d.isValid() ) {
+                cout << "NOT VALID!" << endl;
                 data.clear();
                 break; // one invalid stream invalidates the request
             }

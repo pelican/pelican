@@ -2,6 +2,7 @@
 #define LOCKEDDATA_H
 
 #include <QString>
+#include "AbstractLockable.h"
 
 /**
  * @file LockedData.h
@@ -9,38 +10,39 @@
 
 namespace pelican {
 
-class AbstractLockable;
-
 /**
  * @class LockedData
  *  
  * @brief
- *    A container that automatically locks and unlocks any AbstractLockable object
- *    added to it
+ * A container that automatically locks and unlocks any
+ * AbstractLockable object added to it.
+ *
  * @details
- *    On destruction the AbstractLockable read lock count will be less by one.
- * 
+ * On destruction the AbstractLockable read lock count will be less by one.
  */
-
 class LockedData
 {
     public:
+        /// Constructs a new LockedData object.
         LockedData(const QString& name, AbstractLockable* data = 0);
+
+        /// Destroys the LockedData object.
         ~LockedData();
-        /// copy constructor also locks the data also
+
+        /// Copy constructor also locks the data also.
         LockedData(const LockedData& data);
 
-        /// returns true if the object contains valid data
-        bool isValid() const;
+        /// Returns true if the object contains valid data.
+        bool isValid() const {return _data ? _data->isValid() : false;}
 
-        /// add a data object
+        /// Add a data object.
         void setData(AbstractLockable*);
 
-        /// return the locked object
-        AbstractLockable* object() const;
+        /// Return the locked object.
+        AbstractLockable* object() const {return _data;}
 
-        /// return the name of the data
-        QString name() const { return _name; };
+        /// Return the name of the data.
+        QString name() const {return _name;}
 
     private:
         AbstractLockable* _data;
@@ -48,4 +50,5 @@ class LockedData
 };
 
 } // namespace pelican
+
 #endif // LOCKEDDATA_H 

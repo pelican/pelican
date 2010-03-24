@@ -18,7 +18,7 @@ namespace pelican {
  * Base class for all chunker plug-ins.
  *
  * @details
- * Methods on this class are called by the DataListener class
+ * Methods on this class are called by the DataReceiver class
  * which sets up the necessary connections etc.
  */
 class AbstractChunker
@@ -26,26 +26,36 @@ class AbstractChunker
     private:
         DataManager* _dataManager;
         QString _type;
+        QString _host;
+        quint16 _port;
+
+    protected:
+        QIODevice* _device;
 
     public:
         /// Constructs a new AbstractChunker.
-        AbstractChunker(const QString& type, DataManager* dataManager)
-            : _dataManager(dataManager), _type(type) {}
+        AbstractChunker(const QString& type, DataManager* dataManager, QString host = "", quint16 port = 0)
+            : _dataManager(dataManager), _type(type), _device(NULL), _host(host), _port(port) {}
 
         /// Destroys the AbstractChunker.
-        virtual ~AbstractChunker() {}
+        virtual ~AbstractChunker();
 
         /// Return the type name to be associated with this data.
         const QString& type() const {return _type;}
 
-        /// Create a new socket appropriate to the type expected on the data stream.
-        /// By default, the new socket will be a UDP socket.
-        virtual QAbstractSocket* newSocket() const {return new QUdpSocket;}
+        /// Create a new device appropriate to the type expected on the data stream.
+        virtual QIODevice* newDevice() = 0;
 
         /// Called whenever there is data ready to be processed.
         /// Inheriting classes should process a complete data chunk
         /// inside this method.
-        virtual void next(QAbstractSocket*) = 0;
+        virtual void next(QIODevice*) = 0;
+
+        /// Returns the host.
+        const QString& host() {return _host;}
+
+        /// Returns the port.
+        quint16 port() {return _port;}
 
     protected:
         /// Access to memory to store data is through this interface.

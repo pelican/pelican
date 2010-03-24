@@ -42,4 +42,5 @@ class DataClientFactory : public AbstractFactory
 };
 
 } // namespace pelican
+
 #endif // DATACLIENTFACTORY_H 

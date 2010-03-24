@@ -30,7 +30,7 @@ boost::shared_ptr<ServerRequest> TestProtocol::request(QTcpSocket& )
     else if (_request == ServerRequest::StreamData) {
         boost::shared_ptr<StreamDataRequest> ptr(new StreamDataRequest);
         DataRequirements req;
-        req.addStreamData("TestStream");
+        req.addStreamData(_id);
         ptr->addDataOption(req);
         return static_cast<boost::shared_ptr<ServerRequest> >(ptr);
     } else if (_request == ServerRequest::ServiceData)

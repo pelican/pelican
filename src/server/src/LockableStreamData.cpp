@@ -3,6 +3,9 @@
 #include "LockedData.h"
 #include "comms/Data.h"
 #include "comms/StreamData.h"
+
+#include <iostream>
+
 #include "utility/memCheck.h"
 
 namespace pelican {
@@ -45,6 +48,7 @@ bool LockableStreamData::isValid() const
 
 bool LockableStreamData::isValid(const QSet<QString>& associates) const
 {
+    std::cout << "Hello" << std::endl;
     Q_ASSERT( data() != 0 );
     bool rv = data()->isValid();
     foreach(const QString& assoc, associates )

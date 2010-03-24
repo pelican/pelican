@@ -52,7 +52,7 @@ void StreamDataBufferTest::test_getWritable()
     // setup data manager with a service data buffer for remaining test cases
     ServiceDataBuffer* serveBuffer = new ServiceDataBuffer("test");
     QString service1("Service1");
-    _dataManager->serviceDataBuffer(service1,serveBuffer);
+    _dataManager->setServiceDataBuffer(service1,serveBuffer);
     {
         // Use case:
         // getWritable() called with service data supported, but no data

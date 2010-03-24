@@ -20,7 +20,6 @@ namespace pelican {
  *    class in their constructor
  *
  */
-
 class AbstractFactory
 {
     public:
@@ -34,13 +33,11 @@ class AbstractFactory
         /// return the configuration node for a type (named type if supplied)
         ConfigNode configuration(const QString& type, const QString& name="") const;
 
-
     protected:
         const Config* _config;
         Config::TreeAddress_t _configRoot;
-
-    private:
 };
 
 } // namespace pelican
+
 #endif // ABSTRACTFACTORY_H

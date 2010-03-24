@@ -1,11 +1,12 @@
 #include "LockedData.h"
-#include "AbstractLockable.h"
 #include "utility/memCheck.h"
 
 namespace pelican {
 
-
-// class LockedData 
+/**
+ * @details
+ * Constructs a new LockedData object.
+ */
 LockedData::LockedData( const QString& name, AbstractLockable* data )
     : _name(name)
 {
@@ -13,12 +14,21 @@ LockedData::LockedData( const QString& name, AbstractLockable* data )
     setData(data);
 }
 
+/**
+ * @details
+ * Destroys the LockedData object, decreasing the lock count on the
+ * data it contains.
+ */
 LockedData::~LockedData()
 {
     if( _data ) 
         _data->unlock();
 }
 
+/**
+ * @details
+ * Creates a copy of a LockedData object.
+ */
 LockedData::LockedData( const LockedData& data )
 {
     _name = data._name;
@@ -26,25 +36,16 @@ LockedData::LockedData( const LockedData& data )
     setData(data._data);
 }
 
+/**
+ * @details
+ * Sets the data object and locks it.
+ */
 void LockedData::setData(AbstractLockable* data)
 {
     if( data ) {
-        _data=data;
+        _data = data;
         data->lock();
     }
-}
-
-AbstractLockable* LockedData::object() const
-{
-    return _data; 
-}
-
-bool LockedData::isValid() const
-{
-    bool rv = false;
-    if ( _data  )
-        rv = _data->isValid();
-    return rv;
 }
 
 } // namespace pelican

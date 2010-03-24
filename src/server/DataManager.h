@@ -48,12 +48,12 @@ class DataManager
         const DataRequirements& dataSpec() const {return _specs;}
 
         /// Return the next unlocked data block from Stream Data.
-        LockedData getNext(const QString& type);
-
-        /// Return the next unlocked data block from Stream Data.
         /// If the associate data requested is unavailable,
         /// LockedData will be invalid.
         LockedData getNext(const QString& type, const QSet<QString>& associateData);
+
+        /// Return the next unlocked data block from Stream Data.
+        LockedData getNext(const QString& type);
 
         /// Return the requested Service Data.
         LockedData getServiceData(const QString& type, const QString& version);
@@ -71,10 +71,10 @@ class DataManager
         WritableData getWritableData(const QString& type, size_t size);
 
         /// Add a service data type to be managed.
-        void serviceDataBuffer(const QString& name, ServiceDataBuffer* buffer);
+        void setServiceDataBuffer(const QString& name, ServiceDataBuffer* buffer);
 
         /// Add a stream data type to be managed.
-        void streamDataBuffer(const QString& name, StreamDataBuffer* buffer);
+        void setStreamDataBuffer(const QString& name, StreamDataBuffer* buffer);
 };
 
 } // namespace pelican

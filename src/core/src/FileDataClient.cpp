@@ -21,7 +21,7 @@ namespace pelican {
 FileDataClient::FileDataClient(const ConfigNode& config, const DataTypes& types)
     : AbstractDataClient(config, types )
 {
-    /* Get the configuration options */
+    // Get the configuration options.
     _getConfig();
 }
 
@@ -40,13 +40,13 @@ FileDataClient::~FileDataClient()
  */
 QHash<QString, DataBlob*> FileDataClient::getData(QHash<QString, DataBlob*>& dataHash)
 {
-    /* Create the local data hash to return */
+    // Create the local data hash to return.
     QHash<QString, DataBlob*> validHash;
 
-    /* Loop over each pipeline's set of data requirements */
+    // Loop over each pipeline's set of data requirements.
     foreach (DataRequirements req, dataRequirements()) {
 
-        /* Loop over service data requirements */
+        // Loop over service data requirements.
         foreach (QString type, req.serviceData()) {
             QString filename = _fileNames.value(type);
             if (!filename.isEmpty()) {
@@ -62,7 +62,7 @@ QHash<QString, DataBlob*> FileDataClient::getData(QHash<QString, DataBlob*>& dat
             }
         }
 
-        /* Loop over stream data requirements */
+        // Loop over stream data requirements.
         foreach (QString type, req.streamData()) {
             QString filename = _fileNames.value(type);
             if (!filename.isEmpty()) {
@@ -89,7 +89,7 @@ QHash<QString, DataBlob*> FileDataClient::getData(QHash<QString, DataBlob*>& dat
  */
 void FileDataClient::_getConfig()
 {
-    /* Get all the filenames for each data type */
+    // Get all the filenames for each data type.
     _fileNames = configNode().getOptionHash("data", "type", "file");
 }
 

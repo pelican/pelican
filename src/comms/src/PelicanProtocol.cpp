@@ -84,7 +84,7 @@ boost::shared_ptr<ServerRequest> PelicanProtocol::request(QTcpSocket& socket)
         default:
             break;
     }
-    return boost::shared_ptr<ServerRequest>(new ServerRequest(ServerRequest::Error, "Unknown type Passed"));
+    return boost::shared_ptr<ServerRequest>(new ServerRequest(ServerRequest::Error, "PelicanProtocol: Unknown type passed"));
 }
 
 void PelicanProtocol::send(QIODevice& stream, const AbstractProtocol::StreamData_t& data ) 
