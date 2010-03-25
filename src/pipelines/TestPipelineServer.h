@@ -36,6 +36,7 @@ class TestPipelineServer : public AbstractPipeline
 
     private:
         VisibilityPrinter* _visPrinter;
+        int _counter;
 
 };
 

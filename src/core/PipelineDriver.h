@@ -34,7 +34,7 @@ class PipelineDriver
     private:
         friend class PipelineDriverTest;
 
-    private: /* Data */
+    private:
         /// Pointer to the data client.
         AbstractDataClient* _dataClient;
 
@@ -71,6 +71,9 @@ class PipelineDriver
         /// The adapter names required for each data type.
         QHash<QString, QString> _adapterNames;
 
+        /// FIXME Flag set ignore empty hash.
+        bool _ignoreEmptyHash;
+
     public:
         /// Constructs a new pipeline driver.
         PipelineDriver( DataBlobFactory* blobFactory, ModuleFactory* moduleFactory, 
@@ -90,6 +93,9 @@ class PipelineDriver
 
         /// Stops the data flow through the pipelines.
         void stop();
+
+        /// Sets the option to ignore an empty hash.
+        void setIgnoreEmptyHash(bool value) {_ignoreEmptyHash = value;}
 
     private:
         /// Checks that the data requirements of all pipelines are compatible.

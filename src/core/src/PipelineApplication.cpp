@@ -174,4 +174,14 @@ bool PipelineApplication::_createConfig(int argc, char** argv)
     return true;
 }
 
+/**
+ * @details
+ * Sets the option to ignore an empty hash from the client, which should
+ * be fixed in the getData() method in data client eventually.
+ */
+void PipelineApplication::setIgnoreEmptyHash(bool value)
+{
+    _driver->setIgnoreEmptyHash(value);
+}
+
 } // namespace pelican

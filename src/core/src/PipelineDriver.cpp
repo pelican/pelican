@@ -155,7 +155,7 @@ void PipelineDriver::start()
         }
 
         // Check if no pipelines were run.
-        if (!ranPipeline)
+        if (!ranPipeline && !_ignoreEmptyHash)
             throw QString("PipelineDriver::start(): No pipelines run.");
     }
 }

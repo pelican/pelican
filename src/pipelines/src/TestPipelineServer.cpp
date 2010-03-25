@@ -13,6 +13,7 @@ namespace pelican {
 TestPipelineServer::TestPipelineServer()
     : AbstractPipeline()
 {
+    _counter = 0;
 }
 
 
@@ -44,9 +45,11 @@ void TestPipelineServer::run(QHash<QString, DataBlob*>& remoteData)
     VisibilityData* vis = (VisibilityData*) remoteData["VisibilityData"];
     Q_ASSERT(vis != NULL);
     _visPrinter->run(vis);
-
-    // Stop the pipeline driver.
-    stop();
+    sleep(1);
+    // Stop the pipeline driver if we have gone through 10 iterations.
+    ++_counter;
+    if (_counter == 10)
+        stop();
 }
 
 } // namespace pelican

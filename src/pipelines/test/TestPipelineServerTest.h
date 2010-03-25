@@ -10,7 +10,7 @@
 
 namespace pelican {
 
-class Config;
+class TestConfig;
 
 /**
  * @class TestPipelineServerTest
@@ -49,9 +49,9 @@ class TestPipelineServerTest : public CppUnit::TestFixture
 class PipelineBinaryEmulator : public QThread
 {
     private:
-        Config* _config;
+        TestConfig* _config;
     public:
-        PipelineBinaryEmulator(Config *config);
+        PipelineBinaryEmulator(TestConfig *config);
     protected:
         void run();
 };
