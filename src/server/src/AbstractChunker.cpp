@@ -17,4 +17,15 @@ AbstractChunker::~AbstractChunker()
 //        delete _device;
 }
 
+/**
+ * @details
+ *
+ */
+WritableData AbstractChunker::getDataStorage(size_t size) const
+{
+    if (!_dataManager)
+        throw QString("AbstractChunker::getDataStorage(): No data manager.");
+    return _dataManager->getWritableData(_type, size);
+}
+
 } // namespace pelican

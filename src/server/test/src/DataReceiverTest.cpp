@@ -49,7 +49,8 @@ void DataReceiverTest::test_listen()
          * Null Socket returned by Chunker
          * Expect : do nothing and return
          */
-        TestChunker testChunker(_dm, "test", true, 0, _testHost,_testPort);
+        TestChunker testChunker("test", true, 0, _testHost,_testPort);
+        testChunker.setDataManager(_dm);
         DataReceiver dr(&testChunker,_dm);
         dr.listen();
     }
@@ -59,7 +60,8 @@ void DataReceiverTest::test_listen()
          * Unspecified host
          * Expect : do nothing and return
          */
-        TestChunker testChunker(_dm, "test", false, 0, "",_testPort);
+        TestChunker testChunker("test", false, 0, "",_testPort);
+        testChunker.setDataManager(_dm);
         DataReceiver dr(&testChunker,_dm);
         dr.listen();
     }
@@ -69,7 +71,8 @@ void DataReceiverTest::test_listen()
          * Unspecified port
          * Expect : do nothing and return
          */
-        TestChunker testChunker(_dm, "test", false, 0, "", 0);
+        TestChunker testChunker("test", false, 0, "", 0);
+        testChunker.setDataManager(_dm);
         DataReceiver dr(&testChunker,_dm);
         dr.listen();
     }
@@ -80,7 +83,8 @@ void DataReceiverTest::test_listen()
          * Expect : to be listening and the Chunker to be receiving data
          *          within its own thread
          */
-        TestChunker testChunker(_dm, "test", false, 0, _testHost, _testPort);
+        TestChunker testChunker("test", false, 0, _testHost, _testPort);
+        testChunker.setDataManager(_dm);
         DataReceiver dr(&testChunker,_dm);
         dr.listen();
 

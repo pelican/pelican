@@ -12,9 +12,11 @@
 #include "server/test/TestChunker.h"
 #include "server/test/PelicanTestClient.h"
 #include "server/test/TestProtocol.h"
+#include "comms/PelicanProtocol.h"
 #include "utility/pelicanTimer.h"
 #include "utility/TestConfig.h"
 #include <QCoreApplication>
+#include <QTimer>
 
 #include "utility/memCheck.h"
 
@@ -51,28 +53,22 @@ void TestPipelineServerTest::test_method()
 
     // Set up the server.
     PelicanServer server;
-    DataManager dataManager;
-    TestChunker chunker(&dataManager, "VisibilityData", false, 10);
-    StreamDataBuffer* dataBuffer = new StreamDataBuffer("VisibilityData");
-
-    dataManager.setStreamDataBuffer("VisibilityData", dataBuffer);
-//    WritableData writableData = dataBuffer->getWritable(10);
-//    std::cout << "returned writable data" << std::endl;
+    TestChunker chunker("VisibilityData", false, 512);
     server.addStreamChunker(&chunker, "127.0.0.1", 2001);
 
     // Add the protocol.
-    AbstractProtocol* protocol = new TestProtocol("VisibilityData", ServerRequest::StreamData);
+    AbstractProtocol* protocol = new PelicanProtocol;
     server.addProtocol(protocol, 2000);
 
     // Start the server.
     server.start();
     while (!server.isReady()) {}
-    std::cout << "Server ready." << std::endl;
-//    writableData.data();
 
     // Start the pipeline binary.
     PipelineBinaryEmulator pipelineBinary(static_cast<Config*>(&config));
 
+    // Return after 3 seconds.
+    QTimer::singleShot(3000, &app, SLOT(quit()));
     app.exec();
     }
     catch (QString e) {
@@ -113,6 +109,7 @@ PipelineBinaryEmulator::PipelineBinaryEmulator(Config* config) : QThread()
 
 void PipelineBinaryEmulator::run()
 {
+    try {
     std::cout << "Starting binary thread" << std::endl;
     // Set up the client.
     QList<DataRequirements> reqList;
@@ -131,9 +128,15 @@ void PipelineBinaryEmulator::run()
         std::cout << "Client getting data" << std::endl;
         validHash = dataClient->getData(hash);
         std::cout << "Client get data done." << std::endl;
-        msleep(1000);
+        msleep(500);
     }
     std::cout << "%%%%%%%%%%%%%%%%%%%%%%%%%%%%% FINISHED" << std::endl;
+
+    complex_t* dat =  visData->ptr();
+    std::cout << "Number of entries: " << visData->nEntries();
+    for (unsigned i = 0; i  < visData->nEntries(); ++i) {
+        std::cout << dat[i] << std::endl;
+    }
 
     // Clean up.
     delete visData;
@@ -143,6 +146,10 @@ void PipelineBinaryEmulator::run()
 //    pApp.registerPipeline(new TestPipelineServer);
 //    pApp.setDataClient("FileDataClient");
 //    pApp.start();
+    }
+    catch (QString e) {
+        std::cerr << "Unexpected exception: " + e.toStdString() << std::endl;
+    }
 }
 
 } // namespace pelican

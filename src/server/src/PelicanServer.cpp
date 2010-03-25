@@ -91,7 +91,9 @@ void PelicanServer::run()
 
     // set up datastream inputs
     for (int i = 0; i < inputPorts.size(); ++i) {
-        boost::shared_ptr<DataReceiver> listener( new DataReceiver(_chunkerPortMap[inputPorts[i]], &dataManager ) );
+        AbstractChunker* chunker = _chunkerPortMap[inputPorts[i]];
+        chunker->setDataManager(&dataManager); // Added this.
+        boost::shared_ptr<DataReceiver> listener( new DataReceiver(chunker, &dataManager ) );
         chunkers.append(listener);
         listener->listen();
     }

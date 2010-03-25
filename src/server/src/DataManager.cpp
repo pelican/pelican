@@ -12,6 +12,14 @@ namespace pelican {
 
 /**
  * @details
+ * DataManager constructor.
+ */
+DataManager::DataManager()
+{
+}
+
+/**
+ * @details
  * DataManager destructor.
  *
  * This deletes all the stream and service data buffers held by
@@ -33,6 +41,7 @@ DataManager::~DataManager()
  */
 WritableData DataManager::getWritableData(const QString& type, size_t size)
 {
+    std::cout << "DataManager::getWritableData, type : " << type.toStdString() << std::endl;
     if ( _streams.contains(type) ) {
         // XXX remove
         std::cout << "DataManager::Returning writable stream data" << std::endl;
@@ -52,8 +61,10 @@ WritableData DataManager::getWritableData(const QString& type, size_t size)
  */
 StreamDataBuffer* DataManager::getStreamBuffer(const QString& type)
 {
-    if ( ! _streams.contains(type) )
+    std::cout << "DataManager::getStreamBuffer" << type.toStdString() << std::endl;
+    if ( ! _streams.contains(type) ) {
         setStreamDataBuffer( type, new StreamDataBuffer(type) );
+    }
     return _streams[type];
 }
 
@@ -75,9 +86,12 @@ ServiceDataBuffer* DataManager::getServiceBuffer(const QString& type)
  * @details
  * Note that the DataManager takes ownership of the StreamDataBuffer, and will
  * delete it on destruction.
+ *
+ * FIXME THIS APPEARS TO BE USED FOR THE TEST ONLY - DON'T USE IT!
  */
 void DataManager::setStreamDataBuffer( const QString& name, StreamDataBuffer* buffer)
 {
+    std::cout << "DataManager::setStreamDataBuffer" << std::endl;
     _specs.setStreamData(name);
     buffer->setDataManager(this);
     _streams[name]=buffer;
@@ -129,6 +143,7 @@ LockedData DataManager::getNext(const QString& type, const QSet<QString>& associ
  */
 LockedData DataManager::getNext(const QString& type)
 {
+    std::cout << "DataManager::getNext: type : " << type.toStdString() << std::endl;
     LockedData lockedData(type, 0);
     _streams[type]->getNext(lockedData);
     return lockedData;

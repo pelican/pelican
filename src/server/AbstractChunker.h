@@ -34,8 +34,8 @@ class AbstractChunker
 
     public:
         /// Constructs a new AbstractChunker.
-        AbstractChunker(const QString& type, DataManager* dataManager, QString host = "", quint16 port = 0)
-            : _dataManager(dataManager), _type(type), _host(host), _port(port), _device(NULL) {}
+        AbstractChunker(const QString& type, QString host = "", quint16 port = 0)
+            : _dataManager(NULL), _type(type), _host(host), _port(port), _device(NULL) {}
 
         /// Destroys the AbstractChunker.
         virtual ~AbstractChunker();
@@ -57,15 +57,18 @@ class AbstractChunker
         /// Returns the port.
         quint16 port() {return _port;}
 
+        /// Sets the data manager.
+        void setDataManager(DataManager* dataManager) {
+            _dataManager = dataManager;
+        }
+
     protected:
         /// Access to memory to store data is through this interface.
         /// The WritableData object should always be checked with its
         /// isValid() method before use. When the WritableData object goes
         /// out of scope the data will become available to be served
         /// automatically if it is valid.
-        WritableData getDataStorage(size_t size) const {
-            return _dataManager->getWritableData(_type, size);
-        }
+        WritableData getDataStorage(size_t size) const;
 };
 
 } // namespace pelican

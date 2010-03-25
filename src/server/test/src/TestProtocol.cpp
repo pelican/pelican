@@ -1,6 +1,8 @@
 #include "TestProtocol.h"
+#include "comms/StreamData.h"
 #include "comms/ServerRequest.h"
 #include "comms/StreamDataRequest.h"
+#include <cassert>
 
 #include <iostream>
 #include "utility/memCheck.h"
@@ -48,10 +50,22 @@ void TestProtocol::send( QIODevice& device, const QString& message)
 
 void TestProtocol::send( QIODevice& device, const AbstractProtocol::StreamData_t& d)
 {
-    std::cout << "TestProtocol::send()" << std::endl;
+    std::cout << "TestProtocol::send(): List length: " << d.size() << std::endl;
+    assert(d.size() > 0);
     _last.clear();
+    char* data = static_cast<char*>(d[0]->operator *());
+    size_t size = d[0]->size() / sizeof(double);
+    for (unsigned i = 0; i < size; i++) {
+        std::cout << reinterpret_cast<double*>(data)[i];
+    }
+    std::cout << std::endl;
+    _last.append(data);
     _lastStreamData = d;
-    device.write(_last);
+    QDataStream stream(&device);
+    stream.setVersion(QDataStream::Qt_4_0);
+    stream << (quint16)_request;
+    std::cout << "Sending request type " << (qint16)_request << std::endl;
+    stream << _last.data();
 }
 
 void TestProtocol::send( QIODevice& device, const AbstractProtocol::ServiceData_t& )

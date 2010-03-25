@@ -26,7 +26,6 @@ StreamDataBuffer::StreamDataBuffer(const QString& type, DataManager* manager, QO
 
 StreamDataBuffer::~StreamDataBuffer()
 {
-    std::cout << "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% StreamDataBuffer destructor." << std::endl;
     foreach( LockableStreamData* data, _data)
         delete data;
 }
@@ -39,10 +38,8 @@ void StreamDataBuffer::getNext(LockedData& lockedData)
 {
     QMutexLocker locker(&_mutex);
     std::cout << "StreamDataBuffer::getNext. Serve queue size " << _serveQueue.size() << std::endl;
-    std::cout << "StreamDataBuffer::getNext. Test list size " << _testList.size() << std::endl;
     if( ! _serveQueue.isEmpty() ) {
         std::cout << "Serve queue not empty."  << std::endl;
-//        _testList.takeFirst();
         lockedData.setData(_serveQueue.dequeue());
         return;
     } else {
@@ -165,14 +162,10 @@ void StreamDataBuffer::deactivateData(LockableStreamData* data)
  */
 void StreamDataBuffer::activateData(LockableStreamData* data)
 {
-    std::cout << "StreamDataBuffer: Activate data" << std::endl;
     QMutexLocker locker(&_mutex);
     if( data->isValid() ) {
         std::cout << "StreamDataBuffer: Activate data: is valid" << std::endl;
         _serveQueue.enqueue(data);
-        _testList.append(0);
-        std::cout << "StreamDataBuffer: Data queued, size: " << _serveQueue.size() << std::endl;
-        std::cout << "StreamDataBuffer: Test list size: " << _testList.size() << std::endl;
     } else {
         std::cout << "StreamDataBuffer: Activate data not valid" << std::endl;
         _emptyQueue.enqueue(data);

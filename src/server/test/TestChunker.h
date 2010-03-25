@@ -27,10 +27,10 @@ class TestChunker : public QObject, public AbstractChunker
 
     public:
         /// Constructs a new TestChunker.
-        TestChunker(DataManager* dm, const QString& type = "ChunkType",
+        TestChunker(const QString& type = "ChunkType",
                 bool badSocket = false, size_t size = 0, QString host = "",
                 quint16 port = 0, QObject* parent = 0)
-        : QObject(parent), AbstractChunker(type, dm, host, port), _badSocket(badSocket),
+        : QObject(parent), AbstractChunker(type, host, port), _badSocket(badSocket),
         _nextCount(0), _size(size) {}
 
         /// Destroys the TestChunker.

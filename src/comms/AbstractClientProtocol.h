@@ -18,7 +18,7 @@ class ServerResponse;
  * @class AbstractClientProtocol
  *  
  * @brief
- * Base class for all protocols on the server side.
+ * Base class for all protocols on the client side.
  *
  * @details
  * 

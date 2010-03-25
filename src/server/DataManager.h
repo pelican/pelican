@@ -36,7 +36,7 @@ class DataManager
 
     public:
         /// DataManager constructor.
-        DataManager() {}
+        DataManager();
 
         /// DataManager destructor.
         virtual ~DataManager();
