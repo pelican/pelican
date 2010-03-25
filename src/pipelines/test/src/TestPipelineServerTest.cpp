@@ -52,7 +52,7 @@ void TestPipelineServerTest::test_method()
     // Set up the server.
     PelicanServer server;
     DataManager dataManager;
-    TestChunker chunker(&dataManager, "VisibilityStreamData", false, 10);
+    TestChunker chunker(&dataManager, "VisibilityData", false, 10);
     StreamDataBuffer* dataBuffer = new StreamDataBuffer("VisibilityData");
 
     dataManager.setStreamDataBuffer("VisibilityData", dataBuffer);
@@ -61,37 +61,19 @@ void TestPipelineServerTest::test_method()
     server.addStreamChunker(&chunker, "127.0.0.1", 2001);
 
     // Add the protocol.
-    AbstractProtocol* protocol = new TestProtocol("VisibilityStreamData", ServerRequest::StreamData);
+    AbstractProtocol* protocol = new TestProtocol("VisibilityData", ServerRequest::StreamData);
     server.addProtocol(protocol, 2000);
 
     // Start the server.
     server.start();
     while (!server.isReady()) {}
+    std::cout << "Server ready." << std::endl;
 //    writableData.data();
 
-    // Set up the client.
-    QList<DataRequirements> reqList;
-    DataRequirements req;
-    req.addStreamData("VisibilityData");
-    reqList.append(req);
-    Config::TreeAddress_t base;
-    base.append(Config::NodeId_t("clients", ""));
-    AdapterFactory adapterFactory(&config);
-    DataClientFactory clientFactory(&config, base, &adapterFactory);
-    AbstractDataClient* dataClient = clientFactory.create("PelicanServerClient", reqList);
-    QHash<QString, DataBlob*> hash;
-    VisibilityData* visData = new VisibilityData;
-    hash.insert("VisibilityData", visData);
-    hash = dataClient->getData(hash);
+    // Start the pipeline binary.
+    PipelineBinaryEmulator pipelineBinary(static_cast<Config*>(&config));
 
-    // Set up the pipeline.
-//    PipelineApplication pApp(argc, argv);
-//    pApp.registerPipeline(new TestPipelineServer);
-//    pApp.setDataClient("FileDataClient");
-//    pApp.start();
-
-    // Clean up.
-    delete visData;
+    app.exec();
     }
     catch (QString e) {
         CPPUNIT_FAIL("Unexpected exception: " + e.toStdString());
@@ -121,6 +103,46 @@ void TestPipelineServerTest::_createConfig()
 
     config.setFromString(xml);
     config.saveTestConfig("TestPipelineServer.xml", "pipelines");
+}
+
+PipelineBinaryEmulator::PipelineBinaryEmulator(Config* config) : QThread()
+{
+    _config = config;
+    start();
+}
+
+void PipelineBinaryEmulator::run()
+{
+    std::cout << "Starting binary thread" << std::endl;
+    // Set up the client.
+    QList<DataRequirements> reqList;
+    DataRequirements req;
+    req.addStreamData("VisibilityData");
+    reqList.append(req);
+    Config::TreeAddress_t base;
+    base.append(Config::NodeId_t("clients", ""));
+    AdapterFactory adapterFactory(_config);
+    DataClientFactory clientFactory(_config, base, &adapterFactory);
+    AbstractDataClient* dataClient = clientFactory.create("PelicanServerClient", reqList);
+    VisibilityData* visData = new VisibilityData;
+    QHash<QString, DataBlob*> hash, validHash;
+    hash.insert("VisibilityData", visData);
+    while (validHash.isEmpty()) {
+        std::cout << "Client getting data" << std::endl;
+        validHash = dataClient->getData(hash);
+        std::cout << "Client get data done." << std::endl;
+        msleep(1000);
+    }
+    std::cout << "%%%%%%%%%%%%%%%%%%%%%%%%%%%%% FINISHED" << std::endl;
+
+    // Clean up.
+    delete visData;
+
+    // Set up the pipeline.
+//    PipelineApplication pApp(argc, argv);
+//    pApp.registerPipeline(new TestPipelineServer);
+//    pApp.setDataClient("FileDataClient");
+//    pApp.start();
 }
 
 } // namespace pelican

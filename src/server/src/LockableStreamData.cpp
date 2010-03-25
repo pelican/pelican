@@ -48,7 +48,6 @@ bool LockableStreamData::isValid() const
 
 bool LockableStreamData::isValid(const QSet<QString>& associates) const
 {
-    std::cout << "Hello" << std::endl;
     Q_ASSERT( data() != 0 );
     bool rv = data()->isValid();
     foreach(const QString& assoc, associates )

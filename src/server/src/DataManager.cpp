@@ -33,8 +33,11 @@ DataManager::~DataManager()
  */
 WritableData DataManager::getWritableData(const QString& type, size_t size)
 {
-    if ( _streams.contains(type) )
+    if ( _streams.contains(type) ) {
+        // XXX remove
+        std::cout << "DataManager::Returning writable stream data" << std::endl;
         return _streams[type]->getWritable(size);
+    }
     if ( _service.contains(type) )
         return _service[type]->getWritable(size);
     return WritableData(0);

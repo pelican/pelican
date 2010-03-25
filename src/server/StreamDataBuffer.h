@@ -73,6 +73,7 @@ class StreamDataBuffer : public DataBuffer
         QList<LockableStreamData*> _data;
         QQueue<LockableStreamData*> _serveQueue;
         QQueue<LockableStreamData*> _emptyQueue;
+        QList<int> _testList;
         DataManager* _manager;
 };
 

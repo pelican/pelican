@@ -35,7 +35,7 @@ class AbstractChunker
     public:
         /// Constructs a new AbstractChunker.
         AbstractChunker(const QString& type, DataManager* dataManager, QString host = "", quint16 port = 0)
-            : _dataManager(dataManager), _type(type), _device(NULL), _host(host), _port(port) {}
+            : _dataManager(dataManager), _type(type), _host(host), _port(port), _device(NULL) {}
 
         /// Destroys the AbstractChunker.
         virtual ~AbstractChunker();

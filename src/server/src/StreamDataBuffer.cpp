@@ -26,6 +26,7 @@ StreamDataBuffer::StreamDataBuffer(const QString& type, DataManager* manager, QO
 
 StreamDataBuffer::~StreamDataBuffer()
 {
+    std::cout << "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% StreamDataBuffer destructor." << std::endl;
     foreach( LockableStreamData* data, _data)
         delete data;
 }
@@ -37,8 +38,11 @@ StreamDataBuffer::~StreamDataBuffer()
 void StreamDataBuffer::getNext(LockedData& lockedData)
 {
     QMutexLocker locker(&_mutex);
+    std::cout << "StreamDataBuffer::getNext. Serve queue size " << _serveQueue.size() << std::endl;
+    std::cout << "StreamDataBuffer::getNext. Test list size " << _testList.size() << std::endl;
     if( ! _serveQueue.isEmpty() ) {
         std::cout << "Serve queue not empty."  << std::endl;
+//        _testList.takeFirst();
         lockedData.setData(_serveQueue.dequeue());
         return;
     } else {
@@ -66,6 +70,7 @@ WritableData StreamDataBuffer::getWritable(size_t size)
             throw QString("StreamDataBuffer::getWritable(): No data manager.");
         _manager->associateServiceData(d);
     }
+    std::cout << "StreamDataBuffer: Returning WritableData object" << std::endl;
     return WritableData( d );
 }
 
@@ -124,7 +129,7 @@ LockableStreamData* StreamDataBuffer::_getWritable(size_t size)
  */
 void StreamDataBuffer::activateData()
 {
-    std::cout << "Activate data slot" << std::endl;
+    std::cout << "StreamDataBuffer: Activate data slot" << std::endl;
     activateData( static_cast<LockableStreamData*>(sender()) );
 }
 
@@ -148,6 +153,7 @@ void StreamDataBuffer::deactivateData()
  */
 void StreamDataBuffer::deactivateData(LockableStreamData* data)
 {
+    std::cout << "StreamDataBuffer: Deactivating data" << std::endl;
     QMutexLocker locker(&_mutex);
     data->reset();
     _emptyQueue.enqueue(data);
@@ -159,13 +165,16 @@ void StreamDataBuffer::deactivateData(LockableStreamData* data)
  */
 void StreamDataBuffer::activateData(LockableStreamData* data)
 {
-    std::cout << "Activate data" << std::endl;
+    std::cout << "StreamDataBuffer: Activate data" << std::endl;
     QMutexLocker locker(&_mutex);
     if( data->isValid() ) {
-        std::cout << "Activate data: is valid" << std::endl;
+        std::cout << "StreamDataBuffer: Activate data: is valid" << std::endl;
         _serveQueue.enqueue(data);
+        _testList.append(0);
+        std::cout << "StreamDataBuffer: Data queued, size: " << _serveQueue.size() << std::endl;
+        std::cout << "StreamDataBuffer: Test list size: " << _testList.size() << std::endl;
     } else {
-        std::cout << "Activate data not valid" << std::endl;
+        std::cout << "StreamDataBuffer: Activate data not valid" << std::endl;
         _emptyQueue.enqueue(data);
     }
 }

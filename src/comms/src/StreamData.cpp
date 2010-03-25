@@ -45,7 +45,6 @@ void StreamData::addAssociatedData(boost::shared_ptr<Data> data)
 
 bool StreamData::isValid() const
 {
-    std::cout << "HELLO AGAIN" << std::endl;
     bool rv = Data::isValid();
     if( rv ) {
         foreach(const boost::shared_ptr<Data>& d, _associateData) {

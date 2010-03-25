@@ -1,6 +1,7 @@
 #include "TestChunker.h"
 #include <QCoreApplication>
 #include <QBuffer>
+#include <QTimer>
 
 #include <iostream>
 
@@ -18,6 +19,7 @@ QIODevice* TestChunker::newDevice()
 //    socket->connectToHost( _host, _port );
 //    return socket;
 
+    QTimer::singleShot(1000, this, SLOT(_start()));
     QBuffer* buffer = new QBuffer;
     _device = buffer;
     return buffer;
@@ -40,6 +42,15 @@ unsigned int TestChunker::nextCalled()
     unsigned int n = _nextCount;
     _nextCount = 0;
     return n;
+}
+
+/**
+ * @details
+ * Private slot to start the data stream.
+ */
+void TestChunker::_start()
+{
+    next(_device);
 }
 
 } // namespace pelican

@@ -30,7 +30,7 @@ class DataBuffer : public QObject
         : QObject(parent), _type(type) {}
 
         /// Destroys the DataBuffer object.
-        ~DataBuffer() {}
+        virtual ~DataBuffer() {}
 
         virtual WritableData getWritable(size_t size) = 0;
 

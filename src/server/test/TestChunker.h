@@ -1,6 +1,7 @@
 #ifndef TESTCHUNKER_H
 #define TESTCHUNKER_H
 #include <QString>
+#include <QObject>
 #include "server/AbstractChunker.h"
 
 /**
@@ -8,6 +9,7 @@
  */
 
 namespace pelican {
+
 class DataManager;
 
 /**
@@ -19,14 +21,16 @@ class DataManager;
  * @details
  * 
  */
-class TestChunker : public AbstractChunker
+class TestChunker : public QObject, public AbstractChunker
 {
+    Q_OBJECT
+
     public:
         /// Constructs a new TestChunker.
         TestChunker(DataManager* dm, const QString& type = "ChunkType",
                 bool badSocket = false, size_t size = 0, QString host = "",
-                quint16 port = 0)
-        : AbstractChunker(type, dm, host, port), _badSocket(badSocket),
+                quint16 port = 0, QObject* parent = 0)
+        : QObject(parent), AbstractChunker(type, dm, host, port), _badSocket(badSocket),
         _nextCount(0), _size(size) {}
 
         /// Destroys the TestChunker.
@@ -41,6 +45,10 @@ class TestChunker : public AbstractChunker
         /// return the number of times that the next method has been called
         //  will also reset the counter
         unsigned int nextCalled();
+
+    private slots:
+        /// Starts the data stream.
+        void _start();
 
     private:
         bool _badSocket;

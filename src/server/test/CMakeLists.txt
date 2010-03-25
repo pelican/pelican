@@ -9,6 +9,7 @@ set(
 
 set( serverTestLib_moc_sources
    TestServer.h
+   TestChunker.h
    )
 
 set(
