@@ -6,10 +6,11 @@ The Pipeline for Extensible, Lightweight Imaging and CAlibratioN
 Code Build Dependencies
 =======================
 Required:   Qt4
-            boost_program_options
+            boost_program_option (http://www.boost.org)
             blas (atlas, gsl or mkl)
             lapack
-            cfitsio
+            cfitsio (http://heasarc.gsfc.nasa.gov/fitsio/)
+            cppunit
 Optional:   openmp (compiler)
 
 
