@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/!svn/ver/861/wfitGui/src/cmake/FindCUDA
+END
+make2cmake.cmake
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/861/wfitGui/src/cmake/FindCUDA/make2cmake.cmake
+END
+parse_cubin.cmake
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/861/wfitGui/src/cmake/FindCUDA/parse_cubin.cmake
+END
+run_nvcc.cmake
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/!svn/ver/861/wfitGui/src/cmake/FindCUDA/run_nvcc.cmake
+END

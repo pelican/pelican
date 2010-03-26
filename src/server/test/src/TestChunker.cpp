@@ -48,7 +48,7 @@ QIODevice* TestChunker::newDevice()
  */
 void TestChunker::next(QIODevice*)
 {
-    std::cout << "TestChunker::next" << std::endl;
+    std::cout << "TestChunker::next()" << std::endl;
     ++_nextCount;
     WritableData writableData = getDataStorage(_size);
 

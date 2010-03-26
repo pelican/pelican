@@ -12,9 +12,9 @@
 namespace pelican {
 
 CPPUNIT_TEST_SUITE_REGISTRATION( StreamDataBufferTest );
-// class StreamDataBufferTest 
+// class StreamDataBufferTest
 StreamDataBufferTest::StreamDataBufferTest()
-    : CppUnit::TestFixture()
+: CppUnit::TestFixture()
 {
     int ac = 0;
     _app = new QCoreApplication(ac, NULL);
@@ -35,13 +35,43 @@ void StreamDataBufferTest::tearDown()
     delete _dataManager;
 }
 
+void StreamDataBufferTest::test_getNext()
+{
+    {
+        // Use case:
+        // getNext called on an empty buffer
+        // expect to return an invalid LockedData object
+        StreamDataBuffer b("test",_dataManager);
+        LockedData data("test");
+        b.getNext(data);
+        CPPUNIT_ASSERT( ! data.isValid() );
+    }
+    {
+    // Use case:
+    // getNext called on an non-empty buffer
+    // expect to return an valid LockedData object
+    StreamDataBuffer b("test",_dataManager);
+    b.getWritable(100);
+    _app->processEvents();
+    LockedData data("test");
+    b.getNext(data);
+    CPPUNIT_ASSERT( data.isValid() );
+    // Use Case:
+    // Make a second call to getNext() whilst data exists but locked
+    // Expect to return an invalid object
+    LockedData data2("test2");
+    b.getNext(data2);
+    CPPUNIT_ASSERT( ! data2.isValid() );
+    }
+}
+
 void StreamDataBufferTest::test_getWritable()
 {
     QByteArray data1("data1");
     {
         // Use case:
         // getWritable() called with no service data
-        // expect valid object with no associate data
+        // Expect a valid object with no associate data.
         StreamDataBuffer buffer("test",_dataManager);
         WritableData data = buffer.getWritable(data1.size());
         CPPUNIT_ASSERT( data.isValid() );
@@ -49,7 +79,8 @@ void StreamDataBufferTest::test_getWritable()
         CPPUNIT_ASSERT( data.isValid() );
         CPPUNIT_ASSERT_EQUAL(0, static_cast<LockableStreamData*>(data.data())->associateData().size() );
     }
-    // setup data manager with a service data buffer for remaining test cases
+
+    // Setup data manager with a service data buffer for remaining test cases
     ServiceDataBuffer* serveBuffer = new ServiceDataBuffer("test");
     QString service1("Service1");
     _dataManager->setServiceDataBuffer(service1,serveBuffer);
@@ -80,34 +111,46 @@ void StreamDataBufferTest::test_getWritable()
     }
 }
 
-void StreamDataBufferTest::test_getNext()
+
+void StreamDataBufferTest::test_getWritableStreams()
 {
+    std::cout << "#############################################" << std::endl;
+    // Use case:
+    // Multiple calls to getWritable() simulating filling of a stream buffer.
+    // Expect: unique data pointers to be returned.
     {
-        // Use case:
-        // getNext called on an empty buffer
-        // expect to return an invalid LockedData object
-        StreamDataBuffer b("test",_dataManager);
-        LockedData data("test");
-        b.getNext(data);
-        CPPUNIT_ASSERT( ! data.isValid() );
+        size_t dataSize = 8;
+        StreamDataBuffer buffer("test", _dataManager);
+        {
+            WritableData dataChunk = buffer.getWritable(dataSize);
+            void* dataPtr =  dataChunk.data()->data()->operator*();
+            double value = 1;
+            dataChunk.write(&value, 8, 0);
+            std::cout << "[1] dataPtr = " << dataPtr << std::endl;
+        }
+        {
+            WritableData dataChunk = buffer.getWritable(dataSize);
+            void* dataPtr =  dataChunk.data()->data()->operator*();
+            double value = 2;
+            dataChunk.write(&value, 8, 0);
+            std::cout << "[2] dataPtr = " << dataPtr << std::endl;
+        }
+        {
+            WritableData dataChunk = buffer.getWritable(dataSize);
+            void* dataPtr =  dataChunk.data()->data()->operator*();
+            double value = 3;
+            dataChunk.write(&value, 8, 0);
+            std::cout << "[3] dataPtr = " << dataPtr << std::endl;
+        }
+        {
+            std::cout << "+++++++++++++++++++++++++++++++++++++++++++" << std::endl;
+            LockedData data("test");
+            buffer.getNext(data);
+            buffer.getNext(data);
+            buffer.getNext(data);
+        }
     }
-    {
-        // Use case:
-        // getNext called on an non-empty buffer
-        // expect to return an valid LockedData object
-        StreamDataBuffer b("test",_dataManager);
-        b.getWritable(100);
-        _app->processEvents();
-        LockedData data("test");
-        b.getNext(data);
-        CPPUNIT_ASSERT( data.isValid() );
-        // Use Case:
-        // Make a second call to getNext() whilst data exists but locked
-        // Expect to return an invalid object
-        LockedData data2("test2");
-        b.getNext(data2);
-        CPPUNIT_ASSERT( ! data2.isValid() );
-    }
+    std::cout << "#############################################" << std::endl;
 }
 
 } // namespace pelican
