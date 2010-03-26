@@ -51,12 +51,16 @@ void TestChunker::next(QIODevice*)
     std::cout << "TestChunker::next()" << std::endl;
     ++_nextCount;
     WritableData writableData = getDataStorage(_size);
+
+
     unsigned nDoubles = _size / sizeof(double);
     std::vector<double> array(nDoubles);
     for (unsigned i = 0; i < nDoubles; i++) {
 //        array[i] = i;
         array[i] = _nextCount;
     }
+
+
     // Write some test data.
     writableData.write((void*)&array[0], _size, 0);
 }
