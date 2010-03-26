@@ -66,7 +66,7 @@ void PelicanServerTest::test_singleProtocolStream()
         PelicanServer server;
         quint16 port = 2000;
         server.addProtocol(new TestProtocol("", ServerRequest::StreamData), port);
-        server.addStreamChunker(new TestChunker("TestStream"), "127.0.0.1", port+1);
+        server.addStreamChunker(new TestChunker("TestStream"));
         server.start();
         while (!server.isReady()) {}
         PelicanTestClient client(port);

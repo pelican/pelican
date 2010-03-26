@@ -2,7 +2,7 @@
 #define IMAGEDATA_H
 
 #include "data/DataBlob.h"
-#include <boost/math/special_functions/fpclassify.hpp>
+//#include <boost/math/special_functions/fpclassify.hpp>
 #include <QString>
 #include <vector>
 #include <cmath>
