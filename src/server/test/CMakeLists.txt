@@ -22,6 +22,7 @@ set(
    src/StreamDataBufferTest.cpp
    src/SessionTest.cpp
    src/WritableDataTest.cpp
+   #src/LofarChunkerTest.cpp
 )
 
 QT4_WRAP_CPP(

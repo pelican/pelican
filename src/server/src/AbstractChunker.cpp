@@ -19,7 +19,15 @@ AbstractChunker::~AbstractChunker()
 
 /**
  * @details
+ * Returns a writable data object of the specified /p size.
  *
+ * This method should be used by the chunker to access memory in a stream
+ * or service FIFO buffer to ensure that the chunker only ever writes into an
+ * available, locked location.
+ *
+ * 
+ *
+ * @param[in] size  The size of the chunk requested on the buffer.
  */
 WritableData AbstractChunker::getDataStorage(size_t size) const
 {

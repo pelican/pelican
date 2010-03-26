@@ -12,12 +12,13 @@
 #include "StreamDataRequest.h"
 #include "StreamData.h"
 #include "data/DataRequirements.h"
+
 #include "utility/memCheck.h"
 
 namespace pelican {
 
 
-// class PelicanProtocol 
+// class PelicanProtocol
 PelicanProtocol::PelicanProtocol()
     : AbstractProtocol()
 {
@@ -27,7 +28,7 @@ PelicanProtocol::~PelicanProtocol()
 {
 }
 
-boost::shared_ptr<ServerRequest> PelicanProtocol::request(QTcpSocket& socket) 
+boost::shared_ptr<ServerRequest> PelicanProtocol::request(QTcpSocket& socket)
 {
 
     int timeout = 1000;
@@ -87,7 +88,7 @@ boost::shared_ptr<ServerRequest> PelicanProtocol::request(QTcpSocket& socket)
     return boost::shared_ptr<ServerRequest>(new ServerRequest(ServerRequest::Error, "PelicanProtocol: Unknown type passed"));
 }
 
-void PelicanProtocol::send(QIODevice& stream, const AbstractProtocol::StreamData_t& data ) 
+void PelicanProtocol::send(QIODevice& stream, const AbstractProtocol::StreamData_t& data )
 {
     // construct the stream data header
     // first integer is the number of Stream Data sets
@@ -122,7 +123,7 @@ void PelicanProtocol::send(QIODevice& stream, const AbstractProtocol::StreamData
     }
 }
 
-void PelicanProtocol::send(QIODevice& stream, const AbstractProtocol::ServiceData_t& data ) 
+void PelicanProtocol::send(QIODevice& stream, const AbstractProtocol::ServiceData_t& data )
 {
     // construct the service data header
     // first integer is the number of Service Data sets
