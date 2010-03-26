@@ -64,6 +64,7 @@ void StreamDataBuffer::getNext(LockedData& lockedData)
  */
 WritableData StreamDataBuffer::getWritable(size_t size)
 {
+    // XXX remove
     std::cout << std::endl;
     QMutexLocker locker(&_mutex);
     LockableStreamData* d = _getWritable(size);
@@ -94,17 +95,31 @@ LockableStreamData* StreamDataBuffer::_getWritable(size_t size)
     {
       std::cout << "StreamDataBuffer::_getWritable(): Returning pre-allocated data from the emptyQueue." << std::endl;
         // Make a copy of the empty queue.
-        QQueue<LockableStreamData*> temp = _emptyQueue;
+//        QQueue<LockableStreamData*> temp = _emptyQueue;
 
-        // Iterate through until we find a container big enough.
-        do {
-            LockableStreamData* lockableData = temp.dequeue();
-            if( lockableData->maxSize() >= size ) {
-                // We found one, so our work is done.
-                return lockableData;
-            }
-        }
-        while( ! temp.isEmpty() );
+      // Iterate through until we find a container big enough.
+      int i = 0;
+      do {
+          LockableStreamData* lockableData = _emptyQueue[i];
+
+          if( lockableData->maxSize() >= size ) {
+              // We found one, so our work is done.
+              _emptyQueue.removeAt(i);
+              return lockableData;
+          }
+          ++i;
+      }
+      while ( i < _emptyQueue.size() );
+
+//       do {
+//            LockableStreamData* lockableData = temp.dequeue();
+//            if( lockableData->maxSize() >= size ) {
+//                // We found one, so our work is done.
+//
+//                return lockableData;
+//            }
+//        }
+//        while( ! temp.isEmpty() );
     }
 
     // There are no empty containers already available, so we
@@ -163,7 +178,8 @@ void StreamDataBuffer::deactivateData(LockableStreamData* data)
     std::cout << "StreamDataBuffer: Deactivating data" << std::endl;
     QMutexLocker locker(&_mutex);
     data->reset();
-    _emptyQueue.enqueue(data);
+//    _emptyQueue.enqueue(data);
+    _emptyQueue.push_back(data);
 }
 
 /**
@@ -178,7 +194,8 @@ void StreamDataBuffer::activateData(LockableStreamData* data)
         _serveQueue.enqueue(data);
     } else {
         std::cout << "StreamDataBuffer: Activate data not valid" << std::endl;
-        _emptyQueue.enqueue(data);
+//        _emptyQueue.enqueue(data);
+        _emptyQueue.push_back(data);
     }
 }
 

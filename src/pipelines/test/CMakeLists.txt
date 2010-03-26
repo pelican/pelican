@@ -43,7 +43,7 @@ add_executable(testPipelineVisibilityPrinter ${TestPipelineVisibilityPrinter_src
 target_link_libraries(testPipelineVisibilityPrinter ${SUBPACKAGE_LIBRARIES} ${CPPUNIT_LIBRARIES} memoryTracer)
 
 add_executable(testPipelineServer ${TestPipelineServer_src})
-target_link_libraries(testPipelineServer ${SUBPACKAGE_LIBRARIES} ${CPPUNIT_LIBRARIES} memoryTracer)
+target_link_libraries(testPipelineServer ${SUBPACKAGE_LIBRARIES} ${CPPUNIT_LIBRARIES} memoryTracerDummy)
 
 add_executable(testPipelineRawImage ${TestPipelineRawImage_src})
 target_link_libraries(testPipelineRawImage ${SUBPACKAGE_LIBRARIES} ${CPPUNIT_LIBRARIES} memoryTracer)

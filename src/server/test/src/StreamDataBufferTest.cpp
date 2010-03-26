@@ -128,6 +128,7 @@ void StreamDataBufferTest::test_getWritableStreams()
             dataChunk.write(&value, 8, 0);
             std::cout << "[1] dataPtr = " << dataPtr << std::endl;
         }
+        CPPUNIT_ASSERT_EQUAL(1, buffer._serveQueue.size());
         {
             WritableData dataChunk = buffer.getWritable(dataSize);
             void* dataPtr =  dataChunk.data()->data()->operator*();
@@ -135,6 +136,7 @@ void StreamDataBufferTest::test_getWritableStreams()
             dataChunk.write(&value, 8, 0);
             std::cout << "[2] dataPtr = " << dataPtr << std::endl;
         }
+        CPPUNIT_ASSERT_EQUAL(2, buffer._serveQueue.size());
         {
             WritableData dataChunk = buffer.getWritable(dataSize);
             void* dataPtr =  dataChunk.data()->data()->operator*();
@@ -142,13 +144,38 @@ void StreamDataBufferTest::test_getWritableStreams()
             dataChunk.write(&value, 8, 0);
             std::cout << "[3] dataPtr = " << dataPtr << std::endl;
         }
+
+        CPPUNIT_ASSERT_EQUAL(3, buffer._serveQueue.size());
+        CPPUNIT_ASSERT_EQUAL(0, buffer._emptyQueue.size());
         {
-            std::cout << "+++++++++++++++++++++++++++++++++++++++++++" << std::endl;
             LockedData data("test");
             buffer.getNext(data);
-            buffer.getNext(data);
+        }
+        CPPUNIT_ASSERT_EQUAL(2, buffer._serveQueue.size());
+        CPPUNIT_ASSERT_EQUAL(1, buffer._emptyQueue.size());
+        {
+            LockedData data("test");
             buffer.getNext(data);
         }
+        CPPUNIT_ASSERT_EQUAL(1, buffer._serveQueue.size());
+        CPPUNIT_ASSERT_EQUAL(2, buffer._emptyQueue.size());
+
+        {
+            LockedData data("test");
+            buffer.getNext(data);
+        }
+        CPPUNIT_ASSERT_EQUAL(0, buffer._serveQueue.size());
+        CPPUNIT_ASSERT_EQUAL(3, buffer._emptyQueue.size());
+        {
+            WritableData dataChunk = buffer.getWritable(dataSize);
+            void* dataPtr =  dataChunk.data()->data()->operator*();
+            double value = 4;
+            dataChunk.write(&value, 8, 0);
+            std::cout << "[4] dataPtr = " << dataPtr << std::endl;
+        }
+        CPPUNIT_ASSERT_EQUAL(1, buffer._serveQueue.size());
+        CPPUNIT_ASSERT_EQUAL(2, buffer._emptyQueue.size());
+
     }
     std::cout << "#############################################" << std::endl;
 }

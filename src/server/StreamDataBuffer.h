@@ -19,7 +19,7 @@ class WritableData;
 
 /**
  * @class StreamDataBuffer
- *  
+ *
  * @brief
  * Maintain StreamData and memory access.
  *
@@ -30,6 +30,9 @@ class WritableData;
 class StreamDataBuffer : public DataBuffer
 {
     Q_OBJECT
+
+    private:
+        friend class StreamDataBufferTest;
 
     public:
         /// StreamDataBuffer constructor.
@@ -72,10 +75,10 @@ class StreamDataBuffer : public DataBuffer
         size_t _space;
         QList<LockableStreamData*> _data;
         QQueue<LockableStreamData*> _serveQueue;
-        QQueue<LockableStreamData*> _emptyQueue;
+        QList<LockableStreamData*> _emptyQueue;
         DataManager* _manager;
 };
 
 } // namespace pelican
 
-#endif // STREAMDATABUFFER_H 
+#endif // STREAMDATABUFFER_H
