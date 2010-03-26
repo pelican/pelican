@@ -2,6 +2,7 @@
 #define TESTCHUNKER_H
 #include <QString>
 #include <QObject>
+#include <cstring>
 #include "server/AbstractChunker.h"
 class QTimer;
 
