@@ -17,6 +17,7 @@ set( server_moc_headers
 
 set( server_src
      src/AbstractChunker.cpp
+     src/LofarChunker.cpp
      src/AbstractLockable.cpp
      src/LockableData.cpp
      src/DataReceiver.cpp

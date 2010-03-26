@@ -19,7 +19,7 @@ StreamDataBuffer::StreamDataBuffer(const QString& type, DataManager* manager, QO
     : DataBuffer(type, parent),_manager(manager)
 {
     // These are in bytes:
-    _max = 10000; //TODO make configurable
+    _max = 100000; //TODO make configurable
     _maxChunkSize = _max;
     _space = _max; 
 }
