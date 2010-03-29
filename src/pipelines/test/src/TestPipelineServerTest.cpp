@@ -53,9 +53,9 @@ void TestPipelineServerTest::test_method()
 
         // Set up the server.
         PelicanServer server;
-        TestChunker chunker("VisibilityData", false, 512);
+        TestChunker* chunker = new TestChunker("VisibilityData", false, 512);
         //server.addStreamChunker(&chunker, "127.0.0.1", 2001);
-        server.addStreamChunker(&chunker);
+        server.addStreamChunker(chunker);
 
         // Add the protocol.
         AbstractProtocol* protocol = new PelicanProtocol;
