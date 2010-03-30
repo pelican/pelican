@@ -164,6 +164,7 @@ QList<LockedData> Session::processStreamDataRequest(const StreamDataRequest& req
             dataList = _dataManager->getDataRequirements( *it );
             ++it;
         }
+        usleep(1);
     }
     return dataList;
 }
