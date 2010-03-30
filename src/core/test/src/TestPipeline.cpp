@@ -10,10 +10,11 @@ namespace pelican {
  * @details
  * Default TestPipeline constructor.
  */
-TestPipeline::TestPipeline()
+TestPipeline::TestPipeline(int iterations)
     : AbstractPipeline()
 {
-    _setDefaults();
+    reset();
+    _iterations = iterations;
 }
 
 /**
@@ -22,11 +23,12 @@ TestPipeline::TestPipeline()
  *
  * @param[in] requirements The data requirements of the pipeline.
  */
-TestPipeline::TestPipeline(const DataRequirements& requirements)
+TestPipeline::TestPipeline(const DataRequirements& requirements, int iterations)
     : AbstractPipeline()
 {
-    _setDefaults();
+    reset();
     _requiredDataRemote = requirements;
+    _iterations = iterations;
 }
 
 /**
@@ -73,16 +75,6 @@ void TestPipeline::run(QHash<QString, DataBlob*>& dataHash)
     // Increment counter and test for completion.
     if (++_counter >= _iterations)
         stop(); // Stop the pipeline driver.
-}
-
-/**
- * @details
- * Private method to set defaults. Called by constructors.
- */
-void TestPipeline::_setDefaults()
-{
-    _iterations = 10; // by default
-    reset();
 }
 
 } // namespace pelican

@@ -34,7 +34,10 @@ class PipelineDriverTest : public CppUnit::TestFixture
         CPPUNIT_TEST( test_start_noPipelinesRegistered );
         CPPUNIT_TEST( test_start_noPipelinesRun );
         CPPUNIT_TEST( test_start_singlePipelineNoClient );
-        CPPUNIT_TEST( test_multiPipeline );
+        CPPUNIT_TEST( test_start_singlePipelineClientReturnsGoodData );
+        CPPUNIT_TEST( test_start_singlePipelineClientReturnsWrongData );
+        CPPUNIT_TEST( test_start_multiPipelineRunDifferentData );
+        CPPUNIT_TEST( test_start_multiPipelineRunOne );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -47,7 +50,10 @@ class PipelineDriverTest : public CppUnit::TestFixture
         void test_start_noPipelinesRegistered();
         void test_start_noPipelinesRun();
         void test_start_singlePipelineNoClient();
-        void test_multiPipeline();
+        void test_start_singlePipelineClientReturnsGoodData();
+        void test_start_singlePipelineClientReturnsWrongData();
+        void test_start_multiPipelineRunDifferentData();
+        void test_start_multiPipelineRunOne();
 
     public:
         PipelineDriverTest(  );

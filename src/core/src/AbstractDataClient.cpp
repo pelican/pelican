@@ -21,13 +21,12 @@ namespace pelican {
 AbstractDataClient::AbstractDataClient(const ConfigNode& config, const DataTypes& types)
     : _dataReqs( types ), _configNode(config)
 {
-    // Quick sanity check
+    // Quick sanity check.
     if ( _dataReqs.dataRequirements().size()== 0 )
         throw( QString("No data requirements specified") );
 
-    // construct the totla set of requirements
-    foreach( const DataRequirements dr, dataRequirements() )
-    {
+    // Construct the total set of requirements.
+    foreach( const DataRequirements dr, dataRequirements() ) {
         _requireSet += dr.allData();
     }
 }
@@ -40,18 +39,13 @@ AbstractDataClient::~AbstractDataClient()
 {
 }
 
-AbstractServiceAdapter* AbstractDataClient::serviceAdapter(const QString& type) const
-{
-    return _dataReqs.serviceAdapter(type);
-}
-
-AbstractStreamAdapter* AbstractDataClient::streamAdapter(const QString& type) const
-{
-    return _dataReqs.streamAdapter(type);
-}
-
+/**
+ * @details
+ * Writes a message to the log (currently stderr).
+ */
 void AbstractDataClient::log(const QString& msg)
 {
     std::cerr << msg.toStdString() << std::endl;
 }
+
 } // namespace pelican

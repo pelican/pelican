@@ -28,6 +28,7 @@ PipelineDriver::PipelineDriver(DataBlobFactory* blobFactory,
     // Initialise member variables.
     _run = false;
     _dataClient = NULL;
+    _ignoreEmptyHash = false;
 
     // Store pointers to factories.
     _blobFactory = blobFactory;
@@ -145,13 +146,12 @@ void PipelineDriver::start()
 
         // Run all the pipelines compatible with this data hash.
         bool ranPipeline = false;
-        QMultiHash<DataRequirements, AbstractPipeline*>::iterator i = _pipelines.begin();
-        while (i != _pipelines.end()) {
-            if (i.key().isCompatible(validData)) {
+        QMultiHash<DataRequirements, AbstractPipeline*>::iterator pipe;
+        for (pipe = _pipelines.begin(); pipe != _pipelines.end(); ++pipe) {
+            if (pipe.key().isCompatible(validData)) {
                 ranPipeline = true;
-                i.value()->run(_dataHash);
+                pipe.value()->run(_dataHash);
             }
-            ++i;
         }
 
         // Check if no pipelines were run.

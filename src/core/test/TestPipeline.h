@@ -29,10 +29,10 @@ class TestPipeline : public AbstractPipeline
 
     public:
         /// Default constructor.
-        TestPipeline();
+        TestPipeline(int iterations = 0);
 
         /// Overloaded constructor.
-        TestPipeline(const DataRequirements& requirements);
+        TestPipeline(const DataRequirements& requirements, int iterations = 0);
 
         /// Destructor.
         ~TestPipeline();
@@ -51,13 +51,6 @@ class TestPipeline : public AbstractPipeline
 
         /// Runs the pipeline.
         void run(QHash<QString, DataBlob*>& dataHash);
-
-        /// Sets the number of pipeline iterations to perform.
-        void setIterations(int number) {_iterations = number;}
-
-    private:
-        /// Sets the default member variables.
-        void _setDefaults();
 };
 
 } // namespace pelican

@@ -14,6 +14,7 @@ set( coreTestMT_src
 set( coreTestLibrary_src
      src/coreTest.cpp
      src/TestPipeline.cpp
+     src/TestDataClient.cpp
 )
 add_library(coreTestUtilities ${coreTestLibrary_src} )
 SUBPACKAGE_ADD_LIBRARIES(coreTestUtilities)

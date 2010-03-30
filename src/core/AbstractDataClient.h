@@ -50,7 +50,7 @@ class DataBlob;
 class AbstractDataClient
 {
     private:
-        /// The DataTypeas and requirements.
+        /// The DataTypes and requirements.
         DataTypes _dataReqs;
 
         /// The configuration node for the data client.
@@ -58,17 +58,23 @@ class AbstractDataClient
 
     protected:
         QSet<QString> _requireSet;
+
+        /// Writes a message to the log.
         void log(const QString& msg);
 
     protected:
         /// Returns a pointer to the configuration node.
         const ConfigNode& configNode() {return _configNode;}
 
-        /// returns the appropriate adapter for service data of the required type
-        AbstractServiceAdapter* serviceAdapter(const QString& type) const;
+        /// Returns the adapter for service data of the required type.
+        AbstractServiceAdapter* serviceAdapter(const QString& type) const {
+            return _dataReqs.serviceAdapter(type);
+        }
 
-        /// returns the appropriate adapter for a stream of the required type
-        AbstractStreamAdapter* streamAdapter(const QString& type) const;
+        /// Returns the adapter for stream data of the required type.
+        AbstractStreamAdapter* streamAdapter(const QString& type) const {
+            return _dataReqs.streamAdapter(type);
+        }
 
     public:
         /// Data client constructor.
@@ -79,7 +85,9 @@ class AbstractDataClient
         virtual ~AbstractDataClient();
 
         /// Returns the list of data requirements for each pipeline.
-        const QList<DataRequirements>& dataRequirements() { return _dataReqs.dataRequirements(); }
+        const QList<DataRequirements>& dataRequirements() {
+            return _dataReqs.dataRequirements();
+        }
 
         /// Gets the requested data from the data server.
         /// This method gets tFills the given data hash, and returns another hash of valid data.

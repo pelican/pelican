@@ -1,11 +1,16 @@
 #include <QCoreApplication>
 #include "ModuleFactory.h"
 #include "DataClientFactory.h"
+#include "core/DataTypes.h"
 #include "core/PipelineDriver.h"
 #include "core/test/PipelineDriverTest.h"
 #include "core/test/TestPipeline.h"
+#include "core/test/TestDataClient.h"
 #include "data/DataRequirements.h"
 #include "data/DataBlobFactory.h"
+
+#include <iostream>
+
 #include "utility/memCheck.h"
 
 namespace pelican {
@@ -141,8 +146,7 @@ void PipelineDriverTest::test_start_noPipelinesRun()
 void PipelineDriverTest::test_start_singlePipelineNoClient()
 {
     int num = 10;
-    TestPipeline *pipeline = new TestPipeline;
-    pipeline->setIterations(num);
+    TestPipeline *pipeline = new TestPipeline(num);
     CPPUNIT_ASSERT_NO_THROW(_pipelineDriver->registerPipeline(pipeline));
     CPPUNIT_ASSERT_EQUAL(0, pipeline->count());
     CPPUNIT_ASSERT_NO_THROW(_pipelineDriver->start());
@@ -150,61 +154,145 @@ void PipelineDriverTest::test_start_singlePipelineNoClient()
     CPPUNIT_ASSERT_EQUAL(pipeline->count(), pipeline->matchedCounter());
 }
 
-void PipelineDriverTest::test_multiPipeline()
+/**
+ * @details
+ * Tests the start() method, running a single registered pipeline requiring
+ * some remote data, with a client that returns the required data.
+ *
+ * Expect the pipeline's run() method to be called repeatedly.
+ */
+void PipelineDriverTest::test_start_singlePipelineClientReturnsGoodData()
 {
-    return;
-    // Use Case:
-    // Attempt to run multiple registered pipelines requiring different data.
-    // Expect run method to be called with appropriate data on the test pipelines (repeatedly).
+    // Create the pipeline.
+    int num = 10;
+    DataRequirements req;
+    req.addStreamData("StreamData");
+    TestPipeline *pipeline = new TestPipeline(req, num);
+    CPPUNIT_ASSERT_NO_THROW(_pipelineDriver->registerPipeline(pipeline));
+    CPPUNIT_ASSERT_EQUAL(0, pipeline->count());
 
-//    QString reqData1("wibble1");
-//    QString reqData2("wibble2");
-//    TestDataClient client;
-//    QSet<QString> set;
-//    set.insert(reqData1);
-//    set.insert(reqData2);
-//    client.setSubset(set);
-//    _pipelineDriver->setDataClient(&client);
-//
-//    DataRequirements req1;
-//    DataRequirements req2;
-//    req1.setStreamData(reqData1);
-//    req2.setStreamData(reqData2);
-//    TestPipeline *pipeline1 = new TestPipeline(req1);
-//    TestPipeline *pipeline2 = new TestPipeline(req2);
-//    pipeline1->setPipelineDriver(_pipelineDriver);
-//    pipeline2->setPipelineDriver(_pipelineDriver);
-//    CPPUNIT_ASSERT_NO_THROW(_pipelineDriver->registerPipeline(pipeline1));
-//    CPPUNIT_ASSERT_NO_THROW(_pipelineDriver->registerPipeline(pipeline2));
-//    int num = 10;
-//    pipeline1->setIterations(num);
-//    pipeline2->setIterations(num);
-//    CPPUNIT_ASSERT_EQUAL(0, pipeline1->count());
-//    CPPUNIT_ASSERT_EQUAL(0, pipeline2->count());
-//
-//    // Use Case:
-//    // Data returned matches both pipelines.
-//    CPPUNIT_ASSERT_NO_THROW(_pipelineDriver->start());
-//    CPPUNIT_ASSERT_EQUAL(num, pipeline1->count());
-//    CPPUNIT_ASSERT_EQUAL(num, pipeline2->count());
-//    CPPUNIT_ASSERT_EQUAL(pipeline1->count(), pipeline1->matchedCounter());
-//    CPPUNIT_ASSERT_EQUAL(pipeline2->count(), pipeline2->matchedCounter());
-//
-//    // Reset pipeline counters.
-//    pipeline1->reset();
-//    pipeline2->reset();
-//
-//    // Use Case:
-//    // Data returned matches a single pipeline.
-//    QSet<QString> monoSet;
-//    monoSet.insert(reqData1);
-//    client.setSubset(monoSet);
-//    CPPUNIT_ASSERT_NO_THROW(_pipelineDriver->start());
-//    CPPUNIT_ASSERT_EQUAL(num, pipeline1->count());
-//    CPPUNIT_ASSERT_EQUAL(num, pipeline2->count());
-//    CPPUNIT_ASSERT_EQUAL(pipeline1->count(), pipeline1->matchedCounter());
-//    CPPUNIT_ASSERT_EQUAL(pipeline2->count(), pipeline2->matchedCounter());
+    // Create the data client.
+    ConfigNode config;
+    DataTypes types;
+    types.addData(req);
+    TestDataClient client(config, types);
+    _pipelineDriver->_dataClient = &client;
 
+    // Start the pipeline driver.
+    CPPUNIT_ASSERT_NO_THROW(_pipelineDriver->start());
+    CPPUNIT_ASSERT_EQUAL(num, pipeline->count());
+    CPPUNIT_ASSERT_EQUAL(pipeline->count(), pipeline->matchedCounter());
+}
+
+/**
+ * @details
+ * Tests the start() method, running a single registered pipeline requiring
+ * some remote data, with a client that returns different data.
+ *
+ * Expect a throw, since no pipelines are run.
+ */
+void PipelineDriverTest::test_start_singlePipelineClientReturnsWrongData()
+{
+    // Create the pipeline.
+    int num = 10;
+    DataRequirements pipelineReq;
+    pipelineReq.addStreamData("StreamData");
+    TestPipeline *pipeline = new TestPipeline(pipelineReq, num);
+    CPPUNIT_ASSERT_NO_THROW(_pipelineDriver->registerPipeline(pipeline));
+    CPPUNIT_ASSERT_EQUAL(0, pipeline->count());
+
+    // Create the data client.
+    ConfigNode config;
+    DataTypes types;
+    DataRequirements clientTypes;
+    clientTypes.addStreamData("OtherStreamData");
+    types.addData(clientTypes);
+    TestDataClient client(config, types);
+    _pipelineDriver->_dataClient = &client;
+
+    // Start the pipeline driver.
+    CPPUNIT_ASSERT_THROW(_pipelineDriver->start(), QString);
+    CPPUNIT_ASSERT_EQUAL(0, pipeline->count());
+    CPPUNIT_ASSERT_EQUAL(pipeline->count(), pipeline->matchedCounter());
+}
+
+/**
+ * @details
+ * Tests the start() method, running two registered pipelines requiring
+ * different data. The client returns both sets of data.
+ *
+ * Expect each pipeline's run() method to be called repeatedly.
+ */
+void PipelineDriverTest::test_start_multiPipelineRunDifferentData()
+{
+    // Create both pipelines.
+    int num = 10;
+    DataRequirements pipelineReq1, pipelineReq2;
+    QString type1 = "StreamData1", type2 = "StreamData2";
+    pipelineReq1.addStreamData(type1);
+    pipelineReq2.addStreamData(type2);
+    TestPipeline *pipeline1 = new TestPipeline(pipelineReq1, num);
+    TestPipeline *pipeline2 = new TestPipeline(pipelineReq2, num);
+    CPPUNIT_ASSERT_NO_THROW(_pipelineDriver->registerPipeline(pipeline1));
+    CPPUNIT_ASSERT_NO_THROW(_pipelineDriver->registerPipeline(pipeline2));
+    CPPUNIT_ASSERT_EQUAL(0, pipeline1->count());
+    CPPUNIT_ASSERT_EQUAL(0, pipeline2->count());
+
+    // Create the data client.
+    ConfigNode config;
+    DataTypes types;
+    DataRequirements clientTypes;
+    clientTypes.addStreamData(type1); // Add both types of required data.
+    clientTypes.addStreamData(type2); // Add both types of required data.
+    types.addData(clientTypes);
+    TestDataClient client(config, types);
+    _pipelineDriver->_dataClient = &client;
+
+    // Start the pipeline driver.
+    CPPUNIT_ASSERT_NO_THROW(_pipelineDriver->start());
+    CPPUNIT_ASSERT_EQUAL(num, pipeline1->count());
+    CPPUNIT_ASSERT_EQUAL(pipeline1->count(), pipeline1->matchedCounter());
+    CPPUNIT_ASSERT_EQUAL(num, pipeline2->count());
+    CPPUNIT_ASSERT_EQUAL(pipeline2->count(), pipeline2->matchedCounter());
+}
+
+/**
+ * @details
+ * Tests the start() method on two registered pipelines requiring different
+ * data, when the client returns only one type of data.
+ *
+ * Expect one pipeline's run() method to be called repeatedly.
+ */
+void PipelineDriverTest::test_start_multiPipelineRunOne()
+{
+    // Create both pipelines.
+    int num = 10;
+    DataRequirements pipelineReq1, pipelineReq2;
+    QString type1 = "StreamData1", type2 = "StreamData2";
+    pipelineReq1.addStreamData(type1);
+    pipelineReq2.addStreamData(type2);
+    TestPipeline *pipeline1 = new TestPipeline(pipelineReq1, num);
+    TestPipeline *pipeline2 = new TestPipeline(pipelineReq2, num);
+    CPPUNIT_ASSERT_NO_THROW(_pipelineDriver->registerPipeline(pipeline1));
+    CPPUNIT_ASSERT_NO_THROW(_pipelineDriver->registerPipeline(pipeline2));
+    CPPUNIT_ASSERT_EQUAL(0, pipeline1->count());
+    CPPUNIT_ASSERT_EQUAL(0, pipeline2->count());
+
+    // Create the data client.
+    ConfigNode config;
+    DataTypes types;
+    DataRequirements clientTypes;
+    clientTypes.addStreamData(type1); // Add one type of required data.
+    types.addData(clientTypes);
+    TestDataClient client(config, types);
+    _pipelineDriver->_dataClient = &client;
+
+    // Start the pipeline driver.
+    CPPUNIT_ASSERT_NO_THROW(_pipelineDriver->start());
+    CPPUNIT_ASSERT_EQUAL(num, pipeline1->count());
+    CPPUNIT_ASSERT_EQUAL(pipeline1->count(), pipeline1->matchedCounter());
+    CPPUNIT_ASSERT_EQUAL(0, pipeline2->count());
+    CPPUNIT_ASSERT_EQUAL(pipeline2->count(), pipeline2->matchedCounter());
 }
 
 } // namespace pelican
