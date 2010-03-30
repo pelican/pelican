@@ -10,6 +10,7 @@
  */
 
 namespace pelican {
+    class ConfigNode;
 
 /**
  * @class AbstractChunker
@@ -37,8 +38,16 @@ class AbstractChunker
         AbstractChunker(const QString& type, QString host = "", quint16 port = 0)
             : _dataManager(NULL), _type(type), _host(host), _port(port), _device(NULL) {}
 
+        AbstractChunker(const QString& type, const ConfigNode& config);
+
         /// Destroys the AbstractChunker.
         virtual ~AbstractChunker();
+
+        /// set the port to listen on for data
+        void setPort(quint16 port);
+
+        /// set the ip address to listen on for data
+        void setHost(const QString& ipaddress);
 
         /// Return the type name to be associated with this data.
         const QString& type() const {return _type;}

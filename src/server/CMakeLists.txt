@@ -16,23 +16,26 @@ set( server_moc_headers
    )
 
 set( server_src
-     src/AbstractChunker.cpp
-     src/LofarChunker.cpp
-     src/AbstractLockable.cpp
-     src/LockableData.cpp
-     src/DataReceiver.cpp
-     src/LockedData.cpp
-     src/DataManager.cpp
-     src/PelicanServer.cpp
-     src/PelicanPortServer.cpp
-     src/Session.cpp
-     src/LockableStreamData.cpp
-     src/StreamDataBuffer.cpp
-     src/ServiceDataBuffer.cpp
-     src/WritableData.cpp
+    src/AbstractChunker.cpp
+    src/LofarChunker.cpp
+    src/AbstractLockable.cpp
+    src/ChunkerClassGeneratorBase.cpp
+    src/ChunkerManager.cpp
+    src/ChunkerFactory.cpp
+    src/LockableData.cpp
+    src/DataReceiver.cpp
+    src/LockedData.cpp
+    src/DataManager.cpp
+    src/PelicanServer.cpp
+    src/PelicanPortServer.cpp
+    src/Session.cpp
+    src/LockableStreamData.cpp
+    src/StreamDataBuffer.cpp
+    src/ServiceDataBuffer.cpp
+    src/WritableData.cpp
 )
 set( serverExe_src
-     src/main.cpp
+    src/main.cpp
 )
 
 QT4_WRAP_CPP(

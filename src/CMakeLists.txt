@@ -16,7 +16,7 @@ set( ${PROJECT_NAME}_MINOR_VERSION 0 )
 set( ${PROJECT_NAME}_PATCH_LEVEL 0 )
 
 # === CMake setup info
-cmake_minimum_required(VERSION 2.6.4 FATAL_ERROR)
+cmake_minimum_required(VERSION 2.6 FATAL_ERROR)
 list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_SOURCE_DIR}/cmake)
 include(cmake/packagemacros.cmake)
 include_directories(${PROJECT_SOURCE_DIR})

@@ -50,6 +50,11 @@ AbstractStreamAdapter* AbstractDataClient::streamAdapter(const QString& type) co
     return _dataReqs.streamAdapter(type);
 }
 
+AbstractAdapter::AdapterType_t AbstractDataClient::type(const QString& dataName) const
+{
+    return _dataReqs.type(dataName);
+}
+
 void AbstractDataClient::log(const QString& msg)
 {
     std::cerr << msg.toStdString() << std::endl;

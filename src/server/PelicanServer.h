@@ -9,6 +9,7 @@
 #include <QThread>
 #include <QMutex>
 #include <QMutexLocker>
+#include "ChunkerManager.h"
 
 /**
  * @file PelicanServer.h
@@ -48,21 +49,18 @@ class PelicanServer : public QThread
         /// Assosiate a host and port with a particular
         //  chunker type. Ownership of the Chunker is
         //  transferred to this class.
-        void addStreamChunker(AbstractChunker*, const QString& host, quint16 port);
-        void addServiceChunker(AbstractChunker*, const QString& host, quint16 port);
+        void addStreamChunker(AbstractChunker*);
+        void addServiceChunker(AbstractChunker*);
         bool isReady() {QMutexLocker locker(&_mutex); return _ready;}
 
     protected:
         // code to be executed in the thread ( via start() )
         void run();
-        void _addChunker(AbstractChunker*);
 
     private:
         QMap<quint16,AbstractProtocol* > _protocolPortMap;
-        QMap<QPair<QString,quint16>,AbstractChunker* > _chunkerPortMap;
-        QSet<QString> _streamDataTypes;
-        QSet<QString> _serviceDataTypes;
         QMutex _mutex;
+        ChunkerManager _chunkerManager;
         bool _ready;
 };
 
