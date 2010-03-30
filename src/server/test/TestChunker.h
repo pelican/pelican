@@ -34,7 +34,7 @@ class TestChunker : public QObject, public AbstractChunker
                 quint16 port = 0, QObject* parent = 0);
 
         /// Destroys the TestChunker.
-        ~TestChunker() {}
+        ~TestChunker();
 
         /// Creates the socket to use for the incoming data stream.
         virtual QIODevice* newDevice();

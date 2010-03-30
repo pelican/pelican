@@ -24,6 +24,15 @@ _nextCount(0), _size(size)
 
 /**
  * @details
+ * Destroys the TestChunker.
+ */
+TestChunker::~TestChunker()
+{
+    delete _timer;
+}
+
+/**
+ * @details
  * Constructs a new device.
  */
 QIODevice* TestChunker::newDevice()
@@ -78,10 +87,10 @@ unsigned int TestChunker::nextCalled()
  */
 void TestChunker::_start()
 {
-    if (_nextCount < 10)
+//    if (_nextCount < 10)
         next(_device);
-    else
-        _timer->stop();
+//    else
+//        _timer->stop();
 }
 
 } // namespace pelican
