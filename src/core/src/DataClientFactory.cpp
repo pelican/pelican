@@ -80,11 +80,10 @@ AbstractDataClient* DataClientFactory::create(const QString& type,
  * @details
  * Method to create a pointer to a data client of the specified /p type
  *
- * ??! DOC GOES HERE ??!!
  *
- * @param[in] type ?? DOC!!
- * @param[in] requirements ?? DOC!!
- * @param[in] name ?? DOC!!
+ * @param[in] type : The type of data client object to create
+ * @param[in] requirements : the data sets to be provided by the client
+ * @param[in] name : a specific named configuration to use
  */
 AbstractDataClient* DataClientFactory::create(const QString& type,
         const DataTypes& requirements, const QString& name)
