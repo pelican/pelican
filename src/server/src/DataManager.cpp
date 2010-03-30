@@ -200,7 +200,7 @@ LockedData DataManager::getServiceData(const QString& type, const QString& versi
 
 void DataManager::associateServiceData(LockableStreamData* data)
 {
-    std::cout << "DataManager::associateServiceData()" << std::endl;
+//     std::cout << "DataManager::associateServiceData()" << std::endl;
     QHashIterator<QString, ServiceDataBuffer*> i(_service);
     while (i.hasNext()) {
         i.next();

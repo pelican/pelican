@@ -207,11 +207,11 @@ QHash<QString, DataBlob*> PelicanServerClient::_sendRequest(const ServerRequest&
 
     boost::shared_ptr<ServerResponse> r = _protocol->receive(sock);
     validData =  _response(sock, r, dataHash);
-    std::cout << "-------------------" << std::endl;
-    foreach (QString key, validData.keys()) {
-        std::cout << "Key: " << key.toStdString() << std::endl;
-    }
-    std::cout << "-------------------" << std::endl;
+//     std::cout << "-------------------" << std::endl;
+//     foreach (QString key, validData.keys()) {
+//         std::cout << "Key: " << key.toStdString() << std::endl;
+//     }
+//     std::cout << "-------------------" << std::endl;
     return validData;
 }
 

@@ -67,12 +67,12 @@ void Session::processRequest(const ServerRequest& req, QIODevice& out)
         switch(req.type()) {
             case ServerRequest::Acknowledge:
                 _protocol->send(out,"ACK");
-                cout << "Sent acknowledgement" << endl;
+                cout << "Session::processRequest(): Sent acknowledgement" << endl;
                 break;
             case ServerRequest::StreamData:
                 {
                     QList<LockedData> dataList = processStreamDataRequest(static_cast<const StreamDataRequest&>(req) );
-                    cout << "List size: " << dataList.size() << endl;
+//                     cout << "Session::processRequest():  List size: " << dataList.size() << endl;
                     if( dataList.size() > 0 ) {
                         AbstractProtocol::StreamData_t data;
                         for( int i=0; i < dataList.size(); ++i ) {
@@ -81,13 +81,13 @@ void Session::processRequest(const ServerRequest& req, QIODevice& out)
                         }
                         _protocol->send( out, data );
 
-                        // Mark as being served so can delete.
+                        // Mark as data as being served so it can be deactivated.
                         foreach (LockedData d, dataList) {
                             static_cast<LockableStreamData*>(d.object())->served() = true;
                         }
-                        cout << "Sent stream data" << endl;
+//                         cout << "Session::processRequest(): Sent stream data" << endl;
                     }
-                    cout << "Finished stream data request" << endl;
+//                     cout << "Session::processRequest(): Finished stream data request" << endl;
                 }
                 break;
             case ServerRequest::ServiceData:
@@ -100,7 +100,7 @@ void Session::processRequest(const ServerRequest& req, QIODevice& out)
                             data.append(lockedData->data().get());
                         }
                         _protocol->send( out, data );
-                        cout << "Sent service data" << endl;
+//                         cout << "Session::processRequest(): Sent service data" << endl;
                     }
                 }
                 break;
@@ -111,7 +111,7 @@ void Session::processRequest(const ServerRequest& req, QIODevice& out)
     catch( const QString& e )
     {
         _protocol->sendError( out, e );
-        cout << "Sent error: " << e.toStdString() << endl;
+//         cout << "Sent error: " << e.toStdString() << endl;
     }
 }
 

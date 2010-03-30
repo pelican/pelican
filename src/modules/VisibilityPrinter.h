@@ -33,6 +33,9 @@ class VisibilityPrinter : public AbstractModule
     public:
         /// Runs the module
         void run(VisibilityData* vis);
+
+    private:
+        unsigned _counter;
 };
 
 } // namespace pelican
