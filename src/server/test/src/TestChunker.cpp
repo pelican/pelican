@@ -36,7 +36,7 @@ QIODevice* TestChunker::newDevice()
 //    socket->connectToHost( _host, _port );
 //    return socket;
 
-    _timer->start(1);
+    _timer->start(500);
     QBuffer* buffer = new QBuffer;
     _device = buffer;
     return buffer;

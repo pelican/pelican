@@ -69,7 +69,7 @@ void TestPipelineServerTest::test_method()
         PipelineBinaryEmulator pipelineBinary(&config);
 
         // Return after one second.
-        QTimer::singleShot(12000, &app, SLOT(quit()));
+        QTimer::singleShot(50000, &app, SLOT(quit()));
         app.exec();
     }
     catch (QString e) {

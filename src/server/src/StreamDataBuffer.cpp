@@ -37,7 +37,7 @@ StreamDataBuffer::~StreamDataBuffer()
 void StreamDataBuffer::getNext(LockedData& lockedData)
 {
     QMutexLocker locker(&_mutex);
-    std::cout << "StreamDataBuffer::getNext() . Serve queue size " << _serveQueue.size() << std::endl;
+    //std::cout << "StreamDataBuffer::getNext() . Serve queue size " << _serveQueue.size() << std::endl;
 
     for (int i = 0; i < _serveQueue.size(); ++i) {
         LockableStreamData* lockable = _serveQueue[i];
@@ -52,7 +52,7 @@ void StreamDataBuffer::getNext(LockedData& lockedData)
         lockedData.setData(_serveQueue.dequeue());
         return;
     } else {
-        std::cout << "StreamDataBuffer::getNext(): Serve queue empty."  << std::endl;
+        //std::cout << "StreamDataBuffer::getNext(): Serve queue empty."  << std::endl;
     }
     lockedData.setData(0);
 }

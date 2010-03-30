@@ -124,11 +124,11 @@ void DataManager::setServiceDataBuffer(const QString& name, ServiceDataBuffer* b
  */
 LockedData DataManager::getNext(const QString& type, const QSet<QString>& associateData )
 {
-    std::cout << "DataManager::getNext() type = " << type.toStdString() << std::endl;
+    //std::cout << "DataManager::getNext() type = " << type.toStdString() << std::endl;
     LockedData lockedData = getNext(type);
     
     if( lockedData.isValid() ) {
-        std::cout << "DataManager::getNext(): Valid locked stream data found." << std::endl;
+        //std::cout << "DataManager::getNext(): Valid locked stream data found." << std::endl;
 
         // check it contains valid associateData
         LockableStreamData* streamData =
@@ -153,7 +153,7 @@ LockedData DataManager::getNext(const QString& type, const QSet<QString>& associ
  */
 LockedData DataManager::getNext(const QString& type)
 {
-    std::cout << "DataManager::getNext: type : " << type.toStdString() << std::endl;
+//     std::cout << "DataManager::getNext: type : " << type.toStdString() << std::endl;
     LockedData lockedData(type, 0);
 
     _streams[type]->getNext(lockedData);
