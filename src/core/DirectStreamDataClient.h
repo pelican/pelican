@@ -15,9 +15,18 @@ namespace pelican {
  * @class DirectStreamDataClient
  *  
  * @brief
- *    A Background Thread that reads raw data directly from a socket
+ *    A Data Client that allows you to connect to one or more data streams
+ *    directly using specialist chunkers, rather than through the PelicanServer
+ *    This is useful when the data rates on the stream can be handled in a single
+ *    pipeline.
  * @details
- *    An interface class
+ *    To use:
+ *    1) Set up the client in the usual way with adapters etc.
+ *    2) add a chunker for each stream
+ *    3) setup your configuration file
+ *    4) call the start() mehtod to launch all the chunkers in seperate threads
+ *    5) now ready to call getData
+ *
  */
 
 class DirectStreamDataClient : public AbstractDataClient
