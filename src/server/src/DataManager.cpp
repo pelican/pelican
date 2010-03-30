@@ -10,6 +10,7 @@
 
 namespace pelican {
 
+
 /**
  * @details
  * DataManager constructor.
@@ -17,6 +18,7 @@ namespace pelican {
 DataManager::DataManager()
 {
 }
+
 
 /**
  * @details
@@ -35,6 +37,7 @@ DataManager::~DataManager()
     }
 }
 
+
 /**
  * @details
  *
@@ -52,6 +55,7 @@ WritableData DataManager::getWritableData(const QString& type, size_t size)
     return WritableData(0);
 }
 
+
 /**
  * @details
  * This method sets up a stream buffer for the specified data type
@@ -68,6 +72,7 @@ StreamDataBuffer* DataManager::getStreamBuffer(const QString& type)
     return _streams[type];
 }
 
+
 /**
  * @details
  * This method sets up a service buffer for the specified data type
@@ -82,6 +87,7 @@ ServiceDataBuffer* DataManager::getServiceBuffer(const QString& type)
     return _service[type];
 }
 
+
 /**
  * @details
  * Note that the DataManager takes ownership of the StreamDataBuffer, and will
@@ -89,13 +95,13 @@ ServiceDataBuffer* DataManager::getServiceBuffer(const QString& type)
  *
  * FIXME THIS APPEARS TO BE USED FOR THE TEST ONLY - DON'T USE IT!
  */
-void DataManager::setStreamDataBuffer( const QString& name, StreamDataBuffer* buffer)
+void DataManager::setStreamDataBuffer(const QString& name, StreamDataBuffer* buffer)
 {
-    std::cout << "DataManager::setStreamDataBuffer" << std::endl;
     _specs.setStreamData(name);
     buffer->setDataManager(this);
     _streams[name]=buffer;
 }
+
 
 /**
  * @details
@@ -108,6 +114,7 @@ void DataManager::setServiceDataBuffer(const QString& name, ServiceDataBuffer* b
     _service[name]=buffer;
 }
 
+
 /**
  * @details
  *
@@ -118,20 +125,24 @@ void DataManager::setServiceDataBuffer(const QString& name, ServiceDataBuffer* b
  */
 LockedData DataManager::getNext(const QString& type, const QSet<QString>& associateData )
 {
-    std::cout << "DataManager::getNext()" << std::endl;
+    std::cout << "DataManager::getNext() type = " << type.toStdString() << std::endl;
     LockedData lockedData = getNext(type);
+    
     if( lockedData.isValid() ) {
-        std::cout << "Valid locked data" << std::endl;
+        std::cout << "DataManager::getNext(): Valid locked stream data found." << std::endl;
+
         // check it contains valid associateData
         LockableStreamData* streamData =
                 static_cast<LockableStreamData*>(lockedData.object());
-        QSet<QString> tst = streamData->associateDataTypes();
-        if(! ( associateData - tst ).isEmpty() ) {
+        QSet<QString> test = streamData->associateDataTypes();
+
+        if(! ( associateData - test ).isEmpty() ) {
             return LockedData(0);
         }
     }
     return lockedData;
 }
+
 
 /**
  * @details
@@ -145,28 +156,37 @@ LockedData DataManager::getNext(const QString& type)
 {
     std::cout << "DataManager::getNext: type : " << type.toStdString() << std::endl;
     LockedData lockedData(type, 0);
+
     _streams[type]->getNext(lockedData);
     return lockedData;
 }
 
+/**
+ * @details
+ */
 LockedData DataManager::getServiceData(const QString& type, const QString& version)
 {
-    LockedData ld(type,0);
+    LockedData lockedData(type,0);
+
     if( _service.contains(type) ) 
-        _service[type]->getData(ld, version);
-    return ld;
+        _service[type]->getData(lockedData, version);
+    return lockedData;
 }
+
 
 void DataManager::associateServiceData(LockableStreamData* data)
 {
+    std::cout << "DataManager::associateServiceData()" << std::endl;
     QHashIterator<QString, ServiceDataBuffer*> i(_service);
     while (i.hasNext()) {
         i.next();
         LockedData d(i.key());
         i.value()->getCurrent(d);
-        if( d.isValid() ) 
+        if( d.isValid() ) {
             data->addAssociatedData(d);
+        }
     }
 }
+
 
 } // namespace pelican

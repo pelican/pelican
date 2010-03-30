@@ -2,3 +2,6 @@
 doc/html
 # build directory
 build
+# kdevelop settings directory
+src/.kdev4
+src/src.kdev4

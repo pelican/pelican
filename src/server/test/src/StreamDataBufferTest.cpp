@@ -150,12 +150,14 @@ void StreamDataBufferTest::test_getWritableStreams()
         {
             LockedData data("test");
             buffer.getNext(data);
+            static_cast<LockableStreamData*>(data.object())->served() = true;
         }
         CPPUNIT_ASSERT_EQUAL(2, buffer._serveQueue.size());
         CPPUNIT_ASSERT_EQUAL(1, buffer._emptyQueue.size());
         {
             LockedData data("test");
             buffer.getNext(data);
+            static_cast<LockableStreamData*>(data.object())->served() = true;
         }
         CPPUNIT_ASSERT_EQUAL(1, buffer._serveQueue.size());
         CPPUNIT_ASSERT_EQUAL(2, buffer._emptyQueue.size());
@@ -163,6 +165,7 @@ void StreamDataBufferTest::test_getWritableStreams()
         {
             LockedData data("test");
             buffer.getNext(data);
+            static_cast<LockableStreamData*>(data.object())->served() = true;
         }
         CPPUNIT_ASSERT_EQUAL(0, buffer._serveQueue.size());
         CPPUNIT_ASSERT_EQUAL(3, buffer._emptyQueue.size());

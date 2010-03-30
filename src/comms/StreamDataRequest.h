@@ -47,7 +47,7 @@ class StreamDataRequest : public ServerRequest
 
         /// Returns true if there are no stream data
         /// in any of the requirements passed.
-        bool isEmpty() const {return _dataOptions.size() == 0;}
+        bool isEmpty() const { return _dataOptions.empty(); }
 
         /// The number of requirements.
         int size() const {return _dataOptions.size();}

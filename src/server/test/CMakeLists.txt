@@ -10,19 +10,19 @@ set(
 set( serverTestLib_moc_sources
    TestServer.h
    TestChunker.h
-   )
+)
 
 set(
    serverTest_src
    src/serverTest.cpp
-   src/LockableStreamDataTest.cpp
-   src/LockedDataTest.cpp
-   src/DataManagerTest.cpp
+   #src/LockableStreamDataTest.cpp
+   #src/LockedDataTest.cpp
+   #src/DataManagerTest.cpp
    src/ServiceDataBufferTest.cpp
-   src/StreamDataBufferTest.cpp
+   #src/StreamDataBufferTest.cpp
    src/SessionTest.cpp
-   src/WritableDataTest.cpp
-   #src/LofarChunkerTest.cpp
+   #src/WritableDataTest.cpp
+   ####src/LofarChunkerTest.cpp
 )
 
 QT4_WRAP_CPP(

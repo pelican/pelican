@@ -142,9 +142,9 @@ void ZenithCalibrater::run(VisibilityData* _rawVis,
  * For zheev() reference see: http://goo.gl/lPz1
  *
  * @param[in]     nAnt              Number of antennas.
- * @paran[in]     nEigenvaluesUsed  Number of eigenvalues retained per iteration.
+ * @param[in]     nEigenvaluesUsed  Number of eigenvalues retained per iteration.
  * @param[in]     nIterations       Maximum number of iterations in calibration loop.
- * @paran[in]     tolerance         Variable to determine if convergence has been met.
+ * @param[in]     tolerance         Variable to determine if convergence has been met.
  * @param[in]     lWork             ??
  * @param[in]     work              ??
  * @param[in]     rWork             ??
