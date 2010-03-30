@@ -73,9 +73,9 @@ class StreamDataBuffer : public DataBuffer
         size_t _max;
         size_t _maxChunkSize;
         size_t _space;
-        QList<LockableStreamData*> _data;
-        QQueue<LockableStreamData*> _serveQueue;
-        QList<LockableStreamData*> _emptyQueue;
+        QList<LockableStreamData*> _data; ///< List of all allocated memory blocks.
+        QQueue<LockableStreamData*> _serveQueue; ///< Queue of blocks waiting to be served.
+        QList<LockableStreamData*> _emptyQueue; ///< List of all available blocks.
         DataManager* _manager;
 };
 

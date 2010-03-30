@@ -64,8 +64,6 @@ void StreamDataBuffer::getNext(LockedData& lockedData)
  */
 WritableData StreamDataBuffer::getWritable(size_t size)
 {
-    // XXX remove
-    std::cout << std::endl;
     QMutexLocker locker(&_mutex);
     LockableStreamData* d = _getWritable(size);
 
@@ -91,35 +89,15 @@ WritableData StreamDataBuffer::getWritable(size_t size)
  */
 LockableStreamData* StreamDataBuffer::_getWritable(size_t size)
 {
-    if( ! _emptyQueue.isEmpty() )
-    {
-      std::cout << "StreamDataBuffer::_getWritable(): Returning pre-allocated data from the emptyQueue." << std::endl;
-        // Make a copy of the empty queue.
-//        QQueue<LockableStreamData*> temp = _emptyQueue;
+    // Return a pre-allocated block from the empty queue, if one exists.
+    for (int i = 0; i < _emptyQueue.size(); ++i) {
+        LockableStreamData* lockableData = _emptyQueue[i];
 
-      // Iterate through until we find a container big enough.
-      int i = 0;
-      do {
-          LockableStreamData* lockableData = _emptyQueue[i];
-
-          if( lockableData->maxSize() >= size ) {
-              // We found one, so our work is done.
-              _emptyQueue.removeAt(i);
-              return lockableData;
-          }
-          ++i;
-      }
-      while ( i < _emptyQueue.size() );
-
-//       do {
-//            LockableStreamData* lockableData = temp.dequeue();
-//            if( lockableData->maxSize() >= size ) {
-//                // We found one, so our work is done.
-//
-//                return lockableData;
-//            }
-//        }
-//        while( ! temp.isEmpty() );
+        if( lockableData->maxSize() >= size ) {
+            // We found one, so our work is done.
+            _emptyQueue.removeAt(i);
+            return lockableData;
+        }
     }
 
     // There are no empty containers already available, so we
@@ -127,12 +105,10 @@ LockableStreamData* StreamDataBuffer::_getWritable(size_t size)
     if(size <= _space && size <= _maxChunkSize )
     {
         void* memory = malloc(size);
-        std::cout << "StreamDataBuffer::_getWritable(): Allocated memory." << std::endl;
         if (memory) {
             _space -= size;
             LockableStreamData* lockableData = new LockableStreamData(_type, memory, size);
-            _data.append(lockableData);
-            std::cout << "Appended the data to the list" << std::endl;
+            _data.append(lockableData); // Add to the list of known data.
             Q_ASSERT(connect( lockableData, SIGNAL(unlockedWrite()), this, SLOT(activateData() ) ));
             Q_ASSERT(connect( lockableData, SIGNAL(unlocked()), this, SLOT(deactivateData() ) ));
             return lockableData;
@@ -151,7 +127,6 @@ LockableStreamData* StreamDataBuffer::_getWritable(size_t size)
  */
 void StreamDataBuffer::activateData()
 {
-    std::cout << "StreamDataBuffer: Activate data slot" << std::endl;
     activateData( static_cast<LockableStreamData*>(sender()) );
 }
 
@@ -175,10 +150,9 @@ void StreamDataBuffer::deactivateData()
  */
 void StreamDataBuffer::deactivateData(LockableStreamData* data)
 {
-    std::cout << "StreamDataBuffer: Deactivating data" << std::endl;
+    //std::cout << "StreamDataBuffer::deactivateData()" << std::endl;
     QMutexLocker locker(&_mutex);
     data->reset();
-//    _emptyQueue.enqueue(data);
     _emptyQueue.push_back(data);
 }
 
@@ -190,11 +164,10 @@ void StreamDataBuffer::activateData(LockableStreamData* data)
 {
     QMutexLocker locker(&_mutex);
     if( data->isValid() ) {
-        std::cout << "StreamDataBuffer: Activate data: is valid" << std::endl;
+        //std::cout << "StreamDataBuffer::activateData(): Valid" << std::endl;
         _serveQueue.enqueue(data);
     } else {
-        std::cout << "StreamDataBuffer: Activate data not valid" << std::endl;
-//        _emptyQueue.enqueue(data);
+        //std::cout << "StreamDataBuffer::activateData(): Not valid" << std::endl;
         _emptyQueue.push_back(data);
     }
 }
