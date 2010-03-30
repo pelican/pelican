@@ -1,6 +1,6 @@
 #ifndef CHUNKERCLASSGENERATORBASE_H
 #define CHUNKERCLASSGENERATORBASE_H
-
+#include <QString>
 
 /**
  * @file ChunkerClassGeneratorBase.h
@@ -24,7 +24,7 @@ namespace pelican {
 class ChunkerClassGeneratorBase
 {
     public:
-        ChunkerClassGeneratorBase(const QString& type);
+        ChunkerClassGeneratorBase( const QString& type );
         virtual ~ChunkerClassGeneratorBase();
         QString type() { return _type; };
         virtual AbstractChunker* create(const ConfigNode& config) = 0;

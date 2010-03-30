@@ -9,7 +9,7 @@ namespace pelican {
 /**
  *@details ChunkerClassGeneratorBase 
  */
-ChunkerClassGeneratorBase::ChunkerClassGeneratorBase()
+ChunkerClassGeneratorBase::ChunkerClassGeneratorBase( const QString& type )
     : _type(type)
 {
 }
