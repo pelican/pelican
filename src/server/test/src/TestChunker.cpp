@@ -45,7 +45,7 @@ QIODevice* TestChunker::newDevice()
 //    socket->connectToHost( _host, _port );
 //    return socket;
 
-    _timer->start(500);
+    _timer->start(1);
     QBuffer* buffer = new QBuffer;
     _device = buffer;
     return buffer;
@@ -57,10 +57,21 @@ QIODevice* TestChunker::newDevice()
  */
 void TestChunker::next(QIODevice*)
 {
-    std::cout << "TestChunker::next()" << std::endl;
+    //std::cout << "TestChunker::next()" << std::endl;
     ++_nextCount;
+
+    // Get writable data object.
     WritableData writableData = getDataStorage(_size);
 
+    // If the writable data object is not valid, then return.
+    if (!writableData.isValid())
+        return;
+
+    // ... or, block until writable data is valid.
+    while (!writableData.isValid()) {
+        writableData = getDataStorage(_size);
+        usleep(1);
+    }
 
     unsigned nDoubles = _size / sizeof(double);
     std::vector<double> array(nDoubles);
@@ -68,7 +79,6 @@ void TestChunker::next(QIODevice*)
 //        array[i] = i;
         array[i] = _nextCount;
     }
-
 
     // Write some test data.
     writableData.write((void*)&array[0], _size, 0);

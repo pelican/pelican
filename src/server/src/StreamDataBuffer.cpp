@@ -19,7 +19,7 @@ StreamDataBuffer::StreamDataBuffer(const QString& type, DataManager* manager, QO
     : DataBuffer(type, parent),_manager(manager)
 {
     // These are in bytes:
-    _max = 100000; //TODO make configurable
+    _max = 10000; //TODO make configurable
     _maxChunkSize = _max;
     _space = _max;
 }
@@ -66,7 +66,7 @@ void StreamDataBuffer::getNext(LockedData& lockedData)
 WritableData StreamDataBuffer::getWritable(size_t size)
 {
     // XXX remove
-    std::cout << std::endl;
+    //std::cout << std::endl;
     LockableStreamData* d = _getWritable(size);
 
     // prepare the object for use
@@ -78,7 +78,7 @@ WritableData StreamDataBuffer::getWritable(size_t size)
         _manager->associateServiceData(d);
     }
 
-    std::cout << "StreamDataBuffer: Returning WritableData object" << std::endl;
+    //std::cout << "StreamDataBuffer: Returning WritableData object" << std::endl;
     return WritableData( d );
 }
 
@@ -92,7 +92,7 @@ WritableData StreamDataBuffer::getWritable(size_t size)
  */
 LockableStreamData* StreamDataBuffer::_getWritable(size_t size)
 {
-    std::cout << "StreamDataBuffer::_getWritable() empty queue size = " << _emptyQueue.size() << std::endl;
+    //std::cout << "StreamDataBuffer::_getWritable() empty queue size = " << _emptyQueue.size() << std::endl;
 
     // Return a pre-allocated block from the empty queue, if one exists.
     for (int i = 0; i < _emptyQueue.size(); ++i) {
