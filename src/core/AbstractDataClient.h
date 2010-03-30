@@ -7,6 +7,7 @@
 #include <QList>
 #include <QSet>
 #include <QString>
+class QIODevice;
 
 /**
  * @file AbstractDataClient.h
@@ -16,6 +17,8 @@ namespace pelican {
 
 class AbstractAdapter;
 class DataBlob;
+class StreamData;
+class Data;
 
 /**
  * @class AbstractDataClient
@@ -59,8 +62,11 @@ class AbstractDataClient
     protected:
         QSet<QString> _requireSet;
 
+    protected: // methods
         /// Writes a message to the log.
         void log(const QString& msg);
+        QHash<QString, DataBlob*> adaptStream(QIODevice& device, const StreamData* sd, QHash<QString, DataBlob*>& dataHash );
+        QHash<QString, DataBlob*> adaptService(QIODevice& device, const Data* d, QHash<QString, DataBlob*>& dataHash );
 
     protected:
         /// Returns a pointer to the configuration node.

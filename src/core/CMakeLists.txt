@@ -4,7 +4,7 @@ set( core_moc_headers
     )
 set( core_src
      src/AbstractDataClient.cpp
-     src/AbstractStreamDataClient.cpp
+     src/DirectStreamDataClient.cpp
      src/AbstractPipeline.cpp
      src/DataClientFactory.cpp
      src/DataTypes.cpp

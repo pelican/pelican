@@ -153,6 +153,8 @@ QHash<QString, DataBlob*> PelicanServerClient::_response(QIODevice& device,
                 // Service data
                 ServiceDataResponse* res = static_cast<ServiceDataResponse*>(r.get());
                 foreach( const Data* d, res->data() ) {
+                    validData.unite(adaptService( device, d, dataHash ));
+                    /*
                     QString type = d->name();
                     AbstractServiceAdapter* adapter = serviceAdapter(type);
                     Q_ASSERT(adapter != 0 );
@@ -160,6 +162,7 @@ QHash<QString, DataBlob*> PelicanServerClient::_response(QIODevice& device,
                     adapter->config(dataHash[type], d->size() );
                     adapter->deserialise(&device);
                     validData.insert(type, dataHash.value(type));
+                    */
                 }
             }
             break;
@@ -172,17 +175,7 @@ QHash<QString, DataBlob*> PelicanServerClient::_response(QIODevice& device,
 
 QHash<QString, DataBlob*> PelicanServerClient::_adaptStream(QIODevice& device, const StreamData* sd, QHash<QString, DataBlob*>& dataHash )
 {
-    QHash<QString, DataBlob*> validData;
-
-    const QString& type = sd->name();
-    dataHash[type]->setVersion(sd->id());
-    AbstractStreamAdapter* adapter = streamAdapter(type);
-    Q_ASSERT( adapter != 0 );
-    adapter->config( dataHash[type], sd->size(), dataHash );
-    adapter->deserialise(&device);
-    validData.insert(type, dataHash.value(type));
-
-    return validData;
+    return adaptStream(device,sd,dataHash);
 }
 
 void PelicanServerClient::_connect()
