@@ -4,13 +4,13 @@
 #include <QString>
 #include <QList>
 #include "data/DataRequirements.h"
+#include "adapters/AbstractAdapter.h"
 
 /**
  * @file DataTypes.h
  */
 
 namespace pelican {
-    class AbstractAdapter;
     class AbstractStreamAdapter;
     class AbstractServiceAdapter;
 
@@ -45,6 +45,9 @@ class DataTypes
 
         /// return a Service Adapter for the specified type
         AbstractServiceAdapter* serviceAdapter(const QString& type) const;
+
+        /// return the adapter type associated with the given data stream
+        AbstractAdapter::AdapterType_t type(const QString& dataName) const;
 
     private:
         QList<DataRequirements> _dataRequirements; 

@@ -79,6 +79,12 @@ AbstractServiceAdapter* DataTypes::serviceAdapter(const QString& type) const
     return static_cast<AbstractServiceAdapter*>(_adapters.value(type));
 }
 
+AbstractAdapter::AdapterType_t DataTypes::type(const QString& dataName) const
+{
+    Q_ASSERT( _adapters.contains(dataName) );
+    return _adapters.value(dataName)->type();
+}
+
 const QList<DataRequirements>& DataTypes::dataRequirements() const
 {
     return _dataRequirements;
