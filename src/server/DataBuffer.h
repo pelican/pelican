@@ -36,6 +36,7 @@ class DataBuffer : public QObject
 
     protected:
         QMutex _mutex;
+        QMutex _writeMutex;
         QString _type;
 };
 

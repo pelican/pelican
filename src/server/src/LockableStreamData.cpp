@@ -18,6 +18,7 @@ LockableStreamData::LockableStreamData(const QString& name, void* memory,
         size_t size, QObject* parent) : AbstractLockableData(size, parent)
 {
     _data.reset( new StreamData(name, memory, size) );
+    _served = false;
 }
 
 LockableStreamData::~LockableStreamData()

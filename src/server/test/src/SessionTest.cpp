@@ -15,8 +15,10 @@
 #include "comms/ServiceDataRequest.h"
 #include "comms/StreamDataRequest.h"
 #include "TestProtocol.h"
-#include <iostream>
+#include "utility/pelicanTimer.h"
+#include <QTime>
 
+#include <iostream>
 
 #include "utility/memCheck.h"
 
@@ -40,8 +42,8 @@ void SessionTest::setUp()
 {
     QString id = "1";
     _proto = new TestProtocol(id);
-    _data = new DataManager;
-    _session = new Session(0, _proto, _data);
+    _dataManager = new DataManager;
+    _session = new Session(0, _proto, _dataManager);
     _block = new QByteArray;
     _device = new QBuffer(_block);
 }
@@ -49,7 +51,7 @@ void SessionTest::setUp()
 void SessionTest::tearDown()
 {
     delete _proto;
-    delete _data;
+    delete _dataManager;
     delete _session;
     delete _block;
     delete _device;
@@ -70,7 +72,7 @@ void SessionTest::test_processRequest()
     // Set up stream data for remaining tests
     QString stream1("test");
     StreamDataBuffer* streambuffer = new StreamDataBuffer(stream1);
-    _data->setStreamDataBuffer( stream1, streambuffer );
+    _dataManager->setStreamDataBuffer( stream1, streambuffer );
     {
         // Use Case:
         // Request a single StreamData, no data available
@@ -135,11 +137,11 @@ void SessionTest::test_processServiceDataRequest()
     QString badtype("bad");
     QString type1("type1");
     ServiceDataBuffer* servicebuffer1 = new ServiceDataBuffer("test");
-    _data->setServiceDataBuffer( type1, servicebuffer1 );
+    _dataManager->setServiceDataBuffer( type1, servicebuffer1 );
     QString version1 = _injectData(servicebuffer1, "version1");
     QString type2("type2");
     ServiceDataBuffer* servicebuffer2 = new ServiceDataBuffer("test");
-    _data->setServiceDataBuffer( type2, servicebuffer2 );
+    _dataManager->setServiceDataBuffer( type2, servicebuffer2 );
     QString version2 = _injectData(servicebuffer2, "version2");
     {
         // Use Case:
@@ -174,52 +176,63 @@ void SessionTest::test_streamData()
 {
     {
         // Use Case:
-        // Request StreamData that has no data options
-        // Expect request to be silently ignored and invalid data
-        // returned
+        // Request StreamData that has no data request options (empty request).
+        // Expect request to be silently ignored and an empty list to be returned.
         StreamDataRequest request;
         QList<LockedData> dataList = _session->processStreamDataRequest(request);
-        foreach(LockedData data, dataList) {
-            CPPUNIT_ASSERT( ! data.isValid() );
-        }
+        CPPUNIT_ASSERT_EQUAL(0, dataList.size());
     }
-    // Set up stream data for remaining tests
-    QString stream1("Stream1");
+
+    // Set up stream data for remaining tests.
+    QString stream1("stream1");
     StreamDataBuffer* streambuffer = new StreamDataBuffer(stream1);
-    _data->setStreamDataBuffer( stream1, streambuffer );
+    _dataManager->setStreamDataBuffer( stream1, streambuffer );
+
     {
         // Use Case:
-        // Request StreamData for a stream that is not supported by the server
-        // Expect error message to be returned
-        DataRequirements req;
-        req.setStreamData("NotSupported");
+        // Request StreamData for a stream that is not supported by the server.
+        // Expect error message to be returned.
+        DataRequirements requirements;   
+        requirements.setStreamData("NotSupported");
         StreamDataRequest request;
-        request.addDataOption(req);
-        CPPUNIT_ASSERT_THROW( _session->processStreamDataRequest(request), QString );
-    }
-    {
-        // Use Case:
-        // Request StreamData for a stream that is supported but for which no data exists
-        // Expect to return with no data
-        DataRequirements req;
-        req.setStreamData(stream1);
-        StreamDataRequest request;
-        request.addDataOption(req);
-        QList<LockedData> dataList = _session->processStreamDataRequest(request);
-        foreach(LockedData data, dataList) {
-            CPPUNIT_ASSERT( ! data.isValid() );
+        request.addDataOption(requirements);
+        try {
+            _session->processStreamDataRequest(request);
+        }
+        catch (QString error) {
+            CPPUNIT_ASSERT(error.contains("Data requested not supported by server"));
         }
     }
+
+    {
+        // Use Case:
+        // Request StreamData for a stream that is supported but for which no
+        // data exists and set the request timeout.
+        // Expect to throw an error after the timeout as been exceeded.
+        DataRequirements requirements;
+        requirements.setStreamData(stream1);
+        StreamDataRequest request;
+        request.addDataOption(requirements);
+        try {
+            _session->processStreamDataRequest(request, 100);
+        }
+        catch (QString error) {
+            CPPUNIT_ASSERT(error.contains("Request timed out"));
+        }
+    }
+
     {
         // Use Case:
         // Request StreamData for a stream that is supported and the data exists
-        // no service data
-        // Expect to return the data
-        DataRequirements req;
-        req.setStreamData(stream1);
+        // no service data.
+        // Expect to return the data.
+        DataRequirements requirements;
+        requirements.setStreamData(stream1);
+        
         StreamDataRequest request;
-        request.addDataOption(req);
+        request.addDataOption(requirements);
         _injectData(streambuffer);
+
         QList<LockedData> dataList = _session->processStreamDataRequest(request);
         foreach(LockedData data, dataList) {
             CPPUNIT_ASSERT( data.isValid() );
@@ -227,52 +240,89 @@ void SessionTest::test_streamData()
             CPPUNIT_ASSERT_EQUAL( 0 , (int)(static_cast<LockableStreamData*>(data.object())->streamData()->associateData().size()) );
         }
     }
+
     // Set up service data stream for remaining tests
     QString service1("service1");
     ServiceDataBuffer* servicebuffer = new ServiceDataBuffer("test");
-    _data->setServiceDataBuffer( service1, servicebuffer );
+    _dataManager->setServiceDataBuffer( service1, servicebuffer );
+
     {
         // Use Case:
         // Request StreamData for a stream that is supported and the data exists
         // service data requested, but not available
-        // Expect to return invalid data
-        DataRequirements req;
-        req.setStreamData(stream1);
-        req.setServiceData(service1);
+        // Expect to throw after the timeout has been reached and the stream
+        // data to still be availaible in the buffer at the end.
+        DataRequirements requirements;
+        requirements.setStreamData(stream1);
+        requirements.setServiceData(service1);
         StreamDataRequest request;
-        request.addDataOption(req);
-        _injectData(streambuffer);
-        QList<LockedData> dataList = _session->processStreamDataRequest(request);
-        foreach(LockedData data, dataList) {
-            CPPUNIT_ASSERT( ! data.isValid() );
+        request.addDataOption(requirements);
+        //_injectData(streambuffer); // NOTE Dont need to inject data again.
+
+
+        try {
+            _session->processStreamDataRequest(request, 10);
         }
+        catch (QString error) {
+            CPPUNIT_ASSERT(error.contains("Request timed out"));
+        }
+        CPPUNIT_ASSERT(_dataManager->getNext(stream1).isValid() == true);
     }
+
     {
-        // Use Case:
-        // Request StreamData for a stream that is supported and the data exists
-        // service data requested, and it exists
-        // Expect to return data, and service data record
-        DataRequirements req;
-        StreamDataRequest request;
-        request.addDataOption(req);
-        _injectData(streambuffer);
-        _injectData(servicebuffer);
-        QList<LockedData> dataList = _session->processStreamDataRequest(request);
-        foreach(LockedData data, dataList) {
-            CPPUNIT_ASSERT( data.isValid() );
-            CPPUNIT_ASSERT_EQUAL( 1 , (int)static_cast<LockableStreamData*>(data.object())->associateData().size() );
-            CPPUNIT_ASSERT_EQUAL( 1 , (int)(static_cast<LockableStreamData*>(data.object())->streamData()->associateData().size()) );
+        DataManager myDataManager;
+        ServiceDataBuffer* myServiceBuffer = myDataManager.getServiceBuffer(service1);
+        StreamDataBuffer* myStreamBuffer = myDataManager.getStreamBuffer(stream1);
+        Session mySession(0, _proto, &myDataManager);
+        {
+            // Use Case:
+            // Request StreamData for a stream that is supported and the data exists
+            // service data requested, and it exists
+            // Expect to return data, and service data record
+
+            std::cout << "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%" << std::endl;
+
+            DataRequirements requirements;
+            requirements.setStreamData(stream1);
+            requirements.setServiceData(service1);
+            StreamDataRequest request;
+            request.addDataOption(requirements);
+
+            QString version("0");
+            try {
+                _injectData(myServiceBuffer, version);
+                _injectData(myStreamBuffer); // NOTE dont need to inject data again
+            }
+            catch (QString error) {
+                std::cout << "ALERT !! " << error.toStdString() << std::endl;
+            }
+
+            // Check that the data buffers have data in them.
+            CPPUNIT_ASSERT(myDataManager.getNext(stream1).isValid() == true);
+            CPPUNIT_ASSERT(myDataManager.getServiceData(service1, version).isValid() == true);
+
+            QList<LockedData> dataList;
+            CPPUNIT_ASSERT_NO_THROW(dataList = mySession.processStreamDataRequest(request, 100));
+            CPPUNIT_ASSERT_EQUAL(1, dataList.size());
+
+            foreach(LockedData data, dataList) {
+                CPPUNIT_ASSERT( data.isValid() );
+                CPPUNIT_ASSERT_EQUAL( 1 , (int)static_cast<LockableStreamData*>(data.object())->associateData().size() );
+                CPPUNIT_ASSERT_EQUAL( 1 , (int)(static_cast<LockableStreamData*>(data.object())->streamData()->associateData().size()) );
+            }
         }
     }
 }
 
+
 QString SessionTest::_injectData(DataBuffer* buffer, const QString& id)
 {
+    // Writable data has to go out of scope to be activated.
     {
         WritableData d = buffer->getWritable(10);
         d.data()->setId(id);
     }
-    _app->processEvents();
+    _app->processEvents(); // Connect signals and slots to activate data.
     return id;
 }
 

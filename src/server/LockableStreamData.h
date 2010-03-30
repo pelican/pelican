@@ -45,6 +45,9 @@ class LockableStreamData : public AbstractLockableData
         /// Test validity of all data.
         bool isValid() const;
 
+        /// Returns true if the object has been served.
+        bool& served() { return _served; };
+        
         /// Test validity of data only taking into account the named associates.
         bool isValid(const QSet<QString>&) const;
 
@@ -65,6 +68,7 @@ class LockableStreamData : public AbstractLockableData
     private:
         DataList_t _serviceData;
         QSet<QString> _serviceDataTypes;
+        bool _served;
 };
 
 } // namespace pelican

@@ -36,29 +36,37 @@ void ServiceDataBufferTest::test_getWritable()
 {
     {
         // Use case:
-        // Call getWritable twice without releasing the new object
-        // expect second call to return an invalid object
-        ServiceDataBuffer b("test");
-        WritableData d1 = b.getWritable(1);
-        WritableData d2 = b.getWritable(1);
-        CPPUNIT_ASSERT( d1.isValid() );
-        CPPUNIT_ASSERT( ! d2.isValid() );
+        // Call getWritable twice without releasing the new object.
+        // expect second call to return an invalid object.
+        ServiceDataBuffer buffer("test");
+        WritableData data1 = buffer.getWritable(1);
+        WritableData data2 = buffer.getWritable(1);
+        CPPUNIT_ASSERT(data1.isValid());
+        CPPUNIT_ASSERT(!data2.isValid());
     }
+    
     {
         // Use case:
-        // On deleting the WritableData expect it to become current
+        // On deleting the WritableData expect it to become current.
         // This should also release the lock allowing a second call
         // to getWritable() to return a valid object
-        ServiceDataBuffer b("test");
+        ServiceDataBuffer buffer("test");
         {
-            LockableData* d = 0;
-            d = static_cast<LockableData*>(b.getWritable(1).data());
-            CPPUNIT_ASSERT( d != 0 );
-            CPPUNIT_ASSERT( d->isValid() );
-            //CPPUNIT_ASSERT( b.getCurrent().data()[0] == d );
+            LockableData* data = 0;
+            data = static_cast<LockableData*>(buffer.getWritable(1).data());
+            CPPUNIT_ASSERT( data != 0 );
+            CPPUNIT_ASSERT( data->isValid() );
         }
-        _app->processEvents();
-        WritableData wd = b.getWritable(1);
+
+        _app->processEvents(); // needed to connect signals and slots
+
+        LockedData currentData("test");
+        buffer.getCurrent(currentData);
+        CPPUNIT_ASSERT(currentData.isValid());
+        
+        // Check that the lock is now released allowing a second getWritable()
+        // to return valid data
+        WritableData wd = buffer.getWritable(1);
         CPPUNIT_ASSERT( wd.isValid() );
     }
 }

@@ -11,7 +11,10 @@
 #include <QTcpSocket>
 #include <QString>
 #include <QHash>
+#include <QTime>
+
 #include <iostream>
+
 #include "utility/memCheck.h"
 
 using std::cout;
@@ -23,7 +26,7 @@ namespace pelican {
 Session::Session(int socketDescriptor, AbstractProtocol* proto, DataManager* data, QObject* parent)
     : QThread(parent), _dataManager(data)
 {
-    _proto = proto;
+    _protocol = proto;
     _socketDescriptor = socketDescriptor;
 }
 
@@ -32,6 +35,11 @@ Session::~Session()
     if (isRunning()) wait();
 }
 
+
+/**
+ * @details
+ *
+ */
 void Session::run()
 {
     QTcpSocket socket;
@@ -40,7 +48,7 @@ void Session::run()
         return;
     }
 
-    boost::shared_ptr<ServerRequest> req = _proto->request(socket);
+    boost::shared_ptr<ServerRequest> req = _protocol->request(socket);
 
     processRequest(*req, socket);
     socket.disconnectFromHost();
@@ -58,7 +66,7 @@ void Session::processRequest(const ServerRequest& req, QIODevice& out)
     try {
         switch(req.type()) {
             case ServerRequest::Acknowledge:
-                _proto->send(out,"ACK");
+                _protocol->send(out,"ACK");
                 cout << "Sent acknowledgement" << endl;
                 break;
             case ServerRequest::StreamData:
@@ -71,7 +79,12 @@ void Session::processRequest(const ServerRequest& req, QIODevice& out)
                             LockableStreamData* lockedData = static_cast<LockableStreamData*>(dataList[i].object());
                             data.append(static_cast<StreamData*>(lockedData->streamData()));
                         }
-                        _proto->send( out, data );
+                        _protocol->send( out, data );
+
+                        // Mark as being served so can delete.
+                        foreach (LockedData d, dataList) {
+                            static_cast<LockableStreamData*>(d.object())->served() = true;
+                        }
                         cout << "Sent stream data" << endl;
                     }
                     cout << "Finished stream data request" << endl;
@@ -86,54 +99,99 @@ void Session::processRequest(const ServerRequest& req, QIODevice& out)
                             LockableData* lockedData = static_cast<LockableData*>(d[i].object());
                             data.append(lockedData->data().get());
                         }
-                        _proto->send( out, data );
+                        _protocol->send( out, data );
                         cout << "Sent service data" << endl;
                     }
                 }
                 break;
             default:
-                _proto->sendError( out, req.message());
+                _protocol->sendError( out, req.message());
         }
     }
     catch( const QString& e )
     {
-        _proto->sendError( out, e );
+        _protocol->sendError( out, e );
         cout << "Sent error: " << e.toStdString() << endl;
     }
 }
 
 /**
  * @details
- * Iterates over the list of data options provided in the request
- * It will take the first data set that matches and that has data.
- * The data will be returned as a locked container to ensure access
- * by other threads will be blocked.
+ * Iterates over the list of data options (requirements) provided in the request
+ * until a valid data object is returned.
+ *
+ * Returns the first data set available (streams and associated service data)
+ * that match the requirements.
+ *
+ * An empty request will return immediately with an empty list.
+ *
+ * WARNING: This function will block until valid data matching the request can
+ * made.
+ *
+ * The data will be returned as a locked container to ensure access by other
+ * threads will be blocked. This is achived by a signal emitted when the
+ * LockedData object goes out of scope.
+ *
+ * @param[in] req       StreamDataRequest object containing a data requirements
+ *                      iterator.
+ * @param[in] timeout   Timeout in milliseconds. (0 = dont timeout)
+ *
+ * @return A list of locked data containing streams data object and their
+ *         associated service data for the first request that can be fully
+ *         satisfied.
  */
-QList<LockedData> Session::processStreamDataRequest(const StreamDataRequest& req )
+QList<LockedData> Session::processStreamDataRequest(const StreamDataRequest& req,
+                                                    const unsigned timeout)
 {
-    QList<LockedData> data;
-    DataRequirementsIterator it=req.begin();
-    while( it != req.end() && data.size() == 0 )
-    {
-        if( ! it->isCompatible( _dataManager->dataSpec() ) )
-            throw QString("Session::processStreamDataRequest(): "
-                    "Data requested not supported by server");
-        // attempt to get the required stream data
-        foreach (const QString stream, it->streamData() )
-        {
-            std::cout << "stream: " << stream.toStdString() << std::endl;
-            LockedData d = _dataManager->getNext(stream, it->serviceData() );
-            if( ! d.isValid() ) {
-                cout << "NOT VALID!" << endl;
-                data.clear();
-                break; // one invalid stream invalidates the request
-            }
-            data.append(d);
-        }
-        ++it;
+    // Return an empty list if there are no data requirements in the request.
+    QList<LockedData> dataList;
+    if (req.isEmpty()) {
+        return dataList;
     }
-    return data;
+
+    // Start a timer to handle the timeout.
+    QTime time;
+    time.start();
+
+    // Iterate until the data requirments can be satisfied.
+    while (dataList.size() == 0) {
+
+        if (time.elapsed() > timeout && timeout > 0) {
+            throw QString("Session::processStreamDataRequest():"
+            " Request timed out after %1 ms.").arg(time.elapsed());
+        }
+
+        DataRequirementsIterator it = req.begin();
+
+        while(it != req.end() && dataList.size() == 0) {
+
+            std::cout << std::endl; // TODO remove
+            if( ! it->isCompatible( _dataManager->dataSpec() ) )
+                throw QString("Session::processStreamDataRequest(): "
+                "Data requested not supported by server");
+
+            // attempt to get the required stream data
+            foreach (const QString stream, it->streamData() )
+            {
+                std::cout << "Session::processStreamDataRequest() Stream Data = "
+                          << stream.toStdString() << std::endl;
+
+                LockedData data = _dataManager->getNext(stream, it->serviceData());
+
+                if( ! data.isValid() ) {
+                    cout << "Session::processStreamDataRequest(): data NOT VALID!" << endl;
+                    dataList.clear();
+                    break; // one invalid stream invalidates the request
+                }
+                dataList.append(data);
+            }
+            ++it;
+        }
+    }
+    
+    return dataList;
 }
+
 
 /**
  * @details
