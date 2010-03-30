@@ -89,6 +89,11 @@ class AbstractDataClient
             return _dataReqs.dataRequirements();
         }
 
+        /// returns the type of data associated with the data name (stream/service/unknown)
+        AbstractAdapter::AdapterType_t type(const QString& dataName) const {
+            return _dataReqs.type(dataName);
+        }
+
         /// Gets the requested data from the data server.
         /// This method gets tFills the given data hash, and returns another hash of valid data.
         virtual QHash<QString, DataBlob*> getData(QHash<QString, DataBlob*>&) = 0;
