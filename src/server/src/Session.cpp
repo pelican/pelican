@@ -154,41 +154,17 @@ QList<LockedData> Session::processStreamDataRequest(const StreamDataRequest& req
     time.start();
 
     // Iterate until the data requirments can be satisfied.
-    while (dataList.size() == 0) {
-
-        if (time.elapsed() > timeout && timeout > 0) {
+    while (dataList.size() == 0) { // keep spinning until we either get data or time out
+        if ((unsigned int)time.elapsed() > timeout && timeout > 0) {
             throw QString("Session::processStreamDataRequest():"
             " Request timed out after %1 ms.").arg(time.elapsed());
         }
-
         DataRequirementsIterator it = req.begin();
-
         while(it != req.end() && dataList.size() == 0) {
-
-            std::cout << std::endl; // TODO remove
-            if( ! it->isCompatible( _dataManager->dataSpec() ) )
-                throw QString("Session::processStreamDataRequest(): "
-                "Data requested not supported by server");
-
-            // attempt to get the required stream data
-            foreach (const QString stream, it->streamData() )
-            {
-                std::cout << "Session::processStreamDataRequest() Stream Data = "
-                          << stream.toStdString() << std::endl;
-
-                LockedData data = _dataManager->getNext(stream, it->serviceData());
-
-                if( ! data.isValid() ) {
-                    cout << "Session::processStreamDataRequest(): data NOT VALID!" << endl;
-                    dataList.clear();
-                    break; // one invalid stream invalidates the request
-                }
-                dataList.append(data);
-            }
+            dataList = _dataManager->getDataRequirements( *it );
             ++it;
         }
     }
-    
     return dataList;
 }
 

@@ -47,6 +47,10 @@ class DataManager
         /// Returns the data types handled by this manager.
         const DataRequirements& dataSpec() const {return _specs;}
 
+        /// Return a list of Stream Data objects corresponding
+        //  to a DataRequirement object 
+        QList<LockedData> getDataRequirements(const DataRequirements& req);
+
         /// Return the next unlocked data block from Stream Data.
         /// If the associate data requested is unavailable,
         /// LockedData will be invalid.

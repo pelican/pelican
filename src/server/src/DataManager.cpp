@@ -93,7 +93,6 @@ ServiceDataBuffer* DataManager::getServiceBuffer(const QString& type)
  * Note that the DataManager takes ownership of the StreamDataBuffer, and will
  * delete it on destruction.
  *
- * FIXME THIS APPEARS TO BE USED FOR THE TEST ONLY - DON'T USE IT!
  */
 void DataManager::setStreamDataBuffer(const QString& name, StreamDataBuffer* buffer)
 {
@@ -159,6 +158,31 @@ LockedData DataManager::getNext(const QString& type)
 
     _streams[type]->getNext(lockedData);
     return lockedData;
+}
+
+/**
+ * @details
+ *         Attempt to fulfill a DataRequirement request for data
+ * @return A list of locked data containing streams data objects (with the
+ *         associated service data) or the request
+ *         returns an empty string 
+ */
+QList<LockedData> DataManager::getDataRequirements(const DataRequirements& req)
+{
+    QList<LockedData> dataList;
+    if( ! req.isCompatible( dataSpec() ) )
+        throw QString("Session::processStreamDataRequest(): "
+                "Data requested not supported by server");
+    foreach (const QString stream, req.streamData() )
+    {
+        LockedData data = getNext(stream, req.serviceData());
+        if( ! data.isValid() ) {
+            dataList.clear();
+            break; // one invalid stream invalidates the request
+        }
+        dataList.append(data);
+    }
+    return dataList;
 }
 
 /**

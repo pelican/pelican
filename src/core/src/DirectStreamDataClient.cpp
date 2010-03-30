@@ -71,22 +71,12 @@ QHash<QString, DataBlob*> DirectStreamDataClient::getData(QHash<QString, DataBlo
             if( ! it->isCompatible( _dataManager.dataSpec() ) )
                 throw QString("DirectStreamDataClient::getData(): "
                         "Data requested not supported by client");
-
-            // check each stream in this request is valid
-            foreach (const QString stream, it->streamData() )
-            {
-                LockedData d = _dataManager.getNext(stream, it->serviceData() );
-                if( ! d.isValid() ) {
-                    dataList.clear();
-                    break; // one invalid stream invalidates the request
-                }
-                dataList.append(d);
-            }
+            dataList = _dataManager.getDataRequirements(*it);
             ++it;
         }
     }
 
-    // Transform the Data 
+    // Transform the Data  into DataBlobs
     for( int i=0; i < dataList.size(); ++i ) {
         LockableStreamData* lockedData = static_cast<LockableStreamData*>(dataList[i].object());
         StreamData* sd = lockedData->streamData();
