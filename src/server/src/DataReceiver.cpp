@@ -30,6 +30,8 @@ DataReceiver::DataReceiver(AbstractChunker* chunker, DataManager* dm, QObject* p
  */
 DataReceiver::~DataReceiver()
 {
+    // TODO is this safe?
+    std::cout << "DataReceiver Destructor" << std::endl;
     // If the thread has started, call quit() to exit the event loop.
     if (isRunning()) while (!isFinished()) quit();
     wait();
