@@ -153,8 +153,6 @@ void TestPipelineServerTest::test_testTwoUdpChunkers()
         server.start();
         while (!server.isReady()) {}
 
-
-
         // Start the pipeline binary.
         PipelineBinaryEmulator pipelineBinary(&config);
 

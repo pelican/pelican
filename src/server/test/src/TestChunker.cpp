@@ -40,11 +40,6 @@ QIODevice* TestChunker::newDevice()
     if(_badSocket)
         return 0;
 
-//    QUdpSocket* socket = new QUdpSocket;
-//    _device = socket;
-//    socket->connectToHost( _host, _port );
-//    return socket;
-
     _timer->start(1);
     QBuffer* buffer = new QBuffer;
     _device = buffer;
