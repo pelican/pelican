@@ -17,6 +17,7 @@ namespace pelican {
 DataReceiver::DataReceiver(AbstractChunker* chunker, DataManager* dm, QObject* parent)
     : QThread(parent), _chunker(chunker), _dm(dm)
 {
+    std::cout << "DataReceiver Constructor" << std::endl;
     Q_ASSERT( dm != 0 );
     if ( !chunker ) throw QString("DataReceiver: Invalid Chunker");
     _device = 0;

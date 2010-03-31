@@ -52,6 +52,7 @@ void ChunkerManager::init(DataManager& dataManager )
         chunkers.append(listener);
         listener->listen();
     }
+    std::cout << "Exit ChunkerManager::init()" << std::endl;
 }
 
 void ChunkerManager::addStreamChunker( AbstractChunker* chunker )
