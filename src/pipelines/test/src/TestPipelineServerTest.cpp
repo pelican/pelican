@@ -15,6 +15,8 @@
 #include "comms/PelicanProtocol.h"
 #include "utility/pelicanTimer.h"
 #include "utility/TestConfig.h"
+#include "server/test/TelescopeEmulator.h"
+#include "server/test/TestUdpChunker.h"
 #include <QCoreApplication>
 #include <QTimer>
 
@@ -51,10 +53,14 @@ void TestPipelineServerTest::test_method()
 
         QCoreApplication app(argc, argv);
 
+        // Set up the telescope emulator
+        TelescopeEmulator telescope;
+
         // Set up the server.
         PelicanServer server;
-        TestChunker* chunker = new TestChunker("VisibilityData", false, 512);
-        //server.addStreamChunker(&chunker, "127.0.0.1", 2001);
+        //TestChunker* chunker = new TestChunker("VisibilityData", false, 512);
+        TestUdpChunker* chunker = new TestUdpChunker("VisibilityData",
+                                          "127.0.0.1", 2002, 512);
         server.addStreamChunker(chunker);
 
         // Add the protocol.
@@ -102,11 +108,13 @@ void TestPipelineServerTest::_createConfig()
     config.saveTestConfig("TestPipelineServer.xml", "pipelines");
 }
 
+
 PipelineBinaryEmulator::PipelineBinaryEmulator(TestConfig* config) : QThread()
 {
     _config = config;
     start();
 }
+
 
 void PipelineBinaryEmulator::run()
 {

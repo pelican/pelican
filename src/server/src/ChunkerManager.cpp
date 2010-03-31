@@ -31,7 +31,7 @@ ChunkerManager::~ChunkerManager()
 
 void ChunkerManager::init(DataManager& dataManager )
 {
-    QVector<boost::shared_ptr<DataReceiver> > chunkers;
+//     QVector<boost::shared_ptr<DataReceiver> > dataReceivers;
 
     foreach( const QString& type, _streamDataTypes )
     {
@@ -48,9 +48,9 @@ void ChunkerManager::init(DataManager& dataManager )
     for (int i = 0; i < inputPorts.size(); ++i) {
         AbstractChunker* chunker = _chunkerPortMap[inputPorts[i]];
         chunker->setDataManager(&dataManager); // Added this.
-        boost::shared_ptr<DataReceiver> listener( new DataReceiver(chunker, &dataManager ) );
-        chunkers.append(listener);
-        listener->listen();
+        boost::shared_ptr<DataReceiver> receiver( new DataReceiver(chunker, &dataManager ) );
+        _dataReceivers.append(receiver);
+        receiver->listen();
     }
     std::cout << "Exit ChunkerManager::init()" << std::endl;
 }

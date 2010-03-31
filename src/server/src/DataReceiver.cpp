@@ -80,11 +80,11 @@ void DataReceiver::listen()
 
 /**
  * @details
- * This slot is called when data is available on the
+ * This slot is called when data is available on the device.
  */
 void DataReceiver::processIncomingData()
 {
-    std::cout << "Processing data in slot" << std::endl;
+//     std::cout << "DataReceiver::processIncomingData()" << std::endl;
     _chunker->next( _device );
 }
 
