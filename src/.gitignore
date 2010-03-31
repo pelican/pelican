@@ -1,3 +1,3 @@
-build
+build/
 src.kdev4
-
+.kdev4/

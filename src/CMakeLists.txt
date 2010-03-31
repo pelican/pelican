@@ -2,7 +2,7 @@
 if (INTEL)
   set(CMAKE_CXX_COMPILER icpc)
   set(CMAKE_C_COMPILER icc)
-else (INTEL) 
+else (INTEL)
   set(CMAKE_CXX_COMPILER g++)
   set(CMAKE_C_COMPILER gcc)
 endif (INTEL)

@@ -49,7 +49,9 @@ ENDIF (MKL_THREADED)
 FOREACH (MKL_NAME ${MKL_NAMES})
   FIND_LIBRARY(${MKL_NAME}_LIBRARY
     NAMES ${MKL_NAME}
-    PATHS /usr/lib64 /usr/lib /usr/local/lib64 /usr/local/lib /opt/intel/mkl/*/lib/em64t /opt/intel/mkl/*/lib/32
+    PATHS /usr/lib64 /usr/lib /usr/local/lib64 /usr/local/lib
+          /opt/intel/mkl/*/lib/*/
+          /opt/intel/Compiler/*/*/mkl/lib/*/
     )
 
   SET(TMP_LIBRARY ${${MKL_NAME}_LIBRARY})

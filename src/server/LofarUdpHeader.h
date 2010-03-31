@@ -3,6 +3,7 @@
 
 #include <complex>
 #include <math.h>
+// #include <cstdint> causes a c++0x error (although needed for uint8_t etc) !
 
 namespace pelican {
 
