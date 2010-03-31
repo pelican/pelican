@@ -1,17 +1,12 @@
-mkdir build
-cd build
-cmake ../src/.
+Compiling from source
+=====================
 
+Pelican is compiled by the cmake build system using the following steps.
 
-Build Options
-=============
--DTIMER=TRUE
--DCMAKE_BUILD_TYPE=release/debug
--DOPENMP=TRUE
+    mkdir build
+    cd build
+    cmake ../path/to/top/level/CMakeLists.txt
+    make [build options]
 
-Setting the compiler
-====================
-export C="icc"
-export CXX="icpc"
-cmake ...
-
+For build options see:
+    readme.txt
