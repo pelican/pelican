@@ -70,9 +70,9 @@ void ChunkerManager::addServiceChunker( AbstractChunker* chunker )
 void ChunkerManager::_addChunker( AbstractChunker* chunker)
 {
     if( chunker ) {
-        if( _streamDataTypes.contains(chunker->type()) || _serviceDataTypes.contains(chunker->type()) ) {
-            throw( QString("PelicanServer:  input stream \"") + chunker->type() + "\" is already assigned");
-        }
+        //if( _streamDataTypes.contains(chunker->type()) || _serviceDataTypes.contains(chunker->type()) ) {
+        //    throw( QString("PelicanServer:  input stream \"") + chunker->type() + "\" is already assigned");
+        //}
         QPair<QString,quint16> pair(chunker->host(), chunker->port());
         if (!chunker->host().isEmpty()) {
             if( _chunkerPortMap.contains(pair) ) {

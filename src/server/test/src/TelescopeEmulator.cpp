@@ -7,13 +7,20 @@
 
 namespace pelican {
 
-
-TelescopeEmulator::TelescopeEmulator()
+/**
+ * @details
+ */
+TelescopeEmulator::TelescopeEmulator(const qint16 port, const double initialValue)
 {
     _abort = false;
+    _port = port;
+    _initialValue = initialValue;
     start();
 }
 
+/**
+* @details
+*/
 TelescopeEmulator::~TelescopeEmulator()
 {
     _abort = true;
@@ -27,14 +34,14 @@ TelescopeEmulator::~TelescopeEmulator()
 void TelescopeEmulator::run()
 {
     QUdpSocket socket;
-//    socket.bind(QHostAddress::LocalHost, 2002);
 
     unsigned counter = 0;
     while (!_abort) {
 //         std::cout << "TelescopeEmulator::run()" << std::endl;
-        std::vector<double> data(64, double(counter));
+        double value = double(counter) + _initialValue;
+        std::vector<double> data(64, value);
         socket.writeDatagram(reinterpret_cast<char*>(&data[0]), 512,
-                QHostAddress::LocalHost, 2002);
+                QHostAddress::LocalHost, _port);
         msleep(1);
         ++counter;
     }

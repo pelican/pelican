@@ -56,10 +56,13 @@ void TestUdpChunker::next(QIODevice* socket)
 //     std::cout << "TestUdpChunker::next() size = " << _size << std::endl;
 
     qint64 sizeRead = static_cast<QUdpSocket*>(socket)->readDatagram(_tempBuffer.data(), _size);
+
+//     double value = *reinterpret_cast<double*>(_tempBuffer.data());
+//     std::cout << value << std::endl;
     
     if (sizeRead != _size)
         throw QString("TestUdpChunker::next(): size mismatch.");
-    
+
     // Get writable data object.
     WritableData writableData = getDataStorage(_size);
 

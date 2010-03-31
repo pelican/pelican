@@ -24,7 +24,7 @@ namespace pelican {
 class TelescopeEmulator : public QThread
 {
     public:
-        TelescopeEmulator();
+        TelescopeEmulator(const qint16 port, const double initialValue = 0.0);
         virtual ~TelescopeEmulator();
 
     public:
@@ -33,6 +33,8 @@ class TelescopeEmulator : public QThread
 
     private:
         bool _abort;
+        qint16 _port;
+        double _initialValue;
 };
 
 } // namespace pelican
