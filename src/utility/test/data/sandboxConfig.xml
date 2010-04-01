@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pelican>
+<configuration version="1.0">
+
+    <varsets>
+        <varset name="myName">
+        </varset>
+    </varsets>
+
+    <pipeline>
+        <modules>
+            <ModuleName name="">
+            </ModuleName>
+        <modules>
+
+        <clients>
+            <ClientName>
+            </ClientName>
+        </client>
+
+        <adapters>
+            <AdapterName>
+            </AdapterName>
+        </adapters>
+    </pipeline>
+
+    <server>
+        <chunkers>
+            <ChunkerName>
+            </ChunkerName>
+        </chunkers>
+
+        <buffers>
+            <BufferName>
+            </BufferName>
+        </buffers>
+    </server>
+    
+</configuration>
