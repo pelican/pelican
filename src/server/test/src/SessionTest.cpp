@@ -16,8 +16,8 @@
 #include "comms/StreamDataRequest.h"
 #include "TestProtocol.h"
 #include "utility/pelicanTimer.h"
+#include "utility/Config.h"
 #include <QTime>
-
 #include <iostream>
 
 #include "utility/memCheck.h"
@@ -42,7 +42,8 @@ void SessionTest::setUp()
 {
     QString id = "1";
     _proto = new TestProtocol(id);
-    _dataManager = new DataManager;
+    Config config;
+    _dataManager = new DataManager(&config);
     _session = new Session(0, _proto, _dataManager);
     _block = new QByteArray;
     _device = new QBuffer(_block);
@@ -270,7 +271,8 @@ void SessionTest::test_streamData()
     }
 
     {
-        DataManager myDataManager;
+        Config config;
+        DataManager myDataManager(&config);
         ServiceDataBuffer* myServiceBuffer = myDataManager.getServiceBuffer(service1);
         StreamDataBuffer* myStreamBuffer = myDataManager.getStreamBuffer(stream1);
         Session mySession(0, _proto, &myDataManager);

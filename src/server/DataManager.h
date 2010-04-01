@@ -7,6 +7,7 @@
 #include "ServiceDataBuffer.h"
 #include "LockedData.h"
 #include "data/DataRequirements.h"
+#include "utility/Config.h"
 
 /**
  * @file DataManager.h
@@ -36,7 +37,7 @@ class DataManager
 
     public:
         /// DataManager constructor.
-        DataManager();
+        DataManager(const Config* config);
 
         /// DataManager destructor.
         virtual ~DataManager();
@@ -79,6 +80,10 @@ class DataManager
 
         /// Add a stream data type to be managed.
         void setStreamDataBuffer(const QString& name, StreamDataBuffer* buffer);
+
+    public:
+        const Config* _config;
+        Config::TreeAddress_t _bufferConfigBaseAddress;
 };
 
 } // namespace pelican

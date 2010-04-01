@@ -9,6 +9,7 @@
 #include "comms/PelicanProtocol.h"
 #include "comms/StreamData.h"
 #include "comms/Data.h"
+#include "utility/Config.h"
 
 
 #include "utility/memCheck.h"
@@ -23,7 +24,7 @@ namespace pelican {
  */
 TestServer::TestServer(AbstractProtocol* proto,  QObject* parent)
     : QThread(parent), _protoOwner(false), 
-      _proto(proto), _server(0)
+      _proto(proto), _portServer(0)
 {
     // set up the protocol
     if(! _proto) {
@@ -32,8 +33,8 @@ TestServer::TestServer(AbstractProtocol* proto,  QObject* parent)
     }
     start();
     // wait until we have a server object
-    while( ! _server ) {msleep(1);}
-    while( ! _server->isListening() ) {msleep(1);};
+    while( ! _portServer ) {msleep(1);}
+    while( ! _portServer->isListening() ) {msleep(1);};
 }
 
 /**
@@ -44,18 +45,22 @@ TestServer::~TestServer()
     while (!isFinished()) quit();
     if(_protoOwner)
         delete _proto;
-    delete _server;
+    if (_dataManager)
+        delete _dataManager;
+    delete _portServer;
     wait();
 }
 
 void TestServer::run()
 {
-    if( ! _server  ) {
-        _server = new PelicanPortServer(_proto,&_dm);
+    Config config;
+    _dataManager = new DataManager(&config);;
+    if( ! _portServer  ) {
+        _portServer = new PelicanPortServer(_proto, _dataManager);
     }
-    if( !_server->listen(QHostAddress::Any, 0 ) )
+    if( !_portServer->listen(QHostAddress::Any, 0 ) )
     {
-        QString msg = QString("unable to start TestServer :") + _server->errorString();
+        QString msg = QString("unable to start TestServer :") + _portServer->errorString();
         std::cerr << msg.toStdString() << std::endl;
         return;
     }
@@ -66,13 +71,13 @@ void TestServer::run()
 quint16 TestServer::port() const
 {
     Q_ASSERT( isRunning() );
-    return _server->serverPort();
+    return _portServer->serverPort();
 }
 
 bool TestServer::isListening() const
 {
     Q_ASSERT( isRunning() );
-    return _server->isListening();
+    return _portServer->isListening();
 }
 
 void TestServer::serveStreamData(const QList<StreamData>& data)
@@ -85,7 +90,7 @@ void TestServer::serveStreamData(const QList<StreamData>& data)
 
 void TestServer::serveStreamData(const StreamData& d)
 {
-    StreamDataBuffer* buf = _dm.getStreamBuffer(d.name()); // ensures the StreamData buffer exists
+    StreamDataBuffer* buf = _dataManager->getStreamBuffer(d.name()); // ensures the StreamData buffer exists
 
     // The Associated Data should be registered
     // before we register the stream data
@@ -115,7 +120,7 @@ void TestServer::serveServiceData(const QList<Data>& data )
 
 void TestServer::serveServiceData(const Data& d )
 {
-    ServiceDataBuffer* buf = _dm.getServiceBuffer(d.name()); // ensures the ServiceData buffer exists
+    ServiceDataBuffer* buf = _dataManager->getServiceBuffer(d.name()); // ensures the ServiceData buffer exists
     WritableData wd = buf->getWritable(d.size());
     if( ! wd.isValid() ) 
         throw("unable to add ServiceBuffer Data");

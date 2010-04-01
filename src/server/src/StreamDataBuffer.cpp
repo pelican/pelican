@@ -16,20 +16,21 @@ namespace pelican {
 
 // class StreamDataBuffer
 StreamDataBuffer::StreamDataBuffer(const QString& type, DataManager* manager,
-        QObject* parent)
+        const size_t max, const size_t maxChunkSize, QObject* parent)
     : DataBuffer(type, parent),_manager(manager)
 {
-    // These are in bytes:
-    _max = 10000; //TODO make configurable
-    _maxChunkSize = _max;
-    _space = _max;
+    _max = max;
+    _maxChunkSize = maxChunkSize;
+    _space = _max; // initially empty so the space = max size.
 }
+
 
 StreamDataBuffer::~StreamDataBuffer()
 {
     foreach( LockableStreamData* data, _data)
         delete data;
 }
+
 
 /**
  * @details
@@ -56,6 +57,7 @@ void StreamDataBuffer::getNext(LockedData& lockedData)
     lockedData.setData(0);
 }
 
+
 /**
  * @details
  * Gets a writable data object of the given size and returns it.
@@ -80,6 +82,7 @@ WritableData StreamDataBuffer::getWritable(size_t size)
     //std::cout << "StreamDataBuffer: Returning WritableData object" << std::endl;
     return WritableData( d );
 }
+
 
 /**
  * @details
@@ -124,6 +127,7 @@ LockableStreamData* StreamDataBuffer::_getWritable(size_t size)
     return 0;
 }
 
+
 /**
  * @details
  * This protected slot is called when the lockable data object
@@ -135,6 +139,7 @@ void StreamDataBuffer::activateData()
     activateData( static_cast<LockableStreamData*>(sender()) );
 }
 
+
 /**
  * @details
  * This protected slot is called when the lockable data object
@@ -145,6 +150,7 @@ void StreamDataBuffer::deactivateData()
 {
     deactivateData(static_cast<LockableStreamData*>( sender() ) );
 }
+
 
 /**
  * @details
@@ -168,6 +174,7 @@ void StreamDataBuffer::deactivateData(LockableStreamData* data)
     //     QMutexLocker writeLocker(&_mutex);
     _emptyQueue.push_back(data);
 }
+
 
 /**
  * @details

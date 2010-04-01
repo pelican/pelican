@@ -10,6 +10,7 @@
 #include "server/test/TestUdpChunker.h"
 #include <QCoreApplication>
 #include <QTimer>
+#include "utility/Config.h"
 
 #include "utility/memCheck.h"
 
@@ -66,7 +67,7 @@ void TestPipelineServerTest::test_testChunker()
         QCoreApplication app(argc, argv);
 
         // Set up the server.
-        PelicanServer server;
+        PelicanServer server(&config);
         TestChunker* chunker = new TestChunker("VisibilityData", false, 512);
         server.addStreamChunker(chunker);
 
@@ -108,7 +109,7 @@ void TestPipelineServerTest::test_testUdpChunker()
 
         // Set up the server.
         qint16 telescopePort = 2002;
-        PelicanServer server;
+        PelicanServer server(&config);
 
         // TODO replace getting the config node with use of the chunker factory.
         Config::TreeAddress_t address;
@@ -164,7 +165,7 @@ void TestPipelineServerTest::test_testTwoUdpChunkers()
         TelescopeEmulator telescope2(telescopePort2, 0.2);
 
         // Set up the server.
-        PelicanServer server;
+        PelicanServer server(&config);
         // TODO replace getting the config node with use of the chunker factory.
         Config::TreeAddress_t address1;
         address1 << Config::NodeId_t("server", "");
@@ -181,6 +182,9 @@ void TestPipelineServerTest::test_testTwoUdpChunkers()
         TestUdpChunker* chunker2 = new TestUdpChunker(configChunker2);
         server.addStreamChunker(chunker1);
         server.addStreamChunker(chunker2);
+
+        //  this might be better...
+        //server.addStreamChunker<ChunkerType>("chunkerType", "name");
 
         // Add the protocol.
         AbstractProtocol* protocol = new PelicanProtocol;
@@ -227,7 +231,7 @@ void TestPipelineServerTest::_createConfig()
     QString serverXml =
     "<buffers>"
     "   <VisibilityData>"
-    "       <buffer maxSize=\"10000\" maxChunkSize=\"10000\"/>"
+    "       <buffer maxSize=\"2000\" maxChunkSize=\"2000\"/>"
     "   </VisibilityData>"
     "</buffers>"
     ""

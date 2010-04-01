@@ -5,6 +5,7 @@
 #include "comms/StreamData.h"
 #include "WritableData.h"
 #include <iostream>
+#include "utility/Config.h"
 
 #include "utility/memCheck.h"
 
@@ -15,8 +16,11 @@ namespace pelican {
  * @details
  * DataManager constructor.
  */
-DataManager::DataManager()
+DataManager::DataManager(const Config* config)
 {
+    _config = config;
+    _bufferConfigBaseAddress << Config::NodeId_t("server","");
+    _bufferConfigBaseAddress << Config::NodeId_t("buffers","");
 }
 
 
@@ -66,8 +70,15 @@ WritableData DataManager::getWritableData(const QString& type, size_t size)
 StreamDataBuffer* DataManager::getStreamBuffer(const QString& type)
 {
     std::cout << "DataManager::getStreamBuffer" << type.toStdString() << std::endl;
+
     if ( ! _streams.contains(type) ) {
-        setStreamDataBuffer( type, new StreamDataBuffer(type) );
+        Config::TreeAddress_t configAddress(_bufferConfigBaseAddress);
+        configAddress << Config::NodeId_t(type, "");
+        ConfigNode config = _config->get(configAddress);
+        size_t maxSize = config.getOption("buffer", "maxSize", "10240").toUInt();
+        size_t maxChunkSize = config.getOption("buffer", "maxChunkSize", "10240").toUInt();
+        setStreamDataBuffer( type, new StreamDataBuffer(type, NULL, maxSize, maxChunkSize) );
+        
     }
     return _streams[type];
 }
@@ -160,6 +171,7 @@ LockedData DataManager::getNext(const QString& type)
     return lockedData;
 }
 
+
 /**
  * @details
  *         Attempt to fulfill a DataRequirement request for data
@@ -184,6 +196,7 @@ QList<LockedData> DataManager::getDataRequirements(const DataRequirements& req)
     }
     return dataList;
 }
+
 
 /**
  * @details

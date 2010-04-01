@@ -1,7 +1,7 @@
 #include "DataManagerTest.h"
 #include "DataManager.h"
 #include "WritableData.h"
-
+#include "utility/Config.h"
 
 #include "utility/memCheck.h"
 
@@ -33,7 +33,8 @@ void DataManagerTest::test_getWritable()
         // call get Writable with an unknown type
         // Expect:
         // return an invalid Writable
-        DataManager d;
+        Config config;
+        DataManager d(&config);
         WritableData data = d.getWritableData("anything",100);
         CPPUNIT_ASSERT(!data.isValid());
     }

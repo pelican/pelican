@@ -8,17 +8,22 @@
 #include "DataReceiver.h"
 #include "comms/PelicanProtocol.h"
 #include "PelicanPortServer.h"
-#include "utility/memCheck.h"
 #include <iostream>
+#include "utility/Config.h"
+
+#include "utility/memCheck.h"
 
 namespace pelican {
 
+
 // class PelicanServer
-PelicanServer::PelicanServer(QObject* parent)
+PelicanServer::PelicanServer(const Config* config, QObject* parent)
     : QThread(parent)
 {
+    _config = config;
     _ready = false;
 }
+
 
 PelicanServer::~PelicanServer()
 {
@@ -45,6 +50,7 @@ void PelicanServer::addStreamChunker( AbstractChunker* chunker)
     _chunkerManager.addStreamChunker(chunker);
 }
 
+
 void PelicanServer::addServiceChunker( AbstractChunker* chunker)
 {
     _chunkerManager.addServiceChunker(chunker);
@@ -64,7 +70,7 @@ void PelicanServer::run()
     QVector<boost::shared_ptr<PelicanPortServer> > servers;
 
     // Set up the data manager.
-    DataManager dataManager;
+    DataManager dataManager(_config);
     _chunkerManager.init(dataManager);
 
     // Set up listening servers.

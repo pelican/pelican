@@ -9,6 +9,7 @@
 #include <QCoreApplication>
 #include <QThread>
 #include <iostream>
+#include "utility/Config.h"
 
 #include "utility/memCheck.h"
 
@@ -43,7 +44,8 @@ void PelicanServerTest::test_singleProtocolAcknowledge()
     // Attach to Server with a single protocol.
     // Expect response to the correct port
     try {
-        PelicanServer server;
+        Config config;
+        PelicanServer server(&config);
         quint16 port = 2000;
         server.addProtocol(new TestProtocol(""), port);
         server.start();
@@ -63,7 +65,8 @@ void PelicanServerTest::test_singleProtocolStream()
     // Attach to Server with a single protocol.
     // Expect response to the correct port
     try {
-        PelicanServer server;
+        Config config;
+        PelicanServer server(&config);
         quint16 port = 2000;
         server.addProtocol(new TestProtocol("", ServerRequest::StreamData), port);
         server.addStreamChunker(new TestChunker("TestStream"));
@@ -87,7 +90,8 @@ void PelicanServerTest::test_multiProtocol()
     // Assign multiple protocols to the same port
     // Expect an exception
     {
-        PelicanServer server;
+        Config config;
+        PelicanServer server(&config);
         quint16 port = 20000;
         CPPUNIT_ASSERT_NO_THROW(server.addProtocol(new TestProtocol(id1), port));
         CPPUNIT_ASSERT_THROW(server.addProtocol(new TestProtocol(id2), port), QString);
@@ -99,7 +103,8 @@ void PelicanServerTest::test_multiProtocol()
     // to the appropriate protocol object
     {
         try {
-            PelicanServer server;
+            Config config;
+            PelicanServer server(&config);
             quint16 porta = 20000;
             quint16 portb = 20001;
             server.addProtocol(new TestProtocol(id1), porta);

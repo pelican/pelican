@@ -6,6 +6,7 @@
 #include "LockedData.h"
 #include "LockableStreamData.h"
 #include <QCoreApplication>
+#include "utility/Config.h"
 
 #include "utility/memCheck.h"
 
@@ -27,7 +28,8 @@ StreamDataBufferTest::~StreamDataBufferTest()
 
 void StreamDataBufferTest::setUp()
 {
-    _dataManager = new DataManager;
+    Config config;
+    _dataManager = new DataManager(&config);
 }
 
 void StreamDataBufferTest::tearDown()

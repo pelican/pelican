@@ -68,9 +68,9 @@ class TestServer : public QThread
     private:
         bool _protoOwner; // flag to indicate ownership of the 
                           // protocol object
+        DataManager* _dataManager;
         AbstractProtocol* _proto;
-        DataManager _dm;
-        PelicanPortServer* _server;
+        PelicanPortServer* _portServer;
 
 };
 

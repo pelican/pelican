@@ -4,6 +4,7 @@
 #include "DataManager.h"
 #include "utility/pelicanTimer.h"
 #include <QThread>
+#include "utility/Config.h"
 
 #include "utility/memCheck.h"
 
@@ -24,7 +25,8 @@ void DataReceiverTest::setUp()
 {
     _testHost = "localhost";
     _testPort = 1444;
-    _dm = new DataManager;
+    Config config;
+    _dm = new DataManager(&config);
 //    _testChunker = new TestChunker(_dm);
 }
 
