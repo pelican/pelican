@@ -4,6 +4,7 @@
 #include <QObject>
 #include <cstring>
 #include "server/AbstractChunker.h"
+#include "utility/Config.h"
 class QTimer;
 
 /**
@@ -32,6 +33,8 @@ class TestChunker : public QObject, public AbstractChunker
         TestChunker(const QString& type = "ChunkType",
                 bool badSocket = false, size_t size = 0, QString host = "",
                 quint16 port = 0, QObject* parent = 0);
+
+        TestChunker(const ConfigNode& config);
 
         /// Destroys the TestChunker.
         ~TestChunker();

@@ -23,6 +23,21 @@ _nextCount(0), _size(size)
 }
 
 /**
+* @details
+* Constructs a new TestChunker.
+*/
+TestChunker::TestChunker(const ConfigNode& config)
+: QObject(), AbstractChunker()
+{
+    _badSocket = false;
+    _nextCount = 0;
+    _size = config.getOption("data", "chunkSize", "512").toUInt();
+    _timer = new QTimer;
+    connect(_timer, SIGNAL(timeout()), this, SLOT(_start()));
+}
+
+
+/**
  * @details
  * Destroys the TestChunker.
  */
