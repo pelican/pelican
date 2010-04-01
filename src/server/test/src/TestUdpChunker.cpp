@@ -20,6 +20,9 @@ namespace pelican {
 TestUdpChunker::TestUdpChunker(const ConfigNode& config)
 : AbstractChunker() 
 {
+    if (config.type() != "TestUdpChunker")
+        throw QString("TestUdpChunker::TestUdpChunker(): Wrong config.");
+
     // Get Congiguration options.
     setHost(config.getOption("connection", "host"));
     setPort(qint16(config.getOption("connection", "port").toUInt()));

@@ -112,6 +112,7 @@ void TestPipelineServerTest::test_testUdpChunker()
 
         // TODO replace getting the config node with use of the chunker factory.
         Config::TreeAddress_t address;
+        address << Config::NodeId_t("server", "");
         address << Config::NodeId_t("chunkers", "");
         address << Config::NodeId_t("TestUdpChunker", "1");
         ConfigNode configChunker1 = config.get(address);
@@ -166,12 +167,14 @@ void TestPipelineServerTest::test_testTwoUdpChunkers()
         PelicanServer server;
         // TODO replace getting the config node with use of the chunker factory.
         Config::TreeAddress_t address1;
+        address1 << Config::NodeId_t("server", "");
         address1 << Config::NodeId_t("chunkers", "");
         address1 << Config::NodeId_t("TestUdpChunker", "1");
         ConfigNode configChunker1 = config.get(address1);
         TestUdpChunker* chunker1 = new TestUdpChunker(configChunker1);
 
         Config::TreeAddress_t address2;
+        address2 << Config::NodeId_t("server", "");
         address2 << Config::NodeId_t("chunkers", "");
         address2 << Config::NodeId_t("TestUdpChunker", "2");
         ConfigNode configChunker2 = config.get(address2);
@@ -204,11 +207,11 @@ void TestPipelineServerTest::_createConfig()
 {
     TestConfig config;
 
-    QString xml =
+    QString pipelineXml =
     "<clients>"
     "   <PelicanServerClient>"
     "       <server host=\"127.0.0.1\" port=\"2000\"/>"
-    "       <data type=\"VisibilityData\" adapter=\"AdapterLofarStationVisibilities\"/>"
+    "   <data type=\"VisibilityData\" adapter=\"AdapterLofarStationVisibilities\"/>"
     "   </PelicanServerClient>"
     "</clients>"
     ""
@@ -219,7 +222,14 @@ void TestPipelineServerTest::_createConfig()
     "       <polarisation value=\"both\"/>"
     "       <dataBytes number=\"8\"/>"
     "   </AdapterLofarStationVisibilities>"
-    "</adapters>"
+    "</adapters>";
+
+    QString serverXml =
+    "<buffers>"
+    "   <VisibilityData>"
+    "       <buffer maxSize=\"10000\" maxChunkSize=\"10000\"/>"
+    "   </VisibilityData>"
+    "</buffers>"
     ""
     "<chunkers>"
     "   <TestUdpChunker name=\"1\">"
@@ -232,7 +242,7 @@ void TestPipelineServerTest::_createConfig()
     "   </TestUdpChunker>"
     "</chunkers>";
 
-    config.setFromString(xml);
+    config.setFromString(pipelineXml, serverXml);
     config.saveTestConfig("TestPipelineServer.xml", "pipelines");
 }
 

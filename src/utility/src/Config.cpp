@@ -153,7 +153,7 @@ void Config::save(const QString& fileName) const
  *
  * @param[in] text  QString containing the XML configuration.
  */
-void Config::setFromString(const QString& text)
+void Config::setFromString(const QString& pipelineConfig, const QString& serverConfig)
 {
     _document.clear();
     _document = QDomDocument("pelican");
@@ -165,7 +165,12 @@ void Config::setFromString(const QString& text)
     "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
     "<!DOCTYPE pelican>"
     "<configuration version=\"1.0\">"
-    "" + text + ""
+    "<pipeline>"
+    "" + pipelineConfig + ""
+    "</pipeline>"
+    "<server>"
+    "" + serverConfig + ""
+    "</server>"
     "</configuration>";
 
     if (!_document.setContent(xmlDoc, true, &error, &line, &column)) {

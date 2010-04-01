@@ -47,6 +47,11 @@ class ConfigNode
         /// Returns the configuration node name.
         QString name() const { return _config.attribute("name"); }
 
+        /// Returns the name of the parent node.
+        QString parentName() const {
+            return _config.parentNode().toElement().tagName();
+        }
+
         /// Returns a configuration option (attribute).
         /// i.e. the attribute for the XML: <tagName attribute=""/>
         QString getOption(const QString& tagName, const QString& attribute,

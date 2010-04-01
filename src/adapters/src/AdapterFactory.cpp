@@ -22,6 +22,7 @@ namespace pelican {
 AdapterFactory::AdapterFactory(const Config *config)
 {
     _config = config;
+    _configRoot.append(Config::NodeId_t("pipeline", ""));
     _configRoot.append(Config::NodeId_t("adapters", ""));
 }
 

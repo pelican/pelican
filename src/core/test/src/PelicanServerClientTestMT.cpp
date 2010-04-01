@@ -59,11 +59,13 @@ void PelicanServerClientTestMT::test_getData()
     // common client configuration
     Config config;
     config.setFromString(
-            "<testconfig>"
-            "   <server host=\"127.0.0.1\"/>"
-            "</testconfig>"
-            );
+        "",
+        "<testconfig>"
+        "   <server host=\"127.0.0.1\"/>"
+        "</testconfig>"
+    );
     Config::TreeAddress_t address;
+    address << Config::NodeId_t("server", "");
     address << Config::NodeId_t("testconfig", "");
     ConfigNode configNode = config.get(address);
     {

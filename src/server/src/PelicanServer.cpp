@@ -51,21 +51,32 @@ void PelicanServer::addServiceChunker( AbstractChunker* chunker)
 }
 
 
+/**
+ * @details
+ * Runs the server thread starting its event loop.
+ * 
+ * Sets up the data manager which handles stream and service data buffers
+ * which are set up on request of the chunkers.
+ * 
+ */
 void PelicanServer::run()
 {
     QVector<boost::shared_ptr<PelicanPortServer> > servers;
 
-    // set up the data manager
+    // Set up the data manager.
     DataManager dataManager;
     _chunkerManager.init(dataManager);
 
-    // set up listening servers
+    // Set up listening servers.
     QList<quint16> ports = _protocolPortMap.keys();
     for (int i = 0; i < ports.size(); ++i) {
-        boost::shared_ptr<PelicanPortServer> server( new PelicanPortServer(_protocolPortMap[ports[i]], &dataManager ) );
+        boost::shared_ptr<PelicanPortServer> server(
+            new PelicanPortServer(_protocolPortMap[ports[i]], &dataManager )
+        );
         servers.append(server);
         if ( !server->listen(QHostAddress::Any, ports[i] )) {
-            throw QString(QString("Unable to start PelicanServer on port='") + QString().setNum(ports[i])+ QString("'"));
+            throw QString(QString("Unable to start PelicanServer on port='") +
+                            QString().setNum(ports[i])+ QString("'"));
         }
     }
     _mutex.lock();

@@ -24,6 +24,7 @@ namespace pelican {
 ModuleFactory::ModuleFactory(const Config *config)
 {
     _config = config;
+    _configRoot.append(Config::NodeId_t("pipeline", ""));
     _configRoot.append(Config::NodeId_t("modules", ""));
 }
 

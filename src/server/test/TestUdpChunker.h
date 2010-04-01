@@ -30,7 +30,7 @@ class TestUdpChunker : public AbstractChunker
     public:
         /// Constructs a new TestUdpChunker.
          TestUdpChunker(const ConfigNode& config);
-                       
+
         /// Destroys the TestChunker.
         ~TestUdpChunker();
 

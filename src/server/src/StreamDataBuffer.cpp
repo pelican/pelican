@@ -15,7 +15,8 @@ namespace pelican {
 
 
 // class StreamDataBuffer
-StreamDataBuffer::StreamDataBuffer(const QString& type, DataManager* manager, QObject* parent)
+StreamDataBuffer::StreamDataBuffer(const QString& type, DataManager* manager,
+        QObject* parent)
     : DataBuffer(type, parent),_manager(manager)
 {
     // These are in bytes:
