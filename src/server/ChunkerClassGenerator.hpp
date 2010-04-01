@@ -18,14 +18,14 @@ namespace pelican {
 /**
  * Template class generator for contructing Chunkers
  */
-template<class ChunkerType>
-class ChunkerClassGenerator : public ChunkerClassGeneratorBase
-{
-    ChunkerClassGenerator(const QString& type) : ChunkerClassGeneratorBase(type) {};
-    AbstractChunker* create(const ConfigNode& config) {
-        return new ChunkerType(type(), config);
-    }
-}
+//template<class ChunkerType>
+//class ChunkerClassGenerator : public ChunkerClassGeneratorBase
+//{
+//    ChunkerClassGenerator(const QString& type) : ChunkerClassGeneratorBase(type) {};
+//    AbstractChunker* create(const ConfigNode& config) {
+//        return new ChunkerType(type(), config);
+//    }
+//};
 
 } // namespace pelican
 #endif // CHUNKERCLASSGENERATOR_H 

@@ -23,7 +23,7 @@ TestUdpChunker::TestUdpChunker(const ConfigNode& config)
     if (config.type() != "TestUdpChunker")
         throw QString("TestUdpChunker::TestUdpChunker(): Wrong config.");
 
-    // Get Congiguration options.
+    // Get configuration options.
     setHost(config.getOption("connection", "host"));
     setPort(qint16(config.getOption("connection", "port").toUInt()));
     setType(config.getOption("data", "type"));
@@ -36,7 +36,7 @@ TestUdpChunker::TestUdpChunker(const ConfigNode& config)
     if (_chunkSize == 0)
         throw QString("TestUdpChunker::TestUdpChunker(): Chunk size zero.");
 
-    // Initialise tempory storage and chunk counter.
+    // Initialise temporary storage and chunk counter.
     _nextCount = 0;
     _tempBuffer.resize(_chunkSize);
 }
