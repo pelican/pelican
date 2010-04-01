@@ -54,8 +54,11 @@ class PipelineBinaryEmulator : public QThread
 {
     private:
         TestConfig* _config;
+
     public:
-        PipelineBinaryEmulator(TestConfig *config);
+        PipelineBinaryEmulator(TestConfig *config) : QThread(),
+        _config(config) {start();}
+
     protected:
         void run();
 };

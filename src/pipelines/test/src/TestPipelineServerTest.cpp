@@ -1,17 +1,8 @@
 #include "pipelines/test/TestPipelineServerTest.h"
 #include "core/PipelineApplication.h"
-#include "core/AbstractPipeline.h"
-#include "core/AbstractDataClient.h"
-#include "core/DataClientFactory.h"
-#include "data/VisibilityData.h"
-#include "adapters/AdapterFactory.h"
 #include "pipelines/TestPipelineServer.h"
 #include "server/PelicanServer.h"
-#include "server/DataManager.h"
-#include "server/WritableData.h"
 #include "server/test/TestChunker.h"
-#include "server/test/PelicanTestClient.h"
-#include "server/test/TestProtocol.h"
 #include "comms/PelicanProtocol.h"
 #include "utility/pelicanTimer.h"
 #include "utility/TestConfig.h"
@@ -25,28 +16,48 @@
 namespace pelican {
 
 CPPUNIT_TEST_SUITE_REGISTRATION( TestPipelineServerTest );
-// class TestPipelineServerTest
+
+/**
+ * @details
+ * TestPipelineServerTest constructor.
+ */
 TestPipelineServerTest::TestPipelineServerTest()
 : CppUnit::TestFixture()
 {
 }
 
+/**
+ * @details
+ * Destroys the TestPipelineServerTest.
+ */
 TestPipelineServerTest::~TestPipelineServerTest()
 {
 }
 
+/**
+ * @details
+ * Set-up routine run before each test.
+ */
 void TestPipelineServerTest::setUp()
 {
 }
 
+/**
+ * @details
+ * Clean-up routine run after each test.
+ */
 void TestPipelineServerTest::tearDown()
 {
 }
 
+/**
+ * @details
+ * Creates a Pelican server with a TestChunker, and a test pipeline.
+ * Expect the test pipeline to be called with data from the chunker.
+ */
 void TestPipelineServerTest::test_testChunker()
 {
     try {
-        std::cout << "TestPipelineServerTest::test_testChunker()" << std::endl;
         _createConfig();
         TestConfig config("TestPipelineServer.xml", "pipelines");
         int argc = 2;
@@ -79,7 +90,12 @@ void TestPipelineServerTest::test_testChunker()
     }
 }
 
-
+/**
+ * @details
+ * Creates a Pelican server with a TestUdpChunker, a telescope emulator,
+ * and a test pipeline.
+ * Expect the test pipeline to be called with data from the telescope emulator.
+ */
 void TestPipelineServerTest::test_testUdpChunker()
 {
     try {
@@ -91,9 +107,10 @@ void TestPipelineServerTest::test_testUdpChunker()
         QCoreApplication app(argc, argv);
 
         // Set up the server.
+        qint16 telescopePort = 2002;
         PelicanServer server;
         TestUdpChunker* chunker = new TestUdpChunker("VisibilityData",
-                                                     "127.0.0.1", 2002, 512);
+                            "127.0.0.1", telescopePort, 512);
         server.addStreamChunker(chunker);
 
         // Add the protocol.
@@ -105,7 +122,7 @@ void TestPipelineServerTest::test_testUdpChunker()
         while (!server.isReady()) {}
         
         // Set up the telescope emulator (turn on the telescope)
-        TelescopeEmulator telescope(2002, 0.5);
+        TelescopeEmulator telescope(telescopePort, 0.5);
         
         // Start the pipeline binary.
         PipelineBinaryEmulator pipelineBinary(&config);
@@ -119,7 +136,12 @@ void TestPipelineServerTest::test_testUdpChunker()
     }
 }
 
-
+/**
+ * @details
+ * Creates a Pelican server with two TestUdpChunkers, two telescope emulators,
+ * and a test pipeline.
+ * Expect the test pipeline to be called with data from the telescope emulator.
+ */
 void TestPipelineServerTest::test_testTwoUdpChunkers()
 {
     try {
@@ -131,8 +153,7 @@ void TestPipelineServerTest::test_testTwoUdpChunkers()
         QCoreApplication app(argc, argv);
 
         // Set up the telescope emulators (turn on the telescope)
-        qint16 telescopePort1 = 2002;
-        qint16 telescopePort2 = 2003;
+        qint16 telescopePort1 = 2002, telescopePort2 = 2003;
         TelescopeEmulator telescope1(telescopePort1, 0.1);
         TelescopeEmulator telescope2(telescopePort2, 0.2);
 
@@ -165,8 +186,6 @@ void TestPipelineServerTest::test_testTwoUdpChunkers()
     }
 }
 
-
-
 void TestPipelineServerTest::_createConfig()
 {
     TestConfig config;
@@ -192,58 +211,14 @@ void TestPipelineServerTest::_createConfig()
 }
 
 
-PipelineBinaryEmulator::PipelineBinaryEmulator(TestConfig* config) : QThread()
-{
-    _config = config;
-    start();
-}
-
-
 void PipelineBinaryEmulator::run()
 {
-    try {
-//        std::cout << "Starting binary thread" << std::endl;
-//        // Set up the client.
-//        QList<DataRequirements> reqList;
-//        DataRequirements req;
-//        req.addStreamData("VisibilityData");
-//        reqList.append(req);
-//        Config::TreeAddress_t base;
-//        base.append(Config::NodeId_t("clients", ""));
-//        AdapterFactory adapterFactory(_config);
-//        DataClientFactory clientFactory(_config, base, &adapterFactory);
-//        AbstractDataClient* dataClient = clientFactory.create("PelicanServerClient", reqList);
-//        VisibilityData* visData = new VisibilityData;
-//        QHash<QString, DataBlob*> hash, validHash;
-//        hash.insert("VisibilityData", visData);
-//        while (validHash.isEmpty()) {
-//            std::cout << "Client getting data" << std::endl;
-//            validHash = dataClient->getData(hash);
-//            std::cout << "Client get data done." << std::endl;
-//            //        msleep(500);
-//        }
-//        std::cout << "%%%%%%%%%%%%%%%%%%%%%%%%%%%%% FINISHED" << std::endl;
-//
-//        complex_t* dat =  visData->ptr();
-//        std::cout << "Number of entries: " << visData->nEntries();
-//        for (unsigned i = 0; i  < visData->nEntries(); ++i) {
-//            std::cout << dat[i] << std::endl;
-//        }
-//
-//        // Clean up.
-//        delete visData;
-
-        // Set up the pipeline.
-        int argc = 2;
-        PipelineApplication pApp(argc, _config->argv("TestPipelineServer.xml", "pipelines"));
-        pApp.registerPipeline(new TestPipelineServer);
-        pApp.setIgnoreEmptyHash(true);
-        pApp.setDataClient("PelicanServerClient");
-        pApp.start();
-    }
-    catch (QString e) {
-        std::cerr << "Unexpected exception: " + e.toStdString() << std::endl;
-    }
+    // Set up the pipeline.
+    int argc = 2;
+    PipelineApplication pApp(argc, _config->argv("TestPipelineServer.xml", "pipelines"));
+    pApp.registerPipeline(new TestPipelineServer);
+    pApp.setDataClient("PelicanServerClient");
+    pApp.start();
 }
 
 } // namespace pelican
