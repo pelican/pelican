@@ -109,8 +109,13 @@ void TestPipelineServerTest::test_testUdpChunker()
         // Set up the server.
         qint16 telescopePort = 2002;
         PelicanServer server;
-        TestUdpChunker* chunker = new TestUdpChunker("VisibilityData",
-                            "127.0.0.1", telescopePort, 512);
+
+        // TODO replace getting the config node with use of the chunker factory.
+        Config::TreeAddress_t address;
+        address << Config::NodeId_t("chunkers", "");
+        address << Config::NodeId_t("TestUdpChunker", "1");
+        ConfigNode configChunker1 = config.get(address);
+        TestUdpChunker* chunker = new TestUdpChunker(configChunker1);
         server.addStreamChunker(chunker);
 
         // Add the protocol.
@@ -159,10 +164,18 @@ void TestPipelineServerTest::test_testTwoUdpChunkers()
 
         // Set up the server.
         PelicanServer server;
-        TestUdpChunker* chunker1 = new TestUdpChunker("VisibilityData",
-                            "127.0.0.1", telescopePort1, 512);
-        TestUdpChunker* chunker2 = new TestUdpChunker("VisibilityData",
-                            "127.0.0.1", telescopePort2, 512);
+        // TODO replace getting the config node with use of the chunker factory.
+        Config::TreeAddress_t address1;
+        address1 << Config::NodeId_t("chunkers", "");
+        address1 << Config::NodeId_t("TestUdpChunker", "1");
+        ConfigNode configChunker1 = config.get(address1);
+        TestUdpChunker* chunker1 = new TestUdpChunker(configChunker1);
+
+        Config::TreeAddress_t address2;
+        address2 << Config::NodeId_t("chunkers", "");
+        address2 << Config::NodeId_t("TestUdpChunker", "2");
+        ConfigNode configChunker2 = config.get(address2);
+        TestUdpChunker* chunker2 = new TestUdpChunker(configChunker2);
         server.addStreamChunker(chunker1);
         server.addStreamChunker(chunker2);
 
@@ -186,6 +199,7 @@ void TestPipelineServerTest::test_testTwoUdpChunkers()
     }
 }
 
+
 void TestPipelineServerTest::_createConfig()
 {
     TestConfig config;
@@ -197,6 +211,7 @@ void TestPipelineServerTest::_createConfig()
     "       <data type=\"VisibilityData\" adapter=\"AdapterLofarStationVisibilities\"/>"
     "   </PelicanServerClient>"
     "</clients>"
+    ""
     "<adapters>"
     "   <AdapterLofarStationVisibilities>"
     "       <antennas number=\"2\"/>"
@@ -204,7 +219,18 @@ void TestPipelineServerTest::_createConfig()
     "       <polarisation value=\"both\"/>"
     "       <dataBytes number=\"8\"/>"
     "   </AdapterLofarStationVisibilities>"
-    "</adapters>";
+    "</adapters>"
+    ""
+    "<chunkers>"
+    "   <TestUdpChunker name=\"1\">"
+    "       <connection host=\"127.0.0.1\" port=\"2002\"/>"
+    "       <data type=\"VisibilityData\" chunkSize=\"512\"/>"
+    "   </TestUdpChunker>"
+    "   <TestUdpChunker name=\"2\">"
+    "       <connection host=\"127.0.0.1\" port=\"2003\"/>"
+    "       <data type=\"VisibilityData\" chunkSize=\"512\"/>"
+    "   </TestUdpChunker>"
+    "</chunkers>";
 
     config.setFromString(xml);
     config.saveTestConfig("TestPipelineServer.xml", "pipelines");

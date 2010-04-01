@@ -8,20 +8,34 @@
 #include <iostream>
 
 #include "utility/memCheck.h"
+#include <utility/Config.h>
 
 namespace pelican {
 
-/**
- * @details
- * Constructs a new TestUdpChunker.
- */
-TestUdpChunker::TestUdpChunker(const QString& type, QString host, quint16 port,
-                               const size_t size)
-        : AbstractChunker(type, host, port)
+
+    /**
+* @details
+* Constructs a new TestUdpChunker.
+*/
+TestUdpChunker::TestUdpChunker(const ConfigNode& config)
+: AbstractChunker() 
 {
-    _size = size;
+    // Get Congiguration options.
+    setHost(config.getOption("connection", "host"));
+    setPort(qint16(config.getOption("connection", "port").toUInt()));
+    setType(config.getOption("data", "type"));
+    _chunkSize = config.getOption("data", "chunkSize").toUInt();
+
+    // Some sanity checking.
+    if (type().isEmpty())
+        throw QString("TestUdpChunker::TestUdpChunker(): Data type unspecified.");
+    
+    if (_chunkSize == 0)
+        throw QString("TestUdpChunker::TestUdpChunker(): Chunk size zero.");
+
+    // Initialise tempory storage and chunk counter.
     _nextCount = 0;
-    _tempBuffer.resize(_size);
+    _tempBuffer.resize(_chunkSize);
 }
 
 
@@ -55,22 +69,22 @@ void TestUdpChunker::next(QIODevice* socket)
 {
 //     std::cout << "TestUdpChunker::next() size = " << _size << std::endl;
 
-    qint64 sizeRead = static_cast<QUdpSocket*>(socket)->readDatagram(_tempBuffer.data(), _size);
+    qint64 sizeRead = static_cast<QUdpSocket*>(socket)->readDatagram(_tempBuffer.data(), _chunkSize);
 
 //     double value = *reinterpret_cast<double*>(_tempBuffer.data());
 //     std::cout << value << std::endl;
     
-    if (sizeRead != _size)
+    if (sizeRead != _chunkSize)
         throw QString("TestUdpChunker::next(): size mismatch.");
 
     // Get writable data object.
-    WritableData writableData = getDataStorage(_size);
+    WritableData writableData = getDataStorage(_chunkSize);
 
     // If the writable data object is not valid, then return.
     if (!writableData.isValid())
         return;
 
-    writableData.write((void*)_tempBuffer.data(), _size, 0);
+    writableData.write((void*)_tempBuffer.data(), _chunkSize, 0);
 
     ++_nextCount;
 }

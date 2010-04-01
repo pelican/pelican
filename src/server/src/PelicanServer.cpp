@@ -54,7 +54,6 @@ void PelicanServer::addServiceChunker( AbstractChunker* chunker)
 void PelicanServer::run()
 {
     QVector<boost::shared_ptr<PelicanPortServer> > servers;
-    QVector<boost::shared_ptr<DataReceiver> > chunkers;
 
     // set up the data manager
     DataManager dataManager;

@@ -24,8 +24,8 @@ class TestPipelineServerTest : public CppUnit::TestFixture
 {
     public:
         CPPUNIT_TEST_SUITE( TestPipelineServerTest );
-        //CPPUNIT_TEST( test_testChunker );
-        //CPPUNIT_TEST( test_testUdpChunker );
+        CPPUNIT_TEST( test_testChunker );
+        CPPUNIT_TEST( test_testUdpChunker );
         CPPUNIT_TEST( test_testTwoUdpChunkers );
         CPPUNIT_TEST_SUITE_END();
 

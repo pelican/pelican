@@ -29,9 +29,8 @@ class TestUdpChunker : public AbstractChunker
 {
     public:
         /// Constructs a new TestUdpChunker.
-        TestUdpChunker(const QString& type = "type", const QString host = "",
-                       const quint16 port = 0, const size_t size = 0);
-
+         TestUdpChunker(const ConfigNode& config);
+                       
         /// Destroys the TestChunker.
         ~TestUdpChunker();
 
@@ -43,7 +42,7 @@ class TestUdpChunker : public AbstractChunker
 
     private:
         unsigned int _nextCount;
-        size_t _size;
+        size_t _chunkSize;
         QByteArray _tempBuffer;
 };
 
