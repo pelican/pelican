@@ -13,6 +13,8 @@ set( modules_src
      src/ImageCombiner.cpp
 )
 
+
+include_directories(${MKL_INCLUDE_DIR})
 add_library(modules ${modules_src} )
 add_library(modules_static STATIC ${modules_src})
 SET_TARGET_PROPERTIES(modules_static PROPERTIES OUTPUT_NAME "modules")
