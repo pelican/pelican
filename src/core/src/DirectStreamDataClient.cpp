@@ -89,7 +89,7 @@ QHash<QString, DataBlob*> DirectStreamDataClient::getData(QHash<QString, DataBlo
                 validData[d->name()] = dataHash[ d->name()];
             }
             else {
-                // copy the associate data TODO
+                // send the associate data through the adapter
                 QByteArray tmp_array = QByteArray::fromRawData((char*)d->operator*(), d->size());
                 QBuffer device(&tmp_array);
                 validData.unite(adaptService( device, d.get(), dataHash ));
