@@ -5,6 +5,7 @@
 #include "comms/StreamData.h"
 #include "WritableData.h"
 #include <iostream>
+#include "utility/Config.h"
 
 #include "utility/memCheck.h"
 
@@ -15,8 +16,11 @@ namespace pelican {
  * @details
  * DataManager constructor.
  */
-DataManager::DataManager()
+DataManager::DataManager(const Config* config)
 {
+    _config = config;
+    _bufferConfigBaseAddress << Config::NodeId_t("server","");
+    _bufferConfigBaseAddress << Config::NodeId_t("buffers","");
 }
 
 
@@ -44,10 +48,10 @@ DataManager::~DataManager()
  */
 WritableData DataManager::getWritableData(const QString& type, size_t size)
 {
-    std::cout << "DataManager::getWritableData, type : " << type.toStdString() << std::endl;
+    //std::cout << "DataManager::getWritableData, type : " << type.toStdString() << std::endl;
     if ( _streams.contains(type) ) {
         // XXX remove
-        std::cout << "DataManager::Returning writable stream data" << std::endl;
+        //std::cout << "DataManager::Returning writable stream data" << std::endl;
         return _streams[type]->getWritable(size);
     }
     if ( _service.contains(type) )
@@ -66,8 +70,15 @@ WritableData DataManager::getWritableData(const QString& type, size_t size)
 StreamDataBuffer* DataManager::getStreamBuffer(const QString& type)
 {
     std::cout << "DataManager::getStreamBuffer" << type.toStdString() << std::endl;
+
     if ( ! _streams.contains(type) ) {
-        setStreamDataBuffer( type, new StreamDataBuffer(type) );
+        Config::TreeAddress_t configAddress(_bufferConfigBaseAddress);
+        configAddress << Config::NodeId_t(type, "");
+        ConfigNode config = _config->get(configAddress);
+        size_t maxSize = config.getOption("buffer", "maxSize", "10240").toUInt();
+        size_t maxChunkSize = config.getOption("buffer", "maxChunkSize", "10240").toUInt();
+        setStreamDataBuffer( type, new StreamDataBuffer(type, NULL, maxSize, maxChunkSize) );
+        
     }
     return _streams[type];
 }
@@ -124,11 +135,11 @@ void DataManager::setServiceDataBuffer(const QString& name, ServiceDataBuffer* b
  */
 LockedData DataManager::getNext(const QString& type, const QSet<QString>& associateData )
 {
-    std::cout << "DataManager::getNext() type = " << type.toStdString() << std::endl;
+    //std::cout << "DataManager::getNext() type = " << type.toStdString() << std::endl;
     LockedData lockedData = getNext(type);
     
     if( lockedData.isValid() ) {
-        std::cout << "DataManager::getNext(): Valid locked stream data found." << std::endl;
+        //std::cout << "DataManager::getNext(): Valid locked stream data found." << std::endl;
 
         // check it contains valid associateData
         LockableStreamData* streamData =
@@ -153,12 +164,13 @@ LockedData DataManager::getNext(const QString& type, const QSet<QString>& associ
  */
 LockedData DataManager::getNext(const QString& type)
 {
-    std::cout << "DataManager::getNext: type : " << type.toStdString() << std::endl;
+//     std::cout << "DataManager::getNext: type : " << type.toStdString() << std::endl;
     LockedData lockedData(type, 0);
 
     _streams[type]->getNext(lockedData);
     return lockedData;
 }
+
 
 /**
  * @details
@@ -185,6 +197,7 @@ QList<LockedData> DataManager::getDataRequirements(const DataRequirements& req)
     return dataList;
 }
 
+
 /**
  * @details
  */
@@ -200,7 +213,7 @@ LockedData DataManager::getServiceData(const QString& type, const QString& versi
 
 void DataManager::associateServiceData(LockableStreamData* data)
 {
-    std::cout << "DataManager::associateServiceData()" << std::endl;
+//     std::cout << "DataManager::associateServiceData()" << std::endl;
     QHashIterator<QString, ServiceDataBuffer*> i(_service);
     while (i.hasNext()) {
         i.next();

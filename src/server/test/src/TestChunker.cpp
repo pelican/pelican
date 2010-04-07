@@ -23,6 +23,30 @@ _nextCount(0), _size(size)
 }
 
 /**
+* @details
+* Constructs a new TestChunker.
+*/
+TestChunker::TestChunker(const ConfigNode& config)
+: QObject(), AbstractChunker()
+{
+    _badSocket = false;
+    _nextCount = 0;
+    _size = config.getOption("data", "chunkSize", "512").toUInt();
+    _timer = new QTimer;
+    connect(_timer, SIGNAL(timeout()), this, SLOT(_start()));
+}
+
+
+/**
+ * @details
+ * Destroys the TestChunker.
+ */
+TestChunker::~TestChunker()
+{
+    delete _timer;
+}
+
+/**
  * @details
  * Constructs a new device.
  */
@@ -30,11 +54,6 @@ QIODevice* TestChunker::newDevice()
 {
     if(_badSocket)
         return 0;
-
-//    QUdpSocket* socket = new QUdpSocket;
-//    _device = socket;
-//    socket->connectToHost( _host, _port );
-//    return socket;
 
     _timer->start(1);
     QBuffer* buffer = new QBuffer;
@@ -48,10 +67,21 @@ QIODevice* TestChunker::newDevice()
  */
 void TestChunker::next(QIODevice*)
 {
-    std::cout << "TestChunker::next()" << std::endl;
+    //std::cout << "TestChunker::next()" << std::endl;
     ++_nextCount;
+
+    // Get writable data object.
     WritableData writableData = getDataStorage(_size);
 
+    // If the writable data object is not valid, then return.
+    if (!writableData.isValid())
+        return;
+
+    // ... or, block until writable data is valid.
+    while (!writableData.isValid()) {
+        writableData = getDataStorage(_size);
+        usleep(1);
+    }
 
     unsigned nDoubles = _size / sizeof(double);
     std::vector<double> array(nDoubles);
@@ -59,7 +89,6 @@ void TestChunker::next(QIODevice*)
 //        array[i] = i;
         array[i] = _nextCount;
     }
-
 
     // Write some test data.
     writableData.write((void*)&array[0], _size, 0);
@@ -78,10 +107,10 @@ unsigned int TestChunker::nextCalled()
  */
 void TestChunker::_start()
 {
-    if (_nextCount < 10)
+//    if (_nextCount < 10)
         next(_device);
-    else
-        _timer->stop();
+//    else
+//        _timer->stop();
 }
 
 } // namespace pelican

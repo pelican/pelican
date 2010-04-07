@@ -30,6 +30,8 @@ class WritableData
 
         AbstractLockableData* data() {return _data;}
 
+        void* ptr() { return _data->data()->operator*(); }
+
         /// returns true if there is a valid Data object
         bool isValid() const {return _data ? _data->isValid() : false;}
 

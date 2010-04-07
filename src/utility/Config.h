@@ -69,7 +69,8 @@ class Config
         /// Sets the configuration from the QString text.
         /// Warning: This method is added for testing only and will destroy
         /// any previous configuration.
-        void setFromString(const QString& text);
+        void setFromString(const QString& pipelineConfig,
+                           const QString& serverConfig = "");
 
     protected:
         /// Reads and parses the configuration file.

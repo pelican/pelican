@@ -8,17 +8,22 @@
 #include "DataReceiver.h"
 #include "comms/PelicanProtocol.h"
 #include "PelicanPortServer.h"
-#include "utility/memCheck.h"
 #include <iostream>
+#include "utility/Config.h"
+
+#include "utility/memCheck.h"
 
 namespace pelican {
 
+
 // class PelicanServer
-PelicanServer::PelicanServer(QObject* parent)
+PelicanServer::PelicanServer(const Config* config, QObject* parent)
     : QThread(parent)
 {
+    _config = config;
     _ready = false;
 }
+
 
 PelicanServer::~PelicanServer()
 {
@@ -45,28 +50,39 @@ void PelicanServer::addStreamChunker( AbstractChunker* chunker)
     _chunkerManager.addStreamChunker(chunker);
 }
 
+
 void PelicanServer::addServiceChunker( AbstractChunker* chunker)
 {
     _chunkerManager.addServiceChunker(chunker);
 }
 
 
+/**
+ * @details
+ * Runs the server thread starting its event loop.
+ * 
+ * Sets up the data manager which handles stream and service data buffers
+ * which are set up on request of the chunkers.
+ * 
+ */
 void PelicanServer::run()
 {
     QVector<boost::shared_ptr<PelicanPortServer> > servers;
-    QVector<boost::shared_ptr<DataReceiver> > chunkers;
 
-    // set up the data manager
-    DataManager dataManager;
+    // Set up the data manager.
+    DataManager dataManager(_config);
     _chunkerManager.init(dataManager);
 
-    // set up listening servers
+    // Set up listening servers.
     QList<quint16> ports = _protocolPortMap.keys();
     for (int i = 0; i < ports.size(); ++i) {
-        boost::shared_ptr<PelicanPortServer> server( new PelicanPortServer(_protocolPortMap[ports[i]], &dataManager ) );
+        boost::shared_ptr<PelicanPortServer> server(
+            new PelicanPortServer(_protocolPortMap[ports[i]], &dataManager )
+        );
         servers.append(server);
         if ( !server->listen(QHostAddress::Any, ports[i] )) {
-            throw QString(QString("Unable to start PelicanServer on port='") + QString().setNum(ports[i])+ QString("'"));
+            throw QString(QString("Unable to start PelicanServer on port='") +
+                            QString().setNum(ports[i])+ QString("'"));
         }
     }
     _mutex.lock();

@@ -54,9 +54,10 @@ PipelineApplication::PipelineApplication(int argc, char** argv)
     _moduleFactory = new ModuleFactory(_config);
 
     // Construct the DataClient factory
-    Config::TreeAddress_t clientsNode;
-    clientsNode.append(Config::NodeId_t("clients", ""));
-    _clientFactory = new DataClientFactory(_config, clientsNode, _adapterFactory );
+    Config::TreeAddress_t clientBaseAddress;
+    clientBaseAddress.append(Config::NodeId_t("pipeline", ""));
+    clientBaseAddress.append(Config::NodeId_t("clients", ""));
+    _clientFactory = new DataClientFactory(_config, clientBaseAddress, _adapterFactory );
 
     // Construct the pipeline driver
     _driver = new PipelineDriver( _dataBlobFactory, _moduleFactory, _clientFactory );

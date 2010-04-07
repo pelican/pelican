@@ -40,6 +40,10 @@ class AbstractChunker
 
         AbstractChunker(const QString& type, const ConfigNode& config);
 
+        AbstractChunker()
+        : _dataManager(NULL), _type(""), _host(""), _port(0), _device(NULL)
+        {}
+
         /// Destroys the AbstractChunker.
         virtual ~AbstractChunker();
 
@@ -49,6 +53,9 @@ class AbstractChunker
         /// set the ip address to listen on for data
         void setHost(const QString& ipaddress);
 
+        /// Sets th type name to be associated with this data.
+        void setType(const QString& type) { _type = type; }
+        
         /// Return the type name to be associated with this data.
         const QString& type() const {return _type;}
 

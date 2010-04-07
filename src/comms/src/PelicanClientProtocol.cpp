@@ -68,7 +68,7 @@ QByteArray PelicanClientProtocol::serialise(const ServerRequest& req)
 
 boost::shared_ptr<ServerResponse> PelicanClientProtocol::receive(QAbstractSocket& socket)
 {
-    std::cout << "PelicanClientProtocol::receive" << std::endl;
+//     std::cout << "PelicanClientProtocol::receive()" << std::endl;
     int timeout = 2000;
     ServerResponse::Response type = ServerResponse::Error;
     while (socket.bytesAvailable() < (int)sizeof(quint16)) {
@@ -82,7 +82,7 @@ boost::shared_ptr<ServerResponse> PelicanClientProtocol::receive(QAbstractSocket
     in.setVersion(QDataStream::Qt_4_0);
     in >> (quint16&)type;
 
-    std::cout << "Type: " << type << std::endl;
+//     std::cout << "PelicanClientProtocol::receive(): Type: " << type << std::endl;
 
 
     switch(type) {

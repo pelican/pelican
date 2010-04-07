@@ -1,28 +1,29 @@
 SUBPACKAGE(serverTest server)
-set(
-   serverTestlib_src
-   src/TestChunker.cpp
-   src/TestProtocol.cpp
-   src/TestServer.cpp
-   src/PelicanTestClient.cpp
+set(serverTestlib_src
+    src/TestChunker.cpp
+    src/TestUdpChunker.cpp
+    src/TestProtocol.cpp
+    src/TestServer.cpp
+    src/PelicanTestClient.cpp
+    src/TelescopeEmulator.cpp
 )
 
-set( serverTestLib_moc_sources
-   TestServer.h
-   TestChunker.h
+set(serverTestLib_moc_sources
+    TestServer.h
+    TestChunker.h
 )
 
-set(
-   serverTest_src
-   src/serverTest.cpp
-   src/LockableStreamDataTest.cpp
-   src/LockedDataTest.cpp
-   src/DataManagerTest.cpp
-   src/ServiceDataBufferTest.cpp
-   src/StreamDataBufferTest.cpp
-   src/SessionTest.cpp
-   src/WritableDataTest.cpp
-   ####src/LofarChunkerTest.cpp
+set(serverTest_src
+    src/serverTest.cpp
+    src/ChunkerFactoryTest.cpp
+    src/LockableStreamDataTest.cpp
+    src/LockedDataTest.cpp
+    src/DataManagerTest.cpp
+    src/ServiceDataBufferTest.cpp
+    src/StreamDataBufferTest.cpp
+    src/SessionTest.cpp
+    src/WritableDataTest.cpp
+    ####src/LofarChunkerTest.cpp
 )
 
 QT4_WRAP_CPP(
@@ -32,11 +33,10 @@ QT4_WRAP_CPP(
 # multi-threaded tests
 # these need to be seperate so as not to use the
 # single threaded utility libs
-set(
-   serverTestMT_src
-   src/serverTest.cpp
-   src/PelicanServerTest.cpp
-   src/DataReceiverTest.cpp
+set(serverTestMT_src
+    src/serverTest.cpp
+    src/PelicanServerTest.cpp
+    src/DataReceiverTest.cpp
 )
 
 add_library( serverTestUtilities ${serverTestlib_src} ${serverTestLib_moc_headers} )
@@ -49,4 +49,4 @@ add_executable(serverTestMT ${serverTestMT_src} )
 target_link_libraries(serverTestMT ${SUBPACKAGE_LIBRARIES} ${CPPUNIT_LIBRARIES} memoryTracerDummy )
 
 add_test(serverTest serverTest )
-#add_test(serverTestMT serverTestMT )
+add_test(serverTestMT serverTestMT )

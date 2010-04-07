@@ -15,6 +15,7 @@ namespace pelican {
 VisibilityPrinter::VisibilityPrinter(const ConfigNode& config)
     : AbstractModule(config)
 {
+    _counter = 0;
 }
 
 
@@ -39,6 +40,10 @@ void VisibilityPrinter::run(VisibilityData* vis)
     if (vis->nAntennas() == 0)
         throw QString("Empty data blob: Visibility Data");
 
+
+    std::cout << std::endl;
+    std::cout << "VisibilityPrinter::run() Iteration " << _counter << std::endl;
+    
     unsigned nChan = vis->nChannels();
     unsigned nAnt = vis->nAntennas();
     unsigned nPol = vis->nPolarisations();
@@ -47,12 +52,12 @@ void VisibilityPrinter::run(VisibilityData* vis)
             complex_t* ptr = vis->ptr(c, p);
             for (unsigned j = 0; j < nAnt; j++) {
                 for (unsigned i = 0; i < nAnt; i++) {
-                    std::cout << "VisData: " << ptr[i + j * nAnt] << std::endl;
+                    std::cout << "VisibilityPrinter::run(): VisData: " << ptr[i + j * nAnt] << std::endl;
                 }
             }
         }
     }
-
+    _counter++;
 }
 
 

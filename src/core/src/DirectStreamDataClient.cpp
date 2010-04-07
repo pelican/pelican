@@ -4,7 +4,7 @@
 #include "data/DataRequirements.h"
 #include "server/LockedData.h"
 #include "server/LockableStreamData.h"
-
+#include "utility/Config.h"
 
 #include "utility/memCheck.h"
 
@@ -20,6 +20,11 @@ DirectStreamDataClient::DirectStreamDataClient(const ConfigNode& config, const D
     : AbstractDataClient(config, types)
 {
     _started = false;
+    // FIXME: to give the data manager its required config
+    // Problem being that is not included by default in the client node
+    // being passed down.
+    Config dataManagerConfig;
+    _dataManager = new DataManager(&dataManagerConfig);
 }
 
 /**
@@ -27,6 +32,8 @@ DirectStreamDataClient::DirectStreamDataClient(const ConfigNode& config, const D
  */
 DirectStreamDataClient::~DirectStreamDataClient()
 {
+    if (_dataManager)
+        delete _dataManager;
 }
 
 void DirectStreamDataClient::setChunker(AbstractChunker* chunker, const QString& name)
@@ -49,7 +56,7 @@ void DirectStreamDataClient::start()
 {
     if( ! _started ) {
         _started = true;
-        _chunkerManager.init(_dataManager);
+        _chunkerManager.init(*_dataManager);
     }
 }
 
@@ -68,10 +75,10 @@ QHash<QString, DataBlob*> DirectStreamDataClient::getData(QHash<QString, DataBlo
         QList<DataRequirements>::const_iterator it = dataRequirements().begin();
         while( it != dataRequirements().end() && dataList.size() == 0 )
         {
-            if( ! it->isCompatible( _dataManager.dataSpec() ) )
+            if( ! it->isCompatible( _dataManager->dataSpec() ) )
                 throw QString("DirectStreamDataClient::getData(): "
                         "Data requested not supported by client");
-            dataList = _dataManager.getDataRequirements(*it);
+            dataList = _dataManager->getDataRequirements(*it);
             ++it;
         }
     }

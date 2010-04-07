@@ -10,11 +10,13 @@ namespace pelican {
 AbstractChunker::AbstractChunker(const QString& type, const ConfigNode& config)
     : _dataManager(NULL), _type(type), _device(NULL)
 {
-    setHost(config.getOption("server","host"));
-    QString port = config.getOption("server","port");
+    setHost(config.getOption("server", "host"));
+    QString port = config.getOption("server", "port");
     if( port != "" )
         setPort(port.toUInt());
 }
+
+
 /**
  * @details
  * Destroys the AbstractChunker, deleting the IO device it uses.

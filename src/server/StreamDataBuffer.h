@@ -36,8 +36,11 @@ class StreamDataBuffer : public DataBuffer
 
     public:
         /// StreamDataBuffer constructor.
-        StreamDataBuffer(const QString& type, DataManager* manager = 0,
-                QObject* parent = 0);
+        /// FIXME: Is data manager ever not null other than in tests?
+        StreamDataBuffer(const QString& type, DataManager* manager = NULL,
+                         const size_t max = 10240,
+                         const size_t maxChunkSize = 10240,
+                         QObject* parent = 0);
 
         /// StreamDataBuffer destructor.
         ~StreamDataBuffer();
@@ -50,6 +53,12 @@ class StreamDataBuffer : public DataBuffer
 
         /// Set the data manager to use.
         void setDataManager(DataManager* manager) {_manager = manager;}
+
+        /// Sets the maximum size of the buffer in bytes.
+        void setMaxSize(const size_t size) { _max = size; }
+
+        /// Sets the maximum chunk size of the in bytes.
+        void setMaxChunkSize(const size_t size) { _maxChunkSize = size; }
 
     protected slots:
         /// Places the data chunk that emitted the signal on the serve queue.

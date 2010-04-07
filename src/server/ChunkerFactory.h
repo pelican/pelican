@@ -1,56 +1,66 @@
 #ifndef CHUNKERFACTORY_H
 #define CHUNKERFACTORY_H
 
-#include <QHash>
-#include <boost/shared_ptr.hpp>
+#include <QString>
 
 #include "utility/AbstractFactory.h"
+#include "server/AbstractChunker.h"
 
 /**
  * @file ChunkerFactory.h
  */
 
 namespace pelican {
-    class ChunkerClassGeneratorBase;
-    class AbstractChunker;
 
 /**
  * @class ChunkerFactory
  *  
  * @brief
- *    Creates configured Chunker objects
+ * Creates configured chunker objects.
+ *
  * @details
- *    The factory must be configured by adding ChunkerType obejcts
- *    which can create the necessary objects.
- *    Create will then generate the object, passing down in its
- *    instantiator the the appropriate configuration object
+ * The ChunkerFactory class creates pre-configured chunkers of the required
+ * type using the specified configuration object.
  *
- *    e.g.
+ * \code
  *
- *    // set up the factory
- *    ChunkerFactory factory;
- *    factory.addType(new myChunkerType);
+ * // Create the chunker factory.
+ * Config::TreeAddress_t address;
+ * address.append(Config::NodeId_t("server", ""));
+ * address.append(Config::NodeId_t("chunkers", ""));
+ * ChunkerFactory factory(&config, address);
  *
- *    // use the factory
- *    AbstractChunker* mychunker = factory.create("myChunker");
+ * // Create a chunker.
+ * AbstractChunker* c = factory.create<TestUdpChunker>("TestUdpChunker");
+ *
+ * \endcode
  */
-
 class ChunkerFactory : public AbstractFactory
 {
     public:
-        ChunkerFactory( const Config* config, const Config::TreeAddress_t& base );
-        ~ChunkerFactory();
+        /// Creates the chunker factory.
+        ChunkerFactory(const Config* config, const Config::TreeAddress_t& base)
+        : AbstractFactory(config, base) {}
 
-        /// add a type of chunker to the chunker factory
-        //  This will take ownership of the object and delete it on destruction
-        static void registerChunkerType( boost::shared_ptr<ChunkerClassGeneratorBase> ct );
+        /// Destroys the chunker factory, deleting any chunkers created by it.
+        ~ChunkerFactory() {
+            for (int i = 0; i < _chunkers.size(); ++i)
+                delete _chunkers[i];
+        }
 
-        /// create a configured object with tthe given name and type
-        virtual AbstractChunker* create( const QString& type, const QString& name="" );
+        /// Creates a configured chunker of the given type and name.
+        template <typename T> AbstractChunker* create(const QString& configType,
+                const QString& configName = "")
+        {
+            AbstractChunker* chunker = new T(configuration(configType, configName));
+            _chunkers.append(chunker);
+            return chunker;
+        }
 
     private:
-        static QHash<QString, boost::shared_ptr<ChunkerClassGeneratorBase> > _types;
+        QList<AbstractChunker*> _chunkers;
 };
 
 } // namespace pelican
+
 #endif // CHUNKERFACTORY_H 

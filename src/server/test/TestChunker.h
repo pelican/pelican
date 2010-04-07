@@ -4,6 +4,7 @@
 #include <QObject>
 #include <cstring>
 #include "server/AbstractChunker.h"
+#include "utility/Config.h"
 class QTimer;
 
 /**
@@ -33,8 +34,10 @@ class TestChunker : public QObject, public AbstractChunker
                 bool badSocket = false, size_t size = 0, QString host = "",
                 quint16 port = 0, QObject* parent = 0);
 
+        TestChunker(const ConfigNode& config);
+
         /// Destroys the TestChunker.
-        ~TestChunker() {}
+        ~TestChunker();
 
         /// Creates the socket to use for the incoming data stream.
         virtual QIODevice* newDevice();

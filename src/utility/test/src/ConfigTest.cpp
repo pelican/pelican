@@ -252,6 +252,7 @@ void ConfigTest::test_configFromString()
     config.setFromString(xml);
 
     Config::TreeAddress_t address;
+    address << Config::NodeId_t("pipeline", "");
     address << Config::NodeId_t("modules", "");
     address << Config::NodeId_t("moduleType", "test");
     ConfigNode configNode = config.get(address);

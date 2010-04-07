@@ -21,17 +21,17 @@ namespace pelican {
  * 
  */
 
-class ChunkerClassGeneratorBase
-{
-    public:
-        ChunkerClassGeneratorBase( const QString& type );
-        virtual ~ChunkerClassGeneratorBase();
-        QString type() { return _type; };
-        virtual AbstractChunker* create(const ConfigNode& config) = 0;
-
-    private:
-        QString _type;
-};
+//class ChunkerClassGeneratorBase
+//{
+//    public:
+//        ChunkerClassGeneratorBase( const QString& type );
+//        virtual ~ChunkerClassGeneratorBase();
+//        QString type() { return _type; };
+//        virtual AbstractChunker* create(const ConfigNode& config) = 0;
+//
+//    private:
+//        QString _type;
+//};
 
 } // namespace pelican
 #endif // CHUNKERCLASSGENERATORBASE_H 

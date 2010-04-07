@@ -17,6 +17,7 @@ namespace pelican {
 DataReceiver::DataReceiver(AbstractChunker* chunker, DataManager* dm, QObject* parent)
     : QThread(parent), _chunker(chunker), _dm(dm)
 {
+    std::cout << "DataReceiver Constructor" << std::endl;
     Q_ASSERT( dm != 0 );
     if ( !chunker ) throw QString("DataReceiver: Invalid Chunker");
     _device = 0;
@@ -30,6 +31,8 @@ DataReceiver::DataReceiver(AbstractChunker* chunker, DataManager* dm, QObject* p
  */
 DataReceiver::~DataReceiver()
 {
+    // TODO is this safe?
+    std::cout << "DataReceiver Destructor" << std::endl;
     // If the thread has started, call quit() to exit the event loop.
     if (isRunning()) while (!isFinished()) quit();
     wait();
@@ -77,11 +80,11 @@ void DataReceiver::listen()
 
 /**
  * @details
- * This slot is called when data is available on the
+ * This slot is called when data is available on the device.
  */
 void DataReceiver::processIncomingData()
 {
-    std::cout << "Processing data in slot" << std::endl;
+//     std::cout << "DataReceiver::processIncomingData()" << std::endl;
     _chunker->next( _device );
 }
 

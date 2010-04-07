@@ -5,6 +5,9 @@
 #include <QMap>
 #include <QString>
 #include <QPair>
+#include <QVector>
+#include <boost/shared_ptr.hpp>
+#include "server/DataReceiver.h"
 
 /**
  * @file ChunkerManager.h
@@ -49,6 +52,7 @@ class ChunkerManager
         QMap<QPair<QString,quint16>,AbstractChunker* > _chunkerPortMap;
         QSet<QString> _streamDataTypes;
         QSet<QString> _serviceDataTypes;
+        QVector<boost::shared_ptr<DataReceiver> > _dataReceivers;
 };
 
 } // namespace pelican

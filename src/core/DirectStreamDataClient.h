@@ -46,7 +46,7 @@ class DirectStreamDataClient : public AbstractDataClient
 
     private:
         ChunkerManager _chunkerManager;
-        DataManager _dataManager;
+        DataManager* _dataManager;
         QString _server;
         unsigned int _port;
 };

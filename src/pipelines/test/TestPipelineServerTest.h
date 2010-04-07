@@ -24,7 +24,9 @@ class TestPipelineServerTest : public CppUnit::TestFixture
 {
     public:
         CPPUNIT_TEST_SUITE( TestPipelineServerTest );
-        CPPUNIT_TEST( test_method );
+        CPPUNIT_TEST( test_testChunker );
+        CPPUNIT_TEST( test_testUdpChunker );
+        CPPUNIT_TEST( test_testTwoUdpChunkers );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -32,7 +34,9 @@ class TestPipelineServerTest : public CppUnit::TestFixture
         void tearDown();
 
         // Test Methods
-        void test_method();
+        void test_testChunker();
+        void test_testUdpChunker();
+        void test_testTwoUdpChunkers();
 
     private:
         // Create XML configuration
@@ -50,8 +54,11 @@ class PipelineBinaryEmulator : public QThread
 {
     private:
         TestConfig* _config;
+
     public:
-        PipelineBinaryEmulator(TestConfig *config);
+        PipelineBinaryEmulator(TestConfig *config) : QThread(),
+        _config(config) {start();}
+
     protected:
         void run();
 };

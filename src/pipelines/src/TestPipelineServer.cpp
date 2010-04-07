@@ -46,6 +46,7 @@ void TestPipelineServer::run(QHash<QString, DataBlob*>& remoteData)
     Q_ASSERT(vis != NULL);
     _visPrinter->run(vis);
     sleep(1);
+
     // Stop the pipeline driver if we have gone through 10 iterations.
     ++_counter;
     if (_counter == 10)

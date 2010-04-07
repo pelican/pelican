@@ -2,33 +2,7 @@
 <!DOCTYPE pelican>
 <configuration version="1.0">
 
-<clients>
-    <FileDataClient>
-        <data type="VisibilityData" adapter="AdapterLofarStationVisibilities" file="data/lofarVis.dat"/>
-        <data type="AntennaPositions" adapter="AdapterAntennaList" file="data/antennaPositions.dat"/>
-    </FileDataClient>
-</clients>
-
-
-<adapters>
-    <AdapterAntennaList>
-        <antennas number="96"/>
-    </AdapterAntennaList>
-
-    <AdapterLofarStationVisibilities>
-        <!-- The Julian date for CE 2009 April 23 08:35:05.0 UT is 2454944.85770 -->
-        <time start="2454944.85770" delta="0"/>
-        <antennas number="96"/>
-        <channels start="0" end="511"/>
-        <polarisation value="both"/>
-        <dataBytes number="8"/>
-        <rowMajor value="true"/>
-    </AdapterLofarStationVisibilities>
-</adapters>
-
-
 <varsets>
-
     <varset name="channels">
         <!-- <frequencies reference="3.554687500e7" delta="195312.5"/>  -->
         <frequencies reference="0.0" referenceChannel="0" delta="195312.5"/>
@@ -52,34 +26,55 @@
         <deltaUT value="0"/>
         <pressure value="1000"/>
     </varset>
-
 </varsets>
 
 
-<modules>
+<pipeline>
+    <clients>
+        <FileDataClient>
+            <data type="VisibilityData" adapter="AdapterLofarStationVisibilities" file="data/lofarVis.dat"/>
+            <data type="AntennaPositions" adapter="AdapterAntennaList" file="data/antennaPositions.dat"/>
+        </FileDataClient>
+    </clients>
 
-    <ZenithImagerDft>
-        <size l="256" m="256" pixelCentred="true"/>
-        <fullSky value="true" cutHemisphere="true"/>
-        <varset name="channels"/>
-        <varset name="kso"/>
-    </ZenithImagerDft>
 
+    <adapters>
+        <AdapterAntennaList>
+            <antennas number="96"/>
+        </AdapterAntennaList>
 
-    <ImageWriterFits>
-        <overwrite value="true"/>
-        <directory value=""/>
-        <file name="raw.fits" prefix="" suffix=""/>
+        <AdapterLofarStationVisibilities>
+            <!-- The Julian date for CE 2009 April 23 08:35:05.0 UT is 2454944.85770 -->
+            <time start="2454944.85770" delta="0"/>
+            <antennas number="96"/>
+            <channels start="0" end="511"/>
+            <polarisation value="both"/>
+            <dataBytes number="8"/>
+            <rowMajor value="true"/>
+        </AdapterLofarStationVisibilities>
+    </adapters>
 
-        <origin value="Oxford e-Research Centre"/>
-        <telescope value="LOFAR"/>
-        <instrument value="Effelsberg"/>
-        <observer value=""/>
-        <object value="full sky"/>
-        <author value=""/>
-        <reference value=""/>
-    </ImageWriterFits>
+    <modules>
+        <ZenithImagerDft>
+            <size l="256" m="256" pixelCentred="true"/>
+            <fullSky value="true" cutHemisphere="true"/>
+            <varset name="channels"/>
+            <varset name="kso"/>
+        </ZenithImagerDft>
 
-</modules>
+        <ImageWriterFits>
+            <overwrite value="true"/>
+            <directory value=""/>
+            <file name="raw.fits" prefix="" suffix=""/>
+            <header key="origin" value="Oxford e-Research Centre"/>
+            <header key="telescope" value="LOFAR"/>
+            <header key="instrument" value="Effelsberg"/>
+            <header key="observer" value=""/>
+            <header key="object" value="full sky"/>
+            <header key="author" value=""/>
+            <header key="reference" value=""/>
+        </ImageWriterFits>
+    </modules>
+</pipeline>
 
 </configuration>

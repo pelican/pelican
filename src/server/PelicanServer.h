@@ -20,6 +20,7 @@ namespace pelican {
 class AbstractProtocol;
 class AbstractChunker;
 class PelicanPortServer;
+class Config;
 
 /**
  * @class PelicanServer
@@ -38,7 +39,7 @@ class PelicanServer : public QThread
     Q_OBJECT
 
     public:
-        PelicanServer(QObject* parent=0);
+        PelicanServer(const Config* config, QObject* parent=0);
         ~PelicanServer();
 
         /// Assosiate an incoming port with a particular
@@ -62,6 +63,7 @@ class PelicanServer : public QThread
         QMutex _mutex;
         ChunkerManager _chunkerManager;
         bool _ready;
+        const Config* _config;
 };
 
 } // namespace pelican
