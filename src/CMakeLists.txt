@@ -34,6 +34,7 @@ endif (TIMER)
 if (IGNORE_MKL)
     set(IGNORE_MLK true)
 endif (IGNORE_MKL)
+set(IGNORE_MLK true)
 
 if (OPENMP)
     find_package(OpenMP REQUIRED)
@@ -87,6 +88,13 @@ set(dependencies
 )
 PACKAGE_DEPENDENCIES(${dependencies})
 
+# -- list of all libraries for single library install
+set(PROJECT_LIBRARIES pelican 
+    ${Boost_LIBRARIES} 
+    ${PELICAN_CBLAS_LIBS}
+    ${PELICAN_LAPACK_LIBS}
+    ${CFITSIO_LIBRARIES}
+    )
 
 # === Sub modules
 include(modules.cmake)
@@ -100,12 +108,14 @@ add_doxygen_target(developer DoxyfileDeveloper)
 
 
 # === libpelican.so build target
+#if(CMAKE_BUILD_TYPE MATCHES RELEASE)
 #add_library(pelican SHARED
-    #${CMAKE_CURRENT_BUILD_DIR}/adapters/libadapters.a
-    #${CMAKE_CURRENT_BUILD_DIR}/comms/libcomms.a
+#    ${CMAKE_CURRENT_BUILD_DIR}/adapters/libadapters.a
+#    ${CMAKE_CURRENT_BUILD_DIR}/comms/libcomms.a
 #)
 #set_target_properties(pelican PROPERTIES LINKER_LANGUAGE CXX)
-#target_link_libraries(pelican ${SUBPACKAGE_LIBRARIES} memoryTracer)
+#target_link_libraries(pelican ${PROJECT_LIBRARY_SOURCES} )
+#message("PROJECT_LIBRARY_SOURCES = ${PROJECT_LIBRARY_SOURCES}")
 #install(TARGETS pelican DESTINATION ${LIBRARY_INSTALL_DIR})
-
-
+#endif(CMAKE_BUILD_TYPE MATCHES RELEASE)
+PROJECT_LIBRARY(pelican)

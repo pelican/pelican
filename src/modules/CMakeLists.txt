@@ -15,17 +15,8 @@ set( modules_src
 
 
 include_directories(${MKL_INCLUDE_DIR})
-add_library(modules ${modules_src} )
-add_library(modules_static STATIC ${modules_src})
-SET_TARGET_PROPERTIES(modules_static PROPERTIES OUTPUT_NAME "modules")
-SET_TARGET_PROPERTIES(modules_static PROPERTIES PREFIX "lib")
-SET_TARGET_PROPERTIES(modules PROPERTIES CLEAN_DIRECT_OUTPUT 1)
-SET_TARGET_PROPERTIES(modules_static PROPERTIES CLEAN_DIRECT_OUTPUT 1)
-
-
-target_link_libraries(modules ${SUBPACKAGE_LIBRARIES} )
-install(TARGETS modules DESTINATION ${LIBRARY_INSTALL_DIR} )
-SUBPACKAGE_ADD_LIBRARIES(modules
+SUBPACKAGE_LIBRARY(modules ${modules_src} )
+SUBPACKAGE_ADD_LIBRARIES(
     ${PELICAN_CBLAS_LIBS}
     ${PELICAN_LAPACK_LIBS}
     ${CFITSIO_LIBRARIES}

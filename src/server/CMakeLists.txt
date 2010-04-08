@@ -42,18 +42,10 @@ QT4_WRAP_CPP(
     server_moc_sources
     ${server_moc_headers} )
 
-add_library(server ${server_src} ${server_moc_sources})
-add_library(server_static STATIC ${server_src} ${server_moc_sources})
-SET_TARGET_PROPERTIES(server_static PROPERTIES OUTPUT_NAME "server")
-SET_TARGET_PROPERTIES(server_static PROPERTIES PREFIX "lib")
-SET_TARGET_PROPERTIES(server PROPERTIES CLEAN_DIRECT_OUTPUT 1)
-SET_TARGET_PROPERTIES(server_static PROPERTIES CLEAN_DIRECT_OUTPUT 1)
+SUBPACKAGE_LIBRARY(server ${server_src} ${server_moc_sources})
+SUBPACKAGE_ADD_LIBRARIES(${QT_QTNETWORK_LIBRARY} ${QT_QTCORE_LIBRARY})
 
-
-SUBPACKAGE_ADD_LIBRARIES(server ${QT_QTNETWORK_LIBRARY} ${QT_QTCORE_LIBRARY})
-target_link_libraries(server ${SUBPACKAGE_LIBRARIES} )
-install(TARGETS server DESTINATION ${LIBRARY_INSTALL_DIR} )
 add_executable(pelicanServer ${serverExe_src} )
-target_link_libraries(pelicanServer server ${SUBPACKAGE_LIBRARIES} memoryTracerDummy )
+target_link_libraries(pelicanServer ${SUBPACKAGE_LIBRARIES} memoryTracerDummy )
 
 add_subdirectory(test)

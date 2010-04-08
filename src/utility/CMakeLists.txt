@@ -17,18 +17,8 @@ set( tracer_src
 )
 
 # The general utility library
-add_library(pelicanutility ${utility_src} )
-add_library(pelicanutility_static STATIC ${utility_src} )
-SET_TARGET_PROPERTIES(pelicanutility_static PROPERTIES OUTPUT_NAME "pelicanutility")
-SET_TARGET_PROPERTIES(pelicanutility_static PROPERTIES PREFIX "lib")
-SET_TARGET_PROPERTIES(pelicanutility PROPERTIES CLEAN_DIRECT_OUTPUT 1)
-SET_TARGET_PROPERTIES(pelicanutility_static PROPERTIES CLEAN_DIRECT_OUTPUT 1)
-
-
-
-target_link_libraries(pelicanutility ${SUBPACKAGE_LIBRARIES})
-install(TARGETS pelicanutility DESTINATION ${LIBRARY_INSTALL_DIR} )
-SUBPACKAGE_ADD_LIBRARIES(pelicanutility ${QT_QTNETWORK_LIBRARY} ${QT_QTCORE_LIBRARY} ${QT_QTXML_LIBRARY})
+SUBPACKAGE_LIBRARY(utility ${utility_src} )
+SUBPACKAGE_ADD_LIBRARIES(${QT_QTNETWORK_LIBRARY} ${QT_QTCORE_LIBRARY} ${QT_QTXML_LIBRARY})
 
 # The thread safe library (dummies)
 add_library(memoryTracerDummy ${dummyTracer_src} )
