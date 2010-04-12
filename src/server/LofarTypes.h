@@ -4,8 +4,7 @@
 #include <complex>
 #include <cmath>
 #include <cstdio>
-//#include <cstdint> // causes a c++0x error with icc 11.1-038
-#include <stdint.h>
+#include <boost/cstdint.hpp>
 
 namespace pelican {
 
