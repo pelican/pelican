@@ -95,6 +95,7 @@ void PipelineDriver::registerPipeline(AbstractPipeline *pipeline)
  *
  * The recognised values are:
  * - FileDataClient
+ * - PelicanServerClient
  *
  * @param[in] name The type of the data client to create.
  */

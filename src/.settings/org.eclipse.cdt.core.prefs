@@ -1,6 +1,5 @@
-#Thu Feb 11 11:32:35 GMT 2010
+#Mon Apr 12 14:18:36 BST 2010
 eclipse.preferences.version=1
-environment/project/cdt.managedbuild.toolchain.gnu.base.935239837=<?xml version\="1.0" encoding\="UTF-8" standalone\="no"?>\n<environment append\="true" appendContributed\="true"/>\n
 org.eclipse.cdt.core.formatter.alignment_for_arguments_in_method_invocation=16
 org.eclipse.cdt.core.formatter.alignment_for_base_clause_in_type_declaration=80
 org.eclipse.cdt.core.formatter.alignment_for_compact_if=0
@@ -14,10 +13,10 @@ org.eclipse.cdt.core.formatter.alignment_for_throws_clause_in_method_declaration
 org.eclipse.cdt.core.formatter.brace_position_for_array_initializer=end_of_line
 org.eclipse.cdt.core.formatter.brace_position_for_block=end_of_line
 org.eclipse.cdt.core.formatter.brace_position_for_block_in_case=end_of_line
-org.eclipse.cdt.core.formatter.brace_position_for_method_declaration=end_of_line
+org.eclipse.cdt.core.formatter.brace_position_for_method_declaration=next_line
 org.eclipse.cdt.core.formatter.brace_position_for_namespace_declaration=end_of_line
 org.eclipse.cdt.core.formatter.brace_position_for_switch=end_of_line
-org.eclipse.cdt.core.formatter.brace_position_for_type_declaration=end_of_line
+org.eclipse.cdt.core.formatter.brace_position_for_type_declaration=next_line
 org.eclipse.cdt.core.formatter.compact_else_if=true
 org.eclipse.cdt.core.formatter.continuation_indentation=2
 org.eclipse.cdt.core.formatter.continuation_indentation_for_array_initializer=2
@@ -36,11 +35,11 @@ org.eclipse.cdt.core.formatter.indentation.size=4
 org.eclipse.cdt.core.formatter.insert_new_line_after_opening_brace_in_array_initializer=do not insert
 org.eclipse.cdt.core.formatter.insert_new_line_after_template_declaration=do not insert
 org.eclipse.cdt.core.formatter.insert_new_line_at_end_of_file_if_missing=do not insert
-org.eclipse.cdt.core.formatter.insert_new_line_before_catch_in_try_statement=do not insert
+org.eclipse.cdt.core.formatter.insert_new_line_before_catch_in_try_statement=insert
 org.eclipse.cdt.core.formatter.insert_new_line_before_closing_brace_in_array_initializer=do not insert
-org.eclipse.cdt.core.formatter.insert_new_line_before_else_in_if_statement=do not insert
+org.eclipse.cdt.core.formatter.insert_new_line_before_else_in_if_statement=insert
 org.eclipse.cdt.core.formatter.insert_new_line_before_identifier_in_function_declaration=do not insert
-org.eclipse.cdt.core.formatter.insert_new_line_before_while_in_do_statement=do not insert
+org.eclipse.cdt.core.formatter.insert_new_line_before_while_in_do_statement=insert
 org.eclipse.cdt.core.formatter.insert_new_line_in_empty_block=insert
 org.eclipse.cdt.core.formatter.insert_space_after_assignment_operator=insert
 org.eclipse.cdt.core.formatter.insert_space_after_binary_operator=insert

@@ -14,21 +14,23 @@ namespace pelican {
  * @class TelescopeEmulator
  *
  * @brief
- * TestClass to emulate UDP signals sent from a telescope for testing the
+ * Test class to emulate UDP signals sent from a telescope for testing the
  * server.
  *
  * @details
  *
  */
-
 class TelescopeEmulator : public QThread
 {
     public:
+        /// Constructs a new telescope emulator.
         TelescopeEmulator(const qint16 port, const double initialValue = 0.0);
-        virtual ~TelescopeEmulator();
+
+        /// Destroys the telescope emulator.
+        ~TelescopeEmulator();
 
     public:
-        ///
+        /// Runs the telescope emulator thread.
         void run();
 
     private:
