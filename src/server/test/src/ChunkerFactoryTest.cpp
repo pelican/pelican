@@ -47,6 +47,41 @@ void ChunkerFactoryTest::tearDown()
  */
 void ChunkerFactoryTest::test_create()
 {
+    //    try {
+    //        // Create a test configuration.
+    //        Config config;
+    //        QString serverXml =
+    //                "<chunkers>"
+    //                "   <TestUdpChunker name=\"1\">"
+    //                "       <connection host=\"127.0.0.1\" port=\"2002\"/>"
+    //                "       <data type=\"VisibilityData\" chunkSize=\"512\"/>"
+    //                "   </TestUdpChunker>"
+    //                "   <TestUdpChunker name=\"2\">"
+    //                "       <connection host=\"127.0.0.1\" port=\"2003\"/>"
+    //                "       <data type=\"VisibilityData\" chunkSize=\"512\"/>"
+    //                "   </TestUdpChunker>"
+    //                "</chunkers>";
+    //        config.setFromString("", serverXml);
+    //
+    //        // Create the chunker factory.
+    //        Config::TreeAddress_t address;
+    //        address.append(Config::NodeId_t("server", ""));
+    //        address.append(Config::NodeId_t("chunkers", ""));
+    //        ChunkerFactory factory(&config, address);
+    //
+    //        // Create a chunker with the right configuration.
+    //        AbstractChunker* chunker = factory.create<TestUdpChunker>("TestUdpChunker", "2");
+    //
+    //        // Assert that the chunker has the correct configuration.
+    //        CPPUNIT_ASSERT(chunker->type() == "VisibilityData");
+    //        CPPUNIT_ASSERT(chunker->host() == "127.0.0.1");
+    //        CPPUNIT_ASSERT(chunker->port() == 2003);
+    //    }
+    //
+    //    catch (QString e) {
+    //        CPPUNIT_FAIL("Unexpected exception: " + e.toStdString());
+    //    }
+
     try {
         // Create a test configuration.
         Config config;
@@ -69,8 +104,12 @@ void ChunkerFactoryTest::test_create()
         address.append(Config::NodeId_t("chunkers", ""));
         ChunkerFactory factory(&config, address);
 
-        // Create a chunker with the right configuration.
-        AbstractChunker* chunker = factory.create<TestUdpChunker>("TestUdpChunker", "2");
+
+        typedef ChunkerClassGenerator<TestUdpChunker> chunkerGenerator;
+        factory.registerChunkerType(boost::shared_ptr<chunkerGenerator>(new chunkerGenerator("TestUdpChunker")));
+
+        AbstractChunker* chunker = factory.create("TestUdpChunker", "2");
+
 
         // Assert that the chunker has the correct configuration.
         CPPUNIT_ASSERT(chunker->type() == "VisibilityData");

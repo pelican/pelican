@@ -13,10 +13,10 @@
 namespace pelican {
 
 
-    /**
-* @details
-* Constructs a new TestUdpChunker.
-*/
+/**
+ * @details
+ * Constructs a new TestUdpChunker.
+ */
 TestUdpChunker::TestUdpChunker(const ConfigNode& config)
 : AbstractChunker() 
 {
@@ -41,7 +41,6 @@ TestUdpChunker::TestUdpChunker(const ConfigNode& config)
     _tempBuffer.resize(_chunkSize);
 }
 
-
 /**
  * @details
  * Destroys the TestUdpChunker.
@@ -49,7 +48,6 @@ TestUdpChunker::TestUdpChunker(const ConfigNode& config)
 TestUdpChunker::~TestUdpChunker()
 {
 }
-
 
 /**
  * @details
@@ -62,7 +60,6 @@ QIODevice* TestUdpChunker::newDevice()
     socket->bind(QHostAddress(host()), port());
     return socket;
 }
-
 
 /**
  * @details
@@ -91,7 +88,5 @@ void TestUdpChunker::next(QIODevice* socket)
 
     ++_nextCount;
 }
-
-
 
 } // namespace pelican
