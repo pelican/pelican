@@ -120,7 +120,6 @@ MACRO( SUBPACKAGE package )
     file(GLOB public_headers RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "*.h" )
     install(FILES ${public_headers} 
             DESTINATION ${INCLUDE_INSTALL_DIR}/${package}
-            PERMISSIONS WORLD_READ
             )
 
     # process packages that it depends on
