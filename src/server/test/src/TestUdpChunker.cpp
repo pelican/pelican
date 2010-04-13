@@ -1,4 +1,5 @@
 #include "TestUdpChunker.h"
+#include "ChunkerFactory.h"
 
 #include <QCoreApplication>
 #include <QBuffer>
@@ -12,6 +13,8 @@
 
 namespace pelican {
 
+// Register the chunker with the factory.
+PELICAN_DECLARE_CHUNKER(TestUdpChunker)
 
 /**
  * @details

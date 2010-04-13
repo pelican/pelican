@@ -1,40 +1,45 @@
 #include "ChunkerFactory.h"
-#include "ChunkerClassGeneratorBase.h"
+#include <QtGlobal>
+#include <iostream>
 
 #include "utility/memCheck.h"
 
 namespace pelican {
 
-QHash<QString, boost::shared_ptr<ChunkerClassGeneratorBase> > ChunkerFactory::_types;
+QHash<QString, ChunkerFactory::AbstractGenerator* > ChunkerFactory::AbstractGenerator::_types;
 
 /**
- *@details ChunkerFactory
+ * @details ChunkerFactory
  */
-ChunkerFactory::ChunkerFactory( const Config* config, const Config::TreeAddress_t& base )
+ChunkerFactory::ChunkerFactory(const Config* config, const Config::TreeAddress_t& base)
     : AbstractFactory(config, base)
 {
 }
 
 /**
- *@details
+ * @details
  */
 ChunkerFactory::~ChunkerFactory()
 {
-}
-
-void ChunkerFactory::registerChunkerType( boost::shared_ptr<ChunkerClassGeneratorBase> ct )
-{
-    _types.insert(ct->type(), ct);
-}
-
-AbstractChunker* ChunkerFactory::create( const QString& type, const QString& name )
-{
-    if( ! _types.contains(type) )
-    {
-        throw( QString("ChunkerFactory::create(): unknown type \"") + type + QString("\"")  );
+    foreach (AbstractChunker* chunker, _objects) {
+        delete chunker;
     }
-    return _types[type]->create( configuration( type, name) );
 }
 
+/**
+ * @details
+ * @param type
+ * @param name
+ * @return
+ */
+AbstractChunker* ChunkerFactory::create(const QString& type, const QString& name)
+{
+    if (! AbstractGenerator::types().contains(type))
+        throw QString("ChunkerFactory::create(): Unknown type \"%1\"").arg(type);
+
+    AbstractChunker* chunker = AbstractGenerator::types()[type]->create(configuration(type, name));
+    _objects.append(chunker);
+    return chunker;
+}
 
 } // namespace pelican
