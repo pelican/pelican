@@ -83,7 +83,7 @@ class DataManager
 
     public:
         const Config* _config;
-        Config::TreeAddress_t _bufferConfigBaseAddress;
+        Config::TreeAddress _bufferConfigBaseAddress;
 };
 
 } // namespace pelican

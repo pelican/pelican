@@ -14,7 +14,7 @@ namespace pelican {
 /**
  *@details DataClientFactory
  */
-DataClientFactory::DataClientFactory(const Config* config, const Config::TreeAddress_t& base, AdapterFactory* afactory)
+DataClientFactory::DataClientFactory(const Config* config, const Config::TreeAddress& base, AdapterFactory* afactory)
     : AbstractFactory(config, base), _adapterFactory(afactory)
 {
 }
@@ -50,7 +50,7 @@ AbstractDataClient* DataClientFactory::create(const QString& type,
     }
 
     // Find the configuration information for adapters
-    Config::TreeAddress_t address = configRoot();
+    Config::TreeAddress address = configRoot();
     address.append(QPair<QString, QString>(type, ""));
     ConfigNode element = _config->get(address);
     QHash<QString, QString> adapterNames = element.getOptionHash("data",

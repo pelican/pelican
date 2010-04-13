@@ -112,10 +112,10 @@ void TestPipelineServerTest::test_testUdpChunker()
         PelicanServer server(&config);
 
         // TODO replace getting the config node with use of the chunker factory.
-        Config::TreeAddress_t address;
-        address << Config::NodeId_t("server", "");
-        address << Config::NodeId_t("chunkers", "");
-        address << Config::NodeId_t("TestUdpChunker", "1");
+        Config::TreeAddress address;
+        address << Config::NodeId("server", "");
+        address << Config::NodeId("chunkers", "");
+        address << Config::NodeId("TestUdpChunker", "1");
         ConfigNode configChunker1 = config.get(address);
         TestUdpChunker* chunker = new TestUdpChunker(configChunker1);
         server.addStreamChunker(chunker);
@@ -167,17 +167,17 @@ void TestPipelineServerTest::test_testTwoUdpChunkers()
         // Set up the server.
         PelicanServer server(&config);
         // TODO replace getting the config node with use of the chunker factory.
-        Config::TreeAddress_t address1;
-        address1 << Config::NodeId_t("server", "");
-        address1 << Config::NodeId_t("chunkers", "");
-        address1 << Config::NodeId_t("TestUdpChunker", "1");
+        Config::TreeAddress address1;
+        address1 << Config::NodeId("server", "");
+        address1 << Config::NodeId("chunkers", "");
+        address1 << Config::NodeId("TestUdpChunker", "1");
         ConfigNode configChunker1 = config.get(address1);
         TestUdpChunker* chunker1 = new TestUdpChunker(configChunker1);
 
-        Config::TreeAddress_t address2;
-        address2 << Config::NodeId_t("server", "");
-        address2 << Config::NodeId_t("chunkers", "");
-        address2 << Config::NodeId_t("TestUdpChunker", "2");
+        Config::TreeAddress address2;
+        address2 << Config::NodeId("server", "");
+        address2 << Config::NodeId("chunkers", "");
+        address2 << Config::NodeId("TestUdpChunker", "2");
         ConfigNode configChunker2 = config.get(address2);
         TestUdpChunker* chunker2 = new TestUdpChunker(configChunker2);
         server.addStreamChunker(chunker1);

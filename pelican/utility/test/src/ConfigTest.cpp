@@ -84,9 +84,9 @@ void ConfigTest::test_setConfiguration()
     // Sets a configuration.
     // Expect that it exists.
     {
-        Config::TreeAddress_t address;
-        address << Config::NodeId_t("modules", "");
-        address << Config::NodeId_t("module", "test1");
+        Config::TreeAddress address;
+        address << Config::NodeId("modules", "");
+        address << Config::NodeId("module", "test1");
         QDomElement e = config._set(address);
         CPPUNIT_ASSERT(e.parentNode().toElement().tagName() == "modules");
         CPPUNIT_ASSERT(e.tagName() == "module");
@@ -97,9 +97,9 @@ void ConfigTest::test_setConfiguration()
     /// Sets a configuration by address and attribute
     /// Expects that it exists
     {
-        Config::TreeAddress_t address;
-        address << Config::NodeId_t("servers", "");
-        address << Config::NodeId_t("server", "test");
+        Config::TreeAddress address;
+        address << Config::NodeId("servers", "");
+        address << Config::NodeId("server", "test");
         QString ip = "123.456.789.10";
         config.setAttribute(address, "ip", ip);
         CPPUNIT_ASSERT(config.getAttribute(address, "ip") == ip);
@@ -119,8 +119,8 @@ void ConfigTest::test_getConfiguration()
     // Ask for an address that doesn't exist.
     // Expect that a null element is returned.
     {
-        Config::TreeAddress_t address;
-        address << Config::NodeId_t("wibble", "wobble");
+        Config::TreeAddress address;
+        address << Config::NodeId("wibble", "wobble");
         QDomElement e = config._get(address);
         CPPUNIT_ASSERT(e.isNull());
     }
@@ -129,8 +129,8 @@ void ConfigTest::test_getConfiguration()
     // Ask for an attribute that doesn't exist (both address and key).
     // Expect that an empty string is returned
     {
-        Config::TreeAddress_t address;
-        address << Config::NodeId_t("wibble", "wobble");
+        Config::TreeAddress address;
+        address << Config::NodeId("wibble", "wobble");
         QString a = config.getAttribute(address, "flop");
         CPPUNIT_ASSERT(a.isEmpty());
     }
@@ -139,8 +139,8 @@ void ConfigTest::test_getConfiguration()
     // Ask for an attribute with a key that doesn't exist at a valid address.
     // Expect that an empty string is returned
     {
-        Config::TreeAddress_t address;
-        address << Config::NodeId_t("wibble", "wobble");
+        Config::TreeAddress address;
+        address << Config::NodeId("wibble", "wobble");
         config.setAttribute(address, "flip", "true");
         QString a = config.getAttribute(address, "flop");
         CPPUNIT_ASSERT(a.isEmpty());
@@ -162,9 +162,9 @@ void ConfigTest::test_configFileRead()
     // Expect that all of the parameters are found
     {
         TestConfig config("testConfig.xml", "utility");
-        Config::TreeAddress_t address;
-        address << Config::NodeId_t("modules", "");
-        address << Config::NodeId_t("moduleType", "testA");
+        Config::TreeAddress address;
+        address << Config::NodeId("modules", "");
+        address << Config::NodeId("moduleType", "testA");
         QDomElement e = config._get(address);
         CPPUNIT_ASSERT(e.parentNode().nodeName() == "modules");
         CPPUNIT_ASSERT(e.childNodes().count() == 3);
@@ -175,7 +175,7 @@ void ConfigTest::test_configFileRead()
         CPPUNIT_ASSERT(e.childNodes().at(1).toElement().attribute("name") == "some_coords");
         CPPUNIT_ASSERT(e.childNodes().at(1).toElement().attribute("x") == "1024");
         CPPUNIT_ASSERT(e.childNodes().at(1).toElement().attribute("y") == "2048");
-        address << Config::NodeId_t("paramC", "channels");
+        address << Config::NodeId("paramC", "channels");
         CPPUNIT_ASSERT(config.getText(address) == "1,2,3,4,5");
     }
 
@@ -184,9 +184,9 @@ void ConfigTest::test_configFileRead()
     // Expect that the module node is found but has no children.
     {
         TestConfig config("testConfig.xml", "utility");
-        Config::TreeAddress_t address;
-        address << Config::NodeId_t("modules", "");
-        address << Config::NodeId_t("moduleType", "default::testA");
+        Config::TreeAddress address;
+        address << Config::NodeId("modules", "");
+        address << Config::NodeId("moduleType", "default::testA");
         QDomElement e = config._get(address);
         CPPUNIT_ASSERT(e.parentNode().nodeName() == "modules");
         CPPUNIT_ASSERT(e.nodeName() == "moduleType");
@@ -222,9 +222,9 @@ void ConfigTest::test_configFileRead()
     // Expect that all the parameters are found.
     {
         TestConfig config("testConfig.xml", "utility");
-        Config::TreeAddress_t address;
-        address << Config::NodeId_t("modules", "");
-        address << Config::NodeId_t("moduleType", "testA");
+        Config::TreeAddress address;
+        address << Config::NodeId("modules", "");
+        address << Config::NodeId("moduleType", "testA");
         QDomElement e = config._get(address);
 
         CPPUNIT_ASSERT(e.parentNode().nodeName() == "modules");
@@ -251,10 +251,10 @@ void ConfigTest::test_configFromString()
     Config config;
     config.setFromString(xml);
 
-    Config::TreeAddress_t address;
-    address << Config::NodeId_t("pipeline", "");
-    address << Config::NodeId_t("modules", "");
-    address << Config::NodeId_t("moduleType", "test");
+    Config::TreeAddress address;
+    address << Config::NodeId("pipeline", "");
+    address << Config::NodeId("modules", "");
+    address << Config::NodeId("moduleType", "test");
     ConfigNode configNode = config.get(address);
 
     CPPUNIT_ASSERT(configNode.type() == "moduleType");

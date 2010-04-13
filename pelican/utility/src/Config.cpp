@@ -2,6 +2,7 @@
 #include <iostream>
 #include <QTextStream>
 #include <QFile>
+#include <QStringList>
 #include <iostream>
 #include <QDomDocumentType>
 
@@ -24,7 +25,7 @@ Config::Config(const QString& fileName)
  * Return the specified configuration node together with any extra required
  * varsets.
  */
-ConfigNode Config::get(const TreeAddress_t &address) const
+ConfigNode Config::get(const TreeAddress &address) const
 {
     // Declare the list of returned DOM elements.
     QList<QDomElement> elementList;
@@ -37,9 +38,9 @@ ConfigNode Config::get(const TreeAddress_t &address) const
     QDomNodeList varsetList = node.elementsByTagName("varset");
     for (int i = 0; i < varsetList.size(); ++i) {
         QString varsetName = varsetList.at(i).toElement().attribute("name");
-        Config::TreeAddress_t varsetAddress;
-        varsetAddress.append(Config::NodeId_t("varsets", ""));
-        varsetAddress.append(Config::NodeId_t("varset", varsetName));
+        Config::TreeAddress varsetAddress;
+        varsetAddress.append(Config::NodeId("varsets", ""));
+        varsetAddress.append(Config::NodeId("varset", varsetName));
 
         // Get the varset at the address.
         elementList.insert(i + 1, _get(varsetAddress));
@@ -53,7 +54,7 @@ ConfigNode Config::get(const TreeAddress_t &address) const
  * @details
  * Set the the attribute at the specified address to the key, value.
  */
-void Config::setAttribute(const TreeAddress_t &address, const QString &key,
+void Config::setAttribute(const TreeAddress &address, const QString &key,
         const QString &value)
 {
     QDomElement e = _set(address);
@@ -66,7 +67,7 @@ void Config::setAttribute(const TreeAddress_t &address, const QString &key,
  * Returns the attribute at the address with the specified key. An empty string
  * is returned if the address or key doesn't exist.
  */
-QString Config::getAttribute(const TreeAddress_t& address, const QString& key) const
+QString Config::getAttribute(const TreeAddress& address, const QString& key) const
 {
     QDomElement e = _get(address);
     if (e.isNull()) {
@@ -82,7 +83,7 @@ QString Config::getAttribute(const TreeAddress_t& address, const QString& key) c
  * @details
  * Sets the text node at the address.
  */
-void Config::setText(const TreeAddress_t& address, const QString& text)
+void Config::setText(const TreeAddress& address, const QString& text)
 {
     QDomElement e = _set(address);
     QDomText t = _document.createTextNode(text);
@@ -95,7 +96,7 @@ void Config::setText(const TreeAddress_t& address, const QString& text)
  * Gets value of the text node at the address. If multiple text nodes are
  * found at the same level they will be concatenated.
  */
-QString Config::getText(const TreeAddress_t& address) const
+QString Config::getText(const TreeAddress& address) const
 {
     QDomElement e = _get(address);
     QDomNodeList children = e.childNodes();
@@ -139,9 +140,9 @@ void Config::save(const QString& fileName) const
 
     QFile file(fileName);
 
-    if (!file.open(QFile::WriteOnly | QFile::Truncate)) {
+    if (!file.open(QFile::WriteOnly | QFile::Truncate))
         return;
-    }
+
     QTextStream out(&file);
     out << _document.toByteArray(4);
 }
@@ -149,15 +150,18 @@ void Config::save(const QString& fileName) const
 
 /**
  * @details
- * Sets the content of the configuration QDomDocument from the QString /p text.
+ * Sets the content of the configuration QDomDocument from the QStrings
+ * /p pipelineConfig and /p serverConfig.
  *
- * @param[in] text  QString containing the XML configuration.
+ * @param[in] pipelineConfig String containing the pipeline XML configuration.
+ * @param[in] serverConfig String containing server XML configuration.
  */
 void Config::setFromString(const QString& pipelineConfig, const QString& serverConfig)
 {
     _document.clear();
     _document = QDomDocument("pelican");
-    /* Read the XML configuration file into the QDomDocument */
+
+    // Read the XML configuration file into the QDomDocument.
     QString error;
     int line, column;
 
@@ -174,7 +178,7 @@ void Config::setFromString(const QString& pipelineConfig, const QString& serverC
     "</configuration>";
 
     if (!_document.setContent(xmlDoc, true, &error, &line, &column)) {
-        throw QString("Config: Parse error "
+        throw QString("Config: Error parsing XML "
                 "(Line: %1 Col: %2): %3.").arg(line).arg(column).arg(error);
     }
 }
@@ -184,11 +188,11 @@ void Config::setFromString(const QString& pipelineConfig, const QString& serverC
  * @details
  * Sets and creates the specified address in the configuration document.
  *
- * @param[in]   address The address of the configuration node element to be set.
+ * @param[in] address The address of the configuration node element to be set.
  *
  * @return QDomElement at the address specified in the argument.
  */
-QDomElement Config::_set(const TreeAddress_t &address)
+QDomElement Config::_set(const TreeAddress &address)
 {
     QDomElement parent = _document.documentElement();
 
@@ -203,7 +207,7 @@ QDomElement Config::_set(const TreeAddress_t &address)
         QString tag  = address.at(a).first;
         QString name = address.at(a).second;
 
-        /* Find child nodes of the specified tag type */
+        // Find child nodes of the specified tag type.
         QDomNodeList children = parent.childNodes();
         QList<QDomNode> nodes;
         for (int i = 0; i < children.size(); i++) {
@@ -212,16 +216,16 @@ QDomElement Config::_set(const TreeAddress_t &address)
             }
         }
 
-        /* No node exists of the specified tag - create one...*/
+        // No node exists of the specified tag - create one...
         if (nodes.isEmpty()) {
             _createChildNode(parent, tag, name);
             parent = parent.lastChild().toElement();
         }
 
-        /* Nodes exist of the specified tag - do we need a new one? */
+        // Nodes exist of the specified tag - do we need a new one?
         else {
 
-            /* Find if the tag already exists with the name */
+            // Find if the tag already exists with the name
             int iNode = -1;
             for (int n = 0; n < nodes.size(); n++) {
                 QString nodeName = nodes.at(n).toElement().attribute(QString("name"));
@@ -230,13 +234,13 @@ QDomElement Config::_set(const TreeAddress_t &address)
                 }
             }
 
-            /* No tag exists with the unique name - append one to the end */
+            // No tag exists with the unique name - append one to the end.
             if (iNode == -1) {
                 _createChildNode(parent, tag, name);
                 parent = parent.lastChild().toElement();
             }
 
-            /* Tag exists - move the parent pointer */
+            // Tag exists - move the parent pointer.
             else {
                 parent = nodes.at(iNode).toElement();
             }
@@ -252,11 +256,11 @@ QDomElement Config::_set(const TreeAddress_t &address)
  * Returns a QDomElement at the specified address. The element returned is
  * null if the address doesn't exist.
  */
-QDomElement Config::_get(const TreeAddress_t &address) const
+QDomElement Config::_get(const TreeAddress &address) const
 {
     QDomElement parent = _document.documentElement();
 
-    /* Empty configuration return null element */
+    // Empty configuration return null element.
     if (parent.isNull()) {
         return QDomElement();
     }
@@ -266,7 +270,7 @@ QDomElement Config::_get(const TreeAddress_t &address) const
         QString tag  = address.at(a).first;
         QString name = address.at(a).second;
 
-        /* Find child nodes of the specified tag type */
+        // Find child nodes of the specified tag type.
         QDomNodeList children = parent.childNodes();
         QList<QDomNode> nodes;
         for (int i = 0; i < children.size(); i++) {
@@ -275,15 +279,15 @@ QDomElement Config::_get(const TreeAddress_t &address) const
             }
         }
 
-        /* No node exists of the specified tag */
+        // No node exists of the specified tag.
         if (nodes.isEmpty()) {
             return QDomElement();
         }
 
-        /* Nodes exist of the specified tag; find the right one to return */
+        // Nodes exist of the specified tag; find the right one to return.
         else {
 
-            /* Find if the tag already exists with the name */
+            // Find if the tag already exists with the name.
             int iNode = -1;
             for (int n = 0; n < nodes.size(); n++) {
                 QString nodeName = nodes.at(n).toElement().attribute(QString("name"));
@@ -292,12 +296,12 @@ QDomElement Config::_get(const TreeAddress_t &address) const
                 }
             }
 
-            /* No tag exists with the name */
+            // No tag exists with the name.
             if (iNode == -1) {
                 return QDomElement();
             }
 
-            /* Tag exists - move the parent pointer */
+            // Tag exists - move the parent pointer.
             else {
                 parent = nodes.at(iNode).toElement();
             }
@@ -329,7 +333,7 @@ void Config::read(const QString fileName)
     if (!file.open(QFile::ReadOnly | QFile::Text))
         return;
 
-    /* Read the XML configuration file into the QDomDocument */
+    // Read the XML configuration file into the QDomDocument.
     QString error;
     int line, column;
     if (!_document.setContent(&file, true, &error, &line, &column)) {
@@ -344,7 +348,7 @@ void Config::read(const QString fileName)
 
 /**
  * @details
- * Create a child node under the parent with the tag and name attribute.
+ * Create a child node under the /p parent with the /p tag and /p name attribute.
  */
 void Config::_createChildNode(QDomElement &parent, const QString& tag, const QString& name)
 {
@@ -358,4 +362,5 @@ void Config::_createChildNode(QDomElement &parent, const QString& tag, const QSt
     parent.appendChild(e);
 }
 
-} /* namespace pelican */
+
+} // namespace pelican

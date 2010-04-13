@@ -4,11 +4,10 @@
 #include <QBuffer>
 #include <QTimer>
 #include <QUdpSocket>
-
 #include <iostream>
+#include "utility/Config.h"
 
 #include "utility/memCheck.h"
-#include <utility/Config.h>
 
 namespace pelican {
 
@@ -18,7 +17,7 @@ namespace pelican {
  * Constructs a new TestUdpChunker.
  */
 TestUdpChunker::TestUdpChunker(const ConfigNode& config)
-: AbstractChunker() 
+: AbstractChunker()
 {
     if (config.type() != "TestUdpChunker")
         throw QString("TestUdpChunker::TestUdpChunker(): Wrong config.");
@@ -32,7 +31,7 @@ TestUdpChunker::TestUdpChunker(const ConfigNode& config)
     // Some sanity checking.
     if (type().isEmpty())
         throw QString("TestUdpChunker::TestUdpChunker(): Data type unspecified.");
-    
+
     if (_chunkSize == 0)
         throw QString("TestUdpChunker::TestUdpChunker(): Chunk size zero.");
 
@@ -41,13 +40,6 @@ TestUdpChunker::TestUdpChunker(const ConfigNode& config)
     _tempBuffer.resize(_chunkSize);
 }
 
-/**
- * @details
- * Destroys the TestUdpChunker.
- */
-TestUdpChunker::~TestUdpChunker()
-{
-}
 
 /**
  * @details
@@ -73,8 +65,8 @@ void TestUdpChunker::next(QIODevice* socket)
 
 //     double value = *reinterpret_cast<double*>(_tempBuffer.data());
 //     std::cout << value << std::endl;
-    
-    if (sizeRead != _chunkSize)
+
+    if ((size_t)sizeRead != _chunkSize)
         throw QString("TestUdpChunker::next(): size mismatch.");
 
     // Get writable data object.

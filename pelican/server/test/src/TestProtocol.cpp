@@ -2,9 +2,8 @@
 #include "comms/StreamData.h"
 #include "comms/ServerRequest.h"
 #include "comms/StreamDataRequest.h"
-#include <cassert>
-
 #include <iostream>
+
 #include "utility/memCheck.h"
 
 namespace pelican {
@@ -51,7 +50,7 @@ void TestProtocol::send( QIODevice& device, const QString& message)
 void TestProtocol::send( QIODevice& device, const AbstractProtocol::StreamData_t& d)
 {
     std::cout << "TestProtocol::send(): List length: " << d.size() << std::endl;
-    assert(d.size() > 0);
+    Q_ASSERT(d.size() > 0);
     _last.clear();
     char* data = static_cast<char*>(d[0]->operator *());
     size_t size = d[0]->size() / sizeof(double);

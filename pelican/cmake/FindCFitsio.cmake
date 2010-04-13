@@ -5,27 +5,27 @@
 #  CFITSIO_LIBRARIES     = Set of libraries required for linking
 #  CFITSIO_INCLUDE_DIR   = Directory where to find fitsio.h
 
-# Already in cache, be silent
-#IF (CFITSIO_INCLUDE_DIR)
-#    SET(CFITSIO_FIND_QUIETLY TRUE)
-#ENDIF (CFITSIO_INCLUDE_DIR)
 
-FIND_PATH(CFITSIO_INCLUDE_DIR fitsio.h PATHS /usr/include/ )
+find_path(CFITSIO_INCLUDE_DIR fitsio.h
+    PATHS
+    /usr/include/
+)
 
-SET(CFITSIO_NAMES cfitsio)
-    
-FOREACH(lib ${CFITSIO_NAMES} )
-    FIND_LIBRARY(CFITSIO_LIBRARY_${lib} NAMES ${lib})
-    LIST(APPEND CFITSIO_LIBRARIES ${CFITSIO_LIBRARY_${lib}})
-ENDFOREACH(lib)
+set(CFITSIO_NAMES cfitsio)
+
+foreach (lib ${CFITSIO_NAMES})
+    find_library(CFITSIO_LIBRARY_${lib} NAMES ${lib})
+    list(APPEND CFITSIO_LIBRARIES ${CFITSIO_LIBRARY_${lib}})
+endforeach (lib ${CFITSIO_NAMES})
 
 # handle the QUIETLY and REQUIRED arguments and set CFITSIO_FOUND to TRUE if.
 # all listed variables are TRUE
-INCLUDE(FindPackageHandleCompat)
-FIND_PACKAGE_HANDLE_STANDARD_ARGS(CFITSIO DEFAULT_MSG CFITSIO_LIBRARIES CFITSIO_INCLUDE_DIR)
+include(FindPackageHandleCompat)
+FIND_PACKAGE_HANDLE_STANDARD_ARGS(CFitsio DEFAULT_MSG
+                                 CFITSIO_LIBRARIES CFITSIO_INCLUDE_DIR)
 
-IF(NOT CFITSIO_FOUND)
-    SET( CFITSIO_LIBRARIES )
-ENDIF(NOT CFITSIO_FOUND)
+if (NOT CFITSIO_FOUND)
+    set( CFITSIO_LIBRARIES )
+endif (NOT CFITSIO_FOUND)
 
-MARK_AS_ADVANCED(CFITSIO_LIBRARIES CFITSIO_INCLUDE_DIR)
+mark_as_advanced(CFITSIO_LIBRARIES CFITSIO_INCLUDE_DIR)

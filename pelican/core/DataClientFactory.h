@@ -27,7 +27,7 @@ namespace pelican {
 class DataClientFactory : public AbstractFactory
 {
     public:
-        DataClientFactory( const Config* config, const Config::TreeAddress_t& base, AdapterFactory* );
+        DataClientFactory( const Config* config, const Config::TreeAddress& base, AdapterFactory* );
         ~DataClientFactory();
 
         /// create a configured object with tthe given name and type

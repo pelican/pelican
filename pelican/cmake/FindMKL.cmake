@@ -79,7 +79,7 @@ find_path(MKL_INCLUDE_DIR mkl.h
 
 # Handle the QUIETLY and REQUIRED arguments and set MKL_FOUND to TRUE if
 # all listed variables are TRUE
-include(FindPackageHandleStandardArgs)
+include(FindPackageHandleCompat)
 FIND_PACKAGE_HANDLE_STANDARD_ARGS(MKL DEFAULT_MSG MKL_LIBRARIES)
 
 # Hide the MKL_LIBRARY temporary variable in the cmake cache.

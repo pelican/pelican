@@ -63,8 +63,8 @@ void ModuleFactoryTest::test_createModule_EmptyModule()
     {
         Config config;
         ModuleFactory factory(&config);
-        Config::TreeAddress_t address = factory.configRoot();
-        address.append(Config::NodeId_t("module", "EmptyModule"));
+        Config::TreeAddress address = factory.configRoot();
+        address.append(Config::NodeId("module", "EmptyModule"));
         config.set(address);
 
         AbstractModule* module = 0;

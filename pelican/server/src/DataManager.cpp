@@ -19,8 +19,8 @@ namespace pelican {
 DataManager::DataManager(const Config* config)
 {
     _config = config;
-    _bufferConfigBaseAddress << Config::NodeId_t("server","");
-    _bufferConfigBaseAddress << Config::NodeId_t("buffers","");
+    _bufferConfigBaseAddress << Config::NodeId("server","");
+    _bufferConfigBaseAddress << Config::NodeId("buffers","");
 }
 
 
@@ -72,8 +72,8 @@ StreamDataBuffer* DataManager::getStreamBuffer(const QString& type)
     std::cout << "DataManager::getStreamBuffer" << type.toStdString() << std::endl;
 
     if ( ! _streams.contains(type) ) {
-        Config::TreeAddress_t configAddress(_bufferConfigBaseAddress);
-        configAddress << Config::NodeId_t(type, "");
+        Config::TreeAddress configAddress(_bufferConfigBaseAddress);
+        configAddress << Config::NodeId(type, "");
         ConfigNode config = _config->get(configAddress);
         size_t maxSize = config.getOption("buffer", "maxSize", "10240").toUInt();
         size_t maxChunkSize = config.getOption("buffer", "maxChunkSize", "10240").toUInt();

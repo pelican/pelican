@@ -4,17 +4,17 @@
 #include <cppunit/extensions/HelperMacros.h>
 
 /**
- * @file ModuleFactoryTest.h
+ * @file AdapterFactoryTest.h
  */
 
 namespace pelican {
 
 /**
  * @class AdatperFactoryTest
- *  
+ *
  * @brief
  * CppUnit tests for AdapterFactory class.
- * 
+ *
  * @details
  * Tries to create a number of modules.
  */

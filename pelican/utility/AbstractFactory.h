@@ -23,19 +23,19 @@ namespace pelican {
 class AbstractFactory
 {
     public:
-        AbstractFactory(const Config* config, const Config::TreeAddress_t& base);
+        AbstractFactory(const Config* config, const Config::TreeAddress& base);
         virtual ~AbstractFactory();
 
         /// Returns the tree node address that marks the start
         /// of the module configuration block.
-        Config::TreeAddress_t configRoot() const { return _configRoot; }
+        Config::TreeAddress configRoot() const { return _configRoot; }
 
         /// return the configuration node for a type (named type if supplied)
         ConfigNode configuration(const QString& type, const QString& name="") const;
 
     protected:
         const Config* _config;
-        Config::TreeAddress_t _configRoot;
+        Config::TreeAddress _configRoot;
 };
 
 } // namespace pelican

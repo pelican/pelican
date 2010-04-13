@@ -60,8 +60,8 @@ void PelicanServerClientTest::test_getData()
             "   <server host=\"127.0.0.1\"/>"
             "</testconfig>"
             );
-    Config::TreeAddress_t address;
-    address << Config::NodeId_t("testconfig", "");
+    Config::TreeAddress address;
+    address << Config::NodeId("testconfig", "");
     ConfigNode configNode = config.get(address);
     {
         // Use Case:
