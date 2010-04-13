@@ -39,9 +39,6 @@ class ServiceDataBuffer : public DataBuffer
         //  if this data is unavailable then return an invalid
         void getData(LockedData& locker, const QString& version);
 
-        /// remove the specified version from the buffer
-        void retireData(const QString& version);
-
         /// return the current version
         void getCurrent(LockedData& locker);
 
@@ -60,6 +57,7 @@ class ServiceDataBuffer : public DataBuffer
 
     private:
         QHash<QString,LockableData*> _data;
+        QList<LockableData*> _expiredData;
         LockableData* _newData; // temporary store until activated
         QString _current;
         size_t _max;

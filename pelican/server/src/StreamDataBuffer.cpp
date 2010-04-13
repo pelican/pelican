@@ -66,8 +66,6 @@ void StreamDataBuffer::getNext(LockedData& lockedData)
  */
 WritableData StreamDataBuffer::getWritable(size_t size)
 {
-    // XXX remove
-    //std::cout << std::endl;
     LockableStreamData* d = _getWritable(size);
 
     // prepare the object for use
@@ -103,7 +101,6 @@ LockableStreamData* StreamDataBuffer::_getWritable(size_t size)
         if( lockableData->maxSize() >= size ) {
             // We found one, so our work is done.
             _emptyQueue.removeAt(i);
-//             std::cout << "StreamDataBuffer::_getWritable(): Returning pre-allocated data from the emptyQueue." << std::endl;
             return lockableData;
         }
     }
