@@ -1,4 +1,5 @@
-#include "TestPipelineCalibrateImage.h"
+#include "pelican/pipelines/TestPipelineCalibrateImage.h"
+
 #include "pelican/modules/ZenithImagerDft.h"
 #include "pelican/modules/ImageWriterFits.h"
 #include "pelican/modules/ZenithModelVisibilities.h"

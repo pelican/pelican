@@ -1,14 +1,15 @@
 #include "pelican/modules/ZenithCalibrater.h"
+
 #include "pelican/data/DataBlob.h"
 #include "pelican/utility/ConfigNode.h"
 #include "pelican/data/VisibilityData.h"
 #include "pelican/data/ModelVisibilityData.h"
 #include "pelican/data/CorrectedVisibilityData.h"
-#include <QStringList>
 #include "pelican/utility/pelicanTimer.h"
+
+#include <QStringList>
 #include <fstream>
 #include <cblas.h>
-
 #include <iostream>
 #include <iomanip>
 

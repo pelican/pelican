@@ -1,7 +1,7 @@
 #ifndef BASICFLAGGER_H
 #define BASICFLAGGER_H
 
-#include "AbstractModule.h"
+#include "pelican/modules/AbstractModule.h"
 #include "pelican/data/VisibilityData.h"
 #include "pelican/data/FlagTable.h"
 #include "pelican/utility/ConfigNode.h"

@@ -1,4 +1,4 @@
-#include "VisibilityDataTest.h"
+#include "pelican/data/test/VisibilityDataTest.h"
 #include "pelican/data/VisibilityData.h"
 #include "pelican/utility/memCheck.h"
 

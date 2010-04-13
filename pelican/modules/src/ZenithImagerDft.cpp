@@ -1,9 +1,11 @@
 #include "pelican/modules/ZenithImagerDft.h"
+
 #include "pelican/modules/AstrometryFast.h"
 #include "pelican/utility/constants.h"
 #include "pelican/utility/pelicanTimer.h"
 #include "pelican/data/VisibilityData.h"
 #include "pelican/data/AntennaPositions.h"
+
 #include <QString>
 #include <QStringList>
 #include <iostream>

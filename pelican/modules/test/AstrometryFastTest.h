@@ -1,7 +1,7 @@
 #ifndef ASTROMETRYFASTTEST_H
 #define ASTROMETRYFASTTEST_H
 
-#include "AstrometryFast.h"
+#include "pelican/modules/AstrometryFast.h"
 
 #include <cppunit/extensions/HelperMacros.h>
 
@@ -13,10 +13,10 @@ namespace pelican {
 
 /**
  * @class AstrometryFastTest
- *  
+ *
  * @brief
  * Tests various functions of the astrometry module.
- * 
+ *
  * @details
  * Performs unit tests on the astrometric transform module
  * using the CppUnit framework.

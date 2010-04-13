@@ -6,12 +6,13 @@
 #include "pelican/data/AntennaPositions.h"
 #include "pelican/utility/constants.h"
 #include "pelican/data/Source.h"
+#include "pelican/utility/pelicanTimer.h"
+
 #include <QHash>
 #include <QString>
 #include <QStringList>
 #include <iostream>
 #include <cmath>
-#include "pelican/utility/pelicanTimer.h"
 
 #include "pelican/utility/memCheck.h"
 

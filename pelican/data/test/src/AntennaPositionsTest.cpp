@@ -1,5 +1,5 @@
-#include "AntennaPositionsTest.h"
-#include "AntennaPositions.h"
+#include "pelican/data/test/AntennaPositionsTest.h"
+#include "pelican/data/AntennaPositions.h"
 
 #include "pelican/utility/memCheck.h"
 

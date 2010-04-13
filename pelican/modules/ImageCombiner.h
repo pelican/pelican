@@ -1,7 +1,7 @@
 #ifndef IMAGECOMBINER_H
 #define IMAGECOMBINER_H
 
-#include "AbstractModule.h"
+#include "pelican/modules/AbstractModule.h"
 #include "pelican/utility/ConfigNode.h"
 #include "pelican/data/ImageData.h"
 

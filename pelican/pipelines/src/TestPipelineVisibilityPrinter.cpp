@@ -1,4 +1,4 @@
-#include "TestPipelineVisibilityPrinter.h"
+#include "pelican/pipelines/TestPipelineVisibilityPrinter.h"
 #include "pelican/modules/VisibilityPrinter.h"
 #include "pelican/data/VisibilityData.h"
 

@@ -1,8 +1,8 @@
 #ifndef CELESTIALDATA_H_
 #define CELESTIALDATA_H_
 
-#include "Vector2.h"
-#include "Vector3.h"
+#include "pelican/data/Vector2.h"
+#include "pelican/data/Vector3.h"
 
 /**
  * @file CelestialData.h
