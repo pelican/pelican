@@ -99,7 +99,7 @@ class ChunkerFactory : public AbstractFactory
         ChunkerFactory(const Config* config, const Config::TreeAddress& base)
         : AbstractFactory(config, base) {}
 
-        ~ChunkerFactory();
+        ~ChunkerFactory() {}
 
         /// add a type of chunker to the chunker factory
         // This will take ownership of the object and delete it on destruction

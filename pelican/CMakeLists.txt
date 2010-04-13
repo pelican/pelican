@@ -38,10 +38,6 @@ set( ${PROJECT_NAME}_PATCH_LEVEL 0 )
 # === CMake setup info
 list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_SOURCE_DIR}/cmake)
 include(cmake/packagemacros.cmake)
-<<<<<<< HEAD:src/CMakeLists.txt
-=======
-include_directories(${PROJECT_SOURCE_DIR}/..)
->>>>>>> d34e9f6f9ba274dc8e38fc981c238fb0e3937721:pelican/CMakeLists.txt
 enable_testing()
 
 # === Options and defaults
@@ -81,7 +77,10 @@ set (BUILD_SHARED_LIBS TRUE)
 
 
 # === Compiler defaults
-include_directories(${PROJECT_SOURCE_DIR})
+include_directories(
+    ${PROJECT_SOURCE_DIR}/..
+    ${PROJECT_SOURCE_DIR}
+)
 set(CPP_PLATFORM_LIBS ${CMAKE_THREAD_LIBS_INIT})
 set(CMAKE_CXX_FLAGS_RELEASE "-O2")
 if (CMAKE_COMPILER_IS_GNUCC)

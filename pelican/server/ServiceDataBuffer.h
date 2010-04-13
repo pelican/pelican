@@ -1,6 +1,7 @@
 #ifndef SERVICEDATABUFFER_H
 #define SERVICEDATABUFFER_H
 
+#include <QObject>
 #include <QMutex>
 #include <QHash>
 #include "DataBuffer.h"
@@ -14,9 +15,10 @@ namespace pelican {
 class LockableData;
 class LockedData;
 
+
 /**
  * @class ServiceDataBuffer
- *  
+ *
  * @brief
  *    Maintains service data
  * @details
@@ -25,7 +27,7 @@ class LockedData;
  *    method.
  *    Multiple threads may access the same Data at the same time for
  *    reading.
- *    
+ *
  */
 
 class ServiceDataBuffer : public DataBuffer
@@ -67,4 +69,4 @@ class ServiceDataBuffer : public DataBuffer
 };
 
 } // namespace pelican
-#endif // SERVICEDATABUFFER_H 
+#endif // SERVICEDATABUFFER_H
