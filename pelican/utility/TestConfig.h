@@ -86,7 +86,7 @@ class TestConfig : public Config
             searchPaths << "../" + package + "/test/data";
             searchPaths << package + "/test/data";
             searchPaths << "test/data";
-            searchPaths << "pelican/data";
+            searchPaths << "data";
             QDir::setSearchPaths("testData", searchPaths);
             QString name = "testData:" + fileName;
             QFile file(name);
