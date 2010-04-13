@@ -18,7 +18,6 @@ set( server_moc_headers
 set( server_src
     src/AbstractChunker.cpp
     src/AbstractLockable.cpp
-    src/ChunkerClassGeneratorBase.cpp
     src/ChunkerManager.cpp
     src/ChunkerFactory.cpp
     src/LockableData.cpp
