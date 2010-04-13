@@ -3,9 +3,6 @@
 #include <QString>
 #include "ChunkerFactory.h"
 #include "ChunkerClassGeneratorBase.h"
-//#ifndef DECLARE_CHUNKER
-//#define PELICAN_DECLARE_CHUNKER(type) ChunkerFactory::registerChunkerType( boost::shared_ptr<ChunkerClassGenerator<type> >( new ChunkerClassGenerator<type>(\"type\") ) );
-//#endif
 
 /**
  * @file ChunkerClassGenerator.hpp
@@ -29,4 +26,8 @@ class ChunkerClassGenerator : public ChunkerClassGeneratorBase
 };
 
 } // namespace pelican
+//#ifndef PELICAN_DECLARE_CHUNKER
+//#define PELICAN_DECLARE_CHUNKER(type) ChunkerFactory::registerChunkerType( boost::shared_ptr<ChunkerClassGenerator<type> >( new ChunkerClassGenerator<type>(#type) ) );
+//#endif
+
 #endif // CHUNKERCLASSGENERATOR_H 
