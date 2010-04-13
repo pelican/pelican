@@ -1,14 +1,13 @@
 #ifndef ABSTRACTLOCKABLEDATA_H
 #define ABSTRACTLOCKABLEDATA_H
 
-
-#include <boost/shared_ptr.hpp>
-#include "AbstractLockable.h"
-#include "comms/Data.h"
-
 /**
  * @file AbstractLockableData.h
  */
+
+#include <boost/shared_ptr.hpp>
+#include "pelican/server/AbstractLockable.h"
+#include "pelican/comms/Data.h"
 
 namespace pelican {
 
@@ -16,7 +15,7 @@ class Data;
 
 /**
  * @class AbstractLockableData
- *  
+ *
  * @brief
  * Interface for data classes that can be locked.
  *
@@ -56,4 +55,4 @@ class AbstractLockableData : public AbstractLockable
 
 } // namespace pelican
 
-#endif // ABSTRACTLOCKABLEDATA_H 
+#endif // ABSTRACTLOCKABLEDATA_H

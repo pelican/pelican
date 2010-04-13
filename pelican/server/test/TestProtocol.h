@@ -1,8 +1,8 @@
 #ifndef TESTPROTOCOL_H
 #define TESTPROTOCOL_H
 
-#include "comms/AbstractProtocol.h"
-#include "comms/ServerRequest.h"
+#include "pelican/comms/AbstractProtocol.h"
+#include "pelican/comms/ServerRequest.h"
 #include <QString>
 #include <QIODevice>
 

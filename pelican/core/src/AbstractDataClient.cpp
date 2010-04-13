@@ -1,15 +1,15 @@
 #include <iostream>
-#include "core/AbstractDataClient.h"
-#include "adapters/AdapterFactory.h"
-#include "adapters/AbstractStreamAdapter.h"
-#include "adapters/AbstractServiceAdapter.h"
-#include "data/DataRequirements.h"
-#include "comms/Data.h"
-#include "comms/StreamData.h"
-#include "utility/ConfigNode.h"
+#include "pelican/core/AbstractDataClient.h"
+#include "pelican/adapters/AdapterFactory.h"
+#include "pelican/adapters/AbstractStreamAdapter.h"
+#include "pelican/adapters/AbstractServiceAdapter.h"
+#include "pelican/data/DataRequirements.h"
+#include "pelican/comms/Data.h"
+#include "pelican/comms/StreamData.h"
+#include "pelican/utility/ConfigNode.h"
 #include <QtGlobal>
 
-#include "utility/memCheck.h"
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 

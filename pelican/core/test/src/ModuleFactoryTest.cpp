@@ -1,8 +1,8 @@
 #include "ModuleFactoryTest.h"
 #include "ModuleFactory.h"
-#include "modules/AbstractModule.h"
-#include "utility/Config.h"
-#include "utility/memCheck.h"
+#include "pelican/modules/AbstractModule.h"
+#include "pelican/utility/Config.h"
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 

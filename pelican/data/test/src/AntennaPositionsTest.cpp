@@ -1,7 +1,7 @@
 #include "AntennaPositionsTest.h"
 #include "AntennaPositions.h"
 
-#include "utility/memCheck.h"
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 

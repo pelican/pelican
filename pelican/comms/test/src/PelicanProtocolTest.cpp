@@ -9,13 +9,13 @@
 #include "StreamDataResponse.h"
 #include "ServiceDataResponse.h"
 #include "StreamData.h"
-#include "data/DataRequirements.h"
-#include "utility/SocketTester.h"
+#include "pelican/data/DataRequirements.h"
+#include "pelican/utility/SocketTester.h"
 
 #include <iostream>
 #include <cstdlib>
 
-#include "utility/memCheck.h"
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 
@@ -69,7 +69,7 @@ void PelicanProtocolTest::test_sendServiceData()
         QBuffer stream(&block);
         stream.open(QIODevice::WriteOnly);
 
-        QByteArray data1("data1");
+        QByteArray data1("pelican/data1");
         Data d1("d1",data1.data(),data1.size());
         CPPUNIT_ASSERT_EQUAL( (long)data1.size(), (long)d1.size());
         d1.setId("d1id");
@@ -100,12 +100,12 @@ void PelicanProtocolTest::test_sendServiceData()
         QBuffer stream(&block);
         stream.open(QIODevice::WriteOnly);
 
-        QByteArray data1("data1");
+        QByteArray data1("pelican/data1");
         Data d1("d1",data1.data(),data1.size());
         d1.setId("d1id");
         data.append(&d1);
 
-        QByteArray data2("data2");
+        QByteArray data2("pelican/data2");
         Data d2("d2",data2.data(),data2.size());
         d1.setId("d2id");
         data.append(&d2);
@@ -158,7 +158,7 @@ void PelicanProtocolTest::test_sendStreamData()
         // Use Case
         // Single Stream Data with no service data
         PelicanProtocol proto;
-        QByteArray data1("data1");
+        QByteArray data1("pelican/data1");
         StreamData streamData("d1", data1.data(), data1.size());
         CPPUNIT_ASSERT_EQUAL( (long)data1.size(), (long)streamData.size() );
         streamData.setId("testid");
@@ -184,10 +184,10 @@ void PelicanProtocolTest::test_sendStreamData()
         // Use Case
         // Single Stream Data with  service data
         PelicanProtocol proto;
-        QByteArray data1("data1");
+        QByteArray data1("pelican/data1");
         StreamData sd("d1",data1.data(),data1.size());
         sd.setId("streamdataid");
-        QByteArray data2("data2");
+        QByteArray data2("pelican/data2");
         boost::shared_ptr<Data> d1(new Data("d1",data2.data(),data2.size()) );
         d1->setId("d1id");
         sd.addAssociatedData(d1);

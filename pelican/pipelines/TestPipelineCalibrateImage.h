@@ -1,7 +1,7 @@
 #ifndef TESTPIPELINECALIBRATEIMAGE_H
 #define TESTPIPELINECALIBRATEIMAGE_H
 
-#include "core/AbstractPipeline.h"
+#include "pelican/core/AbstractPipeline.h"
 #include <QString>
 #include <QHash>
 

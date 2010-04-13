@@ -1,7 +1,7 @@
-#include "ChunkerFactory.h"
-#include "ChunkerClassGeneratorBase.h"
+#include "pelican/server/ChunkerFactory.h"
+#include "pelican/server/ChunkerClassGeneratorBase.h"
 
-#include "utility/memCheck.h"
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 

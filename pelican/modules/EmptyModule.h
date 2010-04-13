@@ -2,7 +2,7 @@
 #define EMPTYMODULE_H
 
 #include "AbstractModule.h"
-#include "utility/ConfigNode.h"
+#include "pelican/utility/ConfigNode.h"
 
 /**
  * @file EmptyModule.h

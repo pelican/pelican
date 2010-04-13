@@ -5,7 +5,7 @@
  * @file TestConfig.h
  */
 
-#include "utility/Config.h"
+#include "pelican/utility/Config.h"
 #include <QDir>
 #include <QFile>
 #include <QStringList>
@@ -86,7 +86,7 @@ class TestConfig : public Config
             searchPaths << "../" + package + "/test/data";
             searchPaths << package + "/test/data";
             searchPaths << "test/data";
-            searchPaths << "data";
+            searchPaths << "pelican/data";
             QDir::setSearchPaths("testData", searchPaths);
             QString name = "testData:" + fileName;
             QFile file(name);

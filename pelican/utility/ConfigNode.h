@@ -5,7 +5,7 @@
  * @file ConfigNode.h
  */
 
-#include "data/DataBlob.h"
+#include "pelican/data/DataBlob.h"
 #include <QDomElement>
 #include <QString>
 #include <QHash>

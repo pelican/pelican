@@ -1,8 +1,9 @@
-#include "DataRequirements.h"
+#include "pelican/data/DataRequirements.h"
 #include <QHash>
 #include <QtGlobal>
 #include <QStringList>
-#include "utility/memCheck.h"
+
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 
@@ -10,7 +11,7 @@ namespace pelican {
  * @details
  * DataRequirements constructor.
  */
-DataRequirements::DataRequirements() 
+DataRequirements::DataRequirements()
     : _hash(0)
 {
 }

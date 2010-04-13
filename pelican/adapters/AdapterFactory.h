@@ -3,7 +3,7 @@
 
 #include <QString>
 #include <QVector>
-#include "utility/Config.h"
+#include "pelican/utility/Config.h"
 
 /**
  * @file AdapterFactory.h

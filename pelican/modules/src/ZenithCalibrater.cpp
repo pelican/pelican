@@ -1,18 +1,18 @@
-#include "modules/ZenithCalibrater.h"
-#include "data/DataBlob.h"
-#include "utility/ConfigNode.h"
-#include "data/VisibilityData.h"
-#include "data/ModelVisibilityData.h"
-#include "data/CorrectedVisibilityData.h"
+#include "pelican/modules/ZenithCalibrater.h"
+#include "pelican/data/DataBlob.h"
+#include "pelican/utility/ConfigNode.h"
+#include "pelican/data/VisibilityData.h"
+#include "pelican/data/ModelVisibilityData.h"
+#include "pelican/data/CorrectedVisibilityData.h"
 #include <QStringList>
-#include "utility/pelicanTimer.h"
+#include "pelican/utility/pelicanTimer.h"
 #include <fstream>
 #include <cblas.h>
 
 #include <iostream>
 #include <iomanip>
 
-#include "utility/memCheck.h"
+#include "pelican/utility/memCheck.h"
 
 using std::cout;
 using std::endl;

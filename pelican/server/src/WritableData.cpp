@@ -1,13 +1,13 @@
 #include <string>
-#include "comms/Data.h"
-#include "WritableData.h"
-#include "AbstractLockableData.h"
+#include "pelican/comms/Data.h"
+#include "pelican/server/WritableData.h"
+#include "pelican/server/AbstractLockableData.h"
 
-#include "utility/memCheck.h"
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 
-// class WritableData 
+// class WritableData
 WritableData::WritableData(AbstractLockableData* data)
     : _data(data)
 {

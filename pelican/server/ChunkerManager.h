@@ -1,13 +1,13 @@
 #ifndef CHUNKERMANAGER_H
 #define CHUNKERMANAGER_H
 
+#include "pelican/server/DataReceiver.h"
 #include <QSet>
 #include <QMap>
 #include <QString>
 #include <QPair>
 #include <QVector>
 #include <boost/shared_ptr.hpp>
-#include "server/DataReceiver.h"
 
 /**
  * @file ChunkerManager.h
@@ -19,7 +19,7 @@ namespace pelican {
 
 /**
  * @class ChunkerManager
- *  
+ *
  * @brief
  *    Manage and operatoe chunkers
  * @details
@@ -56,4 +56,4 @@ class ChunkerManager
 };
 
 } // namespace pelican
-#endif // CHUNKERMANAGER_H 
+#endif // CHUNKERMANAGER_H

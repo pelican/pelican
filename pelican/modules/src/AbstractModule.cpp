@@ -1,7 +1,8 @@
-#include "modules/AbstractModule.h"
+#include "pelican/modules/AbstractModule.h"
+
 #include <iostream>
 
-#include "utility/memCheck.h"
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 

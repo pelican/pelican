@@ -3,7 +3,7 @@
 //#include <QtNetwork>
 #include <iostream>
 
-#include "utility/memCheck.h"
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 

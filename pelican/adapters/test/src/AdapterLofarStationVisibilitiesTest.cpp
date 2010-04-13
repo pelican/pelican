@@ -1,19 +1,19 @@
 #include "AdapterLofarStationVisibilitiesTest.h"
-#include "adapters/test/VisGen.h"
+#include "pelican/adapters/test/VisGen.h"
 #include <QCoreApplication>
 #include <QDataStream>
 #include <QBuffer>
 #include <QFile>
-#include "utility/ConfigNode.h"
-#include "adapters/AdapterLofarStationVisibilities.h"
-#include "adapters/AbstractStreamAdapter.h"
+#include "pelican/utility/ConfigNode.h"
+#include "pelican/adapters/AdapterLofarStationVisibilities.h"
+#include "pelican/adapters/AbstractStreamAdapter.h"
 #include <iostream>
 #include <iomanip>
 #include <QString>
-#include "utility/pelicanTimer.h"
+#include "pelican/utility/pelicanTimer.h"
 
 
-#include "utility/memCheck.h"
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 

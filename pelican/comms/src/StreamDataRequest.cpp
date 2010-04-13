@@ -1,12 +1,12 @@
-#include "StreamDataRequest.h"
+#include "pelican/comms/StreamDataRequest.h"
 
-#include "data/DataRequirements.h"
-#include "utility/memCheck.h"
+#include "pelican/data/DataRequirements.h"
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 
 
-// class StreamDataRequest 
+// class StreamDataRequest
 StreamDataRequest::StreamDataRequest()
     : ServerRequest(ServerRequest::StreamData)
 {

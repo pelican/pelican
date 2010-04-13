@@ -1,10 +1,10 @@
 #include "AdapterAntennaListTest.h"
-#include "adapters/AdapterAntennaList.h"
-#include "utility/ConfigNode.h"
+#include "pelican/adapters/AdapterAntennaList.h"
+#include "pelican/utility/ConfigNode.h"
 #include <QDomElement>
 #include <QFile>
 
-#include "utility/memCheck.h"
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 
@@ -34,7 +34,7 @@ void AdapterAntennaListTest::tearDown()
 
 void AdapterAntennaListTest::test_method()
 {
-    QString fileName = "data/antennaPositions.dat";
+    QString fileName = "pelican/data/antennaPositions.dat";
     QFile file(fileName);
     if (!file.exists()) return;
     file.open(QIODevice::ReadOnly);

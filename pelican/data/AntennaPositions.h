@@ -1,7 +1,7 @@
 #ifndef ANTENNAPOSITIONS_H
 #define ANTENNAPOSITIONS_H
 
-#include "data/DataBlob.h"
+#include "pelican/data/DataBlob.h"
 #include <vector>
 
 /**

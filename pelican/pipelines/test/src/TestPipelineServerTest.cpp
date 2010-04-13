@@ -1,18 +1,18 @@
-#include "pipelines/test/TestPipelineServerTest.h"
-#include "core/PipelineApplication.h"
-#include "pipelines/TestPipelineServer.h"
-#include "server/PelicanServer.h"
-#include "server/test/TestChunker.h"
-#include "comms/PelicanProtocol.h"
-#include "utility/pelicanTimer.h"
-#include "utility/TestConfig.h"
-#include "server/test/TelescopeEmulator.h"
-#include "server/test/TestUdpChunker.h"
+#include "pelican/pipelines/test/TestPipelineServerTest.h"
+#include "pelican/core/PipelineApplication.h"
+#include "pelican/pipelines/TestPipelineServer.h"
+#include "pelican/server/PelicanServer.h"
+#include "pelican/server/test/TestChunker.h"
+#include "pelican/comms/PelicanProtocol.h"
+#include "pelican/utility/pelicanTimer.h"
+#include "pelican/utility/TestConfig.h"
+#include "pelican/server/test/TelescopeEmulator.h"
+#include "pelican/server/test/TestUdpChunker.h"
 #include <QCoreApplication>
 #include <QTimer>
-#include "utility/Config.h"
+#include "pelican/utility/Config.h"
 
-#include "utility/memCheck.h"
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 

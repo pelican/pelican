@@ -1,7 +1,7 @@
 #ifndef ABSTRACTPIPELINE_H
 #define ABSTRACTPIPELINE_H
 
-#include "data/DataRequirements.h"
+#include "pelican/data/DataRequirements.h"
 #include <QString>
 #include <QList>
 

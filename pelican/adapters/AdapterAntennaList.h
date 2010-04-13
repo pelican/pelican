@@ -1,8 +1,8 @@
 #ifndef ADAPTERANTENNALIST_H
 #define ADAPTERANTENNALIST_H
 
-#include "adapters/AbstractServiceAdapter.h"
-#include "data/AntennaPositions.h"
+#include "pelican/adapters/AbstractServiceAdapter.h"
+#include "pelican/data/AntennaPositions.h"
 #include <QDataStream>
 
 /**

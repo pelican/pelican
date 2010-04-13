@@ -1,19 +1,19 @@
-#include "modules/ZenithModelVisibilities.h"
+#include "pelican/modules/ZenithModelVisibilities.h"
 
-#include "modules/AstrometryFast.h"
-#include "data/DataBlob.h"
-#include "data/ModelVisibilityData.h"
-#include "data/AntennaPositions.h"
-#include "utility/constants.h"
-#include "data/Source.h"
+#include "pelican/modules/AstrometryFast.h"
+#include "pelican/data/DataBlob.h"
+#include "pelican/data/ModelVisibilityData.h"
+#include "pelican/data/AntennaPositions.h"
+#include "pelican/utility/constants.h"
+#include "pelican/data/Source.h"
 #include <QHash>
 #include <QString>
 #include <QStringList>
 #include <iostream>
 #include <cmath>
-#include "utility/pelicanTimer.h"
+#include "pelican/utility/pelicanTimer.h"
 
-#include "utility/memCheck.h"
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 

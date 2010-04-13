@@ -1,7 +1,7 @@
 #include "AdapterAntennaList.h"
 #include <QTextStream>
 
-#include "utility/memCheck.h"
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 

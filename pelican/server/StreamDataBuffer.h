@@ -1,7 +1,7 @@
 #ifndef STREAMDATABUFFER_H
 #define STREAMDATABUFFER_H
 
-#include "DataBuffer.h"
+#include "pelican/server/DataBuffer.h"
 #include <QQueue>
 #include <QObject>
 

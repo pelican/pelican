@@ -1,14 +1,14 @@
 #include <QCoreApplication>
 #include "PelicanServerClientTestMT.h"
 #include "PelicanServerClient.h"
-#include "server/test/TestServer.h"
-#include "comms/StreamData.h"
-#include "comms/Data.h"
-#include "adapters/test/TestAdapter.h"
-#include "adapters/test/TestStreamAdapter.h"
-#include "adapters/test/TestDataBlob.h"
-#include "utility/Config.h"
-#include "utility/ConfigNode.h"
+#include "pelican/server/test/TestServer.h"
+#include "pelican/comms/StreamData.h"
+#include "pelican/comms/Data.h"
+#include "pelican/adapters/test/TestAdapter.h"
+#include "pelican/adapters/test/TestStreamAdapter.h"
+#include "pelican/adapters/test/TestDataBlob.h"
+#include "pelican/utility/Config.h"
+#include "pelican/utility/ConfigNode.h"
 
 namespace pelican {
 
@@ -52,8 +52,8 @@ void PelicanServerClientTestMT::test_getData()
     QString version2("version2");
     DataRequirements reqStream1;
     reqStream1.addStreamData(stream1);
-    QByteArray data1("data1");
-    QByteArray data2("data2");
+    QByteArray data1("pelican/data1");
+    QByteArray data2("pelican/data2");
     unsigned int port = server.port();
 
     // common client configuration

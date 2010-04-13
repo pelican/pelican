@@ -1,9 +1,9 @@
-#include "modules/BasicFlagger.h"
-#include "data/VisibilityData.h"
-#include "data/FlagTable.h"
+#include "pelican/modules/BasicFlagger.h"
+#include "pelican/data/VisibilityData.h"
+#include "pelican/data/FlagTable.h"
 #include <algorithm>
 
-#include "utility/memCheck.h"
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 

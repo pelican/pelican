@@ -3,11 +3,11 @@
 
 #include <QString>
 #include <QHash>
-#include "StreamDataBuffer.h"
-#include "ServiceDataBuffer.h"
-#include "LockedData.h"
-#include "data/DataRequirements.h"
-#include "utility/Config.h"
+#include "pelican/server/StreamDataBuffer.h"
+#include "pelican/server/ServiceDataBuffer.h"
+#include "pelican/server/LockedData.h"
+#include "pelican/data/DataRequirements.h"
+#include "pelican/utility/Config.h"
 
 /**
  * @file DataManager.h
@@ -20,7 +20,7 @@ class StreamData;
 
 /**
  * @class DataManager
- *  
+ *
  * @brief
  * Main class for accessing data in the server.
  *
@@ -49,7 +49,7 @@ class DataManager
         const DataRequirements& dataSpec() const {return _specs;}
 
         /// Return a list of Stream Data objects corresponding
-        //  to a DataRequirement object 
+        //  to a DataRequirement object
         QList<LockedData> getDataRequirements(const DataRequirements& req);
 
         /// Return the next unlocked data block from Stream Data.
@@ -88,4 +88,4 @@ class DataManager
 
 } // namespace pelican
 
-#endif // DATAMANAGER_H 
+#endif // DATAMANAGER_H

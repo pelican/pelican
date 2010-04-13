@@ -1,7 +1,7 @@
 #ifndef ANTENNAMATRIXDATA_H
 #define ANTENNAMATRIXDATA_H
 
-#include "data/DataBlob.h"
+#include "pelican/data/DataBlob.h"
 #include <vector>
 #include <iostream>
 

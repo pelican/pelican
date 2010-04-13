@@ -1,8 +1,8 @@
-#include "AstrometryFast.h"
-#include "utility/constants.h"
+#include "pelican/modules/AstrometryFast.h"
+#include "pelican/utility/constants.h"
 #include <cmath>
 
-#include "utility/memCheck.h"
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 
@@ -16,12 +16,12 @@ namespace pelican {
  * Earth rotation, site position, and atmospheric refraction. The
  * transformations should be accurate to less than two arcseconds.
  *
- * @param[in] t   Populated structure containing site data.
- * @param[in] c   Populated structure containing celestial data.
- * @param[in] ra  The ICRS (J2000) Right Ascension in radians.
- * @param[in] dec The ICRS (J2000) Declination in radians.
- * @param[out] a  The local azimuth in radians.
- * @param[out] e  The local elevation in radians.
+ * @param[in]  t   Populated structure containing site data.
+ * @param[in]  c   Populated structure containing celestial data.
+ * @param[in]  ra  The ICRS (J2000) Right Ascension in radians.
+ * @param[in]  dec The ICRS (J2000) Declination in radians.
+ * @param[out] a   The local azimuth in radians.
+ * @param[out] e   The local elevation in radians.
  */
 void AstrometryFast::icrsEquatorialToObserved(const SiteData* t,
         const CelestialData* c, double ra, double dec, double* a, double* e)

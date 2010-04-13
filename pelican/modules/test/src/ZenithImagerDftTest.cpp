@@ -1,18 +1,18 @@
 #include "ZenithImagerDftTest.h"
-#include "modules/ZenithImagerDft.h"
-#include "utility/pelicanTimer.h"
-#include "utility/constants.h"
-#include "utility/ConfigNode.h"
-#include "data/ImageData.h"
-#include "data/VisibilityData.h"
-#include "data/FrequencyList.h"
-#include "data/AntennaPositions.h"
+#include "pelican/modules/ZenithImagerDft.h"
+#include "pelican/utility/pelicanTimer.h"
+#include "pelican/utility/constants.h"
+#include "pelican/utility/ConfigNode.h"
+#include "pelican/data/ImageData.h"
+#include "pelican/data/VisibilityData.h"
+#include "pelican/data/FrequencyList.h"
+#include "pelican/data/AntennaPositions.h"
 
 #include <limits>
 #include <vector>
 #include <iostream>
 
-#include "utility/memCheck.h"
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 

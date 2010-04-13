@@ -1,8 +1,8 @@
 #ifndef TESTPIPELINE_H
 #define TESTPIPELINE_H
 
-#include "core/AbstractPipeline.h"
-#include "data/DataRequirements.h"
+#include "pelican/core/AbstractPipeline.h"
+#include "pelican/data/DataRequirements.h"
 
 /**
  * @file TestPipeline.h

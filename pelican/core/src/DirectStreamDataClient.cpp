@@ -1,12 +1,14 @@
-#include <QBuffer>
-#include "DirectStreamDataClient.h"
-#include "comms/StreamData.h"
-#include "data/DataRequirements.h"
-#include "server/LockedData.h"
-#include "server/LockableStreamData.h"
-#include "utility/Config.h"
+#include "pelican/core/DirectStreamDataClient.h"
 
-#include "utility/memCheck.h"
+#include "pelican/comms/StreamData.h"
+#include "pelican/data/DataRequirements.h"
+#include "pelican/server/LockedData.h"
+#include "pelican/server/LockableStreamData.h"
+#include "pelican/utility/Config.h"
+
+#include <QBuffer>
+
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 class ConfigNode;
@@ -14,7 +16,7 @@ class DataTypes;
 
 
 /**
- *@details DirectStreamDataClient 
+ *@details DirectStreamDataClient
  */
 DirectStreamDataClient::DirectStreamDataClient(const ConfigNode& config, const DataTypes& types)
     : AbstractDataClient(config, types)
@@ -46,7 +48,7 @@ void DirectStreamDataClient::setChunker(AbstractChunker* chunker, const QString&
             _chunkerManager.addServiceChunker(chunker);
             break;
         default:
-            throw(QString( QString("data type ") + name + " not available in requirements"));
+            throw(QString( QString("pelican/data type ") + name + " not available in requirements"));
             break;
     }
 
@@ -77,7 +79,7 @@ QHash<QString, DataBlob*> DirectStreamDataClient::getData(QHash<QString, DataBlo
         {
             if( ! it->isCompatible( _dataManager->dataSpec() ) )
                 throw QString("DirectStreamDataClient::getData(): "
-                        "Data requested not supported by client");
+                        "pelican/data requested not supported by client");
             dataList = _dataManager->getDataRequirements(*it);
             ++it;
         }

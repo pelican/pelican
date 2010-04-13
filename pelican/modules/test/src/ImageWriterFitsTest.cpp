@@ -1,14 +1,14 @@
 #include "ImageWriterFitsTest.h"
-#include "modules/ImageWriterFits.h"
-#include "utility/Config.h"
-#include "data/ImageData.h"
+#include "pelican/modules/ImageWriterFits.h"
+#include "pelican/utility/Config.h"
+#include "pelican/data/ImageData.h"
 #include <QCoreApplication>
 #include <QFile>
-#include "utility/pelicanTimer.h"
-#include "data/DataBlob.h"
+#include "pelican/utility/pelicanTimer.h"
+#include "pelican/data/DataBlob.h"
 #include <iostream>
 
-#include "utility/memCheck.h"
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 

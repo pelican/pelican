@@ -1,17 +1,20 @@
+#include "pelican/server/PelicanServer.h"
+
+#include "pelican/comms/AbstractProtocol.h"
+#include "pelican/server/AbstractChunker.h"
+#include "pelican/server/DataManager.h"
+#include "pelican/server/DataReceiver.h"
+#include "pelican/comms/PelicanProtocol.h"
+#include "pelican/server/PelicanPortServer.h"
+#include "pelican/utility/Config.h"
+
 #include <boost/shared_ptr.hpp>
 #include <QtGlobal>
 #include <QTcpSocket>
-#include "PelicanServer.h"
-#include "comms/AbstractProtocol.h"
-#include "AbstractChunker.h"
-#include "DataManager.h"
-#include "DataReceiver.h"
-#include "comms/PelicanProtocol.h"
-#include "PelicanPortServer.h"
-#include <iostream>
-#include "utility/Config.h"
 
-#include "utility/memCheck.h"
+#include <iostream>
+
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 
@@ -60,10 +63,10 @@ void PelicanServer::addServiceChunker( AbstractChunker* chunker)
 /**
  * @details
  * Runs the server thread starting its event loop.
- * 
+ *
  * Sets up the data manager which handles stream and service data buffers
  * which are set up on request of the chunkers.
- * 
+ *
  */
 void PelicanServer::run()
 {

@@ -1,6 +1,8 @@
 #ifndef VISGEN_H
 #define VISGEN_H
 
+#include "pelican/data/DataBlob.h"
+
 #include <QByteArray>
 #include <vector>
 #include <complex>
@@ -8,7 +10,6 @@
 #include <iostream>
 #include <fstream>
 #include <cstdlib>
-#include <data/DataBlob.h>
 
 /**
  * @file VisGen.h

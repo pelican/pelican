@@ -1,13 +1,13 @@
 #include <QTcpSocket>
-#include "PelicanPortServer.h"
-#include "Session.h"
-#include "comms/AbstractProtocol.h"
-#include <iostream>
-#include "utility/memCheck.h"
+#include "pelican/server/PelicanPortServer.h"
+#include "pelican/server/Session.h"
+#include "pelican/comms/AbstractProtocol.h"
+
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 
-// class PelicanPortServer 
+// class PelicanPortServer
 PelicanPortServer::PelicanPortServer(AbstractProtocol* proto, DataManager* data, QObject* parent)
     : QTcpServer(parent), _proto(proto), _data(data)
 {

@@ -1,4 +1,4 @@
-#include "data/VisibilityPositions.h"
+#include "pelican/data/VisibilityPositions.h"
 
 namespace pelican {
 

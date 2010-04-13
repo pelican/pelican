@@ -2,9 +2,9 @@
 #define BASICFLAGGER_H
 
 #include "AbstractModule.h"
-#include "data/VisibilityData.h"
-#include "data/FlagTable.h"
-#include "utility/ConfigNode.h"
+#include "pelican/data/VisibilityData.h"
+#include "pelican/data/FlagTable.h"
+#include "pelican/utility/ConfigNode.h"
 #include <vector>
 
 /**

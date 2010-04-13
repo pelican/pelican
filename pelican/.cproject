@@ -32,6 +32,7 @@
 <listOptionValue builtIn="false" value="/usr/include/qt4/QtNetwork"/>
 <listOptionValue builtIn="false" value="/usr/include/qt4/QtGui"/>
 <listOptionValue builtIn="false" value="/usr/include/qt4"/>
+<listOptionValue builtIn="false" value="/usr/include/qt4/QtXml"/>
 </option>
 <inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.2120366062" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
 </tool>

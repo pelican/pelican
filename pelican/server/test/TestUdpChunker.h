@@ -1,11 +1,12 @@
 #ifndef TESTUDPCHUNKER_H
 #define TESTUDPCHUNKER_H
 
+#include "pelican/server/AbstractChunker.h"
+
 #include <QString>
 #include <QObject>
 #include <cstring>
 #include <QByteArray>
-#include "server/AbstractChunker.h"
 
 /**
  * @file TestUdpChunker.h

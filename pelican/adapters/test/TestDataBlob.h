@@ -2,7 +2,7 @@
 #define TESTDATABLOB_H
 
 #include <vector>
-#include "data/DataBlob.h"
+#include "pelican/data/DataBlob.h"
 
 /**
  * @file TestDataBlob.h

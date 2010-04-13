@@ -1,7 +1,6 @@
-#include <iostream>
-#include "LockableData.h"
-#include "comms/Data.h"
-#include "utility/memCheck.h"
+#include "pelican/server/LockableData.h"
+#include "pelican/comms/Data.h"
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 

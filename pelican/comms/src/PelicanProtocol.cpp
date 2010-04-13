@@ -3,17 +3,17 @@
 #include <QStringList>
 #include <QString>
 #include <QMapIterator>
-#include "Data.h"
-#include "PelicanProtocol.h"
-#include "ServerRequest.h"
-#include "ServerResponse.h"
-#include "AcknowledgementRequest.h"
-#include "ServiceDataRequest.h"
-#include "StreamDataRequest.h"
-#include "StreamData.h"
-#include "data/DataRequirements.h"
+#include "pelican/comms/Data.h"
+#include "pelican/comms/PelicanProtocol.h"
+#include "pelican/comms/ServerRequest.h"
+#include "pelican/comms/ServerResponse.h"
+#include "pelican/comms/AcknowledgementRequest.h"
+#include "pelican/comms/ServiceDataRequest.h"
+#include "pelican/comms/StreamDataRequest.h"
+#include "pelican/comms/StreamData.h"
+#include "pelican/data/DataRequirements.h"
 
-#include "utility/memCheck.h"
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 

@@ -1,34 +1,36 @@
 #ifndef TESTSERVER_H
 #define TESTSERVER_H
 
+#include "pelican/server/DataManager.h"
+
 #include <QList>
 #include <QString>
 #include <QThread>
-#include "server/DataManager.h"
 
 /**
  * @file TestServer.h
  */
 
 namespace pelican {
-    class PelicanPortServer;
-    class AbstractProtocol;
+
+class PelicanPortServer;
+class AbstractProtocol;
 
 /**
  * @class TestServer
- *  
+ *
  * @brief
  *    A class that sets up and runs a PelicanPortServer on the local host
  *    for testing purposes
  *
  * @details
  *    The TestServer will start listening on a random port for incomming
- *    packets as soon as it is contructed. Data to be served by the server 
- *    is passed through by the serveData() methods. The server uses the 
+ *    packets as soon as it is contructed. Data to be served by the server
+ *    is passed through by the serveData() methods. The server uses the
  *    full Pelican Server infrastructure.
  *
  *    Example:
- *    // Server setup 
+ *    // Server setup
  *    TestServer server;
  *    server.setServiceData( someServiceData );
  *
@@ -66,7 +68,7 @@ class TestServer : public QThread
         virtual void run();
 
     private:
-        bool _protoOwner; // flag to indicate ownership of the 
+        bool _protoOwner; // flag to indicate ownership of the
                           // protocol object
         DataManager* _dataManager;
         AbstractProtocol* _proto;
@@ -75,4 +77,4 @@ class TestServer : public QThread
 };
 
 } // namespace pelican
-#endif // TESTSERVER_H 
+#endif // TESTSERVER_H

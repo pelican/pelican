@@ -1,16 +1,17 @@
-#include "AdapterFactory.h"
-#include "adapters/AbstractAdapter.h"
-#include "adapters/AbstractStreamAdapter.h"
-#include "adapters/AbstractServiceAdapter.h"
-#include "utility/ConfigNode.h"
-#include "utility/Config.h"
+#include "pelican/adapters/AdapterFactory.h"
+#include "pelican/adapters/AbstractAdapter.h"
+#include "pelican/adapters/AbstractStreamAdapter.h"
+#include "pelican/adapters/AbstractServiceAdapter.h"
+#include "pelican/utility/ConfigNode.h"
+#include "pelican/utility/Config.h"
+
 #include <QStringList>
 #include <QtGlobal>
 
-#include "adapters/AdapterAntennaList.h"
-#include "adapters/AdapterLofarStationVisibilities.h"
+#include "pelican/adapters/AdapterAntennaList.h"
+#include "pelican/adapters/AdapterLofarStationVisibilities.h"
 
-#include "utility/memCheck.h"
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 

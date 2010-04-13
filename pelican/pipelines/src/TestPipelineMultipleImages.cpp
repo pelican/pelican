@@ -1,13 +1,15 @@
-#include "pipelines/TestPipelineMultipleImages.h"
-#include "modules/ZenithImagerDft.h"
-#include "modules/ImageWriterFits.h"
-#include "modules/ZenithModelVisibilities.h"
-#include "data/ImageData.h"
-#include "data/ModelVisibilityData.h"
-#include "data/AntennaPositions.h"
+#include "pelican/pipelines/TestPipelineMultipleImages.h"
+
+#include "pelican/modules/ZenithImagerDft.h"
+#include "pelican/modules/ImageWriterFits.h"
+#include "pelican/modules/ZenithModelVisibilities.h"
+#include "pelican/data/ImageData.h"
+#include "pelican/data/ModelVisibilityData.h"
+#include "pelican/data/AntennaPositions.h"
+
 #include <iostream>
 
-#include "utility/memCheck.h"
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 

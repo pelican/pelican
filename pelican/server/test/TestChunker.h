@@ -1,10 +1,13 @@
 #ifndef TESTCHUNKER_H
 #define TESTCHUNKER_H
+
+#include "pelican/server/AbstractChunker.h"
+#include "pelican/utility/Config.h"
+
 #include <QString>
 #include <QObject>
 #include <cstring>
-#include "server/AbstractChunker.h"
-#include "utility/Config.h"
+
 class QTimer;
 
 /**
@@ -22,7 +25,7 @@ class DataManager;
  * Implemnetation of an AbstractChunker to monitor calling.
  *
  * @details
- * 
+ *
  */
 class TestChunker : public QObject, public AbstractChunker
 {
@@ -62,4 +65,4 @@ class TestChunker : public QObject, public AbstractChunker
 
 } // namespace pelican
 
-#endif // TESTCHUNKER_H 
+#endif // TESTCHUNKER_H

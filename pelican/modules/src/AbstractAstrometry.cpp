@@ -1,9 +1,9 @@
-#include "AbstractAstrometry.h"
-#include "data/CelestialData.h"
-#include "data/SiteData.h"
+#include "pelican/modules/AbstractAstrometry.h"
+#include "pelican/data/CelestialData.h"
+#include "pelican/data/SiteData.h"
 #include <cmath>
 
-#include "utility/memCheck.h"
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 

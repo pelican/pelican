@@ -1,7 +1,7 @@
 #ifndef ABSTRACTADAPTER_H
 #define ABSTRACTADAPTER_H
 
-#include "utility/ConfigNode.h"
+#include "pelican/utility/ConfigNode.h"
 #include <QIODevice>
 #include <iostream>
 

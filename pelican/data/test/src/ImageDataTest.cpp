@@ -1,8 +1,8 @@
 #include "ImageDataTest.h"
 #include "ImageData.h"
-#include "utility/pelicanTimer.h"
+#include "pelican/utility/pelicanTimer.h"
 
-#include "utility/memCheck.h"
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 

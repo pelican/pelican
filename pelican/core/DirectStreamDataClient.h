@@ -1,9 +1,9 @@
 #ifndef DIRECTSTREAMDATACLIENT_H
 #define DIRECTSTREAMDATACLIENT_H
 
-#include "AbstractDataClient.h"
-#include "server/ChunkerManager.h"
-#include "server/DataManager.h"
+#include "pelican/core/AbstractDataClient.h"
+#include "pelican/server/ChunkerManager.h"
+#include "pelican/server/DataManager.h"
 
 /**
  * @file DirectStreamDataClient.h
@@ -13,7 +13,7 @@ namespace pelican {
 
 /**
  * @class DirectStreamDataClient
- *  
+ *
  * @brief
  *    A Data Client that allows you to connect to one or more data streams
  *    directly using specialist chunkers, rather than through the PelicanServer
@@ -52,4 +52,4 @@ class DirectStreamDataClient : public AbstractDataClient
 };
 
 } // namespace pelican
-#endif // DIRECTSTREAMDATACLIENT_H 
+#endif // DIRECTSTREAMDATACLIENT_H

@@ -1,13 +1,14 @@
-#include "DataManager.h"
+#include "pelican/server/DataManager.h"
 
-#include "LockableData.h"
-#include "LockableStreamData.h"
-#include "comms/StreamData.h"
-#include "WritableData.h"
+#include "pelican/server/LockableData.h"
+#include "pelican/server/LockableStreamData.h"
+#include "pelican/server/WritableData.h"
+#include "pelican/comms/StreamData.h"
+#include "pelican/utility/Config.h"
+
 #include <iostream>
-#include "utility/Config.h"
 
-#include "utility/memCheck.h"
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 
@@ -48,10 +49,10 @@ DataManager::~DataManager()
  */
 WritableData DataManager::getWritableData(const QString& type, size_t size)
 {
-    //std::cout << "DataManager::getWritableData, type : " << type.toStdString() << std::endl;
+    //std::cout << "pelican/dataManager::getWritableData, type : " << type.toStdString() << std::endl;
     if ( _streams.contains(type) ) {
         // XXX remove
-        //std::cout << "DataManager::Returning writable stream data" << std::endl;
+        //std::cout << "pelican/dataManager::Returning writable stream data" << std::endl;
         return _streams[type]->getWritable(size);
     }
     if ( _service.contains(type) )
@@ -69,7 +70,7 @@ WritableData DataManager::getWritableData(const QString& type, size_t size)
  */
 StreamDataBuffer* DataManager::getStreamBuffer(const QString& type)
 {
-    std::cout << "DataManager::getStreamBuffer" << type.toStdString() << std::endl;
+    std::cout << "pelican/dataManager::getStreamBuffer" << type.toStdString() << std::endl;
 
     if ( ! _streams.contains(type) ) {
         Config::TreeAddress configAddress(_bufferConfigBaseAddress);
@@ -78,7 +79,7 @@ StreamDataBuffer* DataManager::getStreamBuffer(const QString& type)
         size_t maxSize = config.getOption("buffer", "maxSize", "10240").toUInt();
         size_t maxChunkSize = config.getOption("buffer", "maxChunkSize", "10240").toUInt();
         setStreamDataBuffer( type, new StreamDataBuffer(type, NULL, maxSize, maxChunkSize) );
-        
+
     }
     return _streams[type];
 }
@@ -135,11 +136,11 @@ void DataManager::setServiceDataBuffer(const QString& name, ServiceDataBuffer* b
  */
 LockedData DataManager::getNext(const QString& type, const QSet<QString>& associateData )
 {
-    //std::cout << "DataManager::getNext() type = " << type.toStdString() << std::endl;
+    //std::cout << "pelican/dataManager::getNext() type = " << type.toStdString() << std::endl;
     LockedData lockedData = getNext(type);
-    
+
     if( lockedData.isValid() ) {
-        //std::cout << "DataManager::getNext(): Valid locked stream data found." << std::endl;
+        //std::cout << "pelican/dataManager::getNext(): Valid locked stream data found." << std::endl;
 
         // check it contains valid associateData
         LockableStreamData* streamData =
@@ -164,7 +165,7 @@ LockedData DataManager::getNext(const QString& type, const QSet<QString>& associ
  */
 LockedData DataManager::getNext(const QString& type)
 {
-//     std::cout << "DataManager::getNext: type : " << type.toStdString() << std::endl;
+//     std::cout << "pelican/dataManager::getNext: type : " << type.toStdString() << std::endl;
     LockedData lockedData(type, 0);
 
     _streams[type]->getNext(lockedData);
@@ -177,14 +178,14 @@ LockedData DataManager::getNext(const QString& type)
  *         Attempt to fulfill a DataRequirement request for data
  * @return A list of locked data containing streams data objects (with the
  *         associated service data) or the request
- *         returns an empty string 
+ *         returns an empty string
  */
 QList<LockedData> DataManager::getDataRequirements(const DataRequirements& req)
 {
     QList<LockedData> dataList;
     if( ! req.isCompatible( dataSpec() ) )
         throw QString("Session::processStreamDataRequest(): "
-                "Data requested not supported by server");
+                "pelican/data requested not supported by server");
     foreach (const QString stream, req.streamData() )
     {
         LockedData data = getNext(stream, req.serviceData());
@@ -205,7 +206,7 @@ LockedData DataManager::getServiceData(const QString& type, const QString& versi
 {
     LockedData lockedData(type,0);
 
-    if( _service.contains(type) ) 
+    if( _service.contains(type) )
         _service[type]->getData(lockedData, version);
     return lockedData;
 }
@@ -213,7 +214,7 @@ LockedData DataManager::getServiceData(const QString& type, const QString& versi
 
 void DataManager::associateServiceData(LockableStreamData* data)
 {
-//     std::cout << "DataManager::associateServiceData()" << std::endl;
+//     std::cout << "pelican/dataManager::associateServiceData()" << std::endl;
     QHashIterator<QString, ServiceDataBuffer*> i(_service);
     while (i.hasNext()) {
         i.next();
