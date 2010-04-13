@@ -24,8 +24,8 @@ namespace pelican {
 ModuleFactory::ModuleFactory(const Config *config)
 {
     _config = config;
-    _configRoot.append(Config::NodeId_t("pipeline", ""));
-    _configRoot.append(Config::NodeId_t("modules", ""));
+    _configRoot.append(Config::NodeId("pipeline", ""));
+    _configRoot.append(Config::NodeId("modules", ""));
 }
 
 /**
@@ -53,7 +53,7 @@ ModuleFactory::~ModuleFactory()
 AbstractModule* ModuleFactory::createModule(const QString& type, const QString& name)
 {
     /* Create an index into the configuration file and get the configuration */
-    Config::TreeAddress_t address = _configRoot;
+    Config::TreeAddress address = _configRoot;
     address.append(QPair<QString, QString>(type, name));
     ConfigNode config = _config->get(address);
 

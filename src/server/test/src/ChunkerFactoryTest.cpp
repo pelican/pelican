@@ -64,9 +64,9 @@ void ChunkerFactoryTest::test_create()
         config.setFromString("", serverXml);
 
         // Create the chunker factory.
-        Config::TreeAddress_t address;
-        address.append(Config::NodeId_t("server", ""));
-        address.append(Config::NodeId_t("chunkers", ""));
+        Config::TreeAddress address;
+        address.append(Config::NodeId("server", ""));
+        address.append(Config::NodeId("chunkers", ""));
         ChunkerFactory factory(&config, address);
 
         // Create a chunker with the right configuration.

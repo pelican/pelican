@@ -54,7 +54,7 @@ void PipelineDriverTest::setUp()
     _dataBlobFactory = new DataBlobFactory;
     Config config;
     _moduleFactory = new ModuleFactory(&config);
-    Config::TreeAddress_t clientsNode;
+    Config::TreeAddress clientsNode;
     _clientFactory = new DataClientFactory(0, clientsNode, 0);
 
     // Create the pipeline driver.

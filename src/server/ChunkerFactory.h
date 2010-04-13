@@ -39,7 +39,7 @@ class ChunkerFactory : public AbstractFactory
 {
     public:
         /// Creates the chunker factory.
-        ChunkerFactory(const Config* config, const Config::TreeAddress_t& base)
+        ChunkerFactory(const Config* config, const Config::TreeAddress& base)
         : AbstractFactory(config, base) {}
 
         /// Destroys the chunker factory, deleting any chunkers created by it.

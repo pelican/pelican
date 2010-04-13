@@ -22,8 +22,8 @@ namespace pelican {
 AdapterFactory::AdapterFactory(const Config *config)
 {
     _config = config;
-    _configRoot.append(Config::NodeId_t("pipeline", ""));
-    _configRoot.append(Config::NodeId_t("adapters", ""));
+    _configRoot.append(Config::NodeId("pipeline", ""));
+    _configRoot.append(Config::NodeId("adapters", ""));
 }
 
 
@@ -53,7 +53,7 @@ AdapterFactory::~AdapterFactory()
 AbstractAdapter* AdapterFactory::create(const QString& type, const QString& name)
 {
     // Create an index into the configuration file and get the configuration.
-    Config::TreeAddress_t address = _configRoot;
+    Config::TreeAddress address = _configRoot;
     address.append(QPair<QString, QString>(type, name));
     ConfigNode config = _config->get(address);
 

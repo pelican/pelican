@@ -1,9 +1,9 @@
 #ifndef TESTPROTOCOL_H
 #define TESTPROTOCOL_H
-#include <QString>
 
 #include "comms/AbstractProtocol.h"
 #include "comms/ServerRequest.h"
+#include <QString>
 #include <QIODevice>
 
 /**
@@ -14,16 +14,17 @@ namespace pelican {
 
 /**
  * @class TestProtocol
- *  
+ *
  * @brief
  * A dummy protocol for testing.
  *
  * @details
- * 
+ *
  */
 class TestProtocol : public AbstractProtocol
 {
-        enum sendType_t {ack, msg,error};
+    private:
+        enum {ack, msg, error};
 
     public:
         TestProtocol(const QString& id, ServerRequest::Request request = ServerRequest::Acknowledge);
@@ -46,4 +47,4 @@ class TestProtocol : public AbstractProtocol
 
 } // namespace pelican
 
-#endif // TESTPROTOCOL_H 
+#endif // TESTPROTOCOL_H

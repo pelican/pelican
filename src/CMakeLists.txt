@@ -1,3 +1,23 @@
+#===============================================================================
+# Top level PELICAN cmake script.
+#===============================================================================
+# Options:
+#   -DCMAKE_BUILD_TYPE={debug | release} (default: debug):
+#       Build in debug or release mode.
+#
+#   -DINTEL={true | false} (default: false):
+#       Use the intel C++ compiler.
+#
+#   -DTIMER={true | false} (default: false):
+#       Enable additional timer printing.
+#
+#   -DIGNORE_MKL={true | false} (default: false):
+#       Ignore MKL libraries.
+#
+#   -DOPENMP={true | false} (default: false):
+#       Enabled threaded math computation using openMP.
+#===============================================================================
+
 # === Set the compiler
 if (INTEL)
   set(CMAKE_CXX_COMPILER icpc)
@@ -60,14 +80,13 @@ set (BUILD_SHARED_LIBS TRUE)
 
 # === Compiler defaults
 set(CPP_PLATFORM_LIBS ${CMAKE_THREAD_LIBS_INIT})
+set(CMAKE_CXX_FLAGS_RELEASE "-O2")
 if (CMAKE_COMPILER_IS_GNUCC)
     # Note that -std=c++0x is needed for -pedantic.
-  set(CMAKE_CXX_FLAGS_RELEASE "-O2")
     add_definitions(-Wall -Wextra -pedantic -std=c++0x)
     add_definitions(-Wno-deprecated -Wno-unknown-pragmas)
     list(APPEND CPP_PLATFORM_LIBS util dl)
 else (CMAKE_COMPILER_IS_GNUCC) #assume compiler is intel ?!
-    set(CMAKE_CXX_FLAGS_RELEASE "-O2")
     add_definitions(-Wall -Wcheck)
     add_definitions(-wd383 -wd981)  # suppress remark/warning
     add_definitions(-ww111 -ww1572) # promote remark to warning
@@ -89,14 +108,14 @@ set(dependencies
 PACKAGE_DEPENDENCIES(${dependencies})
 
 # -- list of all libraries for single library install
-set(PROJECT_LIBRARIES pelican 
-    ${Boost_LIBRARIES} 
+set(PROJECT_LIBRARIES pelican
+    ${Boost_LIBRARIES}
     ${PELICAN_CBLAS_LIBS}
     ${PELICAN_LAPACK_LIBS}
     ${CFITSIO_LIBRARIES}
-    )
+)
 
-# === Sub modules
+# === Sub modules (recurse into sub-directories to build modules)
 include(modules.cmake)
 
 # === Doxygen documentation targets

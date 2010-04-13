@@ -17,22 +17,22 @@
 # www.mip.informatik.uni-kiel.de
 # --------------------------------
 
- FIND_PATH(FFTW3_INCLUDE_DIR fftw3.h
-   ${FFTW3_DIR}/include
-   ${FFTW3_HOME}/include
-   ${FFTW3_DIR}
-   ${FFTW3_HOME}
-   $ENV{FFTW3_DIR}/include
-   $ENV{FFTW3_HOME}/include
-   $ENV{FFTW3_DIR}
-   $ENV{FFTW3_HOME}
-   /usr/include
-   /usr/local/include
-   $ENV{SOURCE_DIR}/fftw3
-   $ENV{SOURCE_DIR}/fftw3/include
-   $ENV{SOURCE_DIR}/fftw
-   $ENV{SOURCE_DIR}/fftw/include
- )
+FIND_PATH(FFTW3_INCLUDE_DIR fftw3.h
+    ${FFTW3_DIR}/include
+    ${FFTW3_HOME}/include
+    ${FFTW3_DIR}
+    ${FFTW3_HOME}
+    $ENV{FFTW3_DIR}/include
+    $ENV{FFTW3_HOME}/include
+    $ENV{FFTW3_DIR}
+    $ENV{FFTW3_HOME}
+    /usr/include
+    /usr/local/include
+    $ENV{SOURCE_DIR}/fftw3
+    $ENV{SOURCE_DIR}/fftw3/include
+    $ENV{SOURCE_DIR}/fftw
+    $ENV{SOURCE_DIR}/fftw/include
+)
 #MESSAGE("DBG FFTW3_INCLUDE_DIR=${FFTW3_INCLUDE_DIR}")
 
 

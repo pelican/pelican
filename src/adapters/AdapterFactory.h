@@ -40,7 +40,7 @@ class AdapterFactory
 
         /// Returns the tree node address that marks the start
         /// of the module configuration block.
-        Config::TreeAddress_t configRoot() const { return _configRoot; }
+        Config::TreeAddress configRoot() const { return _configRoot; }
 
     private:
         /// Creates a new adapter.
@@ -49,7 +49,7 @@ class AdapterFactory
     protected:
         const Config* _config; ///< Pointer to the configuration object.
         QVector<AbstractAdapter*> _adapters; ///< Holds pointers to the created adapters.
-        Config::TreeAddress_t _configRoot;
+        Config::TreeAddress _configRoot;
 };
 
 } // namespace pelican

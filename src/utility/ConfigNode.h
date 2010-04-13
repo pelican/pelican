@@ -1,6 +1,10 @@
 #ifndef CONFIGNODE_H_
 #define CONFIGNODE_H_
 
+/**
+ * @file ConfigNode.h
+ */
+
 #include "data/DataBlob.h"
 #include <QDomElement>
 #include <QString>

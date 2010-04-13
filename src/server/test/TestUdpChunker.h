@@ -19,10 +19,10 @@ class DataManager;
  * @class TestUdpChunker
  *
  * @brief
- * Implemnetation of an AbstractChunker to work with the Telescope emulator.
+ * Implementation of an AbstractChunker to work with the Telescope emulator.
  *
  * @details
- * 
+ *
  */
 
 class TestUdpChunker : public AbstractChunker
@@ -32,7 +32,7 @@ class TestUdpChunker : public AbstractChunker
          TestUdpChunker(const ConfigNode& config);
 
         /// Destroys the TestChunker.
-        ~TestUdpChunker();
+        ~TestUdpChunker() {};
 
         /// Creates the socket to use for the incoming data stream.
         virtual QIODevice* newDevice();
@@ -41,11 +41,11 @@ class TestUdpChunker : public AbstractChunker
         virtual void next(QIODevice*);
 
     private:
-        unsigned int _nextCount;
+        unsigned _nextCount;
         size_t _chunkSize;
         QByteArray _tempBuffer;
 };
 
 } // namespace pelican
 
-#endif // TESTUDPCHUNKER_H 
+#endif // TESTUDPCHUNKER_H
