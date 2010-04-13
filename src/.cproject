@@ -691,6 +691,7 @@
 <listOptionValue builtIn="false" value="/usr/include/qt4/QtCore/"/>
 <listOptionValue builtIn="false" value="/usr/include/qt4/QtXml/"/>
 </option>
+<option id="gnu.cpp.compiler.option.preprocessor.def.1983822716" superClass="gnu.cpp.compiler.option.preprocessor.def" valueType="definedSymbols"/>
 <inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.626673450" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
 </tool>
 <tool errorParsers="org.eclipse.cdt.core.GCCErrorParser" id="cdt.managedbuild.tool.gnu.c.compiler.base.341391354" name="GCC C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.base">

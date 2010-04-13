@@ -64,7 +64,7 @@ ENDMACRO( PACKAGE_DEPENDENCIES )
 
 #
 # Define a directory as a SUBPACKAGE( packageName subpackage_dependencies )
-# 
+#
 
 MACRO( SUBPACKAGE_ADD_LIBRARIES )
     IF(SUBPACKAGE_CURRENT)
@@ -118,7 +118,7 @@ MACRO( SUBPACKAGE package )
 
     # install target for header files
     file(GLOB public_headers RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "*.h" )
-    install(FILES ${public_headers} 
+    install(FILES ${public_headers}
             DESTINATION ${INCLUDE_INSTALL_DIR}/${package}
             )
 
@@ -322,7 +322,7 @@ MACRO( SUBPROJECT_OBJECT_FILES target outputObjectFiles )
             endif(IS_ABSOLUTE ${sourcefile})
             LIST(APPEND ${outputObjectFiles} ${source_name}${CMAKE_C_OUTPUT_EXTENSION})
         endforeach( sourcefile )
-        ADD_DIR_PREFIX(${STATIC_OBJ_DIR}/ ${outputObjectFiles}) 
+        ADD_DIR_PREFIX(${STATIC_OBJ_DIR}/ ${outputObjectFiles})
         #MESSAGE("${SUBPACKAGE_CURRENT}: OBJECT=${${outputObjectFiles}}")
     ELSE(SUBPACKAGE_CURRENT)
         MESSAGE("Error: SUBPACKAGE_LIBRARY specified outside of a SUBPACKAGE context")

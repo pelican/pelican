@@ -11,7 +11,7 @@
 namespace pelican {
 
 
-// class ServiceDataBuffer 
+// class ServiceDataBuffer
 ServiceDataBuffer::ServiceDataBuffer(const QString& type)
     : DataBuffer(type)
 {
@@ -20,14 +20,13 @@ ServiceDataBuffer::ServiceDataBuffer(const QString& type)
 
     _max = 10000; //TODO make configurable
     _maxChunkSize = _max;
-    _space = _max; 
+    _space = _max;
 }
 
 ServiceDataBuffer::~ServiceDataBuffer()
 {
     delete _newData;
-    foreach(LockableData* data, _data )
-    {
+    foreach(LockableData* data, _data ) {
         delete data;
     }
 }
@@ -59,7 +58,7 @@ WritableData ServiceDataBuffer::getWritable(size_t size)
         for (int i = 0; i < _expiredData.size(); ++i) {
             LockableData* lockableData = _expiredData[i];
             if( lockableData->maxSize() >= size ) {
-                // We found one, ensure we remove it from the 
+                // We found one, ensure we remove it from the
                 // active data queue.
                 _data.remove(lockableData->id());
                 _expiredData.removeAt(i);
@@ -100,7 +99,7 @@ void ServiceDataBuffer::deactivateData(LockableData* data)
     // If it is not the current service data (which will be associated with
     // any incoming stream data), we mark it as available for removal in the event of
     // the buffer being full.
-   if( data->id() != _current && ! _expiredData.contains(data) ) 
+   if( data->id() != _current && ! _expiredData.contains(data) )
         _expiredData.append(data);
 }
 

@@ -18,13 +18,13 @@
 #       Enabled threaded math computation using openMP.
 #===============================================================================
 
+# === Specify minimum cmake version
+cmake_minimum_required(VERSION 2.6 FATAL_ERROR)
+
 # === Set the compiler
 if (INTEL)
   set(CMAKE_CXX_COMPILER icpc)
   set(CMAKE_C_COMPILER icc)
-else (INTEL)
-  set(CMAKE_CXX_COMPILER g++)
-  set(CMAKE_C_COMPILER gcc)
 endif (INTEL)
 
 # === CMake Build File
@@ -36,10 +36,8 @@ set( ${PROJECT_NAME}_MINOR_VERSION 0 )
 set( ${PROJECT_NAME}_PATCH_LEVEL 0 )
 
 # === CMake setup info
-cmake_minimum_required(VERSION 2.6 FATAL_ERROR)
 list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_SOURCE_DIR}/cmake)
 include(cmake/packagemacros.cmake)
-include_directories(${PROJECT_SOURCE_DIR})
 enable_testing()
 
 # === Options and defaults
@@ -79,6 +77,7 @@ set (BUILD_SHARED_LIBS TRUE)
 
 
 # === Compiler defaults
+include_directories(${PROJECT_SOURCE_DIR})
 set(CPP_PLATFORM_LIBS ${CMAKE_THREAD_LIBS_INIT})
 set(CMAKE_CXX_FLAGS_RELEASE "-O2")
 if (CMAKE_COMPILER_IS_GNUCC)
@@ -127,14 +126,4 @@ add_doxygen_target(developer DoxyfileDeveloper)
 
 
 # === libpelican.so build target
-#if(CMAKE_BUILD_TYPE MATCHES RELEASE)
-#add_library(pelican SHARED
-#    ${CMAKE_CURRENT_BUILD_DIR}/adapters/libadapters.a
-#    ${CMAKE_CURRENT_BUILD_DIR}/comms/libcomms.a
-#)
-#set_target_properties(pelican PROPERTIES LINKER_LANGUAGE CXX)
-#target_link_libraries(pelican ${PROJECT_LIBRARY_SOURCES} )
-#message("PROJECT_LIBRARY_SOURCES = ${PROJECT_LIBRARY_SOURCES}")
-#install(TARGETS pelican DESTINATION ${LIBRARY_INSTALL_DIR})
-#endif(CMAKE_BUILD_TYPE MATCHES RELEASE)
 PROJECT_LIBRARY(pelican)

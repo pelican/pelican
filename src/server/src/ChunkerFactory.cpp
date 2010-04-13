@@ -7,20 +7,6 @@ namespace pelican {
 
 QHash<QString, boost::shared_ptr<ChunkerClassGeneratorBase> > ChunkerFactory::_types;
 
-/**
- *@details ChunkerFactory
- */
-ChunkerFactory::ChunkerFactory( const Config* config, const Config::TreeAddress_t& base )
-    : AbstractFactory(config, base)
-{
-}
-
-/**
- *@details
- */
-ChunkerFactory::~ChunkerFactory()
-{
-}
 
 void ChunkerFactory::registerChunkerType( boost::shared_ptr<ChunkerClassGeneratorBase> ct )
 {

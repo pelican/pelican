@@ -15,7 +15,7 @@ namespace pelican {
 
 /**
  * @class ChunkerFactory
- *  
+ *
  * @brief
  * Creates configured chunker objects.
  *
@@ -95,21 +95,18 @@ namespace pelican {
 class ChunkerFactory : public AbstractFactory
 {
     public:
-<<<<<<< HEAD:src/server/ChunkerFactory.h
         /// Creates the chunker factory.
         ChunkerFactory(const Config* config, const Config::TreeAddress& base)
         : AbstractFactory(config, base) {}
-=======
-        ChunkerFactory( const Config* config, const Config::TreeAddress_t& base );
+
         ~ChunkerFactory();
->>>>>>> 2f78fc300f41c284bb5dcbbdac9e0ad0bbd2d41f:src/server/ChunkerFactory.h
 
         /// add a type of chunker to the chunker factory
         // This will take ownership of the object and delete it on destruction
-        static void registerChunkerType( boost::shared_ptr<ChunkerClassGeneratorBase> ct );
+        static void registerChunkerType(boost::shared_ptr<ChunkerClassGeneratorBase> ct);
 
         /// create a configured object with tthe given name and type
-        virtual AbstractChunker* create( const QString& type, const QString& name="" );
+        virtual AbstractChunker* create(const QString& type, const QString& name="");
 
     private:
         static QHash<QString, boost::shared_ptr<ChunkerClassGeneratorBase> > _types;
@@ -117,4 +114,4 @@ class ChunkerFactory : public AbstractFactory
 
 } // namespace pelican
 
-#endif // CHUNKERFACTORY_H 
+#endif // CHUNKERFACTORY_H
