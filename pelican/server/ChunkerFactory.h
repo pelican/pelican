@@ -13,55 +13,9 @@
 
 namespace pelican {
 
-/**
- * @class ChunkerFactory
- *
- * @brief
- * Creates configured chunker objects.
- *
- * @details
- * The ChunkerFactory class creates pre-configured chunkers of the required
- * type using the specified configuration object.
- *
- * \code
- *
- * // Create the chunker factory.
- * Config::TreeAddress_t address;
- * address.append(Config::NodeId_t("server", ""));
- * address.append(Config::NodeId_t("chunkers", ""));
- * ChunkerFactory factory(&config, address);
- *
- * // Create a chunker.
- * AbstractChunker* c = factory.create<TestUdpChunker>("TestUdpChunker");
- *
- * \endcode
- */
-//class ChunkerFactory : public AbstractFactory
-//{
-//    public:
-//        /// Creates the chunker factory.
-//        ChunkerFactory(const Config* config, const Config::TreeAddress_t& base)
-//        : AbstractFactory(config, base) {}
-//
-//        /// Destroys the chunker factory, deleting any chunkers created by it.
-//        ~ChunkerFactory() {
-//            for (int i = 0; i < _chunkers.size(); ++i)
-//                delete _chunkers[i];
-//        }
-//
-//        /// Creates a configured chunker of the given type and name.
-//        template <typename T> AbstractChunker* create(const QString& configType,
-//                const QString& configName = "")
-//        {
-//            AbstractChunker* chunker = new T(configuration(configType, configName));
-//            _chunkers.append(chunker);
-//            return chunker;
-//        }
-//
-//    private:
-//        QList<AbstractChunker*> _chunkers;
-//};
-
+#ifndef PELICAN_DECLARE_CHUNKER
+#define PELICAN_DECLARE_CHUNKER(type) namespace {ChunkerFactory::Generator<type> reg(#type);}
+#endif
 
 /**
  * @class ChunkerFactory
@@ -73,7 +27,10 @@ namespace pelican {
  * The factory must be configured by adding ChunkerType objects
  * which can create the necessary objects.
  * Create will then generate the object, passing down in its
- * instantiator the the appropriate configuration object
+ * instantiator the the appropriate configuration object.
+ *
+ * Use the PELICAN_DECLARE_CHUNKER macro in the chunker's source (.cpp)
+ * file to register the chunker with the factory.
  *
  * \code
  *
@@ -85,31 +42,58 @@ namespace pelican {
  *
  * // Set up the factory.
  * ChunkerFactory factory;
- * factory.registerChunkerType(new myChunkerType);
  *
  * // Create a chunker.
  * AbstractChunker* chunker = factory.create("myChunker");
-*
-* \endcode
-*/
+ *
+ * \endcode
+ */
 class ChunkerFactory : public AbstractFactory
 {
     public:
-        /// Creates the chunker factory.
-        ChunkerFactory(const Config* config, const Config::TreeAddress& base)
-        : AbstractFactory(config, base) {}
+        /// Abstract base class for object generators.
+        class AbstractGenerator
+        {
+            public:
+                AbstractGenerator(const QString& type) : _type(type) {}
+                virtual ~AbstractGenerator() {}
+                QString type() {return _type;}
+                virtual AbstractChunker* create(const ConfigNode& config) = 0;
 
-        ~ChunkerFactory() {}
+                /// Returns a reference to the type map.
+                static QHash<QString, AbstractGenerator*> types() {return _types;}
 
-        /// add a type of chunker to the chunker factory
-        // This will take ownership of the object and delete it on destruction
-        static void registerChunkerType(boost::shared_ptr<ChunkerClassGeneratorBase> ct);
+            protected:
+                static QHash<QString, AbstractGenerator*> _types;
 
-        /// create a configured object with tthe given name and type
+            private:
+                QString _type;
+        };
+
+        /// Template class generator for constructing objects.
+        template<class Type> class Generator : public AbstractGenerator
+        {
+            public:
+                /// Constructs a new Generator for the given type.
+                Generator(const QString& type) : AbstractGenerator(type) {
+                    _types.insert(type, this);
+                }
+
+                /// Creates a chunker of the given type.
+                AbstractChunker* create(const ConfigNode& config) {
+                    return new Type(config);
+                }
+        };
+
+    public:
+        ChunkerFactory(const Config* config, const Config::TreeAddress& base);
+        ~ChunkerFactory();
+
+        /// Create a configured object with the given name and type.
         virtual AbstractChunker* create(const QString& type, const QString& name="");
 
     private:
-        static QHash<QString, boost::shared_ptr<ChunkerClassGeneratorBase> > _types;
+        QList<AbstractChunker*> _objects;
 };
 
 } // namespace pelican
