@@ -105,9 +105,8 @@ void ChunkerFactoryTest::test_create()
         ChunkerFactory factory(&config, address);
 
 
-        //typedef ChunkerClassGenerator<TestUdpChunker> chunkerGenerator;
-        //factory.registerChunkerType(boost::shared_ptr<chunkerGenerator>(new chunkerGenerator("TestUdpChunker")));
-        PELICAN_DECLARE_CHUNKER(TestUdpChunker);
+        typedef ChunkerClassGenerator<TestUdpChunker> chunkerGenerator;
+        factory.registerChunkerType(boost::shared_ptr<chunkerGenerator>(new chunkerGenerator("TestUdpChunker")));
 
         AbstractChunker* chunker = factory.create("TestUdpChunker", "2");
 
