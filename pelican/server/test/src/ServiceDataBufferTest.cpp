@@ -71,4 +71,24 @@ void ServiceDataBufferTest::test_getWritable()
     }
 }
 
+void ServiceDataBufferTest::test_retiredData()
+{
+    {
+        // Use Case:
+        // dataRetired called on current
+        // Expect the data to remain current and not be retired
+        ServiceDataBuffer buffer("test");
+        {
+            WritableData data1 = buffer.getWritable(1);
+            CPPUNIT_ASSERT(data1.isValid());
+            // becomes active when it goes out of scope here
+        }
+    }
+    {
+        // Use Case:
+        // dataRetired called on non-current
+        // Expect the data to remain available, yet also become available for reuse
+    }
+}
+
 } // namespace pelican

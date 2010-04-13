@@ -1,5 +1,5 @@
 #include <QMutexLocker>
-#include "ServiceDataBuffer.h"
+#include "pelican/server/ServiceDataBuffer.h"
 #include "LockedData.h"
 #include "WritableData.h"
 #include "LockableData.h"
@@ -35,14 +35,6 @@ void ServiceDataBuffer::getData(LockedData& ld, const QString& version)
 {
     QMutexLocker lock(&_mutex);
     ld.setData(_data.value(version));
-}
-
-void ServiceDataBuffer::retireData(const QString& version)
-{
-    if ( _data.contains(version) )
-    {
-        delete _data.take(version);
-    }
 }
 
 void ServiceDataBuffer::getCurrent(LockedData& ld)

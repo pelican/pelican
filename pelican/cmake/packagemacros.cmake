@@ -122,6 +122,15 @@ MACRO( SUBPACKAGE package )
             DESTINATION ${INCLUDE_INSTALL_DIR}/${package}
             )
 
+    # generate public header files in the build tree
+    #set(SUBPACKAGE_PUBLIC_INCLUDE ${BUILD_INCLUDE_DIR}/${PROJECT_NAME}/${package})
+    #FILE(MAKE_DIRECTORY ${SUBPACKAGE_PUBLIC_INCLUDE})
+    #foreach(FILENAME ${public_headers})
+    #    add_custom_command( OUTPUT ${SUBPACKAGE_PUBLIC_INCLUDE}/${FILENAME} DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/${FILENAME}
+    #                        COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/${FILENAME} ${SUBPACKAGE_PUBLIC_INCLUDE}/${FILENAME} )
+    #    add_custom_target( ${FILENAME} ALL DEPENDS ${SUBPACKAGE_PUBLIC_INCLUDE}/${FILENAME} )
+    #endforeach(FILENAME ${public_headers})
+
     # process packages that it depends on
     set(SUBPACKAGE_${package}_DEPS ${ARGN})
     IF(SUBPACKAGE_${package}_DEPS)

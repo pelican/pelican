@@ -24,6 +24,7 @@ class ServiceDataBufferTest : public CppUnit::TestFixture
     public:
         CPPUNIT_TEST_SUITE( ServiceDataBufferTest );
         CPPUNIT_TEST( test_getWritable );
+        CPPUNIT_TEST( test_retiredData );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -32,6 +33,7 @@ class ServiceDataBufferTest : public CppUnit::TestFixture
 
         // Test Methods
         void test_getWritable();
+        void test_retiredData();
 
     public:
         ServiceDataBufferTest(  );
