@@ -1,12 +1,13 @@
-#include "DataReceiverTest.h"
-#include "DataReceiver.h"
-#include "TestChunker.h"
-#include "DataManager.h"
-#include "utility/pelicanTimer.h"
-#include <QThread>
-#include "utility/Config.h"
+#include "pelican/server/test/DataReceiverTest.h"
+#include "pelican/server/DataReceiver.h"
+#include "pelican/server/test/TestChunker.h"
+#include "pelican/server/DataManager.h"
+#include "pelican/utility/pelicanTimer.h"
+#include "pelican/utility/Config.h"
 
-#include "utility/memCheck.h"
+#include <QThread>
+
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 

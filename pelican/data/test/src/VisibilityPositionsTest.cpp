@@ -1,6 +1,6 @@
 #include "VisibilityPositionsTest.h"
 #include "VisibilityPositions.h"
-#include "utility/memCheck.h"
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 

@@ -1,7 +1,7 @@
 #ifndef CORRECTEDVISIBILITYDATA_H_
 #define CORRECTEDVISIBILITYDATA_H_
 
-#include "data/VisibilityData.h"
+#include "pelican/data/VisibilityData.h"
 #include <vector>
 
 /**

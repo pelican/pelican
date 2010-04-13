@@ -1,19 +1,19 @@
 #include <QStringList>
 #include <QtGlobal>
-#include "core/ModuleFactory.h"
-#include "utility/Config.h"
+#include "pelican/core/ModuleFactory.h"
+#include "pelican/utility/Config.h"
 
-#include "modules/AbstractModule.h"
-#include "modules/VisibilityPrinter.h"
-#include "modules/BasicFlagger.h"
-#include "modules/EmptyModule.h"
-#include "modules/ZenithCalibrater.h"
-#include "modules/ZenithImagerDft.h"
-#include "modules/ZenithModelVisibilities.h"
-#include "modules/ImageWriterFits.h"
-#include "modules/ImageCombiner.h"
+#include "pelican/modules/AbstractModule.h"
+#include "pelican/modules/VisibilityPrinter.h"
+#include "pelican/modules/BasicFlagger.h"
+#include "pelican/modules/EmptyModule.h"
+#include "pelican/modules/ZenithCalibrater.h"
+#include "pelican/modules/ZenithImagerDft.h"
+#include "pelican/modules/ZenithModelVisibilities.h"
+#include "pelican/modules/ImageWriterFits.h"
+#include "pelican/modules/ImageCombiner.h"
 
-#include "utility/memCheck.h"
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 
@@ -25,7 +25,7 @@ ModuleFactory::ModuleFactory(const Config *config)
 {
     _config = config;
     _configRoot.append(Config::NodeId("pipeline", ""));
-    _configRoot.append(Config::NodeId("modules", ""));
+    _configRoot.append(Config::NodeId("pelican/modules", ""));
 }
 
 /**

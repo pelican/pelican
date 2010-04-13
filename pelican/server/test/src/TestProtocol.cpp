@@ -1,10 +1,10 @@
 #include "TestProtocol.h"
-#include "comms/StreamData.h"
-#include "comms/ServerRequest.h"
-#include "comms/StreamDataRequest.h"
+#include "pelican/comms/StreamData.h"
+#include "pelican/comms/ServerRequest.h"
+#include "pelican/comms/StreamDataRequest.h"
 #include <iostream>
 
-#include "utility/memCheck.h"
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 

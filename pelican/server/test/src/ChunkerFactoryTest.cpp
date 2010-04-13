@@ -1,9 +1,9 @@
 #include "ChunkerFactoryTest.h"
 #include "ChunkerFactory.h"
 #include "TestUdpChunker.h"
-#include "utility/Config.h"
+#include "pelican/utility/Config.h"
 
-#include "utility/memCheck.h"
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 

@@ -3,8 +3,8 @@
 
 #include <QString>
 #include <QVector>
-#include "utility/Config.h"
-#include "utility/ConfigNode.h"
+#include "pelican/utility/Config.h"
+#include "pelican/utility/ConfigNode.h"
 
 class QDomElement;
 

@@ -1,7 +1,7 @@
 #ifndef FREQUENCYLIST_H
 #define FREQUENCYLIST_H
 
-#include "data/DataBlob.h"
+#include "pelican/data/DataBlob.h"
 #include <vector>
 
 /**
@@ -15,7 +15,7 @@ namespace pelican {
  *
  * @brief
  * Class to define the channel to frequency mapping.
- * 
+ *
  * @details
  * This class defines how channel frequency data is held. It inherits
  * the DataBlob base class.

@@ -1,14 +1,14 @@
-#include "utility/test/ConfigTest.h"
-#include "utility/TestConfig.h"
-#include "utility/Config.h"
-#include "utility/ConfigNode.h"
+#include "pelican/utility/test/ConfigTest.h"
+#include "pelican/utility/TestConfig.h"
+#include "pelican/utility/Config.h"
+#include "pelican/utility/ConfigNode.h"
 #include <QCoreApplication>
 #include <QTextStream>
 #include <QFile>
 #include <QDir>
 #include <iostream>
 
-#include "utility/memCheck.h"
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 
@@ -85,10 +85,10 @@ void ConfigTest::test_setConfiguration()
     // Expect that it exists.
     {
         Config::TreeAddress address;
-        address << Config::NodeId("modules", "");
+        address << Config::NodeId("pelican/modules", "");
         address << Config::NodeId("module", "test1");
         QDomElement e = config._set(address);
-        CPPUNIT_ASSERT(e.parentNode().toElement().tagName() == "modules");
+        CPPUNIT_ASSERT(e.parentNode().toElement().tagName() == "pelican/modules");
         CPPUNIT_ASSERT(e.tagName() == "module");
         CPPUNIT_ASSERT(e.attribute("name") == "test1");
     }
@@ -161,12 +161,12 @@ void ConfigTest::test_configFileRead()
     // that its children and their attributes are correct.
     // Expect that all of the parameters are found
     {
-        TestConfig config("testConfig.xml", "utility");
+        TestConfig config("testConfig.xml", "pelican/utility");
         Config::TreeAddress address;
-        address << Config::NodeId("modules", "");
+        address << Config::NodeId("pelican/modules", "");
         address << Config::NodeId("moduleType", "testA");
         QDomElement e = config._get(address);
-        CPPUNIT_ASSERT(e.parentNode().nodeName() == "modules");
+        CPPUNIT_ASSERT(e.parentNode().nodeName() == "pelican/modules");
         CPPUNIT_ASSERT(e.childNodes().count() == 3);
         CPPUNIT_ASSERT(e.childNodes().at(0).nodeName() == "paramA");
         CPPUNIT_ASSERT(e.childNodes().at(1).nodeName() == "paramB");
@@ -183,12 +183,12 @@ void ConfigTest::test_configFileRead()
     // Ask for the address of another module to to check this exists too.
     // Expect that the module node is found but has no children.
     {
-        TestConfig config("testConfig.xml", "utility");
+        TestConfig config("testConfig.xml", "pelican/utility");
         Config::TreeAddress address;
-        address << Config::NodeId("modules", "");
+        address << Config::NodeId("pelican/modules", "");
         address << Config::NodeId("moduleType", "default::testA");
         QDomElement e = config._get(address);
-        CPPUNIT_ASSERT(e.parentNode().nodeName() == "modules");
+        CPPUNIT_ASSERT(e.parentNode().nodeName() == "pelican/modules");
         CPPUNIT_ASSERT(e.nodeName() == "moduleType");
         CPPUNIT_ASSERT(e.childNodes().count() == 0);
     }
@@ -198,7 +198,7 @@ void ConfigTest::test_configFileRead()
     // Expect that a parse error exception is thrown
     {
         try {
-            TestConfig config("emptyConfig.xml", "utility");
+            TestConfig config("emptyConfig.xml", "pelican/utility");
         }
         catch (QString err) {
             CPPUNIT_ASSERT(err.startsWith("Config: Parse error"));
@@ -210,7 +210,7 @@ void ConfigTest::test_configFileRead()
     // Expect to throw an exception.
     {
         try {
-            TestConfig config("badConfig.xml", "utility");
+            TestConfig config("badConfig.xml", "pelican/utility");
         }
         catch (QString err) {
             CPPUNIT_ASSERT(err.startsWith("Config: Invalid doctype"));
@@ -221,13 +221,13 @@ void ConfigTest::test_configFileRead()
     // Try to extract the named parameters.
     // Expect that all the parameters are found.
     {
-        TestConfig config("testConfig.xml", "utility");
+        TestConfig config("testConfig.xml", "pelican/utility");
         Config::TreeAddress address;
-        address << Config::NodeId("modules", "");
+        address << Config::NodeId("pelican/modules", "");
         address << Config::NodeId("moduleType", "testA");
         QDomElement e = config._get(address);
 
-        CPPUNIT_ASSERT(e.parentNode().nodeName() == "modules");
+        CPPUNIT_ASSERT(e.parentNode().nodeName() == "pelican/modules");
         CPPUNIT_ASSERT(e.namedItem("paramA").toElement().attribute("value") == "1");
         CPPUNIT_ASSERT(e.namedItem("paramB").toElement().attribute("x") == "1024");
         CPPUNIT_ASSERT(e.namedItem("paramB").toElement().attribute("name") == "some_coords");
@@ -253,7 +253,7 @@ void ConfigTest::test_configFromString()
 
     Config::TreeAddress address;
     address << Config::NodeId("pipeline", "");
-    address << Config::NodeId("modules", "");
+    address << Config::NodeId("pelican/modules", "");
     address << Config::NodeId("moduleType", "test");
     ConfigNode configNode = config.get(address);
 
@@ -273,7 +273,7 @@ void ConfigTest::test_testConfig()
     // Test configuration file that exists
     // Expect not to throw.
     {
-        CPPUNIT_ASSERT_NO_THROW(TestConfig("testConfig.xml", "utility"));
+        CPPUNIT_ASSERT_NO_THROW(TestConfig("testConfig.xml", "pelican/utility"));
     }
 
     // Use case:
@@ -282,7 +282,7 @@ void ConfigTest::test_testConfig()
     {
         CPPUNIT_ASSERT_THROW_MESSAGE(
                 "TestConfig: Configuration file noConfig.xml not found.",
-                TestConfig("noConfig.xml", "utility"),
+                TestConfig("noConfig.xml", "pelican/utility"),
                 QString
         );
     }

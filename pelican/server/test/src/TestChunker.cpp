@@ -1,11 +1,12 @@
-#include "TestChunker.h"
+#include "pelican/server/test/TestChunker.h"
+
 #include <QCoreApplication>
 #include <QBuffer>
 #include <QTimer>
 
 #include <iostream>
 
-#include "utility/memCheck.h"
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 
@@ -31,7 +32,7 @@ TestChunker::TestChunker(const ConfigNode& config)
 {
     _badSocket = false;
     _nextCount = 0;
-    _size = config.getOption("data", "chunkSize", "512").toUInt();
+    _size = config.getOption("pelican/data", "chunkSize", "512").toUInt();
     _timer = new QTimer;
     connect(_timer, SIGNAL(timeout()), this, SLOT(_start()));
 }

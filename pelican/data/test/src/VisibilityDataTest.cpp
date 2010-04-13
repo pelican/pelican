@@ -1,6 +1,6 @@
 #include "VisibilityDataTest.h"
-#include "data/VisibilityData.h"
-#include "utility/memCheck.h"
+#include "pelican/data/VisibilityData.h"
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 

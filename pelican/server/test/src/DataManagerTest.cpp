@@ -1,14 +1,14 @@
-#include "DataManagerTest.h"
-#include "DataManager.h"
-#include "WritableData.h"
-#include "utility/Config.h"
+#include "pelican/server/test/DataManagerTest.h"
+#include "pelican/server/DataManager.h"
+#include "pelican/server/WritableData.h"
+#include "pelican/utility/Config.h"
 
-#include "utility/memCheck.h"
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 
 CPPUNIT_TEST_SUITE_REGISTRATION( DataManagerTest );
-// class DataManagerTest 
+// class DataManagerTest
 DataManagerTest::DataManagerTest()
     : CppUnit::TestFixture()
 {

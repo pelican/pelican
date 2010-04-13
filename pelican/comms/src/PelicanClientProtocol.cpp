@@ -1,24 +1,24 @@
-#include "PelicanClientProtocol.h"
-#include "Data.h"
-#include "StreamData.h"
-#include "ServerRequest.h"
-#include "ServerResponse.h"
-#include "ServiceDataResponse.h"
-#include "StreamDataResponse.h"
-#include "ServiceDataRequest.h"
-#include "StreamDataRequest.h"
-#include "data/DataRequirements.h"
+#include "pelican/comms/PelicanClientProtocol.h"
+#include "pelican/comms/Data.h"
+#include "pelican/comms/StreamData.h"
+#include "pelican/comms/ServerRequest.h"
+#include "pelican/comms/ServerResponse.h"
+#include "pelican/comms/ServiceDataResponse.h"
+#include "pelican/comms/StreamDataResponse.h"
+#include "pelican/comms/ServiceDataRequest.h"
+#include "pelican/comms/StreamDataRequest.h"
+#include "pelican/data/DataRequirements.h"
 #include <QByteArray>
 #include <QAbstractSocket>
 #include <QDataStream>
 #include <iostream>
 
-#include "utility/memCheck.h"
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 
 
-// class PelicanClientProtocol 
+// class PelicanClientProtocol
 PelicanClientProtocol::PelicanClientProtocol()
     : AbstractClientProtocol()
 {
@@ -135,7 +135,7 @@ boost::shared_ptr<ServerResponse> PelicanClientProtocol::receive(QAbstractSocket
             }
             break;
         default:
-            break; 
+            break;
     }
     return boost::shared_ptr<ServerResponse>(new ServerResponse(ServerResponse::Error, "PelicanClientProtocol: Unknown type passed"));
 }

@@ -1,7 +1,7 @@
 #ifndef FILEDATACLIENT_H
 #define FILEDATACLIENT_H
 
-#include "core/AbstractDataClient.h"
+#include "pelican/core/AbstractDataClient.h"
 #include <QHash>
 #include <QString>
 

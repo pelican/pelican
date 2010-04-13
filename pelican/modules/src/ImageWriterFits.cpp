@@ -1,7 +1,7 @@
-#include "modules/ImageWriterFits.h"
-#include "utility/constants.h"
-#include "utility/ConfigNode.h"
-#include "data/ImageData.h"
+#include "pelican/modules/ImageWriterFits.h"
+#include "pelican/utility/constants.h"
+#include "pelican/utility/ConfigNode.h"
+#include "pelican/data/ImageData.h"
 #include <QDateTime>
 #include <QFile>
 #include <QFileInfo>
@@ -9,7 +9,7 @@
 #include <typeinfo>
 #include <iostream>
 
-#include "utility/memCheck.h"
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 
@@ -228,8 +228,8 @@ void ImageWriterFits::_writeHeader(ImageData* image)
 
     // Amplitude range (only valid if not an image cube).
     if (image->nChannels() == 1 && image->nPolarisations() == 1) {
-        _writeKey("DATAMIN", image->min(0, 0), "Minimum pixel value");
-        _writeKey("DATAMAX", image->max(0, 0), "Maximum pixel value");
+        _writeKey("pelican/dataMIN", image->min(0, 0), "Minimum pixel value");
+        _writeKey("pelican/dataMAX", image->max(0, 0), "Maximum pixel value");
     }
 
     // x (l) axis keywords.

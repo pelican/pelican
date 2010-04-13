@@ -1,7 +1,7 @@
 #ifndef VISIBILITYPOSITIONS_H
 #define VISIBILITYPOSITIONS_H
 
-#include "data/DataBlob.h"
+#include "pelican/data/DataBlob.h"
 #include <vector>
 
 /**
@@ -12,10 +12,10 @@ namespace pelican {
 
 /**
  * @class VisibilityPositionsData
- *  
+ *
  * @brief
  * Visibility positions container class.
- * 
+ *
  * @details
  * This class holds visibility positions for a telescope.
  * Positions are stored for a reference frequency channel and scaled upon demand.

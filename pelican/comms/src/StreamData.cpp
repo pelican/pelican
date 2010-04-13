@@ -1,12 +1,12 @@
-#include "StreamData.h"
-#include "Data.h"
+#include "pelican/comms/StreamData.h"
+#include "pelican/comms/Data.h"
 #include <iostream>
 
-#include "utility/memCheck.h"
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 
-// class StreamData 
+// class StreamData
 StreamData::StreamData(const QString& name, void* data, size_t size)
     : Data(name, data, size)
 {
@@ -54,12 +54,12 @@ bool StreamData::isValid() const
     return rv;
 }
 
-bool StreamData::operator==(const StreamData& sd) const 
+bool StreamData::operator==(const StreamData& sd) const
 {
     if( _associateData.size() != sd._associateData.size() )
         return false;
     bool rv = Data::operator==(sd);
-    for( int i = 0; i < _associateData.size(); ++i ) 
+    for( int i = 0; i < _associateData.size(); ++i )
     {
         rv &= _associateData[i]->operator==(*(sd._associateData[i]));
     }

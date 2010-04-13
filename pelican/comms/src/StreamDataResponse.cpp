@@ -1,6 +1,6 @@
-#include "StreamDataResponse.h"
+#include "pelican/comms/StreamDataResponse.h"
 
-#include "utility/memCheck.h"
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 

@@ -1,16 +1,16 @@
-#include "DataTypesTest.h"
-#include "DataTypes.h"
-#include "adapters/test/TestAdapter.h"
-#include "adapters/test/TestStreamAdapter.h"
-#include "data/DataRequirements.h"
+#include "pelican/core/test/DataTypesTest.h"
+#include "pelican/core/DataTypes.h"
+#include "pelican/adapters/test/TestAdapter.h"
+#include "pelican/adapters/test/TestStreamAdapter.h"
+#include "pelican/data/DataRequirements.h"
 
-#include "utility/memCheck.h"
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 
 CPPUNIT_TEST_SUITE_REGISTRATION( DataTypesTest );
 /**
- *@details DataTypesTest 
+ *@details DataTypesTest
  */
 DataTypesTest::DataTypesTest()
     : CppUnit::TestFixture()

@@ -1,10 +1,10 @@
 #ifndef ZENITHMODELVISIBILITIES_H
 #define ZENITHMODELVISIBILITIES_H
 
-#include "modules/AbstractModule.h"
-#include "data/SiteData.h"
-#include "data/CelestialData.h"
-#include "data/ModelVisibilityData.h"
+#include "pelican/modules/AbstractModule.h"
+#include "pelican/data/SiteData.h"
+#include "pelican/data/CelestialData.h"
+#include "pelican/data/ModelVisibilityData.h"
 #include <vector>
 
 

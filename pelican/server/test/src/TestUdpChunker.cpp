@@ -1,16 +1,15 @@
-#include "TestUdpChunker.h"
+#include "pelican/server/test/TestUdpChunker.h"
+#include "pelican/utility/Config.h"
 
 #include <QCoreApplication>
 #include <QBuffer>
 #include <QTimer>
 #include <QUdpSocket>
 #include <iostream>
-#include "utility/Config.h"
 
-#include "utility/memCheck.h"
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
-
 
 /**
  * @details
@@ -25,8 +24,8 @@ TestUdpChunker::TestUdpChunker(const ConfigNode& config)
     // Get configuration options.
     setHost(config.getOption("connection", "host"));
     setPort(qint16(config.getOption("connection", "port").toUInt()));
-    setType(config.getOption("data", "type"));
-    _chunkSize = config.getOption("data", "chunkSize").toUInt();
+    setType(config.getOption("pelican/data", "type"));
+    _chunkSize = config.getOption("pelican/data", "chunkSize").toUInt();
 
     // Some sanity checking.
     if (type().isEmpty())

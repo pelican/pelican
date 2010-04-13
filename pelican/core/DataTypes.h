@@ -3,8 +3,8 @@
 
 #include <QString>
 #include <QList>
-#include "data/DataRequirements.h"
-#include "adapters/AbstractAdapter.h"
+#include "pelican/data/DataRequirements.h"
+#include "pelican/adapters/AbstractAdapter.h"
 
 /**
  * @file DataTypes.h

@@ -1,13 +1,13 @@
-#include "DataTest.h"
-#include "Data.h"
+#include "pelican/comms/test/DataTest.h"
+#include "pelican/comms/Data.h"
 
 
-#include "utility/memCheck.h"
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 
 CPPUNIT_TEST_SUITE_REGISTRATION( DataTest );
-// class DataTest 
+// class DataTest
 DataTest::DataTest()
     : CppUnit::TestFixture()
 {

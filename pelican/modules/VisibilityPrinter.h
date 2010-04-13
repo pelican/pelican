@@ -1,7 +1,7 @@
 #ifndef VISIBILITYPRINTER_H
 #define VISIBILITYPRINTER_H
 
-#include "modules/AbstractModule.h"
+#include "pelican/modules/AbstractModule.h"
 #include <QHash>
 #include <QString>
 

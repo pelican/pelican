@@ -1,14 +1,15 @@
 /*
- * pelicanserver
+ * pelican server
  * Main server executable
  */
 
+#include "pelican/server/PelicanServer.h"
+#include "pelican/server/DataManager.h"
+#include "pelican/server/PelicanPortServer.h"
+#include "pelican/comms/PelicanProtocol.h"
+#include "pelican/utility/Config.h"
+
 #include <QCoreApplication>
-#include "DataManager.h"
-#include "PelicanServer.h"
-#include "PelicanPortServer.h"
-#include "comms/PelicanProtocol.h"
-#include "utility/Config.h"
 
 using namespace pelican;
 

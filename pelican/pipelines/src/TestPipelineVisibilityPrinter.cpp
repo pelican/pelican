@@ -1,8 +1,8 @@
 #include "TestPipelineVisibilityPrinter.h"
-#include "modules/VisibilityPrinter.h"
-#include "data/VisibilityData.h"
+#include "pelican/modules/VisibilityPrinter.h"
+#include "pelican/data/VisibilityData.h"
 
-#include "utility/memCheck.h"
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 

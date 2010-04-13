@@ -1,11 +1,11 @@
 #ifndef ASTROMETRYFAST_H
 #define ASTROMETRYFAST_H
 
-#include "AbstractAstrometry.h"
-#include "data/CelestialData.h"
-#include "data/SiteData.h"
-#include "data/Vector2.h"
-#include "data/Vector3.h"
+#include "pelican/modules/AbstractAstrometry.h"
+#include "pelican/data/CelestialData.h"
+#include "pelican/data/SiteData.h"
+#include "pelican/data/Vector2.h"
+#include "pelican/data/Vector3.h"
 
 /**
  * @file AstrometryFast.h
@@ -19,7 +19,7 @@ namespace pelican {
  * @brief
  * Provides fast astrometric coordinate transformations accurate to
  * less than 2 arcsec.
- * 
+ *
  * @details
  * This class implements the fast astrometric transformations described in
  * "Concise telescope pointing algorithm using IAU 2000 precepts",
@@ -42,7 +42,7 @@ namespace pelican {
  * - Frame bias (negligible).
  * - Polar motion (this is below 0.5 arcsec).
  * - Diurnal aberration and parallax (this is below 0.3 arcsec).
- * 
+ *
  * The approximations in these routines produce results that are accurate to
  * less than 2 arcsec for the whole of the 21st Century. The RMS error is less
  * than 1 arcsec.
@@ -99,4 +99,4 @@ class AstrometryFast : public AbstractAstrometry
 
 } // namespace pelican
 
-#endif // ASTROMETRYFAST_H 
+#endif // ASTROMETRYFAST_H

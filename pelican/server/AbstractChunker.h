@@ -1,9 +1,12 @@
 #ifndef ABSTRACTCHUNKER_H
 #define ABSTRACTCHUNKER_H
+
+#include "pelican/server/DataManager.h"
+#include "pelican/server/WritableData.h"
+
 #include <QUdpSocket>
 #include <QString>
-#include "DataManager.h"
-#include "WritableData.h"
+
 
 /**
  * @file AbstractChunker.h
@@ -14,7 +17,7 @@ namespace pelican {
 
 /**
  * @class AbstractChunker
- *  
+ *
  * @brief
  * Base class for all chunker plug-ins.
  *
@@ -55,7 +58,7 @@ class AbstractChunker
 
         /// Sets th type name to be associated with this data.
         void setType(const QString& type) { _type = type; }
-        
+
         /// Return the type name to be associated with this data.
         const QString& type() const {return _type;}
 
@@ -89,4 +92,4 @@ class AbstractChunker
 
 } // namespace pelican
 
-#endif // ABSTRACTCHUNKER_H 
+#endif // ABSTRACTCHUNKER_H

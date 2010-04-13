@@ -3,9 +3,9 @@
 
 #include <QString>
 
-#include "utility/AbstractFactory.h"
-#include "server/AbstractChunker.h"
-#include "server/ChunkerClassGenerator.hpp"
+#include "pelican/utility/AbstractFactory.h"
+#include "pelican/server/AbstractChunker.h"
+#include "pelican/server/ChunkerClassGenerator.hpp"
 
 /**
  * @file ChunkerFactory.h

@@ -1,12 +1,11 @@
-#include "ServiceDataRequest.h"
+#include "pelican/comms/ServiceDataRequest.h"
 
-
-#include "utility/memCheck.h"
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 
 
-// class ServiceDataRequest 
+// class ServiceDataRequest
 ServiceDataRequest::ServiceDataRequest()
     : ServerRequest(ServerRequest::ServiceData)
 {

@@ -1,10 +1,10 @@
-#include "modules/AbstractModule.h"
-#include "core/AbstractPipeline.h"
-#include "core/ModuleFactory.h"
-#include "core/PipelineApplication.h"
-#include "core/PipelineDriver.h"
+#include "pelican/modules/AbstractModule.h"
+#include "pelican/core/AbstractPipeline.h"
+#include "pelican/core/ModuleFactory.h"
+#include "pelican/core/PipelineApplication.h"
+#include "pelican/core/PipelineDriver.h"
 #include <QtGlobal>
-#include "utility/memCheck.h"
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 

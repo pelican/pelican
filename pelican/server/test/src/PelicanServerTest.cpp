@@ -1,17 +1,18 @@
-#include "PelicanServerTest.h"
+#include "pelican/server/test/PelicanServerTest.h"
 
-#include "PelicanServer.h"
-#include "PelicanTestClient.h"
-#include "TestProtocol.h"
-#include "DataManager.h"
-#include "TestChunker.h"
-#include "data/DataRequirements.h"
+#include "pelican/server/test/PelicanTestClient.h"
+#include "pelican/server/PelicanServer.h"
+#include "pelican/server/test/TestProtocol.h"
+#include "pelican/server/DataManager.h"
+#include "pelican/server/test/TestChunker.h"
+#include "pelican/data/DataRequirements.h"
+#include "pelican/utility/Config.h"
+
 #include <QCoreApplication>
 #include <QThread>
 #include <iostream>
-#include "utility/Config.h"
 
-#include "utility/memCheck.h"
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 

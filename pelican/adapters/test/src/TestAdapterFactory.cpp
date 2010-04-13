@@ -2,7 +2,7 @@
 #include "TestAdapter.h"
 #include "TestStreamAdapter.h"
 
-#include "utility/memCheck.h"
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 

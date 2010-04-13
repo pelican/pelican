@@ -1,16 +1,16 @@
-#include "DataTypes.h"
-#include "adapters/AbstractStreamAdapter.h"
-#include "adapters/AbstractServiceAdapter.h"
-#include "data/DataRequirements.h"
+#include "pelican/core/DataTypes.h"
+#include "pelican/adapters/AbstractStreamAdapter.h"
+#include "pelican/adapters/AbstractServiceAdapter.h"
+#include "pelican/data/DataRequirements.h"
 
 
-#include "utility/memCheck.h"
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 
 
 /**
- *@details DataTypes 
+ *@details DataTypes
  */
 DataTypes::DataTypes()
 {

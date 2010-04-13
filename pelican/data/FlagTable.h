@@ -1,7 +1,7 @@
 #ifndef FLAGTABLE_H
 #define FLAGTABLE_H
 
-#include "data/AntennaMatrixData.h"
+#include "pelican/data/AntennaMatrixData.h"
 #include <algorithm>
 #include <vector>
 

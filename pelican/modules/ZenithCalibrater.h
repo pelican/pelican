@@ -5,9 +5,9 @@
  * @file ZenithCalibrater.h
  */
 
-#include "modules/AbstractModule.h"
-#include "data/Source.h"
-#include "data/CorrectedVisibilityData.h"
+#include "pelican/modules/AbstractModule.h"
+#include "pelican/data/Source.h"
+#include "pelican/data/CorrectedVisibilityData.h"
 #include <vector>
 
 namespace pelican {

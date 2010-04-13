@@ -1,12 +1,12 @@
-#include "pipelines/test/TestPipelineMultipleImagesTest.h"
-#include "core/PipelineApplication.h"
-#include "core/AbstractPipeline.h"
-#include "pipelines/TestPipelineMultipleImages.h"
+#include "pelican/pipelines/test/TestPipelineMultipleImagesTest.h"
+#include "pelican/core/PipelineApplication.h"
+#include "pelican/core/AbstractPipeline.h"
+#include "pelican/pipelines/TestPipelineMultipleImages.h"
 #include <QCoreApplication>
-#include "utility/pelicanTimer.h"
-#include "utility/TestConfig.h"
+#include "pelican/utility/pelicanTimer.h"
+#include "pelican/utility/TestConfig.h"
 
-#include "utility/memCheck.h"
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 

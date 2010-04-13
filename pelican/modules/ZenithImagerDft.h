@@ -5,9 +5,9 @@
  * @file ZenithImagerDft.h
  */
 
-#include "modules/AbstractModule.h"
-#include "data/ImageData.h"
-#include "data/VisibilityData.h"
+#include "pelican/modules/AbstractModule.h"
+#include "pelican/data/ImageData.h"
+#include "pelican/data/VisibilityData.h"
 #include <vector>
 
 namespace pelican {

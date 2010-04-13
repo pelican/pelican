@@ -1,26 +1,28 @@
-#include "SessionTest.h"
+#include "pelican/server/test/SessionTest.h"
+
+#include "pelican/server/Session.h"
+#include "pelican/server/DataManager.h"
+#include "pelican/server/LockableStreamData.h"
+#include "pelican/server/WritableData.h"
+#include "pelican/server/StreamDataBuffer.h"
+#include "pelican/data/DataRequirements.h"
+#include "pelican/comms/Data.h"
+#include "pelican/comms/StreamData.h"
+#include "pelican/comms/ServerRequest.h"
+#include "pelican/comms/ServiceDataRequest.h"
+#include "pelican/comms/StreamDataRequest.h"
+#include "pelican/server/test/TestProtocol.h"
+#include "pelican/utility/pelicanTimer.h"
+#include "pelican/utility/Config.h"
+
+#include <QTime>
 #include <QBuffer>
 #include <QByteArray>
 #include <QDataStream>
 #include <QCoreApplication>
-#include "Session.h"
-#include "DataManager.h"
-#include "LockableStreamData.h"
-#include "WritableData.h"
-#include "StreamDataBuffer.h"
-#include "data/DataRequirements.h"
-#include "comms/Data.h"
-#include "comms/StreamData.h"
-#include "comms/ServerRequest.h"
-#include "comms/ServiceDataRequest.h"
-#include "comms/StreamDataRequest.h"
-#include "TestProtocol.h"
-#include "utility/pelicanTimer.h"
-#include "utility/Config.h"
-#include <QTime>
 #include <iostream>
 
-#include "utility/memCheck.h"
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 
@@ -193,7 +195,7 @@ void SessionTest::test_streamData()
         // Use Case:
         // Request StreamData for a stream that is not supported by the server.
         // Expect error message to be returned.
-        DataRequirements requirements;   
+        DataRequirements requirements;
         requirements.setStreamData("NotSupported");
         StreamDataRequest request;
         request.addDataOption(requirements);
@@ -201,7 +203,7 @@ void SessionTest::test_streamData()
             _session->processStreamDataRequest(request);
         }
         catch (QString error) {
-            CPPUNIT_ASSERT(error.contains("Data requested not supported by server"));
+            CPPUNIT_ASSERT(error.contains("pelican/data requested not supported by server"));
         }
     }
 
@@ -229,7 +231,7 @@ void SessionTest::test_streamData()
         // Expect to return the data.
         DataRequirements requirements;
         requirements.setStreamData(stream1);
-        
+
         StreamDataRequest request;
         request.addDataOption(requirements);
         _injectData(streambuffer);

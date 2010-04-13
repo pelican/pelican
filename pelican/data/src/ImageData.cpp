@@ -1,4 +1,4 @@
-#include "data/ImageData.h"
+#include "pelican/data/ImageData.h"
 #include <algorithm>
 #include <QString>
 #include <iomanip>

@@ -1,16 +1,16 @@
-#include "core/FileDataClient.h"
-#include "adapters/AbstractServiceAdapter.h"
-#include "adapters/AbstractStreamAdapter.h"
-#include "adapters/AdapterFactory.h"
-#include "data/DataRequirements.h"
-#include "data/DataBlobFactory.h"
-#include "utility/ConfigNode.h"
+#include "pelican/core/FileDataClient.h"
+#include "pelican/adapters/AbstractServiceAdapter.h"
+#include "pelican/adapters/AbstractStreamAdapter.h"
+#include "pelican/adapters/AdapterFactory.h"
+#include "pelican/data/DataRequirements.h"
+#include "pelican/data/DataBlobFactory.h"
+#include "pelican/utility/ConfigNode.h"
 
 #include <QFile>
 #include <QSet>
 #include <QtGlobal>
 
-#include "utility/memCheck.h"
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 
@@ -90,7 +90,7 @@ QHash<QString, DataBlob*> FileDataClient::getData(QHash<QString, DataBlob*>& dat
 void FileDataClient::_getConfig()
 {
     // Get all the filenames for each data type.
-    _fileNames = configNode().getOptionHash("data", "type", "file");
+    _fileNames = configNode().getOptionHash("pelican/data", "type", "file");
 }
 
 } // namespace pelican

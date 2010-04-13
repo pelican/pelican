@@ -1,6 +1,6 @@
-#include "AbstractLockable.h"
+#include "pelican/server/AbstractLockable.h"
 
-#include "utility/memCheck.h"
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 

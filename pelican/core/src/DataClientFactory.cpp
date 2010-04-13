@@ -1,13 +1,13 @@
-#include "DataClientFactory.h"
-#include "FileDataClient.h"
-#include "PelicanServerClient.h"
-#include "DataTypes.h"
-#include "data/DataRequirements.h"
-#include "adapters/AdapterFactory.h"
+#include "pelican/core/DataClientFactory.h"
+#include "pelican/core/FileDataClient.h"
+#include "pelican/core/PelicanServerClient.h"
+#include "pelican/core/DataTypes.h"
+#include "pelican/data/DataRequirements.h"
+#include "pelican/adapters/AdapterFactory.h"
 
 #include <iostream>
 
-#include "utility/memCheck.h"
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 
@@ -53,7 +53,7 @@ AbstractDataClient* DataClientFactory::create(const QString& type,
     Config::TreeAddress address = configRoot();
     address.append(QPair<QString, QString>(type, ""));
     ConfigNode element = _config->get(address);
-    QHash<QString, QString> adapterNames = element.getOptionHash("data",
+    QHash<QString, QString> adapterNames = element.getOptionHash("pelican/data",
             "type", "adapter");
 
     // Construct the adapters and add them to the DataTypes structure
@@ -64,7 +64,7 @@ AbstractDataClient* DataClientFactory::create(const QString& type,
         foreach (const QString& dataType, all)
         {
             if(!adapterNames.contains(dataType))
-                throw("DataClientFactory: Unable to find adapter for data"
+                throw("pelican/dataClientFactory: Unable to find adapter for data"
                         " type \"" + dataType + "\"");
             AbstractAdapter* adapter =
                     _adapterFactory->create(adapterNames.value(dataType), "");
@@ -98,7 +98,7 @@ AbstractDataClient* DataClientFactory::create(const QString& type,
                 requirements));
     }
     else {
-        throw QString("DataClientFactory: Unknown data client type: ") + type;
+        throw QString("pelican/dataClientFactory: Unknown data client type: ") + type;
     }
     return _clients.last();
 }

@@ -1,12 +1,11 @@
-#include "DataReceiver.h"
+#include "pelican/server/DataReceiver.h"
+#include "pelican/server/AbstractChunker.h"
+#include "pelican/utility/pelicanTimer.h"
 #include <QIODevice>
 #include <QTimer>
 #include <iostream>
-#include "AbstractChunker.h"
-#include "utility/pelicanTimer.h"
 
-
-#include "utility/memCheck.h"
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 
@@ -17,9 +16,9 @@ namespace pelican {
 DataReceiver::DataReceiver(AbstractChunker* chunker, DataManager* dm, QObject* parent)
     : QThread(parent), _chunker(chunker), _dm(dm)
 {
-    std::cout << "DataReceiver Constructor" << std::endl;
+    std::cout << "pelican/dataReceiver Constructor" << std::endl;
     Q_ASSERT( dm != 0 );
-    if ( !chunker ) throw QString("DataReceiver: Invalid Chunker");
+    if ( !chunker ) throw QString("pelican/dataReceiver: Invalid Chunker");
     _device = 0;
     _port = 0;
 }
@@ -32,7 +31,7 @@ DataReceiver::DataReceiver(AbstractChunker* chunker, DataManager* dm, QObject* p
 DataReceiver::~DataReceiver()
 {
     // TODO is this safe?
-    std::cout << "DataReceiver Destructor" << std::endl;
+    std::cout << "pelican/dataReceiver Destructor" << std::endl;
     // If the thread has started, call quit() to exit the event loop.
     if (isRunning()) while (!isFinished()) quit();
     wait();
@@ -53,10 +52,10 @@ void DataReceiver::run()
 {
     // Open up the device to use.
     _device = _chunker->newDevice();
-    std::cout << "DataReceiver::run" << std::endl;
+    std::cout << "pelican/dataReceiver::run" << std::endl;
     if( _device )
     {
-        std::cout << "DataReceiver::run(): Socket OK" << std::endl;
+        std::cout << "pelican/dataReceiver::run(): Socket OK" << std::endl;
         Q_ASSERT( connect(_device, SIGNAL( readyRead() ),
                     this, SLOT(processIncomingData()) ) );
         exec(); // Enter event loop here.
@@ -84,7 +83,7 @@ void DataReceiver::listen()
  */
 void DataReceiver::processIncomingData()
 {
-//     std::cout << "DataReceiver::processIncomingData()" << std::endl;
+//     std::cout << "pelican/dataReceiver::processIncomingData()" << std::endl;
     _chunker->next( _device );
 }
 

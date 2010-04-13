@@ -1,12 +1,13 @@
-#include <QMutexLocker>
 #include "pelican/server/ServiceDataBuffer.h"
-#include "LockedData.h"
-#include "WritableData.h"
-#include "LockableData.h"
+
+#include "pelican/server/LockedData.h"
+#include "pelican/server/WritableData.h"
+#include "pelican/server/LockableData.h"
+
+#include <QMutexLocker>
 #include <stdlib.h>
 
-
-#include "utility/memCheck.h"
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 

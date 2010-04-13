@@ -1,12 +1,13 @@
-#include "LockableStreamData.h"
-#include "LockableData.h"
-#include "LockedData.h"
-#include "comms/Data.h"
-#include "comms/StreamData.h"
+#include "pelican/server/LockableStreamData.h"
+
+#include "pelican/server/LockableData.h"
+#include "pelican/server/LockedData.h"
+#include "pelican/comms/Data.h"
+#include "pelican/comms/StreamData.h"
 
 #include <iostream>
 
-#include "utility/memCheck.h"
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 
@@ -53,9 +54,9 @@ bool LockableStreamData::isValid(const QSet<QString>& associates) const
     bool rv = data()->isValid();
     foreach(const QString& assoc, associates )
     {
-        foreach(LockedData data, _serviceData ) 
+        foreach(LockedData data, _serviceData )
         {
-            if( data.name() == assoc ) 
+            if( data.name() == assoc )
                 rv = rv && data.isValid();
         }
     }
@@ -69,8 +70,8 @@ void LockableStreamData::reset()
     streamData()->reset();
 }
 
-StreamData* LockableStreamData::streamData() const { 
-    return static_cast<StreamData*>(_data.get()); 
+StreamData* LockableStreamData::streamData() const {
+    return static_cast<StreamData*>(_data.get());
 }
 
 } // namespace pelican

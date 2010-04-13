@@ -1,14 +1,14 @@
-#include "StreamDataTest.h"
-#include "StreamData.h"
-#include "Data.h"
+#include "pelican/comms/test/StreamDataTest.h"
 
+#include "pelican/comms/StreamData.h"
+#include "pelican/comms/Data.h"
 
-#include "utility/memCheck.h"
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 
 CPPUNIT_TEST_SUITE_REGISTRATION( StreamDataTest );
-// class StreamDataTest 
+// class StreamDataTest
 StreamDataTest::StreamDataTest()
     : CppUnit::TestFixture()
 {
@@ -46,7 +46,7 @@ void StreamDataTest::test_isValid()
         // Use Case:
         // Stream Data is valid, but associate Data is not
         // expect invalid
-        Data d; 
+        Data d;
         {
             StreamData sd("",(void*)1000,10);
             CPPUNIT_ASSERT( ! d.isValid() );

@@ -79,7 +79,7 @@ set (BUILD_SHARED_LIBS TRUE)
 # === Compiler defaults
 include_directories(
     ${PROJECT_SOURCE_DIR}/..
-    ${PROJECT_SOURCE_DIR}
+#    ${PROJECT_SOURCE_DIR}
 )
 set(CPP_PLATFORM_LIBS ${CMAKE_THREAD_LIBS_INIT})
 set(CMAKE_CXX_FLAGS_RELEASE "-O2")

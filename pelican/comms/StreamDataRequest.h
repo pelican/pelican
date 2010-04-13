@@ -2,8 +2,8 @@
 #define STREAMDATAREQUEST_H
 
 #include <QVector>
-#include "ServerRequest.h"
-#include "data/DataRequirements.h"
+#include "pelican/comms/ServerRequest.h"
+#include "pelican/data/DataRequirements.h"
 #include <iostream>
 
 /**
@@ -60,4 +60,4 @@ typedef StreamDataRequest::DataRequirementsIterator DataRequirementsIterator;
 
 } // namespace pelican
 
-#endif // STREAMDATAREQUEST_H 
+#endif // STREAMDATAREQUEST_H

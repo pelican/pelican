@@ -1,7 +1,7 @@
 #ifndef VISIBILITYDATA_H
 #define VISIBILITYDATA_H
 
-#include "data/AntennaMatrixData.h"
+#include "pelican/data/AntennaMatrixData.h"
 
 /**
  * @file VisibilityData.h

@@ -1,10 +1,12 @@
 #ifndef SERVICEDATABUFFER_H
 #define SERVICEDATABUFFER_H
 
+#include "pelican/server/DataBuffer.h"
+
 #include <QObject>
 #include <QMutex>
 #include <QHash>
-#include "DataBuffer.h"
+
 
 /**
  * @file ServiceDataBuffer.h

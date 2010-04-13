@@ -1,7 +1,7 @@
 #ifndef WRITABLEDATA_H
 #define WRITABLEDATA_H
 
-#include "server/AbstractLockableData.h"
+#include "pelican/server/AbstractLockableData.h"
 
 /**
  * @file WritableData.h
@@ -11,7 +11,7 @@ namespace pelican {
 
 /**
  * @class WritableData
- *  
+ *
  * @brief
  * Provides locked access to an area of memory to enable writing.
  *
@@ -19,7 +19,7 @@ namespace pelican {
  * The data will become unlocked on destruction
  * and emit a signal when there are no locks upon it
  */
-class WritableData 
+class WritableData
 {
     public:
         WritableData(AbstractLockableData* d);
@@ -41,4 +41,4 @@ class WritableData
 
 } // namespace pelican
 
-#endif // WRITABLEDATA_H 
+#endif // WRITABLEDATA_H

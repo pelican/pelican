@@ -1,11 +1,11 @@
 #include <QVector>
 #include <boost/shared_ptr.hpp>
-#include "ChunkerManager.h"
-#include "DataReceiver.h"
-#include "DataManager.h"
-#include "AbstractChunker.h"
+#include "pelican/server/ChunkerManager.h"
+#include "pelican/server/DataReceiver.h"
+#include "pelican/server/DataManager.h"
+#include "pelican/server/AbstractChunker.h"
 
-#include "utility/memCheck.h"
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 

@@ -3,7 +3,7 @@
 
 
 #include "AbstractServiceAdapter.h"
-#include "utility/ConfigNode.h"
+#include "pelican/utility/ConfigNode.h"
 
 /**
  * @file TestAdapter.h

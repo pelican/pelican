@@ -1,18 +1,18 @@
 #include <QCoreApplication>
 #include <QString>
-#include "adapters/AdapterFactory.h"
-#include "core/PipelineApplication.h"
-#include "core/PipelineDriver.h"
-#include "core/ModuleFactory.h"
-#include "core/DataClientFactory.h"
-#include "data/DataBlobFactory.h"
+#include "pelican/adapters/AdapterFactory.h"
+#include "pelican/core/PipelineApplication.h"
+#include "pelican/core/PipelineDriver.h"
+#include "pelican/core/ModuleFactory.h"
+#include "pelican/core/DataClientFactory.h"
+#include "pelican/data/DataBlobFactory.h"
 #include "boost/program_options.hpp"
-#include "utility/Config.h"
-#include "utility/ConfigNode.h"
+#include "pelican/utility/Config.h"
+#include "pelican/utility/ConfigNode.h"
 #include <string>
 #include <iostream>
 
-#include "utility/memCheck.h"
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 

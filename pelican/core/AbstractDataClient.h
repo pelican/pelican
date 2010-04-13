@@ -1,8 +1,8 @@
 #ifndef ABSTRACTDATACLIENT_H
 #define ABSTRACTDATACLIENT_H
 
-#include "DataTypes.h"
-#include "utility/ConfigNode.h"
+#include "pelican/core/DataTypes.h"
+#include "pelican/utility/ConfigNode.h"
 #include <QHash>
 #include <QList>
 #include <QSet>
@@ -22,11 +22,11 @@ class Data;
 
 /**
  * @class AbstractDataClient
- *  
+ *
  * @brief
  * This is the abstract base class for the data client used by the pipeline
  * driver.
- * 
+ *
  * @details
  * The data client fetches data from the data server and makes it available
  * to the pipelines via the pipeline driver. The data client is created by

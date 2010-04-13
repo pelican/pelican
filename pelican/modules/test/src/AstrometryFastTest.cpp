@@ -1,10 +1,10 @@
 #include "AstrometryFastTest.h"
-#include "modules/AstrometryFast.h"
-#include "utility/pelicanTimer.h"
-#include "utility/constants.h"
+#include "pelican/modules/AstrometryFast.h"
+#include "pelican/utility/pelicanTimer.h"
+#include "pelican/utility/constants.h"
 #include <iostream>
 
-#include "utility/memCheck.h"
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 

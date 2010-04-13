@@ -1,7 +1,7 @@
-#include "ServiceDataResponse.h"
+#include "pelican/comms/ServiceDataResponse.h"
 
-#include "Data.h"
-#include "utility/memCheck.h"
+#include "pelican/comms/Data.h"
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 

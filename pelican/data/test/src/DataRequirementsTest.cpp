@@ -1,13 +1,13 @@
-#include "DataRequirementsTest.h"
-#include "DataRequirements.h"
-#include "utility/memCheck.h"
+#include "pelican/data/test/DataRequirementsTest.h"
+#include "pelican/data/DataRequirements.h"
+#include "pelican/utility/memCheck.h"
 #include <QSet>
 #include <QStringList>
 
 namespace pelican {
 
 CPPUNIT_TEST_SUITE_REGISTRATION( DataRequirementsTest );
-// class DataRequirementsTest 
+// class DataRequirementsTest
 DataRequirementsTest::DataRequirementsTest()
     : CppUnit::TestFixture()
 {

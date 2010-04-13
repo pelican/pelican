@@ -1,12 +1,12 @@
-#include "adapters/AdapterLofarStationVisibilities.h"
-#include "utility/ConfigNode.h"
+#include "pelican/adapters/AdapterLofarStationVisibilities.h"
+#include "pelican/utility/ConfigNode.h"
 #include <QByteArray>
 #include <QIODevice>
 #include <iostream>
 #include <iomanip>
 #include <QStringList>
 
-#include "utility/memCheck.h"
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 
@@ -26,7 +26,7 @@ AdapterLofarStationVisibilities::AdapterLofarStationVisibilities(const ConfigNod
     _nAnt = config.getOption("antennas", "number", "96").toUInt();
     QString rowMajor = config.getOption("rowMajor", "value", "true").toLower();
     _rowMajor = (rowMajor.startsWith("t")) ? true : false;
-    _dataBytes = config.getOption("dataBytes", "number", "8").toUInt();
+    _dataBytes = config.getOption("pelican/dataBytes", "number", "8").toUInt();
     _timeStart = config.getOption("time", "start", "0.0").toDouble();
     _timeDelta = config.getOption("time", "delta", "0.0").toDouble();
 

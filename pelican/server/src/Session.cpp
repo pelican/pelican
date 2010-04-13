@@ -1,13 +1,15 @@
-#include "Session.h"
-#include "comms/AbstractProtocol.h"
-#include "DataManager.h"
-#include "LockedData.h"
-#include "LockableStreamData.h"
-#include "LockableData.h"
-#include "comms/StreamData.h"
-#include "comms/ServerRequest.h"
-#include "comms/StreamDataRequest.h"
-#include "comms/ServiceDataRequest.h"
+#include "pelican/server/Session.h"
+
+#include "pelican/comms/AbstractProtocol.h"
+#include "pelican/server/DataManager.h"
+#include "pelican/server/LockedData.h"
+#include "pelican/server/LockableStreamData.h"
+#include "pelican/server/LockableData.h"
+#include "pelican/comms/StreamData.h"
+#include "pelican/comms/ServerRequest.h"
+#include "pelican/comms/StreamDataRequest.h"
+#include "pelican/comms/ServiceDataRequest.h"
+
 #include <QTcpSocket>
 #include <QString>
 #include <QHash>
@@ -15,7 +17,7 @@
 
 #include <iostream>
 
-#include "utility/memCheck.h"
+#include "pelican/utility/memCheck.h"
 
 using std::cout;
 using std::endl;
@@ -183,7 +185,7 @@ QList<LockedData> Session::processServiceDataRequest(const ServiceDataRequest& r
         LockedData d = _dataManager->getServiceData(type, req.version(type));
         if( ! d.isValid() )
         {
-            throw QString("Data Requested does not exist :" + type + " " + req.version(type));
+            throw QString("pelican/data Requested does not exist :" + type + " " + req.version(type));
         }
         data.append(d);
     }

@@ -1,10 +1,11 @@
 #ifndef STREAMDATA_H
 #define STREAMDATA_H
 
+#include "pelican/comms/Data.h"
+
 #include <QSet>
 #include <QString>
 #include <boost/shared_ptr.hpp>
-#include "Data.h"
 
 
 /**
@@ -17,7 +18,7 @@ class LockedData;
 
 /**
  * @class StreamData
- *  
+ *
  * @brief
  *     Contains Pointers to Chunked Stream and a manifest of associated data
  * @details
@@ -52,4 +53,4 @@ class StreamData : public Data
 };
 
 } // namespace pelican
-#endif // STREAMDATA_H 
+#endif // STREAMDATA_H

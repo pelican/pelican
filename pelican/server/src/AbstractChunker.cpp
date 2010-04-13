@@ -1,9 +1,9 @@
-#include "AbstractChunker.h"
+#include "pelican/server/AbstractChunker.h"
+#include "pelican/utility/ConfigNode.h"
 
 #include <iostream>
 
-#include "utility/ConfigNode.h"
-#include "utility/memCheck.h"
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 
@@ -36,7 +36,7 @@ AbstractChunker::~AbstractChunker()
  * or service FIFO buffer to ensure that the chunker only ever writes into an
  * available, locked location.
  *
- * 
+ *
  *
  * @param[in] size  The size of the chunk requested on the buffer.
  */

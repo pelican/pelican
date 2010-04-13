@@ -5,19 +5,19 @@
 #include <QByteArray>
 #include <QDebug>
 #include "PelicanServerClient.h"
-#include "adapters/AbstractServiceAdapter.h"
-#include "adapters/AbstractStreamAdapter.h"
-#include "data/DataRequirements.h"
-#include "data/DataBlob.h"
-#include "comms/ServerResponse.h"
-#include "comms/StreamData.h"
-#include "comms/StreamDataRequest.h"
-#include "comms/ServiceDataRequest.h"
-#include "comms/StreamDataResponse.h"
-#include "comms/ServiceDataResponse.h"
-#include "comms/PelicanClientProtocol.h"
+#include "pelican/adapters/AbstractServiceAdapter.h"
+#include "pelican/adapters/AbstractStreamAdapter.h"
+#include "pelican/data/DataRequirements.h"
+#include "pelican/data/DataBlob.h"
+#include "pelican/comms/ServerResponse.h"
+#include "pelican/comms/StreamData.h"
+#include "pelican/comms/StreamDataRequest.h"
+#include "pelican/comms/ServiceDataRequest.h"
+#include "pelican/comms/StreamDataResponse.h"
+#include "pelican/comms/ServiceDataResponse.h"
+#include "pelican/comms/PelicanClientProtocol.h"
 
-#include "utility/memCheck.h"
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 

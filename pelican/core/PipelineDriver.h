@@ -1,7 +1,7 @@
 #ifndef PIPELINEDRIVER_H
 #define PIPELINEDRIVER_H
 
-#include "data/DataRequirements.h"
+#include "pelican/data/DataRequirements.h"
 #include <QMultiHash>
 #include <QList>
 

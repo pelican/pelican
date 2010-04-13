@@ -1,11 +1,11 @@
 #ifndef IMAGEDATA_H
 #define IMAGEDATA_H
 
-#include "data/DataBlob.h"
-//#include <boost/math/special_functions/fpclassify.hpp>
+#include "pelican/data/DataBlob.h"
 #include <QString>
 #include <vector>
 #include <cmath>
+//#include <boost/math/special_functions/fpclassify.hpp>
 
 /**
  * @file ImageData.h

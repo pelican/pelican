@@ -2,11 +2,11 @@
 #include "LockableStreamData.h"
 #include "LockableData.h"
 #include "LockedData.h"
-#include "comms/StreamData.h"
+#include "pelican/comms/StreamData.h"
 #include <QString>
 
 
-#include "utility/memCheck.h"
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 

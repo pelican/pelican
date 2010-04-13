@@ -1,9 +1,9 @@
-#include "modules/VisibilityPrinter.h"
-#include "utility/ConfigNode.h"
-#include "data/VisibilityData.h"
+#include "pelican/modules/VisibilityPrinter.h"
+#include "pelican/utility/ConfigNode.h"
+#include "pelican/data/VisibilityData.h"
 #include <iostream>
 
-#include "utility/memCheck.h"
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 
@@ -35,7 +35,7 @@ VisibilityPrinter::~VisibilityPrinter()
 void VisibilityPrinter::run(VisibilityData* vis)
 {
     if (!vis)
-        throw QString("Data blob missing: Visibility Data");
+        throw QString("pelican/data blob missing: Visibility Data");
 
     if (vis->nAntennas() == 0)
         throw QString("Empty data blob: Visibility Data");

@@ -1,8 +1,8 @@
-#include "core/test/TestPipeline.h"
-#include "modules/EmptyModule.h"
+#include "pelican/core/test/TestPipeline.h"
+#include "pelican/modules/EmptyModule.h"
 #include <iostream>
 
-#include "utility/memCheck.h"
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 

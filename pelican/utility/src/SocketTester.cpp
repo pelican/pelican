@@ -1,12 +1,10 @@
-#include "SocketTester.h"
+#include "pelican/utility/SocketTester.h"
 
-//#include <sys/types.h>
-//#include <sys/socket.h>
-#include "utility/memCheck.h"
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 
-// class SocketTester 
+// class SocketTester
 SocketTester::SocketTester()
 {
     _init = false;

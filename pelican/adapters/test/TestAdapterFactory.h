@@ -3,7 +3,7 @@
 
 
 #include "AdapterFactory.h"
-#include "utility/Config.h"
+#include "pelican/utility/Config.h"
 
 /**
  * @file TestAdapterFactory.h

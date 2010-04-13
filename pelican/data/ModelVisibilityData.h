@@ -1,8 +1,8 @@
 #ifndef MODELVISIBILITYDATA_H_
 #define MODELVISIBILITYDATA_H_
 
-#include "data/VisibilityData.h"
-#include "data/Source.h"
+#include "pelican/data/VisibilityData.h"
+#include "pelican/data/Source.h"
 #include <vector>
 
 /**

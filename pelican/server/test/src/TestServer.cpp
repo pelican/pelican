@@ -1,29 +1,30 @@
+#include "pelican/server/test/TestServer.h"
+
+#include "pelican/server/PelicanPortServer.h"
+#include "pelican/server/StreamDataBuffer.h"
+#include "pelican/server/ServiceDataBuffer.h"
+#include "pelican/server/WritableData.h"
+#include "pelican/server/LockableData.h"
+#include "pelican/server/LockableStreamData.h"
+#include "pelican/comms/PelicanProtocol.h"
+#include "pelican/comms/StreamData.h"
+#include "pelican/comms/Data.h"
+#include "pelican/utility/Config.h"
+
 #include <iostream>
-#include "TestServer.h"
-#include "PelicanPortServer.h"
-#include "StreamDataBuffer.h"
-#include "ServiceDataBuffer.h"
-#include "WritableData.h"
-#include "LockableData.h"
-#include "LockableStreamData.h"
-#include "comms/PelicanProtocol.h"
-#include "comms/StreamData.h"
-#include "comms/Data.h"
-#include "utility/Config.h"
 
-
-#include "utility/memCheck.h"
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 
 
 /**
- *@details TestServer 
+ *@details TestServer
    The default portocol is the standard PelicanProtocol, which can be
    overridden in the constructor.
  */
 TestServer::TestServer(AbstractProtocol* proto,  QObject* parent)
-    : QThread(parent), _protoOwner(false), 
+    : QThread(parent), _protoOwner(false),
       _proto(proto), _portServer(0)
 {
     // set up the protocol
@@ -82,7 +83,7 @@ bool TestServer::isListening() const
 
 void TestServer::serveStreamData(const QList<StreamData>& data)
 {
-    for(int i=0; i<data.size(); ++i) 
+    for(int i=0; i<data.size(); ++i)
     {
         serveStreamData(data[i]);
     }
@@ -100,7 +101,7 @@ void TestServer::serveStreamData(const StreamData& d)
 
     // Now aded the Stream Data
     WritableData wd = buf->getWritable(d.size() );
-    if( ! wd.isValid() ) 
+    if( ! wd.isValid() )
         throw("unable to add StreamBuffer Data");
     // copy the object
     LockableStreamData* data = static_cast<LockableStreamData*>(wd.data());
@@ -112,7 +113,7 @@ void TestServer::serveStreamData(const StreamData& d)
 
 void TestServer::serveServiceData(const QList<Data>& data )
 {
-    for(int i=0; i<data.size(); ++i) 
+    for(int i=0; i<data.size(); ++i)
     {
         serveServiceData(data[i]);
     }
@@ -122,7 +123,7 @@ void TestServer::serveServiceData(const Data& d )
 {
     ServiceDataBuffer* buf = _dataManager->getServiceBuffer(d.name()); // ensures the ServiceData buffer exists
     WritableData wd = buf->getWritable(d.size());
-    if( ! wd.isValid() ) 
+    if( ! wd.isValid() )
         throw("unable to add ServiceBuffer Data");
     Data* data = wd.data()->data().get();
     data->setId(d.id());

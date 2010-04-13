@@ -1,5 +1,5 @@
-#include "LockedData.h"
-#include "utility/memCheck.h"
+#include "pelican/server/LockedData.h"
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 
@@ -21,7 +21,7 @@ LockedData::LockedData( const QString& name, AbstractLockable* data )
  */
 LockedData::~LockedData()
 {
-    if( _data ) 
+    if( _data )
         _data->unlock();
 }
 

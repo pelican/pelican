@@ -1,14 +1,16 @@
-#include "DataManager.h"
-#include "comms/StreamData.h"
-#include "StreamDataBufferTest.h"
-#include "StreamDataBuffer.h"
-#include "WritableData.h"
-#include "LockedData.h"
-#include "LockableStreamData.h"
-#include <QCoreApplication>
-#include "utility/Config.h"
+#include "pelican/server/test/StreamDataBufferTest.h"
 
-#include "utility/memCheck.h"
+#include "pelican/server/DataManager.h"
+#include "pelican/comms/StreamData.h"
+#include "pelican/server/StreamDataBuffer.h"
+#include "pelican/server/WritableData.h"
+#include "pelican/server/LockedData.h"
+#include "pelican/server/LockableStreamData.h"
+#include "pelican/utility/Config.h"
+
+#include <QCoreApplication>
+
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 
@@ -69,7 +71,7 @@ void StreamDataBufferTest::test_getNext()
 
 void StreamDataBufferTest::test_getWritable()
 {
-    QByteArray data1("data1");
+    QByteArray data1("pelican/data1");
     {
         // Use case:
         // getWritable() called with no service data

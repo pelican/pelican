@@ -1,15 +1,15 @@
-#include "DataManager.h"
-#include "StreamDataBuffer.h"
-#include "LockableStreamData.h"
-#include "LockedData.h"
-#include "WritableData.h"
-#include "comms/StreamData.h"
+#include "pelican/server/DataManager.h"
+#include "pelican/server/StreamDataBuffer.h"
+#include "pelican/server/LockableStreamData.h"
+#include "pelican/server/LockedData.h"
+#include "pelican/server/WritableData.h"
+#include "pelican/comms/StreamData.h"
+
 #include <QMutexLocker>
 #include <stdlib.h>
 #include <iostream>
 
-
-#include "utility/memCheck.h"
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 
@@ -53,7 +53,7 @@ void StreamDataBuffer::getNext(LockedData& lockedData)
         lockedData.setData(_serveQueue.dequeue());
         return;
     }
-    
+
     lockedData.setData(0);
 }
 

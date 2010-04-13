@@ -1,13 +1,13 @@
 #include "AbstractFactory.h"
 
 
-#include "utility/memCheck.h"
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 
 
 /**
- *@details AbstractFactory 
+ *@details AbstractFactory
  */
 AbstractFactory::AbstractFactory(const Config* config, const Config::TreeAddress& base )
     : _config(config), _configRoot(base)

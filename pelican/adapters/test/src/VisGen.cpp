@@ -1,8 +1,8 @@
-#include "VisGen.h"
+#include "pelican/adapters/test/VisGen.h"
 #include <iomanip>
 #include <QString>
 
-#include "utility/memCheck.h"
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 

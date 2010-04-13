@@ -1,9 +1,9 @@
-#include "modules/ZenithImagerDft.h"
-#include "modules/AstrometryFast.h"
-#include "utility/constants.h"
-#include "utility/pelicanTimer.h"
-#include "data/VisibilityData.h"
-#include "data/AntennaPositions.h"
+#include "pelican/modules/ZenithImagerDft.h"
+#include "pelican/modules/AstrometryFast.h"
+#include "pelican/utility/constants.h"
+#include "pelican/utility/pelicanTimer.h"
+#include "pelican/data/VisibilityData.h"
+#include "pelican/data/AntennaPositions.h"
 #include <QString>
 #include <QStringList>
 #include <iostream>
@@ -20,7 +20,7 @@
     #include <omp.h>
 #endif
 
-#include "utility/memCheck.h"
+#include "pelican/utility/memCheck.h"
 
 
 namespace pelican {

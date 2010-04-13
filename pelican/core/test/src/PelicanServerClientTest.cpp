@@ -5,22 +5,22 @@
 #include <QTcpSocket>
 #include "PelicanServerClientTest.h"
 #include "PelicanServerClient.h"
-#include "adapters/AdapterFactory.h"
-#include "data/DataRequirements.h"
-#include "adapters/test/TestDataBlob.h"
-#include "adapters/test/TestAdapter.h"
-#include "adapters/test/TestStreamAdapter.h"
-#include "utility/Config.h"
-#include "utility/ConfigNode.h"
-#include "utility/SocketTester.h"
-#include "comms/StreamData.h"
-#include "comms/Data.h"
-#include "comms/StreamDataResponse.h"
-#include "comms/ServiceDataResponse.h"
-#include "server/test/TestServer.h"
+#include "pelican/adapters/AdapterFactory.h"
+#include "pelican/data/DataRequirements.h"
+#include "pelican/adapters/test/TestDataBlob.h"
+#include "pelican/adapters/test/TestAdapter.h"
+#include "pelican/adapters/test/TestStreamAdapter.h"
+#include "pelican/utility/Config.h"
+#include "pelican/utility/ConfigNode.h"
+#include "pelican/utility/SocketTester.h"
+#include "pelican/comms/StreamData.h"
+#include "pelican/comms/Data.h"
+#include "pelican/comms/StreamDataResponse.h"
+#include "pelican/comms/ServiceDataResponse.h"
+#include "pelican/server/test/TestServer.h"
 
 
-#include "utility/memCheck.h"
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 
@@ -107,7 +107,7 @@ void PelicanServerClientTest::test_getData()
 
         QHash<QString, DataBlob*> dataHash;
         DataBlob db;
-        dataHash.insert("data2", &db);
+        dataHash.insert("pelican/data2", &db);
 
         CPPUNIT_ASSERT_THROW(client.getData(dataHash), QString);
     }
@@ -124,7 +124,7 @@ void PelicanServerClientTest::test_response()
     QString serviceVersion1("sv1");
     DataRequirements reqStream1;
     reqStream1.addStreamData(stream1);
-    QByteArray data1("data1");
+    QByteArray data1("pelican/data1");
     {
         // Use Case
         // receive a StreamData response (single stream, no service data)
@@ -151,7 +151,7 @@ void PelicanServerClientTest::test_response()
         CPPUNIT_ASSERT_EQUAL( version1.toStdString(), vhash[stream1]->version().toStdString() );
         CPPUNIT_ASSERT_EQUAL( std::string( data1.data() ) , std::string( static_cast<TestDataBlob*>(vhash[stream1])->data() ) );
     }
-    QByteArray data2("data2");
+    QByteArray data2("pelican/data2");
     {
         // Use Case
         // ServiceData response - single service data

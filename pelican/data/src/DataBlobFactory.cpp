@@ -1,19 +1,19 @@
 #include <QStringList>
 #include <QtGlobal>
-#include "data/DataBlobFactory.h"
+#include "pelican/data/DataBlobFactory.h"
 
 // All data blob headers.
-#include "data/AntennaPositions.h"
-#include "data/DataBlob.h"
-#include "data/FlagTable.h"
-#include "data/FrequencyList.h"
-#include "data/ImageData.h"
-#include "data/VisibilityData.h"
-#include "data/VisibilityPositions.h"
-#include "data/ModelVisibilityData.h"
-#include "data/CorrectedVisibilityData.h"
+#include "pelican/data/AntennaPositions.h"
+#include "pelican/data/DataBlob.h"
+#include "pelican/data/FlagTable.h"
+#include "pelican/data/FrequencyList.h"
+#include "pelican/data/ImageData.h"
+#include "pelican/data/VisibilityData.h"
+#include "pelican/data/VisibilityPositions.h"
+#include "pelican/data/ModelVisibilityData.h"
+#include "pelican/data/CorrectedVisibilityData.h"
 
-#include "utility/memCheck.h"
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 
@@ -62,7 +62,7 @@ DataBlob* DataBlobFactory::create(const QString& type)
     /* Check which type of blob to create */
     if (type == "AntennaPositions")
         dataBlob = new AntennaPositions;
-    else if (type == "DataBlob")
+    else if (type == "pelican/dataBlob")
         dataBlob = new DataBlob;
     else if (type == "FlagTable")
         dataBlob = new FlagTable;

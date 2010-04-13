@@ -1,6 +1,6 @@
-#include "modules/EmptyModule.h"
+#include "pelican/modules/EmptyModule.h"
 
-#include "utility/memCheck.h"
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 

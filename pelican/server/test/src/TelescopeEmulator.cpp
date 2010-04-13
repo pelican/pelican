@@ -1,9 +1,9 @@
-#include "server/test/TelescopeEmulator.h"
+#include "pelican/server/test/TelescopeEmulator.h"
 #include <QUdpSocket>
 
 #include <iostream>
 
-#include "utility/memCheck.h"
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 

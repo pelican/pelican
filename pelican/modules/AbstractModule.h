@@ -1,12 +1,14 @@
 #ifndef ABSTRACTMODULE_H
 #define ABSTRACTMODULE_H
 
+#include "pelican/utility/ConfigNode.h"
+#include "pelican/data/DataBlob.h"
+
 #include <QString>
-#include "utility/ConfigNode.h"
-#include "data/DataBlob.h"
-#include <iostream>
 #include <algorithm>
 #include <vector>
+
+#include <iostream>
 
 /**
  * @file AbstractModule.h

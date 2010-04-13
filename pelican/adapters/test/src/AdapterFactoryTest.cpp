@@ -1,9 +1,9 @@
 #include "AdapterFactoryTest.h"
 #include "AdapterFactory.h"
-#include "adapters/AbstractAdapter.h"
-#include "utility/Config.h"
+#include "pelican/adapters/AbstractAdapter.h"
+#include "pelican/utility/Config.h"
 
-#include "utility/memCheck.h"
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 

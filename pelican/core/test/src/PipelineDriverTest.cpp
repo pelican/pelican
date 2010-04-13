@@ -1,17 +1,18 @@
-#include <QCoreApplication>
-#include "ModuleFactory.h"
-#include "DataClientFactory.h"
-#include "core/DataTypes.h"
-#include "core/PipelineDriver.h"
-#include "core/test/PipelineDriverTest.h"
-#include "core/test/TestPipeline.h"
-#include "core/test/TestDataClient.h"
-#include "data/DataRequirements.h"
-#include "data/DataBlobFactory.h"
+#include "pelican/core/test/PipelineDriverTest.h"
 
+#include "pelican/core/ModuleFactory.h"
+#include "pelican/core/DataClientFactory.h"
+#include "pelican/core/DataTypes.h"
+#include "pelican/core/PipelineDriver.h"
+#include "pelican/core/test/TestPipeline.h"
+#include "pelican/core/test/TestDataClient.h"
+#include "pelican/data/DataRequirements.h"
+#include "pelican/data/DataBlobFactory.h"
+
+#include <QCoreApplication>
 #include <iostream>
 
-#include "utility/memCheck.h"
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 

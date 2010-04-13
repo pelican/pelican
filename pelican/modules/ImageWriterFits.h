@@ -1,7 +1,7 @@
 #ifndef IMAGERWRITERFITS_H_
 #define IMAGERWRITERFITS_H_
 
-#include "modules/AbstractModule.h"
+#include "pelican/modules/AbstractModule.h"
 #include <QString>
 #include <QHash>
 #include <fitsio.h>

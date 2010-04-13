@@ -1,7 +1,7 @@
-#include "modules/ImageCombiner.h"
+#include "pelican/modules/ImageCombiner.h"
 //#include <boost/math/special_functions/fpclassify.hpp>
 
-#include "utility/memCheck.h"
+#include "pelican/utility/memCheck.h"
 
 
 namespace pelican {

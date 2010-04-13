@@ -1,4 +1,4 @@
-#include "Config.h"
+#include "pelican/utility/Config.h"
 #include <iostream>
 #include <QTextStream>
 #include <QFile>
@@ -6,7 +6,7 @@
 #include <iostream>
 #include <QDomDocumentType>
 
-#include "utility/memCheck.h"
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 

@@ -1,19 +1,21 @@
+#include "pelican/core/PipelineDriver.h"
+
+#include "pelican/core/DataClientFactory.h"
+#include "pelican/core/AbstractDataClient.h"
+#include "pelican/core/FileDataClient.h"
+#include "pelican/core/AbstractPipeline.h"
+#include "pelican/core/ModuleFactory.h"
+#include "pelican/data/DataBlob.h"
+#include "pelican/data/DataBlobFactory.h"
+#include "pelican/utility/Config.h"
+#include "pelican/utility/ConfigNode.h"
+
 #include <QString>
 #include <QtGlobal>
 #include <QtDebug>
-#include "DataClientFactory.h"
-#include "core/AbstractDataClient.h"
-#include "core/FileDataClient.h"
-#include "core/AbstractPipeline.h"
-#include "core/ModuleFactory.h"
-#include "core/PipelineDriver.h"
-#include "data/DataBlob.h"
-#include "data/DataBlobFactory.h"
-#include "utility/Config.h"
-#include "utility/ConfigNode.h"
 #include <iostream>
 
-#include "utility/memCheck.h"
+#include "pelican/utility/memCheck.h"
 
 
 namespace pelican {

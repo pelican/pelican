@@ -3,7 +3,7 @@
 
 #include <QList>
 #include <QString>
-#include "utility/AbstractFactory.h"
+#include "pelican/utility/AbstractFactory.h"
 
 /**
  * @file DataClientFactory.h

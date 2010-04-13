@@ -6,7 +6,7 @@
 #include <cstdio>
 #include "sys/time.h"
 
-#include "utility/memoryTracer.h"
+#include "pelican/utility/memoryTracer.h"
 
 /**
  * @brief
