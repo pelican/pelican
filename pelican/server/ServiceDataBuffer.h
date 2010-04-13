@@ -64,6 +64,8 @@ class ServiceDataBuffer : public DataBuffer
         size_t _maxChunkSize;
         size_t _space;
         unsigned long _id;
+
+    friend class ServiceDataBufferTest;
 };
 
 } // namespace pelican
