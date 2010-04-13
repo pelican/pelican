@@ -28,8 +28,8 @@ TestUdpChunker::TestUdpChunker(const ConfigNode& config)
     // Get configuration options.
     setHost(config.getOption("connection", "host"));
     setPort(qint16(config.getOption("connection", "port").toUInt()));
-    setType(config.getOption("pelican/data", "type"));
-    _chunkSize = config.getOption("pelican/data", "chunkSize").toUInt();
+    setType(config.getOption("data", "type"));
+    _chunkSize = config.getOption("data", "chunkSize").toUInt();
 
     // Some sanity checking.
     if (type().isEmpty())
