@@ -536,6 +536,14 @@
 <useDefaultCommand>true</useDefaultCommand>
 <runAllBuilders>true</runAllBuilders>
 </target>
+<target name="blow away folder contents (UNSAFE)" path="debug" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+<buildCommand>rm</buildCommand>
+<buildArguments>-rf *</buildArguments>
+<buildTarget>blow away folder contents (UNSAFE)</buildTarget>
+<stopOnError>true</stopOnError>
+<useDefaultCommand>false</useDefaultCommand>
+<runAllBuilders>true</runAllBuilders>
+</target>
 </buildTargets>
 </storageModule>
 </cconfiguration>
