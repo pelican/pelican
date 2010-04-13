@@ -180,7 +180,8 @@ TAB_SIZE               = 4
 # will result in a user-defined paragraph with heading "Side Effects:".
 # You can put \n's in the value part of an alias to insert newlines.
 
-ALIASES                =
+ALIASES                = "usecase=\par Use Case:\n" \
+                         "expect=\par Expect:\n"
 
 # Set the OPTIMIZE_OUTPUT_FOR_C tag to YES if your project consists of C
 # sources only. Doxygen will then generate output that is more tailored for C.
@@ -567,7 +568,7 @@ WARN_LOGFILE           = doxygenCode_warnings.txt
 
 INPUT                  = "@CMAKE_CURRENT_SOURCE_DIR@" \
                          "@CMAKE_CURRENT_BINARY_DIR@" \
-                         @CMAKE_CURRENT_SOURCE_DIR@/doc/CodeMain.doxy
+                          @CMAKE_CURRENT_SOURCE_DIR@/doc/CodeMain.doxy
 
 
 # This tag can be used to specify the character encoding of the source files
@@ -599,9 +600,14 @@ RECURSIVE              = YES
 # subdirectory from a directory tree whose root is specified with the INPUT tag.
 
 EXCLUDE                = _darcs \
+                         @CMAKE_CURRENT_SOURCE_DIR@/doc
                          @CMAKE_CURRENT_SOURCE_DIR@/doc/UserMain.doxy
                          @CMAKE_CURRENT_SOURCE_DIR@/doc/DeveloperMain.doxy
                          @CMAKE_CURRENT_SOURCE_DIR@/*/test
+                         @CMAKE_CURRENT_SOURCE_DIR@/*/test/data
+                         @CMAKE_CURRENT_SOURCE_DIR@/build
+                         @CMAKE_CURRENT_SOURCE_DIR@/debug
+                         @CMAKE_CURRENT_SOURCE_DIR@/release
 
 # The EXCLUDE_SYMLINKS tag can be used select whether or not files or
 # directories that are symbolic links (a Unix filesystem feature) are excluded
@@ -615,7 +621,10 @@ EXCLUDE_SYMLINKS       = NO
 # against the file with absolute path, so to exclude all test directories
 # for example use the pattern */test/*
 
-EXCLUDE_PATTERNS       = */test/*
+EXCLUDE_PATTERNS       = */test/* \
+                         */build/* \
+                         */debug/* \
+                         */release/*
 
 # The EXCLUDE_SYMBOLS tag can be used to specify one or more symbol names
 # (namespaces, classes, functions, etc.) that should be excluded from the
@@ -882,7 +891,7 @@ BINARY_TOC             = NO
 # The TOC_EXPAND flag can be set to YES to add extra items for group members
 # to the contents of the HTML help documentation and to the tree view.
 
-TOC_EXPAND             = NO
+TOC_EXPAND             = YES
 
 # If the GENERATE_QHP tag is set to YES and both QHP_NAMESPACE and QHP_VIRTUAL_FOLDER
 # are set, an additional index file will be generated that can be used as input for
@@ -1430,7 +1439,7 @@ CALL_GRAPH             = NO
 # the time of a run. So in most cases it will be better to enable caller
 # graphs for selected functions only using the \callergraph command.
 
-CALLER_GRAPH           = NO
+CALLER_GRAPH           = YES
 
 # If the GRAPHICAL_HIERARCHY and HAVE_DOT tags are set to YES then doxygen
 # will graphical hierarchy of all classes instead of a textual one.

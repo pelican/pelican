@@ -1,5 +1,5 @@
-#include "ImageDataTest.h"
-#include "ImageData.h"
+#include "pelican/data/test/ImageDataTest.h"
+#include "pelican/data/ImageData.h"
 #include "pelican/utility/pelicanTimer.h"
 
 #include "pelican/utility/memCheck.h"

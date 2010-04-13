@@ -5,7 +5,7 @@
  * @file uvfitsLoader.h
  */
 
-#include "AbstractModule.h"
+#include "pelican/modules/AbstractModule.h"
 #include <fitsio.h>
 #include <vector>
 #include <QMultiHash>

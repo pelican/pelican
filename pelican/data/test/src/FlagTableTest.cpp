@@ -1,4 +1,4 @@
-#include "FlagTableTest.h"
+#include "pelican/data/test/FlagTableTest.h"
 #include "pelican/data/FlagTable.h"
 #include "pelican/utility/pelicanTimer.h"
 #include "pelican/utility/memCheck.h"

@@ -1,4 +1,5 @@
-#include "TestPipelineRawImage.h"
+#include "pelican/pipelines/TestPipelineRawImage.h"
+
 #include "pelican/modules/ZenithImagerDft.h"
 #include "pelican/modules/ImageWriterFits.h"
 #include "pelican/data/AntennaPositions.h"

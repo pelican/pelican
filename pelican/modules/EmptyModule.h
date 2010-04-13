@@ -1,7 +1,7 @@
 #ifndef EMPTYMODULE_H
 #define EMPTYMODULE_H
 
-#include "AbstractModule.h"
+#include "pelican/modules/AbstractModule.h"
 #include "pelican/utility/ConfigNode.h"
 
 /**

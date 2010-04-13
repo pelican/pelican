@@ -1,4 +1,4 @@
-#include "../uvfitsLoader.h"
+#include "pelican/modules/uvfitsLoader.h"
 #include <QString>
 
 

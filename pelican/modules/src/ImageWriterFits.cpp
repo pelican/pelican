@@ -1,7 +1,9 @@
 #include "pelican/modules/ImageWriterFits.h"
+
 #include "pelican/utility/constants.h"
 #include "pelican/utility/ConfigNode.h"
 #include "pelican/data/ImageData.h"
+
 #include <QDateTime>
 #include <QFile>
 #include <QFileInfo>
