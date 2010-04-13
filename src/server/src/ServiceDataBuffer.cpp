@@ -56,6 +56,16 @@ WritableData ServiceDataBuffer::getWritable(size_t size)
 {
     if( ! _newData ) {
         QMutexLocker lock(&_mutex);
+        for (int i = 0; i < _expiredData.size(); ++i) {
+            LockableData* lockableData = _expiredData[i];
+            if( lockableData->maxSize() >= size ) {
+                // We found one, ensure we remove it from the 
+                // active data queue.
+                _data.remove(lockableData->id());
+                _expiredData.removeAt(i);
+                return lockableData;
+            }
+        }
         // create a new data Object if we have enough space
         if(size <= _space && size <= _maxChunkSize )
         {
@@ -82,9 +92,16 @@ void ServiceDataBuffer::deactivateData()
     deactivateData( static_cast<LockableData*>( sender() ) );
 }
 
-void ServiceDataBuffer::deactivateData(LockableData* )
+void ServiceDataBuffer::deactivateData(LockableData* data)
 {
-    // TODO
+    // We cannot delete the data immediately there is no
+    // longer any stream data referencing the data as a client
+    // may still ask for the data.
+    // If it is not the current service data (which will be associated with
+    // any incoming stream data), we mark it as available for removal in the event of
+    // the buffer being full.
+   if( data->id() != _current && ! _expiredData.contains(data) ) 
+        _expiredData.append(data);
 }
 
 void ServiceDataBuffer::activateData(LockableData* data)

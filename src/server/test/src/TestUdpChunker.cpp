@@ -53,7 +53,6 @@ QIODevice* TestUdpChunker::newDevice()
     return socket;
 }
 
-
 /**
  * @details
  * Gets the next chunk of data from the UDP socket

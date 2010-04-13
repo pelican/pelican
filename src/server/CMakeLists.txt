@@ -1,6 +1,6 @@
 INCLUDE_DIRECTORIES(${QT_INCLUDES})
 SUBPACKAGE(server comms utility)
-# files requireing mpp preprocessing (i.e. QObjects)
+# files requiring MOC pre-processing (i.e. QObjects)
 set( server_moc_headers
     AbstractLockable.h
     AbstractLockableData.h
@@ -17,9 +17,7 @@ set( server_moc_headers
 
 set( server_src
     src/AbstractChunker.cpp
-    src/LofarChunker.cpp
     src/AbstractLockable.cpp
-    src/ChunkerClassGeneratorBase.cpp
     src/ChunkerManager.cpp
     src/ChunkerFactory.cpp
     src/LockableData.cpp
