@@ -75,7 +75,8 @@ if (NOT INCLUDE_INSTALL_DIR)
 endif (NOT INCLUDE_INSTALL_DIR)
 
 # installation targets for cmake files
-install(DIRECTORY cmake DESTINATION ${PELICAN_INSTALL_DIR})
+install(DIRECTORY cmake DESTINATION ${PELICAN_INSTALL_DIR}
+        FILES_MATCHING PATTERN "*.cmake" )
 
 # === Compiler defaults
 set (BUILD_SHARED_LIBS TRUE)
