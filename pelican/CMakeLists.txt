@@ -61,6 +61,7 @@ if (OPENMP)
     list(APPEND CMAKE_C_FLAGS ${OpenMP_C_FLAGS})
 endif (OPENMP)
 
+# === installtion locations
 if (NOT LIBRARY_INSTALL_DIR)
     set(LIBRARY_INSTALL_DIR lib)
 endif (NOT LIBRARY_INSTALL_DIR)
@@ -73,14 +74,15 @@ if (NOT INCLUDE_INSTALL_DIR)
     set(INCLUDE_INSTALL_DIR "include/pelican")
 endif (NOT INCLUDE_INSTALL_DIR)
 
-set (BUILD_SHARED_LIBS TRUE)
-
+# installation targets for cmake files
+install(DIRECTORY cmake DESTINATION ${PELICAN_INSTALL_DIR})
 
 # === Compiler defaults
+set (BUILD_SHARED_LIBS TRUE)
 include_directories(
     ${PROJECT_SOURCE_DIR}/..
-#    ${PROJECT_SOURCE_DIR}
 )
+
 set(CPP_PLATFORM_LIBS ${CMAKE_THREAD_LIBS_INIT})
 set(CMAKE_CXX_FLAGS_RELEASE "-O2")
 if (CMAKE_COMPILER_IS_GNUCC)
