@@ -1,4 +1,5 @@
 SUBPACKAGE(modules data utility)
+
 set( modules_src
      src/AbstractModule.cpp
      src/AbstractAstrometry.cpp
@@ -13,12 +14,10 @@ set( modules_src
      src/ImageCombiner.cpp
 )
 
-
 include_directories(${MKL_INCLUDE_DIR})
-SUBPACKAGE_LIBRARY(modules ${modules_src} )
+SUBPACKAGE_LIBRARY(modules ${modules_src})
 SUBPACKAGE_ADD_LIBRARIES(
-    ${PELICAN_CBLAS_LIBS}
-    ${PELICAN_LAPACK_LIBS}
+    ${pelican_math_libs}
     ${CFITSIO_LIBRARIES}
 )
 

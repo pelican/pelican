@@ -165,14 +165,15 @@ void VisGen::_generate(int nAnt, int nChan, int nPol)
 
                         int index = cIndex + jIndex + (i * nPol + pi);
 
-                        /* CRITICAL: Keep this for the test to work */
-                        float aj = float(j) / 100.0;
-                        float ai = float(i) / 100.0;
+                        // CRITICAL: Keep this for the test to work.
+                        // =====================================================
+                        float aj = float(j) / float(100.0);
+                        float ai = float(i) / float(100.0);
                         float re = float(c) + aj + ai;
                         float im = float(c) + aj + ai;
-                        re += (pi == pj) ? 1000.0 * pi : -99999.9;
-                        im += (pi == pj) ? 1000.0 * pi : -99999.9;
-                        /* End critical */
+                        re += (pi == pj) ? float(1000.0) * pi : float(-99999.9);
+                        im += (pi == pj) ? float(1000.0) * pi : float(-99999.9);
+                        // =====================================================
 
                         _data[index] = complex_t(re, im);
                     }

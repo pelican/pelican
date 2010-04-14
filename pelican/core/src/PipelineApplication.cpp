@@ -61,7 +61,6 @@ PipelineApplication::PipelineApplication(int argc, char** argv)
 
     // Construct the pipeline driver
     _driver = new PipelineDriver( _dataBlobFactory, _moduleFactory, _clientFactory );
-
 }
 
 /**

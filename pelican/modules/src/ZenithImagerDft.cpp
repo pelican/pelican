@@ -11,19 +11,15 @@
 #include <iostream>
 #include <iomanip>
 #include <limits>
+#include <omp.h>
 
-#ifdef USE_MKL
-    #include <mkl_cblas.h>
+#ifdef USING_MKL
+    #include <mkl.h>
 #else
-    #include "cblas.h"
-#endif
-
-#ifdef PELICAN_OPENMP
-    #include <omp.h>
+    #include <cblas.h>
 #endif
 
 #include "pelican/utility/memCheck.h"
-
 
 namespace pelican {
 
@@ -341,7 +337,6 @@ void ZenithImagerDft::_makeImageDft(const unsigned nAnt, const real_t* antPosX,
 
     // Set up buffers for sorting a vector of weights for one pixel
     // and the temporary results of the per pixel matrix vector product
-#ifdef PELICAN_OPENMP
     unsigned nProcs = omp_get_num_procs();
     std::vector< std::vector<complex_t> > tempWeights;
     std::vector< std::vector<complex_t> > tempBuffer;
@@ -352,10 +347,6 @@ void ZenithImagerDft::_makeImageDft(const unsigned nAnt, const real_t* antPosX,
         tempBuffer[i].resize(nAnt);
     }
     int tid = 0;
-#else
-    std::vector<complex_t> tempWeights(nAnt);
-    std::vector<complex_t> tempBuffer(nAnt);
-#endif
 
     real_t alpha[2] = {1.0, 0.0};
     real_t beta[2]  = {0.0, 0.0};
@@ -371,17 +362,12 @@ void ZenithImagerDft::_makeImageDft(const unsigned nAnt, const real_t* antPosX,
 #pragma omp parallel for private(tid, weights, buffer)
     for (int m = 0; m < static_cast<int>(nM); m++) {
 
-            unsigned indexM = m * nL;
-            complex_t *weightsYM = &_weightsYM[m * nAnt];
+        unsigned indexM = m * nL;
+        complex_t *weightsYM = &_weightsYM[m * nAnt];
 
-#ifdef PELICAN_OPENMP
-            tid = omp_get_thread_num();
-            weights = &tempWeights[tid][0];
-            buffer = &tempBuffer[tid][0];
-#else
-            weights = &tempWeights[0];
-            buffer = &tempBuffer[0];
-#endif
+        tid = omp_get_thread_num();
+        weights = &tempWeights[tid][0];
+        buffer = &tempBuffer[tid][0];
 
         for (unsigned l = 0; l < nL; l++) {
             complex_t* weightsXL = &_weightsXL[l * nAnt];

@@ -1,13 +1,14 @@
+#===============================================================================
 # Find Intel MKL.
-################################################################################
+#===============================================================================
 # This module defines
 #  MKL_FOUND:     If false, do not try to use MKL.
 #  MKL_LIBRARIES: The libraries needed to use MKL BLAS & LAPACK.
-#  MKL_INCLUDE_DIR:
-################################################################################
+#  MKL_INCLUDE_DIR: The location of mkl.h
+#===============================================================================
 
 
-# Architecture specfic interface layer
+# Architecture specfic interface layer.
 # ==============================================================================
 if (CMAKE_SIZEOF_VOID_P EQUAL 8)
   set(MKL_NAMES ${MKL_NAMES} mkl_intel_lp64)
@@ -16,42 +17,37 @@ else (CMAKE_SIZEOF_VOID_P EQUAL 8)
 endif (CMAKE_SIZEOF_VOID_P EQUAL 8)
 
 
-# Computation layer:  see http://bit.ly/bMCczV
+# Computation layer:  see http://bit.ly/bMCczV.
 # ==============================================================================
-set(MKL_NAMES ${MKL_NAMES} mkl_core)
-#SET(MKL_NAMES ${MKL_NAMES} mkl_lapack) # only needed for extended LAPACK functions.
-# Library dispatcher for dynamic load of processor specific kernel
-#SET(MKL_NAMES ${MKL_NAMES} mkl)
+set(mkl_lib_names
+    mkl_core
+    #mkl_lapack # only needed for extended LAPACK functions.
+)
 
 
-# Threading model
+# Threading model.
 # ==============================================================================
-#SET(MKL_THREADED true)
+SET(use_threaded_mkl false)
 
-if (MKL_THREADED)
-
+if (use_threaded_mkl)
     if (CMAKE_COMPILER_IS_GNUCXX)
-        set(MKL_NAMES ${MKL_NAMES} mkl_gnu_thread)
+        list(APPEND ${mkl_lib_names} mkl_gnu_thread)
     else (CMAKE_COMPILER_IS_GNUCXX)
-        set(MKL_NAMES ${MKL_NAMES} mkl_intel_thread)
+        list(APPEND ${mkl_lib_names} mkl_intel_thread)
     endif (CMAKE_COMPILER_IS_GNUCXX)
-    # For pgi compiler use set(MKL_NAMES ${MKL_NAMES} mkl_pgi_thread)
-
     find_package(OpenMP REQUIRED)
     list(APPEND CMAKE_CXX_FLAGS ${OpenMP_CXX_FLAGS})
     list(APPEND CMAKE_C_FLAGS ${OpenMP_C_FLAGS})
+else (use_threaded_mkl)
+    list(APPEND ${mkl_lib_names} mkl_sequential)
+endif (use_threaded_mkl)
 
-else (MKL_THREADED)
-
-    set(MKL_NAMES ${MKL_NAMES} mkl_sequential)
-
-endif (MKL_THREADED)
 
 # Loop over required library names adding to MKL_LIBRARIES.
-foreach (MKL_NAME ${MKL_NAMES})
-
-    find_library(${MKL_NAME}_LIBRARY
-        NAMES ${MKL_NAME}
+# ==============================================================================
+foreach (mkl_name ${mkl_lib_names})
+    find_library(${mkl_name}_LIBRARY
+        NAMES ${mkl_name}
         PATHS
         /usr/lib64
         /usr/lib
@@ -61,15 +57,16 @@ foreach (MKL_NAME ${MKL_NAMES})
         /opt/intel/Compiler/*/*/mkl/lib/*/
     )
 
-    set(TMP_LIBRARY ${${MKL_NAME}_LIBRARY})
+    set(tmp_library ${${mkl_name}_LIBRARY})
 
-    if (TMP_LIBRARY)
-        set(MKL_LIBRARIES ${MKL_LIBRARIES} ${TMP_LIBRARY})
-    endif(TMP_LIBRARY)
+    if (tmp_library)
+        set(MKL_LIBRARIES ${MKL_LIBRARIES} ${tmp_library})
+    endif (tmp_library)
+endforeach (mkl_name)
 
-endforeach  (MKL_NAME)
 
-
+# Find the include directory.
+# ==============================================================================
 find_path(MKL_INCLUDE_DIR mkl.h
     PATHS
     /usr/include/
@@ -77,10 +74,12 @@ find_path(MKL_INCLUDE_DIR mkl.h
     /opt/intel/Compiler/*/*/mkl/include/
 )
 
-# Handle the QUIETLY and REQUIRED arguments and set MKL_FOUND to TRUE if
-# all listed variables are TRUE
+# Handle the QUIETLY and REQUIRED arguments.
+# ==============================================================================
 include(FindPackageHandleCompat)
 FIND_PACKAGE_HANDLE_STANDARD_ARGS(MKL DEFAULT_MSG MKL_LIBRARIES)
 
-# Hide the MKL_LIBRARY temporary variable in the cmake cache.
-mark_as_advanced(MKL_LIBRARY)
+
+# Hide in cache.
+# ==============================================================================
+mark_as_advanced(MKL_LIBRARIES MKL_INCLUDE_DIR tmp_library)

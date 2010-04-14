@@ -11,36 +11,31 @@
 #   -DTIMER={true | false} (default: false):
 #       Enable additional timer printing.
 #
-#   -DIGNORE_MKL={true | false} (default: false):
-#       Ignore MKL libraries.
-#
-#   -DOPENMP={true | false} (default: false):
-#       Enabled threaded math computation using openMP.
 #===============================================================================
 
-# === Specify minimum cmake version
+# === Specify minimum cmake version.
 cmake_minimum_required(VERSION 2.6 FATAL_ERROR)
 
-# === Set the compiler
+# === Set the compiler.
 if (INTEL)
-  set(CMAKE_CXX_COMPILER icpc)
-  set(CMAKE_C_COMPILER icc)
+    set(CMAKE_CXX_COMPILER icpc)
+    set(CMAKE_C_COMPILER icc)
 endif (INTEL)
 
-# === CMake Build File
+# === CMake Build File.
 project(Pelican CXX C)
 
-# === Project version
+# === Project version.
 set( ${PROJECT_NAME}_MAJOR_VERSION 0 )
 set( ${PROJECT_NAME}_MINOR_VERSION 0 )
 set( ${PROJECT_NAME}_PATCH_LEVEL 0 )
 
-# === CMake setup info
+# === CMake setup info.
 list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_SOURCE_DIR}/cmake)
 include(cmake/packagemacros.cmake)
 enable_testing()
 
-# === Options and defaults
+# === Options and defaults.
 if (NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE debug)
 endif (NOT CMAKE_BUILD_TYPE)
@@ -49,19 +44,7 @@ if (TIMER)
     add_definitions(-DTIMER_ENABLE)
 endif (TIMER)
 
-if (IGNORE_MKL)
-    set(IGNORE_MLK true)
-endif (IGNORE_MKL)
-set(IGNORE_MLK true)
-
-if (OPENMP)
-    find_package(OpenMP REQUIRED)
-    add_definitions(-DPELICAN_OPENMP)
-    list(APPEND CMAKE_CXX_FLAGS ${OpenMP_CXX_FLAGS})
-    list(APPEND CMAKE_C_FLAGS ${OpenMP_C_FLAGS})
-endif (OPENMP)
-
-# === installtion locations
+# === installtion locations.
 if (NOT LIBRARY_INSTALL_DIR)
     set(LIBRARY_INSTALL_DIR lib)
 endif (NOT LIBRARY_INSTALL_DIR)
@@ -74,18 +57,18 @@ if (NOT INCLUDE_INSTALL_DIR)
     set(INCLUDE_INSTALL_DIR "include/pelican")
 endif (NOT INCLUDE_INSTALL_DIR)
 
-# installation targets for cmake files
+# === Installation target for project cmake files.
 install(DIRECTORY cmake DESTINATION ${PELICAN_INSTALL_DIR}
         FILES_MATCHING PATTERN "*.cmake" )
 
-# === Compiler defaults
+# === Compiler defaults.
 set (BUILD_SHARED_LIBS TRUE)
-include_directories(
-    ${PROJECT_SOURCE_DIR}/..
-)
-
+find_package(OpenMP REQUIRED)
+list(APPEND CMAKE_CXX_FLAGS ${OpenMP_CXX_FLAGS})
+list(APPEND CMAKE_C_FLAGS ${OpenMP_C_FLAGS})
 set(CPP_PLATFORM_LIBS ${CMAKE_THREAD_LIBS_INIT})
-set(CMAKE_CXX_FLAGS_RELEASE "-O2")
+include_directories(${PROJECT_SOURCE_DIR}/..)
+set(CMAKE_CXX_FLAGS_RELEASE "-O2 -fPIC")
 if (CMAKE_COMPILER_IS_GNUCC)
     # Note that -std=c++0x is needed for -pedantic.
     add_definitions(-Wall -Wextra -pedantic -std=c++0x)
@@ -101,35 +84,21 @@ if (APPLE)
     add_definitions(-DDARWIN)
 endif (APPLE)
 
+# === Setup project dependencies.
+include(cmake/dependencies.cmake)
 
-# === Dependencies
-find_package(Boost COMPONENTS program_options REQUIRED)
-include(MathLibraries)
-set(dependencies
-        Qt4
-        CppUnit
-        CFitsio
-)
-PACKAGE_DEPENDENCIES(${dependencies})
-
-# -- list of all libraries for single library install
-set(PROJECT_LIBRARIES pelican
-    ${Boost_LIBRARIES}
-    ${PELICAN_CBLAS_LIBS}
-    ${PELICAN_LAPACK_LIBS}
-    ${CFITSIO_LIBRARIES}
-)
-
-# === Sub modules (recurse into sub-directories to build modules)
+# === Sub modules (recurse into sub-directories to build modules).
 include(modules.cmake)
 
-# === Doxygen documentation targets
+# === Doxygen documentation targets.
 include(UseDoxygen)
 set(DOXYFILE_LATEX "NO")
 add_doxygen_target(code DoxyfileCode)
 add_doxygen_target(user DoxyfileUser)
 add_doxygen_target(developer DoxyfileDeveloper)
 
-
-# === libpelican.so build target
+# === libpelican.so build target.
 PROJECT_LIBRARY(pelican)
+
+# === Write build configuration for use with FindPelican.cmake
+file(WRITE cmake/pelicanBuildConfig.cmake "set(pelican_mkl ${pelican_mkl})")

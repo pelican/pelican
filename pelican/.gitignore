@@ -3,3 +3,4 @@ src.kdev4
 .kdev4/
 release/
 debug/
+intel_release/

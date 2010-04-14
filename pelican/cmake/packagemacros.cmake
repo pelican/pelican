@@ -40,10 +40,10 @@ CHECK_INCLUDE_FILES("sys/types.h" HAVE_SYS_TYPES_H)
 CHECK_INCLUDE_FILES( unistd.h HAVE_UNISTD_H)
 CHECK_INCLUDE_FILES( memory.h HAVE_MEMORY_H)
 
+
 #
 # Load in Package Dependencies
 #
-
 MACRO( PACKAGE_DEPENDENCIES )
     # add specific packages
     set(config_header "${BUILD_INCLUDE_DIR}/config.h")
@@ -243,7 +243,7 @@ ENDMACRO( SUBPACKAGE_LIBRARY )
 #  the contents of all the subpackage libraries (defined by SUBPACKAGE_LIBRARY)
 #
 MACRO( PROJECT_LIBRARY libname)
-    if(CMAKE_BUILD_TYPE MATCHES RELEASE)
+    if(CMAKE_BUILD_TYPE MATCHES RELEASE|[rR]elease)
         include( ${SUBPACKAGE_GLOBAL_FILE} )
         # mark the object files as generated to avoid a search/missing targets
         foreach(obj ${SUBPACKAGE_SHARED_OBJECTS})
@@ -264,7 +264,9 @@ MACRO( PROJECT_LIBRARY libname)
         #    target_link_libraries("${libname}")
         install(TARGETS "${libname}_static" DESTINATION ${LIBRARY_INSTALL_DIR})
         install(TARGETS "${libname}" DESTINATION ${LIBRARY_INSTALL_DIR})
-    endif(CMAKE_BUILD_TYPE MATCHES RELEASE)
+        target_link_libraries("${libname}" ${PROJECT_LIBRARIES})
+        target_link_libraries("${libname}_static" ${PROJECT_LIBRARIES})
+    endif(CMAKE_BUILD_TYPE MATCHES RELEASE|[rR]elease)
 ENDMACRO( PROJECT_LIBRARY)
 
 # ------- some utility macros
