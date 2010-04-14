@@ -15,7 +15,6 @@ set(serverTestLib_moc_sources
 
 set(serverTest_src
     src/serverTest.cpp
-    src/ChunkerFactoryTest.cpp
     src/LockableStreamDataTest.cpp
     src/LockedDataTest.cpp
     src/DataManagerTest.cpp
