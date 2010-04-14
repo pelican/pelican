@@ -1,4 +1,4 @@
-#include "FactoryTest.h"
+#include "ChunkerFactoryTest.h"
 #include "pelican/utility/Factory.h"
 #include "pelican/utility/Config.h"
 #include "pelican/server/test/TestUdpChunker.h"
@@ -7,21 +7,21 @@
 
 namespace pelican {
 
-CPPUNIT_TEST_SUITE_REGISTRATION( FactoryTest );
+CPPUNIT_TEST_SUITE_REGISTRATION( ChunkerFactoryTest );
 
 /**
- * @details FactoryTest constructor.
+ * @details ChunkerFactoryTest constructor.
  */
-FactoryTest::FactoryTest()
+ChunkerFactoryTest::ChunkerFactoryTest()
     : CppUnit::TestFixture()
 {
 }
 
 /**
  * @details
- * Destroys the FactoryTest object.
+ * Destroys the ChunkerFactoryTest object.
  */
-FactoryTest::~FactoryTest()
+ChunkerFactoryTest::~ChunkerFactoryTest()
 {
 }
 
@@ -29,7 +29,7 @@ FactoryTest::~FactoryTest()
  * @details
  * Initialisation routine run before each test method.
  */
-void FactoryTest::setUp()
+void ChunkerFactoryTest::setUp()
 {
 }
 
@@ -37,7 +37,7 @@ void FactoryTest::setUp()
  * @details
  * Clean-up routine run after each test method.
  */
-void FactoryTest::tearDown()
+void ChunkerFactoryTest::tearDown()
 {
 }
 
@@ -45,7 +45,7 @@ void FactoryTest::tearDown()
  * @details
  * Tests creating a new chunker using the factory create() method.
  */
-void FactoryTest::test_create()
+void ChunkerFactoryTest::test_create()
 {
     try {
         // Create a test configuration.

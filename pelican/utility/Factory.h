@@ -2,10 +2,7 @@
 #define FACTORY_H
 
 #include <QString>
-//#include <QMap>
-#include <string>
-#include <map>
-#include <iostream>
+#include <QMap>
 
 #include "pelican/utility/Config.h"
 #include "pelican/utility/ConfigNode.h"
@@ -14,11 +11,7 @@
  * @file Factory.h
  */
 
-using std::map;
-using std::string;
-
 namespace pelican {
-
 
 /**
  * @brief Abstract base for object creators.
@@ -30,24 +23,24 @@ namespace pelican {
 template<class B> class AbstractCreator
 {
     private:
-        string _type;
-        static map<string, AbstractCreator<B>*> _types;
+        QString _type;
 
     public:
         /// Constructs an AbstractCreator.
-        AbstractCreator(string type) : _type(type) {}
+        AbstractCreator(QString type) : _type(type) {}
 
         /// Creates an object of the given type (pure virtual).
         virtual B* create(const ConfigNode& config) = 0;
 
         /// Returns a reference to the type of this creator.
-        const string& type() {return _type;}
+        const QString& type() {return _type;}
 
-        /// Returns a reference to the type map.
-        static map<string, AbstractCreator<B>*>& types() {return _types;}
+        /// Returns a reference to the static type map.
+        static QMap<QString, AbstractCreator<B>*>& types() {
+            static QMap<QString, AbstractCreator<B>*> types;
+            return types;
+        }
 };
-
-template<class B> map<string, AbstractCreator<B>*> AbstractCreator<B>::_types;
 
 /**
  * @brief Template for creating objects.
@@ -60,13 +53,8 @@ template<class T, class B> class Creator : public AbstractCreator<B>
         /// Constructs a Creator for the given type.
         /// This inserts the type name and a pointer to this generator
         /// into the map of known object types, so that it can be created.
-        Creator(string type) : AbstractCreator<B>(type) {
-//            AbstractCreator<B>::types().insert(type, this);
-            std::cout << "Type: " << type << std::endl;
-            std::pair<string, AbstractCreator<B>*> keyPair(type, this);
-            std::cout << "Here" << std::endl;
-            AbstractCreator<B>::types().insert(keyPair);
-            std::cout << "Here" << std::endl;
+        Creator(QString type) : AbstractCreator<B>(type) {
+            AbstractCreator<B>::types().insert(type, this);
         }
 
         /// Allocates and constructs an object of the given type.
@@ -76,27 +64,27 @@ template<class T, class B> class Creator : public AbstractCreator<B>
 };
 
 /**
- * @class ChunkerFactory
+ * @class Factory
  *
  * @brief
- * Class to create configured chunker objects.
+ * Class to create configured objects.
  *
  * @details
- * This class creates configured chunker objects that have been declared
- * using the PELICAN_DECLARE_CHUNKER macro.
+ * This class creates configured objects that have been declared
+ * using the PELICAN_DECLARE_* macros.
  * Calling the create() method will then generate the object with the
  * appropriate configuration.
  *
- * Use the PELICAN_DECLARE_CHUNKER macro in the chunker's source (.cpp)
- * file to register the chunker with the factory.
+ * Use the PELICAN_DECLARE_* macro in the object's source (.cpp)
+ * file to register the object with the factory.
  *
  * \code
  *
- * // Create the chunker factory.
+ * // Create the factory.
  * Config::TreeAddress address;
  * address.append(Config::NodeId("server", ""));
  * address.append(Config::NodeId("chunkers", ""));
- * ChunkerFactory factory(&config, address);
+ * Factory<AbstractChunker> factory(&config, address);
  *
  * // Create a chunker.
  * AbstractChunker* chunker = factory.create("MyChunkerType");
@@ -106,11 +94,11 @@ template<class T, class B> class Creator : public AbstractCreator<B>
 template<class B> class Factory
 {
     private:
-        QList<B*> _objects;
+        QList<B*> _objects;              ///< The list of constructed objects.
 
     protected:
-        const Config* _config;
-        Config::TreeAddress _configRoot;
+        const Config* _config;           ///< Configuration object pointer.
+        Config::TreeAddress _configRoot; ///< Configuration root node.
 
     public:
         /// Creates the factory.
@@ -118,42 +106,35 @@ template<class B> class Factory
         : _config(config), _configRoot(base) {}
 
         /// Destroys the factory and deletes any objects created by it.
-        ~Factory() {
+        virtual ~Factory() {
             for (int i = 0; i < _objects.size(); ++i)
                 delete _objects[i];
         }
 
         /// Returns the tree node address that marks the start
         /// of the module configuration block.
-        Config::TreeAddress configRoot() const { return _configRoot; }
+        Config::TreeAddress configRoot() const {return _configRoot;}
 
-        /// return the configuration node for a type (named type if supplied)
+        /// Return the configuration node for a type (named type if supplied).
         ConfigNode configuration(const QString& type, const QString& name="") const
         {
             Config::TreeAddress address = _configRoot;
-            address.append(QPair<QString, QString>(type, name));
-            ConfigNode element = _config->get(address);
-            return element;
+            address.append(Config::NodeId(type, name));
+            return _config->get(address);
         }
 
-
-        /**
-         * @details
-         * Creates a new configured object of the given type, with the given
-         * name (default blank).
-         *
-         * @param[in] type The object type.
-         * @param[in] name The name of the object.
-         *
-         * @return Returns a pointer to the allocated object.
-         */
-        B* create(const QString& type, const QString& name)
+        /// Creates a new configured object.
+        /// Calling this method causes an object of the given \p type and
+        /// \p name (default blank) to be allocated and configured
+        /// appropriately.
+        ///
+        /// The base class pointer to the allocated object is returned
+        B* create(const QString& type, const QString& name = "")
         {
-            string str = type.toStdString();
-            if (AbstractCreator<B>::types().count(str) == 0)
+            if (AbstractCreator<B>::types().count(type) == 0)
                 throw QString("Factory::create(): Unknown type '%1'").arg(type);
 
-            B* object = AbstractCreator<B>::types()[str]->create(configuration(type, name));
+            B* object = AbstractCreator<B>::types()[type]->create(configuration(type, name));
             _objects.append(object);
             return object;
         }

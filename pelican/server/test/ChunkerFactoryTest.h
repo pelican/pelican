@@ -1,16 +1,16 @@
-#ifndef FACTORYTEST_H
-#define FACTORYTEST_H
+#ifndef CHUNKERFACTORYTEST_H
+#define CHUNKERFACTORYTEST_H
 
 #include <cppunit/extensions/HelperMacros.h>
 
 /**
- * @file FactoryTest.h
+ * @file ChunkerFactoryTest.h
  */
 
 namespace pelican {
 
 /**
- * @class FactoryTest
+ * @class ChunkerFactoryTest
  *  
  * @brief
  * 
@@ -18,10 +18,10 @@ namespace pelican {
  * 
  */
 
-class FactoryTest : public CppUnit::TestFixture
+class ChunkerFactoryTest : public CppUnit::TestFixture
 {
     public:
-        CPPUNIT_TEST_SUITE( FactoryTest );
+        CPPUNIT_TEST_SUITE( ChunkerFactoryTest );
         CPPUNIT_TEST( test_create );
         CPPUNIT_TEST_SUITE_END();
 
@@ -33,11 +33,12 @@ class FactoryTest : public CppUnit::TestFixture
         void test_create();
 
     public:
-        FactoryTest(  );
-        ~FactoryTest();
+        ChunkerFactoryTest(  );
+        ~ChunkerFactoryTest();
 
     private:
 };
 
 } // namespace pelican
-#endif // FACTORYTEST_H
+
+#endif // CHUNKERFACTORYTEST_H

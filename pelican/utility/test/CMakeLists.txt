@@ -6,7 +6,6 @@ set(
    src/SocketTesterTest.cpp
    src/ConfigTest.cpp
    src/ConfigNodeTest.cpp
-   src/FactoryTest.cpp
 )
 
 if (CMAKE_BUILD_TYPE MATCHES DEBUG)
