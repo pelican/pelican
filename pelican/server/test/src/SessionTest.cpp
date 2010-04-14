@@ -203,7 +203,7 @@ void SessionTest::test_streamData()
             _session->processStreamDataRequest(request);
         }
         catch (QString error) {
-            CPPUNIT_ASSERT(error.contains("pelican/data requested not supported by server"));
+            CPPUNIT_ASSERT(error.contains("data requested not supported by server"));
         }
     }
 

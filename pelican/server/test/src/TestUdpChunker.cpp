@@ -1,5 +1,4 @@
 #include "pelican/server/test/TestUdpChunker.h"
-#include "pelican/server/ChunkerFactory.h"
 #include "pelican/utility/Config.h"
 
 #include <QCoreApplication>

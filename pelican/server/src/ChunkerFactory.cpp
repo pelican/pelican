@@ -1,4 +1,5 @@
 #include "pelican/server/ChunkerFactory.h"
+#include "pelican/server/AbstractChunker.h"
 
 #include "pelican/utility/memCheck.h"
 
