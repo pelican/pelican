@@ -93,12 +93,10 @@ template<class T, class B> class Creator : public AbstractCreator<B>
  */
 template<class B> class Factory
 {
-    private:
-        QList<B*> _objects;              ///< The list of constructed objects.
-
     protected:
         const Config* _config;           ///< Configuration object pointer.
         Config::TreeAddress _configRoot; ///< Configuration root node.
+        QList<B*> _objects;              ///< The list of constructed objects.
 
     public:
         /// Creates the factory.
@@ -110,10 +108,6 @@ template<class B> class Factory
             for (int i = 0; i < _objects.size(); ++i)
                 delete _objects[i];
         }
-
-        /// Returns the tree node address that marks the start
-        /// of the module configuration block.
-        Config::TreeAddress configRoot() const {return _configRoot;}
 
         /// Return the configuration node for a type (named type if supplied).
         ConfigNode configuration(const QString& type, const QString& name="") const
@@ -128,13 +122,14 @@ template<class B> class Factory
         /// \p name (default blank) to be allocated and configured
         /// appropriately.
         ///
-        /// The base class pointer to the allocated object is returned
-        B* create(const QString& type, const QString& name = "")
+        /// The method returns a base class pointer to the allocated object.
+        virtual B* create(const QString& type, const QString& name = "")
         {
             if (AbstractCreator<B>::types().count(type) == 0)
                 throw QString("Factory::create(): Unknown type '%1'").arg(type);
 
-            B* object = AbstractCreator<B>::types()[type]->create(configuration(type, name));
+            B* object = AbstractCreator<B>::types()[type]->
+                    create(configuration(type, name));
             _objects.append(object);
             return object;
         }

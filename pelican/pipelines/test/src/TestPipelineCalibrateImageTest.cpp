@@ -28,13 +28,13 @@ TestPipelineCalibrateImageTest::~TestPipelineCalibrateImageTest()
 
 void TestPipelineCalibrateImageTest::setUp()
 {
-    int ac = 0;
-    _app = new QCoreApplication(ac, NULL);
+//    int ac = 0;
+//    _app = new QCoreApplication(ac, NULL);
 }
 
 void TestPipelineCalibrateImageTest::tearDown()
 {
-    delete _app;
+//    delete _app;
 }
 
 void TestPipelineCalibrateImageTest::test_method()
