@@ -85,7 +85,9 @@ void SessionTest::test_processRequest()
         StreamDataRequest request;
         request.addDataOption(req);
         CPPUNIT_ASSERT_EQUAL( 0, _block->size() );
-        _session->processRequest(request, *_device);
+
+        _session->processRequest(request, *_device, 1);
+
         AbstractProtocol::StreamData_t data = _proto->lastStreamData();
         CPPUNIT_ASSERT_EQUAL( 0, data.size() );
     }

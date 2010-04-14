@@ -63,7 +63,7 @@ void Session::run()
  * This routine processes a general ServerRequest, calling the appropriate
  * working and then passes this on to the protocol to be returned to the client
  */
-void Session::processRequest(const ServerRequest& req, QIODevice& out)
+void Session::processRequest(const ServerRequest& req, QIODevice& out, const unsigned timeout)
 {
     try {
         switch(req.type()) {
@@ -73,8 +73,8 @@ void Session::processRequest(const ServerRequest& req, QIODevice& out)
                 break;
             case ServerRequest::StreamData:
                 {
-                    QList<LockedData> dataList = processStreamDataRequest(static_cast<const StreamDataRequest&>(req) );
-//                     cout << "Session::processRequest():  List size: " << dataList.size() << endl;
+                    QList<LockedData> dataList = processStreamDataRequest(static_cast<const StreamDataRequest&>(req), timeout );
+//                    cout << "Session::processRequest():  List size: " << dataList.size() << endl;
                     if( dataList.size() > 0 ) {
                         AbstractProtocol::StreamData_t data;
                         for( int i=0; i < dataList.size(); ++i ) {
@@ -131,12 +131,12 @@ void Session::processRequest(const ServerRequest& req, QIODevice& out)
  * made.
  *
  * The data will be returned as a locked container to ensure access by other
- * threads will be blocked. This is achived by a signal emitted when the
+ * threads will be blocked. This is achieved by a signal emitted when the
  * LockedData object goes out of scope.
  *
  * @param[in] req       StreamDataRequest object containing a data requirements
  *                      iterator.
- * @param[in] timeout   Timeout in milliseconds. (0 = dont timeout)
+ * @param[in] timeout   Timeout in milliseconds. (0 = do not timeout)
  *
  * @return A list of locked data containing streams data object and their
  *         associated service data for the first request that can be fully
@@ -155,7 +155,7 @@ QList<LockedData> Session::processStreamDataRequest(const StreamDataRequest& req
     QTime time;
     time.start();
 
-    // Iterate until the data requirments can be satisfied.
+    // Iterate until the data requirements can be satisfied.
     while (dataList.size() == 0) { // keep spinning until we either get data or time out
         if ((unsigned int)time.elapsed() > timeout && timeout > 0) {
             throw QString("Session::processStreamDataRequest():"
@@ -171,7 +171,6 @@ QList<LockedData> Session::processStreamDataRequest(const StreamDataRequest& req
     return dataList;
 }
 
-
 /**
  * @details
  * Returns all the data sets mentioned in the list (or throws if any one is missing).
@@ -185,7 +184,7 @@ QList<LockedData> Session::processServiceDataRequest(const ServiceDataRequest& r
         LockedData d = _dataManager->getServiceData(type, req.version(type));
         if( ! d.isValid() )
         {
-            throw QString("pelican/data Requested does not exist :" + type + " " + req.version(type));
+            throw QString("Data requested does not exist :" + type + " " + req.version(type));
         }
         data.append(d);
     }

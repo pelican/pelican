@@ -45,7 +45,7 @@ class Session : public QThread
         void run();
 
         /// Process a request to the server sending the appropriate response.
-        void processRequest(const ServerRequest&, QIODevice& );
+        void processRequest(const ServerRequest&, QIODevice&, const unsigned timeout = 0 );
 
     protected:
         /// Iterates over the requirements in the stream data request (/p req) and
