@@ -34,7 +34,7 @@ class TestDataBlob : public DataBlob
         /// Resizes the data buffer.
         void resize(size_t size) {
             _buffer.resize(size + 1);
-            _buffer[size + 1] = '\0'; // Safety if someone tries to print.
+            _buffer[size] = '\0'; // Safety if someone tries to print.
         }
 };
 

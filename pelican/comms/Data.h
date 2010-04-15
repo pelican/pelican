@@ -3,6 +3,8 @@
 
 #include <cstring>
 #include <QObject>
+#include <typeinfo>
+#include <cstdlib>
 class QByteArray;
 
 /**
@@ -62,6 +64,12 @@ class Data
 
         /// Returns a pointer to the beginning of the memory block.
         const void* operator*() const {return _data;}
+
+        /// Returns a pointer to the beginning of the memory block.
+        void* data() {return _data;}
+
+        /// Returns a pointer to the beginning of the memory block.
+        const void* data() const {return _data;}
 
         /// Returns the name of the data.
         const QString& name() const {return _name;}
