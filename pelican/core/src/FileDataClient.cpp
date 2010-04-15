@@ -1,7 +1,6 @@
 #include "pelican/core/FileDataClient.h"
 #include "pelican/adapters/AbstractServiceAdapter.h"
 #include "pelican/adapters/AbstractStreamAdapter.h"
-#include "pelican/adapters/AdapterFactory.h"
 #include "pelican/data/DataRequirements.h"
 #include "pelican/data/DataBlobFactory.h"
 #include "pelican/utility/ConfigNode.h"
@@ -90,7 +89,7 @@ QHash<QString, DataBlob*> FileDataClient::getData(QHash<QString, DataBlob*>& dat
 void FileDataClient::_getConfig()
 {
     // Get all the filenames for each data type.
-    _fileNames = configNode().getOptionHash("pelican/data", "type", "file");
+    _fileNames = configNode().getOptionHash("data", "type", "file");
 }
 
 } // namespace pelican

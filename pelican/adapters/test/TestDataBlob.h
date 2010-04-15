@@ -14,23 +14,30 @@ namespace pelican {
  * @class TestDataBlob
  *  
  * @brief
- *    Datablob to support unit testing
+ * Data blob to support unit testing.
+ *
  * @details
- *    A minimalist datablob that has no structure - just an empty buffer
- * 
+ * A minimalist data blob that has no structure, just an empty buffer.
  */
-
 class TestDataBlob : public DataBlob
 {
-    public:
-        TestDataBlob(  );
-        ~TestDataBlob();
-        char* data();
-        void resize(size_t size);
-
     private:
-        std::vector<char> _buf;
+        std::vector<char> _buffer;
+
+    public:
+        /// Constructs the test data blob.
+        TestDataBlob() : DataBlob() {}
+
+        /// Returns a pointer to the first element of the buffer.
+        char* data() {return &_buffer[0];}
+
+        /// Resizes the data buffer.
+        void resize(size_t size) {
+            _buffer.resize(size + 1);
+            _buffer[size + 1] = '\0'; // Safety if someone tries to print.
+        }
 };
 
 } // namespace pelican
+
 #endif // TESTDATABLOB_H 

@@ -1,6 +1,5 @@
 #include <iostream>
 #include "pelican/core/AbstractDataClient.h"
-#include "pelican/adapters/AdapterFactory.h"
 #include "pelican/adapters/AbstractStreamAdapter.h"
 #include "pelican/adapters/AbstractServiceAdapter.h"
 #include "pelican/data/DataRequirements.h"

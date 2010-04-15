@@ -12,7 +12,7 @@
 
 namespace pelican {
 
-class AdapterFactory;
+class AbstractAdapter;
 class DataTypes;
 class DataRequirements;
 
@@ -28,12 +28,12 @@ class DataRequirements;
 class DataClientFactory : public Factory<AbstractDataClient>
 {
     private:
-        AdapterFactory* _adapterFactory;
+        Factory<AbstractAdapter>* _adapterFactory;
 
     public:
         /// Constructs the data client factory.
         DataClientFactory(const Config* config,
-                const Config::TreeAddress& base, AdapterFactory* aFactory)
+                const Config::TreeAddress& base, Factory<AbstractAdapter>* aFactory)
         : Factory<AbstractDataClient>(config, base), _adapterFactory(aFactory) {}
 
         /// Create a configured object with the given name and type.

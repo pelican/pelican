@@ -3,7 +3,6 @@
 #include "pelican/core/PelicanServerClient.h"
 #include "pelican/core/DataTypes.h"
 #include "pelican/data/DataRequirements.h"
-#include "pelican/adapters/AdapterFactory.h"
 
 #include <iostream>
 
@@ -37,7 +36,7 @@ AbstractDataClient* DataClientFactory::create(const QString& type,
         QSet<QString> all = req.streamData() + req.serviceData();
         foreach (const QString& dataType, all)
         {
-            if(!adapterNames.contains(dataType))
+            if (!adapterNames.contains(dataType))
                 throw QString("DataClientFactory: Unable to find adapter for "
                         "data type '%1'.").arg(dataType);
             AbstractAdapter* adapter =

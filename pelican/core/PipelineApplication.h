@@ -2,6 +2,7 @@
 #define PIPELINEAPPLICATION_H
 
 #include <QString>
+#include "pelican/utility/Factory.h"
 
 /**
  * @file PipelineApplication.h
@@ -9,8 +10,8 @@
 
 namespace pelican {
 
+class AbstractAdapter;
 class AbstractPipeline;
-class AdapterFactory;
 class Config;
 class DataBlobFactory;
 class ModuleFactory;
@@ -75,7 +76,7 @@ class PipelineApplication
         Config *_config;
 
         /// Pointer to adapter factory.
-        AdapterFactory* _adapterFactory;
+        Factory<AbstractAdapter>* _adapterFactory;
 
         /// Pointer to the application's data blob factory.
         DataBlobFactory *_dataBlobFactory;

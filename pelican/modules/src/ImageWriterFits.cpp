@@ -230,8 +230,8 @@ void ImageWriterFits::_writeHeader(ImageData* image)
 
     // Amplitude range (only valid if not an image cube).
     if (image->nChannels() == 1 && image->nPolarisations() == 1) {
-        _writeKey("pelican/dataMIN", image->min(0, 0), "Minimum pixel value");
-        _writeKey("pelican/dataMAX", image->max(0, 0), "Maximum pixel value");
+        _writeKey("DATAMIN", image->min(0, 0), "Minimum pixel value");
+        _writeKey("DATAMAX", image->max(0, 0), "Maximum pixel value");
     }
 
     // x (l) axis keywords.

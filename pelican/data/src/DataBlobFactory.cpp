@@ -62,7 +62,7 @@ DataBlob* DataBlobFactory::create(const QString& type)
     /* Check which type of blob to create */
     if (type == "AntennaPositions")
         dataBlob = new AntennaPositions;
-    else if (type == "pelican/dataBlob")
+    else if (type == "DataBlob")
         dataBlob = new DataBlob;
     else if (type == "FlagTable")
         dataBlob = new FlagTable;

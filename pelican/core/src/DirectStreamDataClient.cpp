@@ -48,7 +48,7 @@ void DirectStreamDataClient::setChunker(AbstractChunker* chunker, const QString&
             _chunkerManager.addServiceChunker(chunker);
             break;
         default:
-            throw(QString( QString("pelican/data type ") + name + " not available in requirements"));
+            throw(QString( QString("Data type ") + name + " not available in requirements"));
             break;
     }
 
@@ -79,7 +79,7 @@ QHash<QString, DataBlob*> DirectStreamDataClient::getData(QHash<QString, DataBlo
         {
             if( ! it->isCompatible( _dataManager->dataSpec() ) )
                 throw QString("DirectStreamDataClient::getData(): "
-                        "pelican/data requested not supported by client");
+                        "Data requested not supported by client");
             dataList = _dataManager->getDataRequirements(*it);
             ++it;
         }
