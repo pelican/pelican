@@ -512,9 +512,9 @@
 </storageModule>
 <storageModule moduleId="org.eclipse.cdt.make.core.buildtargets">
 <buildTargets>
-<target name="cmake (build makefiles" path="intel_release" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+<target name="cmake (build makefiles)" path="intel_release" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 <buildCommand>cmake</buildCommand>
-<buildArguments>../ -DINTEL=true -DOPENMP=true -DCMAKE_BUILD_TYPE=release -DTIMER=true</buildArguments>
+<buildArguments>../ -DCMAKE_BUILD_TYPE=release -DCMAKE_CXX_COMPILER=icpc -DCMAKE_C_COMPILER=icc</buildArguments>
 <buildTarget/>
 <stopOnError>true</stopOnError>
 <useDefaultCommand>false</useDefaultCommand>
@@ -523,7 +523,6 @@
 <target name="make (release)" path="intel_release" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 <buildCommand>make</buildCommand>
 <buildArguments>-j2</buildArguments>
-<buildTarget/>
 <stopOnError>true</stopOnError>
 <useDefaultCommand>true</useDefaultCommand>
 <runAllBuilders>true</runAllBuilders>
@@ -1078,9 +1077,9 @@
 </storageModule>
 <storageModule moduleId="org.eclipse.cdt.make.core.buildtargets">
 <buildTargets>
-<target name="cmake (build makefiles" path="intel_release" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+<target name="cmake (build makefiles)" path="intel_release" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 <buildCommand>cmake</buildCommand>
-<buildArguments>../ -DINTEL=true -DOPENMP=true -DCMAKE_BUILD_TYPE=release -DTIMER=true</buildArguments>
+<buildArguments>../ -DCMAKE_BUILD_TYPE=release -DCMAKE_CXX_COMPILER=icpc -DCMAKE_C_COMPILER=icc</buildArguments>
 <buildTarget/>
 <stopOnError>true</stopOnError>
 <useDefaultCommand>false</useDefaultCommand>
@@ -1089,7 +1088,6 @@
 <target name="make (release)" path="intel_release" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 <buildCommand>make</buildCommand>
 <buildArguments>-j2</buildArguments>
-<buildTarget/>
 <stopOnError>true</stopOnError>
 <useDefaultCommand>true</useDefaultCommand>
 <runAllBuilders>true</runAllBuilders>

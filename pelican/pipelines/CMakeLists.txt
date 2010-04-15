@@ -1,4 +1,4 @@
-INCLUDE_DIRECTORIES(${QT_INCLUDES})
+include_directories(${QT_INCLUDES})
 
 SUBPACKAGE(pipelines utility data modules core server serverTest)
 
