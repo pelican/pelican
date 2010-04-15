@@ -1,8 +1,8 @@
 #include <QCoreApplication>
 #include <QString>
+#include "pelican/modules/AbstractModule.h"
 #include "pelican/core/PipelineApplication.h"
 #include "pelican/core/PipelineDriver.h"
-#include "pelican/core/ModuleFactory.h"
 #include "pelican/core/DataClientFactory.h"
 #include "pelican/data/DataBlobFactory.h"
 #include "boost/program_options.hpp"
@@ -56,7 +56,9 @@ PipelineApplication::PipelineApplication(int argc, char** argv)
     _dataBlobFactory = new DataBlobFactory;
 
     // Construct the module factory
-    _moduleFactory = new ModuleFactory(_config);
+    Config::TreeAddress moduleBase(base);
+    moduleBase.append(Config::NodeId("modules", ""));
+    _moduleFactory = new Factory<AbstractModule>(_config, moduleBase);
 
     // Construct the DataClient factory
     Config::TreeAddress clientBase(base);

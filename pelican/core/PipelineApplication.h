@@ -11,10 +11,10 @@
 namespace pelican {
 
 class AbstractAdapter;
+class AbstractModule;
 class AbstractPipeline;
 class Config;
 class DataBlobFactory;
-class ModuleFactory;
 class PipelineDriver;
 class DataClientFactory;
 
@@ -82,7 +82,7 @@ class PipelineApplication
         DataBlobFactory *_dataBlobFactory;
 
         /// Pointer to the application's module factory.
-        ModuleFactory *_moduleFactory;
+        Factory<AbstractModule>* _moduleFactory;
 
         /// Pointer to the module factory.
         DataClientFactory* _clientFactory;

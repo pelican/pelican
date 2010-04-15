@@ -1,6 +1,5 @@
 #include "pelican/core/test/PipelineDriverTest.h"
-
-#include "pelican/core/ModuleFactory.h"
+#include "pelican/modules/AbstractModule.h"
 #include "pelican/core/DataClientFactory.h"
 #include "pelican/core/DataTypes.h"
 #include "pelican/core/PipelineDriver.h"
@@ -54,7 +53,10 @@ void PipelineDriverTest::setUp()
     // Create the factories.
     _dataBlobFactory = new DataBlobFactory;
     Config config;
-    _moduleFactory = new ModuleFactory(&config);
+
+    Config::TreeAddress modulesNode;
+    _moduleFactory = new Factory<AbstractModule>(0, modulesNode);
+
     Config::TreeAddress clientsNode;
     _clientFactory = new DataClientFactory(0, clientsNode, 0);
 

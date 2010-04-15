@@ -2,6 +2,7 @@
 #define PIPELINEDRIVER_H
 
 #include "pelican/data/DataRequirements.h"
+#include "pelican/utility/Factory.h"
 #include <QMultiHash>
 #include <QList>
 
@@ -11,13 +12,12 @@
 
 namespace pelican {
 
+class AbstractModule;
 class AbstractPipeline;
-class ModuleFactory;
 class AbstractDataClient;
 class AbstractAdapter;
 class DataBlobFactory;
 class DataClientFactory;
-class AdapterFactory;
 
 /**
  * @class PipelineDriver
@@ -42,7 +42,7 @@ class PipelineDriver
         DataBlobFactory* _blobFactory;
 
         /// Pointer to the module factory.
-        ModuleFactory* _moduleFactory;
+        Factory<AbstractModule>* _moduleFactory;
 
         /// Pointer to the module factory.
         DataClientFactory* _clientFactory;
@@ -76,7 +76,8 @@ class PipelineDriver
 
     public:
         /// Constructs a new pipeline driver.
-        PipelineDriver( DataBlobFactory* blobFactory, ModuleFactory* moduleFactory, 
+        PipelineDriver( DataBlobFactory* blobFactory,
+                Factory<AbstractModule>* moduleFactory,
                 DataClientFactory* clientFactory );
 
         /// Destroys the pipeline driver.

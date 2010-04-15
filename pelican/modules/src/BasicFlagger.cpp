@@ -7,6 +7,8 @@
 
 namespace pelican {
 
+PELICAN_DECLARE_MODULE(BasicFlagger)
+
 /**
  * @details
  * Module constructor.

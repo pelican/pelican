@@ -4,7 +4,6 @@
 #include "pelican/core/AbstractDataClient.h"
 #include "pelican/core/FileDataClient.h"
 #include "pelican/core/AbstractPipeline.h"
-#include "pelican/core/ModuleFactory.h"
 #include "pelican/data/DataBlob.h"
 #include "pelican/data/DataBlobFactory.h"
 #include "pelican/utility/Config.h"
@@ -25,7 +24,7 @@ namespace pelican {
  * PipelineDriver constructor, which takes pointers to the allocated factories.
  */
 PipelineDriver::PipelineDriver(DataBlobFactory* blobFactory,
-        ModuleFactory* moduleFactory, DataClientFactory* clientFactory
+        Factory<AbstractModule>* moduleFactory, DataClientFactory* clientFactory
 ){
     // Initialise member variables.
     _run = false;

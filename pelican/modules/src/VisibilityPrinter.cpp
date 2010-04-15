@@ -7,6 +7,7 @@
 
 namespace pelican {
 
+PELICAN_DECLARE_MODULE(VisibilityPrinter)
 
 /**
  * @details

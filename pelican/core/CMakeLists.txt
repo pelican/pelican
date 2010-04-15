@@ -9,7 +9,6 @@ set( core_src
      src/DataClientFactory.cpp
      src/DataTypes.cpp
      src/FileDataClient.cpp
-     src/ModuleFactory.cpp
      src/PelicanServerClient.cpp
      src/PipelineApplication.cpp
      src/PipelineDriver.cpp

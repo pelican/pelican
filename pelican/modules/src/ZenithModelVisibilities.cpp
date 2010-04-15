@@ -18,6 +18,8 @@
 
 namespace pelican {
 
+PELICAN_DECLARE_MODULE(ZenithModelVisibilities)
+
 /**
  * @details
  * Module constructor.

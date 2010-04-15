@@ -40,4 +40,5 @@ class ModuleFactoryTest : public CppUnit::TestFixture
 };
 
 } // namespace pelican
+
 #endif // MODULEFACTORYTEST_H 

@@ -15,6 +15,8 @@
 
 namespace pelican {
 
+PELICAN_DECLARE_MODULE(ImageWriterFits)
+
 /**
  * @details
  * Module constructor.

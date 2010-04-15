@@ -6,6 +6,8 @@
 
 namespace pelican {
 
+PELICAN_DECLARE_MODULE(ImageCombiner)
+
 /**
  * @details
  * Module constructor.

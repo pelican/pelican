@@ -1,6 +1,5 @@
 #include "pelican/modules/AbstractModule.h"
 #include "pelican/core/AbstractPipeline.h"
-#include "pelican/core/ModuleFactory.h"
 #include "pelican/core/PipelineApplication.h"
 #include "pelican/core/PipelineDriver.h"
 #include <QtGlobal>
@@ -14,7 +13,7 @@ namespace pelican {
  */
 AbstractPipeline::AbstractPipeline()
 {
-    /* Initialise members */
+    // Initialise members.
     _moduleFactory = NULL;
     _pipelineDriver = NULL;
 }
@@ -42,17 +41,16 @@ AbstractPipeline::~AbstractPipeline()
  *                 configuration to differentiate the use of several modules
  *                 of the same type within a pipeline.
  *
- *
  * @return The method returns a pointer to the newly-created module.
  */
 AbstractModule* AbstractPipeline::createModule(const QString& type,
         const QString& name)
 {
-    /* Check that the module factory exists */
+    // Check that the module factory exists.
     if (_moduleFactory == NULL)
            throw QString("AbstractPipeline::createModule(): No module factory.");
 
-    AbstractModule* module = _moduleFactory->createModule(type, name);
+    AbstractModule* module = _moduleFactory->create(type, name);
     _modules.append(module);
     return module;
 }
@@ -83,7 +81,7 @@ const DataRequirements& AbstractPipeline::requiredDataRemote() const
  *
  * @param[in] factory Pointer to the module factory to use.
  */
-void AbstractPipeline::setModuleFactory(ModuleFactory* factory)
+void AbstractPipeline::setModuleFactory(Factory<AbstractModule>* factory)
 {
     _moduleFactory = factory;
 }

@@ -1,5 +1,4 @@
 #include "AdapterFactoryTest.h"
-#include "AdapterFactory.h"
 #include "pelican/adapters/AbstractAdapter.h"
 #include "pelican/utility/Config.h"
 

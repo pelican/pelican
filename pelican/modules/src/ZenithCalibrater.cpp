@@ -22,6 +22,8 @@ using std::conj;
 
 namespace pelican {
 
+PELICAN_DECLARE_MODULE(ZenithCalibrater)
+
 /**
  * @details
  * Module constructor. Register data blobs required by the module and get the

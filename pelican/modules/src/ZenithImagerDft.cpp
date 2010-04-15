@@ -27,6 +27,8 @@
 
 namespace pelican {
 
+PELICAN_DECLARE_MODULE(ZenithImagerDft)
+
 /**
  * @details
  * Module constructor.

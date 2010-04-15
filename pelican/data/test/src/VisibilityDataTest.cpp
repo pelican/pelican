@@ -31,7 +31,7 @@ void VisibilityDataTest::tearDown()
 void VisibilityDataTest::test_accessorMethods()
 {
     const unsigned nAntennas = 96;
-    const unsigned nChannels = 64;
+    const unsigned nChannels = 4;
 //    const unsigned nPols = 2;
     std::vector<unsigned> channels(nChannels);
     VisibilityData data(nAntennas, channels, VisibilityData::POL_BOTH);
@@ -76,7 +76,7 @@ void VisibilityDataTest::test_accessorMethodsLinear()
     // Use Case
     // Construct a visibility data set and test each of the accessor methods.
     const unsigned nAntennas = 96;
-    const unsigned nChannels = 64;
+    const unsigned nChannels = 4;
     const unsigned nPols = 2;
     const unsigned nTotal = nPols * nChannels * nAntennas * nAntennas;
     std::vector<unsigned> channels(nChannels);
