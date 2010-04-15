@@ -25,7 +25,7 @@ ModuleFactory::ModuleFactory(const Config *config)
 {
     _config = config;
     _configRoot.append(Config::NodeId("pipeline", ""));
-    _configRoot.append(Config::NodeId("pelican/modules", ""));
+    _configRoot.append(Config::NodeId("modules", ""));
 }
 
 /**
