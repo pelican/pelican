@@ -5,35 +5,30 @@
 #   Qt4
 #   CppUnit
 #   CFitsio
-#   Boost_program_options
-#   CBLAS (either provided by ATLAS or MKL)
-#   LAPACK (either provided by ATLAS or MKL)
+#   Boost program options
+#   cblas (either ATLAS or MKL)
+#   lapack (either ATLAS or MKL)
 #
 # Optional dependencies:
 #
 # Sets the following variables:
-#   PROJECT_LIBARRIES
+#   PROJECT_LIBARRIES: Use for building libpelican.so (TO BE REMOVED)
 #
-#
-
-include(packagemacros)
 
 # === Find Dependencies.
 find_package(Boost COMPONENTS program_options REQUIRED)
-set(dependencies
-    Qt4
-    CppUnit
-    CFitsio
-)
-PACKAGE_DEPENDENCIES(${dependencies}) # This calls find_package() ...
+find_package(Qt4 COMPONENTS QtCore QtGui QtNetwork QtXml REQUIRED)
+find_package(CppUnit REQUIRED)
+find_package(CFitsio REQUIRED)
 
 # === Find cblas and lapack from MKL if availiable, otherwise elsewhere.
-set(pelican_mkl false) # Variable to determine if MKL is beging used by pelican.
-set(IGNORE_MKL true) ## FIXME: HACK TO TURN OFF LOOKING FOR MKL AS FINDMKL IS BROKEN...
+if(NOT DEFINED pelican_mkl)
+    set(pelican_mkl true)
+endif(NOT DEFINED pelican_mkl)
 
-if (NOT IGNORE_MKL)
-    find_package(MKL) # Broken somewhere... :\
-endif (NOT IGNORE_MKL)
+if(pelican_mkl)
+    find_package(MKL)
+endif(pelican_mkl)
 
 if (MKL_FOUND)
     add_definitions(-DUSING_MKL)
@@ -55,7 +50,3 @@ set(PROJECT_LIBRARIES
     ${pelican_math_libs}
     ${CFITSIO_LIBRARIES}
 )
-
-#foreach(lib ${PROJECT_LIBRARIES})
-#    message(STATUS "================ ${lib}")
-#endforeach()
