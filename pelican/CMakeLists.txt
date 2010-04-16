@@ -21,7 +21,7 @@
 # --------------------------------------
 #   -DLIBRARY_INSTALL_DIR
 #   -DINCLUDE_INSTALL_DIR
-#   -DPELICAN_INSTALL_DIR
+#   -DMODULES_INSTALL_DIR
 #===============================================================================
 
 # === Specify minimum cmake version.
@@ -58,10 +58,6 @@ endif (NOT INCLUDE_INSTALL_DIR)
 if (NOT MODULES_INSTALL_DIR)
     set (MODULES_INSTALL_DIR "share/pelican")
 endif (NOT MODULES_INSTALL_DIR)
-
-#if (NOT PELICAN_INSTALL_DIR)
-#    set(PELICAN_INSTALL_DIR "${LIBRARY_INSTALL_DIR}/pelican")
-#endif (NOT PELICAN_INSTALL_DIR )
 
 # === Installation target for project cmake files.
 install(DIRECTORY cmake DESTINATION ${MODULES_INSTALL_DIR}
