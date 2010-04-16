@@ -1,8 +1,9 @@
 #include "ModuleFactoryTest.h"
-#include "ModuleFactory.h"
 #include "pelican/modules/AbstractModule.h"
+#include "pelican/utility/Factory.h"
 #include "pelican/utility/Config.h"
 #include "pelican/utility/memCheck.h"
+#include <iostream>
 
 namespace pelican {
 
@@ -52,9 +53,10 @@ void ModuleFactoryTest::test_createModule_EmptyModule()
     // Expect to be given a basic object
     {
         Config emptyConfig;
-        ModuleFactory factory(&emptyConfig);
+        Config::TreeAddress base;
+        Factory<AbstractModule> factory(&emptyConfig, base);
         AbstractModule* module = 0;
-        CPPUNIT_ASSERT_NO_THROW(module = factory.createModule("EmptyModule", "EmptyPipeline"));
+        CPPUNIT_ASSERT_NO_THROW(module = factory.create("EmptyModule"));
         CPPUNIT_ASSERT(module != 0);
     }
 
@@ -62,13 +64,16 @@ void ModuleFactoryTest::test_createModule_EmptyModule()
     // Ask for a module with a configuration
     {
         Config config;
-        ModuleFactory factory(&config);
-        Config::TreeAddress address = factory.configRoot();
-        address.append(Config::NodeId("module", "EmptyModule"));
+        Config::TreeAddress base;
+        base.append(Config::NodeId("pipeline", ""));
+        base.append(Config::NodeId("modules", ""));
+        Config::TreeAddress address(base);
+        address.append(Config::NodeId("EmptyModule", ""));
         config.set(address);
+        Factory<AbstractModule> factory(&config, base);
 
         AbstractModule* module = 0;
-        CPPUNIT_ASSERT_NO_THROW(module = factory.createModule("EmptyModule", "EmptyPipeline"));
+        CPPUNIT_ASSERT_NO_THROW(module = factory.create("EmptyModule"));
         CPPUNIT_ASSERT(module != 0);
     }
 }

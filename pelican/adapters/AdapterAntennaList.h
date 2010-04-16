@@ -21,15 +21,13 @@ class ConfigNode;
  * @details
  *
  */
-
 class AdapterAntennaList : public AbstractServiceAdapter
 {
     public:
+        /// Constructs a new AdapterAntennaList object.
         AdapterAntennaList(const ConfigNode& config);
-        ~AdapterAntennaList();
 
-    public:
-        /// Method to deserialise an antenna list file
+        /// Method to deserialise an antenna list file.
         void deserialise(QIODevice* in);
 
     private:

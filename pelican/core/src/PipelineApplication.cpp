@@ -1,11 +1,9 @@
 #include <QCoreApplication>
 #include <QString>
-#include "pelican/adapters/AdapterFactory.h"
+#include "pelican/modules/AbstractModule.h"
 #include "pelican/core/PipelineApplication.h"
 #include "pelican/core/PipelineDriver.h"
-#include "pelican/core/ModuleFactory.h"
 #include "pelican/core/DataClientFactory.h"
-#include "pelican/data/DataBlobFactory.h"
 #include "boost/program_options.hpp"
 #include "pelican/utility/Config.h"
 #include "pelican/utility/ConfigNode.h"
@@ -44,20 +42,27 @@ PipelineApplication::PipelineApplication(int argc, char** argv)
     if (!_createConfig(argc, argv))
         throw QString("Cannot create configuration object.");
 
-    // Construct the adapter factory
-    _adapterFactory = new AdapterFactory(_config);
+    // Construct the pipeline base address.
+    Config::TreeAddress base;
+    base.append(Config::NodeId("pipeline", ""));
+
+    // Construct the adapter factory.
+    Config::TreeAddress adapterBase(base);
+    adapterBase.append(Config::NodeId("adapters", ""));
+    _adapterFactory = new Factory<AbstractAdapter>(_config, adapterBase);
 
     // Construct the data blob factory
-    _dataBlobFactory = new DataBlobFactory;
+    _dataBlobFactory = new Factory<DataBlob>;
 
     // Construct the module factory
-    _moduleFactory = new ModuleFactory(_config);
+    Config::TreeAddress moduleBase(base);
+    moduleBase.append(Config::NodeId("modules", ""));
+    _moduleFactory = new Factory<AbstractModule>(_config, moduleBase);
 
     // Construct the DataClient factory
-    Config::TreeAddress clientBaseAddress;
-    clientBaseAddress.append(Config::NodeId("pipeline", ""));
-    clientBaseAddress.append(Config::NodeId("clients", ""));
-    _clientFactory = new DataClientFactory(_config, clientBaseAddress, _adapterFactory );
+    Config::TreeAddress clientBase(base);
+    clientBase.append(Config::NodeId("clients", ""));
+    _clientFactory = new DataClientFactory(_config, clientBase, _adapterFactory );
 
     // Construct the pipeline driver
     _driver = new PipelineDriver( _dataBlobFactory, _moduleFactory, _clientFactory );

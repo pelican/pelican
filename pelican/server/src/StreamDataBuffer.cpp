@@ -27,8 +27,10 @@ StreamDataBuffer::StreamDataBuffer(const QString& type, DataManager* manager,
 
 StreamDataBuffer::~StreamDataBuffer()
 {
-    foreach( LockableStreamData* data, _data)
+    foreach( LockableStreamData* data, _data) {
+        free(data->data()->data());
         delete data;
+    }
 }
 
 
@@ -43,9 +45,8 @@ void StreamDataBuffer::getNext(LockedData& lockedData)
 
     for (int i = 0; i < _serveQueue.size(); ++i) {
         LockableStreamData* lockable = _serveQueue[i];
-        void *ptr = lockable->data()->operator *();
-//         std::cout << "StreamDataBuffer::getNext(): Queue pos: " << i << " ptr = " << ptr << std::endl;
-        std::cout << "StreamDataBuffer::getNext(): Queue pos: " << i << " Content: " << reinterpret_cast<double*>(ptr)[0] << std::endl;
+        void *ptr = lockable->data()->data();
+        std::cout << "StreamDataBuffer::getNext(): Queue pos: " << i << " Content: " << *reinterpret_cast<double*>(ptr) << std::endl;
     }
 
     if( ! _serveQueue.isEmpty() ) {
@@ -109,7 +110,7 @@ LockableStreamData* StreamDataBuffer::_getWritable(size_t size)
     // create a new data object if we have enough space.
     if(size <= _space && size <= _maxChunkSize )
     {
-        void* memory = malloc(size);
+        void* memory = calloc(size, sizeof(char)); // Released in destructor.
         if (memory) {
             _space -= size;
             LockableStreamData* lockableData = new LockableStreamData(_type, memory, size);

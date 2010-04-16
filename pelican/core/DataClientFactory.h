@@ -3,42 +3,52 @@
 
 #include <QList>
 #include <QString>
-#include "pelican/utility/AbstractFactory.h"
+#include "pelican/core/AbstractDataClient.h"
+#include "pelican/utility/Factory.h"
 
 /**
  * @file DataClientFactory.h
  */
 
 namespace pelican {
-    class AbstractDataClient;
-    class AdapterFactory;
-    class DataTypes;
-    class DataRequirements;
+
+class AbstractAdapter;
+class DataTypes;
+class DataRequirements;
 
 /**
  * @class DataClientFactory
  *  
  * @brief
- *    Construct data clients
+ * Construct data clients.
+ *
  * @details
  * 
  */
-
-class DataClientFactory : public AbstractFactory
+class DataClientFactory : public Factory<AbstractDataClient>
 {
+    private:
+        Factory<AbstractAdapter>* _adapterFactory;
+
     public:
-        DataClientFactory( const Config* config, const Config::TreeAddress& base, AdapterFactory* );
-        ~DataClientFactory();
+        /// Constructs the data client factory.
+        DataClientFactory(const Config* config,
+                const Config::TreeAddress& base, Factory<AbstractAdapter>* aFactory)
+        : Factory<AbstractDataClient>(config, base), _adapterFactory(aFactory) {}
 
-        /// create a configured object with tthe given name and type
-        AbstractDataClient* create( const QString& type, const DataTypes& requirements, const QString& name="" );
+        /// Create a configured object with the given name and type.
+        AbstractDataClient* create(const QString& type,
+                const DataTypes& requirements, const QString& name="");
 
-        /// create a configured object with the given name and type from a list of data requirements
-        AbstractDataClient* create( const QString& type, const QList<DataRequirements>& requirements, const QString& name="");
+        /// Create a configured object with the given name and type from a list of data requirements.
+        AbstractDataClient* create(const QString& type,
+                const QList<DataRequirements>& requirements, const QString& name="");
 
     private:
-        QList<AbstractDataClient*> _clients;
-        AdapterFactory* _adapterFactory;
+        /// Disable inherited method.
+        AbstractDataClient* create(const QString&, const QString& = "") {
+            return 0;
+        }
 };
 
 } // namespace pelican

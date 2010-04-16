@@ -37,8 +37,9 @@ const double c = 299792458; // speed of light
 } // namespace phy
 
 
+typedef enum { POL_X, POL_Y, POL_BOTH, POL_UNDEF } Polarisation;
 
 
 } // namespace pelican
 
-#endif /* PELICANCONSTANTS_H_ */
+#endif // PELICANCONSTANTS_H_

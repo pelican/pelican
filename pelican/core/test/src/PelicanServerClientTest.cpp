@@ -5,7 +5,6 @@
 #include <QTcpSocket>
 #include "PelicanServerClientTest.h"
 #include "PelicanServerClient.h"
-#include "pelican/adapters/AdapterFactory.h"
 #include "pelican/data/DataRequirements.h"
 #include "pelican/adapters/test/TestDataBlob.h"
 #include "pelican/adapters/test/TestAdapter.h"

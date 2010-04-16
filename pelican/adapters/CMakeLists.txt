@@ -2,7 +2,6 @@ INCLUDE_DIRECTORIES(${QT_INCLUDES})
 SUBPACKAGE(adapters utility data)
 
 set( adapters_src
-    src/AdapterFactory.cpp
     src/AdapterLofarStationVisibilities.cpp
     src/AdapterAntennaList.cpp
 )

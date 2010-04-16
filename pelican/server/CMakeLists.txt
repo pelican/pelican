@@ -19,7 +19,6 @@ set( server_src
     src/AbstractChunker.cpp
     src/AbstractLockable.cpp
     src/ChunkerManager.cpp
-    src/ChunkerFactory.cpp
     src/LockableData.cpp
     src/DataReceiver.cpp
     src/LockedData.cpp

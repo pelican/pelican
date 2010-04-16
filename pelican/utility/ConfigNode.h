@@ -5,7 +5,7 @@
  * @file ConfigNode.h
  */
 
-#include "pelican/data/DataBlob.h"
+#include "pelican/utility/constants.h"
 #include <QDomElement>
 #include <QString>
 #include <QHash>
@@ -31,7 +31,6 @@ class ConfigNode
         QDomElement _config;
 
     public:
-
         /// Constructs an empty configuration node.
         ConfigNode() {}
 
@@ -88,10 +87,10 @@ class ConfigNode
                 const QString& tagName = QString("channels")) const;
 
         /// Returns the polarisation, if any.
-        DataBlob::pol_t getPolarisation(
+        Polarisation getPolarisation(
                 const QString& tagName = QString("polarisation")) const;
 };
 
-} /* namespace pelican */
+} // namespace pelican
 
-#endif /* CONFIGNODE_H_ */
+#endif // CONFIGNODE_H_

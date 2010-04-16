@@ -7,6 +7,7 @@
 
 namespace pelican {
 
+PELICAN_DECLARE_MODULE(VisibilityPrinter)
 
 /**
  * @details
@@ -35,7 +36,7 @@ VisibilityPrinter::~VisibilityPrinter()
 void VisibilityPrinter::run(VisibilityData* vis)
 {
     if (!vis)
-        throw QString("pelican/data blob missing: Visibility Data");
+        throw QString("Data blob missing: Visibility Data");
 
     if (vis->nAntennas() == 0)
         throw QString("Empty data blob: Visibility Data");

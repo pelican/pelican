@@ -6,7 +6,6 @@ set(utility_src
     src/ConfigNode.cpp
     src/Config.cpp
     src/SocketTester.cpp
-    src/AbstractFactory.cpp
 )
 
 # Thread safe dummies.

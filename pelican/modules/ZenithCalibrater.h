@@ -8,6 +8,7 @@
 #include "pelican/modules/AbstractModule.h"
 #include "pelican/data/Source.h"
 #include "pelican/data/CorrectedVisibilityData.h"
+#include "pelican/utility/constants.h"
 #include <vector>
 
 namespace pelican {
@@ -87,7 +88,7 @@ class ZenithCalibrater : public AbstractModule
         unsigned _nIterations;
 
         std::vector<unsigned> _channels;
-        CorrectedVisibilityData::pol_t _polarisation;
+        Polarisation _polarisation;
 
         int _freqRefChannel;                ///< Frequency reference channel
         double _freqRef;                    ///< Reference frequency

@@ -40,4 +40,5 @@ class ChunkerFactoryTest : public CppUnit::TestFixture
 };
 
 } // namespace pelican
-#endif // CHUNKERFACTORYTEST_H 
+
+#endif // CHUNKERFACTORYTEST_H

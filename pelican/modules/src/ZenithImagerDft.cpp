@@ -23,6 +23,8 @@
 
 namespace pelican {
 
+PELICAN_DECLARE_MODULE(ZenithImagerDft)
+
 /**
  * @details
  * Module constructor.
@@ -144,7 +146,7 @@ void ZenithImagerDft::run(ImageData* image, const AntennaPositions* antPos,
     }
 
     unsigned nAnt = antPos->nAntennas();
-    unsigned nPolImage = _polarisation == VisibilityData::POL_BOTH ? 2 : 1;
+    unsigned nPolImage = _polarisation == POL_BOTH ? 2 : 1;
     unsigned nChanImage = _channels.size();
 
     if (vis != NULL) {
@@ -182,7 +184,7 @@ void ZenithImagerDft::run(ImageData* image, const AntennaPositions* antPos,
         for (unsigned p = 0; p < nPolImage; p++) {
 
             unsigned iPol = p;
-            iPol = (nPolImage == 1 && _polarisation == VisibilityData::POL_X) ? 0 : 1;
+            iPol = (nPolImage == 1 && _polarisation == POL_X) ? 0 : 1;
 
             // Get pointer to visibility data for channel and polarisation.
             if (vis != NULL) {

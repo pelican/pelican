@@ -30,7 +30,7 @@ class ModelVisibilityData : public VisibilityData
         /// Constructs and resizes model visibility data blob.
         ModelVisibilityData(const unsigned nAntennas,
                 const std::vector<unsigned>& channels,
-                const pol_t polarisation)
+                const Polarisation polarisation)
         : VisibilityData(nAntennas, channels, polarisation) {}
 
         ~ModelVisibilityData() {}
@@ -47,7 +47,6 @@ class ModelVisibilityData : public VisibilityData
 
 };
 
-
 } // namespace pelican
 
-#endif /* MODELVISIBILITYDATA_H_ */
+#endif // MODELVISIBILITYDATA_H_

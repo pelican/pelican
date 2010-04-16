@@ -10,6 +10,7 @@
 
 namespace pelican {
 
+PELICAN_DECLARE_ADAPTER(AdapterLofarStationVisibilities)
 
 /**
  * @details
@@ -26,14 +27,14 @@ AdapterLofarStationVisibilities::AdapterLofarStationVisibilities(const ConfigNod
     _nAnt = config.getOption("antennas", "number", "96").toUInt();
     QString rowMajor = config.getOption("rowMajor", "value", "true").toLower();
     _rowMajor = (rowMajor.startsWith("t")) ? true : false;
-    _dataBytes = config.getOption("pelican/dataBytes", "number", "8").toUInt();
+    _dataBytes = config.getOption("dataBytes", "number", "8").toUInt();
     _timeStart = config.getOption("time", "start", "0.0").toDouble();
     _timeDelta = config.getOption("time", "delta", "0.0").toDouble();
 
     // Get the channel and polarisation selection.
     _channels = config.getChannels();
     _polarisation = config.getPolarisation();
-    _nPol = (_polarisation == VisibilityData::POL_BOTH) ? 2 : 1;
+    _nPol = (_polarisation == POL_BOTH) ? 2 : 1;
     _nChan = _channels.size();
 }
 

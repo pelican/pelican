@@ -1,7 +1,7 @@
 #include "ChunkerFactoryTest.h"
-#include "ChunkerFactory.h"
-#include "TestUdpChunker.h"
+#include "pelican/utility/Factory.h"
 #include "pelican/utility/Config.h"
+#include "pelican/server/test/TestUdpChunker.h"
 
 #include "pelican/utility/memCheck.h"
 
@@ -67,7 +67,7 @@ void ChunkerFactoryTest::test_create()
         Config::TreeAddress address;
         address.append(Config::NodeId("server", ""));
         address.append(Config::NodeId("chunkers", ""));
-        ChunkerFactory factory(&config, address);
+        Factory<AbstractChunker> factory(&config, address);
 
         // Create the chunker.
         AbstractChunker* chunker = factory.create("TestUdpChunker", "2");

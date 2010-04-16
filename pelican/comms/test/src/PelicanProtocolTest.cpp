@@ -69,7 +69,7 @@ void PelicanProtocolTest::test_sendServiceData()
         QBuffer stream(&block);
         stream.open(QIODevice::WriteOnly);
 
-        QByteArray data1("pelican/data1");
+        QByteArray data1("data1");
         Data d1("d1",data1.data(),data1.size());
         CPPUNIT_ASSERT_EQUAL( (long)data1.size(), (long)d1.size());
         d1.setId("d1id");
@@ -87,7 +87,7 @@ void PelicanProtocolTest::test_sendServiceData()
         CPPUNIT_ASSERT_EQUAL( 1, sd->data().size() );
         CPPUNIT_ASSERT( d1 == *(sd->data()[0]) );
         std::vector<char> buf1(d1.size()+1);
-        buf1[d1.size()+1] = '\0';
+        buf1[d1.size()] = '\0';
         CPPUNIT_ASSERT_EQUAL( (long)d1.size(), (long)socket.read( &buf1[0], d1.size() ) );
         CPPUNIT_ASSERT_EQUAL( std::string(data1.data()), std::string(&buf1[0]));
     }
@@ -100,12 +100,12 @@ void PelicanProtocolTest::test_sendServiceData()
         QBuffer stream(&block);
         stream.open(QIODevice::WriteOnly);
 
-        QByteArray data1("pelican/data1");
+        QByteArray data1("data1");
         Data d1("d1",data1.data(),data1.size());
         d1.setId("d1id");
         data.append(&d1);
 
-        QByteArray data2("pelican/data2");
+        QByteArray data2("data2");
         Data d2("d2",data2.data(),data2.size());
         d1.setId("d2id");
         data.append(&d2);
@@ -126,11 +126,11 @@ void PelicanProtocolTest::test_sendServiceData()
         // check we have the actual data
         CPPUNIT_ASSERT_EQUAL((long)data1.size(), (long)d1.size());
         std::vector<char> buf1(d1.size()+1);
-        buf1[d1.size()+1] = '\0';
+        buf1[d1.size()] = '\0';
         CPPUNIT_ASSERT_EQUAL( (long)d1.size(), (long)socket.read( &buf1[0], d1.size() ) );
         CPPUNIT_ASSERT_EQUAL( std::string(data1.data()), std::string(&buf1[0]));
         std::vector<char> buf2(d2.size()+1);
-        buf2[d2.size()+1] = '\0';
+        buf2[d2.size()] = '\0';
         CPPUNIT_ASSERT_EQUAL( (long)d2.size(), (long)socket.read( &buf2[0], d2.size() ) );
         CPPUNIT_ASSERT_EQUAL( std::string(data2.data()), std::string(&buf2[0]) );
     }
@@ -158,7 +158,7 @@ void PelicanProtocolTest::test_sendStreamData()
         // Use Case
         // Single Stream Data with no service data
         PelicanProtocol proto;
-        QByteArray data1("pelican/data1");
+        QByteArray data1("data1");
         StreamData streamData("d1", data1.data(), data1.size());
         CPPUNIT_ASSERT_EQUAL( (long)data1.size(), (long)streamData.size() );
         streamData.setId("testid");
@@ -184,10 +184,10 @@ void PelicanProtocolTest::test_sendStreamData()
         // Use Case
         // Single Stream Data with  service data
         PelicanProtocol proto;
-        QByteArray data1("pelican/data1");
+        QByteArray data1("data1");
         StreamData sd("d1",data1.data(),data1.size());
         sd.setId("streamdataid");
-        QByteArray data2("pelican/data2");
+        QByteArray data2("data2");
         boost::shared_ptr<Data> d1(new Data("d1",data2.data(),data2.size()) );
         d1->setId("d1id");
         sd.addAssociatedData(d1);

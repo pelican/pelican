@@ -63,6 +63,7 @@ bool Tracer::entry( void* p ) const {
 
 void Tracer::add (void* p, char const * file, int line)
 {
+    //std::cout << "add(" << p << "): " << file << ", " << line << std::endl;
     if (_lockCount > 0)
            return;
     Tracer::Lock lock (*this);
@@ -71,6 +72,7 @@ void Tracer::add (void* p, char const * file, int line)
 
 void Tracer::remove (void * p)
 {
+    //std::cout << "remove(" << p << ")" << std::endl;
     //QMutexLocker locker(&_mutex);
     if (_lockCount > 0)
            return;

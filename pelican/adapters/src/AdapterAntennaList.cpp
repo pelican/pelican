@@ -5,22 +5,17 @@
 
 namespace pelican {
 
+PELICAN_DECLARE_ADAPTER(AdapterAntennaList)
 
-// class AdapterAntennaList
+/**
+ * @details
+ * Constructs a new antenna list service data adapter.
+ */
 AdapterAntennaList::AdapterAntennaList(const ConfigNode& config)
     : AbstractServiceAdapter(config)
 {
     _nAnt = config.getOption("antennas", "number", "96").toUInt();
 }
-
-
-/**
- * @details
- */
-AdapterAntennaList::~AdapterAntennaList()
-{
-}
-
 
 /**
  * @details
@@ -40,27 +35,22 @@ void AdapterAntennaList::deserialise(QIODevice* in)
 
     for (unsigned a = 0; a < _nAnt; a++) {
         s >> x[a] >> y[a] >> z[a] >> temp >> temp >> temp;
-//        std::cout << a << " " << x[a] << " " << y[a] << " " << z[a] << std::endl;
     }
 }
-
 
 /**
  * @details
  */
 void AdapterAntennaList::_setData()
 {
-    if (_chunkSize == 0) {
+    if (_chunkSize == 0)
         throw QString("No data to read. Stream chunk size set to zero.");
-    }
 
-    if (_data == NULL) {
+    if (_data == NULL)
         throw QString("Cannot deserialise into an unallocated blob!");
-    }
 
     _antPos = static_cast<AntennaPositions*>(_data);
     _antPos->resize(_nAnt);
 }
-
 
 } // namespace pelican

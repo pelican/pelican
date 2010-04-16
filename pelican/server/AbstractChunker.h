@@ -3,7 +3,7 @@
 
 #include "pelican/server/DataManager.h"
 #include "pelican/server/WritableData.h"
-#include "pelican/server/ChunkerFactory.h"
+#include "pelican/utility/Factory.h"
 
 #include <QUdpSocket>
 #include <QString>
@@ -29,7 +29,7 @@ namespace pelican {
  * namespace so that the dummy creator variable is not accessible from outside
  * the file that instantiated it.
  */
-#define PELICAN_DECLARE_CHUNKER(type) namespace {ChunkerFactory::Creator<type> reg(#type);}
+#define PELICAN_DECLARE_CHUNKER(type) namespace {Creator<type, AbstractChunker> reg(#type);}
 
 
 class ConfigNode;

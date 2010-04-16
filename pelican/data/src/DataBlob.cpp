@@ -11,7 +11,7 @@ namespace pelican {
  */
 DataBlob::DataBlob()
 {
-    /* Set the default time stamp */
+    // Set the default time stamp.
     setTimeStamp();
 }
 
@@ -32,14 +32,14 @@ DataBlob::~DataBlob()
  */
 void DataBlob::setTimeStamp()
 {
-    /* Get the system date */
+    // Get the system date.
     QDateTime utc = QDateTime::currentDateTime().toUTC();
 
-    /* Set the date part of the MJD */
+    // Set the date part of the MJD.
     _modifiedJulianDate = utc.date().toJulianDay();
     _modifiedJulianDate -= 2400000.5;
 
-    /* Set the time part of the MJD */
+    // Set the time part of the MJD.
     QTime midnight(0, 0, 0);
     double millisec = midnight.msecsTo(utc.time());
     _modifiedJulianDate += (millisec / 86400000.0);

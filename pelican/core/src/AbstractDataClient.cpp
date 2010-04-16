@@ -1,9 +1,9 @@
 #include <iostream>
 #include "pelican/core/AbstractDataClient.h"
-#include "pelican/adapters/AdapterFactory.h"
 #include "pelican/adapters/AbstractStreamAdapter.h"
 #include "pelican/adapters/AbstractServiceAdapter.h"
 #include "pelican/data/DataRequirements.h"
+#include "pelican/data/DataBlob.h"
 #include "pelican/comms/Data.h"
 #include "pelican/comms/StreamData.h"
 #include "pelican/utility/ConfigNode.h"

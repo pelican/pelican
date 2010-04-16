@@ -32,7 +32,7 @@ TestChunker::TestChunker(const ConfigNode& config)
 {
     _badSocket = false;
     _nextCount = 0;
-    _size = config.getOption("pelican/data", "chunkSize", "512").toUInt();
+    _size = config.getOption("data", "chunkSize", "512").toUInt();
     _timer = new QTimer;
     connect(_timer, SIGNAL(timeout()), this, SLOT(_start()));
 }

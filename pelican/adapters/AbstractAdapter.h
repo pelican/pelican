@@ -2,6 +2,7 @@
 #define ABSTRACTADAPTER_H
 
 #include "pelican/utility/ConfigNode.h"
+#include "pelican/utility/Factory.h"
 #include <QIODevice>
 #include <iostream>
 
@@ -10,6 +11,22 @@
  */
 
 namespace pelican {
+
+/**
+ * This macro is used to register the named adapter type with the factory.
+ * It should be used within the global scope of the adapter's source file.
+ *
+ * @note
+ * The macro expands to declare a dummy variable of the object's generator
+ * type, which (when constructed), adds the type name to the creator's known
+ * object types.
+ *
+ * The macro is placed within the global scope so that it is initialised as
+ * soon as the program starts executing. It is placed within an anonymous
+ * namespace so that the dummy creator variable is not accessible from outside
+ * the file that instantiated it.
+ */
+#define PELICAN_DECLARE_ADAPTER(type) namespace {Creator<type, AbstractAdapter> reg(#type);}
 
 class DataBlob;
 

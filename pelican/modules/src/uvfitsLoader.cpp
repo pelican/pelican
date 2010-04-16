@@ -4,6 +4,8 @@
 
 namespace pelican {
 
+PELICAN_DECLARE_MODULE(uvfitsLoader)
+
 uvfitsLoader::uvfitsLoader(const ConfigNode& config)
 {
     // TODO initialise variables here!

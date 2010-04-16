@@ -1,5 +1,6 @@
 #include "pelican/data/test/FlagTableTest.h"
 #include "pelican/data/FlagTable.h"
+#include "pelican/utility/constants.h"
 #include "pelican/utility/pelicanTimer.h"
 #include "pelican/utility/memCheck.h"
 
@@ -34,10 +35,10 @@ void FlagTableTest::test_accessorMethodsIndexed()
     // Use Case
     // Construct a flag data set and test each of the accessor methods.
     const unsigned nAntennas = 96;
-    const unsigned nChannels = 32;
+    const unsigned nChannels = 4;
     const unsigned nPols = 2;
     std::vector<unsigned> channels(nChannels);
-    FlagTable data(nAntennas, channels, FlagTable::POL_BOTH);
+    FlagTable data(nAntennas, channels, POL_BOTH);
 
     // Fill the flag matrix for timing purposes.
     TIMER_START
@@ -116,11 +117,11 @@ void FlagTableTest::test_accessorMethodsLinear()
     // Use Case
     // Construct a flag data set and test each of the accessor methods.
     const unsigned nAntennas = 96;
-    const unsigned nChannels = 32;
+    const unsigned nChannels = 4;
     const unsigned nPols = 2;
     const unsigned nTotal = nPols * nChannels * nAntennas * nAntennas;
     std::vector<unsigned> channels(nChannels);
-    FlagTable data(nAntennas, channels, FlagTable::POL_BOTH);
+    FlagTable data(nAntennas, channels, POL_BOTH);
 
     // Fill the flag matrix for timing purposes.
     TIMER_START
@@ -155,14 +156,14 @@ void FlagTableTest::test_flag()
 {
     // Initialise test.
     const unsigned nAntennas = 96;
-    const unsigned nChannels = 32;
+    const unsigned nChannels = 4;
     const unsigned nPols = 2;
 
     {
         // Use Case
         // Test flagging a single antenna pair.
         std::vector<unsigned> channels(nChannels);
-        FlagTable data(nAntennas, channels, FlagTable::POL_BOTH);
+        FlagTable data(nAntennas, channels, POL_BOTH);
         const unsigned sAntennai = 45;
         const unsigned sAntennaj = 21;
         const unsigned sChannel = 1;
@@ -188,7 +189,7 @@ void FlagTableTest::test_flag()
         // Use Case
         // Test flagging all data from an antenna.
         std::vector<unsigned> channels(nChannels);
-        FlagTable data(nAntennas, channels, FlagTable::POL_BOTH);
+        FlagTable data(nAntennas, channels, POL_BOTH);
         const unsigned sAntenna = 67;
         const unsigned sChannel = 2;
         const unsigned sPol = 0;
@@ -217,7 +218,7 @@ void FlagTableTest::test_flag()
         // Use Case
         // Test flagging all data from one channel.
         std::vector<unsigned> channels(nChannels);
-        FlagTable data(nAntennas, channels, FlagTable::POL_BOTH);
+        FlagTable data(nAntennas, channels, POL_BOTH);
         const unsigned sChannel = 3;
         const unsigned sPol = 1;
         TIMER_START
@@ -241,7 +242,7 @@ void FlagTableTest::test_flag()
         // Use Case
         // Test flagging all data from all channels.
         std::vector<unsigned> channels(nChannels);
-        FlagTable data(nAntennas, channels, FlagTable::POL_BOTH);
+        FlagTable data(nAntennas, channels, POL_BOTH);
         const unsigned sChannelStart = 0;
         const unsigned sChannelEnd = nChannels-1;
         const unsigned sPol = 1;
@@ -290,14 +291,14 @@ void FlagTableTest::test_resize()
     // Test trying to resize an empty blob.
     FlagTable data;
     std::vector<unsigned> channels(128);
-    data.resize(96, channels, FlagTable::POL_BOTH);
+    data.resize(96, channels, POL_BOTH);
     unsigned char* ptr = data.ptr(1);
     CPPUNIT_ASSERT( ptr  != NULL );
 
     // Use Case
     // Try to resize the blob again.
     channels.resize(512);
-    data.resize(96, channels, FlagTable::POL_BOTH);
+    data.resize(96, channels, POL_BOTH);
     ptr = data.ptr(255, 1);
     CPPUNIT_ASSERT( ptr  != NULL );
 }

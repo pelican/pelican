@@ -22,12 +22,14 @@ ServiceDataBuffer::ServiceDataBuffer(const QString& type)
     _max = 10000; //TODO make configurable
     _maxChunkSize = _max;
     _space = _max;
+    _id = 0;
 }
 
 ServiceDataBuffer::~ServiceDataBuffer()
 {
     delete _newData;
     foreach(LockableData* data, _data ) {
+        free(data->data()->data());
         delete data;
     }
 }
@@ -61,7 +63,7 @@ WritableData ServiceDataBuffer::getWritable(size_t size)
         // create a new data Object if we have enough space
         if(size <= _space && size <= _maxChunkSize )
         {
-            void* d = malloc(size);
+            void* d = calloc(size, sizeof(char)); // Released in destructor.
             if( d ) {
                 _space -= size;
                 _newData = new LockableData(_type,d, size);

@@ -3,6 +3,7 @@
 
 #include "pelican/modules/AbstractModule.h"
 #include "pelican/utility/ConfigNode.h"
+#include "pelican/utility/constants.h"
 #include "pelican/data/ImageData.h"
 
 /**
@@ -10,6 +11,8 @@
  */
 
 namespace pelican {
+
+class ConfigNode;
 
 /**
  * @class ImageCombiner
@@ -70,9 +73,9 @@ class ImageCombiner : public AbstractModule
         std::vector<unsigned> _channelsInput1;
         std::vector<unsigned> _channelsInput2;
         std::vector<unsigned> _channelsOutput;
-        ImageData::pol_t _polInput1;
-        ImageData::pol_t _polInput2;
-        ImageData::pol_t _polOutput;
+        Polarisation _polInput1;
+        Polarisation _polInput2;
+        Polarisation _polOutput;
 };
 
 } // namespace pelican

@@ -95,7 +95,7 @@ class FlagTable : public AntennaMatrixData<unsigned char>
         /// @param[in] polarisations The number of polarisations.
         FlagTable(const unsigned antennas,
                 const std::vector<unsigned>& channels,
-                const pol_t polarisation)
+                const Polarisation polarisation)
         : AntennaMatrixData<unsigned char>(antennas, channels, polarisation) {
             clear();
         }

@@ -15,6 +15,8 @@
 
 namespace pelican {
 
+PELICAN_DECLARE_MODULE(ImageWriterFits)
+
 /**
  * @details
  * Module constructor.
@@ -230,8 +232,8 @@ void ImageWriterFits::_writeHeader(ImageData* image)
 
     // Amplitude range (only valid if not an image cube).
     if (image->nChannels() == 1 && image->nPolarisations() == 1) {
-        _writeKey("pelican/dataMIN", image->min(0, 0), "Minimum pixel value");
-        _writeKey("pelican/dataMAX", image->max(0, 0), "Maximum pixel value");
+        _writeKey("DATAMIN", image->min(0, 0), "Minimum pixel value");
+        _writeKey("DATAMAX", image->max(0, 0), "Maximum pixel value");
     }
 
     // x (l) axis keywords.
@@ -257,9 +259,9 @@ void ImageWriterFits::_writeHeader(ImageData* image)
     // Polarisation axis keywords.
     // TODO: Set polarisation FITS axes
     _writeKey("CTYPE3", "POL", "XX / YY");
-    int polType = (image->polarisation() == ImageData::POL_Y) ? 1 : 0;
+    int polType = (image->polarisation() == POL_Y) ? 1 : 0;
     _writeKey("CRVAL3", polType, "0.0 if X or X and Y, 1.0 if Y only");
-    int polDelta = (image->polarisation() == ImageData::POL_BOTH) ? 1 : 0;
+    int polDelta = (image->polarisation() == POL_BOTH) ? 1 : 0;
     _writeKey("CDELT3", polDelta, "0.0 or 1.0 (if there is X and Y)");
     _writeKey("CRPIX3", 0.0);
     // _writeKey("CROTA3", 0.0);

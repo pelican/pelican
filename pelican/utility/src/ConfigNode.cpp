@@ -107,7 +107,7 @@ QString ConfigNode::getOptionText(const QString& tagName,
  * The hash is created using the values of the given attributes \p attr1 and
  * \p attr2, where the key is given in \p attr1 and value in \p attr2.
  *
- * Using this XML with tagName="pelican/data", attr1="type" and attr2="file",
+ * Using this XML with tagName="data", attr1="type" and attr2="file",
  *
  * \verbatim
       <data type="VisibilityData" adapter="VisibilityAdapter" file="vis.dat"/>
@@ -140,7 +140,7 @@ QHash<QString, QString> ConfigNode::getOptionHash(const QString& tagName,
  * Gets attributes for a list of \p tagname items.
  * The list is created using the values of the given attribute \p attr.
  *
- * Using this XML with tagName="pelican/data" and attr="adapter",
+ * Using this XML with tagName="data" and attr="adapter",
  *
  * \verbatim
       <data type="VisibilityData" adapter="VisibilityAdapter" file="vis.dat"/>
@@ -225,19 +225,19 @@ std::vector<unsigned> ConfigNode::getChannels(const QString& tagName) const
  * @details
  * Returns the polarisation option.
  */
-DataBlob::pol_t ConfigNode::getPolarisation(const QString& tagName) const
+Polarisation ConfigNode::getPolarisation(const QString& tagName) const
 {
     QString pol = getOption(tagName, "value", "x").toLower();
     if (pol.startsWith("x"))
-        return DataBlob::POL_X;
+        return POL_X;
     else if (pol.startsWith("y"))
-        return DataBlob::POL_Y;
+        return POL_Y;
     else if (pol.startsWith("both"))
-        return DataBlob::POL_BOTH;
+        return POL_BOTH;
     else
         throw QString("%1: Unknown polarisation.").arg(_config.tagName());
 
-    return DataBlob::POL_UNDEF;
+    return POL_UNDEF;
 }
 
 } // namespace pelican
