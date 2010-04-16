@@ -75,7 +75,10 @@ endif(DEFINED OpenMP_C_FLAGS AND DEFINED OpenMP_CXX_FLAGS)
 foreach(FLAG ${OpenMP_C_FLAG_CANDIDATES})
   set(SAFE_CMAKE_REQUIRED_FLAGS "${CMAKE_REQUIRED_FLAGS}")
   set(CMAKE_REQUIRED_FLAGS "${FLAG}")
-  set(OpenMP_FLAG_DETECTED "" cache internal "" force)
+
+  #unset(OpenMP_FLAG_DETECTED CACHE)
+  set(OpenMP_FLAG_DETECTED OpenMP_FLAG_DETECTED)
+
   message(STATUS "Try OpenMP C flag = [${FLAG}]")
   check_c_source_compiles("${OpenMP_CXX_TEST_SOURCE}" OpenMP_FLAG_DETECTED)
   set(CMAKE_REQUIRED_FLAGS "${SAFE_CMAKE_REQUIRED_FLAGS}")
@@ -89,9 +92,13 @@ endforeach(FLAG ${OpenMP_C_FLAG_CANDIDATES})
 foreach(FLAG ${OpenMP_CXX_FLAG_CANDIDATES})
   set(SAFE_CMAKE_REQUIRED_FLAGS "${CMAKE_REQUIRED_FLAGS}")
   set(CMAKE_REQUIRED_FLAGS "${FLAG}")
-  set(OpenMP_FLAG_DETECTED "" cache internal "" force)
+
+  #unset(OpenMP_FLAG_DETECTED CACHE)
+  set(OpenMP_FLAG_DETECTED OpenMP_FLAG_DETECTED)
+
   message(STATUS "Try OpenMP CXX flag = [${FLAG}]")
   check_cxx_source_compiles("${OpenMP_C_TEST_SOURCE}" OpenMP_FLAG_DETECTED)
+
   set(CMAKE_REQUIRED_FLAGS "${SAFE_CMAKE_REQUIRED_FLAGS}")
   if(OpenMP_FLAG_DETECTED)
     set(OpenMP_CXX_FLAGS_INTERNAL "${FLAG}")

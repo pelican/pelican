@@ -19,9 +19,17 @@
 #
 # Options manipulating install location:
 # --------------------------------------
+#   -DCMAKE_INSTALL_PREFIX
+#       Root directory used to install files when calling 'make install'
+#
 #   -DLIBRARY_INSTALL_DIR
+#       Pelican library install location. Appending to the install prefix.
+#
 #   -DINCLUDE_INSTALL_DIR
+#       Pelican include headers install location. Appending to the install prefix.
+#
 #   -DMODULES_INSTALL_DIR
+#       Pelican cmake modules install location. Appending to the install prefix.
 #===============================================================================
 
 # === Specify minimum cmake version.
@@ -62,11 +70,6 @@ endif (NOT MODULES_INSTALL_DIR)
 # === Installation target for project cmake files.
 install(DIRECTORY cmake DESTINATION ${MODULES_INSTALL_DIR}
         FILES_MATCHING PATTERN "*.cmake")
-
-message(STATUS "CMAKE_INSTALL_PREFIX = ${CMAKE_INSTALL_PREFIX}")
-message(STATUS "LIBRARY_INSTALL_DIR = ${LIBRARY_INSTALL_DIR}")
-message(STATUS "INCLUDE_INSTALL_DIR = ${INCLUDE_INSTALL_DIR}")
-message(STATUS "MODULES_INSTALL_DIR = ${MODULES_INSTALL_DIR}")
 
 # === Compiler defaults.
 include(cmake/compilerDefaults.cmake)
