@@ -267,9 +267,9 @@ MACRO (PROJECT_LIBRARY libname)
         target_link_libraries("${libname}_static" ${PROJECT_LIBRARIES})
         # REMOVE LATER: Debug printing...
         #=======================================================================
-        foreach(lib ${PROJECT_LIBRARIES})
-            message(STATUS ".............. ${lib}")
-        endforeach()
+        #foreach(lib ${PROJECT_LIBRARIES})
+        #    message(STATUS ".............. ${lib}")
+        #endforeach()
         #=======================================================================
     endif( CMAKE_BUILD_TYPE MATCHES RELEASE|[rR]elease )
 ENDMACRO (PROJECT_LIBRARY)
