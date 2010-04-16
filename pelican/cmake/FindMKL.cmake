@@ -8,8 +8,16 @@
 # Defines:
 #  MKL_FOUND:
 #  MKL_LIBRARIES:   The libraries needed to use MKL BLAS & LAPACK.
-#  MKL_INCLUDE_DIR: The location of mkl.h
 #
+
+# Find the include directory.
+# ==============================================================================
+#find_path(MKL_INCLUDE_DIR mkl.h
+#    PATHS
+#    /opt/intel/Compiler/*/*/mkl/include/
+#    /opt/intel/mkl/*/include/
+#    /usr/include/
+#)
 
 # Set the architecture specfic interface layer library.
 # ==============================================================================
@@ -72,25 +80,15 @@ foreach(mkl_lib ${mkl_lib_names})
     endif(tmp_library)
 endforeach(mkl_lib ${mkl_lib_names})
 
-
-# Find the include directory.
-# ==============================================================================
-set(MKL_INCLUDE_DIR "")
-find_path(MKL_INCLUDE_DIR mkl.h
-    PATHS
-    /usr/include/
-    /opt/intel/Compiler/*/*/mkl/include/
-    /opt/intel/mkl/*/include/*/
-)
-
-
-
 # Handle the QUIETLY and REQUIRED arguments.
 # ==============================================================================
 include(FindPackageHandleCompat)
-FIND_PACKAGE_HANDLE_STANDARD_ARGS(MKL DEFAULT_MSG MKL_LIBRARIES MKL_INCLUDE_DIR)
+FIND_PACKAGE_HANDLE_STANDARD_ARGS(MKL DEFAULT_MSG MKL_LIBRARIES)
 
+#if(NOT MKL_FOUND)
+#    set(MKL_LIBRARIES)
+#endif(NOT MKL_FOUND)
 
 # Hide in cache.
 # ==============================================================================
-#mark_as_advanced(MKL_LIBRARIES tmp_library)
+mark_as_advanced(MKL_LIBRARIES tmp_library)
