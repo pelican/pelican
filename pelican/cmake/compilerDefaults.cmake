@@ -11,9 +11,9 @@ endif (NOT CMAKE_BUILD_TYPE)
 set (BUILD_SHARED_LIBS TRUE)
 
 #=== Find and set OpenMP compiler flag.
-find_package(OpenMP REQUIRED)
-list(APPEND CMAKE_CXX_FLAGS "${OpenMP_CXX_FLAGS}")
-list(APPEND CMAKE_C_FLAGS "${OpenMP_C_FLAGS}")
+#find_package(OpenMP REQUIRED)
+#list(APPEND CMAKE_CXX_FLAGS "${OpenMP_CXX_FLAGS}")
+#list(APPEND CMAKE_C_FLAGS "${OpenMP_C_FLAGS}")
 
 set(CPP_PLATFORM_LIBS ${CMAKE_THREAD_LIBS_INIT})
 
