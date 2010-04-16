@@ -21,7 +21,7 @@ set(CPP_PLATFORM_LIBS ${CMAKE_THREAD_LIBS_INIT})
 include_directories(${PROJECT_SOURCE_DIR}/..)
 
 # Set the C++ release flags.
-set(CMAKE_CXX_FLAGS_RELEASE "-O2 -DQT_NO_DEBUG")
+set(CMAKE_CXX_FLAGS_RELEASE "-O2 -DQT_NO_DEBUG -DNDEBUG")
 
 if (CMAKE_COMPILER_IS_GNUCXX)
     # Note that -std=c++0x is needed for -pedantic.

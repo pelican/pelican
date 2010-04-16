@@ -72,7 +72,6 @@ message(STATUS "LIBRARY_INSTALL_DIR = ${LIBRARY_INSTALL_DIR}")
 message(STATUS "INCLUDE_INSTALL_DIR = ${INCLUDE_INSTALL_DIR}")
 message(STATUS "MODULES_INSTALL_DIR = ${MODULES_INSTALL_DIR}")
 
-
 # === Compiler defaults.
 include(cmake/compilerDefaults.cmake)
 
