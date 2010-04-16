@@ -34,7 +34,7 @@ AdapterLofarStationVisibilities::AdapterLofarStationVisibilities(const ConfigNod
     // Get the channel and polarisation selection.
     _channels = config.getChannels();
     _polarisation = config.getPolarisation();
-    _nPol = (_polarisation == VisibilityData::POL_BOTH) ? 2 : 1;
+    _nPol = (_polarisation == POL_BOTH) ? 2 : 1;
     _nChan = _channels.size();
 }
 

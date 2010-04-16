@@ -14,7 +14,7 @@ class AbstractAdapter;
 class AbstractModule;
 class AbstractPipeline;
 class Config;
-class DataBlobFactory;
+class DataBlob;
 class PipelineDriver;
 class DataClientFactory;
 
@@ -79,7 +79,7 @@ class PipelineApplication
         Factory<AbstractAdapter>* _adapterFactory;
 
         /// Pointer to the application's data blob factory.
-        DataBlobFactory *_dataBlobFactory;
+        Factory<DataBlob>* _dataBlobFactory;
 
         /// Pointer to the application's module factory.
         Factory<AbstractModule>* _moduleFactory;

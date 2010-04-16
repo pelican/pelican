@@ -1,5 +1,6 @@
 #include "pelican/data/test/ImageDataTest.h"
 #include "pelican/data/ImageData.h"
+#include "pelican/utility/constants.h"
 #include "pelican/utility/pelicanTimer.h"
 
 #include "pelican/utility/memCheck.h"
@@ -41,7 +42,7 @@ void ImageDataTest::test_accessorMethods()
     std::vector<unsigned> channels(2);
     channels[0] = 0;
     channels[1] = 1;
-    ImageData image(nL, nM, channels, ImageData::POL_BOTH);
+    ImageData image(nL, nM, channels, POL_BOTH);
     image.cellsizeL() = 1.0;
     image.cellsizeM() = 2.0;
     image.refPixelL() = 128.5;

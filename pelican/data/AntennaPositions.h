@@ -14,7 +14,7 @@ namespace pelican {
  * @class AntennaPositions
  *
  * @brief
- * Container class to hold Antenna positions.
+ * Container class to hold antenna positions.
  *
  * @details
  * This class holds antenna positions for a telescope.
@@ -22,46 +22,45 @@ namespace pelican {
 class AntennaPositions : public DataBlob
 {
     public:
-        /// Constructor
-        AntennaPositions();
+        /// Constructs an empty antenna positions data blob.
+        AntennaPositions() : DataBlob() {}
 
-        /// Constructor assigning memory for the antenna positions
-        AntennaPositions(const unsigned nAntennas);
-
-        /// Image data destructor.
-        ~AntennaPositions();
+        /// Constructs and assigns memory for an antenna positions data blob.
+        AntennaPositions(const unsigned nAntennas) : DataBlob() {
+            resize(nAntennas);
+        }
 
     public:
-        /// Clears the antenna positions data
+        /// Clears the antenna positions data.
         void clear();
 
-        /// Assign memory for antenna positions
+        /// Assign memory for antenna positions.
         void resize(const unsigned nAntennas);
 
     public: // accessor methods
 
-        /// Returns the number of antennas for which positions are held
+        /// Returns the number of antennas for which positions are held.
         unsigned nAntennas() const { return _x.size(); }
 
         /// Returns a reference to the x coordinate antenna position for
-        /// antenna \p i
+        /// antenna \p i.
         real_t& x(const unsigned i) { return _x[i]; }
 
         /// Returns a reference to the y coordinate antenna position for
-        // antenna \p i
+        // antenna \p i.
         real_t& y(const unsigned i) { return _y[i]; }
 
         /// Returns a reference to the z coordinate antenna position for
-        /// antenna \p i
+        /// antenna \p i.
         real_t& z(const unsigned i) { return _z[i]; }
 
-        /// Returns a refrence to the vector for the x antenna positions
+        /// Returns a reference to the vector for the x antenna positions.
         std::vector<real_t>& x() { return _x; }
 
-        /// Returns a refrence to the vector for the y antenna positions
+        /// Returns a reference to the vector for the y antenna positions.
         std::vector<real_t>& y() { return _y; }
 
-        /// Returns a refrence to the vector for the z antenna positions
+        /// Returns a reference to the vector for the z antenna positions.
         std::vector<real_t>& z() { return _z; }
 
         /// Returns a pointer to the x antenna positions.
@@ -87,7 +86,6 @@ class AntennaPositions : public DataBlob
         std::vector<real_t> _y; ///< y coordinate of antenna position in metres.
         std::vector<real_t> _z; ///< z coordinate of antenna position in metres.
 };
-
 
 } // namespace pelican
 

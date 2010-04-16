@@ -1,6 +1,7 @@
 #ifndef DATABLOB_H
 #define DATABLOB_H
 
+#include "pelican/utility/Factory.h"
 #include <QString>
 #include <complex>
 
@@ -16,6 +17,21 @@ typedef double real_t;
 /// Complex floating point data type.
 typedef std::complex<real_t> complex_t;
 
+/**
+ * This macro is used to register the named data blob type with the factory.
+ * It should be used within the global scope of the data blob source file.
+ *
+ * @note
+ * The macro expands to declare a dummy variable of the object's generator
+ * type, which (when constructed), adds the type name to the creator's known
+ * object types.
+ *
+ * The macro is placed within the global scope so that it is initialised as
+ * soon as the program starts executing. It is placed within an anonymous
+ * namespace so that the dummy creator variable is not accessible from outside
+ * the file that instantiated it.
+ */
+#define PELICAN_DECLARE_DATABLOB(type) namespace {CreatorBasic<type, DataBlob> reg(#type);}
 
 /**
  * @class DataBlob
@@ -30,9 +46,6 @@ typedef std::complex<real_t> complex_t;
  */
 class DataBlob
 {
-    public:
-        typedef enum { POL_X, POL_Y, POL_BOTH, POL_UNDEF} pol_t;
-
     private:
         /// The timestamp of the data blob, stored as a modified Julian
         /// date (MJD). Note that MJD = JD - 2400000.5, and starts

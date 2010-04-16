@@ -16,7 +16,7 @@ class AbstractModule;
 class AbstractPipeline;
 class AbstractDataClient;
 class AbstractAdapter;
-class DataBlobFactory;
+class DataBlob;
 class DataClientFactory;
 
 /**
@@ -39,7 +39,7 @@ class PipelineDriver
         AbstractDataClient* _dataClient;
 
         /// A pointer to the data blob factory.
-        DataBlobFactory* _blobFactory;
+        Factory<DataBlob>* _blobFactory;
 
         /// Pointer to the module factory.
         Factory<AbstractModule>* _moduleFactory;
@@ -76,7 +76,7 @@ class PipelineDriver
 
     public:
         /// Constructs a new pipeline driver.
-        PipelineDriver( DataBlobFactory* blobFactory,
+        PipelineDriver( Factory<DataBlob>* blobFactory,
                 Factory<AbstractModule>* moduleFactory,
                 DataClientFactory* clientFactory );
 

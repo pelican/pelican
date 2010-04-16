@@ -7,6 +7,8 @@
 
 namespace pelican {
 
+PELICAN_DECLARE_DATABLOB(ImageData)
+
 /**
  * @details
  * Constructs an empty image data blob.
@@ -27,7 +29,7 @@ ImageData::ImageData() : DataBlob()
  * @param[in]   nPolarisations  Number of polarisations in the image cube.
  */
 ImageData::ImageData(const unsigned sizeL, const unsigned sizeM,
-        const std::vector<unsigned>& channels, const pol_t polarisation)
+        const std::vector<unsigned>& channels, const Polarisation polarisation)
 : DataBlob()
 {
     clear();
@@ -55,7 +57,7 @@ ImageData::~ImageData()
  * @param[in] nPolaristaions    Number of polarisations in the image cube.
  */
 void ImageData::resize(const unsigned sizeL, const unsigned sizeM,
-        const std::vector<unsigned>& channels, const pol_t polarisation)
+        const std::vector<unsigned>& channels, const Polarisation polarisation)
 {
     _ampUnits = "JY/PIXEL";
     _sizeL = sizeL;

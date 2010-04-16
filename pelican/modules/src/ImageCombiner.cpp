@@ -59,8 +59,8 @@ void ImageCombiner::run(const ImageData* in1, const ImageData* in2,
                 p1 = p;
                 p2 = p;
             } else {
-                p1 = (_polInput1 == ImageData::POL_X) ? 0 : 1;
-                p2 = (_polInput2 == ImageData::POL_X) ? 0 : 1;
+                p1 = (_polInput1 == POL_X) ? 0 : 1;
+                p2 = (_polInput2 == POL_X) ? 0 : 1;
             }
 
             const real_t* ptr1 = in1->ptr(c1, p1);
@@ -268,11 +268,11 @@ void ImageCombiner::_getConfiguration(const ConfigNode& config)
     _polInput1 = config.getPolarisation("polarisationInput1");
     _polInput2 = config.getPolarisation("polarisationInput2");
     _polOutput = config.getPolarisation("polarisationOutput");
-    unsigned nPols1 = _polInput1 == ImageData::POL_BOTH ? 2 : 1;
-    unsigned nPols2 = _polInput2 == ImageData::POL_BOTH ? 2 : 1;
+    unsigned nPols1 = _polInput1 == POL_BOTH ? 2 : 1;
+    unsigned nPols2 = _polInput2 == POL_BOTH ? 2 : 1;
     if (nPols1 != nPols2)
         throw QString("ImageCombiner: Inconsistent polarisation mapping.");
-    _nPolarisations = _polOutput == ImageData::POL_BOTH ? 2 : 1;
+    _nPolarisations = _polOutput == POL_BOTH ? 2 : 1;
 }
 
 } // namespace pelican

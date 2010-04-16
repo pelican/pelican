@@ -2,6 +2,7 @@
 #include "pelican/modules/BasicFlagger.h"
 #include "pelican/data/VisibilityData.h"
 #include "pelican/data/FlagTable.h"
+#include "pelican/utility/constants.h"
 #include "pelican/utility/pelicanTimer.h"
 #include <algorithm>
 
@@ -26,7 +27,7 @@ BasicFlaggerTest::~BasicFlaggerTest()
  */
 void BasicFlaggerTest::setUp()
 {
-    /* Create a new module with empty configuration before each test */
+    // Create a new module with empty configuration before each test.
     ConfigNode config;
     _basicFlagger = new BasicFlagger(config);
 }
@@ -37,7 +38,7 @@ void BasicFlaggerTest::setUp()
  */
 void BasicFlaggerTest::tearDown()
 {
-    /* Delete the module after each test */
+    // Delete the module after each test.
     delete _basicFlagger;
 }
 
@@ -77,8 +78,8 @@ void BasicFlaggerTest::test_run_withData()
     const unsigned nAntennas = 96;
     const unsigned nChannels = 512;
     std::vector<unsigned> channels(nChannels);
-    VisibilityData visData(nAntennas, channels, VisibilityData::POL_BOTH);
-    FlagTable flagTable(nAntennas, channels, FlagTable::POL_BOTH);
+    VisibilityData visData(nAntennas, channels, POL_BOTH);
+    FlagTable flagTable(nAntennas, channels, POL_BOTH);
     CPPUNIT_ASSERT_NO_THROW(_basicFlagger->run(&visData, &flagTable));
 }
 
@@ -98,8 +99,8 @@ void BasicFlaggerTest::test__flagAutocorrelations()
     const real_t minFraction = 0.25;
     const real_t maxFraction = 1.25;
     std::vector<unsigned> channels(nChannels);
-    VisibilityData visData(nAntennas, channels, VisibilityData::POL_BOTH);
-    FlagTable flagTable(nAntennas, channels, FlagTable::POL_BOTH);
+    VisibilityData visData(nAntennas, channels, POL_BOTH);
+    FlagTable flagTable(nAntennas, channels, POL_BOTH);
     std::vector<complex_t> medians(nChannels * nPols);
 
     // Fill the visibility matrix
@@ -137,7 +138,7 @@ void BasicFlaggerTest::test__getAutocorrelations()
     const unsigned nChannels = 512;
     const unsigned nPols = 2;
     std::vector<unsigned> channels(nChannels);
-    VisibilityData visData(nAntennas, channels, VisibilityData::POL_BOTH);
+    VisibilityData visData(nAntennas, channels, POL_BOTH);
     std::vector<complex_t> autocorr(nAntennas * nChannels * nPols);
 
     // Fill the visibility matrix
@@ -233,8 +234,8 @@ void BasicFlaggerTest::test__moveBadAntennas()
     const real_t minFraction = 0.5;
     const real_t maxFraction = 1.5;
     std::vector<unsigned> channels(nChannels);
-    VisibilityData visData(nAntennas, channels, VisibilityData::POL_BOTH);
-    FlagTable flagTable(nAntennas, channels, FlagTable::POL_BOTH);
+    VisibilityData visData(nAntennas, channels, POL_BOTH);
+    FlagTable flagTable(nAntennas, channels, POL_BOTH);
     std::vector<complex_t> medians(nChannels * nPols);
 
     // Fill the visibility matrix

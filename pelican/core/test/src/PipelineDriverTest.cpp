@@ -6,7 +6,6 @@
 #include "pelican/core/test/TestPipeline.h"
 #include "pelican/core/test/TestDataClient.h"
 #include "pelican/data/DataRequirements.h"
-#include "pelican/data/DataBlobFactory.h"
 
 #include <QCoreApplication>
 #include <iostream>
@@ -51,7 +50,7 @@ void PipelineDriverTest::setUp()
     _coreApp = new QCoreApplication(argc, argv);
 
     // Create the factories.
-    _dataBlobFactory = new DataBlobFactory;
+    _dataBlobFactory = new Factory<DataBlob>;
     Config config;
 
     Config::TreeAddress modulesNode;
@@ -166,25 +165,30 @@ void PipelineDriverTest::test_start_singlePipelineNoClient()
  */
 void PipelineDriverTest::test_start_singlePipelineClientReturnsGoodData()
 {
-    // Create the pipeline.
-    int num = 10;
-    DataRequirements req;
-    req.addStreamData("StreamData");
-    TestPipeline *pipeline = new TestPipeline(req, num);
-    CPPUNIT_ASSERT_NO_THROW(_pipelineDriver->registerPipeline(pipeline));
-    CPPUNIT_ASSERT_EQUAL(0, pipeline->count());
+    try {
+        // Create the pipeline.
+        int num = 10;
+        DataRequirements req;
+        req.addStreamData("VisibilityData");
+        TestPipeline *pipeline = new TestPipeline(req, num);
+        _pipelineDriver->registerPipeline(pipeline);
+        CPPUNIT_ASSERT_EQUAL(0, pipeline->count());
 
-    // Create the data client.
-    ConfigNode config;
-    DataTypes types;
-    types.addData(req);
-    TestDataClient client(config, types);
-    _pipelineDriver->_dataClient = &client;
+        // Create the data client.
+        ConfigNode config;
+        DataTypes types;
+        types.addData(req);
+        TestDataClient client(config, types);
+        _pipelineDriver->_dataClient = &client;
 
-    // Start the pipeline driver.
-    CPPUNIT_ASSERT_NO_THROW(_pipelineDriver->start());
-    CPPUNIT_ASSERT_EQUAL(num, pipeline->count());
-    CPPUNIT_ASSERT_EQUAL(pipeline->count(), pipeline->matchedCounter());
+        // Start the pipeline driver.
+        _pipelineDriver->start();
+        CPPUNIT_ASSERT_EQUAL(num, pipeline->count());
+        CPPUNIT_ASSERT_EQUAL(pipeline->count(), pipeline->matchedCounter());
+    }
+    catch (QString e) {
+        CPPUNIT_FAIL("Unexpected exception: " + e.toStdString());
+    }
 }
 
 /**
@@ -196,27 +200,32 @@ void PipelineDriverTest::test_start_singlePipelineClientReturnsGoodData()
  */
 void PipelineDriverTest::test_start_singlePipelineClientReturnsWrongData()
 {
-    // Create the pipeline.
-    int num = 10;
-    DataRequirements pipelineReq;
-    pipelineReq.addStreamData("StreamData");
-    TestPipeline *pipeline = new TestPipeline(pipelineReq, num);
-    CPPUNIT_ASSERT_NO_THROW(_pipelineDriver->registerPipeline(pipeline));
-    CPPUNIT_ASSERT_EQUAL(0, pipeline->count());
+    try {
+        // Create the pipeline.
+        int num = 10;
+        DataRequirements pipelineReq;
+        pipelineReq.addStreamData("VisibilityData");
+        TestPipeline *pipeline = new TestPipeline(pipelineReq, num);
+        _pipelineDriver->registerPipeline(pipeline);
+        CPPUNIT_ASSERT_EQUAL(0, pipeline->count());
 
-    // Create the data client.
-    ConfigNode config;
-    DataTypes types;
-    DataRequirements clientTypes;
-    clientTypes.addStreamData("OtherStreamData");
-    types.addData(clientTypes);
-    TestDataClient client(config, types);
-    _pipelineDriver->_dataClient = &client;
+        // Create the data client.
+        ConfigNode config;
+        DataTypes types;
+        DataRequirements clientTypes;
+        clientTypes.addStreamData("OtherStreamData");
+        types.addData(clientTypes);
+        TestDataClient client(config, types);
+        _pipelineDriver->_dataClient = &client;
 
-    // Start the pipeline driver.
-    CPPUNIT_ASSERT_THROW(_pipelineDriver->start(), QString);
-    CPPUNIT_ASSERT_EQUAL(0, pipeline->count());
-    CPPUNIT_ASSERT_EQUAL(pipeline->count(), pipeline->matchedCounter());
+        // Start the pipeline driver.
+        CPPUNIT_ASSERT_THROW(_pipelineDriver->start(), QString);
+        CPPUNIT_ASSERT_EQUAL(0, pipeline->count());
+        CPPUNIT_ASSERT_EQUAL(pipeline->count(), pipeline->matchedCounter());
+    }
+    catch (QString e) {
+        CPPUNIT_FAIL("Unexpected exception: " + e.toStdString());
+    }
 }
 
 /**
@@ -228,35 +237,40 @@ void PipelineDriverTest::test_start_singlePipelineClientReturnsWrongData()
  */
 void PipelineDriverTest::test_start_multiPipelineRunDifferentData()
 {
-    // Create both pipelines.
-    int num = 10;
-    DataRequirements pipelineReq1, pipelineReq2;
-    QString type1 = "StreamData1", type2 = "StreamData2";
-    pipelineReq1.addStreamData(type1);
-    pipelineReq2.addStreamData(type2);
-    TestPipeline *pipeline1 = new TestPipeline(pipelineReq1, num);
-    TestPipeline *pipeline2 = new TestPipeline(pipelineReq2, num);
-    CPPUNIT_ASSERT_NO_THROW(_pipelineDriver->registerPipeline(pipeline1));
-    CPPUNIT_ASSERT_NO_THROW(_pipelineDriver->registerPipeline(pipeline2));
-    CPPUNIT_ASSERT_EQUAL(0, pipeline1->count());
-    CPPUNIT_ASSERT_EQUAL(0, pipeline2->count());
+    try {
+        // Create both pipelines.
+        int num = 10;
+        DataRequirements pipelineReq1, pipelineReq2;
+        QString type1 = "VisibilityData", type2 = "ImageData";
+        pipelineReq1.addStreamData(type1);
+        pipelineReq2.addStreamData(type2);
+        TestPipeline *pipeline1 = new TestPipeline(pipelineReq1, num);
+        TestPipeline *pipeline2 = new TestPipeline(pipelineReq2, num);
+        _pipelineDriver->registerPipeline(pipeline1);
+        _pipelineDriver->registerPipeline(pipeline2);
+        CPPUNIT_ASSERT_EQUAL(0, pipeline1->count());
+        CPPUNIT_ASSERT_EQUAL(0, pipeline2->count());
 
-    // Create the data client.
-    ConfigNode config;
-    DataTypes types;
-    DataRequirements clientTypes;
-    clientTypes.addStreamData(type1); // Add both types of required data.
-    clientTypes.addStreamData(type2); // Add both types of required data.
-    types.addData(clientTypes);
-    TestDataClient client(config, types);
-    _pipelineDriver->_dataClient = &client;
+        // Create the data client.
+        ConfigNode config;
+        DataTypes types;
+        DataRequirements clientTypes;
+        clientTypes.addStreamData(type1); // Add both types of required data.
+        clientTypes.addStreamData(type2); // Add both types of required data.
+        types.addData(clientTypes);
+        TestDataClient client(config, types);
+        _pipelineDriver->_dataClient = &client;
 
-    // Start the pipeline driver.
-    CPPUNIT_ASSERT_NO_THROW(_pipelineDriver->start());
-    CPPUNIT_ASSERT_EQUAL(num, pipeline1->count());
-    CPPUNIT_ASSERT_EQUAL(pipeline1->count(), pipeline1->matchedCounter());
-    CPPUNIT_ASSERT_EQUAL(num, pipeline2->count());
-    CPPUNIT_ASSERT_EQUAL(pipeline2->count(), pipeline2->matchedCounter());
+        // Start the pipeline driver.
+        _pipelineDriver->start();
+        CPPUNIT_ASSERT_EQUAL(num, pipeline1->count());
+        CPPUNIT_ASSERT_EQUAL(pipeline1->count(), pipeline1->matchedCounter());
+        CPPUNIT_ASSERT_EQUAL(num, pipeline2->count());
+        CPPUNIT_ASSERT_EQUAL(pipeline2->count(), pipeline2->matchedCounter());
+    }
+    catch (QString e) {
+        CPPUNIT_FAIL("Unexpected exception: " + e.toStdString());
+    }
 }
 
 /**
@@ -268,34 +282,39 @@ void PipelineDriverTest::test_start_multiPipelineRunDifferentData()
  */
 void PipelineDriverTest::test_start_multiPipelineRunOne()
 {
-    // Create both pipelines.
-    int num = 10;
-    DataRequirements pipelineReq1, pipelineReq2;
-    QString type1 = "StreamData1", type2 = "StreamData2";
-    pipelineReq1.addStreamData(type1);
-    pipelineReq2.addStreamData(type2);
-    TestPipeline *pipeline1 = new TestPipeline(pipelineReq1, num);
-    TestPipeline *pipeline2 = new TestPipeline(pipelineReq2, num);
-    CPPUNIT_ASSERT_NO_THROW(_pipelineDriver->registerPipeline(pipeline1));
-    CPPUNIT_ASSERT_NO_THROW(_pipelineDriver->registerPipeline(pipeline2));
-    CPPUNIT_ASSERT_EQUAL(0, pipeline1->count());
-    CPPUNIT_ASSERT_EQUAL(0, pipeline2->count());
+    try {
+        // Create both pipelines.
+        int num = 10;
+        DataRequirements pipelineReq1, pipelineReq2;
+        QString type1 = "VisibilityData", type2 = "ImageData";
+        pipelineReq1.addStreamData(type1);
+        pipelineReq2.addStreamData(type2);
+        TestPipeline *pipeline1 = new TestPipeline(pipelineReq1, num);
+        TestPipeline *pipeline2 = new TestPipeline(pipelineReq2, num);
+        _pipelineDriver->registerPipeline(pipeline1);
+        _pipelineDriver->registerPipeline(pipeline2);
+        CPPUNIT_ASSERT_EQUAL(0, pipeline1->count());
+        CPPUNIT_ASSERT_EQUAL(0, pipeline2->count());
 
-    // Create the data client.
-    ConfigNode config;
-    DataTypes types;
-    DataRequirements clientTypes;
-    clientTypes.addStreamData(type1); // Add one type of required data.
-    types.addData(clientTypes);
-    TestDataClient client(config, types);
-    _pipelineDriver->_dataClient = &client;
+        // Create the data client.
+        ConfigNode config;
+        DataTypes types;
+        DataRequirements clientTypes;
+        clientTypes.addStreamData(type1); // Add one type of required data.
+        types.addData(clientTypes);
+        TestDataClient client(config, types);
+        _pipelineDriver->_dataClient = &client;
 
-    // Start the pipeline driver.
-    CPPUNIT_ASSERT_NO_THROW(_pipelineDriver->start());
-    CPPUNIT_ASSERT_EQUAL(num, pipeline1->count());
-    CPPUNIT_ASSERT_EQUAL(pipeline1->count(), pipeline1->matchedCounter());
-    CPPUNIT_ASSERT_EQUAL(0, pipeline2->count());
-    CPPUNIT_ASSERT_EQUAL(pipeline2->count(), pipeline2->matchedCounter());
+        // Start the pipeline driver.
+        _pipelineDriver->start();
+        CPPUNIT_ASSERT_EQUAL(num, pipeline1->count());
+        CPPUNIT_ASSERT_EQUAL(pipeline1->count(), pipeline1->matchedCounter());
+        CPPUNIT_ASSERT_EQUAL(0, pipeline2->count());
+        CPPUNIT_ASSERT_EQUAL(pipeline2->count(), pipeline2->matchedCounter());
+    }
+    catch (QString e) {
+        CPPUNIT_FAIL("Unexpected exception: " + e.toStdString());
+    }
 }
 
 } // namespace pelican

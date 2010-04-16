@@ -83,7 +83,7 @@ void ZenithCalibrater::run(VisibilityData* _rawVis,
 
     // Number of channels & polarisations to calibrate.
     unsigned nChanCal = _channels.size();
-    unsigned nPolCal = _polarisation == CorrectedVisibilityData::POL_BOTH ? 2 : 1;
+    unsigned nPolCal = _polarisation == POL_BOTH ? 2 : 1;
 
     // Check input data and selection polarisation for consistency.
     checkPolarisationConsitency(_rawVis->polarisation(), _polarisation);
@@ -103,7 +103,7 @@ void ZenithCalibrater::run(VisibilityData* _rawVis,
         for (unsigned p = 0; p < nPolCal; p++) {
 
             unsigned iPol = (nPolCal == 1 &&
-                    _polarisation == CorrectedVisibilityData::POL_X) ? 0 : 1;
+                    _polarisation == POL_X) ? 0 : 1;
 
             // Copy the input visibility data into the visibility work array
             complex_t* rawVis = _rawVis->ptr(iChanRaw, iPol);

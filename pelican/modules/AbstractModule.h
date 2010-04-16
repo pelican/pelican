@@ -3,6 +3,7 @@
 
 #include "pelican/utility/ConfigNode.h"
 #include "pelican/utility/Factory.h"
+#include "pelican/utility/constants.h"
 #include "pelican/data/DataBlob.h"
 
 #include <QString>
@@ -60,8 +61,8 @@ class AbstractModule
     protected:
         /// Checks the polarisation consistency between the selection in the
         /// XML configuration and polarisation of input data blobs.
-        void checkPolarisationConsitency(const DataBlob::pol_t dataPol,
-                const DataBlob::pol_t modulePol) const;
+        void checkPolarisationConsitency(const Polarisation dataPol,
+                const Polarisation modulePol) const;
 
         /// Returns the index of the first occurrence of value in the data.
         template <typename T>

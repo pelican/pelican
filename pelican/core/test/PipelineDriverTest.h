@@ -14,7 +14,7 @@ namespace pelican {
 
 class AbstractModule;
 class PipelineDriver;
-class DataBlobFactory;
+class DataBlob;
 class DataClientFactory;
 
 /**
@@ -63,7 +63,7 @@ class PipelineDriverTest : public CppUnit::TestFixture
     private:
         QCoreApplication *_coreApp;
         PipelineDriver *_pipelineDriver;
-        DataBlobFactory* _dataBlobFactory;
+        Factory<DataBlob>* _dataBlobFactory;
         Factory<AbstractModule>* _moduleFactory;
         DataClientFactory* _clientFactory;
 };

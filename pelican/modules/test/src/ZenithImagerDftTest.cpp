@@ -5,7 +5,6 @@
 #include "pelican/utility/ConfigNode.h"
 #include "pelican/data/ImageData.h"
 #include "pelican/data/VisibilityData.h"
-#include "pelican/data/FrequencyList.h"
 #include "pelican/data/AntennaPositions.h"
 
 #include <limits>
@@ -55,7 +54,7 @@ void ZenithImagerDftTest::test_configuration()
                 imager._cellsizeL, 1.0e-5);
         CPPUNIT_ASSERT_DOUBLES_EQUAL((2.0 / 128.0) * math::rad2asec,
                 imager._cellsizeM, 1.0e-5);
-        CPPUNIT_ASSERT(imager._polarisation == ImageData::POL_X);
+        CPPUNIT_ASSERT(imager._polarisation == POL_X);
         CPPUNIT_ASSERT(imager._channels.size() == 1);
         CPPUNIT_ASSERT(imager._channels[0] == 0);
     }
@@ -73,7 +72,6 @@ void ZenithImagerDftTest::test_inputDataBlobs()
     ImageData image;
     VisibilityData vis;
     AntennaPositions ant;
-    FrequencyList freqList;
 
     // Use case
     // No data blobs
@@ -87,8 +85,8 @@ void ZenithImagerDftTest::test_inputDataBlobs()
     // Expect not to throw
     {
         std::vector<unsigned> channels(2);
-        image.resize(10, 10, channels, ImageData::POL_X);
-        vis.resize(5, channels, VisibilityData::POL_X);
+        image.resize(10, 10, channels, POL_X);
+        vis.resize(5, channels, POL_X);
         ant.resize(5);
         CPPUNIT_ASSERT_NO_THROW(imager.run(&image, &ant, &vis));
     }

@@ -28,13 +28,12 @@ class CorrectedVisibilityData : public VisibilityData
         /// Constructs and resizes corrected visibility data blob.
         CorrectedVisibilityData(const unsigned nAntennas,
                 const std::vector<unsigned>& channels,
-                const pol_t polarisation)
+                const Polarisation polarisation)
         : VisibilityData(nAntennas, channels, polarisation) {}
 
         ~CorrectedVisibilityData() {}
 };
 
-
 } // namespace pelican
 
-#endif /* CORRECTEDVISIBILITYDATA_H_ */
+#endif // CORRECTEDVISIBILITYDATA_H_

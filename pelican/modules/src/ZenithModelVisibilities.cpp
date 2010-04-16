@@ -4,7 +4,6 @@
 #include "pelican/data/DataBlob.h"
 #include "pelican/data/ModelVisibilityData.h"
 #include "pelican/data/AntennaPositions.h"
-#include "pelican/utility/constants.h"
 #include "pelican/data/Source.h"
 #include "pelican/utility/pelicanTimer.h"
 
@@ -66,7 +65,7 @@ void ZenithModelVisibilities::run(AntennaPositions* antPos,
     // Dimensions for model visibility set.
     unsigned nAnt = antPos->nAntennas();
     unsigned nChanModel = _channels.size();
-    unsigned nPolModel = _polarisation == ModelVisibilityData::POL_BOTH ? 2 : 1;
+    unsigned nPolModel = _polarisation == POL_BOTH ? 2 : 1;
 
     // Get time (UT1) and set up celestial data structure for astrometry.
     double UT1 = modelVis->timeStamp();
@@ -88,10 +87,8 @@ void ZenithModelVisibilities::run(AntennaPositions* antPos,
         for (unsigned p = 0; p < nPolModel; p++) {
 
             unsigned iPol = p;
-            iPol = (nPolModel == 1 &&
-                    _polarisation == ModelVisibilityData::POL_X) ? 0 : 1;
-            ModelVisibilityData::pol_t pol = (iPol == 0) ?
-                    ModelVisibilityData::POL_X : ModelVisibilityData::POL_Y;
+            iPol = (nPolModel == 1 && _polarisation == POL_X) ? 0 : 1;
+            Polarisation pol = (iPol == 0) ? POL_X : POL_Y;
 
             _calculateModelVis(modelVis->ptr(c, iPol), nAnt, antPos->xPtr(),
                     antPos->yPtr(), &_sources[0], nSources, frequency,
@@ -161,7 +158,7 @@ void ZenithModelVisibilities::_calculateDirectionCosines (
 void ZenithModelVisibilities::_calculateModelVis(complex_t* vis,
         const unsigned nAnt, const real_t* antPosX, const real_t* antPosY,
         const Source* sources, const unsigned nSources, const double frequency,
-        const ModelVisibilityData::pol_t polarisation,
+        const Polarisation polarisation,
         const double* l, const double* m)
 {
     double k = (math::twoPi * frequency) / phy::c;
@@ -173,7 +170,7 @@ void ZenithModelVisibilities::_calculateModelVis(complex_t* vis,
         for (unsigned i = 0; i < nAnt; i++) {
             double arg = (antPosX[i] * l[s] + antPosY[i] * m[s]) * k;
             complex_t weight = complex_t(cos(arg), sin(arg));
-            double amp = (polarisation == ModelVisibilityData::POL_X) ?
+            double amp = (polarisation == POL_X) ?
                     sources[s].amp1() : sources[s].amp2();
             signal[s * nAnt + i] = sqrt(amp) * weight;
         }

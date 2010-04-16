@@ -225,19 +225,19 @@ std::vector<unsigned> ConfigNode::getChannels(const QString& tagName) const
  * @details
  * Returns the polarisation option.
  */
-DataBlob::pol_t ConfigNode::getPolarisation(const QString& tagName) const
+Polarisation ConfigNode::getPolarisation(const QString& tagName) const
 {
     QString pol = getOption(tagName, "value", "x").toLower();
     if (pol.startsWith("x"))
-        return DataBlob::POL_X;
+        return POL_X;
     else if (pol.startsWith("y"))
-        return DataBlob::POL_Y;
+        return POL_Y;
     else if (pol.startsWith("both"))
-        return DataBlob::POL_BOTH;
+        return POL_BOTH;
     else
         throw QString("%1: Unknown polarisation.").arg(_config.tagName());
 
-    return DataBlob::POL_UNDEF;
+    return POL_UNDEF;
 }
 
 } // namespace pelican

@@ -40,7 +40,7 @@ class ImageData : public DataBlob
         unsigned _nChannels;        ///< Number of channels in the image cube.
         unsigned _nPolarisations;   ///< Number of polarisations in the image cube.
 
-        pol_t _polarisation;             ///< Image polarisation.
+        Polarisation _polarisation; ///< Image polarisation.
         std::vector<unsigned> _channels; ///< List of frequency channels in the image.
 
         double _refFreq;            ///< Reference frequency;
@@ -66,7 +66,7 @@ class ImageData : public DataBlob
         /// Constructor assigning memory for the image cube.
         ImageData(const unsigned sizeL, const unsigned sizeM,
                 const std::vector<unsigned>& channels,
-                const pol_t polarisation);
+                const Polarisation polarisation);
 
         /// Image data destructor.
         ~ImageData();
@@ -76,7 +76,7 @@ class ImageData : public DataBlob
         /// Resize the image cube.
         void resize(const unsigned sizeL, const unsigned sizeM,
                 const std::vector<unsigned>& channels,
-                const pol_t polarisations);
+                const Polarisation polarisations);
 
         /// Clears the image data blob.
         void clear();
@@ -122,7 +122,7 @@ class ImageData : public DataBlob
         }
 
         /// Returns the polarisation enum value.
-        pol_t polarisation() const { return _polarisation; }
+        Polarisation polarisation() const { return _polarisation; }
 
         /// Returns the image size (number of pixels) in the L direction.
         unsigned sizeL() const { return _sizeL; }

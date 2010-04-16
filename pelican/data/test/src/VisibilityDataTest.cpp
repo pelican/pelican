@@ -1,5 +1,6 @@
 #include "pelican/data/test/VisibilityDataTest.h"
 #include "pelican/data/VisibilityData.h"
+#include "pelican/utility/constants.h"
 #include "pelican/utility/memCheck.h"
 
 namespace pelican {
@@ -34,7 +35,7 @@ void VisibilityDataTest::test_accessorMethods()
     const unsigned nChannels = 4;
 //    const unsigned nPols = 2;
     std::vector<unsigned> channels(nChannels);
-    VisibilityData data(nAntennas, channels, VisibilityData::POL_BOTH);
+    VisibilityData data(nAntennas, channels, POL_BOTH);
 
     // TODO: missing loop to set stuff.
 
@@ -80,7 +81,7 @@ void VisibilityDataTest::test_accessorMethodsLinear()
     const unsigned nPols = 2;
     const unsigned nTotal = nPols * nChannels * nAntennas * nAntennas;
     std::vector<unsigned> channels(nChannels);
-    VisibilityData data(nAntennas, channels, VisibilityData::POL_BOTH);
+    VisibilityData data(nAntennas, channels, POL_BOTH);
 
     // Fill the visibility matrix and read it out again.
     for (unsigned index = 0; index < nTotal; index++) {
@@ -121,14 +122,14 @@ void VisibilityDataTest::test_resize()
     // Test trying to resize an empty blob.
     VisibilityData data;
     std::vector<unsigned> channels(128);
-    data.resize(96, channels, VisibilityData::POL_BOTH);
+    data.resize(96, channels, POL_BOTH);
     std::complex<real_t>* ptr = data.ptr(1);
     CPPUNIT_ASSERT( ptr  != NULL );
 
     // Use Case
     // Try to resize the blob again.
     channels.resize(512);
-    data.resize(96, channels, VisibilityData::POL_BOTH);
+    data.resize(96, channels, POL_BOTH);
     ptr = data.ptr(255, 1);
     CPPUNIT_ASSERT( ptr  != NULL );
 }
@@ -146,7 +147,7 @@ void VisibilityDataTest::test_swap_same()
     const unsigned nPols = 2;
     const unsigned nTotal = nPols * nChannels * nAntennas * nAntennas;
     std::vector<unsigned> channels(nChannels);
-    VisibilityData data(nAntennas, channels, VisibilityData::POL_BOTH);
+    VisibilityData data(nAntennas, channels, POL_BOTH);
 
     // Fill the visibility matrix.
     for (unsigned index = 0; index < nTotal; index++) {
@@ -177,7 +178,7 @@ void VisibilityDataTest::test_swap_twice()
     const unsigned nPols = 2;
     const unsigned nTotal = nPols * nChannels * nAntennas * nAntennas;
     std::vector<unsigned> channels(nChannels);
-    VisibilityData data(nAntennas, channels, VisibilityData::POL_BOTH);
+    VisibilityData data(nAntennas, channels, POL_BOTH);
 
     // Fill the visibility matrix.
     for (unsigned index = 0; index < nTotal; index++) {

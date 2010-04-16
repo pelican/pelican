@@ -5,8 +5,8 @@
 #include "pelican/data/SiteData.h"
 #include "pelican/data/CelestialData.h"
 #include "pelican/data/ModelVisibilityData.h"
+#include "pelican/utility/constants.h"
 #include <vector>
-
 
 /**
  * @file ZenithModelVisibilities.h
@@ -52,7 +52,7 @@ class ZenithModelVisibilities : public AbstractModule
                 const real_t* antPosX, const real_t* antPosY,
                 const Source* sources, const unsigned nSources,
                 const double frequency,
-                const ModelVisibilityData::pol_t polarisation,
+                const Polarisation polarisation,
                 const double* l, const double* m);
 
         /// Extract data from the data hash.
@@ -71,7 +71,7 @@ class ZenithModelVisibilities : public AbstractModule
         int _freqRefChannel;                ///< Frequency reference channel
         double _freqRef;                    ///< Reference frequency
         double _freqDelta;                  ///< Frequency delta
-        ModelVisibilityData::pol_t _polarisation;
+        Polarisation _polarisation;
 };
 
 } // namespace pelican

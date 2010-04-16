@@ -28,17 +28,15 @@ namespace pelican {
 class VisibilityPositions : public DataBlob
 {
     public:
-        /// Constructor
-        VisibilityPositions();
+        /// Constructs an empty visibility positions data blob.
+        VisibilityPositions() : DataBlob() {}
 
-        /// Constructor assigning memory for the visibility positions
-        VisibilityPositions(const unsigned nAntennas);
-
-        /// Image data destructor.
-        ~VisibilityPositions();
+        /// Constructs and assigns memory for a visibility positions data blob.
+        VisibilityPositions(const unsigned nAntennas) : DataBlob() {
+            resize(nAntennas);
+        }
 
     public:
-
         /// Clears the visibility positions data
         void clear();
 
@@ -134,7 +132,6 @@ class VisibilityPositions : public DataBlob
         std::vector<real_t> _v; ///< v coordinate of visibility.
         std::vector<real_t> _w; ///< w coordinate of visibility.
 };
-
 
 } // namespace pelican
 

@@ -4,7 +4,6 @@
 #include "pelican/core/PipelineApplication.h"
 #include "pelican/core/PipelineDriver.h"
 #include "pelican/core/DataClientFactory.h"
-#include "pelican/data/DataBlobFactory.h"
 #include "boost/program_options.hpp"
 #include "pelican/utility/Config.h"
 #include "pelican/utility/ConfigNode.h"
@@ -53,7 +52,7 @@ PipelineApplication::PipelineApplication(int argc, char** argv)
     _adapterFactory = new Factory<AbstractAdapter>(_config, adapterBase);
 
     // Construct the data blob factory
-    _dataBlobFactory = new DataBlobFactory;
+    _dataBlobFactory = new Factory<DataBlob>;
 
     // Construct the module factory
     Config::TreeAddress moduleBase(base);
@@ -67,7 +66,6 @@ PipelineApplication::PipelineApplication(int argc, char** argv)
 
     // Construct the pipeline driver
     _driver = new PipelineDriver( _dataBlobFactory, _moduleFactory, _clientFactory );
-
 }
 
 /**

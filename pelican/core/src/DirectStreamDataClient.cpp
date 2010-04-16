@@ -2,6 +2,7 @@
 
 #include "pelican/comms/StreamData.h"
 #include "pelican/data/DataRequirements.h"
+#include "pelican/data/DataBlob.h"
 #include "pelican/server/LockedData.h"
 #include "pelican/server/LockableStreamData.h"
 #include "pelican/utility/Config.h"

@@ -5,7 +5,6 @@
 #include "pelican/core/FileDataClient.h"
 #include "pelican/core/AbstractPipeline.h"
 #include "pelican/data/DataBlob.h"
-#include "pelican/data/DataBlobFactory.h"
 #include "pelican/utility/Config.h"
 #include "pelican/utility/ConfigNode.h"
 
@@ -23,7 +22,7 @@ namespace pelican {
  * @details
  * PipelineDriver constructor, which takes pointers to the allocated factories.
  */
-PipelineDriver::PipelineDriver(DataBlobFactory* blobFactory,
+PipelineDriver::PipelineDriver(Factory<DataBlob>* blobFactory,
         Factory<AbstractModule>* moduleFactory, DataClientFactory* clientFactory
 ){
     // Initialise member variables.
@@ -42,8 +41,7 @@ PipelineDriver::PipelineDriver(DataBlobFactory* blobFactory,
 
 /**
  * @details
- * PipelineDriver destructor. This deletes all the registered pipelines
- * and the data blobs.
+ * PipelineDriver destructor. This deletes all the registered pipelines.
  */
 PipelineDriver::~PipelineDriver()
 {
@@ -52,13 +50,6 @@ PipelineDriver::~PipelineDriver()
         delete pipeline;
     }
     _registeredPipelines.clear();
-
-    // Delete the data blobs.
-    foreach (DataBlob* dataBlob, _dataHash) {
-        delete dataBlob;
-    }
-    _dataHash.clear();
-
 }
 
 /**

@@ -2,6 +2,7 @@
 #define ANTENNAMATRIXDATA_H
 
 #include "pelican/data/DataBlob.h"
+#include "pelican/utility/constants.h"
 #include <vector>
 #include <iostream>
 
@@ -56,7 +57,7 @@ template<typename T> class AntennaMatrixData : public DataBlob
         unsigned _nPolarisations;
 
         /// Polarisation of the data.
-        pol_t _polarisation;
+        Polarisation _polarisation;
 
         /// List of channels for which the data is held.
         std::vector<unsigned> _channels;
@@ -78,7 +79,7 @@ template<typename T> class AntennaMatrixData : public DataBlob
         /// @param[in] polarisation  Polarisation of the data.
         AntennaMatrixData(const unsigned nAntennas,
                 const std::vector<unsigned>& channels,
-                const pol_t polarisation) : DataBlob()
+                const Polarisation polarisation) : DataBlob()
         {
             resize(nAntennas, channels, polarisation);
             initAntennaIndex();
@@ -98,7 +99,7 @@ template<typename T> class AntennaMatrixData : public DataBlob
         /// @param[in] polarisations The number of polarisations.
         void resize(const unsigned antennas,
                 const std::vector<unsigned>& channels,
-                const pol_t polarisation) {
+                const Polarisation polarisation) {
             _nAntennas = antennas;
             _nChannels = channels.size();
             _channels = channels;
@@ -139,7 +140,7 @@ template<typename T> class AntennaMatrixData : public DataBlob
         }
 
         /// Returns the polarisation of the data.
-        pol_t polarisation() const { return _polarisation; }
+        Polarisation polarisation() const { return _polarisation; }
 
         /// Returns a pointer to the first element of the data.
         /// If the data cube has no size, a null pointer is returned.

@@ -4,6 +4,7 @@
 #include "pelican/data/ImageData.h"
 #include <QCoreApplication>
 #include <QFile>
+#include "pelican/utility/constants.h"
 #include "pelican/utility/pelicanTimer.h"
 #include "pelican/data/DataBlob.h"
 #include <iostream>
@@ -48,7 +49,7 @@ void ImageWriterFitsTest::test_openFile()
     ImageWriterFits fits(config);
 
     std::vector<unsigned> channels(512);
-    ImageData image(128, 128, channels, ImageData::POL_BOTH);
+    ImageData image(128, 128, channels, POL_BOTH);
     fits._open("testEmpty", 128, 128, 1, 1, true);
     fits._writeHeader(&image);
     real_t* im = image.ptr();
@@ -66,7 +67,7 @@ void ImageWriterFitsTest::test_createImage()
     unsigned nChan = 1;
     unsigned nPol = 1;
     std::vector<unsigned> channels(2);
-    ImageData image(nL, nM, channels, ImageData::POL_X);
+    ImageData image(nL, nM, channels, POL_X);
     real_t* amp = image.ptr();
     for (unsigned m = 0; m < image.sizeM(); m++) {
         for (unsigned l = 0; l < image.sizeL(); l++) {
@@ -98,7 +99,7 @@ void ImageWriterFitsTest::test_createCube()
     std::vector<unsigned> channels(2);
     channels[0] = 0;
     channels[1] = 1;
-    ImageData image(nL, nM, channels, ImageData::POL_BOTH);
+    ImageData image(nL, nM, channels, POL_BOTH);
     real_t* amp = image.ptr();
     unsigned nPixelsPerPol = nM * nL;
     unsigned nPixelsPerChan = nM * nL * nPol;

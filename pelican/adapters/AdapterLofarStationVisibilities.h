@@ -3,6 +3,7 @@
 
 #include "pelican/adapters/AbstractStreamAdapter.h"
 #include "pelican/data/VisibilityData.h"
+#include "pelican/utility/constants.h"
 #include <QDataStream>
 
 /**
@@ -60,7 +61,7 @@ class AdapterLofarStationVisibilities : public AbstractStreamAdapter
         unsigned _nChan;        ///< Number of channels in the chunk.
         unsigned _nPol;         ///< Number of polarisations in the chunk.
         unsigned _dataBytes;    ///< Number of bytes per data point.
-        VisibilityData::pol_t _polarisation; ///< The polarisation.
+        Polarisation _polarisation; ///< The polarisation.
         std::vector<unsigned> _channels;     ///< List of channels in the data.
         bool _rowMajor;         ///< Set if the data is C-ordered (row major).
         VisibilityData* _vis;   ///< Pointer to visibility data blob being read into.
