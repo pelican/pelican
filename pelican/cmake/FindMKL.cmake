@@ -11,7 +11,6 @@
 #  MKL_INCLUDE_DIR: The location of mkl.h
 #
 
-
 # Set the architecture specfic interface layer library.
 # ==============================================================================
 if(CMAKE_SIZEOF_VOID_P EQUAL 8)
@@ -76,12 +75,15 @@ endforeach(mkl_lib ${mkl_lib_names})
 
 # Find the include directory.
 # ==============================================================================
+set(MKL_INCLUDE_DIR "")
 find_path(MKL_INCLUDE_DIR mkl.h
     PATHS
     /usr/include/
-    /opt/intel/mkl/*/include/*/
     /opt/intel/Compiler/*/*/mkl/include/
+    /opt/intel/mkl/*/include/*/
 )
+
+
 
 # Handle the QUIETLY and REQUIRED arguments.
 # ==============================================================================
@@ -91,4 +93,4 @@ FIND_PACKAGE_HANDLE_STANDARD_ARGS(MKL DEFAULT_MSG MKL_LIBRARIES MKL_INCLUDE_DIR)
 
 # Hide in cache.
 # ==============================================================================
-mark_as_advanced(MKL_LIBRARIES MKL_INCLUDE_DIR tmp_library)
+#mark_as_advanced(MKL_LIBRARIES tmp_library)
