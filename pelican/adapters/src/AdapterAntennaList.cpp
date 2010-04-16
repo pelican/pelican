@@ -1,4 +1,5 @@
-#include "AdapterAntennaList.h"
+#include "pelican/adapters/AdapterAntennaList.h"
+#include "pelican/data/AntennaPositions.h"
 #include <QTextStream>
 
 #include "pelican/utility/memCheck.h"

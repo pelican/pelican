@@ -2,7 +2,6 @@
 #define ADAPTERLOFARSTATIONVISIBILITIES_H
 
 #include "pelican/adapters/AbstractStreamAdapter.h"
-#include "pelican/data/VisibilityData.h"
 #include "pelican/utility/constants.h"
 #include <QDataStream>
 
@@ -13,6 +12,7 @@
 namespace pelican {
 
 class ConfigNode;
+class VisibilityData;
 
 /**
  * @class AdapterLofarStationVisibilities

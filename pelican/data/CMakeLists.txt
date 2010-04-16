@@ -14,6 +14,6 @@ set( data_src
 )
 SUBPACKAGE_LIBRARY(data ${data_src} )
 
-SUBPACKAGE_ADD_LIBRARIES(${QT_QTCORE_LIBRARY})
+SUBPACKAGE_ADD_LIBRARIES(${QT_QTCORE_LIBRARY} memoryTracer)
 
 add_subdirectory(test)

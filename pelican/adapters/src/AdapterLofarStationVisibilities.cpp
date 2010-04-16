@@ -1,5 +1,5 @@
 #include "pelican/adapters/AdapterLofarStationVisibilities.h"
-#include "pelican/utility/ConfigNode.h"
+#include "pelican/data/VisibilityData.h"
 #include <QByteArray>
 #include <QIODevice>
 #include <iostream>

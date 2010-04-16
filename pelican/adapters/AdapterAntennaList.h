@@ -2,7 +2,6 @@
 #define ADAPTERANTENNALIST_H
 
 #include "pelican/adapters/AbstractServiceAdapter.h"
-#include "pelican/data/AntennaPositions.h"
 #include <QDataStream>
 
 /**
@@ -12,6 +11,7 @@
 namespace pelican {
 
 class ConfigNode;
+class AntennaPositions;
 
 /**
  * @class AdapterAntennaList

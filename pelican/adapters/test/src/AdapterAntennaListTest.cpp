@@ -1,6 +1,8 @@
 #include "AdapterAntennaListTest.h"
 #include "pelican/adapters/AdapterAntennaList.h"
+#include "pelican/data/AntennaPositions.h"
 #include "pelican/utility/ConfigNode.h"
+#include <QCoreApplication>
 #include <QDomElement>
 #include <QFile>
 
@@ -26,10 +28,14 @@ AdapterAntennaListTest::~AdapterAntennaListTest()
 
 void AdapterAntennaListTest::setUp()
 {
+    int argc = 1;
+    char *argv[] = {(char*)"pelican"};
+    _app = new QCoreApplication(argc, argv);
 }
 
 void AdapterAntennaListTest::tearDown()
 {
+    delete _app;
 }
 
 void AdapterAntennaListTest::test_method()

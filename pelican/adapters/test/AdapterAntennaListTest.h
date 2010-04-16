@@ -3,6 +3,8 @@
 
 #include <cppunit/extensions/HelperMacros.h>
 
+class QCoreApplication;
+
 /**
  * @file AdapterAntennaListTest.h
  */
@@ -36,7 +38,9 @@ class AdapterAntennaListTest : public CppUnit::TestFixture
         ~AdapterAntennaListTest();
 
     private:
+        QCoreApplication *_app;
 };
 
 } // namespace pelican
+
 #endif // ADAPTERANTENNALISTTEST_H

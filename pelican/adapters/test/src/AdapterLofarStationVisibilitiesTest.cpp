@@ -1,18 +1,18 @@
 #include "AdapterLofarStationVisibilitiesTest.h"
 #include "pelican/adapters/test/VisGen.h"
-#include <QCoreApplication>
-#include <QDataStream>
-#include <QBuffer>
-#include <QFile>
-#include "pelican/utility/ConfigNode.h"
 #include "pelican/adapters/AdapterLofarStationVisibilities.h"
-#include "pelican/adapters/AbstractStreamAdapter.h"
-#include <iostream>
-#include <iomanip>
-#include <QString>
+#include "pelican/data/VisibilityData.h"
+#include "pelican/utility/ConfigNode.h"
 #include "pelican/utility/constants.h"
 #include "pelican/utility/pelicanTimer.h"
 
+#include <QCoreApplication>
+#include <QString>
+#include <QFile>
+#include <QDataStream>
+#include <QBuffer>
+#include <iostream>
+#include <iomanip>
 
 #include "pelican/utility/memCheck.h"
 
@@ -162,7 +162,6 @@ void AdapterLofarStationVisibilitiesTest::test_deserialise_file()
     CPPUNIT_ASSERT(vis = data->ptr(c, p));
     CPPUNIT_ASSERT_DOUBLES_EQUAL(_dataVal(ai, aj, c, p),
             vis[aj * nAnt + ai].real(), 0.001);
-
 
     // Clean up.
     delete adapter;

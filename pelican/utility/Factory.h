@@ -6,6 +6,7 @@
 
 #include "pelican/utility/Config.h"
 #include "pelican/utility/ConfigNode.h"
+#include "pelican/utility/memoryTracer.h"
 
 /**
  * @file Factory.h
@@ -110,6 +111,10 @@ template<class B> class CreatorBase
 
         /// Returns a reference to the static type map.
         static QMap<QString, CreatorBase<B>*>& types() {
+#ifndef NDEBUG
+            // Ensure the memory tracer has been created.
+            boost::details::pool::singleton_default<Tracer>::instance();
+#endif
             static QMap<QString, CreatorBase<B>*> types;
             return types;
         }
