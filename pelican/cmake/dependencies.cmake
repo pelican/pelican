@@ -27,7 +27,7 @@ if(NOT DEFINED pelican_mkl)
 endif(NOT DEFINED pelican_mkl)
 
 if(pelican_mkl)
-    find_package(MKL)
+    find_package(MKL QUIET)
 endif(pelican_mkl)
 
 if (MKL_FOUND)
