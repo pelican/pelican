@@ -139,6 +139,10 @@ template<class T, class B> class CreatorBasic : public CreatorBase<B>
         /// This method constructs a concrete object of the required type, and
         /// returns its base class pointer.
         B* create() {return new T;}
+
+    private:
+        /// Disallow other create() methods.
+        B* create(const ConfigNode&) {return 0;}
 };
 
 /**
@@ -160,6 +164,10 @@ template<class T, class B> class Creator : public CreatorBase<B>
         /// This method constructs a concrete object of the required type,
         /// sets its configuration and returns its base class pointer.
         B* create(const ConfigNode& config) {return new T(config);}
+
+    private:
+        /// Disallow other create() methods.
+        B* create() {return 0;}
 };
 
 } // namespace pelican
