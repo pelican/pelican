@@ -48,6 +48,7 @@ public:
     void add(void* p, char const* file, int line);
     void remove(void* p);
     void dump();
+    bool entry(void* p) const;
 
     static bool ready;
 

@@ -53,6 +53,11 @@ Tracer::~Tracer()
     dump();
 }
 
+bool Tracer::entry(void* p) const
+{
+    return _map.find(p) != _map.end();
+}
+
 void Tracer::add(void* p, char const* file, int line)
 {
     if (_lockCount > 0)
