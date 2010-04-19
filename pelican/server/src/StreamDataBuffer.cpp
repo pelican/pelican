@@ -115,8 +115,8 @@ LockableStreamData* StreamDataBuffer::_getWritable(size_t size)
             _space -= size;
             LockableStreamData* lockableData = new LockableStreamData(_type, memory, size);
             _data.append(lockableData); // Add to the list of known data.
-            Q_ASSERT(connect( lockableData, SIGNAL(unlockedWrite()), this, SLOT(activateData() ) ));
-            Q_ASSERT(connect( lockableData, SIGNAL(unlocked()), this, SLOT(deactivateData() ) ));
+            connect(lockableData, SIGNAL(unlockedWrite()), SLOT(activateData()));
+            connect(lockableData, SIGNAL(unlocked()), SLOT(deactivateData()));
             return lockableData;
         }
     }

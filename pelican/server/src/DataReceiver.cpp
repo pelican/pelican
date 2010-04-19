@@ -56,8 +56,7 @@ void DataReceiver::run()
     if( _device )
     {
         std::cout << "DataReceiver::run(): Socket OK" << std::endl;
-        Q_ASSERT( connect(_device, SIGNAL( readyRead() ),
-                    this, SLOT(processIncomingData()) ) );
+        connect(_device, SIGNAL(readyRead()), SLOT(processIncomingData()));
         exec(); // Enter event loop here.
     }
     delete _device;

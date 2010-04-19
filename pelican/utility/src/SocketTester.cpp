@@ -25,7 +25,7 @@ QTcpSocket& SocketTester::send(const QByteArray& block)
     if( ! _sock1.waitForConnected(1000) ) {
         throw QString("connection timed out");
     }
-    Q_ASSERT(block.size() == _sock1.write(block));
+    _sock1.write(block);
     _sock1.waitForBytesWritten(block.size());
     _sock1.flush();
     _server.waitForNewConnection();
