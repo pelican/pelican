@@ -8,12 +8,22 @@ set(
    src/ConfigNodeTest.cpp
 )
 
-if (CMAKE_BUILD_TYPE MATCHES DEBUG)
+if(CMAKE_BUILD_TYPE MATCHES DEBUG|[Dd]ebug)
     list(APPEND utilityTest_src src/memoryTracerTest.cpp)
-endif (CMAKE_BUILD_TYPE MATCHES DEBUG)
+    add_executable(utilityTest ${utilityTest_src} )
+    target_link_libraries(utilityTest
+        ${SUBPACKAGE_LIBRARIES}
+        ${CPPUNIT_LIBRARIES}
+        memoryTracer
+    )
+else(CMAKE_BUILD_TYPE MATCHES DEBUG|[Dd]ebug)
+    add_executable(utilityTest ${utilityTest_src} )
+    target_link_libraries(utilityTest
+        ${SUBPACKAGE_LIBRARIES}
+        ${CPPUNIT_LIBRARIES}
+    )
+endif(CMAKE_BUILD_TYPE MATCHES DEBUG|[Dd]ebug)
 
-add_executable(utilityTest ${utilityTest_src} )
-target_link_libraries(utilityTest ${SUBPACKAGE_LIBRARIES} ${CPPUNIT_LIBRARIES} memoryTracer)
 add_test(utilityTest utilityTest )
 
 copy_files(${CMAKE_CURRENT_SOURCE_DIR}/data/*.xml . testXMLFiles)
