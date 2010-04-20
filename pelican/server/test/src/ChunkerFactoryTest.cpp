@@ -64,10 +64,7 @@ void ChunkerFactoryTest::test_create()
         config.setFromString("", serverXml);
 
         // Create the chunker factory.
-        Config::TreeAddress address;
-        address.append(Config::NodeId("server", ""));
-        address.append(Config::NodeId("chunkers", ""));
-        Factory<AbstractChunker> factory(&config, address);
+        Factory<AbstractChunker> factory(&config, "server", "chunkers");
 
         // Create the chunker.
         AbstractChunker* chunker = factory.create("TestUdpChunker", "2");

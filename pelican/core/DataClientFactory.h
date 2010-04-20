@@ -32,9 +32,10 @@ class DataClientFactory : public Factory<AbstractDataClient>
 
     public:
         /// Constructs the data client factory.
-        DataClientFactory(const Config* config,
-                const Config::TreeAddress& base, Factory<AbstractAdapter>* aFactory)
-        : Factory<AbstractDataClient>(config, base), _adapterFactory(aFactory) {}
+        DataClientFactory(const Config* config, const QString& section,
+                const QString& group, Factory<AbstractAdapter>* aFactory)
+        : Factory<AbstractDataClient>(config, section, group),
+        _adapterFactory(aFactory) {}
 
         /// Create a configured object with the given name and type.
         AbstractDataClient* create(const QString& type,

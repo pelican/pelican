@@ -48,7 +48,7 @@ class Config
             return ConfigNode(_set(address));
         }
 
-        /// Returns a pointer to the specified configuration node.
+        /// Returns the specified configuration node.
         ConfigNode get(const TreeAddress &address) const;
 
         /// Sets a configuration option attribute at the specified address.
@@ -99,4 +99,4 @@ class Config
 
 } // namespace pelican
 
-#endif /* CONFIG_H */
+#endif // CONFIG_H

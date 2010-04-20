@@ -70,12 +70,10 @@ void Config::setAttribute(const TreeAddress &address, const QString &key,
 QString Config::getAttribute(const TreeAddress& address, const QString& key) const
 {
     QDomElement e = _get(address);
-    if (e.isNull()) {
+    if (e.isNull())
         return QString();
-    }
-    else {
+    else
         return e.attribute(key);
-    }
 }
 
 
@@ -151,7 +149,7 @@ void Config::save(const QString& fileName) const
 /**
  * @details
  * Sets the content of the configuration QDomDocument from the QStrings
- * /p pipelineConfig and /p serverConfig.
+ * \p pipelineConfig and \p serverConfig.
  *
  * @param[in] pipelineConfig String containing the pipeline XML configuration.
  * @param[in] serverConfig String containing server XML configuration.
@@ -166,19 +164,19 @@ void Config::setFromString(const QString& pipelineConfig, const QString& serverC
     int line, column;
 
     QString xmlDoc =
-    "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-    "<!DOCTYPE pelican>"
-    "<configuration version=\"1.0\">"
-    "<pipeline>"
-    "" + pipelineConfig + ""
-    "</pipeline>"
-    "<server>"
-    "" + serverConfig + ""
-    "</server>"
-    "</configuration>";
+            "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+            "<!DOCTYPE pelican>"
+            "<configuration version=\"1.0\">"
+            "<pipeline>"
+            "" + pipelineConfig + ""
+            "</pipeline>"
+            "<server>"
+            "" + serverConfig + ""
+            "</server>"
+            "</configuration>";
 
     if (!_document.setContent(xmlDoc, true, &error, &line, &column)) {
-        throw QString("Config: Error parsing XML "
+        throw QString("Config::setFromString(): Error parsing XML "
                 "(Line: %1 Col: %2): %3.").arg(line).arg(column).arg(error);
     }
 }
@@ -261,9 +259,8 @@ QDomElement Config::_get(const TreeAddress &address) const
     QDomElement parent = _document.documentElement();
 
     // Empty configuration return null element.
-    if (parent.isNull()) {
+    if (parent.isNull())
         return QDomElement();
-    }
 
     for (int a = 0; a < address.size(); a++) {
 
@@ -280,9 +277,8 @@ QDomElement Config::_get(const TreeAddress &address) const
         }
 
         // No node exists of the specified tag.
-        if (nodes.isEmpty()) {
+        if (nodes.isEmpty())
             return QDomElement();
-        }
 
         // Nodes exist of the specified tag; find the right one to return.
         else {
@@ -291,20 +287,17 @@ QDomElement Config::_get(const TreeAddress &address) const
             int iNode = -1;
             for (int n = 0; n < nodes.size(); n++) {
                 QString nodeName = nodes.at(n).toElement().attribute(QString("name"));
-                if (nodeName == name) {
+                if (nodeName == name)
                     iNode = n;
-                }
             }
 
-            // No tag exists with the name.
-            if (iNode == -1) {
+            // Check if no tag exists with the name.
+            if (iNode == -1)
                 return QDomElement();
-            }
 
             // Tag exists - move the parent pointer.
-            else {
+            else
                 parent = nodes.at(iNode).toElement();
-            }
         }
     }
     return parent;
@@ -328,7 +321,8 @@ void Config::read(const QString fileName)
     }
 
     if (!file.exists())
-        throw QString("Config: Configuration file \"%1\" not found.").arg(fileName);
+        throw QString("Config::read(): "
+                "Configuration file \"%1\" not found.").arg(fileName);
 
     if (!file.open(QFile::ReadOnly | QFile::Text))
         return;
@@ -337,30 +331,29 @@ void Config::read(const QString fileName)
     QString error;
     int line, column;
     if (!_document.setContent(&file, true, &error, &line, &column)) {
-        throw QString("Config: Parse error "
+        throw QString("Config::read(): Parse error "
                 "(Line: %1 Col: %2): %3.").arg(line).arg(column).arg(error);
     }
 
     if (_document.doctype().name() != "pelican")
-        throw QString("Config: Invalid doctype.");
+        throw QString("Config::read(): Invalid doctype (must be \"pelican\".");
 }
 
 
 /**
  * @details
- * Create a child node under the /p parent with the /p tag and /p name attribute.
+ * Create a child node under the \p parent with the \p tag and \p name attribute.
  */
 void Config::_createChildNode(QDomElement &parent, const QString& tag, const QString& name)
 {
-    if (parent.isNull()) {
+    if (parent.isNull())
         throw QString("Config: Unable to create child node on null parent.");
-    }
+
     QDomElement e = _document.createElement(tag);
-    if (!name.isEmpty()) {
+    if (!name.isEmpty())
         e.setAttribute(QString("name"), name);
-    }
+
     parent.appendChild(e);
 }
-
 
 } // namespace pelican
