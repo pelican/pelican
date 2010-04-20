@@ -34,10 +34,16 @@ class TimeStreamData : public DataBlob
 
     public:
         /// Clears the time stream data.
-        void clear();
+        void clear() {
+            _data.clear();
+            _startTime = 0.0;
+            _sampleDelta = 0.0;
+        }
 
         /// Assign memory for the time stream data blob.
-        void resize(const unsigned nTimeSamples);
+        void resize(const unsigned nTimeSamples) {
+            _data.resize(nTimeSamples);
+        }
 
     public: // accessor methods
         /// Returns a pointer to the time stream data.
