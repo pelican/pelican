@@ -48,12 +48,12 @@ list(APPEND PELICAN_INCLUDES
 )
 
 list(APPEND PELICAN_LIBRARIES
-    ${QT_QTCORE_LIBRARY}
-    ${QT_QTXML_LIBRARY}
-    ${QT_QTNETWORK_LIBRARY}
-    ${Boost_PROGRAM_OPTIONS_LIBRARY}
-    ${pelican_math_libs}
-    ${CFITSIO_LIBRARIES}
+    #${QT_QTCORE_LIBRARY}
+    #${QT_QTXML_LIBRARY}
+    #${QT_QTNETWORK_LIBRARY}
+    #${Boost_PROGRAM_OPTIONS_LIBRARY}
+    #${pelican_math_libs}
+    #${CFITSIO_LIBRARIES}
 )
 
 # Handle the QUIETLY and REQUIRED arguments.
