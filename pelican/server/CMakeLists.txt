@@ -1,5 +1,5 @@
 INCLUDE_DIRECTORIES(${QT_INCLUDES})
-SUBPACKAGE(server comms utility)
+SUBPACKAGE(server adapters comms utility)
 # files requiring MOC pre-processing (i.e. QObjects)
 set( server_moc_headers
     AbstractLockable.h

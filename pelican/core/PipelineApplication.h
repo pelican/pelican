@@ -92,9 +92,6 @@ class PipelineApplication
         /// Return a pointer to the application configuration object.
         static Config* config(std::string configFilename = "");
 
-        /// Return a reference to the chunker factory.
-//        static Factory<AbstractChunker>& chunkerFactory();
-
         /// Return a pointer to the data blob factory.
         static Factory<DataBlob>* dataBlobFactory();
 

@@ -9,7 +9,6 @@
 #include <QThread>
 #include <QMutex>
 #include <QMutexLocker>
-#include "ChunkerManager.h"
 
 /**
  * @file PelicanServer.h
@@ -17,10 +16,11 @@
 
 namespace pelican {
 
-class AbstractProtocol;
 class AbstractChunker;
-class PelicanPortServer;
+class AbstractProtocol;
+class ChunkerManager;
 class Config;
+class PelicanPortServer;
 
 /**
  * @class PelicanServer
@@ -42,16 +42,17 @@ class PelicanServer : public QThread
         PelicanServer(const Config* config, QObject* parent=0);
         ~PelicanServer();
 
-        /// Assosiate an incoming port with a particular
-        //  protocol. Ownership of AbstractProtocol is
-        //  transferred to this class.
+        /// Assosiate an incoming port with a particular protocol.
+        /// Ownership of AbstractProtocol is transferred to this class.
         void addProtocol(AbstractProtocol*, quint16 port);
 
-        /// Assosiate a host and port with a particular
-        //  chunker type. Ownership of the Chunker is
-        //  transferred to this class.
-        void addStreamChunker(AbstractChunker*);
-        void addServiceChunker(AbstractChunker*);
+        /// Adds a stream chunker.
+        void addStreamChunker(QString type, QString name = QString());
+
+        /// Adds a service chunker.
+        void addServiceChunker(QString type, QString name = QString());
+
+        /// Returns true if the server is ready.
         bool isReady() {QMutexLocker locker(&_mutex); return _ready;}
 
     protected:
@@ -59,12 +60,13 @@ class PelicanServer : public QThread
         void run();
 
     private:
-        QMap<quint16,AbstractProtocol* > _protocolPortMap;
+        QMap<quint16,AbstractProtocol*> _protocolPortMap;
         QMutex _mutex;
-        ChunkerManager _chunkerManager;
+        ChunkerManager* _chunkerManager;
         bool _ready;
         const Config* _config;
 };
 
 } // namespace pelican
+
 #endif // PELICANSERVER_H 

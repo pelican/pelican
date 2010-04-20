@@ -93,16 +93,6 @@ Config* PipelineApplication::config(std::string configFilename)
 
 /**
  * @details
- * Returns a reference to the appplication's chunker factory.
- */
-//Factory<AbstractChunker>& chunkerFactory()
-//{
-//    static Factory<AbstractChunker> factory;
-//    return factory;
-//}
-
-/**
- * @details
  * Returns a pointer to the application's data blob factory.
  */
 Factory<DataBlob>* PipelineApplication::dataBlobFactory()

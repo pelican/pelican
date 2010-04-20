@@ -1,8 +1,10 @@
 #include "pelican/core/DirectStreamDataClient.h"
 
+#include "pelican/core/PipelineApplication.h"
 #include "pelican/comms/StreamData.h"
 #include "pelican/data/DataRequirements.h"
 #include "pelican/data/DataBlob.h"
+#include "pelican/server/ChunkerManager.h"
 #include "pelican/server/LockedData.h"
 #include "pelican/server/LockableStreamData.h"
 #include "pelican/utility/Config.h"
@@ -22,12 +24,17 @@ class DataTypes;
 DirectStreamDataClient::DirectStreamDataClient(const ConfigNode& config, const DataTypes& types)
     : AbstractDataClient(config, types)
 {
+    // Get the application's configuration object.
+    Config* globalConfig = PipelineApplication::config();
+
+    // Create the chunker manager.
+    _chunkerManager = new ChunkerManager(globalConfig, QString("pipeline"));
+
     _started = false;
     // FIXME: to give the data manager its required config
     // Problem being that is not included by default in the client node
     // being passed down.
-    Config dataManagerConfig;
-    _dataManager = new DataManager(&dataManagerConfig);
+    _dataManager = new DataManager(globalConfig);
 }
 
 /**
@@ -37,19 +44,23 @@ DirectStreamDataClient::~DirectStreamDataClient()
 {
     if (_dataManager)
         delete _dataManager;
+
+    // Delete the chunker manager.
+    delete _chunkerManager;
 }
 
-void DirectStreamDataClient::setChunker(AbstractChunker* chunker, const QString& name)
+void DirectStreamDataClient::setChunker(const QString& chunkerType, const QString& name)
 {
+    // FIXME: Chunkers must be able to be named, too.
     switch( type(name) ) {
         case( AbstractAdapter::Stream ) :
-            _chunkerManager.addStreamChunker(chunker);
+            _chunkerManager->addStreamChunker(chunkerType, "");
             break;
         case( AbstractAdapter::Service ) :
-            _chunkerManager.addServiceChunker(chunker);
+            _chunkerManager->addServiceChunker(chunkerType, "");
             break;
         default:
-            throw(QString( QString("Data type ") + name + " not available in requirements"));
+            throw QString("Data type %1 not available in requirements.").arg(name);
             break;
     }
 
@@ -59,7 +70,7 @@ void DirectStreamDataClient::start()
 {
     if( ! _started ) {
         _started = true;
-        _chunkerManager.init(*_dataManager);
+        _chunkerManager->init(*_dataManager);
     }
 }
 
