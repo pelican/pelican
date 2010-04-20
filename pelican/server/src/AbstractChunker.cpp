@@ -23,9 +23,8 @@ AbstractChunker::AbstractChunker(const ConfigNode& config)
  */
 AbstractChunker::~AbstractChunker()
 {
-    // FIXME Why don't we delete the socket or device here?
-//    if (_device)
-//        delete _device;
+    if (_device)
+        delete _device;
 }
 
 /**

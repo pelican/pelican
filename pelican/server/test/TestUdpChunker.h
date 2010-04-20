@@ -25,7 +25,6 @@ class DataManager;
  * @details
  *
  */
-
 class TestUdpChunker : public AbstractChunker
 {
     public:

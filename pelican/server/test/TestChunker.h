@@ -58,6 +58,7 @@ class TestChunker : public QObject, public AbstractChunker
         void _start();
 
     private:
+        QIODevice* _device;
         QTimer* _timer;
         bool _badSocket;
         unsigned int _nextCount;

@@ -54,7 +54,7 @@ void ChunkerManager::init(DataManager& dataManager)
     for (int i = 0; i < inputPorts.size(); ++i) {
         AbstractChunker* chunker = _chunkerPortMap[inputPorts[i]];
         chunker->setDataManager(&dataManager);
-        boost::shared_ptr<DataReceiver> receiver( new DataReceiver(chunker, &dataManager) );
+        boost::shared_ptr<DataReceiver> receiver(new DataReceiver(chunker));
         _dataReceivers.append(receiver);
         receiver->listen();
     }

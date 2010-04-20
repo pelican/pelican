@@ -18,11 +18,11 @@ PELICAN_DECLARE_CHUNKER(TestUdpChunker)
  * @details
  * Constructs a new TestUdpChunker.
  */
-TestUdpChunker::TestUdpChunker(const ConfigNode& config)
-: AbstractChunker()
+TestUdpChunker::TestUdpChunker(const ConfigNode& config) : AbstractChunker()
 {
+    // Check configuration node is correct.
     if (config.type() != "TestUdpChunker")
-        throw QString("TestUdpChunker::TestUdpChunker(): Wrong config.");
+        throw QString("TestUdpChunker: Wrong configuration node.");
 
     // Get configuration options.
     setHost(config.getOption("connection", "host"));
@@ -32,10 +32,10 @@ TestUdpChunker::TestUdpChunker(const ConfigNode& config)
 
     // Some sanity checking.
     if (type().isEmpty())
-        throw QString("TestUdpChunker::TestUdpChunker(): Data type unspecified.");
+        throw QString("TestUdpChunker: Data type unspecified.");
 
     if (_chunkSize == 0)
-        throw QString("TestUdpChunker::TestUdpChunker(): Chunk size zero.");
+        throw QString("TestUdpChunker: Chunk size zero.");
 
     // Initialise temporary storage and chunk counter.
     _nextCount = 0;
@@ -50,7 +50,6 @@ TestUdpChunker::TestUdpChunker(const ConfigNode& config)
 QIODevice* TestUdpChunker::newDevice()
 {
     QUdpSocket* socket = new QUdpSocket;
-    _device = socket;
     socket->bind(QHostAddress(host()), port());
     return socket;
 }
@@ -59,17 +58,15 @@ QIODevice* TestUdpChunker::newDevice()
  * @details
  * Gets the next chunk of data from the UDP socket
  */
-void TestUdpChunker::next(QIODevice* socket)
+void TestUdpChunker::next(QIODevice* device)
 {
-//     std::cout << "TestUdpChunker::next() size = " << _size << std::endl;
+    // Read the data off the UDP socket.
+    QUdpSocket* socket = static_cast<QUdpSocket*>(device);
+    qint64 sizeRead = socket->readDatagram(_tempBuffer.data(), _chunkSize);
 
-    qint64 sizeRead = static_cast<QUdpSocket*>(socket)->readDatagram(_tempBuffer.data(), _chunkSize);
-
-//     double value = *reinterpret_cast<double*>(_tempBuffer.data());
-//     std::cout << value << std::endl;
-
+    // Sanity check.
     if ((size_t)sizeRead != _chunkSize)
-        throw QString("TestUdpChunker::next(): size mismatch.");
+        throw QString("TestUdpChunker::next(): Size mismatch.");
 
     // Get writable data object.
     WritableData writableData = getDataStorage(_chunkSize);
@@ -78,8 +75,8 @@ void TestUdpChunker::next(QIODevice* socket)
     if (!writableData.isValid())
         return;
 
+    // Write the data into the buffer.
     writableData.write((void*)_tempBuffer.data(), _chunkSize, 0);
-
     ++_nextCount;
 }
 
