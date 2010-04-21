@@ -73,6 +73,7 @@ install(DIRECTORY cmake DESTINATION ${MODULES_INSTALL_DIR}
 
 # === Compiler defaults.
 include(cmake/compilerDefaults.cmake)
+add_definitions(-DUSE_MEMORY_TRACKER)
 
 # === Setup project dependencies.
 include(cmake/dependencies.cmake)
