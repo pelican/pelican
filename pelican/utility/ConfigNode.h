@@ -55,6 +55,9 @@ class ConfigNode
             return _config.parentNode().toElement().tagName();
         }
 
+        /// Sets the node from the xml string (NOTE: use for testing)
+        void setFromString(const QString xmlString);
+
         /// Returns a configuration option (attribute).
         /// i.e. the attribute for the XML: <tagName attribute=""/>
         QString getOption(const QString& tagName, const QString& attribute,

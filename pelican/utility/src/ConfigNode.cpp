@@ -5,6 +5,7 @@
 #include <QStringList>
 #include <QTextStream>
 #include <cstdlib>
+#include <iostream>
 
 #include "pelican/utility/memCheck.h"
 
@@ -39,6 +40,26 @@ ConfigNode::ConfigNode(const QList<QDomElement>& config)
             _config.appendChild(list.at(j).cloneNode());
         }
     }
+}
+
+
+/**
+ * @details
+ * Set the config node from the xml string
+ *
+ * @param xmlString
+ */
+void ConfigNode::setFromString(const QString xmlString)
+{
+   QDomDocument doc;
+   QString error;
+   int line, column;
+   if (!doc.setContent(xmlString, true, &error, &line, &column)) {
+       throw QString("ConfigNode::setFromString(): Error parsing XML "
+               "(Line: %1 Col: %2): %3.").arg(line).arg(column).arg(error);
+   }
+
+   _config = doc.documentElement();
 }
 
 

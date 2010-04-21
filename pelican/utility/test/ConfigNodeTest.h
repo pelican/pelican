@@ -9,10 +9,10 @@
 
 /**
  * @class ConfigTest
- *  
+ *
  * @brief
  * Class to test the configuration node object.
- * 
+ *
  * @details
  *
  * @note Created as a QCoreApplication for Qt garbage collection.
@@ -29,6 +29,7 @@ class ConfigNodeTest : public CppUnit::TestFixture
     public:
         CPPUNIT_TEST_SUITE( ConfigNodeTest );
         CPPUNIT_TEST( test_methods );
+        CPPUNIT_TEST( test_setFromString );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -37,6 +38,7 @@ class ConfigNodeTest : public CppUnit::TestFixture
 
         // Test Methods
         void test_methods();
+        void test_setFromString();
 
     public:
         ConfigNodeTest();
