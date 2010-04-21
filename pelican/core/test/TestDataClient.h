@@ -23,7 +23,7 @@ class TestDataClient : public AbstractDataClient
 {
     public:
         /// Constructs a new test data client.
-        TestDataClient(const ConfigNode& config, const DataTypes& types);
+        TestDataClient(const ConfigNode& config);
 
         /// Destroys the test data client.
         ~TestDataClient();

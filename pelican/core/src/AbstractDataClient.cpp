@@ -20,19 +20,10 @@ namespace pelican {
  * client configuration node (\p config).
  *
  * @param[in] config Reference to the data client configuration node.
- * @param[in] types  Object containing the requirements and adapters for each pipeline.
  */
-AbstractDataClient::AbstractDataClient(const ConfigNode& config, const DataTypes& types)
-    : _dataReqs( types ), _configNode(config)
+AbstractDataClient::AbstractDataClient(const ConfigNode& config) :
+    _configNode(config)
 {
-    // Quick sanity check.
-    if ( _dataReqs.dataRequirements().size()== 0 )
-        throw( QString("No data requirements specified") );
-
-    // Construct the total set of requirements.
-    foreach( const DataRequirements dr, dataRequirements() ) {
-        _requireSet += dr.allData();
-    }
 }
 
 /**
@@ -52,8 +43,17 @@ void AbstractDataClient::log(const QString& msg)
     std::cerr << msg.toStdString() << std::endl;
 }
 
-
-QHash<QString, DataBlob*> AbstractDataClient::adaptStream(QIODevice& device, const StreamData* sd, QHash<QString, DataBlob*>& dataHash )
+/**
+ * @details
+ * Adapts (deserialises) stream data into data blobs.
+ *
+ * @param device
+ * @param sd
+ * @param dataHash
+ * @return
+ */
+QHash<QString, DataBlob*> AbstractDataClient::adaptStream(QIODevice& device,
+        const StreamData* sd, QHash<QString, DataBlob*>& dataHash )
 {
     QHash<QString, DataBlob*> validData;
 
@@ -68,7 +68,17 @@ QHash<QString, DataBlob*> AbstractDataClient::adaptStream(QIODevice& device, con
     return validData;
 }
 
-QHash<QString, DataBlob*> AbstractDataClient::adaptService(QIODevice& device, const Data* d, QHash<QString, DataBlob*>& dataHash )
+/**
+ * @details
+ * Adapts (deserialises) service data into data blobs.
+ *
+ * @param device
+ * @param d
+ * @param dataHash
+ * @return
+ */
+QHash<QString, DataBlob*> AbstractDataClient::adaptService(QIODevice& device,
+        const Data* d, QHash<QString, DataBlob*>& dataHash )
 {
     QHash<QString, DataBlob*> validData;
     QString type = d->name();
@@ -79,6 +89,29 @@ QHash<QString, DataBlob*> AbstractDataClient::adaptService(QIODevice& device, co
     adapter->deserialise(&device);
     validData.insert(type, dataHash.value(type));
     return validData;
+}
+
+/**
+ * @details
+ * Sets the requirements of the data client.
+ * This method is called by the data client factory.
+ *
+ * @param[in] types  Object containing the requirements and adapters for each pipeline.
+ */
+void AbstractDataClient::setDataRequirements(const DataTypes& types)
+{
+    // Store the data requirements.
+    _dataReqs = types;
+
+    // Quick sanity check.
+    if ( _dataReqs.dataRequirements().size()== 0 )
+        throw QString("AbstractDataClient::setDataRequirements(): "
+                "No data requirements specified");
+
+    // Construct the total set of requirements.
+    foreach( const DataRequirements dr, dataRequirements() ) {
+        _requireSet += dr.allData();
+    }
 }
 
 } // namespace pelican

@@ -9,8 +9,8 @@ namespace pelican {
 /**
  * @details TestDataClient
  */
-TestDataClient::TestDataClient(const ConfigNode& config, const DataTypes& types)
-    : AbstractDataClient(config, types)
+TestDataClient::TestDataClient(const ConfigNode& config) :
+    AbstractDataClient(config)
 {
 }
 

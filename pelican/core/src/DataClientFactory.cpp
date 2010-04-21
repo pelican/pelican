@@ -45,33 +45,10 @@ AbstractDataClient* DataClientFactory::create(const QString& type,
         }
     }
 
-    return create(type, dataTypes, name);
-}
-
-/**
- * @details
- * Method to create a pointer to a data client of the specified \p type.
- *
- * @param[in] type          The type of data client object to create.
- * @param[in] requirements  The data sets to be provided by the client.
- * @param[in] name          An optional specific named configuration to use.
- */
-AbstractDataClient* DataClientFactory::create(const QString& type,
-        const DataTypes& requirements, const QString& name)
-{
-    // Create the required data client
-    if (type == "FileDataClient" ) {
-        _objects.append(new FileDataClient(configuration(type, name),
-                requirements));
-    }
-    else if (type == "PelicanServerClient" ) {
-        _objects.append(new PelicanServerClient(configuration(type, name),
-                requirements));
-    }
-    else {
-        throw QString("DataClientFactory: Unknown type: '%1'").arg(type);
-    }
-    return _objects.last();
+    // Call the base class implementation and set the data requirements.
+    AbstractDataClient* client = Factory<AbstractDataClient>::create(type, name);
+    client->setDataRequirements(dataTypes);
+    return client;
 }
 
 } // namespace pelican

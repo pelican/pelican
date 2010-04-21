@@ -176,7 +176,8 @@ void PipelineDriverTest::test_start_singlePipelineClientReturnsGoodData()
         ConfigNode config;
         DataTypes types;
         types.addData(req);
-        TestDataClient client(config, types);
+        TestDataClient client(config);
+        client.setDataRequirements(types);
         _pipelineDriver->_dataClient = &client;
 
         // Start the pipeline driver.
@@ -213,7 +214,8 @@ void PipelineDriverTest::test_start_singlePipelineClientReturnsWrongData()
         DataRequirements clientTypes;
         clientTypes.addStreamData("OtherStreamData");
         types.addData(clientTypes);
-        TestDataClient client(config, types);
+        TestDataClient client(config);
+        client.setDataRequirements(types);
         _pipelineDriver->_dataClient = &client;
 
         // Start the pipeline driver.
@@ -256,7 +258,8 @@ void PipelineDriverTest::test_start_multiPipelineRunDifferentData()
         clientTypes.addStreamData(type1); // Add both types of required data.
         clientTypes.addStreamData(type2); // Add both types of required data.
         types.addData(clientTypes);
-        TestDataClient client(config, types);
+        TestDataClient client(config);
+        client.setDataRequirements(types);
         _pipelineDriver->_dataClient = &client;
 
         // Start the pipeline driver.
@@ -300,7 +303,8 @@ void PipelineDriverTest::test_start_multiPipelineRunOne()
         DataRequirements clientTypes;
         clientTypes.addStreamData(type1); // Add one type of required data.
         types.addData(clientTypes);
-        TestDataClient client(config, types);
+        TestDataClient client(config);
+        client.setDataRequirements(types);
         _pipelineDriver->_dataClient = &client;
 
         // Start the pipeline driver.

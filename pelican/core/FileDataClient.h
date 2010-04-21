@@ -33,7 +33,7 @@ class FileDataClient : public AbstractDataClient
 
     public:
         /// Data client constructor.
-        FileDataClient(const ConfigNode& config, const DataTypes& types );
+        FileDataClient(const ConfigNode& config);
 
         /// Data client destructor
         ~FileDataClient();

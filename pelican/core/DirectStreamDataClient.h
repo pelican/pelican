@@ -33,7 +33,7 @@ class ChunkerManager;
 class DirectStreamDataClient : public AbstractDataClient
 {
     public:
-        DirectStreamDataClient( const ConfigNode& config, const DataTypes& types );
+        DirectStreamDataClient( const ConfigNode& config);
         virtual ~DirectStreamDataClient();
         void setPort(unsigned int port);
         void setIP_Address(const QString& ipaddress);

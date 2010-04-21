@@ -14,15 +14,16 @@
 #include "pelican/utility/memCheck.h"
 
 namespace pelican {
-class ConfigNode;
-class DataTypes;
 
+PELICAN_DECLARE_CLIENT(DirectStreamDataClient)
+
+class ConfigNode;
 
 /**
  *@details DirectStreamDataClient
  */
-DirectStreamDataClient::DirectStreamDataClient(const ConfigNode& config, const DataTypes& types)
-    : AbstractDataClient(config, types)
+DirectStreamDataClient::DirectStreamDataClient(const ConfigNode& config)
+    : AbstractDataClient(config)
 {
     // Get the application's configuration object.
     Config* globalConfig = PipelineApplication::config();
