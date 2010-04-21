@@ -8,6 +8,10 @@ if (NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE debug)
 endif (NOT CMAKE_BUILD_TYPE)
 
+if (NOT CMAKE_BUILD_TYPE MATCHES "^RELEASE|DEBUG|[Rr]elease|[Dd]ebug$")
+    message(FATAL_ERROR "## Unknown build type. Select 'debug' or 'release'")
+endif (NOT CMAKE_BUILD_TYPE MATCHES "^RELEASE|DEBUG|[Rr]elease|[Dd]ebug$")
+
 set (BUILD_SHARED_LIBS TRUE)
 
 #=== Find and set OpenMP compiler flag.
