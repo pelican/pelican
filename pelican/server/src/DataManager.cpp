@@ -70,7 +70,7 @@ WritableData DataManager::getWritableData(const QString& type, size_t size)
  */
 StreamDataBuffer* DataManager::getStreamBuffer(const QString& type)
 {
-    std::cout << "DataManager::getStreamBuffer" << type.toStdString() << std::endl;
+    //std::cout << "DataManager::getStreamBuffer(): " << type.toStdString() << std::endl;
 
     if ( ! _streams.contains(type) ) {
         Config::TreeAddress configAddress(_bufferConfigBaseAddress);
