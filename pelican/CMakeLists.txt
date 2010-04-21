@@ -36,7 +36,7 @@
 cmake_minimum_required(VERSION 2.6 FATAL_ERROR)
 
 # === Set the project name (creates name_BINARY_DIR and name_SOURCE_DIR).
-project(Pelican CXX C)
+project(pelican CXX C)
 
 # === Project version.
 set(${PROJECT_NAME}_MAJOR_VERSION 0)
