@@ -68,8 +68,7 @@ void TestPipelineServerTest::test_testChunker()
 
         // Set up the server.
         PelicanServer server(&config);
-        TestChunker* chunker = new TestChunker("VisibilityData", false, 512);
-        server.addStreamChunker(chunker);
+        server.addStreamChunker("TestChunker");
 
         // Add the protocol.
         AbstractProtocol* protocol = new PelicanProtocol;
@@ -108,17 +107,8 @@ void TestPipelineServerTest::test_testUdpChunker()
         QCoreApplication app(argc, argv);
 
         // Set up the server.
-        qint16 telescopePort = 2002;
         PelicanServer server(&config);
-
-        // TODO replace getting the config node with use of the chunker factory.
-        Config::TreeAddress address;
-        address << Config::NodeId("server", "");
-        address << Config::NodeId("chunkers", "");
-        address << Config::NodeId("TestUdpChunker", "1");
-        ConfigNode configChunker1 = config.get(address);
-        TestUdpChunker* chunker = new TestUdpChunker(configChunker1);
-        server.addStreamChunker(chunker);
+        server.addStreamChunker("TestUdpChunker", "1");
 
         // Add the protocol.
         AbstractProtocol* protocol = new PelicanProtocol;
@@ -129,7 +119,7 @@ void TestPipelineServerTest::test_testUdpChunker()
         while (!server.isReady()) {}
         
         // Set up the telescope emulator (turn on the telescope)
-        TelescopeEmulator telescope(telescopePort, 0.5);
+        TelescopeEmulator telescope(2002, 0.5); // Port, initial value.
         
         // Start the pipeline binary.
         PipelineBinaryEmulator pipelineBinary(&config);
@@ -160,31 +150,13 @@ void TestPipelineServerTest::test_testTwoUdpChunkers()
         QCoreApplication app(argc, argv);
 
         // Set up the telescope emulators (turn on the telescope)
-        qint16 telescopePort1 = 2002, telescopePort2 = 2003;
-        TelescopeEmulator telescope1(telescopePort1, 0.1);
-        TelescopeEmulator telescope2(telescopePort2, 0.2);
+        TelescopeEmulator telescope1(2002, 0.1); // Port, initial value.
+        TelescopeEmulator telescope2(2003, 0.2); // Port, initial value.
 
         // Set up the server.
         PelicanServer server(&config);
-        // TODO replace getting the config node with use of the chunker factory.
-        Config::TreeAddress address1;
-        address1 << Config::NodeId("server", "");
-        address1 << Config::NodeId("chunkers", "");
-        address1 << Config::NodeId("TestUdpChunker", "1");
-        ConfigNode configChunker1 = config.get(address1);
-        TestUdpChunker* chunker1 = new TestUdpChunker(configChunker1);
-
-        Config::TreeAddress address2;
-        address2 << Config::NodeId("server", "");
-        address2 << Config::NodeId("chunkers", "");
-        address2 << Config::NodeId("TestUdpChunker", "2");
-        ConfigNode configChunker2 = config.get(address2);
-        TestUdpChunker* chunker2 = new TestUdpChunker(configChunker2);
-        server.addStreamChunker(chunker1);
-        server.addStreamChunker(chunker2);
-
-        //  this might be better...
-        //server.addStreamChunker<ChunkerType>("chunkerType", "name");
+        server.addStreamChunker("TestUdpChunker", "1");
+        server.addStreamChunker("TestUdpChunker", "2");
 
         // Add the protocol.
         AbstractProtocol* protocol = new PelicanProtocol;
@@ -236,6 +208,9 @@ void TestPipelineServerTest::_createConfig()
     "</buffers>"
     ""
     "<chunkers>"
+    "   <TestChunker>"
+    "       <data type=\"VisibilityData\" chunkSize=\"512\"/>"
+    "   </TestChunker>"
     "   <TestUdpChunker name=\"1\">"
     "       <connection host=\"127.0.0.1\" port=\"2002\"/>"
     "       <data type=\"VisibilityData\" chunkSize=\"512\"/>"

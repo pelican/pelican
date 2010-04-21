@@ -2,7 +2,6 @@
 #define DIRECTSTREAMDATACLIENT_H
 
 #include "pelican/core/AbstractDataClient.h"
-#include "pelican/server/ChunkerManager.h"
 #include "pelican/server/DataManager.h"
 
 /**
@@ -10,6 +9,8 @@
  */
 
 namespace pelican {
+
+class ChunkerManager;
 
 /**
  * @class DirectStreamDataClient
@@ -24,7 +25,7 @@ namespace pelican {
  *    1) Set up the client in the usual way with adapters etc.
  *    2) add a chunker for each stream
  *    3) setup your configuration file
- *    4) call the start() mehtod to launch all the chunkers in seperate threads
+ *    4) call the start() method to launch all the chunkers in separate threads
  *    5) now ready to call getData
  *
  */
@@ -37,7 +38,7 @@ class DirectStreamDataClient : public AbstractDataClient
         void setPort(unsigned int port);
         void setIP_Address(const QString& ipaddress);
         QHash<QString, DataBlob*> getData(QHash<QString, DataBlob*>& dataHash);
-        void setChunker(AbstractChunker* chunker, const QString& name);
+        void setChunker(const QString& chunkerType, const QString& name);
         void start();
 
     protected:
@@ -45,11 +46,12 @@ class DirectStreamDataClient : public AbstractDataClient
         //virtual void connect(const QString& address, unsigned int port);
 
     private:
-        ChunkerManager _chunkerManager;
+        ChunkerManager* _chunkerManager;
         DataManager* _dataManager;
         QString _server;
         unsigned int _port;
 };
 
 } // namespace pelican
+
 #endif // DIRECTSTREAMDATACLIENT_H

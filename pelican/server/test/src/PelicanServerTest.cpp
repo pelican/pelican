@@ -66,11 +66,21 @@ void PelicanServerTest::test_singleProtocolStream()
     // Attach to Server with a single protocol.
     // Expect response to the correct port
     try {
+        // Set the chunker configuration.
         Config config;
+        QString serverXml = ""
+                "<chunkers>"
+                "    <TestChunker>"
+                "       <data type=\"TestStream\"/>"
+                "    </TestChunker>"
+                "</chunkers>";
+        config.setFromString("", serverXml);
+
+        // Set up the server.
         PelicanServer server(&config);
         quint16 port = 2000;
         server.addProtocol(new TestProtocol("", ServerRequest::StreamData), port);
-        server.addStreamChunker(new TestChunker("TestStream"));
+        server.addStreamChunker("TestChunker");
         server.start();
         while (!server.isReady()) {}
         PelicanTestClient client(port);

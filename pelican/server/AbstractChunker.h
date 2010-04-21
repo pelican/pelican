@@ -51,46 +51,31 @@ class AbstractChunker
         QString _type;
         QString _host;
         quint16 _port;
-
-    protected:
         QIODevice* _device;
 
     public:
         /// Constructs a new AbstractChunker.
         AbstractChunker(const QString& type, QString host = "", quint16 port = 0)
-            : _dataManager(NULL), _type(type), _host(host), _port(port), _device(NULL) {}
+            : _dataManager(0), _type(type), _host(host), _port(port), _device(0) {}
 
-        AbstractChunker(const QString& type, const ConfigNode& config);
+        /// Constructs a new AbstractChunker.
+        AbstractChunker(const ConfigNode& config);
 
-        AbstractChunker()
-        : _dataManager(NULL), _type(""), _host(""), _port(0), _device(NULL)
-        {}
+        AbstractChunker() :
+            _dataManager(0), _type(""), _host(""), _port(0), _device(0) {}
 
         /// Destroys the AbstractChunker.
         virtual ~AbstractChunker();
 
-        /// set the port to listen on for data
-        void setPort(quint16 port);
-
-        /// set the ip address to listen on for data
-        void setHost(const QString& ipaddress);
-
-        /// Sets th type name to be associated with this data.
-        void setType(const QString& type) { _type = type; }
-
-        /// Return the type name to be associated with this data.
-        const QString& type() const {return _type;}
+        /// Returns the host.
+        const QString& host() {return _host;}
 
         /// Create a new device appropriate to the type expected on the data stream.
         virtual QIODevice* newDevice() = 0;
 
         /// Called whenever there is data ready to be processed.
-        /// Inheriting classes should process a complete data chunk
-        /// inside this method.
+        /// Derived classes must process a complete data chunk in this method.
         virtual void next(QIODevice*) = 0;
-
-        /// Returns the host.
-        const QString& host() {return _host;}
 
         /// Returns the port.
         quint16 port() {return _port;}
@@ -99,6 +84,21 @@ class AbstractChunker
         void setDataManager(DataManager* dataManager) {
             _dataManager = dataManager;
         }
+
+        /// Sets the device pointer.
+        void setDevice(QIODevice* device) {_device = device;}
+
+        /// Set the IP address to listen on for data.
+        void setHost(const QString& ipaddress) {_host = ipaddress;}
+
+        /// Set the port to listen on for data.
+        void setPort(quint16 port) {_port = port;}
+
+        /// Sets the type name to be associated with this data.
+        void setType(const QString& type) {_type = type;}
+
+        /// Return the type name to be associated with this data.
+        const QString& type() const {return _type;}
 
     protected:
         /// Access to memory to store data is through this interface.

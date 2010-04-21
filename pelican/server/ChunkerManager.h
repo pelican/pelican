@@ -1,6 +1,7 @@
 #ifndef CHUNKERMANAGER_H
 #define CHUNKERMANAGER_H
 
+#include "pelican/utility/Factory.h"
 #include "pelican/server/DataReceiver.h"
 #include <QSet>
 #include <QMap>
@@ -14,41 +15,47 @@
  */
 
 namespace pelican {
-    class AbstractChunker;
-    class DataManager;
+
+class AbstractChunker;
+class DataManager;
 
 /**
  * @class ChunkerManager
  *
  * @brief
- *    Manage and operatoe chunkers
+ * Manage and operate chunkers.
+ *
  * @details
- *    Anything comming througbh a Stream Data chunker
- *    will be associated with the current version of service data
- *    service data has no such association
+ * Anything coming through a stream data chunker
+ * will be associated with the current version of service data
+ * service data has no such association.
  */
-
 class ChunkerManager
 {
     public:
-        ChunkerManager( );
+        /// Creates a chunker manager.
+        ChunkerManager(const Config* config,
+                const QString section = QString("server"));
+
+        /// Destroys the chunker manager.
         ~ChunkerManager();
 
-        /// initialise the passed datamanager to support the contained chunkers
+        /// Initialise the passed data manager to support the contained chunkers.
         void init(DataManager& dm);
 
-        /// add a Chunker as a Stream Chunker
-        //  This will take ownership of the chunker
-        //  (see above for more info)
-        void addStreamChunker( AbstractChunker* );
-        /// add a Chunker as a Service Chunker
-        //  This will take ownership of the chunker
-        void addServiceChunker( AbstractChunker* );
+        /// Add a stream chunker.
+        void addStreamChunker(QString type, QString name = QString());
+
+        /// Add a service chunker.
+        void addServiceChunker(QString type, QString name = QString());
 
     private:
+        /// Add an allocated chunker.
         void _addChunker( AbstractChunker* chunker);
 
     private:
+        const Config* _config;
+        Factory<AbstractChunker> *_factory;
         QMap<QPair<QString,quint16>,AbstractChunker* > _chunkerPortMap;
         QSet<QString> _streamDataTypes;
         QSet<QString> _serviceDataTypes;
@@ -56,4 +63,5 @@ class ChunkerManager
 };
 
 } // namespace pelican
+
 #endif // CHUNKERMANAGER_H

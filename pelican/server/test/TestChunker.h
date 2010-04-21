@@ -33,10 +33,11 @@ class TestChunker : public QObject, public AbstractChunker
 
     public:
         /// Constructs a new TestChunker.
-        TestChunker(const QString& type = "ChunkType",
-                bool badSocket = false, size_t size = 0, QString host = "",
-                quint16 port = 0, QObject* parent = 0);
+        TestChunker(const QString& type = "ChunkType", bool badSocket = false,
+                size_t size = 0, QString host = "", quint16 port = 0,
+                QObject* parent = 0);
 
+        /// Constructs a new TestChunker.
         TestChunker(const ConfigNode& config);
 
         /// Destroys the TestChunker.
@@ -45,7 +46,7 @@ class TestChunker : public QObject, public AbstractChunker
         /// Creates the socket to use for the incoming data stream.
         virtual QIODevice* newDevice();
 
-        ///
+        /// Gets the next chunk of data.
         virtual void next(QIODevice*);
 
         /// return the number of times that the next method has been called
@@ -57,6 +58,7 @@ class TestChunker : public QObject, public AbstractChunker
         void _start();
 
     private:
+        QIODevice* _device;
         QTimer* _timer;
         bool _badSocket;
         unsigned int _nextCount;

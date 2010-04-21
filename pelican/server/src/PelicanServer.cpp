@@ -2,6 +2,7 @@
 
 #include "pelican/comms/AbstractProtocol.h"
 #include "pelican/server/AbstractChunker.h"
+#include "pelican/server/ChunkerManager.h"
 #include "pelican/server/DataManager.h"
 #include "pelican/server/DataReceiver.h"
 #include "pelican/comms/PelicanProtocol.h"
@@ -18,47 +19,78 @@
 
 namespace pelican {
 
-
-// class PelicanServer
+/**
+ * @details
+ * Creates a new Pelican server, which in turn creates a chunker manager.
+ */
 PelicanServer::PelicanServer(const Config* config, QObject* parent)
     : QThread(parent)
 {
     _config = config;
     _ready = false;
+
+    // Create the chunker manager.
+    _chunkerManager = new ChunkerManager(config);
 }
 
-
+/**
+ * @details
+ * Destroys the Pelican server.
+ */
 PelicanServer::~PelicanServer()
 {
+    // Wait for the thread to finish.
     if (isRunning()) while (!isFinished()) quit();
     wait();
-    foreach(AbstractProtocol* p, _protocolPortMap)
-        delete p;
+
+    // Delete the protocols.
+    foreach (AbstractProtocol* protocol, _protocolPortMap)
+        delete protocol;
+
+    // Delete the chunker manager.
+    delete _chunkerManager;
 }
 
-
-void PelicanServer::addProtocol(AbstractProtocol* proto, quint16 port)
+/**
+ * @details
+ * Adds the given \p protocol to the given \p port.
+ * The class takes ownership of \p protocol.
+ *
+ * @param proto A pointer to the allocated protocol.
+ * @param port  The incoming port number to use.
+ */
+void PelicanServer::addProtocol(AbstractProtocol* protocol, quint16 port)
 {
-    if( _protocolPortMap.contains(port) ) {
-        delete proto;
-        throw QString("Cannot map multiple protocols to the same port ("
-                + QString().setNum(port)) + ")";
+    if ( _protocolPortMap.contains(port) ) {
+        delete protocol;
+        throw QString("Cannot map multiple protocols to port %1").arg(port);
     }
-    _protocolPortMap[port] = proto;
+    _protocolPortMap[port] = protocol;
 }
 
-
-void PelicanServer::addStreamChunker( AbstractChunker* chunker)
+/**
+ * @details
+ * Adds a stream chunker of the given \p type and \p name.
+ *
+ * @param type The chunker type (class name).
+ * @param name The optional chunker configuration name.
+ */
+void PelicanServer::addStreamChunker(QString type, QString name)
 {
-    _chunkerManager.addStreamChunker(chunker);
+    _chunkerManager->addStreamChunker(type, name);
 }
 
-
-void PelicanServer::addServiceChunker( AbstractChunker* chunker)
+/**
+ * @details
+ * Adds a service chunker of the given \p type and \p name.
+ *
+ * @param type The chunker type (class name).
+ * @param name The optional chunker configuration name.
+ */
+void PelicanServer::addServiceChunker(QString type, QString name)
 {
-    _chunkerManager.addServiceChunker(chunker);
+    _chunkerManager->addServiceChunker(type, name);
 }
-
 
 /**
  * @details
@@ -66,7 +98,6 @@ void PelicanServer::addServiceChunker( AbstractChunker* chunker)
  *
  * Sets up the data manager which handles stream and service data buffers
  * which are set up on request of the chunkers.
- *
  */
 void PelicanServer::run()
 {
@@ -74,14 +105,13 @@ void PelicanServer::run()
 
     // Set up the data manager.
     DataManager dataManager(_config);
-    _chunkerManager.init(dataManager);
+    _chunkerManager->init(dataManager);
 
     // Set up listening servers.
     QList<quint16> ports = _protocolPortMap.keys();
     for (int i = 0; i < ports.size(); ++i) {
         boost::shared_ptr<PelicanPortServer> server(
-            new PelicanPortServer(_protocolPortMap[ports[i]], &dataManager )
-        );
+            new PelicanPortServer(_protocolPortMap[ports[i]], &dataManager) );
         servers.append(server);
         if ( !server->listen(QHostAddress::Any, ports[i] )) {
             throw QString(QString("Unable to start PelicanServer on port='") +

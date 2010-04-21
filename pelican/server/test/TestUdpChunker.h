@@ -25,7 +25,6 @@ class DataManager;
  * @details
  *
  */
-
 class TestUdpChunker : public AbstractChunker
 {
     public:
@@ -38,7 +37,7 @@ class TestUdpChunker : public AbstractChunker
         /// Creates the socket to use for the incoming data stream.
         virtual QIODevice* newDevice();
 
-        ///
+        /// Gets the next chunk of data.
         virtual void next(QIODevice*);
 
     private:

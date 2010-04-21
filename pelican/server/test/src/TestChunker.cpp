@@ -10,15 +10,19 @@
 
 namespace pelican {
 
+PELICAN_DECLARE_CHUNKER(TestChunker)
+
 /**
  * @details
  * Constructs a new TestChunker.
  */
 TestChunker::TestChunker(const QString& type, bool badSocket, size_t size,
-        QString host, quint16 port, QObject* parent)
-: QObject(parent), AbstractChunker(type, host, port), _badSocket(badSocket),
-_nextCount(0), _size(size)
+        QString host, quint16 port, QObject* parent) :
+            QObject(parent), AbstractChunker(type, host, port)
 {
+    _nextCount = 0;
+    _badSocket = badSocket;
+    _size = size;
     _timer = new QTimer;
     connect(_timer, SIGNAL(timeout()), this, SLOT(_start()));
 }
@@ -27,11 +31,11 @@ _nextCount(0), _size(size)
 * @details
 * Constructs a new TestChunker.
 */
-TestChunker::TestChunker(const ConfigNode& config)
-: QObject(), AbstractChunker()
+TestChunker::TestChunker(const ConfigNode& config) :
+    QObject(), AbstractChunker(config)
 {
-    _badSocket = false;
     _nextCount = 0;
+    _badSocket = false;
     _size = config.getOption("data", "chunkSize", "512").toUInt();
     _timer = new QTimer;
     connect(_timer, SIGNAL(timeout()), this, SLOT(_start()));

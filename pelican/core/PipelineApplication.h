@@ -11,6 +11,7 @@
 namespace pelican {
 
 class AbstractAdapter;
+class AbstractChunker;
 class AbstractModule;
 class AbstractPipeline;
 class Config;
@@ -72,21 +73,6 @@ class PipelineApplication
         friend class PipelineApplicationTest;
 
     private:
-        /// Pointer to the application's configuration object.
-        Config *_config;
-
-        /// Pointer to adapter factory.
-        Factory<AbstractAdapter>* _adapterFactory;
-
-        /// Pointer to the application's data blob factory.
-        Factory<DataBlob>* _dataBlobFactory;
-
-        /// Pointer to the application's module factory.
-        Factory<AbstractModule>* _moduleFactory;
-
-        /// Pointer to the module factory.
-        DataClientFactory* _clientFactory;
-
         /// The pipeline driver object.
         PipelineDriver* _driver;
 
@@ -97,8 +83,20 @@ class PipelineApplication
         /// Destructor.
         ~PipelineApplication();
 
+        /// Return a pointer to the adapter factory.
+        static Factory<AbstractAdapter>* adapterFactory();
+
+        /// Return a pointer to the client factory.
+        static DataClientFactory* clientFactory();
+
         /// Return a pointer to the application configuration object.
-        Config* config() {return _config;}
+        static Config* config(std::string configFilename = "");
+
+        /// Return a pointer to the data blob factory.
+        static Factory<DataBlob>* dataBlobFactory();
+
+        /// Return a pointer to the module factory.
+        static Factory<AbstractModule>* moduleFactory();
 
         /// Register a pipeline with the pipeline driver.
         void registerPipeline(AbstractPipeline *pipeline);
@@ -113,8 +111,8 @@ class PipelineApplication
         void setIgnoreEmptyHash(bool value);
 
     private:
-        /// Creates a configuration object based on the command line arguments.
-        bool _createConfig(int argc, char** argv);
+        /// Creates the configuration object based on the command line arguments.
+        void _createConfig(int argc, char** argv);
 };
 
 } // namespace pelican

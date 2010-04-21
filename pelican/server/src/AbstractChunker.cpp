@@ -7,36 +7,33 @@
 
 namespace pelican {
 
-AbstractChunker::AbstractChunker(const QString& type, const ConfigNode& config)
-    : _dataManager(NULL), _type(type), _device(NULL)
+AbstractChunker::AbstractChunker(const ConfigNode& config)
 {
-    setHost(config.getOption("server", "host"));
-    QString port = config.getOption("server", "port");
-    if( port != "" )
-        setPort(port.toUInt());
+    // Initialise members.
+    _dataManager = NULL;
+    _device = NULL;
+    _type = config.getOption("data", "type", "");
+    _host = config.getOption("connection", "host", "");
+    _port = config.getOption("connection", "port", "0").toUInt();
 }
-
 
 /**
  * @details
- * Destroys the AbstractChunker, deleting the IO device it uses.
+ * Destroys the AbstractChunker.
  */
 AbstractChunker::~AbstractChunker()
 {
-    // FIXME Why don't we delete the socket or device here?
-//    if (_device)
-//        delete _device;
+    if (_device)
+        delete _device;
 }
 
 /**
  * @details
- * Returns a writable data object of the specified /p size.
+ * Returns a writable data object of the specified \p size.
  *
  * This method should be used by the chunker to access memory in a stream
  * or service FIFO buffer to ensure that the chunker only ever writes into an
  * available, locked location.
- *
- *
  *
  * @param[in] size  The size of the chunk requested on the buffer.
  */
@@ -45,16 +42,6 @@ WritableData AbstractChunker::getDataStorage(size_t size) const
     if (!_dataManager)
         throw QString("AbstractChunker::getDataStorage(): No data manager.");
     return _dataManager->getWritableData(_type, size);
-}
-
-void AbstractChunker::setPort(quint16 port)
-{
-    _port = port;
-}
-
-void AbstractChunker::setHost(const QString& ipaddress)
-{
-    _host = ipaddress;
 }
 
 } // namespace pelican

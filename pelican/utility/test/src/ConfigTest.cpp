@@ -201,7 +201,7 @@ void ConfigTest::test_configFileRead()
             TestConfig config("emptyConfig.xml", "utility");
         }
         catch (QString err) {
-            CPPUNIT_ASSERT(err.startsWith("Config: Parse error"));
+            CPPUNIT_ASSERT(err.startsWith("Config::read(): Parse error"));
         }
     }
 
@@ -213,7 +213,7 @@ void ConfigTest::test_configFileRead()
             TestConfig config("badConfig.xml", "utility");
         }
         catch (QString err) {
-            CPPUNIT_ASSERT(err.startsWith("Config: Invalid doctype"));
+            CPPUNIT_ASSERT(err.startsWith("Config::read(): Invalid doctype"));
         }
     }
 

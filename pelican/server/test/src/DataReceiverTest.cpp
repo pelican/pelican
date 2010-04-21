@@ -44,7 +44,7 @@ void DataReceiverTest::test_listen()
          * Null data Chunker
          * Expect : throw exception
          */
-        CPPUNIT_ASSERT_THROW(new DataReceiver(NULL,_dm), QString);
+        CPPUNIT_ASSERT_THROW(new DataReceiver(NULL), QString);
     }
 
     {
@@ -54,7 +54,7 @@ void DataReceiverTest::test_listen()
          */
         TestChunker testChunker("test", true, 0, _testHost,_testPort);
         testChunker.setDataManager(_dm);
-        DataReceiver dr(&testChunker,_dm);
+        DataReceiver dr(&testChunker);
         dr.listen();
     }
 
@@ -65,7 +65,7 @@ void DataReceiverTest::test_listen()
          */
         TestChunker testChunker("test", false, 0, "",_testPort);
         testChunker.setDataManager(_dm);
-        DataReceiver dr(&testChunker,_dm);
+        DataReceiver dr(&testChunker);
         dr.listen();
     }
 
@@ -76,7 +76,7 @@ void DataReceiverTest::test_listen()
          */
         TestChunker testChunker("test", false, 0, "", 0);
         testChunker.setDataManager(_dm);
-        DataReceiver dr(&testChunker,_dm);
+        DataReceiver dr(&testChunker);
         dr.listen();
     }
 
@@ -88,7 +88,7 @@ void DataReceiverTest::test_listen()
          */
         TestChunker testChunker("test", false, 0, _testHost, _testPort);
         testChunker.setDataManager(_dm);
-        DataReceiver dr(&testChunker,_dm);
+        DataReceiver dr(&testChunker);
         dr.listen();
 
         // TODO

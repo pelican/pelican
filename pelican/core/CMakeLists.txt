@@ -1,5 +1,5 @@
 include_directories(${QT_INCLUDES})
-SUBPACKAGE(core modules comms data adapters)
+SUBPACKAGE(core modules server comms data adapters)
 
 set( core_src
      src/AbstractDataClient.cpp

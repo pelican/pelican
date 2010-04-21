@@ -53,8 +53,7 @@ void ModuleFactoryTest::test_createModule_EmptyModule()
     // Expect to be given a basic object
     {
         Config emptyConfig;
-        Config::TreeAddress base;
-        Factory<AbstractModule> factory(&emptyConfig, base);
+        Factory<AbstractModule> factory(&emptyConfig, "", "");
         AbstractModule* module = 0;
         CPPUNIT_ASSERT_NO_THROW(module = factory.create("EmptyModule"));
         CPPUNIT_ASSERT(module != 0);
@@ -64,13 +63,14 @@ void ModuleFactoryTest::test_createModule_EmptyModule()
     // Ask for a module with a configuration
     {
         Config config;
+        QString section("pipeline"), group("modules");
         Config::TreeAddress base;
-        base.append(Config::NodeId("pipeline", ""));
-        base.append(Config::NodeId("modules", ""));
+        base.append(Config::NodeId(section, ""));
+        base.append(Config::NodeId(group, ""));
         Config::TreeAddress address(base);
         address.append(Config::NodeId("EmptyModule", ""));
         config.set(address);
-        Factory<AbstractModule> factory(&config, base);
+        Factory<AbstractModule> factory(&config, section, group);
 
         AbstractModule* module = 0;
         CPPUNIT_ASSERT_NO_THROW(module = factory.create("EmptyModule"));

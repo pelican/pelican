@@ -34,10 +34,7 @@ template<class B> class CreatorBase;
  * \code
  *
  * // Create the factory.
- * Config::TreeAddress address;
- * address.append(Config::NodeId("server", ""));
- * address.append(Config::NodeId("chunkers", ""));
- * Factory<AbstractChunker> factory(&config, address);
+ * Factory<AbstractChunker> factory(&config, "server", "chunkers");
  *
  * // Create a chunker.
  * AbstractChunker* chunker = factory.create("MyChunkerType");
@@ -47,17 +44,16 @@ template<class B> class CreatorBase;
 template<class B> class Factory
 {
     protected:
-        const Config* _config;           ///< Configuration object pointer.
-        Config::TreeAddress _configRoot; ///< Configuration root node.
-        QList<B*> _objects;              ///< The list of constructed objects.
+        const Config* _config; ///< Configuration object pointer.
+        QString _section;      ///< Configuration section (pipeline or server).
+        QString _group;        ///< Configuration group name. (e.g. chunkers).
+        QList<B*> _objects;    ///< The list of constructed objects.
 
     public:
         /// Creates the factory.
-        Factory(const Config* config = 0) : _config(config) {}
-
-        /// Creates the factory.
-        Factory(const Config* config, const Config::TreeAddress& base)
-        : _config(config), _configRoot(base) {}
+        Factory(const Config* config = 0, const QString& section = "",
+                const QString& group = "") :
+                    _config(config), _section(section), _group(group) {}
 
         /// Destroys the factory and deletes any objects created by it.
         virtual ~Factory() {
@@ -69,7 +65,9 @@ template<class B> class Factory
         ConfigNode configuration(const QString& type, const QString& name="") const
         {
             if (!_config) throw QString("Factory::configuration(): Not set");
-            Config::TreeAddress address(_configRoot);
+            Config::TreeAddress address;
+            address.append(Config::NodeId(_section, ""));
+            address.append(Config::NodeId(_group, ""));
             address.append(Config::NodeId(type, name));
             return _config->get(address);
         }
