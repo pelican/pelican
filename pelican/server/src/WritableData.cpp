@@ -23,7 +23,11 @@ WritableData::~WritableData()
 
 void WritableData::write(const void* buf, size_t size, size_t offset )
 {
-    Q_ASSERT( size + offset <= _data->data()->size() );
+//  Q_ASSERT( size + offset <= _data->data()->size() );
+
+    if ( size + offset > _data->data()->size() )
+        throw QString("ARRRG!");
+
     void* mem = (char*)(_data->data()->operator*()) + offset;
     std::memcpy( mem, buf , size);
 }

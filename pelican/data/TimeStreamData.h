@@ -7,6 +7,7 @@
 
 #include "pelican/data/DataBlob.h"
 #include <vector>
+#include <complex>
 
 namespace pelican {
 
@@ -21,16 +22,19 @@ namespace pelican {
  */
 
 template <class T>
-class TimeStreamData : public DataBlob
+class T_TimeStreamData : public DataBlob
 {
     public:
         /// Constructs an empty time stream data blob.
-        TimeStreamData() : DataBlob(), _startTime(0.0), _sampleDelta(0.0) {}
+        T_TimeStreamData() : DataBlob(), _startTime(0.0), _sampleDelta(0.0) {}
 
         /// Constructs and assigns memory for a time stream buffer data blob.
-        TimeStreamData(const unsigned nTimeSamples) : DataBlob() {
+        T_TimeStreamData(const unsigned nTimeSamples) : DataBlob() {
             resize(nTimeSamples);
         }
+
+        /// Destroys the time stream data blob.
+        virtual ~T_TimeStreamData() {}
 
     public:
         /// Clears the time stream data.
@@ -46,11 +50,14 @@ class TimeStreamData : public DataBlob
         }
 
     public: // accessor methods
+        /// Returns the number of entries in the data blob.
+        unsigned size() { return _data.size(); }
+
         /// Returns a pointer to the time stream data.
-        T* data() { return _data.size() > 0 ? _data[0] : NULL; }
+        T* data() { return _data.size() > 0 ? &_data[0] : NULL; }
 
         /// Returns a pointer to the time stream data (const overload).
-        const T* data() const  { return _data.size() > 0 ? _data[0] : NULL; }
+        const T* data() const  { return _data.size() > 0 ? &_data[0] : NULL; }
 
         /// Returns the start time of the data.
         double startTime() const { return _startTime; }
@@ -68,6 +75,29 @@ class TimeStreamData : public DataBlob
         std::vector<T> _data;
         double _startTime;
         double _sampleDelta;
+};
+
+
+/**
+ * @class TimeStreaDataDbl
+ *
+ * @brief
+ *
+ *
+ * @details
+ */
+class TimeStreamData : public T_TimeStreamData<std::complex<double> >
+{
+    public:
+        /// Constructs an empty time stream data blob.
+        TimeStreamData() : T_TimeStreamData<std::complex<double> >() {}
+
+        /// Constructs and assigns memory for a time stream buffer data blob.
+        TimeStreamData(const unsigned nTimeSamples) :
+            T_TimeStreamData(nTimeSamples) {}
+
+        /// Destroys the time stream data blob.
+        ~TimeStreamData() {}
 };
 
 

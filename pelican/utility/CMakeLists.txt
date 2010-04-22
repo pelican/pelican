@@ -1,4 +1,10 @@
-include_directories(${QT_INCLUDES})
+include_directories(
+    ${QT_INCLUDE_DIR}
+    ${QT_QTCORE_INCLUDE_DIR}
+    ${QT_QTXML_INCLUDE_DIR}
+    ${QT_QTNETWORK_INCLUDE_DIR}
+)
+
 SUBPACKAGE(utility)
 
 # Thread safe library.
@@ -8,40 +14,40 @@ set(utility_src
     src/SocketTester.cpp
 )
 
-# Thread safe dummies.
-set(dummyTracer_src
-    src/memoryTracerDummy.cpp
-)
-
-# Non thread safe library.
-set(tracer_src
-    src/memoryTracer.cpp
-)
-
 # The general utility library.
 SUBPACKAGE_LIBRARY(utility ${utility_src})
 
 SUBPACKAGE_ADD_LIBRARIES(
-    ${QT_QTNETWORK_LIBRARY}
     ${QT_QTCORE_LIBRARY}
     ${QT_QTXML_LIBRARY}
+    ${QT_QTNETWORK_LIBRARY}
 )
-
-# Build the thread safe library (dummies).
-add_library(memoryTracerDummy ${dummyTracer_src} )
-target_link_libraries(memoryTracerDummy ${SUBPACKAGE_LIBRARIES})
-
-if (DEBUG)
-    install(TARGETS memoryTracerDummy DESTINATION ${LIBRARY_INSTALL_DIR} )
-endif (DEBUG)
-
-# Build the non-thread safe library.
-add_library(memoryTracer ${tracer_src} )
-target_link_libraries(memoryTracer ${SUBPACKAGE_LIBRARIES})
-
-if (DEBUG)
-    install(TARGETS memoryTracer DESTINATION ${LIBRARY_INSTALL_DIR} )
-endif (DEBUG)
 
 # Recurse into test sub-directory to build tests.
 add_subdirectory(test)
+
+#===============================================================================
+# Memory tracer.
+#===============================================================================
+
+set(memoryTracer_src
+    src/memoryTracer.cpp
+)
+
+set(memoryTracerDummy_src
+    src/memoryTracerDummy.cpp
+)
+
+
+# Build the non-thread safe library.
+add_library(memoryTracer ${memoryTracer_src})
+
+# Build the thread safe library (dummies).
+add_library(memoryTracerDummy ${memoryTracerDummy_src})
+
+# Only install the memory tracer if debug mode.
+if(CMAKE_BUILD_TYPE MATCHES DEBUG|[Dd]ebug)
+    install(TARGETS memoryTracerDummy DESTINATION ${LIBRARY_INSTALL_DIR} )
+    install(TARGETS memoryTracer DESTINATION ${LIBRARY_INSTALL_DIR} )
+endif(CMAKE_BUILD_TYPE MATCHES DEBUG|[Dd]ebug)
+

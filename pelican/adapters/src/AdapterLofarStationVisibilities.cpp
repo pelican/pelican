@@ -51,7 +51,7 @@ AdapterLofarStationVisibilities::~AdapterLofarStationVisibilities()
  * Method for deserialise a LOFAR station visibility data set
  * contained in a QDataStream into a pelican visibility data blob.
  *
- * @param[in] in QDataStream containing a serialised version of a LOFAR
+ * @param[in] in QIODevice containing a serialised version of a LOFAR
  *               visibility data set.
  */
 void AdapterLofarStationVisibilities::deserialise(QIODevice* in)

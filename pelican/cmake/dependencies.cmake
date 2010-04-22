@@ -12,7 +12,7 @@
 # Optional dependencies:
 #
 # Sets the following variables:
-#   PROJECT_LIBARRIES: Use for building libpelican.so (TO BE REMOVED)
+#   PROJECT_LIBARRIES: Needed for linking with the libpelican.a
 #
 
 # === Find Dependencies.
@@ -20,6 +20,7 @@ find_package(Boost COMPONENTS program_options REQUIRED)
 find_package(Qt4 COMPONENTS QtCore QtGui QtNetwork QtXml REQUIRED)
 find_package(CppUnit REQUIRED)
 find_package(CFitsio REQUIRED)
+find_package(OpenMP REQUIRED)
 
 # === Find cblas and lapack from MKL if availiable, otherwise elsewhere.
 if(NOT DEFINED pelican_mkl)
@@ -34,6 +35,7 @@ if (MKL_FOUND)
     add_definitions(-DUSING_MKL)
     set(pelican_math_libs ${MKL_LIBRARIES})
     set(pelican_mkl true)
+    message(STATUS "FoundMKL: ${pelican_math_libs}")
 else (MKL_FOUND)
     find_package(CBLAS REQUIRED)
     find_package(LAPACK REQUIRED)

@@ -40,10 +40,10 @@ class AbstractStreamAdapter : public AbstractAdapter
 
     public:
         /// Configures the abstract stream adapter.
-        void config(DataBlob* data, std::size_t size,
+        void config(DataBlob* data, std::size_t chunkSize,
                 const QHash<QString, DataBlob*>& serviceData) {
             _data = data;
-            _chunkSize = size;
+            _chunkSize = chunkSize;
             _serviceData = serviceData;
         }
 

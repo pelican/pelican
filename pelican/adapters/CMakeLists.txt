@@ -13,5 +13,9 @@ set(adapters_src
 
 SUBPACKAGE_LIBRARY(adapters ${adapters_src})
 
+SUBPACKAGE_ADD_LIBRARIES(
+    ${QT_QTCORE_LIBRARY}
+)
+
 # Recurse into test directory
 add_subdirectory(test)

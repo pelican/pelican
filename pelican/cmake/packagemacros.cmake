@@ -181,7 +181,12 @@ MACRO( SUBPACKAGE package )
         SUBPACKAGE_GET_LIBS(${dep})
     ENDFOREACH(dep)
     IF(SUBPACKAGE_LIBRARIES)
-        #LIST(REMOVE_DUPLICATES SUBPACKAGE_LIBRARIES)
+
+    #===========================================================================
+    # CHANGE: uncommented (probably needs to be removed for static library)
+    #LIST(REMOVE_DUPLICATES SUBPACKAGE_LIBRARIES)
+    #===========================================================================
+
     ENDIF(SUBPACKAGE_LIBRARIES)
     FILE(APPEND ${SUBPACKAGE_FILE}
         "IF(LOFAR_PACKAGES)\n"
@@ -199,43 +204,53 @@ MACRO( SUBPACKAGE_LIBRARY libname )
     IF(SUBPACKAGE_CURRENT)
         # add targets for the static and dynamic libs
         add_library("${libname}" SHARED ${ARGN})
-        add_library("${libname}_static" STATIC ${ARGN})
-        SET_TARGET_PROPERTIES("${libname}" PROPERTIES CLEAN_DIRECT_OUTPUT 1)
-        SET_TARGET_PROPERTIES("${libname}_static" PROPERTIES OUTPUT_NAME "${libname}")
-        SET_TARGET_PROPERTIES("${libname}_static" PROPERTIES PREFIX "lib")
-        SET_TARGET_PROPERTIES("${libname}_static" PROPERTIES CLEAN_DIRECT_OUTPUT 1)
+        #add_library("${libname}_static" STATIC ${ARGN})
+        set_target_properties("${libname}" PROPERTIES CLEAN_DIRECT_OUTPUT 1)
+        #SET_TARGET_PROPERTIES("${libname}_static" PROPERTIES OUTPUT_NAME "${libname}")
+        #SET_TARGET_PROPERTIES("${libname}_static" PROPERTIES PREFIX "lib")
+        #SET_TARGET_PROPERTIES("${libname}_static" PROPERTIES CLEAN_DIRECT_OUTPUT 1)
 
-        IF(NOT CMAKE_BUILD_TYPE MATCHES RELEASE|[rR]elease)
-            SUBPACKAGE_ADD_LIBRARIES("${libname}")
-        ELSE(NOT CMAKE_BUILD_TYPE MATCHES RELEASE|[rR]elease)
-            IF(PROJECT_LIBRARIES)
+        if(CMAKE_BUILD_TYPE MATCHES RELEASE|[rR]elease)
+            if(PROJECT_LIBRARIES)
                 SUBPACKAGE_ADD_LIBRARIES("${PROJECT_LIBRARIES}")
-            ELSE(PROJECT_LIBRARIES)
-                MESSAGE("Error: No PROJECT_LIBRARIES set")
-            ENDIF(PROJECT_LIBRARIES)
-        ENDIF(NOT CMAKE_BUILD_TYPE MATCHES RELEASE|[rR]elease)
-        SUBPROJECT_OBJECT_FILES("${libname}_static" "${libname}_static_objects")
+            else(PROJECT_LIBRARIES)
+                message(FATAL_ERROR "ERROR: No PROJECT_LIBRARIES set")
+            endif(PROJECT_LIBRARIES)
+        else(CMAKE_BUILD_TYPE MATCHES RELEASE|[rR]elease)
+            SUBPACKAGE_ADD_LIBRARIES("${libname}")
+        endif(CMAKE_BUILD_TYPE MATCHES RELEASE|[rR]elease)
+
+#        SUBPROJECT_OBJECT_FILES("${libname}_static" "${libname}_static_objects")
         SUBPROJECT_OBJECT_FILES("${libname}" "${libname}_shared_objects")
+
+        #FILE(APPEND ${SUBPACKAGE_GLOBAL_FILE}
+        #    "LIST(INSERT SUBPACKAGE_STATIC_LIBRARIES 0 "${libname}_static")\n"
+        #    "LIST(INSERT SUBPACKAGE_SHARED_LIBRARIES 0 "${libname}")\n"
+        #    "LIST(INSERT SUBPACKAGE_STATIC_OBJECTS 0 ${${libname}_static_objects})\n"
+        #    "LIST(INSERT SUBPACKAGE_SHARED_OBJECTS 0 ${${libname}_shared_objects})\n"
+        #)
+
         FILE(APPEND ${SUBPACKAGE_GLOBAL_FILE}
-            "LIST(INSERT SUBPACKAGE_STATIC_LIBRARIES 0 "${libname}_static")\n"
             "LIST(INSERT SUBPACKAGE_SHARED_LIBRARIES 0 "${libname}")\n"
-            "LIST(INSERT SUBPACKAGE_STATIC_OBJECTS 0 ${${libname}_static_objects})\n"
             "LIST(INSERT SUBPACKAGE_SHARED_OBJECTS 0 ${${libname}_shared_objects})\n"
-            )
-        # construct the global sources variable
+        )
+
+        # Construct the global sources variable.
         foreach(sourcefile ${ARGN})
             if(IS_ABSOLUTE ${sourcefile})
-                LIST(APPEND PROJECT_LIBRARY_SOURCES ${sourcefile})
+                list(APPEND PROJECT_LIBRARY_SOURCES ${sourcefile})
             else(IS_ABSOLUTE ${sourcefile})
-                LIST(APPEND PROJECT_LIBRARY_SOURCES ${SUBPACKAGE_CURRENT}/${sourcefile})
+                list(APPEND PROJECT_LIBRARY_SOURCES ${SUBPACKAGE_CURRENT}/${sourcefile})
             endif(IS_ABSOLUTE ${sourcefile})
         endforeach(sourcefile)
-        FILE(APPEND ${SUBPACKAGE_GLOBAL_FILE}
-            "LIST(APPEND PROJECT_LIBRARY_SOURCES ${PROJECT_LIBRARY_SOURCES})\n"
-            )
-    ELSE(SUBPACKAGE_CURRENT)
-        MESSAGE("Error: SUBPACKAGE_LIBRARY specified outside of a SUBPACKAGE context")
-    ENDIF(SUBPACKAGE_CURRENT)
+
+        file(APPEND ${SUBPACKAGE_GLOBAL_FILE}
+            "LIST(APPEND PROJECT_LIBRARY_SOURCES ${PROJECT_LIBRARY_SOURCES})\n")
+
+    else(SUBPACKAGE_CURRENT)
+        message(FATAL_ERROR "ERROR: SUBPACKAGE_LIBRARY specified outside "
+                            "of a SUBPACKAGE context")
+    endif(SUBPACKAGE_CURRENT)
 ENDMACRO( SUBPACKAGE_LIBRARY )
 
 #
@@ -245,32 +260,37 @@ ENDMACRO( SUBPACKAGE_LIBRARY )
 MACRO (PROJECT_LIBRARY libname)
     if( CMAKE_BUILD_TYPE MATCHES RELEASE|[rR]elease )
         include( ${SUBPACKAGE_GLOBAL_FILE} )
+
         # Mark the object files as generated to avoid a search/missing targets.
         foreach(obj ${SUBPACKAGE_SHARED_OBJECTS})
             SET_SOURCE_FILES_PROPERTIES(${obj} PROPERTIES GENERATED 1)
         endforeach(obj)
-        foreach(obj ${SUBPACKAGE_STATIC_OBJECTS})
-            SET_SOURCE_FILES_PROPERTIES(${obj} PROPERTIES GENERATED 1)
-        endforeach(obj)
+
+        #foreach(obj ${SUBPACKAGE_STATIC_OBJECTS})
+        #    SET_SOURCE_FILES_PROPERTIES(${obj} PROPERTIES GENERATED 1)
+        #endforeach(obj)
+
         add_library("${libname}" SHARED ${SUBPACKAGE_SHARED_OBJECTS} )
-        add_library("${libname}_static" STATIC ${SUBPACKAGE_STATIC_OBJECTS} )
-        SET_TARGET_PROPERTIES("${libname}_static" PROPERTIES OUTPUT_NAME "${libname}")
-        SET_TARGET_PROPERTIES("${libname}_static" PROPERTIES PREFIX "lib")
-        SET_TARGET_PROPERTIES("${libname}_static" PROPERTIES CLEAN_DIRECT_OUTPUT 1)
-        SET_TARGET_PROPERTIES("${libname}_static" PROPERTIES  LINKER_LANGUAGE CXX)
+        #add_library("${libname}_static" STATIC ${SUBPACKAGE_STATIC_OBJECTS} )
+        #SET_TARGET_PROPERTIES("${libname}_static" PROPERTIES OUTPUT_NAME "${libname}")
+        #SET_TARGET_PROPERTIES("${libname}_static" PROPERTIES PREFIX "lib")
+        #SET_TARGET_PROPERTIES("${libname}_static" PROPERTIES CLEAN_DIRECT_OUTPUT 1)
+        #SET_TARGET_PROPERTIES("${libname}_static" PROPERTIES  LINKER_LANGUAGE CXX)
         set_target_properties("${libname}" PROPERTIES LINKER_LANGUAGE CXX)
         add_dependencies("${libname}" ${SUBPACKAGE_SHARED_LIBRARIES})
-        add_dependencies("${libname}_static" ${SUBPACKAGE_STATIC_LIBRARIES})
-        install(TARGETS "${libname}_static" DESTINATION ${LIBRARY_INSTALL_DIR})
+        #add_dependencies("${libname}_static" ${SUBPACKAGE_STATIC_LIBRARIES})
+        #install(TARGETS "${libname}_static" DESTINATION ${LIBRARY_INSTALL_DIR})
         install(TARGETS "${libname}" DESTINATION ${LIBRARY_INSTALL_DIR})
         target_link_libraries("${libname}" ${PROJECT_LIBRARIES})
-        target_link_libraries("${libname}_static" ${PROJECT_LIBRARIES})
+        #target_link_libraries("${libname}_static" ${PROJECT_LIBRARIES})
+
         # REMOVE LATER: Debug printing...
         #=======================================================================
         #foreach(lib ${PROJECT_LIBRARIES})
         #    message(STATUS ".............. ${lib}")
         #endforeach()
         #=======================================================================
+
     endif( CMAKE_BUILD_TYPE MATCHES RELEASE|[rR]elease )
 ENDMACRO (PROJECT_LIBRARY)
 
