@@ -38,7 +38,10 @@ class DirectStreamDataClient : public AbstractDataClient
         void setPort(unsigned int port);
         void setIP_Address(const QString& ipaddress);
         QHash<QString, DataBlob*> getData(QHash<QString, DataBlob*>& dataHash);
-        void setChunker(const QString& chunkerType, const QString& name);
+
+        /// Sets the chunker for the given data type.
+        void setChunker(const QString& dataType, const QString& chunkerType,
+                const QString& chunkerName = QString());
         void start();
 
     protected:
