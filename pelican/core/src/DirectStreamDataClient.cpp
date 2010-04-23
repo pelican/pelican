@@ -22,18 +22,13 @@ class ConfigNode;
 /**
  * @details Constructs the DirectStreamDataClient.
  */
-DirectStreamDataClient::DirectStreamDataClient(const ConfigNode& config)
-    : AbstractDataClient(config)
+DirectStreamDataClient::DirectStreamDataClient(const ConfigNode& configNode)
+    : AbstractDataClient(configNode)
 {
     // Initialise members.
     _started = false;
-
-    // Get the application's configuration object.
-    Config* globalConfig = PipelineApplication::config();
-
-    // Create the chunker manager and the data manager.
-    _chunkerManager = new ChunkerManager(globalConfig, QString("pipeline"));
-    _dataManager = new DataManager(globalConfig);
+    _chunkerManager = 0;
+    _dataManager = 0;
 }
 
 /**
@@ -46,27 +41,55 @@ DirectStreamDataClient::~DirectStreamDataClient()
     delete _chunkerManager;
 }
 
+///**
+// * @details
+// * Sets the chunker for the given data type (DEPRECATED).
+// *
+// * @param dataType     The type of data.
+// * @param chunkerType  The type of the chunker to use for the data.
+// * @param chunkerName  The name of the chunker to use (optional).
+// */
+//void DirectStreamDataClient::setChunker(const QString& dataType,
+//        const QString& chunkerType, const QString& chunkerName)
+//{
+//    switch (type(dataType)) {
+//    case (AbstractAdapter::Stream):
+//        _chunkerManager->addStreamChunker(chunkerType, chunkerName);
+//        break;
+//    case (AbstractAdapter::Service):
+//        _chunkerManager->addServiceChunker(chunkerType, chunkerName);
+//        break;
+//    default:
+//        throw QString("Data type %1 not set in requirements.").arg(dataType);
+//    }
+//}
+
 /**
  * @details
- * Sets the chunker for the given data type.
+ * Adds the given service chunker.
  *
  * @param dataType     The type of data.
  * @param chunkerType  The type of the chunker to use for the data.
  * @param chunkerName  The name of the chunker to use (optional).
  */
-void DirectStreamDataClient::setChunker(const QString& dataType,
-        const QString& chunkerType, const QString& chunkerName)
+void DirectStreamDataClient::addServiceChunker(const QString& chunkerType,
+        const QString& chunkerName)
 {
-    switch (type(dataType)) {
-    case (AbstractAdapter::Stream):
-        _chunkerManager->addStreamChunker(chunkerType, chunkerName);
-        break;
-    case (AbstractAdapter::Service):
-        _chunkerManager->addServiceChunker(chunkerType, chunkerName);
-        break;
-    default:
-        throw QString("Data type %1 not set in requirements.").arg(dataType);
-    }
+    _chunkerManager->addServiceChunker(chunkerType, chunkerName);
+}
+
+/**
+ * @details
+ * Adds the given stream chunker.
+ *
+ * @param dataType     The type of data.
+ * @param chunkerType  The type of the chunker to use for the data.
+ * @param chunkerName  The name of the chunker to use (optional).
+ */
+void DirectStreamDataClient::addStreamChunker(const QString& chunkerType,
+        const QString& chunkerName)
+{
+    _chunkerManager->addStreamChunker(chunkerType, chunkerName);
 }
 
 void DirectStreamDataClient::start()
@@ -128,5 +151,17 @@ QHash<QString, DataBlob*> DirectStreamDataClient::getData(QHash<QString, DataBlo
     return validData;
 }
 
+/**
+ * @details
+ * Creates the chunker manager and the data manager.
+ *
+ * @param[in] config Pointer to the application's configuration object.
+ */
+void DirectStreamDataClient::setManagers(const Config* config)
+{
+    // Create the chunker manager and the data manager.
+    _chunkerManager = new ChunkerManager(config, QString("pipeline"));
+    _dataManager = new DataManager(config);
+}
 
 } // namespace pelican

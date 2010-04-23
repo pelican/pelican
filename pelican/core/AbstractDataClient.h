@@ -90,7 +90,7 @@ class AbstractDataClient
                 const Data* d, QHash<QString, DataBlob*>& dataHash );
 
         /// Returns a pointer to the configuration node.
-        const ConfigNode& configNode() {return _configNode;}
+        const ConfigNode& configNode() const {return _configNode;}
 
         /// Returns the adapter for service data of the required type.
         AbstractServiceAdapter* serviceAdapter(const QString& type) const {
@@ -125,6 +125,9 @@ class AbstractDataClient
 
         /// Sets the data requirements.
         void setDataRequirements(const DataTypes& types);
+
+        /// Sets the chunker manager and data manager.
+        virtual void setManagers(const Config*) {}
 };
 
 } // namespace pelican

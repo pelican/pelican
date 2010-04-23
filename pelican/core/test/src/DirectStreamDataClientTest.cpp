@@ -6,6 +6,7 @@
 #include "pelican/utility/Config.h"
 #include "pelican/utility/Factory.h"
 
+#include <QCoreApplication>
 #include <QList>
 #include <iostream>
 
@@ -36,6 +37,13 @@ DirectStreamDataClientTest::~DirectStreamDataClientTest()
  */
 void DirectStreamDataClientTest::setUp()
 {
+    _app = NULL;
+    if (QCoreApplication::instance() == NULL) {
+        int argc = 1;
+        char *argv[] = {(char*)"pelican"};
+        _app = new QCoreApplication(argc, argv);
+    }
+
     QString pipelineXml = ""
             "<chunkers>"
             "    <TestUdpChunker name=\"a\">"
@@ -46,9 +54,6 @@ void DirectStreamDataClientTest::setUp()
             "<clients>"
             "    <DirectStreamDataClient>"
             "        <data type=\"VisibilityData\" adapter=\"AdapterLofarStationVisibilities\"/>"
-            // FIXME How do we specify chunkers for a non-generic data client?
-            "        <chunker type=\"TestUdpChunker\" name=\"a\" data=\"VisibilityData\"/>"
-            "        <chunker type=\"TestUdpChunker\" name=\"b\" data=\"VisibilityData\"/>"
             "    </DirectStreamDataClient>"
             "</clients>"
             "<adapters>"
@@ -66,28 +71,34 @@ void DirectStreamDataClientTest::setUp()
 void DirectStreamDataClientTest::tearDown()
 {
     delete _config;
+    delete _app;
 }
 
 void DirectStreamDataClientTest::test_method()
 {
-    // Create the adapter factory.
-    Factory<AbstractAdapter> adapterFactory(_config, "pipeline", "adapters");
+    try {
+        // Create the adapter factory.
+        Factory<AbstractAdapter> adapterFactory(_config, "pipeline", "adapters");
 
-    // Create the data client factory.
-    DataClientFactory clientFactory(_config, "pipeline", "clients", &adapterFactory);
+        // Create the data client factory.
+        DataClientFactory clientFactory(_config, "pipeline", "clients", &adapterFactory);
 
-    // Create a list of data requirements.
-    DataRequirements req;
-    QList<DataRequirements> requirements;
-    req.addStreamData("VisibilityData");
-    requirements.append(req);
+        // Create a list of data requirements.
+        DataRequirements req;
+        QList<DataRequirements> requirements;
+        req.addStreamData("VisibilityData");
+        requirements.append(req);
 
-    // Create the client.
-    DirectStreamDataClient* client = static_cast<DirectStreamDataClient*>(
-            clientFactory.create("DirectStreamDataClient", requirements));
-//    client->setChunker("VisibilityData", "TestUdpChunker", "a");
+        // Create the client.
+        DirectStreamDataClient* client = static_cast<DirectStreamDataClient*>(
+                clientFactory.create("DirectStreamDataClient", requirements));
+        client->addStreamChunker("TestUdpChunker", "a");
 
-    std::cout << "Testing Direct Stream Data Client" << std::endl;
+        std::cout << "Testing Direct Stream Data Client" << std::endl;
+    }
+    catch (QString e) {
+        CPPUNIT_FAIL("Unexpected exception: " + e.toStdString());
+    }
 }
 
 } // namespace pelican

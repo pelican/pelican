@@ -7,6 +7,8 @@
  * @file DirectStreamDataClientTest.h
  */
 
+class QCoreApplication;
+
 namespace pelican {
 
 class Config;
@@ -39,6 +41,7 @@ class DirectStreamDataClientTest : public CppUnit::TestFixture
         ~DirectStreamDataClientTest();
 
     private:
+        QCoreApplication* _app;
         Config* _config;
 };
 
