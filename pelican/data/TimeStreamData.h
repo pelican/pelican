@@ -94,7 +94,7 @@ class TimeStreamData : public T_TimeStreamData<std::complex<double> >
 
         /// Constructs and assigns memory for a time stream buffer data blob.
         TimeStreamData(const unsigned nTimeSamples) :
-            T_TimeStreamData(nTimeSamples) {}
+            T_TimeStreamData<std::complex<double> >(nTimeSamples) {}
 
         /// Destroys the time stream data blob.
         ~TimeStreamData() {}
