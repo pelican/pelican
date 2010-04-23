@@ -47,6 +47,7 @@ AbstractDataClient* DataClientFactory::create(const QString& type,
 
     // Call the base class implementation and set the data requirements.
     AbstractDataClient* client = Factory<AbstractDataClient>::create(type, name);
+    client->setManagers(_config);
     client->setDataRequirements(dataTypes);
     return client;
 }

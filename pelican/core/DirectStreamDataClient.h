@@ -33,16 +33,27 @@ class ChunkerManager;
 class DirectStreamDataClient : public AbstractDataClient
 {
     public:
-        DirectStreamDataClient( const ConfigNode& config);
+        DirectStreamDataClient( const ConfigNode& configNode);
         virtual ~DirectStreamDataClient();
         void setPort(unsigned int port);
         void setIP_Address(const QString& ipaddress);
         QHash<QString, DataBlob*> getData(QHash<QString, DataBlob*>& dataHash);
 
-        /// Sets the chunker for the given data type.
-        void setChunker(const QString& dataType, const QString& chunkerType,
+//        /// Sets the chunker for the given data type (DEPRECATED).
+//        void setChunker(const QString& dataType, const QString& chunkerType,
+//                const QString& chunkerName = QString());
+
+        /// Sets the service chunker for the given data type.
+        void addServiceChunker(const QString& chunkerType,
                 const QString& chunkerName = QString());
+
+        /// Sets the stream chunker for the given data type.
+        void addStreamChunker(const QString& chunkerType,
+                const QString& chunkerName = QString());
+
         void start();
+
+        void setManagers(const Config* config);
 
     protected:
         bool _started;

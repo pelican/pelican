@@ -313,13 +313,12 @@ void Config::read(const QString fileName)
 {
     _fileName = fileName;
 
-    QFile file(fileName);
-
     if (fileName.isEmpty()) {
         _document = QDomDocument("pelican");
         return;
     }
 
+    QFile file(fileName);
     if (!file.exists())
         throw QString("Config::read(): "
                 "Configuration file \"%1\" not found.").arg(fileName);
