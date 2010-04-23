@@ -19,6 +19,12 @@ namespace pelican {
  *
  * @details
  * Used for time domain processing application such as channeliser modules.
+ *
+ * Multidimensional data holding a time series for a number of sub-bands
+ * and polarisations.
+ *
+ * Data is held in a vector ordered by
+ *
  */
 
 template <class T>
@@ -26,11 +32,19 @@ class T_TimeStreamData : public DataBlob
 {
     public:
         /// Constructs an empty time stream data blob.
-        T_TimeStreamData() : DataBlob(), _startTime(0.0), _sampleDelta(0.0) {}
+        T_TimeStreamData() : DataBlob() {
+            _nSubbands = 0;
+            _nPolarisations = 0;
+            _nSamples = 0;
+            _startTime = 0.0;
+            _sampleDelta = 0.0;
+        }
 
         /// Constructs and assigns memory for a time stream buffer data blob.
-        T_TimeStreamData(const unsigned nTimeSamples) : DataBlob() {
-            resize(nTimeSamples);
+        T_TimeStreamData(const unsigned nSubbands, const unsigned nPolarisations,
+                const unsigned nSamples) : DataBlob()
+        {
+            resize(_nSubbands, _nPolarisations, _nSamples);
         }
 
         /// Destroys the time stream data blob.
@@ -38,15 +52,24 @@ class T_TimeStreamData : public DataBlob
 
     public:
         /// Clears the time stream data.
-        void clear() {
+        void clear()
+        {
             _data.clear();
+            _nSubbands = 0;
+            _nPolarisations = 0;
+            _nSamples = 0;
             _startTime = 0.0;
             _sampleDelta = 0.0;
         }
 
         /// Assign memory for the time stream data blob.
-        void resize(const unsigned nTimeSamples) {
-            _data.resize(nTimeSamples);
+        void resize(const unsigned nSubbands, const unsigned nPolarisations,
+                const unsigned nSamples)
+        {
+            _nSubbands = nSubbands;
+            _nPolarisations = nPolarisations;
+            _nSamples = nSamples;
+            _data.resize(_nSubbands * _nPolarisations * _nSamples);
         }
 
     public: // accessor methods
@@ -58,6 +81,15 @@ class T_TimeStreamData : public DataBlob
 
         /// Returns a pointer to the time stream data (const overload).
         const T* data() const  { return _data.size() > 0 ? &_data[0] : NULL; }
+
+        /// Returns the number of sub-bands in the data.
+        unsigned nSubbands() const { return _nSubbands; }
+
+        /// Returns the number of polarisations in the data.
+        unsigned nPolarisations() const { return _nPolarisations; }
+
+        /// Returns the number of polarisations in the data.
+        unsigned nSamples() const { return _nSamples; }
 
         /// Returns the start time of the data.
         double startTime() const { return _startTime; }
@@ -73,6 +105,9 @@ class T_TimeStreamData : public DataBlob
 
     private:
         std::vector<T> _data;
+        unsigned _nSubbands;
+        unsigned _nPolarisations;
+        unsigned _nSamples;
         double _startTime;
         double _sampleDelta;
 };
