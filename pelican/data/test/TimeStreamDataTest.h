@@ -31,7 +31,6 @@ class TimeStreamDataTest : public CppUnit::TestFixture
         void setUp();
         void tearDown();
 
-        // Test Methods
         ///Test accessor methods for visibility positions class
         void test_accessorMethods();
 
