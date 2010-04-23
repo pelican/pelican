@@ -44,7 +44,7 @@ class T_TimeStreamData : public DataBlob
         T_TimeStreamData(const unsigned nSubbands, const unsigned nPolarisations,
                 const unsigned nSamples) : DataBlob()
         {
-            resize(_nSubbands, _nPolarisations, _nSamples);
+            resize(nSubbands, nPolarisations, nSamples);
         }
 
         /// Destroys the time stream data blob.
@@ -72,15 +72,17 @@ class T_TimeStreamData : public DataBlob
             _data.resize(_nSubbands * _nPolarisations * _nSamples);
         }
 
+        /// Returns the data index for a given sub-band, polarisation and
+        /// sample.
+        unsigned index(const unsigned subband, const unsigned polarisation,
+                const unsigned sample)
+        {
+            return _nSamples * ( subband * _nPolarisations + polarisation) + sample;
+        }
+
     public: // accessor methods
         /// Returns the number of entries in the data blob.
         unsigned size() { return _data.size(); }
-
-        /// Returns a pointer to the time stream data.
-        T* data() { return _data.size() > 0 ? &_data[0] : NULL; }
-
-        /// Returns a pointer to the time stream data (const overload).
-        const T* data() const  { return _data.size() > 0 ? &_data[0] : NULL; }
 
         /// Returns the number of sub-bands in the data.
         unsigned nSubbands() const { return _nSubbands; }
@@ -102,6 +104,50 @@ class T_TimeStreamData : public DataBlob
 
         /// Sets the time interval between samples.
         void setSampleDelta(const double value) { _sampleDelta = value; }
+
+        /// Returns a pointer to the time stream data.
+        T* data() { return _data.size() > 0 ? &_data[0] : NULL; }
+
+        /// Returns a pointer to the time stream data (const overload).
+        const T* data() const  { return _data.size() > 0 ? &_data[0] : NULL; }
+
+        /// Returns a pointer to the time stream data for the specified
+        /// /p subband.
+        T* data(const unsigned subband)
+        {
+            unsigned index =  subband * _nPolarisations * _nSamples;
+            return (_data.size() > 0 && subband <= _nSubbands
+                    && index < _data.size()) ? &_data[index] : NULL;
+        }
+
+        /// Returns a pointer to the time stream data for the specified
+        /// /p subband (const overload).
+        const T* data(const unsigned subband) const
+        {
+            unsigned index = subband * _nPolarisations * _nSamples;
+            return (_data.size() > 0 && subband < _nSubbands
+                    && index < _data.size()) ? &_data[index] : NULL;
+        }
+
+        /// Returns a pointer to the time stream data for the specified
+        /// /p subband and /p polarisation.
+        T* data(const unsigned subband, const unsigned polarisation)
+        {
+            unsigned index = _nSamples * (subband * _nPolarisations + polarisation);
+            return (_data.size() > 0 && subband < _nSubbands
+                    && polarisation < _nPolarisations && index < _data.size()) ?
+                    &_data[index] : NULL;
+        }
+
+        /// Returns a pointer to the time stream data for the specified
+        /// /p subband (const overload).
+        const T* data(const unsigned subband, const unsigned polarisation) const
+        {
+            unsigned index = 0;
+            return (_data.size() > 0 && subband < _nSubbands
+                    && polarisation < _nPolarisations && index < _data.size()) ?
+                            &_data[index] : NULL;
+        }
 
     private:
         std::vector<T> _data;
@@ -128,8 +174,10 @@ class TimeStreamData : public T_TimeStreamData<std::complex<double> >
         TimeStreamData() : T_TimeStreamData<std::complex<double> >() {}
 
         /// Constructs and assigns memory for a time stream buffer data blob.
-        TimeStreamData(const unsigned nTimeSamples) :
-            T_TimeStreamData<std::complex<double> >(nTimeSamples) {}
+        TimeStreamData(const unsigned nSubbands, const unsigned nPolarisations,
+                const unsigned nSamples)
+        : T_TimeStreamData<std::complex<double> >(nSubbands, nPolarisations,
+                    nSamples) {}
 
         /// Destroys the time stream data blob.
         ~TimeStreamData() {}
