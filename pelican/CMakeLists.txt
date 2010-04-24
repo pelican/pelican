@@ -17,6 +17,9 @@
 #   -DTIMER={true | false} (default: false):
 #       Enable additional timer printing.
 #
+#   -DBUILD_STATIC={off|on} (defual: Off):
+#       Build static versions of the libraries.
+#
 # Options manipulating install location:
 # --------------------------------------
 #   -DCMAKE_INSTALL_PREFIX
@@ -50,22 +53,25 @@ enable_testing()
 
 # === Options.
 option(TIMER "Enabled pelican timing macros" OFF)
-if (TIMER)
+if(TIMER)
     add_definitions(-DTIMER_ENABLE)
-endif (TIMER)
+endif(TIMER)
+option(BUILD_STATIC "Build static versions of pelican library" OFF)
+#option(BUILD_SINGLE_LIB "Build a single pelican library" OFF)
+
 
 # === Installtion locations.
-if (NOT LIBRARY_INSTALL_DIR)
+if(NOT LIBRARY_INSTALL_DIR)
     set(LIBRARY_INSTALL_DIR lib)
-endif (NOT LIBRARY_INSTALL_DIR)
+endif(NOT LIBRARY_INSTALL_DIR)
 
-if (NOT INCLUDE_INSTALL_DIR)
+if(NOT INCLUDE_INSTALL_DIR)
     set(INCLUDE_INSTALL_DIR "include/pelican")
-endif (NOT INCLUDE_INSTALL_DIR)
+endif(NOT INCLUDE_INSTALL_DIR)
 
-if (NOT MODULES_INSTALL_DIR)
+if(NOT MODULES_INSTALL_DIR)
     set (MODULES_INSTALL_DIR "share/pelican")
-endif (NOT MODULES_INSTALL_DIR)
+endif(NOT MODULES_INSTALL_DIR)
 
 # === Installation target for project cmake files.
 install(DIRECTORY cmake DESTINATION ${MODULES_INSTALL_DIR}
