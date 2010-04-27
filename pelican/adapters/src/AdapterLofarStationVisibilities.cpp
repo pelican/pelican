@@ -58,7 +58,6 @@ void AdapterLofarStationVisibilities::deserialise(QIODevice* in)
 {
     // Set local data pointers, resize data if needed, and perform sanity checks!
     _setData();
-    std::cout << std::setprecision(3) << std::fixed;
 
     // Read data from the stream
     complex_t* vis = _vis->ptr();
@@ -70,7 +69,7 @@ void AdapterLofarStationVisibilities::deserialise(QIODevice* in)
     unsigned nPointsPerChan = _nAnt * _nAnt;
 
     std::vector<char> temp(_chunkSize);
-    in->read(reinterpret_cast<char*>(&temp[0]), _chunkSize);
+    in->read(&temp[0], _chunkSize);
 
     for (unsigned iRaw = 0, c = 0; c < _nChan; c++) {
         for (unsigned j = 0; j < _nAnt; j++) {
