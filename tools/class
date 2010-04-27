@@ -162,7 +162,7 @@ if ( ! -f $src_file ) {
     my $fh=FileHandle->new(">".$src_file);
     print $fh "#include \"", $short_header_file, "\"\n\n";
     print $fh $cppincludes, "\n";
-    print $fh "#include \"utility/memCheck.h\"\n\n";
+    print $fh "#include \"pelican/utility/memCheck.h\"\n\n";
     print $fh "namespace $namespace {\n\n", if ( defined $namespace );
     print $fh $cppincludesNamespace, "\n", if ( defined $namespace );
     print $fh "/**\n";
