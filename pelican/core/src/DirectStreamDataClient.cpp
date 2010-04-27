@@ -161,7 +161,7 @@ void DirectStreamDataClient::setManagers(const Config* config)
 {
     // Create the chunker manager and the data manager.
     _chunkerManager = new ChunkerManager(config, QString("pipeline"));
-    _dataManager = new DataManager(config);
+    _dataManager = new DataManager(config, QString("pipeline"));
 }
 
 } // namespace pelican

@@ -37,7 +37,7 @@ class DataManager
 
     public:
         /// DataManager constructor.
-        DataManager(const Config* config);
+        DataManager(const Config* config, const QString section = QString("server"));
 
         /// DataManager destructor.
         virtual ~DataManager();

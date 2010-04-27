@@ -17,10 +17,10 @@ namespace pelican {
  * @details
  * DataManager constructor.
  */
-DataManager::DataManager(const Config* config)
+DataManager::DataManager(const Config* config, const QString section)
 {
     _config = config;
-    _bufferConfigBaseAddress << Config::NodeId("server","");
+    _bufferConfigBaseAddress << Config::NodeId(section,"");
     _bufferConfigBaseAddress << Config::NodeId("buffers","");
 }
 
