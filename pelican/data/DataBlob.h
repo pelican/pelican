@@ -4,7 +4,7 @@
 #include "pelican/utility/Factory.h"
 #include <QString>
 #include <complex>
-class QBuffer;
+class QByteArray;
 
 /**
  * @file DataBlob.h
@@ -76,12 +76,11 @@ class DataBlob
         /// Returns the version of the DataBlob
         QString version() const { return _version; };
 
-        /// serialise the DataBlob into a bit stream
-        virtual QBuffer serialise() const;
+        /// Serialise the DataBlob into a byte array.
+        virtual QByteArray serialise() const;
 
-        /// deserialise the DataBlob from the bit stream
-        //  created with serialise
-        virtual void deserialise(const QBuffer&);
+        /// Deserialises the DataBlob from the byte array created with serialise.
+        virtual void deserialise(const QByteArray&);
 };
 
 } // namespace pelican
