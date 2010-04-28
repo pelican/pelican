@@ -11,7 +11,7 @@ namespace pelican {
 
 
 /**
- *@details PelicanTCPBlobServer 
+ *@details PelicanTCPBlobServer
  */
 PelicanTCPBlobServer::PelicanTCPBlobServer(QObject* parent)
     : AbstractBlobServer(), QThread(parent)
@@ -27,12 +27,12 @@ PelicanTCPBlobServer::~PelicanTCPBlobServer()
 {
 }
 
-void PelicanTCPBlobServer::send(const QString& type, const QBuffer& incoming)
+void PelicanTCPBlobServer::send(const QString& type, const QByteArray& incoming)
 {
     StreamDataBuffer* buf = _dataManager->getStreamBuffer(type);
     WritableData data = buf->getWritable(incoming.size());
     if( data.isValid() ) {
-        data.write(incoming.data(), incoming.size() );
+        data.write(&incoming, incoming.size() );
     }
 }
 
