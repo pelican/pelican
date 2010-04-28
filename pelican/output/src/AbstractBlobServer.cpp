@@ -1,7 +1,6 @@
 #include <QBuffer>
 #include "AbstractBlobServer.h"
 
-
 #include "pelican/data/DataBlob.h"
 #include "pelican/utility/memCheck.h"
 
