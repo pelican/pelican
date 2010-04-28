@@ -42,7 +42,7 @@ class PelicanServer : public QThread
         PelicanServer(const Config* config, QObject* parent=0);
         ~PelicanServer();
 
-        /// Assosiate an incoming port with a particular protocol.
+        /// Associate an incoming port with a particular protocol.
         /// Ownership of AbstractProtocol is transferred to this class.
         void addProtocol(AbstractProtocol*, quint16 port);
 
@@ -56,7 +56,7 @@ class PelicanServer : public QThread
         bool isReady() {QMutexLocker locker(&_mutex); return _ready;}
 
     protected:
-        // code to be executed in the thread ( via start() )
+        /// Code to be executed in the thread, via start().
         void run();
 
     private:

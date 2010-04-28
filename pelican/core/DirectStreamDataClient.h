@@ -1,6 +1,8 @@
 #ifndef DIRECTSTREAMDATACLIENT_H
 #define DIRECTSTREAMDATACLIENT_H
 
+#include <QThread>
+#include <QMutex>
 #include "pelican/core/AbstractDataClient.h"
 #include "pelican/server/DataManager.h"
 
@@ -11,6 +13,7 @@
 namespace pelican {
 
 class ChunkerManager;
+class Config;
 
 /**
  * @class DirectStreamDataClient
@@ -30,7 +33,7 @@ class ChunkerManager;
  *
  */
 
-class DirectStreamDataClient : public AbstractDataClient
+class DirectStreamDataClient : public AbstractDataClient, public QThread
 {
     public:
         DirectStreamDataClient( const ConfigNode& configNode);
@@ -51,15 +54,19 @@ class DirectStreamDataClient : public AbstractDataClient
         void addStreamChunker(const QString& chunkerType,
                 const QString& chunkerName = QString());
 
-        void start();
-
         void setManagers(const Config* config);
+
+    protected:
+        /// Runs the thread owned by this data client.
+        void run();
 
     protected:
         bool _started;
         //virtual void connect(const QString& address, unsigned int port);
 
     private:
+        QMutex _mutex;
+        const Config* _config;
         ChunkerManager* _chunkerManager;
         DataManager* _dataManager;
         QString _server;

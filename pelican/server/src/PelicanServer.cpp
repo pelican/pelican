@@ -23,8 +23,8 @@ namespace pelican {
  * @details
  * Creates a new Pelican server, which in turn creates a chunker manager.
  */
-PelicanServer::PelicanServer(const Config* config, QObject* parent)
-    : QThread(parent)
+PelicanServer::PelicanServer(const Config* config, QObject* parent) :
+    QThread(parent)
 {
     _config = config;
     _ready = false;
@@ -113,14 +113,16 @@ void PelicanServer::run()
         boost::shared_ptr<PelicanPortServer> server(
             new PelicanPortServer(_protocolPortMap[ports[i]], &dataManager) );
         servers.append(server);
-        if ( !server->listen(QHostAddress::Any, ports[i] )) {
-            throw QString(QString("Unable to start PelicanServer on port='") +
-                            QString().setNum(ports[i])+ QString("'"));
-        }
+        if ( !server->listen(QHostAddress::Any, ports[i]) )
+            throw QString("Cannot run PelicanServer on port %1").arg(ports[i]);
     }
+
+    // Set ready flag.
     _mutex.lock();
     _ready = true;
     _mutex.unlock();
+
+    // Enter the server's event loop.
     exec();
 }
 

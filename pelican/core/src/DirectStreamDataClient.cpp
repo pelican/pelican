@@ -23,7 +23,7 @@ class ConfigNode;
  * @details Constructs the DirectStreamDataClient.
  */
 DirectStreamDataClient::DirectStreamDataClient(const ConfigNode& configNode)
-    : AbstractDataClient(configNode)
+    : AbstractDataClient(configNode), QThread()
 {
     // Initialise members.
     _started = false;
@@ -36,8 +36,11 @@ DirectStreamDataClient::DirectStreamDataClient(const ConfigNode& configNode)
  */
 DirectStreamDataClient::~DirectStreamDataClient()
 {
-    // Delete the data manager and the chunker manager.
-    delete _dataManager;
+    // Wait for the thread to finish.
+    if (isRunning()) while (!isFinished()) quit();
+    wait();
+
+    // Delete the chunker manager.
     delete _chunkerManager;
 }
 
@@ -92,11 +95,30 @@ void DirectStreamDataClient::addStreamChunker(const QString& chunkerType,
     _chunkerManager->addStreamChunker(chunkerType, chunkerName);
 }
 
-void DirectStreamDataClient::start()
+/**
+ * @details
+ * Runs the thread owned by this data client, which creates the data manager.
+ * This starts the thread's event loop running.
+ */
+void DirectStreamDataClient::run()
 {
     if( ! _started ) {
-        _started = true;
+        // Lock the mutex.
+        _mutex.lock();
+
+        // Create the data manager in this thread.
+        _dataManager = new DataManager(_config, QString("pipeline"));
         _chunkerManager->init(*_dataManager);
+
+        // Set started flag and unlock the mutex.
+        _started = true;
+        _mutex.unlock();
+
+        // Enter the thread's event loop.
+        exec();
+
+        // Delete the data manager.
+        delete _dataManager;
     }
 }
 
@@ -105,9 +127,14 @@ QHash<QString, DataBlob*> DirectStreamDataClient::getData(QHash<QString, DataBlo
     QHash<QString, DataBlob*> validData;
     QSet<QString> reqs = _requireSet;
     if( ! reqs.subtract(QSet<QString>::fromList(dataHash.keys())).isEmpty() )
-        throw(QString("DirectStreamDataClient::getData() data hash does not "
+        throw(QString("DirectStreamDataClient::getData() Data hash does not "
                 "contain objects for all possible requests"));
-    Q_ASSERT( _started ); // ensure somebody has not forgotten to start
+
+    // Check that the client is ready.
+    _mutex.lock();
+    if (!_started)
+        throw QString("DirectStreamDataClient::getData(): Call start() first.");
+    _mutex.unlock();
 
     // keep polling the data manager until we can match a suitable request
     QList<LockedData> dataList; // will contain the list of valid StreamDataObjects
@@ -153,15 +180,17 @@ QHash<QString, DataBlob*> DirectStreamDataClient::getData(QHash<QString, DataBlo
 
 /**
  * @details
- * Creates the chunker manager and the data manager.
+ * Creates the chunker manager.
  *
  * @param[in] config Pointer to the application's configuration object.
  */
 void DirectStreamDataClient::setManagers(const Config* config)
 {
-    // Create the chunker manager and the data manager.
+    // Store a reference to the configuration node.
+    _config = config;
+
+    // Create the chunker manager.
     _chunkerManager = new ChunkerManager(config, QString("pipeline"));
-    _dataManager = new DataManager(config, QString("pipeline"));
 }
 
 } // namespace pelican

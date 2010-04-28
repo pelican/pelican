@@ -84,6 +84,9 @@ void DirectStreamDataClientTest::tearDown()
 void DirectStreamDataClientTest::test_method()
 {
     try {
+        // Start the telescope emulator on port 2002.
+        TelescopeEmulator telescope1(2002);
+
         // Create the adapter factory.
         Factory<AbstractAdapter> adapterFactory(_config, "pipeline", "adapters");
 
@@ -113,6 +116,7 @@ void DirectStreamDataClientTest::test_method()
         foreach (QString key, validData.keys()) {
             std::cout << "Returned valid data: " << key.toStdString() << std::endl;
         }
+        std::cout << "Finished DirectStreamDataClient test" << std::endl;
     }
     catch (QString e) {
         CPPUNIT_FAIL("Unexpected exception: " + e.toStdString());
