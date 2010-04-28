@@ -1,5 +1,5 @@
 #include "OutputStreamer.h"
-#include "pelican/server/AbstractBlobServer.h"
+#include "pelican/output/AbstractBlobServer.h"
 #include "pelican/utility/memCheck.h"
 
 namespace pelican {

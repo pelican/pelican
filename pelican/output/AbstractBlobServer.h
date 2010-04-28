@@ -13,11 +13,11 @@ namespace pelican {
 
 /**
  * @class AbstractBlobServer
- *  
+ *
  * @brief
  *    Base class for server mechanisms to Serve DataBlobs
  * @details
- * 
+ *
  */
 
 class AbstractBlobServer : public QObject
@@ -28,11 +28,10 @@ class AbstractBlobServer : public QObject
         AbstractBlobServer( QObject* parent = 0 );
         virtual ~AbstractBlobServer();
         virtual void queue(const QString& streamName, DataBlob*);
-
-        virtual void send(const QString& streamName,const QBuffer&) = 0;
+        virtual void send(const QString& streamName, const QByteArray&) = 0;
 
     private:
 };
 
 } // namespace pelican
-#endif // ABSTRACTBLOBSERVER_H 
+#endif // ABSTRACTBLOBSERVER_H

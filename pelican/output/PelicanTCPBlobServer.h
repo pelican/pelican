@@ -14,11 +14,11 @@ namespace pelican {
 
 /**
  * @class PelicanTCPBlobServer
- *  
+ *
  * @brief
  *   Threade server that sends the same data from the queue to all connected peers
  * @details
- * 
+ *
  */
 
 class PelicanTCPBlobServer : public AbstractBlobServer, public QThread
@@ -28,15 +28,15 @@ class PelicanTCPBlobServer : public AbstractBlobServer, public QThread
     public:
         PelicanTCPBlobServer( QObject* parent = 0 );
         ~PelicanTCPBlobServer();
-        virtual void send(const QString& type, const QBuffer& incoming);
+        virtual void send(const QString& type, const QByteArray& incoming);
 
     protected:
         virtual void run();
 
     private:
         DataManager* _dataManager;
-        
+
 };
 
 } // namespace pelican
-#endif // PELICANTCPBLOBSERVER_H 
+#endif // PELICANTCPBLOBSERVER_H
