@@ -8,7 +8,6 @@ set(dataTest_src
     src/FlagTableTest.cpp
     src/VisibilityPositionsTest.cpp
     src/AntennaPositionsTest.cpp
-    src/TimeStreamDataTest.cpp
 )
 
 add_executable(dataTest ${dataTest_src})

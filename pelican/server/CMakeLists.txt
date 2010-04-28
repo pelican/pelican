@@ -8,6 +8,7 @@ SUBPACKAGE(server adapters comms utility)
 
 # files requiring MOC pre-processing (i.e. QObjects)
 set(server_moc_headers
+    AbstractBlobServer.h
     AbstractLockable.h
     AbstractLockableData.h
     LockableData.h
@@ -15,6 +16,7 @@ set(server_moc_headers
     DataReceiver.h
     ServiceDataBuffer.h
     StreamDataBuffer.h
+    PelicanTCPBlobServer.h
     PelicanPortServer.h
     PelicanServer.h
     Session.h
@@ -24,6 +26,7 @@ set(server_moc_headers
 set(server_src
     src/AbstractChunker.cpp
     src/AbstractLockable.cpp
+    src/AbstractBlobServer.cpp
     src/ChunkerManager.cpp
     src/LockableData.cpp
     src/DataReceiver.cpp
@@ -31,6 +34,7 @@ set(server_src
     src/DataManager.cpp
     src/PelicanServer.cpp
     src/PelicanPortServer.cpp
+    src/PelicanTCPBlobServer.cpp
     src/Session.cpp
     src/LockableStreamData.cpp
     src/StreamDataBuffer.cpp

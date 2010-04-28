@@ -2,6 +2,7 @@
 #include <QDate>
 #include <QTime>
 #include <QDateTime>
+#include <QBuffer>
 
 namespace pelican {
 
@@ -45,4 +46,13 @@ void DataBlob::setTimeStamp()
     _modifiedJulianDate += (millisec / 86400000.0);
 }
 
+QBuffer DataBlob::serialise() const
+{
+    throw("DataBlob: This object serialise method is undefined");
+}
+
+void DataBlob::deserialise(const QBuffer&)
+{
+    throw("DataBlob: This object deserialised method is undefined");
+}
 } // namespace pelican
