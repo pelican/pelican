@@ -1,11 +1,14 @@
 #include "pelican/server/test/DataReceiverTest.h"
 #include "pelican/server/DataReceiver.h"
 #include "pelican/server/test/TestChunker.h"
+#include "pelican/server/test/TestUdpChunker.h"
+#include "pelican/server/test/TelescopeEmulator.h"
 #include "pelican/server/DataManager.h"
 #include "pelican/utility/pelicanTimer.h"
 #include "pelican/utility/Config.h"
 
 #include <QThread>
+#include <QCoreApplication>
 
 #include "pelican/utility/memCheck.h"
 
@@ -24,21 +27,20 @@ DataReceiverTest::~DataReceiverTest()
 
 void DataReceiverTest::setUp()
 {
-    _testHost = "localhost";
-    _testPort = 1444;
-    Config config;
-    _dm = new DataManager(&config);
-//    _testChunker = new TestChunker(_dm);
 }
 
 void DataReceiverTest::tearDown()
 {
-    delete _dm;
-//    delete _testChunker;
 }
 
 void DataReceiverTest::test_listen()
 {
+    // Set up the test.
+    QString testHost = "localhost";
+    quint16 testPort = 1444;
+    Config config;
+    DataManager dataManager(&config);
+
     {
         /* Use Case:
          * Null data Chunker
@@ -52,8 +54,8 @@ void DataReceiverTest::test_listen()
          * Null Socket returned by Chunker
          * Expect : do nothing and return
          */
-        TestChunker testChunker("test", true, 0, _testHost,_testPort);
-        testChunker.setDataManager(_dm);
+        TestChunker testChunker("test", true, 0, testHost,testPort);
+        testChunker.setDataManager(&dataManager);
         DataReceiver dr(&testChunker);
         dr.listen();
     }
@@ -63,8 +65,8 @@ void DataReceiverTest::test_listen()
          * Unspecified host
          * Expect : do nothing and return
          */
-        TestChunker testChunker("test", false, 0, "",_testPort);
-        testChunker.setDataManager(_dm);
+        TestChunker testChunker("test", false, 0, "",testPort);
+        testChunker.setDataManager(&dataManager);
         DataReceiver dr(&testChunker);
         dr.listen();
     }
@@ -75,7 +77,7 @@ void DataReceiverTest::test_listen()
          * Expect : do nothing and return
          */
         TestChunker testChunker("test", false, 0, "", 0);
-        testChunker.setDataManager(_dm);
+        testChunker.setDataManager(&dataManager);
         DataReceiver dr(&testChunker);
         dr.listen();
     }
@@ -86,16 +88,67 @@ void DataReceiverTest::test_listen()
          * Expect : to be listening and the Chunker to be receiving data
          *          within its own thread
          */
-        TestChunker testChunker("test", false, 0, _testHost, _testPort);
-        testChunker.setDataManager(_dm);
+        TestChunker testChunker("test", false, 0, testHost, testPort);
+        testChunker.setDataManager(&dataManager);
         DataReceiver dr(&testChunker);
         dr.listen();
 
         // TODO
-//        TestSocketServer ts(_testHost, _testPort);
+//        TestSocketServer ts(testHost, testPort);
 //        CPPUNIT_ASSERT(ts.send("abcd"));
 //        _app->processEvents();
 //        CPPUNIT_ASSERT_EQUAL(1, _testChunker->nextCalled());
+    }
+}
+
+void DataReceiverTest::test_listen_udpChunker()
+{
+    std::cout <<" ========================================== " << std::endl;
+    try {
+        // Create Data Manager
+        Config config;
+        QString configString =
+                "<buffers>"
+                "   <VisibilityData>"
+                "       <buffer maxSize=\"2000\" maxChunkSize=\"2000\"/>"
+                "   </VisibilityData>"
+                "</buffers>";
+        config.setFromString(configString);
+        DataManager dataManager(&config, "pipeline");
+        dataManager.getStreamBuffer("VisibilityData");
+
+        // Start the telescope.
+        TelescopeEmulator telescope(2002, 0.2);
+
+        // Create and set up chunker.
+        QString chunkerNodeString = ""
+                "<TestUdpChunker>"
+                "       <connection host=\"127.0.0.1\" port=\"2002\"/>"
+                "       <data type=\"VisibilityData\" chunkSize=\"512\"/>"
+                "</TestUdpChunker>";
+        ConfigNode chunkerNode(chunkerNodeString);
+        TestUdpChunker chunker(chunkerNode);
+        chunker.setDataManager(&dataManager);
+
+        // Create the data receiver.
+        DataReceiver dr(&chunker);
+        dr.listen();
+
+        // Must call processEvents() for the data to emit the
+        // unlockedWrite() signal.
+        sleep(1);
+        QCoreApplication::processEvents();
+
+        // Test read data
+        LockedData d = dataManager.getNext("VisibilityData");
+        // std::cout << "Is valid: " << d.isValid() << std::endl;
+        char* dataPtr = (char *)(reinterpret_cast<AbstractLockableData*>(d.object())->data()->data() );
+        double value = *reinterpret_cast<double*>(dataPtr);
+        std::cout << "Value : " << value << std::endl;
+    }
+
+    catch (QString e) {
+        CPPUNIT_FAIL("Unexpected exception: " + e.toStdString());
     }
 }
 

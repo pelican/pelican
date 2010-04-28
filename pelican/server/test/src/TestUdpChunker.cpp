@@ -51,6 +51,7 @@ QIODevice* TestUdpChunker::newDevice()
 {
     QUdpSocket* socket = new QUdpSocket;
     socket->bind(QHostAddress(host()), port());
+    while (socket->state() != QUdpSocket::BoundState) {}
     return socket;
 }
 
@@ -60,13 +61,15 @@ QIODevice* TestUdpChunker::newDevice()
  */
 void TestUdpChunker::next(QIODevice* device)
 {
+//    std::cout << "TestUdpChunker::next()" << std::endl;
     // Read the data off the UDP socket.
     QUdpSocket* socket = static_cast<QUdpSocket*>(device);
+    while (!socket->hasPendingDatagrams()) {}
     qint64 sizeRead = socket->readDatagram(_tempBuffer.data(), _chunkSize);
 
     // Sanity check.
     if ((size_t)sizeRead != _chunkSize)
-        throw QString("TestUdpChunker::next(): Size mismatch.");
+        throw QString("TestUdpChunker::next(): Size mismatch, sizeRead %1 != chunkSize %2.").arg(sizeRead).arg(_chunkSize);
 
     // Get writable data object.
     WritableData writableData = getDataStorage(_chunkSize);

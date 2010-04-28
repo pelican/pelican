@@ -21,12 +21,12 @@ class DataManager;
  * @details
  *
  */
-
 class DataReceiverTest : public CppUnit::TestFixture
 {
     public:
         CPPUNIT_TEST_SUITE( DataReceiverTest );
         CPPUNIT_TEST( test_listen );
+        CPPUNIT_TEST( test_listen_udpChunker );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -35,17 +35,15 @@ class DataReceiverTest : public CppUnit::TestFixture
 
         // Test Methods
         void test_listen();
+        void test_listen_udpChunker();
 
     public:
         DataReceiverTest(  );
         ~DataReceiverTest();
 
     private:
-        TestChunker* _testChunker;
-        DataManager* _dm;
-        QString _testHost;
-        quint16 _testPort;
 };
 
 } // namespace pelican
+
 #endif // DATARECEIVERTEST_H

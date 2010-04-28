@@ -36,8 +36,8 @@ DataReceiver::~DataReceiver()
  * @details
  * Runs the thread owned by the DataReceiver object.
  * The thread creates and opens the socket and connects the readyRead()
- * socket signal to the processIncomingData() slot, before entering its
- * own event loop.
+ * socket signal to the private _processIncomingData() slot using a direct
+ * connection, before entering its own event loop.
  */
 void DataReceiver::run()
 {
@@ -45,7 +45,8 @@ void DataReceiver::run()
     _device = _chunker->newDevice();
     _chunker->setDevice(_device);
     if (_device) {
-        connect(_device, SIGNAL(readyRead()), SLOT(processIncomingData()));
+        connect(_device, SIGNAL(readyRead()), SLOT(_processIncomingData()),
+                Qt::DirectConnection);
         exec(); // Enter event loop here.
     }
 }

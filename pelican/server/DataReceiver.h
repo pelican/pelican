@@ -43,9 +43,9 @@ class DataReceiver : public QThread
         /// Connect to the specified host and listen for incoming data.
         void listen() {start();}
 
-    protected slots:
+    private slots:
         /// This slot is called when data is available on the device.
-        void processIncomingData() {_chunker->next(_device);}
+        void _processIncomingData() {_chunker->next(_device);}
 
     protected:
         /// Runs the thread for the data receiver.

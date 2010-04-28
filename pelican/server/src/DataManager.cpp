@@ -79,7 +79,6 @@ StreamDataBuffer* DataManager::getStreamBuffer(const QString& type)
         size_t maxSize = config.getOption("buffer", "maxSize", "10240").toUInt();
         size_t maxChunkSize = config.getOption("buffer", "maxChunkSize", "10240").toUInt();
         setStreamDataBuffer( type, new StreamDataBuffer(type, NULL, maxSize, maxChunkSize) );
-
     }
     return _streams[type];
 }
