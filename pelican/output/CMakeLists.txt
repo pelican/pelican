@@ -6,7 +6,6 @@ set ( output_moc_headers
     )
 
 set( output_src
-     src/AbstractBlobServer.cpp
      src/PelicanTCPBlobServer.cpp
 )
 

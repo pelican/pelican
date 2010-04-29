@@ -1,3 +1,5 @@
+#include <QString>
+#include <QCoreApplication>
 #include "test/PelicanTCPBlobServerTest.h"
 #include "PelicanTCPBlobServer.h"
 
@@ -30,7 +32,9 @@ PelicanTCPBlobServerTest::~PelicanTCPBlobServerTest()
  */
 void PelicanTCPBlobServerTest::setUp()
 {
-
+    int argc = 1;
+    char *argv[] = {(char*)"pelican"};
+    _app = new QCoreApplication(argc,argv);
 }
 
 /**
@@ -39,7 +43,7 @@ void PelicanTCPBlobServerTest::setUp()
  */
 void PelicanTCPBlobServerTest::tearDown()
 { 
-
+    delete _app;
 }
 
 /**
@@ -47,7 +51,11 @@ void PelicanTCPBlobServerTest::tearDown()
  */
 void PelicanTCPBlobServerTest::test_method()
 {
-    PelicanTCPBlobServer server;
+    QString xml = "<TCPBlob>"
+                  "   <connection port=\"8888\"/>"
+                  "</TCPBlob>";
+    ConfigNode config(xml);
+    PelicanTCPBlobServer server(config);
     
     // create a client and try to connect to server
     QHostAddress address("127.0.0.1");

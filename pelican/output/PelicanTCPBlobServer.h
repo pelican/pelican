@@ -5,6 +5,7 @@
 
 #include "AbstractBlobServer.h"
 #include <QtNetwork>
+#include <QThread>
 
 /**
  * @file PelicanTCPBlobServer.h
@@ -12,6 +13,7 @@
 
 namespace pelican {
     class DataManager;
+    class ConfigNode;
 
 /**
  * @class PelicanTCPBlobServer
@@ -22,19 +24,20 @@ namespace pelican {
  * 
  */
 
-class PelicanTCPBlobServer : public AbstractBlobServer
+class PelicanTCPBlobServer : public QThread
 {
     Q_OBJECT
 
     public:
-        PelicanTCPBlobServer( QObject* parent = 0 );
+        PelicanTCPBlobServer( const ConfigNode& config, QObject* parent = 0 );
         ~PelicanTCPBlobServer();
 
     protected:
         virtual void run();
 
     private:
-        QTcpServer*       _tcpServer;
+        QTcpServer* _tcpServer;
+        quint16 _port;
 
     private slots:
         void acceptClientConnection();

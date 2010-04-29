@@ -23,13 +23,12 @@ namespace pelican {
  * 
  */
 
-class AbstractBlobServer : public QThread
+class AbstractBlobServer
 {
-    Q_OBJECT
 
     public:
         /// comment
-        AbstractBlobServer( QObject* parent = 0 );
+        AbstractBlobServer();
         /// comment
         virtual ~AbstractBlobServer();
         /// comment

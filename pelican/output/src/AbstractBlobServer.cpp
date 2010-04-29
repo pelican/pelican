@@ -11,8 +11,7 @@ namespace pelican {
 /**
  *@details AbstractBlobServer 
  */
-AbstractBlobServer::AbstractBlobServer(QObject* parent  )
-    : QThread(parent)
+AbstractBlobServer::AbstractBlobServer()
 {
 }
 

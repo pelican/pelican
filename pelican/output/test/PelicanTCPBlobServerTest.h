@@ -3,6 +3,7 @@
 
 #include <cppunit/extensions/HelperMacros.h>
 #include "pelican/utility/Config.h"
+class QCoreApplication;
 
 /**
  * @file PelicanTCPBlobServerTest.h
@@ -36,6 +37,9 @@ class PelicanTCPBlobServerTest : public CppUnit::TestFixture
     public:
         PelicanTCPBlobServerTest(  );
         ~PelicanTCPBlobServerTest();
+
+    private:
+        QCoreApplication* _app;
 };
 
 } // namespace pelican
