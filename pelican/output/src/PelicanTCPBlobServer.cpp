@@ -7,16 +7,28 @@
 #include "pelican/server/StreamDataBuffer.h"
 #include "pelican/utility/memCheck.h"
 
+#include <QCoreApplication>
+
 namespace pelican {
 
 
 /**
- *@details PelicanTCPBlobServer
+ *@details PelicanTCPBlobServer 
  */
 PelicanTCPBlobServer::PelicanTCPBlobServer(QObject* parent)
-    : AbstractBlobServer(), QThread(parent)
+    : AbstractBlobServer(parent)
 {
     //_dataManger = new DataManager(config); TODO
+    _tcpServer = new QTcpServer(this);
+
+    // start TCP Server, which listens for incoming connections
+    QHostAddress host = QHostAddress("127.0.0.1");
+    if (!_tcpServer -> listen(host, 8888))
+        throw QString("Unable to start QTcpServer: %1").arg(_tcpServer -> errorString()).toStdString();
+    
+    connect(_tcpServer, SIGNAL(newConnection()), this, SLOT(acceptClientConnection()));
+
+    // start main thread
     start();
 }
 
@@ -25,19 +37,27 @@ PelicanTCPBlobServer::PelicanTCPBlobServer(QObject* parent)
  */
 PelicanTCPBlobServer::~PelicanTCPBlobServer()
 {
+    // Close tcpServer
+    _tcpServer -> close();
+
+    // Wait for main thread to finish.
+    if (isRunning()) while (!isFinished()) quit();
+    wait();
 }
 
-void PelicanTCPBlobServer::send(const QString& type, const QByteArray& incoming)
+/**
+ *@details
+ */
+void PelicanTCPBlobServer::acceptClientConnection() 
 {
-    StreamDataBuffer* buf = _dataManager->getStreamBuffer(type);
-    WritableData data = buf->getWritable(incoming.size());
-    if( data.isValid() ) {
-        data.write(&incoming, incoming.size() );
-    }
+    QTcpSocket *client = _tcpServer -> nextPendingConnection();
+    std::cout << "Client connected" << std::endl;
 }
 
 void PelicanTCPBlobServer::run()
 {
+ //   exec();
+
     // TODO
     /*
     while( _run ) {
