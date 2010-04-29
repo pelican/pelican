@@ -166,12 +166,14 @@ QHash<QString, DataBlob*> DirectStreamDataClient::getData(QHash<QString, DataBlo
                 // send the associate data through the adapter
                 QByteArray tmp_array = QByteArray::fromRawData((char*)d->operator*(), d->size());
                 QBuffer device(&tmp_array);
+                device.open(QIODevice::ReadOnly);
                 validData.unite(adaptService( device, d.get(), dataHash ));
             }
         }
         // send the data for adaption
         QByteArray tmp_array = QByteArray::fromRawData((char*)sd->operator*(), sd->size());
         QBuffer device(&tmp_array);
+        device.open(QIODevice::ReadOnly);
         validData.unite(adaptStream( device, sd, dataHash ));
     }
 

@@ -3,6 +3,7 @@
 #include "pelican/core/DataClientFactory.h"
 #include "pelican/core/DirectStreamDataClient.h"
 #include "pelican/data/DataBlob.h"
+#include "pelican/data/VisibilityData.h"
 #include "pelican/data/DataRequirements.h"
 #include "pelican/server/test/TelescopeEmulator.h"
 #include "pelican/utility/Config.h"
@@ -83,9 +84,10 @@ void DirectStreamDataClientTest::tearDown()
 
 void DirectStreamDataClientTest::test_method()
 {
+    std::cout << "----------------------------------" << std::endl;
     try {
         // Start the telescope emulator on port 2002.
-        TelescopeEmulator telescope1(2002);
+        TelescopeEmulator telescope1(2002, 0.2);
 
         // Create the adapter factory.
         Factory<AbstractAdapter> adapterFactory(_config, "pipeline", "adapters");
@@ -113,13 +115,41 @@ void DirectStreamDataClientTest::test_method()
         QHash<QString, DataBlob*> dataHash;
         dataHash.insert(dataType, blobFactory.create(dataType));
         QHash<QString, DataBlob*> validData = client->getData(dataHash);
-        foreach (QString key, validData.keys()) {
-            std::cout << "Returned valid data: " << key.toStdString() << std::endl;
-        }
+
+        // Check the content of the data blob.
+        VisibilityData* visData = (VisibilityData*)validData.value("VisibilityData");
+        _printVisibilities(visData);
+
         std::cout << "Finished DirectStreamDataClient test" << std::endl;
     }
     catch (QString e) {
         CPPUNIT_FAIL("Unexpected exception: " + e.toStdString());
+    }
+}
+
+/**
+ * @details
+ * Prints the contents of a visibility data blob.
+ *
+ * @param visData
+ */
+void DirectStreamDataClientTest::_printVisibilities(VisibilityData* visData)
+{
+    CPPUNIT_ASSERT(visData); // Check that the blob exists.
+    CPPUNIT_ASSERT(visData->nAntennas() != 0);
+
+    unsigned nChan = visData->nChannels();
+    unsigned nAnt = visData->nAntennas();
+    unsigned nPol = visData->nPolarisations();
+    for (unsigned p = 0; p < nPol; p++) {
+        for (unsigned c = 0; c < nChan; c++) {
+            complex_t* ptr = visData->ptr(c, p);
+            for (unsigned j = 0; j < nAnt; j++) {
+                for (unsigned i = 0; i < nAnt; i++) {
+                    std::cout << "VisData: " << ptr[i + j * nAnt] << std::endl;
+                }
+            }
+        }
     }
 }
 

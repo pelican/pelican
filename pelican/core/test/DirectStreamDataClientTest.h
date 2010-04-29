@@ -12,6 +12,7 @@ class QCoreApplication;
 namespace pelican {
 
 class Config;
+class VisibilityData;
 
 /**
  * @class DirectStreamDataClientTest
@@ -39,6 +40,9 @@ class DirectStreamDataClientTest : public CppUnit::TestFixture
     public:
         DirectStreamDataClientTest(  );
         ~DirectStreamDataClientTest();
+
+    private:
+        void _printVisibilities(VisibilityData* visData);
 
     private:
         QCoreApplication* _app;
