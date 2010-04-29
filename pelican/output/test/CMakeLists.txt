@@ -14,3 +14,5 @@ target_link_libraries(outputTestMT
 )
 
 add_test(outputTest outputTest)
+
+target_link_libraries(outputTestMT ${SUBPACKAGE_LIBRARIES} ${CPPUNIT_LIBRARIES} memoryTracerDummy )
