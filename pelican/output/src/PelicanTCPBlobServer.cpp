@@ -8,6 +8,8 @@
 #include "pelican/utility/ConfigNode.h"
 #include "pelican/utility/memCheck.h"
 
+#include <iostream>
+
 #include <QCoreApplication>
 
 namespace pelican {

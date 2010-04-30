@@ -5,3 +5,5 @@ release/
 debug/
 intel_release/
 intel_debug/
+gnu_release/
+gnu_debug/
