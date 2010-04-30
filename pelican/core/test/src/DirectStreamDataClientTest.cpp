@@ -58,6 +58,10 @@ void DirectStreamDataClientTest::setUp()
             "       <connection host=\"127.0.0.1\" port=\"2002\"/>"
             "       <data type=\"VisibilityData\" chunkSize=\"512\"/>"
             "    </TestUdpChunker>"
+            "    <TestUdpChunker name=\"b\">"
+            "       <connection host=\"127.0.0.1\" port=\"2003\"/>"
+            "       <data type=\"VisibilityData\" chunkSize=\"512\"/>"
+            "    </TestUdpChunker>"
             "</chunkers>"
             "<clients>"
             "    <DirectStreamDataClient>"
@@ -82,7 +86,7 @@ void DirectStreamDataClientTest::tearDown()
     delete _app;
 }
 
-void DirectStreamDataClientTest::test_method()
+void DirectStreamDataClientTest::test_singleChunker()
 {
     std::cout << "----------------------------------" << std::endl;
     try {
@@ -114,13 +118,62 @@ void DirectStreamDataClientTest::test_method()
         // Set up the data hash.
         QHash<QString, DataBlob*> dataHash;
         dataHash.insert(dataType, blobFactory.create(dataType));
+
+        // Get the data.
         QHash<QString, DataBlob*> validData = client->getData(dataHash);
 
         // Check the content of the data blob.
         VisibilityData* visData = (VisibilityData*)validData.value("VisibilityData");
         _printVisibilities(visData);
+    }
+    catch (QString e) {
+        CPPUNIT_FAIL("Unexpected exception: " + e.toStdString());
+    }
+}
 
-        std::cout << "Finished DirectStreamDataClient test" << std::endl;
+void DirectStreamDataClientTest::test_twoChunkers()
+{
+    std::cout << "----------------------------------" << std::endl;
+    try {
+        // Start two telescope emulators.
+        TelescopeEmulator telescope1(2002, 0.2);
+        TelescopeEmulator telescope2(2003, 0.4);
+
+        // Create the adapter factory.
+        Factory<AbstractAdapter> adapterFactory(_config, "pipeline", "adapters");
+
+        // Create the data client factory.
+        DataClientFactory clientFactory(_config, "pipeline", "clients", &adapterFactory);
+
+        // Create the data blob factory.
+        Factory<DataBlob> blobFactory;
+
+        // Create a list of data requirements.
+        QString dataType = "VisibilityData";
+        DataRequirements req;
+        QList<DataRequirements> requirements;
+        req.addStreamData(dataType);
+        requirements.append(req);
+
+        // Create the client.
+        DirectStreamDataClient* client = static_cast<DirectStreamDataClient*>(
+                clientFactory.create("DirectStreamDataClient", requirements));
+        client->addStreamChunker("TestUdpChunker", "a");
+        client->addStreamChunker("TestUdpChunker", "b");
+        client->start();
+
+        // Set up the data hash.
+        QHash<QString, DataBlob*> dataHash;
+        dataHash.insert(dataType, blobFactory.create(dataType));
+
+        for (int i = 0; i < 2; i++) {
+            // Get the data.
+            QHash<QString, DataBlob*> validData = client->getData(dataHash);
+
+            // Check the content of the data blob.
+            VisibilityData* visData = (VisibilityData*)validData.value("VisibilityData");
+            _printVisibilities(visData);
+        }
     }
     catch (QString e) {
         CPPUNIT_FAIL("Unexpected exception: " + e.toStdString());

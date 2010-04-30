@@ -27,7 +27,8 @@ class DirectStreamDataClientTest : public CppUnit::TestFixture
 {
     public:
         CPPUNIT_TEST_SUITE( DirectStreamDataClientTest );
-        CPPUNIT_TEST( test_method );
+        CPPUNIT_TEST( test_singleChunker );
+        CPPUNIT_TEST( test_twoChunkers );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -35,7 +36,8 @@ class DirectStreamDataClientTest : public CppUnit::TestFixture
         void tearDown();
 
         // Test Methods
-        void test_method();
+        void test_singleChunker();
+        void test_twoChunkers();
 
     public:
         DirectStreamDataClientTest(  );

@@ -175,8 +175,11 @@ QHash<QString, DataBlob*> DirectStreamDataClient::getData(QHash<QString, DataBlo
         QBuffer device(&tmp_array);
         device.open(QIODevice::ReadOnly);
         validData.unite(adaptStream( device, sd, dataHash ));
+
+        static_cast<LockableStreamData*>(dataList[i].object())->served() = true;
     }
 
+    // TODO Can we use processEvents() at the start of this function instead of a separate thread?
     return validData;
 }
 
