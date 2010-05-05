@@ -1,12 +1,14 @@
 SUBPACKAGE(output comms data server)
 
 set ( output_moc_headers
-      AbstractBlobServer.h
       PelicanTCPBlobServer.h
+      TCPConnectionManager.h
     )
 
 set( output_src
+     src/AbstractBlobServer.cpp
      src/PelicanTCPBlobServer.cpp
+     src/TCPConnectionManager.cpp
 )
 
 QT4_WRAP_CPP(output_moc_src ${output_moc_headers})

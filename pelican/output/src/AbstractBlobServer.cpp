@@ -25,21 +25,9 @@ AbstractBlobServer::~AbstractBlobServer()
 /**
  *@details
  */
-void AbstractBlobServer::send(const QString& streamName, const QByteArray& incoming)
-{
-    StreamDataBuffer* buf = _dataManager->getStreamBuffer(streamName);
-    WritableData data = buf -> getWritable(incoming.size());
-    if( data.isValid() ) {
-        data.write(&incoming, incoming.size() );
-    }
-}
-
-/**
- *@details
- */
 void AbstractBlobServer::queue(const QString& stream, DataBlob* blob)
 {
-    const QByteArray& data = blob->serialise();
+    const QByteArray& data = blob -> serialise();
     send(stream,data);
 }
 

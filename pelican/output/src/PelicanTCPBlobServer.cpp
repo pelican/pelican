@@ -1,16 +1,10 @@
 #include <QBuffer>
+#include <iostream>
 #include "PelicanTCPBlobServer.h"
+ #include <QTimer>
 
-
-#include "pelican/server/WritableData.h"
-#include "pelican/server/DataManager.h"
-#include "pelican/server/StreamDataBuffer.h"
 #include "pelican/utility/ConfigNode.h"
 #include "pelican/utility/memCheck.h"
-
-#include <iostream>
-
-#include <QCoreApplication>
 
 namespace pelican {
 
@@ -18,17 +12,13 @@ namespace pelican {
 /**
  *@details PelicanTCPBlobServer 
  */
-PelicanTCPBlobServer::PelicanTCPBlobServer(const ConfigNode& config, QObject* parent)
-//    : AbstractBlobServer(parent)
-      : QThread(parent), _port(0)
+PelicanTCPBlobServer::PelicanTCPBlobServer(const ConfigNode& configNode, QObject* parent)
+      : QObject(parent)
 {
-    int port = config.getOption("connection", "port").toInt();
-    if( port > 0 )
-    {
-        _port = port;
-    }
-    // start main thread
-    start();
+    // Initliase connection manager thread
+    _connectionManager = new TCPConnectionManager(configNode, parent);
+    _clients = _connectionManager -> getClientsReference();
+    _connectionManager -> start();
 }
 
 /**
@@ -36,54 +26,16 @@ PelicanTCPBlobServer::PelicanTCPBlobServer(const ConfigNode& config, QObject* pa
  */
 PelicanTCPBlobServer::~PelicanTCPBlobServer()
 {
-    // Wait for main thread to finish.
-    if (isRunning()) while (!isFinished()) quit();
-    wait();
+    //TODO: Destruct connection Manager Thread
 }
 
 /**
  *@details
- */
-void PelicanTCPBlobServer::acceptClientConnection() 
+  */
+void PelicanTCPBlobServer::send(const QString& streamName, const QByteArray& incoming)
 {
-    QTcpSocket *client = _tcpServer -> nextPendingConnection();
-    std::cout << "Client connected" << std::endl;
-}
-
-void PelicanTCPBlobServer::run()
-{
-    //_dataManger = new DataManager(config); TODO
-    _tcpServer = new QTcpServer;
-
-    // start TCP Server, which listens for incoming connections
-    if (!_tcpServer -> listen( QHostAddress::Any, _port))
-    {
-        std::cerr << QString("Unable to start QTcpServer: %1").arg( _tcpServer->errorString()).toStdString();
-    }
-    else {
-        connect(_tcpServer, SIGNAL(newConnection()), this, SLOT(acceptClientConnection()), Qt::DirectConnection );
-        exec();
-    }
-
-    // cleanup
-    delete _tcpServer;
-
-    // TODO
-    // Actually maybe we could just do this with callbacks?
-    /*
-    while( _run ) {
-        foreach(const QString& type, clientsRequestingData.keys() ) {
-                LockedData d =_dataManger->getNext(type) ) {
-                if( d.isValid() ) {
-                    // send it out to all clients for this dat type
-                    foreach(connectedClient, clientsRequestingData[type] )
-                    {
-                    }
-                }
-            }
-        }
-    }
-    */
+    // Tell connection manager to send data, somehow...
 }
 
 } // namespace pelican
+
