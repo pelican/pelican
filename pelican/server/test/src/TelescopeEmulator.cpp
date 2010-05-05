@@ -1,5 +1,6 @@
 #include "pelican/server/test/TelescopeEmulator.h"
 #include <QUdpSocket>
+#include <QTimer>
 
 #include <iostream>
 
@@ -13,7 +14,7 @@ namespace pelican {
  * own thread. The data will be sent down the specified UDP \p port, and
  * will start with the given \p initialValue.
  */
-TelescopeEmulator::TelescopeEmulator(const qint16 port, const double initialValue)
+TelescopeEmulator::TelescopeEmulator(const qint16 port, const double initialValue) : QThread()
 {
     _abort = false;
     _port = port;

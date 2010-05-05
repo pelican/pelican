@@ -33,7 +33,7 @@ class Config;
  *
  */
 
-class DirectStreamDataClient : public AbstractDataClient, public QThread
+class DirectStreamDataClient : public AbstractDataClient//, public QThread
 {
     public:
         DirectStreamDataClient( const ConfigNode& configNode);
@@ -56,9 +56,11 @@ class DirectStreamDataClient : public AbstractDataClient, public QThread
 
         void setManagers(const Config* config);
 
-    protected:
-        /// Runs the thread owned by this data client.
-        void run();
+        void start();
+
+//    protected:
+//        /// Runs the thread owned by this data client.
+//        void run();
 
     protected:
         bool _started;

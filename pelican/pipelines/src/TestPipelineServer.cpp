@@ -46,11 +46,11 @@ void TestPipelineServer::run(QHash<QString, DataBlob*>& remoteData)
     VisibilityData* vis = (VisibilityData*) remoteData["VisibilityData"];
     Q_ASSERT(vis != NULL);
     _visPrinter->run(vis);
-    sleep(1);
+//    sleep(1);
 
     // Stop the pipeline driver if we have gone through 10 iterations.
     ++_counter;
-    if (_counter == 10)
+    if (_counter == 5000)
         stop();
 }
 

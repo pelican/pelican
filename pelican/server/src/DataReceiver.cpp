@@ -13,7 +13,7 @@ namespace pelican {
  * DataReceiver constructor.
  */
 DataReceiver::DataReceiver(AbstractChunker* chunker) :
-    QThread(), _chunker(chunker), _device(0)
+        QThread(), _chunker(chunker), _device(0)
 {
     _device = 0;
     if (!chunker)
@@ -27,9 +27,7 @@ DataReceiver::DataReceiver(AbstractChunker* chunker) :
  */
 DataReceiver::~DataReceiver()
 {
-    // If the thread has started, call quit() to exit the event loop.
-    if (isRunning()) while (!isFinished()) quit();
-    wait();
+    do quit(); while (!wait(10));
 }
 
 /**
@@ -47,7 +45,7 @@ void DataReceiver::run()
     if (_device) {
         connect(_device, SIGNAL(readyRead()), SLOT(_processIncomingData()),
                 Qt::DirectConnection);
-        exec(); // Enter event loop here.
+        exec();
     }
 }
 

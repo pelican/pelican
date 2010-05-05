@@ -22,6 +22,8 @@ namespace pelican {
  */
 class TelescopeEmulator : public QThread
 {
+    Q_OBJECT
+
     public:
         /// Constructs a new telescope emulator.
         TelescopeEmulator(const qint16 port, const double initialValue = 0.0);

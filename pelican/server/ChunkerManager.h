@@ -59,7 +59,7 @@ class ChunkerManager
         QMap<QPair<QString,quint16>,AbstractChunker* > _chunkerPortMap;
         QSet<QString> _streamDataTypes;
         QSet<QString> _serviceDataTypes;
-        QVector<boost::shared_ptr<DataReceiver> > _dataReceivers;
+        QVector<DataReceiver*> _dataReceivers;
 };
 
 } // namespace pelican

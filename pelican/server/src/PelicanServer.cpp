@@ -40,8 +40,7 @@ PelicanServer::PelicanServer(const Config* config, QObject* parent) :
 PelicanServer::~PelicanServer()
 {
     // Wait for the thread to finish.
-    if (isRunning()) while (!isFinished()) quit();
-    wait();
+    do quit(); while (!wait(10));
 
     // Delete the protocols.
     foreach (AbstractProtocol* protocol, _protocolPortMap)

@@ -10,6 +10,7 @@
 #include "pelican/utility/Config.h"
 
 #include <QBuffer>
+#include <QCoreApplication>
 
 #include "pelican/utility/memCheck.h"
 
@@ -23,7 +24,7 @@ class ConfigNode;
  * @details Constructs the DirectStreamDataClient.
  */
 DirectStreamDataClient::DirectStreamDataClient(const ConfigNode& configNode)
-    : AbstractDataClient(configNode), QThread()
+    : AbstractDataClient(configNode)//, QThread()
 {
     // Initialise members.
     _started = false;
@@ -36,12 +37,13 @@ DirectStreamDataClient::DirectStreamDataClient(const ConfigNode& configNode)
  */
 DirectStreamDataClient::~DirectStreamDataClient()
 {
-    // Wait for the thread to finish.
-    if (isRunning()) while (!isFinished()) quit();
-    wait();
+//    // Wait for the thread to finish.
+//    if (isRunning()) while (!isFinished()) quit();
+//    wait();
 
-    // Delete the chunker manager.
+    // Delete managers.
     delete _chunkerManager;
+    delete _dataManager;
 }
 
 ///**
@@ -95,32 +97,41 @@ void DirectStreamDataClient::addStreamChunker(const QString& chunkerType,
     _chunkerManager->addStreamChunker(chunkerType, chunkerName);
 }
 
-/**
- * @details
- * Runs the thread owned by this data client, which creates the data manager.
- * This starts the thread's event loop running.
- */
-void DirectStreamDataClient::run()
+
+void DirectStreamDataClient::start()
 {
     if( ! _started ) {
-        // Lock the mutex.
-        _mutex.lock();
-
-        // Create the data manager in this thread.
-        _dataManager = new DataManager(_config, QString("pipeline"));
-        _chunkerManager->init(*_dataManager);
-
-        // Set started flag and unlock the mutex.
         _started = true;
-        _mutex.unlock();
-
-        // Enter the thread's event loop.
-        exec();
-
-        // Delete the data manager.
-        delete _dataManager;
+        _chunkerManager->init(*_dataManager);
     }
 }
+
+///**
+// * @details
+// * Runs the thread owned by this data client, which creates the data manager.
+// * This starts the thread's event loop running.
+// */
+//void DirectStreamDataClient::run()
+//{
+//    if( ! _started ) {
+//        // Lock the mutex.
+//        _mutex.lock();
+//
+//        // Create the data manager in this thread.
+//        _dataManager = new DataManager(_config, QString("pipeline"));
+//        _chunkerManager->init(*_dataManager);
+//
+//        // Set started flag and unlock the mutex.
+//        _started = true;
+//        _mutex.unlock();
+//
+//        // Enter the thread's event loop.
+//        exec();
+//
+//        // Delete the data manager.
+//        delete _dataManager;
+//    }
+//}
 
 QHash<QString, DataBlob*> DirectStreamDataClient::getData(QHash<QString, DataBlob*>& dataHash)
 {
@@ -131,14 +142,16 @@ QHash<QString, DataBlob*> DirectStreamDataClient::getData(QHash<QString, DataBlo
                 "contain objects for all possible requests"));
 
     // Check that the client is ready.
-    _mutex.lock();
+//    _mutex.lock();
     if (!_started)
         throw QString("DirectStreamDataClient::getData(): Call start() first.");
-    _mutex.unlock();
+//    _mutex.unlock();
 
     // keep polling the data manager until we can match a suitable request
     QList<LockedData> dataList; // will contain the list of valid StreamDataObjects
     while( dataList.size() == 0 ) {
+        // Must cycle the event loop for unlocked signals to be transmitted.
+        QCoreApplication::processEvents();
         QList<DataRequirements>::const_iterator it = dataRequirements().begin();
         while( it != dataRequirements().end() && dataList.size() == 0 )
         {
@@ -179,7 +192,6 @@ QHash<QString, DataBlob*> DirectStreamDataClient::getData(QHash<QString, DataBlo
         static_cast<LockableStreamData*>(dataList[i].object())->served() = true;
     }
 
-    // TODO Can we use processEvents() at the start of this function instead of a separate thread?
     return validData;
 }
 
@@ -195,6 +207,7 @@ void DirectStreamDataClient::setManagers(const Config* config)
     _config = config;
 
     // Create the chunker manager.
+    _dataManager = new DataManager(config, QString("pipeline"));
     _chunkerManager = new ChunkerManager(config, QString("pipeline"));
 }
 

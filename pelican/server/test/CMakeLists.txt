@@ -11,6 +11,7 @@ set(serverTestlib_src
 set(serverTestLib_moc_sources
     TestServer.h
     TestChunker.h
+    TelescopeEmulator.h
 )
 
 set(serverTest_src

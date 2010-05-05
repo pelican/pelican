@@ -4,6 +4,7 @@
 #include "pelican/server/AbstractChunker.h"
 
 #include <QThread>
+#include <QMutex>
 #include <QString>
 
 class QIODevice;
@@ -30,6 +31,7 @@ class DataReceiver : public QThread
     Q_OBJECT
 
     private:
+        QMutex _mutex;
         AbstractChunker* _chunker;
         QIODevice* _device; // This is usually a UDP socket.
 
