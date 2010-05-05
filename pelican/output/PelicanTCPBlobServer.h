@@ -1,11 +1,11 @@
 #ifndef PELICANTCPBLOBSERVER_H
 #define PELICANTCPBLOBSERVER_H
-#include <QThread>
 
-
+#include "TCPConnectionManager.h"
 #include "AbstractBlobServer.h"
 #include <QtNetwork>
-#include <QThread>
+#include <QList>
+#include <QMap>
 
 /**
  * @file PelicanTCPBlobServer.h
@@ -19,12 +19,12 @@ namespace pelican {
  * @class PelicanTCPBlobServer
  *  
  * @brief
- *   Threade server that sends the same data from the queue to all connected peers
+ *   Thread server that sends the same data from the queue to all connected peers
  * @details
  * 
  */
 
-class PelicanTCPBlobServer : public QThread
+class PelicanTCPBlobServer : public QObject, public AbstractBlobServer
 {
     Q_OBJECT
 
@@ -32,16 +32,14 @@ class PelicanTCPBlobServer : public QThread
         PelicanTCPBlobServer( const ConfigNode& config, QObject* parent = 0 );
         ~PelicanTCPBlobServer();
 
-    protected:
-        virtual void run();
+    public:
+        virtual void send(const QString& streamName, const QByteArray&);
 
     private:
-        QTcpServer* _tcpServer;
-        quint16 _port;
+        TCPConnectionManager*              _connectionManager;
+        QMap<QString, QList<QTcpSocket*>>* _clients;
 
-    private slots:
-        void acceptClientConnection();
-
+    private:
         friend class PelicanTCPBlobServerTest;
         
 };
