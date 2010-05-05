@@ -2,9 +2,6 @@
 
 @page user_framework_intro What the Pelican Framework Provides
 
-@li@subpage user_framework_deploymentExamples
-@li@subpage user_framework_gettingStarted
-
 @section introFramework Introduction
 
 The Pelican Framework is a c++ toolkit for data processing in quasi-real time.

@@ -14,6 +14,7 @@ To import data into the application you need to tell Pelican some important deta
 To do this you will need to implement two c++ classes, one for the Chunking and
 on for data Adaption. These classes then slot into the pelican framework to 
 deliver your data according to your chosen @link user_framework_deploymentExamples deployment @endlink
+options.
 
 @subsection dataTypes Two types of Data
 Inside the Data Importation framework, Pelican distinguishes between two classes of data, namely @b StreamData
@@ -36,24 +37,31 @@ form of an identifing string.
                    There is always a "current" version of any type of ServiceData
                    and it is this version that is associated with any incoming stream data.
 
-This remainder of this section of the guide is .
-is intended for those who have to write a libary for the raw incomming data
+This remainder of this section of the guide is
+is intended for those who have to write a libary for the raw incoming data
 streams. If this has already been done for you and the data stream you which to process then
-you may want to skip to the @link PipeLine @endlink
+you may want to skip to the @ref user_framework_pipelineEssentials section.
+
 @section dataEssentials_adapters Creating an Adapter
 
-A Data Adapters role is to take an incoming bit stream and convert it in
+A data Adapters role is to take an incoming bit stream and convert it in
 to C++ class structures suitable for handing down to the processing Pipeline.
-The Adapters must inherit from the @em AbstractAdapter class and the class structures it 
-must fill should inherit from @em DataBlob.
+The Adapters must inherit from either the @em AbstractStreamAdapter, or the @em AbstractServiceAdapter class.
+The data class it must fill should inherit from @em DataBlob. There are a number of existing DataBlob types
+that can be used in the modules, so you may not necessarily have to create your own if these are suitable.
 
 So lets create our own Adapter.
 
+@include AdapterExample.cpp
+
 @section dataEssentials_chunkers Creating a Data Chunker
-The function of the adapter is to take an incoming data stream and turn it into
-suitable size chunks that can be fed into the Data Adapter
+The function of the chunker is to take an incoming data stream and turn it into
+suitable size chunks that can be fed into the Data Adapter.
 
-@section Connecting to a Datastream
+@include ChunkerExample.cpp
 
+@section connecting_dataClientDirect Connecting Directly to a Datastream
+
+@section connecting_dataClientServer Connecting to a Pelican Server
 
 */

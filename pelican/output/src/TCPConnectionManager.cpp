@@ -113,6 +113,8 @@ void TCPConnectionManager::send(const QString& streamName, const QByteArray& inc
         // Send data to client
         proto.send(*client, data);
         // Wait for data to be sent, with x timeout
+        // & check return value for bytes written
+        // kill the client if anything goes wrong
         
     }
 }
