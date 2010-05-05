@@ -1,0 +1,19 @@
+/**
+
+@page user_framework_intro What the Pelican Framework Provides
+
+@li@subpage user_framework_deploymentExamples
+@li@subpage user_framework_gettingStarted
+
+@section introFramework Introduction
+
+The Pelican Framework is a c++ toolkit for data processing in quasi-real time.
+
+The toolkit aims to:
+@li separate data aquisition from data processing thus allowing
+    scalability and flexibility to fit a number of seanarios.
+@li provide a number of reusable data processing modules with
+    applications in signal processing.
+
+
+*/
