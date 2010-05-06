@@ -25,5 +25,8 @@ target_link_libraries(coreTest ${SUBPACKAGE_LIBRARIES} ${CPPUNIT_LIBRARIES} memo
 add_executable(coreTestMT ${coreTestMT_src} )
 target_link_libraries(coreTestMT ${SUBPACKAGE_LIBRARIES} ${CPPUNIT_LIBRARIES} memoryTracerDummy )
 
+add_executable(directClient src/directClientMain.cpp )
+target_link_libraries(directClient ${SUBPACKAGE_LIBRARIES} ${CPPUNIT_LIBRARIES} memoryTracerDummy)
+
 add_test(coreTest coreTest )
 add_test(coreTestMT coreTestMT )

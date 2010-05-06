@@ -118,7 +118,7 @@ void DataReceiverTest::test_listen_udpChunker()
         dataManager.getStreamBuffer("VisibilityData");
 
         // Start the telescope.
-        TelescopeEmulator telescope(2002, 0.2);
+        TelescopeEmulator telescope(2002, QHostAddress::LocalHost, 0.2);
 
         // Create and set up chunker.
         QString chunkerNodeString = ""

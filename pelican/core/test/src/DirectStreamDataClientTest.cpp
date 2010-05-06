@@ -91,7 +91,7 @@ void DirectStreamDataClientTest::test_singleChunker()
     std::cout << "----------------------------------" << std::endl;
     try {
         // Start the telescope emulator on port 2002.
-        TelescopeEmulator telescope1(2002, 0.2);
+        TelescopeEmulator telescope1(2002, QHostAddress::LocalHost, 0.2);
 
         // Create the adapter factory.
         Factory<AbstractAdapter> adapterFactory(_config, "pipeline", "adapters");
@@ -141,8 +141,8 @@ void DirectStreamDataClientTest::test_twoChunkersMultipleStarts()
         std::cout << "---------------------------------- " << i << std::endl;
         try {
             // Start two telescope emulators.
-            TelescopeEmulator telescope1(2002, 0.2);
-            TelescopeEmulator telescope2(2003, 0.4);
+            TelescopeEmulator telescope1(2002, QHostAddress::LocalHost, 0.2);
+            TelescopeEmulator telescope2(2003, QHostAddress::LocalHost, 0.4);
 
             // Create the adapter factory.
             Factory<AbstractAdapter> adapterFactory(_config,
@@ -196,8 +196,8 @@ void DirectStreamDataClientTest::test_twoChunkersSingleStart()
 {
     try {
         // Start two telescope emulators.
-        TelescopeEmulator telescope1(2002, 0.2);
-        TelescopeEmulator telescope2(2003, 0.4);
+        TelescopeEmulator telescope1(2002, QHostAddress::LocalHost, 0.2);
+        TelescopeEmulator telescope2(2003, QHostAddress::LocalHost, 0.4);
 
         // Create the adapter factory.
         Factory<AbstractAdapter> adapterFactory(_config,

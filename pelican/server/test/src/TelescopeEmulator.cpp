@@ -14,8 +14,10 @@ namespace pelican {
  * own thread. The data will be sent down the specified UDP \p port, and
  * will start with the given \p initialValue.
  */
-TelescopeEmulator::TelescopeEmulator(const qint16 port, const double initialValue) : QThread()
+TelescopeEmulator::TelescopeEmulator(const qint16 port,
+        const QHostAddress host, const double initialValue) : QThread()
 {
+    _host = host;
     _abort = false;
     _port = port;
     _initialValue = initialValue;
@@ -47,7 +49,7 @@ void TelescopeEmulator::run()
         double value = double(counter) + _initialValue;
         std::vector<double> data(64, value);
         socket.writeDatagram(reinterpret_cast<char*>(&data[0]), 512,
-                QHostAddress::LocalHost, _port);
+                _host, _port);
         msleep(1);
         ++counter;
     }

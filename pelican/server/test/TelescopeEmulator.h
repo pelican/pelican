@@ -7,6 +7,7 @@
 
 
 #include <QThread>
+#include <QHostAddress>
 
 namespace pelican {
 
@@ -26,7 +27,9 @@ class TelescopeEmulator : public QThread
 
     public:
         /// Constructs a new telescope emulator.
-        TelescopeEmulator(const qint16 port, const double initialValue = 0.0);
+        TelescopeEmulator(const qint16 port,
+                const QHostAddress host = QHostAddress::LocalHost,
+                const double initialValue = 0.0);
 
         /// Destroys the telescope emulator.
         ~TelescopeEmulator();
@@ -36,6 +39,7 @@ class TelescopeEmulator : public QThread
         void run();
 
     private:
+        QHostAddress _host;
         bool _abort;
         qint16 _port;
         double _initialValue;
