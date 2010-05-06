@@ -50,7 +50,7 @@ void TestPipelineServer::run(QHash<QString, DataBlob*>& remoteData)
 
     // Stop the pipeline driver if we have gone through 10 iterations.
     ++_counter;
-    if (_counter == 5000)
+    if (_counter == 3000)
         stop();
 }
 

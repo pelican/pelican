@@ -20,7 +20,6 @@ TestChunker::TestChunker(const QString& type, bool badSocket, size_t size,
             QThread(parent), AbstractChunker(type, host, port)
 {
     _device = 0;
-    _nextCount = 0;
     _badSocket = badSocket;
     _size = size;
     start();
@@ -34,7 +33,6 @@ TestChunker::TestChunker(const ConfigNode& config) : QThread(),
         AbstractChunker(config)
 {
     _device = 0;
-    _nextCount = 0;
     _badSocket = false;
     _size = config.getOption("data", "chunkSize", "512").toUInt();
     start();
@@ -59,9 +57,8 @@ QIODevice* TestChunker::newDevice()
     if (_badSocket)
         return 0;
 
-    if (_device) {
+    if (!_device) {
         _device = new QBuffer;
-        _device->open(QIODevice::ReadWrite);
         setDevice(_device);
     }
     return _device;
@@ -71,18 +68,26 @@ QIODevice* TestChunker::newDevice()
  * @details
  * Gets the next chunk of data from the device (if it exists).
  */
-void TestChunker::next(QIODevice*)
+void TestChunker::next(QIODevice* device)
 {
-    //std::cout << "TestChunker::next()" << std::endl;
-    ++_nextCount;
+//    std::cout << "TestChunker::next()" << std::endl;
+
+    // Read data off the device.
+    device->open(QIODevice::ReadOnly);
+    QByteArray array = device->readAll();
+    device->close();
+    if (array.size() == 0) {
+        std::cout << "Nothing to read!" << std::endl;
+        return;
+    }
 
     // Get writable data object.
     WritableData writableData(0);
-//    std::cout << "Next count " << _nextCount << std::endl;
     try {
         writableData = getDataStorage(_size);
     } catch (QString e) {
         std::cout << "Unexpected exception: " << e.toStdString() << std::endl;
+        return;
     }
 
     // If the writable data object is not valid, then return.
@@ -95,22 +100,8 @@ void TestChunker::next(QIODevice*)
         usleep(1);
     }
 
-    unsigned nDoubles = _size / sizeof(double);
-    std::vector<double> array(nDoubles);
-    for (unsigned i = 0; i < nDoubles; i++) {
-//        array[i] = i;
-        array[i] = _nextCount;
-    }
-
     // Write some test data.
-    writableData.write((void*)&array[0], _size, 0);
-}
-
-unsigned int TestChunker::nextCalled()
-{
-    unsigned int n = _nextCount;
-    _nextCount = 0;
-    return n;
+    writableData.write((void*)array.data(), _size, 0);
 }
 
 /**
@@ -121,10 +112,22 @@ void TestChunker::run()
 {
     msleep(50);
 
-    // Call next().
+    // Run the thread.
+    unsigned counter = 0;
+    unsigned nDoubles = _size / sizeof(double);
+    std::vector<double> array(nDoubles);
+
     while (!_abort) {
-        next(_device);
-        msleep(10);
+        if (_device) {
+            for (unsigned i = 0; i < nDoubles; i++)
+                array[i] = counter;
+            counter++;
+            _device->open(QIODevice::WriteOnly);
+            _device->write(reinterpret_cast<char*>(&array[0]), _size);
+            _device->close();
+        }
+
+        msleep(1);
     }
 }
 

@@ -49,10 +49,6 @@ class TestChunker : public QThread, public AbstractChunker
         /// Gets the next chunk of data.
         virtual void next(QIODevice*);
 
-        /// return the number of times that the next method has been called
-        //  will also reset the counter
-        unsigned int nextCalled();
-
     protected:
         /// Runs the thread owned by the test chunker.
         void run();
@@ -61,7 +57,6 @@ class TestChunker : public QThread, public AbstractChunker
         bool _abort;
         QIODevice* _device;
         bool _badSocket;
-        unsigned int _nextCount;
         size_t _size;
 };
 

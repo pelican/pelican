@@ -58,39 +58,36 @@ void TestPipelineServerTest::tearDown()
  */
 void TestPipelineServerTest::test_testChunker()
 {
-//    std::cout << "Here 1" << std::endl;
-//    try {
-//        _createConfig();
-//        TestConfig config("TestPipelineServer.xml", "pipelines");
-//        int argc = 2;
-//        char** argv = config.argv("TestPipelineServer.xml", "pipelines");
-//
-//        QCoreApplication app(argc, argv);
-//
-//        // Set up the server.
-//        PelicanServer server(&config);
-//        server.addStreamChunker("TestChunker");
-//
-//        // Add the protocol.
-//        AbstractProtocol* protocol = new PelicanProtocol;
-//        server.addProtocol(protocol, 2000);
-//
-//        // Start the server.
-//        server.start();
-//        while (!server.isReady()) {}
-//
-//        // Start the pipeline binary.
-//        PipelineBinaryEmulator pipelineBinary(&config);
-//
-//        // Return after 12 seconds.
-//        QTimer::singleShot(12000, &app, SLOT(quit()));
-//        app.exec();
-//    }
-//    catch (QString e) {
-//        CPPUNIT_FAIL("Unexpected exception: " + e.toStdString());
-//    }
-//    std::cout << "Here 2" << std::endl;
+    try {
+        _createConfig();
+        TestConfig config("TestPipelineServer.xml", "pipelines");
+        int argc = 2;
+        char** argv = config.argv("TestPipelineServer.xml", "pipelines");
 
+        QCoreApplication app(argc, argv);
+
+        // Set up the server.
+        PelicanServer server(&config);
+        server.addStreamChunker("TestChunker");
+
+        // Add the protocol.
+        AbstractProtocol* protocol = new PelicanProtocol;
+        server.addProtocol(protocol, 2000);
+
+        // Start the server.
+        server.start();
+        while (!server.isReady()) {}
+
+        // Start the pipeline binary.
+        PipelineBinaryEmulator pipelineBinary(&config);
+
+        // Return after 12 seconds.
+        QTimer::singleShot(30000, &app, SLOT(quit()));
+        app.exec();
+    }
+    catch (QString e) {
+        CPPUNIT_FAIL("Unexpected exception: " + e.toStdString());
+    }
 }
 
 /**
@@ -144,6 +141,11 @@ void TestPipelineServerTest::test_testUdpChunker()
  */
 void TestPipelineServerTest::test_testTwoUdpChunkers()
 {
+        // Set up the telescope emulators (turn on the telescope)
+        TelescopeEmulator telescope1(2002, 0.1); // Port, initial value.
+        TelescopeEmulator telescope2(2003, 0.2); // Port, initial value.
+
+    for (int i = 0; i < 10; i++) {
     try {
         _createConfig();
         TestConfig config("TestPipelineServer.xml", "pipelines");
@@ -151,10 +153,6 @@ void TestPipelineServerTest::test_testTwoUdpChunkers()
         char** argv = config.argv("TestPipelineServer.xml", "pipelines");
 
         QCoreApplication app(argc, argv);
-
-        // Set up the telescope emulators (turn on the telescope)
-        TelescopeEmulator telescope1(2002, 0.1); // Port, initial value.
-        TelescopeEmulator telescope2(2003, 0.2); // Port, initial value.
 
         // Set up the server.
         PelicanServer server(&config);
@@ -178,6 +176,7 @@ void TestPipelineServerTest::test_testTwoUdpChunkers()
     }
     catch (QString e) {
         CPPUNIT_FAIL("Unexpected exception: " + e.toStdString());
+    }
     }
 }
 

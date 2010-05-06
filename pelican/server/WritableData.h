@@ -28,12 +28,23 @@ class WritableData
 
         void write(const void* dataBuffer, size_t size, size_t offset = 0);
 
-        AbstractLockableData* data() {return _data;}
+        AbstractLockableData* data() const {return _data;}
 
         void* ptr() { return _data->data()->operator*(); }
 
         /// returns true if there is a valid Data object
         bool isValid() const {return _data ? _data->isValid() : false;}
+
+        WritableData& operator=(const WritableData& other) {
+            // Protect against invalid self-assignment.
+            if (this != &other) {
+                if (other.data()) {
+                    _data = other.data();
+                    _data->writeLock();
+                }
+            }
+            return *this;
+        }
 
     private:
         AbstractLockableData* _data;
