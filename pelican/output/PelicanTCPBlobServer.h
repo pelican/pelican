@@ -17,11 +17,11 @@ namespace pelican {
 
 /**
  * @class PelicanTCPBlobServer
- *  
+ *
  * @brief
  *   Thread server that sends the same data from the queue to all connected peers
  * @details
- * 
+ *
  */
 
 class PelicanTCPBlobServer : public QObject, public AbstractBlobServer
@@ -37,12 +37,12 @@ class PelicanTCPBlobServer : public QObject, public AbstractBlobServer
 
     private:
         TCPConnectionManager*              _connectionManager;
-        QMap<QString, QList<QTcpSocket*>>* _clients;
+        QMap<QString, QList<QTcpSocket*> >* _clients;
 
     private:
         friend class PelicanTCPBlobServerTest;
-        
+
 };
 
 } // namespace pelican
-#endif // PELICANTCPBLOBSERVER_H 
+#endif // PELICANTCPBLOBSERVER_H

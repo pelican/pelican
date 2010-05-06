@@ -17,11 +17,11 @@ namespace pelican {
 
 /**
  * @class TCPConnectionManager
- *  
+ *
  * @brief
  *   TCP Connection Management thread
  * @details
- * 
+ *
  */
 
 class TCPConnectionManager : public QThread
@@ -36,22 +36,22 @@ class TCPConnectionManager : public QThread
         virtual void run();
 
     public:
-        QMap<QString, QList<QTcpSocket*>>* getClientsReference() { return &_clients; }
+        QMap<QString, QList<QTcpSocket*> >* getClientsReference() { return &_clients; }
 
     public slots:
         void send(const QString& streamName, const QByteArray& incoming);
 
     private:
         quint16                            _port;
-        QMap<QString, QList<QTcpSocket*>>  _clients;
+        QMap<QString, QList<QTcpSocket*> > _clients;
         QTcpServer*                        _tcpServer;
         QMutex                             _mutex;
 
     private slots:
         void connectionError(QAbstractSocket::SocketError socketError);
         void acceptClientConnection();
-        void connectionLost();        
+        void connectionLost();
 };
 
 } // namespace pelican
-#endif // TCPCONNECTIONMANAGER_H 
+#endif // TCPCONNECTIONMANAGER_H
