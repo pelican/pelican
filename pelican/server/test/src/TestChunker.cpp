@@ -2,7 +2,6 @@
 
 #include <QCoreApplication>
 #include <QBuffer>
-#include <QTimer>
 
 #include <iostream>
 
@@ -18,29 +17,26 @@ PELICAN_DECLARE_CHUNKER(TestChunker)
  */
 TestChunker::TestChunker(const QString& type, bool badSocket, size_t size,
         QString host, quint16 port, QObject* parent) :
-            QObject(parent), AbstractChunker(type, host, port)
+            QThread(parent), AbstractChunker(type, host, port)
 {
-    _nextCount = 0;
+    _device = 0;
     _badSocket = badSocket;
     _size = size;
-    _timer = new QTimer;
-    connect(_timer, SIGNAL(timeout()), this, SLOT(_start()));
+    start();
 }
 
 /**
 * @details
 * Constructs a new TestChunker.
 */
-TestChunker::TestChunker(const ConfigNode& config) :
-    QObject(), AbstractChunker(config)
+TestChunker::TestChunker(const ConfigNode& config) : QThread(),
+        AbstractChunker(config)
 {
-    _nextCount = 0;
+    _device = 0;
     _badSocket = false;
     _size = config.getOption("data", "chunkSize", "512").toUInt();
-    _timer = new QTimer;
-    connect(_timer, SIGNAL(timeout()), this, SLOT(_start()));
+    start();
 }
-
 
 /**
  * @details
@@ -48,7 +44,8 @@ TestChunker::TestChunker(const ConfigNode& config) :
  */
 TestChunker::~TestChunker()
 {
-    delete _timer;
+    _abort = true;
+    wait();
 }
 
 /**
@@ -57,26 +54,41 @@ TestChunker::~TestChunker()
  */
 QIODevice* TestChunker::newDevice()
 {
-    if(_badSocket)
+    if (_badSocket)
         return 0;
 
-    _timer->start(1);
-    QBuffer* buffer = new QBuffer;
-    _device = buffer;
-    return buffer;
+    if (!_device) {
+        _device = new QBuffer;
+        setDevice(_device);
+    }
+    return _device;
 }
 
 /**
  * @details
- * Gets the next chunk of data from the UDP socket (if it exists).
+ * Gets the next chunk of data from the device (if it exists).
  */
-void TestChunker::next(QIODevice*)
+void TestChunker::next(QIODevice* device)
 {
-    //std::cout << "TestChunker::next()" << std::endl;
-    ++_nextCount;
+//    std::cout << "TestChunker::next()" << std::endl;
+
+    // Read data off the device.
+    device->open(QIODevice::ReadOnly);
+    QByteArray array = device->readAll();
+    device->close();
+    if (array.size() == 0) {
+        std::cout << "Nothing to read!" << std::endl;
+        return;
+    }
 
     // Get writable data object.
-    WritableData writableData = getDataStorage(_size);
+    WritableData writableData(0);
+    try {
+        writableData = getDataStorage(_size);
+    } catch (QString e) {
+        std::cout << "Unexpected exception: " << e.toStdString() << std::endl;
+        return;
+    }
 
     // If the writable data object is not valid, then return.
     if (!writableData.isValid())
@@ -88,34 +100,35 @@ void TestChunker::next(QIODevice*)
         usleep(1);
     }
 
-    unsigned nDoubles = _size / sizeof(double);
-    std::vector<double> array(nDoubles);
-    for (unsigned i = 0; i < nDoubles; i++) {
-//        array[i] = i;
-        array[i] = _nextCount;
-    }
-
     // Write some test data.
-    writableData.write((void*)&array[0], _size, 0);
-}
-
-unsigned int TestChunker::nextCalled()
-{
-    unsigned int n = _nextCount;
-    _nextCount = 0;
-    return n;
+    writableData.write((void*)array.data(), _size, 0);
 }
 
 /**
  * @details
- * Private slot to start and add to the data stream.
+ * Runs the thread owned by the test chunker.
  */
-void TestChunker::_start()
+void TestChunker::run()
 {
-//    if (_nextCount < 10)
-        next(_device);
-//    else
-//        _timer->stop();
+    msleep(50);
+
+    // Run the thread.
+    unsigned counter = 0;
+    unsigned nDoubles = _size / sizeof(double);
+    std::vector<double> array(nDoubles);
+
+    while (!_abort) {
+        if (_device) {
+            for (unsigned i = 0; i < nDoubles; i++)
+                array[i] = counter;
+            counter++;
+            _device->open(QIODevice::WriteOnly);
+            _device->write(reinterpret_cast<char*>(&array[0]), _size);
+            _device->close();
+        }
+
+        msleep(1);
+    }
 }
 
 } // namespace pelican

@@ -13,11 +13,19 @@
 
 namespace pelican {
 
-
-// class StreamDataBuffer
+/**
+ * @details
+ * Constructs the stream data buffer.
+ *
+ * @param type         A string containing the type of data held in the buffer.
+ * @param manager      A pointer to the data manager to use.
+ * @param max          The maximum size of the buffer in bytes.
+ * @param maxChunkSize The maximum chunk size in bytes.
+ * @param parent       (Optional.) Pointer to the object's parent.
+ */
 StreamDataBuffer::StreamDataBuffer(const QString& type, DataManager* manager,
-        const size_t max, const size_t maxChunkSize, QObject* parent)
-    : DataBuffer(type, parent),_manager(manager)
+        const size_t max, const size_t maxChunkSize, QObject* parent) :
+        DataBuffer(type, parent),_manager(manager)
 {
     _max = max;
     _maxChunkSize = maxChunkSize;
@@ -25,9 +33,13 @@ StreamDataBuffer::StreamDataBuffer(const QString& type, DataManager* manager,
 }
 
 
+/**
+ * @details
+ * Destroys the stream data buffer, freeing the memory held by it.
+ */
 StreamDataBuffer::~StreamDataBuffer()
 {
-    foreach( LockableStreamData* data, _data) {
+    foreach (LockableStreamData* data, _data) {
         free(data->data()->data());
         delete data;
     }
@@ -36,26 +48,29 @@ StreamDataBuffer::~StreamDataBuffer()
 
 /**
  * @details
- * TODO please!
+ * Gets the next block of data to serve.
  */
 void StreamDataBuffer::getNext(LockedData& lockedData)
 {
     QMutexLocker locker(&_mutex);
-    //std::cout << "StreamDataBuffer::getNext() . Serve queue size " << _serveQueue.size() << std::endl;
 
-    for (int i = 0; i < _serveQueue.size(); ++i) {
-        LockableStreamData* lockable = _serveQueue[i];
-        void *ptr = lockable->data()->data();
-        std::cout << "StreamDataBuffer::getNext(): Queue pos: " << i << " Content: " << *reinterpret_cast<double*>(ptr) << std::endl;
-    }
-
-    if( ! _serveQueue.isEmpty() ) {
-//         std::cout << "StreamDataBuffer::getNext(): Serve queue not empty."  << std::endl;
-        lockedData.setData(_serveQueue.dequeue());
+    // Check if the serve queue is empty.
+    if (_serveQueue.isEmpty()) {
+        //std::cout << "StreamDataBuffer::getNext(): Queue empty." << std::endl;
+        lockedData.setData(0); // Return an invalid data block.
         return;
     }
 
-    lockedData.setData(0);
+    // XXX This loop is used for printing only - remove it.
+    for (int i = 0; i < _serveQueue.size(); ++i) {
+        LockableStreamData* lockable = _serveQueue[i];
+        void *ptr = lockable->data()->data();
+        std::cout << "StreamDataBuffer::getNext(): Queue position: " << i <<
+                " Content: " << *reinterpret_cast<double*>(ptr) << std::endl;
+    }
+
+    // Remove the data from the serve queue.
+    lockedData.setData(_serveQueue.dequeue());
 }
 
 
@@ -67,19 +82,19 @@ void StreamDataBuffer::getNext(LockedData& lockedData)
  */
 WritableData StreamDataBuffer::getWritable(size_t size)
 {
-    LockableStreamData* d = _getWritable(size);
+    QMutexLocker locker(&_writeMutex);
+    LockableStreamData* lockableStreamData = _getWritable(size);
 
-    // prepare the object for use
-    // - add Service Data info
-    if( d ) {
-        d->reset();
+    // Prepare the object for use by adding Service Data info.
+    if (lockableStreamData) {
+        lockableStreamData->reset();
         if (!_manager)
             throw QString("StreamDataBuffer::getWritable(): No data manager.");
-        _manager->associateServiceData(d);
+        _manager->associateServiceData(lockableStreamData);
     }
 
     //std::cout << "StreamDataBuffer: Returning WritableData object" << std::endl;
-    return WritableData( d );
+    return WritableData(lockableStreamData);
 }
 
 
@@ -93,7 +108,8 @@ WritableData StreamDataBuffer::getWritable(size_t size)
  */
 LockableStreamData* StreamDataBuffer::_getWritable(size_t size)
 {
-    //std::cout << "StreamDataBuffer::_getWritable() empty queue size = " << _emptyQueue.size() << std::endl;
+//    std::cout << "StreamDataBuffer::_getWritable() Empty queue size: " <<
+//            _emptyQueue.size() << std::endl;
 
     // Return a pre-allocated block from the empty queue, if one exists.
     for (int i = 0; i < _emptyQueue.size(); ++i) {
@@ -108,7 +124,7 @@ LockableStreamData* StreamDataBuffer::_getWritable(size_t size)
 
     // There are no empty containers already available, so we
     // create a new data object if we have enough space.
-    if(size <= _space && size <= _maxChunkSize )
+    if (size <= _space && size <= _maxChunkSize)
     {
         void* memory = calloc(size, sizeof(char)); // Released in destructor.
         if (memory) {
@@ -134,7 +150,7 @@ LockableStreamData* StreamDataBuffer::_getWritable(size_t size)
  */
 void StreamDataBuffer::activateData()
 {
-    activateData( static_cast<LockableStreamData*>(sender()) );
+    activateData(static_cast<LockableStreamData*>(sender()));
 }
 
 
@@ -146,30 +162,28 @@ void StreamDataBuffer::activateData()
  */
 void StreamDataBuffer::deactivateData()
 {
-    deactivateData(static_cast<LockableStreamData*>( sender() ) );
+    deactivateData(static_cast<LockableStreamData*>(sender()));
 }
 
 
 /**
  * @details
- * Puts the specified chunk of data on the empty queue, which allows its
- * space to be reused.
- *
- * TODO Must implement a reset method on data() to de-associate the service data.
+ * Puts the specified chunk of data on the empty queue, which allows the
+ * space it occupied to be reused.
  */
 void StreamDataBuffer::deactivateData(LockableStreamData* data)
 {
-//     std::cout << "StreamDataBuffer::deactivateData()" << std::endl;
-    QMutexLocker locker(&_mutex);
+    std::cout << "StreamDataBuffer::deactivateData()" << std::endl;
 
+    QMutexLocker locker(&_mutex);
     if (!data->served()) {
         _serveQueue.prepend(data);
         return;
     }
-//     std::cout << "StreamDataBuffer: Deactivating data" << std::endl;
+    std::cout << "StreamDataBuffer: Deactivating data" << std::endl;
     data->reset();
 
-    //     QMutexLocker writeLocker(&_mutex);
+    QMutexLocker writeLocker(&_writeMutex);
     _emptyQueue.push_back(data);
 }
 
@@ -180,12 +194,13 @@ void StreamDataBuffer::deactivateData(LockableStreamData* data)
  */
 void StreamDataBuffer::activateData(LockableStreamData* data)
 {
-    QMutexLocker locker(&_mutex);
-    if( data->isValid() ) {
-//         std::cout << "StreamDataBuffer: Activate data: is valid" << std::endl;
+    if (data->isValid()) {
+        QMutexLocker locker(&_mutex);
+        //std::cout << "StreamDataBuffer::activateData(): Valid" << std::endl;
         _serveQueue.enqueue(data);
     } else {
-//         std::cout << "StreamDataBuffer: Activate data not valid" << std::endl;
+        QMutexLocker writeLocker(&_writeMutex);
+        //std::cout << "StreamDataBuffer::activateData(): Not valid" << std::endl;
         _emptyQueue.push_back(data);
     }
 }

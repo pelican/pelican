@@ -5,7 +5,7 @@
 #include "pelican/utility/Config.h"
 
 #include <QString>
-#include <QObject>
+#include <QThread>
 #include <cstring>
 
 class QTimer;
@@ -27,7 +27,7 @@ class DataManager;
  * @details
  *
  */
-class TestChunker : public QObject, public AbstractChunker
+class TestChunker : public QThread, public AbstractChunker
 {
     Q_OBJECT
 
@@ -49,19 +49,14 @@ class TestChunker : public QObject, public AbstractChunker
         /// Gets the next chunk of data.
         virtual void next(QIODevice*);
 
-        /// return the number of times that the next method has been called
-        //  will also reset the counter
-        unsigned int nextCalled();
-
-    private slots:
-        /// Starts the data stream.
-        void _start();
+    protected:
+        /// Runs the thread owned by the test chunker.
+        void run();
 
     private:
+        bool _abort;
         QIODevice* _device;
-        QTimer* _timer;
         bool _badSocket;
-        unsigned int _nextCount;
         size_t _size;
 };
 

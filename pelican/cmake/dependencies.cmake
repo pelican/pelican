@@ -17,7 +17,7 @@
 
 # === Find Dependencies.
 find_package(Boost COMPONENTS program_options REQUIRED)
-find_package(Qt4 COMPONENTS QtCore QtGui QtNetwork QtXml REQUIRED)
+find_package(Qt4 COMPONENTS QtCore QtNetwork QtXml REQUIRED)
 find_package(CppUnit REQUIRED)
 find_package(CFitsio REQUIRED)
 find_package(OpenMP REQUIRED)

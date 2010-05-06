@@ -7,6 +7,7 @@
 #include "pelican/utility/Config.h"
 
 #include <iostream>
+#include <QMutexLocker>
 
 #include "pelican/utility/memCheck.h"
 
@@ -49,7 +50,7 @@ DataManager::~DataManager()
  */
 WritableData DataManager::getWritableData(const QString& type, size_t size)
 {
-    //std::cout << "DataManager::getWritableData, type : " << type.toStdString() << std::endl;
+//    std::cout << "DataManager::getWritableData, type : " << type.toStdString() << std::endl;
     if ( _streams.contains(type) ) {
         // XXX remove
         //std::cout << "DataManager::Returning writable stream data" << std::endl;

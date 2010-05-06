@@ -28,6 +28,11 @@ ChunkerManager::ChunkerManager(const Config* config, const QString section)
  */
 ChunkerManager::~ChunkerManager()
 {
+    // Iterate over all data receivers and stop them.
+    foreach (DataReceiver* receiver, _dataReceivers) {
+        delete receiver;
+    }
+
     // Delete the chunker factory.
     delete _factory;
 }
@@ -54,9 +59,9 @@ void ChunkerManager::init(DataManager& dataManager)
     for (int i = 0; i < inputPorts.size(); ++i) {
         AbstractChunker* chunker = _chunkerPortMap[inputPorts[i]];
         chunker->setDataManager(&dataManager);
-        boost::shared_ptr<DataReceiver> receiver(new DataReceiver(chunker));
+        DataReceiver* receiver = new DataReceiver(chunker);
         _dataReceivers.append(receiver);
-        receiver->listen();
+        receiver->start();
     }
 }
 

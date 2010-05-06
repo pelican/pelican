@@ -82,7 +82,7 @@ void TestPipelineServerTest::test_testChunker()
         PipelineBinaryEmulator pipelineBinary(&config);
 
         // Return after 12 seconds.
-        QTimer::singleShot(12000, &app, SLOT(quit()));
+        QTimer::singleShot(30000, &app, SLOT(quit()));
         app.exec();
     }
     catch (QString e) {
@@ -125,7 +125,7 @@ void TestPipelineServerTest::test_testUdpChunker()
         PipelineBinaryEmulator pipelineBinary(&config);
         
         // Return after 12 seconds.
-        QTimer::singleShot(12000, &app, SLOT(quit()));
+        QTimer::singleShot(30000, &app, SLOT(quit()));
         app.exec();
     }
     catch (QString e) {
@@ -141,6 +141,11 @@ void TestPipelineServerTest::test_testUdpChunker()
  */
 void TestPipelineServerTest::test_testTwoUdpChunkers()
 {
+        // Set up the telescope emulators (turn on the telescope)
+        TelescopeEmulator telescope1(2002, 0.1); // Port, initial value.
+        TelescopeEmulator telescope2(2003, 0.2); // Port, initial value.
+
+    for (int i = 0; i < 10; i++) {
     try {
         _createConfig();
         TestConfig config("TestPipelineServer.xml", "pipelines");
@@ -148,10 +153,6 @@ void TestPipelineServerTest::test_testTwoUdpChunkers()
         char** argv = config.argv("TestPipelineServer.xml", "pipelines");
 
         QCoreApplication app(argc, argv);
-
-        // Set up the telescope emulators (turn on the telescope)
-        TelescopeEmulator telescope1(2002, 0.1); // Port, initial value.
-        TelescopeEmulator telescope2(2003, 0.2); // Port, initial value.
 
         // Set up the server.
         PelicanServer server(&config);
@@ -170,11 +171,12 @@ void TestPipelineServerTest::test_testTwoUdpChunkers()
         PipelineBinaryEmulator pipelineBinary(&config);
 
         // Return after 12 seconds.
-        QTimer::singleShot(12000, &app, SLOT(quit()));
+        QTimer::singleShot(30000, &app, SLOT(quit()));
         app.exec();
     }
     catch (QString e) {
         CPPUNIT_FAIL("Unexpected exception: " + e.toStdString());
+    }
     }
 }
 
@@ -203,7 +205,7 @@ void TestPipelineServerTest::_createConfig()
     QString serverXml =
     "<buffers>"
     "   <VisibilityData>"
-    "       <buffer maxSize=\"2000\" maxChunkSize=\"2000\"/>"
+    "       <buffer maxSize=\"10000\" maxChunkSize=\"10000\"/>"
     "   </VisibilityData>"
     "</buffers>"
     ""

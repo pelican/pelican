@@ -29,7 +29,7 @@ void WritableData::write(const void* buf, size_t size, size_t offset )
         throw QString("ARRRG!");
 
     void* mem = (char*)(_data->data()->operator*()) + offset;
-    std::memcpy( mem, buf , size);
+    memcpy( mem, buf , size);
 }
 
 } // namespace pelican

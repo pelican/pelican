@@ -131,19 +131,81 @@ void DirectStreamDataClientTest::test_singleChunker()
     }
 }
 
-void DirectStreamDataClientTest::test_twoChunkers()
+/**
+ * @details
+ * Tests two chunkers, starting them multiple times.
+ */
+void DirectStreamDataClientTest::test_twoChunkersMultipleStarts()
 {
-    std::cout << "----------------------------------" << std::endl;
+    for (int i = 0; i < 1000; ++i) {
+        std::cout << "---------------------------------- " << i << std::endl;
+        try {
+            // Start two telescope emulators.
+            TelescopeEmulator telescope1(2002, 0.2);
+            TelescopeEmulator telescope2(2003, 0.4);
+
+            // Create the adapter factory.
+            Factory<AbstractAdapter> adapterFactory(_config,
+                    "pipeline", "adapters");
+
+            // Create the data client factory.
+            DataClientFactory clientFactory(_config, "pipeline",
+                    "clients", &adapterFactory);
+
+            // Create the data blob factory.
+            Factory<DataBlob> blobFactory;
+
+            // Create a list of data requirements.
+            QString dataType = "VisibilityData";
+            DataRequirements req;
+            QList<DataRequirements> requirements;
+            req.addStreamData(dataType);
+            requirements.append(req);
+
+            // Create the client.
+            DirectStreamDataClient* client = static_cast<DirectStreamDataClient*>(
+                    clientFactory.create("DirectStreamDataClient", requirements));
+            client->addStreamChunker("TestUdpChunker", "a");
+            client->addStreamChunker("TestUdpChunker", "b");
+            client->start();
+
+            // Set up the data hash.
+            QHash<QString, DataBlob*> dataHash;
+            dataHash.insert(dataType, blobFactory.create(dataType));
+
+            for (int j = 0; j < 2; j++) {
+                // Get the data.
+                QHash<QString, DataBlob*> validData = client->getData(dataHash);
+
+                // Check the content of the data blob.
+                VisibilityData* visData = (VisibilityData*)validData.value("VisibilityData");
+                _printVisibilities(visData);
+            }
+        }
+        catch (QString e) {
+            CPPUNIT_FAIL("Unexpected exception: " + e.toStdString());
+        }
+    }
+}
+
+/**
+ * @details
+ * Tests two chunkers, starting them only once.
+ */
+void DirectStreamDataClientTest::test_twoChunkersSingleStart()
+{
     try {
         // Start two telescope emulators.
         TelescopeEmulator telescope1(2002, 0.2);
         TelescopeEmulator telescope2(2003, 0.4);
 
         // Create the adapter factory.
-        Factory<AbstractAdapter> adapterFactory(_config, "pipeline", "adapters");
+        Factory<AbstractAdapter> adapterFactory(_config,
+                "pipeline", "adapters");
 
         // Create the data client factory.
-        DataClientFactory clientFactory(_config, "pipeline", "clients", &adapterFactory);
+        DataClientFactory clientFactory(_config, "pipeline",
+                "clients", &adapterFactory);
 
         // Create the data blob factory.
         Factory<DataBlob> blobFactory;
@@ -166,7 +228,8 @@ void DirectStreamDataClientTest::test_twoChunkers()
         QHash<QString, DataBlob*> dataHash;
         dataHash.insert(dataType, blobFactory.create(dataType));
 
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 2000; i++) {
+            std::cout << "---------------------------------- " << i << std::endl;
             // Get the data.
             QHash<QString, DataBlob*> validData = client->getData(dataHash);
 
