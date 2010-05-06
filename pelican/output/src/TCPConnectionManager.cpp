@@ -50,7 +50,7 @@ void TCPConnectionManager::acceptClientConnection()
     boost::shared_ptr<ServerRequest> request = proto.request(*client);
     
     // Check if client sent the correct request
-    if (static_cast<ServerRequest&>(*request).type() != ServerRequest::Request::StreamData) {
+    if (static_cast<ServerRequest&>(*request).type() != ServerRequest::StreamData) {
         std::cerr << "Invalid client request" << std::endl;
         client -> close();
         return;
