@@ -6,6 +6,7 @@ include_directories(
 SUBPACKAGE(comms data utility)
 
 set(comms_src
+    src/DataBlobResponse.cpp
     src/PelicanClientProtocol.cpp
     src/PelicanProtocol.cpp
     src/ServiceDataRequest.cpp

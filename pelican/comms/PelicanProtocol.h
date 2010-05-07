@@ -10,6 +10,8 @@
 
 namespace pelican {
 
+    class DataBlob;
+
 /**
  * @class PelicanProtocol
  *  
@@ -29,6 +31,7 @@ class PelicanProtocol : public AbstractProtocol
         virtual void send(QIODevice& stream, const AbstractProtocol::StreamData_t& );
         virtual void send(QIODevice& stream, const AbstractProtocol::ServiceData_t& );
         virtual void send(QIODevice& stream, const QString& );
+        virtual void send(QIODevice& stream, const DataBlob& );
         virtual void sendError(QIODevice& stream, const QString&);
 
     private:

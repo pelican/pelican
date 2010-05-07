@@ -1,11 +1,10 @@
 #ifndef DATABLOB_H
 #define DATABLOB_H
 
-#include "pelican/utility/Factory.h"
 #include <QString>
 #include <complex>
-class QByteArray;
-class QDataStream;
+#include "pelican/utility/Factory.h"
+class QIODevice;
 
 /**
  * @file DataBlob.h
@@ -54,13 +53,17 @@ class DataBlob
         /// from midnight rather than midday.
         double _modifiedJulianDate;
         QString _version;
+        QString _type;
 
     public:
         /// Data blob constructor.
-        DataBlob();
+        DataBlob(const QString& type = QString("") );
 
         /// Data blob destructor.
         virtual ~DataBlob();
+
+        /// return a QString of the type of DataBlob (should be the same as the class name)
+        QString type() const;
 
         /// Sets the time stamp using the current value of the system clock.
         void setTimeStamp();
@@ -77,14 +80,11 @@ class DataBlob
         /// Returns the version of the DataBlob
         QString version() const { return _version; };
 
-        /// Serialise the DataBlob into a byte array.
-        virtual QByteArray serialise() const;
+        /// Serialise the DataBlob into the QIODevice.
+        virtual void serialise(QIODevice&) const;
 
-        /// Serialise the DataBlob into a byte array.
-        virtual void serialise(QByteArray&) const;
-
-        /// Deserialises the DataBlob from the byte array created with serialise.
-        virtual void deserialise(const QByteArray&);
+        /// Deserialises the DataBlob from the QIODevice
+        virtual void deserialise(QIODevice&);
 };
 
 } // namespace pelican
