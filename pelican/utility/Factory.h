@@ -56,8 +56,10 @@ template<class B> class Factory
 
         /// Destroys the factory and deletes any objects created by it.
         virtual ~Factory() {
-            for (int i = 0; i < _objects.size(); ++i)
+            for (int i = 0; i < _objects.size(); ++i) {
+                identifiers().remove(_objects[i]);
                 delete _objects[i];
+            }
         }
 
         /// Return the configuration node for a type (named type if supplied).
@@ -65,9 +67,9 @@ template<class B> class Factory
         {
             if (!_config) throw QString("Factory::configuration(): Not set");
             Config::TreeAddress address;
-            address.append(Config::NodeId(_section, ""));
-            address.append(Config::NodeId(_group, ""));
-            address.append(Config::NodeId(type, name));
+            address << Config::NodeId(_section, "");
+            address << Config::NodeId(_group, "");
+            address << Config::NodeId(type, name);
             return _config->get(address);
         }
 
@@ -86,7 +88,22 @@ template<class B> class Factory
                 _objects.append( CreatorBase<B>::types()[type]->
                         create(configuration(type, name)) );
 
+            identifiers().insert((void*)_objects.last(), type);
             return _objects.last();
+        }
+
+        /// Returns the type of the allocated object.
+        static const QString& whatIs(void* object) {
+            if (!identifiers().contains(object))
+                throw QString("Factory::whatIs(): Object not known.");
+            return identifiers()[object];
+        }
+
+    protected:
+        /// Returns the map of objects created by all factories.
+        static QMap<void*, QString>& identifiers() {
+            static QMap<void*, QString> ids;
+            return ids;
         }
 };
 
