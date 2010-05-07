@@ -11,16 +11,23 @@ namespace pelican {
 /**
  * @details
  * Constructs a new telescope emulator, which starts running in its
- * own thread. The data will be sent down the specified UDP \p port, and
- * will start with the given \p initialValue.
+ * own thread using the given \p initialValue.
+ *
+ * The data will be sent to the specified UDP \p port on the given \p host,
+ * with the given \p interval in microseconds.
+ *
+ * The \p chunkSize is given in bytes.
  */
-TelescopeEmulator::TelescopeEmulator(const qint16 port,
-        const QHostAddress host, const double initialValue) : QThread()
+TelescopeEmulator::TelescopeEmulator(const double initialValue,
+        const qint16 port, const QHostAddress host, const int interval,
+        const int chunkSize) : QThread()
 {
-    _host = host;
     _abort = false;
-    _port = port;
     _initialValue = initialValue;
+    _host = host;
+    _port = port;
+    _interval = interval;
+    _chunkSize = chunkSize;
     start();
 }
 
@@ -36,21 +43,29 @@ TelescopeEmulator::~TelescopeEmulator()
 
 /**
  * @details
- * Runs the telescope emulator in its own thread.
- * A 512-byte UDP datagram is sent via a network socket every millisecond
- * to the local host.
+ * Runs the telescope emulator in its own thread, sending the data down a
+ * local UDP socket.
  */
 void TelescopeEmulator::run()
 {
     QUdpSocket socket;
 
     unsigned counter = 0;
+    unsigned nDoubles = _chunkSize / sizeof(double);
+    if (_chunkSize % sizeof(double) != 0) nDoubles++;
+    std::vector<double> data(nDoubles);
+
     while (!_abort) {
-        double value = double(counter) + _initialValue;
-        std::vector<double> data(64, value);
-        socket.writeDatagram(reinterpret_cast<char*>(&data[0]), 512,
-                _host, _port);
-        msleep(1);
+        // Set the array.
+        for (unsigned i = 0; i < nDoubles; ++i)
+            data[i] = counter + _initialValue;
+
+        // Write the data.
+        socket.writeDatagram(reinterpret_cast<char*>(&data[0]),
+                _chunkSize, _host, _port);
+
+        // Sleep.
+        usleep(_interval);
         ++counter;
     }
 }
