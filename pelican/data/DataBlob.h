@@ -4,7 +4,7 @@
 #include <QString>
 #include <complex>
 #include "pelican/utility/Factory.h"
-class QByteArray;
+class QIODevice;
 
 /**
  * @file DataBlob.h
@@ -80,11 +80,11 @@ class DataBlob
         /// Returns the version of the DataBlob
         QString version() const { return _version; };
 
-        /// Serialise the DataBlob into a byte array.
-        virtual QByteArray serialise() const;
+        /// Serialise the DataBlob into the QIODevice.
+        virtual void serialise(QIODevice&) const;
 
-        /// Deserialises the DataBlob from the byte array created with serialise.
-        virtual void deserialise(const QByteArray&);
+        /// Deserialises the DataBlob from the QIODevice
+        virtual void deserialise(const QIODevice&);
 };
 
 } // namespace pelican

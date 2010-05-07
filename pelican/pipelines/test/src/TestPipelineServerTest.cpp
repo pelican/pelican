@@ -119,7 +119,7 @@ void TestPipelineServerTest::test_testUdpChunker()
         while (!server.isReady()) {}
         
         // Set up the telescope emulator (turn on the telescope)
-        TelescopeEmulator telescope(2002, QHostAddress::LocalHost, 0.5);
+        TelescopeEmulator telescope(0.5, 2002);
         
         // Start the pipeline binary.
         PipelineBinaryEmulator pipelineBinary(&config);
@@ -142,8 +142,8 @@ void TestPipelineServerTest::test_testUdpChunker()
 void TestPipelineServerTest::test_testTwoUdpChunkers()
 {
         // Set up the telescope emulators (turn on the telescope)
-        TelescopeEmulator telescope1(2002, QHostAddress::LocalHost,  0.1);
-        TelescopeEmulator telescope2(2003, QHostAddress::LocalHost, 0.2);
+        TelescopeEmulator telescope1(0.1, 2002);
+        TelescopeEmulator telescope2(0.2, 2003);
 
     for (int i = 0; i < 10; i++) {
     try {

@@ -37,13 +37,14 @@ int main(int argc, char** argv)
     QCoreApplication app(argc, argv);
 
     // Get command line arguments.
-    if (argc != 3) {
-        std::cerr << "Usage: directClient <port> <host>" << std::endl;
+    if (argc != 4) {
+        std::cerr << "Usage: directClient <port> <host> <chunk size, bytes>" << std::endl;
         return 1;
     }
 
     int port = atoi(argv[1]);
     QString host(argv[2]);
+    int chunkSize = atoi(argv[3]);
 
     QString pipelineXml = ""
             "<buffers>"
@@ -54,7 +55,7 @@ int main(int argc, char** argv)
             "<chunkers>"
             "    <TestUdpChunker name=\"a\">"
             "       <connection host=\"" + host + "\" port=\"" + QString::number(port) + "\"/>"
-            "       <data type=\"VisibilityData\" chunkSize=\"512\"/>"
+            "       <data type=\"VisibilityData\" chunkSize=\"" + QString::number(chunkSize) + "\"/>"
             "    </TestUdpChunker>"
             "</chunkers>"
             "<clients>"

@@ -27,9 +27,11 @@ class TelescopeEmulator : public QThread
 
     public:
         /// Constructs a new telescope emulator.
-        TelescopeEmulator(const qint16 port,
+        TelescopeEmulator(const double initialValue = 0.0,
+                const qint16 port = 8080,
                 const QHostAddress host = QHostAddress::LocalHost,
-                const double initialValue = 0.0);
+                const int interval = 1000,
+                const int chunkSize = 512);
 
         /// Destroys the telescope emulator.
         ~TelescopeEmulator();
@@ -39,9 +41,11 @@ class TelescopeEmulator : public QThread
         void run();
 
     private:
-        QHostAddress _host;
         bool _abort;
+        QHostAddress _host;
         qint16 _port;
+        int _interval;
+        int _chunkSize;
         double _initialValue;
 };
 
