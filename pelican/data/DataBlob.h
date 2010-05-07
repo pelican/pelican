@@ -5,6 +5,7 @@
 #include <QString>
 #include <complex>
 class QByteArray;
+class QDataStream;
 
 /**
  * @file DataBlob.h
@@ -79,14 +80,11 @@ class DataBlob
         /// Serialise the DataBlob into a byte array.
         virtual QByteArray serialise() const;
 
-        /// Serialise the data blob to a data stream.
-        virtual void serialise(QDataStream& stream);
+        /// Serialise the DataBlob into a byte array.
+        virtual void serialise(QByteArray&) const;
 
         /// Deserialises the DataBlob from the byte array created with serialise.
         virtual void deserialise(const QByteArray&);
-
-        /// Deserialises the data blob to a data stream.
-        virtual void deserialise(const QDataStream&);
 };
 
 } // namespace pelican
