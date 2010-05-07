@@ -68,7 +68,7 @@ int main(int argc, char** argv)
             "</clients>"
             "<adapters>"
             "   <AdapterLofarStationVisibilities>"
-            "       <antennas number=\"6\"/>"
+            "       <antennas number=\"8\"/>"
             "       <channels start=\"0\" end=\"1\"/>"
             "       <polarisation value=\"both\"/>"
             "       <dataBytes number=\"8\"/>"
@@ -130,7 +130,7 @@ int main(int argc, char** argv)
     // Print summary.
     std::cout << "---------------------------------------------------------\n";
     std::cout << "Data range " << dataRange << " over " << iterations
-            << " iterations. (Lost " << lostPackets << " packets.)\n";
+            << " iterations. (Missed " << lostPackets << " packets.)\n";
     std::cout << "Received " << megaBytesReceived << " MB in "
             << sec << " seconds.\n";
     std::cout << "Bandwidth: " << ((megaBytesReceived * 8) / sec)
