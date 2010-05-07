@@ -80,7 +80,7 @@ class DataBlob
         virtual void serialise(QIODevice&) const;
 
         /// Deserialises the DataBlob from the QIODevice
-        virtual void deserialise(const QIODevice&);
+        virtual void deserialise(QIODevice&);
 };
 
 } // namespace pelican

@@ -61,7 +61,7 @@ void DataBlob::serialise(QIODevice&) const
  * @details
  * Deserialises the data blob.
  */
-void DataBlob::deserialise(const QIODevice&)
+void DataBlob::deserialise(QIODevice&)
 {
     throw("DataBlob: This object deserialised method is undefined.");
 }
