@@ -17,7 +17,7 @@ int main(int argc, char** argv)
     }
     int port = atoi(argv[1]);
     QHostAddress host(QString::fromAscii((argv[2])));
-    TelescopeEmulator emulator(port, host, 0);
+    TelescopeEmulator emulator(0, port, host);
 
     return app.exec();
 }

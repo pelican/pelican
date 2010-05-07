@@ -91,7 +91,7 @@ void DirectStreamDataClientTest::test_singleChunker()
     std::cout << "----------------------------------" << std::endl;
     try {
         // Start the telescope emulator on port 2002.
-        TelescopeEmulator telescope1(2002, QHostAddress::LocalHost, 0.2);
+        TelescopeEmulator telescope1(0.2, 2002);
 
         // Create the adapter factory.
         Factory<AbstractAdapter> adapterFactory(_config, "pipeline", "adapters");
@@ -112,6 +112,7 @@ void DirectStreamDataClientTest::test_singleChunker()
         // Create the client.
         DirectStreamDataClient* client = static_cast<DirectStreamDataClient*>(
                 clientFactory.create("DirectStreamDataClient", requirements));
+        CPPUNIT_ASSERT(DataClientFactory::whatIs(client) == "DirectStreamDataClient");
         client->addStreamChunker("TestUdpChunker", "a");
         client->start();
 
@@ -141,8 +142,8 @@ void DirectStreamDataClientTest::test_twoChunkersMultipleStarts()
         std::cout << "---------------------------------- " << i << std::endl;
         try {
             // Start two telescope emulators.
-            TelescopeEmulator telescope1(2002, QHostAddress::LocalHost, 0.2);
-            TelescopeEmulator telescope2(2003, QHostAddress::LocalHost, 0.4);
+            TelescopeEmulator telescope1(0.2, 2002);
+            TelescopeEmulator telescope2(0.4, 2003);
 
             // Create the adapter factory.
             Factory<AbstractAdapter> adapterFactory(_config,
@@ -165,6 +166,7 @@ void DirectStreamDataClientTest::test_twoChunkersMultipleStarts()
             // Create the client.
             DirectStreamDataClient* client = static_cast<DirectStreamDataClient*>(
                     clientFactory.create("DirectStreamDataClient", requirements));
+            CPPUNIT_ASSERT(DataClientFactory::whatIs(client) == "DirectStreamDataClient");
             client->addStreamChunker("TestUdpChunker", "a");
             client->addStreamChunker("TestUdpChunker", "b");
             client->start();
@@ -196,8 +198,8 @@ void DirectStreamDataClientTest::test_twoChunkersSingleStart()
 {
     try {
         // Start two telescope emulators.
-        TelescopeEmulator telescope1(2002, QHostAddress::LocalHost, 0.2);
-        TelescopeEmulator telescope2(2003, QHostAddress::LocalHost, 0.4);
+        TelescopeEmulator telescope1(0.2, 2002);
+        TelescopeEmulator telescope2(0.4, 2003);
 
         // Create the adapter factory.
         Factory<AbstractAdapter> adapterFactory(_config,
@@ -220,6 +222,7 @@ void DirectStreamDataClientTest::test_twoChunkersSingleStart()
         // Create the client.
         DirectStreamDataClient* client = static_cast<DirectStreamDataClient*>(
                 clientFactory.create("DirectStreamDataClient", requirements));
+        CPPUNIT_ASSERT(DataClientFactory::whatIs(client) == "DirectStreamDataClient");
         client->addStreamChunker("TestUdpChunker", "a");
         client->addStreamChunker("TestUdpChunker", "b");
         client->start();
