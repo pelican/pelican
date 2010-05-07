@@ -65,7 +65,8 @@ void TelescopeEmulator::run()
                 _chunkSize, _host, _port);
 
         // Sleep.
-        usleep(_interval);
+        if (_interval)
+            usleep(_interval);
         ++counter;
     }
 }

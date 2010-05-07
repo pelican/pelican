@@ -62,12 +62,12 @@ void StreamDataBuffer::getNext(LockedData& lockedData)
     }
 
     // XXX This loop is used for printing only - remove it.
-    for (int i = 0; i < _serveQueue.size(); ++i) {
-        LockableStreamData* lockable = _serveQueue[i];
-        void *ptr = lockable->data()->data();
-        std::cout << "StreamDataBuffer::getNext(): Queue position: " << i <<
-                " Content: " << *reinterpret_cast<double*>(ptr) << std::endl;
-    }
+//    for (int i = 0; i < _serveQueue.size(); ++i) {
+//        LockableStreamData* lockable = _serveQueue[i];
+//        void *ptr = lockable->data()->data();
+//        std::cout << "StreamDataBuffer::getNext(): Queue position: " << i <<
+//                " Content: " << *reinterpret_cast<double*>(ptr) << std::endl;
+//    }
 
     // Remove the data from the serve queue.
     lockedData.setData(_serveQueue.dequeue());
@@ -173,14 +173,14 @@ void StreamDataBuffer::deactivateData()
  */
 void StreamDataBuffer::deactivateData(LockableStreamData* data)
 {
-    std::cout << "StreamDataBuffer::deactivateData()" << std::endl;
+    //std::cout << "StreamDataBuffer::deactivateData()" << std::endl;
 
     QMutexLocker locker(&_mutex);
     if (!data->served()) {
         _serveQueue.prepend(data);
         return;
     }
-    std::cout << "StreamDataBuffer: Deactivating data" << std::endl;
+    //std::cout << "StreamDataBuffer: Deactivating data" << std::endl;
     data->reset();
 
     QMutexLocker writeLocker(&_writeMutex);

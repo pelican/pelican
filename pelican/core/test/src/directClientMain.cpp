@@ -9,6 +9,7 @@
 
 #include <iostream>
 #include <QCoreApplication>
+#include <QTime>
 #include <QString>
 #include <QList>
 #include <QHash>
@@ -34,22 +35,24 @@ void printVisibilities(VisibilityData* visData)
 
 int main(int argc, char** argv)
 {
+    try {
     QCoreApplication app(argc, argv);
 
     // Get command line arguments.
-    if (argc != 4) {
-        std::cerr << "Usage: directClient <port> <host> <chunk size, bytes>" << std::endl;
+    if (argc != 5) {
+        std::cerr << "Usage: directClient <port> <host> <chunk size, bytes> <iterations>" << std::endl;
         return 1;
     }
 
     int port = atoi(argv[1]);
     QString host(argv[2]);
     int chunkSize = atoi(argv[3]);
+    int iterations = atoi(argv[4]);
 
     QString pipelineXml = ""
             "<buffers>"
             "   <VisibilityData>"
-            "       <buffer maxSize=\"2000\" maxChunkSize=\"2000\"/>"
+            "       <buffer maxSize=\"2000000\" maxChunkSize=\"2000000\"/>"
             "   </VisibilityData>"
             "</buffers>"
             "<chunkers>"
@@ -65,7 +68,7 @@ int main(int argc, char** argv)
             "</clients>"
             "<adapters>"
             "   <AdapterLofarStationVisibilities>"
-            "       <antennas number=\"2\"/>"
+            "       <antennas number=\"6\"/>"
             "       <channels start=\"0\" end=\"1\"/>"
             "       <polarisation value=\"both\"/>"
             "       <dataBytes number=\"8\"/>"
@@ -74,7 +77,6 @@ int main(int argc, char** argv)
     Config config;
     config.setFromString(pipelineXml);
 
-    try {
     // Create the adapter factory.
     Factory<AbstractAdapter> adapterFactory(&config, "pipeline", "adapters");
 
@@ -101,15 +103,40 @@ int main(int argc, char** argv)
     QHash<QString, DataBlob*> dataHash;
     dataHash.insert(dataType, blobFactory.create(dataType));
 
-    for (int i = 0; i < 2000; i++) {
-        std::cout << "---------------------------------- " << i << std::endl;
+    // Initialise loop counter.
+    QTime timer;
+    timer.start();
+    int counter = 0;
+    complex_t initValue, value;
+    for (counter = 0; counter < iterations; counter++) {
         // Get the data.
         QHash<QString, DataBlob*> validData = client->getData(dataHash);
 
         // Check the content of the data blob.
-        VisibilityData* visData = (VisibilityData*)validData.value("VisibilityData");
-        printVisibilities(visData);
+        VisibilityData* visData = (VisibilityData*)validData.value(dataType);
+        value = visData->ptr()[0];
+        if (counter == 0)
+            initValue = value;
     }
+
+    // Check for lost packets.
+    double dataRange = value.real() - initValue.real();
+    double lostPackets = dataRange + 1 - iterations;
+
+    // Compute bandwidth.
+    double sec = (double)timer.elapsed() / 1e3;
+    double megaBytesReceived = (double)(chunkSize * iterations) / 1e6;
+
+    // Print summary.
+    std::cout << "---------------------------------------------------------\n";
+    std::cout << "Data range " << dataRange << " over " << iterations
+            << " iterations. (Lost " << lostPackets << " packets.)\n";
+    std::cout << "Received " << megaBytesReceived << " MB in "
+            << sec << " seconds.\n";
+    std::cout << "Bandwidth: " << ((megaBytesReceived * 8) / sec)
+            << " Mb/sec" << std::endl;
+    std::cout << "---------------------------------------------------------\n";
+
     } catch (QString error) {
         std::cerr << error.toStdString() << std::endl;
     }
