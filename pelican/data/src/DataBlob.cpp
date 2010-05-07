@@ -2,7 +2,7 @@
 #include <QDate>
 #include <QTime>
 #include <QDateTime>
-#include <QByteArray>
+#include <QIODevice>
 
 namespace pelican {
 
@@ -61,7 +61,7 @@ QByteArray DataBlob::serialise() const
  * @details
  * Serialises the data blob into the byte array.
  */
-void DataBlob::serialise(QByteArray&) const
+void DataBlob::serialise(QIODevice&) const
 {
     throw("DataBlob: This object serialise method is undefined.");
 }
@@ -71,7 +71,7 @@ void DataBlob::serialise(QByteArray&) const
  * @details
  * Deserialises the data blob from the byte array.
  */
-void DataBlob::deserialise(const QByteArray&)
+void DataBlob::deserialise(const QIODevice&)
 {
     throw("DataBlob: This object deserialised method is undefined.");
 }
