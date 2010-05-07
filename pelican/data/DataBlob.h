@@ -79,6 +79,9 @@ class DataBlob
         /// Serialise the DataBlob into a byte array.
         virtual QByteArray serialise() const;
 
+        /// Serialise the data blob to a data stream.
+        virtual void serialise(QDataStream& stream);
+
         /// Deserialises the DataBlob from the byte array created with serialise.
         virtual void deserialise(const QByteArray&);
 };
