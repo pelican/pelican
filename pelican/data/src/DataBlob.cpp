@@ -49,17 +49,7 @@ void DataBlob::setTimeStamp()
 
 /**
  * @details
- * Serialises the data blob into the byte array.
- */
-QByteArray DataBlob::serialise() const
-{
-    throw("DataBlob: This object serialise method is undefined.");
-}
-
-
-/**
- * @details
- * Serialises the data blob into the byte array.
+ * Serialises the data blob.
  */
 void DataBlob::serialise(QIODevice&) const
 {
@@ -69,7 +59,7 @@ void DataBlob::serialise(QIODevice&) const
 
 /**
  * @details
- * Deserialises the data blob from the byte array.
+ * Deserialises the data blob.
  */
 void DataBlob::deserialise(const QIODevice&)
 {
