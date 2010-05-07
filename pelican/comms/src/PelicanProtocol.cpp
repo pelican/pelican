@@ -12,6 +12,7 @@
 #include "pelican/comms/StreamDataRequest.h"
 #include "pelican/comms/StreamData.h"
 #include "pelican/data/DataRequirements.h"
+#include "pelican/data/DataBlob.h"
 
 #include "pelican/utility/memCheck.h"
 
@@ -151,6 +152,17 @@ void PelicanProtocol::send(QIODevice& stream, const AbstractProtocol::ServiceDat
         Data* d = i.next();
         stream.write( (const char*)d->operator*(), (quint64)d->size() );
     }
+}
+
+void PelicanProtocol::send(QIODevice& stream, const DataBlob& data )
+{
+    QByteArray array;
+    QDataStream out(&array, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_4_0);
+    out << (quint16)ServerResponse::Blob;
+    out << data.type();
+    stream.write(array);
+    //data.serialise(stream);
 }
 
 void PelicanProtocol::send(QIODevice& stream, const QString& msg )

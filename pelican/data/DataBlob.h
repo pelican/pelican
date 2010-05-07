@@ -1,9 +1,9 @@
 #ifndef DATABLOB_H
 #define DATABLOB_H
 
-#include "pelican/utility/Factory.h"
 #include <QString>
 #include <complex>
+#include "pelican/utility/Factory.h"
 class QByteArray;
 
 /**
@@ -53,13 +53,17 @@ class DataBlob
         /// from midnight rather than midday.
         double _modifiedJulianDate;
         QString _version;
+        QString _type;
 
     public:
         /// Data blob constructor.
-        DataBlob();
+        DataBlob(const QString& type = QString("") );
 
         /// Data blob destructor.
         virtual ~DataBlob();
+
+        /// return a QString of the type of DataBlob (should be the same as the class name)
+        QString type() const;
 
         /// Sets the time stamp using the current value of the system clock.
         void setTimeStamp();

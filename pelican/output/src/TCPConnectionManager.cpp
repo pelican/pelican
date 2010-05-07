@@ -8,6 +8,7 @@
 #include "pelican/utility/ConfigNode.h"
 #include "pelican/comms/StreamData.h"
 #include "pelican/utility/memCheck.h"
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 
@@ -19,7 +20,7 @@ TCPConnectionManager::TCPConnectionManager(const   ConfigNode& configNode,  QObj
 {
     // Set TCP Server connection options
     int port = configNode.getOption("connection", "port").toInt();
-    _port = port > 0 ? port : 9000;
+    _port = port;
 }
 
 /**
@@ -33,8 +34,12 @@ TCPConnectionManager::~TCPConnectionManager()
     delete _tcpServer;
 
     // Wait for main thread to finish.
-    if (isRunning()) while (!isFinished()) quit();
-    wait();
+    do { quit(); } while( ! wait(10) );
+}
+
+qint16 TCPConnectionManager::serverPort() const
+{
+    return _tcpServer->serverPort();
 }
 
 /**
@@ -54,7 +59,7 @@ void TCPConnectionManager::acceptClientConnection()
         std::cerr << "Invalid client request" << std::endl;
         client -> close();
         return;
-    }    
+    }
 
     StreamDataRequest& req = static_cast<StreamDataRequest&>(*request);
 
@@ -83,7 +88,7 @@ void TCPConnectionManager::acceptClientConnection()
                 _clients.insert(streamData, socketList);
             }
         }
-        
+
         ++it;
     }
 
@@ -115,7 +120,6 @@ void TCPConnectionManager::send(const QString& streamName, const QByteArray& inc
         // Wait for data to be sent, with x timeout
         // & check return value for bytes written
         // kill the client if anything goes wrong
-        
     }
 }
 
@@ -149,6 +153,8 @@ void TCPConnectionManager::run()
         connect(_tcpServer, SIGNAL(newConnection()), this, SLOT(acceptClientConnection()), Qt::DirectConnection );
         exec();
     }
+
+    delete _tcpServer;
 }
 
 } // namespace pelican

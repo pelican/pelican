@@ -37,6 +37,7 @@ class TCPConnectionManager : public QThread
 
     public:
         QMap<QString, QList<QTcpSocket*> >* getClientsReference() { return &_clients; }
+        qint16 serverPort() const;
 
     public slots:
         void send(const QString& streamName, const QByteArray& incoming);

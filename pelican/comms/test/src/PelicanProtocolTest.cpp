@@ -4,6 +4,7 @@
 #include "ServerRequest.h"
 #include "ServerResponse.h"
 #include "AcknowledgementRequest.h"
+#include "DataBlobResponse.h"
 #include "ServiceDataRequest.h"
 #include "StreamDataRequest.h"
 #include "StreamDataResponse.h"
@@ -11,6 +12,7 @@
 #include "StreamData.h"
 #include "pelican/data/DataRequirements.h"
 #include "pelican/utility/SocketTester.h"
+#include "pelican/data/test/TestDataBlob.h"
 
 #include <iostream>
 #include <cstdlib>
@@ -133,6 +135,34 @@ void PelicanProtocolTest::test_sendServiceData()
         buf2[d2.size()] = '\0';
         CPPUNIT_ASSERT_EQUAL( (long)d2.size(), (long)socket.read( &buf2[0], d2.size() ) );
         CPPUNIT_ASSERT_EQUAL( std::string(data2.data()), std::string(&buf2[0]) );
+    }
+}
+
+void PelicanProtocolTest::test_sendDataBlob()
+{
+    {
+        // Use Case
+        // DataBlob type known
+        // expect safe transfer
+        QByteArray block;
+        QBuffer stream(&block);
+        stream.open(QIODevice::WriteOnly);
+
+        TestDataBlob blob;
+        PelicanProtocol proto;
+        proto.send(stream,blob);
+        CPPUNIT_ASSERT( ! block.isEmpty() );
+
+        // send it over a TCP Socket
+        QTcpSocket& socket = _st->send(block);
+        boost::shared_ptr<ServerResponse> resp = _protocol.receive(socket);
+        if( resp->type() == ServerResponse::Error ) {
+             CPPUNIT_FAIL( "Socket Error: " + resp->message().toStdString() );
+        }
+        // make sure we get the correct type back
+        CPPUNIT_ASSERT( resp->type()  == ServerResponse::Blob );
+        //DataBlobResponse* db = static_cast<DataBlobResponse*>(resp.get());
+        //CPPUNIT_ASSERT( static_cast<TestDataBlob*>(db->dataBlob()) == blob );
     }
 }
 
