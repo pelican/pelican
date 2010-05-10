@@ -162,7 +162,7 @@ void PelicanProtocol::send(QIODevice& stream, const DataBlob& data )
     out << (quint16)ServerResponse::Blob;
     out << data.type();
     stream.write(array);
-    //data.serialise(stream);
+    data.serialise(stream);
 }
 
 void PelicanProtocol::send(QIODevice& stream, const QString& msg )

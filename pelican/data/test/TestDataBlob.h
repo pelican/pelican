@@ -26,6 +26,8 @@ class TestDataBlob : public DataBlob
         ~TestDataBlob();
         void setData(const QString& data);
         bool operator==(const TestDataBlob&);
+        void deserialise(QIODevice&);
+        void serialise(QIODevice&) const;
 
     private:
         QString _data;

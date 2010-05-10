@@ -10,7 +10,6 @@
 #include "pelican/comms/StreamDataRequest.h"
 #include "pelican/data/DataRequirements.h"
 #include "pelican/data/DataBlob.h"
-#include "pelican/utility/Factory.h"
 #include <QByteArray>
 #include <QAbstractSocket>
 #include <QDataStream>
@@ -139,13 +138,18 @@ boost::shared_ptr<ServerResponse> PelicanClientProtocol::receive(QAbstractSocket
             break;
         case ServerResponse::Blob:
             {
-                Factory<DataBlob> factory;
                 QString type;
                 in >> type;
-                DataBlob* blob = factory.create(type);
-                boost::shared_ptr<DataBlobResponse> s( new DataBlobResponse(blob) );
-                //blob->deserialise(in.device());
-                return s;
+                try {
+                    DataBlob* blob = _getDataBlob(type);
+                    boost::shared_ptr<DataBlobResponse> s( new DataBlobResponse(blob) );
+                    blob->deserialise(*(in.device()));
+                    return s;
+                }
+                catch( const QString& msg )
+                {
+                    return boost::shared_ptr<ServerResponse>(new ServerResponse(ServerResponse::Error, msg ));
+                }
             }
             break;
         default:
