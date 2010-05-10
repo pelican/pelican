@@ -25,10 +25,12 @@ AbstractBlobServer::~AbstractBlobServer()
 /**
  *@details
  */
+/*
 void AbstractBlobServer::queue(const QString& stream, DataBlob* blob)
 {
 //    const QByteArray& data = blob->serialise();
 //    send(stream,data);
 }
+*/
 
 } // namespace pelican

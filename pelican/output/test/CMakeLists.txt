@@ -1,7 +1,8 @@
-SUBPACKAGE(outputTest output)
+SUBPACKAGE(outputTest output dataTest)
 
 set(outputTest_src
     src/outputTest.cpp
+    src/TCPConnectionManagerTest.cpp
     src/PelicanTCPBlobServerTest.cpp
 )
 

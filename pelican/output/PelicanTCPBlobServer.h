@@ -14,6 +14,7 @@
 namespace pelican {
     class DataManager;
     class ConfigNode;
+    class DataBlob;
 
 /**
  * @class PelicanTCPBlobServer
@@ -31,13 +32,13 @@ class PelicanTCPBlobServer : public QObject, public AbstractBlobServer
     public:
         PelicanTCPBlobServer( const ConfigNode& config, QObject* parent = 0 );
         ~PelicanTCPBlobServer();
+        quint16 serverPort() const;
 
     public:
-        virtual void send(const QString& streamName, const QByteArray&);
+        virtual void send(const QString& streamName, const DataBlob&);
 
     private:
-        TCPConnectionManager*              _connectionManager;
-        QMap<QString, QList<QTcpSocket*> >* _clients;
+        TCPConnectionManager*  _connectionManager;
 
     private:
         friend class PelicanTCPBlobServerTest;

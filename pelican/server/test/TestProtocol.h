@@ -33,6 +33,7 @@ class TestProtocol : public AbstractProtocol
         virtual void send( QIODevice& device, const AbstractProtocol::StreamData_t& );
         virtual void send( QIODevice& device, const AbstractProtocol::ServiceData_t& );
         virtual void send( QIODevice& device, const QString& message );
+        virtual void send( QIODevice& , const DataBlob& ) {};
         virtual void sendError( QIODevice& device, const QString&);
 
         QByteArray& lastBlock();

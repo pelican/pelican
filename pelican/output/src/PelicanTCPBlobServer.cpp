@@ -16,9 +16,9 @@ PelicanTCPBlobServer::PelicanTCPBlobServer(const ConfigNode& configNode, QObject
       : QObject(parent)
 {
     // Initliase connection manager thread
-    _connectionManager = new TCPConnectionManager(configNode, parent);
-    _clients = _connectionManager -> getClientsReference();
-    _connectionManager -> start();
+    int port = configNode.getOption("connection", "port").toInt();
+    _connectionManager = new TCPConnectionManager(port, parent);
+    _connectionManager->start();
 }
 
 /**
@@ -26,15 +26,22 @@ PelicanTCPBlobServer::PelicanTCPBlobServer(const ConfigNode& configNode, QObject
  */
 PelicanTCPBlobServer::~PelicanTCPBlobServer()
 {
-    //TODO: Destruct connection Manager Thread
+    _connectionManager->quit();
+    delete _connectionManager;
 }
 
 /**
  *@details
   */
-void PelicanTCPBlobServer::send(const QString& streamName, const QByteArray& incoming)
+void PelicanTCPBlobServer::send(const QString& streamName, const DataBlob& incoming)
 {
     // Tell connection manager to send data, somehow...
+    _connectionManager->send(streamName,incoming);
+}
+
+quint16 PelicanTCPBlobServer::serverPort() const
+{
+    return _connectionManager->serverPort();
 }
 
 } // namespace pelican

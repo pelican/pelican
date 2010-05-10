@@ -32,9 +32,7 @@ class AbstractBlobServer
         /// comment
         virtual ~AbstractBlobServer();
         /// comment
-        virtual void queue(const QString& streamName, DataBlob*);
-        /// comment
-        virtual void send(const QString& streamName, const QByteArray&) { }
+        virtual void send(const QString& streamName, const DataBlob&) = 0;
 
     protected:
         DataManager* _dataManager;
