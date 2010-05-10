@@ -90,6 +90,13 @@ void TCPConnectionManager::acceptClientConnection()
 
 void TCPConnectionManager::send(const QString& streamName, const DataBlob& blob)
 {
+    /*if( currentThread() != this )
+    {
+        std::cout << "other thread" << std::endl;
+        emit _sendCalled(streamName, blob);
+    }
+    */
+
     QMutexLocker sendlocker(&_sendMutex);
 
     // Check if there are any client reading streamName type data
@@ -106,8 +113,11 @@ void TCPConnectionManager::send(const QString& streamName, const DataBlob& blob)
         QTcpSocket* client =  clientListCopy[i];
         // Send data to client
         try {
-            std::cout << "sending" << std::endl;
+            std::cout << "sending to:" << client->peerName().toStdString() << std::endl;
+            Q_ASSERT( client->state() == QAbstractSocket::ConnectedState );
             _protocol->send(*client, streamName, blob);
+            client->flush();
+            std::cout << "finished sending" << std::endl;
         }
         catch ( ... ) 
         {

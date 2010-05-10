@@ -4,6 +4,7 @@
 #include <QCoreApplication>
 #include "pelican/comms/ServerRequest.h"
 #include "pelican/comms/ServerResponse.h"
+#include "pelican/comms/DataBlobResponse.h"
 #include "pelican/comms/StreamDataRequest.h"
 #include "pelican/comms/PelicanClientProtocol.h"
 #include "pelican/data/test/TestDataBlob.h"
@@ -67,10 +68,13 @@ void TCPConnectionManagerTest::test_send()
     TestDataBlob blob;
     blob.setData("sometestData");
     _server->send("testData",blob);
+    sleep(1);
 
+    CPPUNIT_ASSERT( client->state() == QAbstractSocket::ConnectedState );
     boost::shared_ptr<ServerResponse> r = _clientProtocol->receive(*client);
-    //CPPUNIT_ASSERT( r->type() == ServerResponse::Blob );
-    //CPPUNIT_ASSERT(  blob == static_cast<TestDataBlob*>(r->dataBlob());
+    CPPUNIT_ASSERT( r->type() == ServerResponse::Blob );
+    DataBlobResponse* res = static_cast<DataBlobResponse*>(r.get());
+    CPPUNIT_ASSERT( res->dataName() == "testData" );
 }
 
 void TCPConnectionManagerTest::test_brokenConnection()
