@@ -43,6 +43,7 @@ qint16 TCPConnectionManager::serverPort() const
  */
 void TCPConnectionManager::acceptClientConnection() 
 {
+    std::cout << "adding new client" << std::endl;
     // Get new client connection
     QTcpSocket *client = _tcpServer -> nextPendingConnection();
     Q_ASSERT( client->thread() == currentThread() );
@@ -105,7 +106,8 @@ void TCPConnectionManager::send(const QString& streamName, const DataBlob& blob)
         QTcpSocket* client =  clientListCopy[i];
         // Send data to client
         try {
-            _protocol->send(*client, blob);
+            std::cout << "sending" << std::endl;
+            _protocol->send(*client, streamName, blob);
         }
         catch ( ... ) 
         {

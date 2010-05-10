@@ -3,14 +3,12 @@
 
 
 #include "ServerResponse.h"
-#include "pelican/data/DataBlob.h"
 
 /**
  * @file DataBlobResponse.h
  */
 
 namespace pelican {
-//    class DataBlob;
 
 /**
  * @class DataBlobResponse
@@ -25,19 +23,14 @@ class DataBlobResponse : public ServerResponse
 {
 
     public:
-        DataBlobResponse( DataBlob* blob );
+        DataBlobResponse( const QString& blobType, const QString& dataName );
         ~DataBlobResponse();
-
-        DataBlob* dataBlob() const { return _data; };
-
-        /// fetch the DataBlob object returned in the request
-        template<class T> 
-            T* getBlob() const {
-            return static_cast<T>(_data);
-        }
+        QString blobClass() { return _type; }
+        QString dataName() { return _name; }
 
     private:
-        DataBlob* _data;
+        QString _type;
+        QString _name;
 };
 
 } // namespace pelican

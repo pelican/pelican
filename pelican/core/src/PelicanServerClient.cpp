@@ -10,6 +10,7 @@
 #include "pelican/data/DataRequirements.h"
 #include "pelican/data/DataBlob.h"
 #include "pelican/comms/ServerResponse.h"
+#include "pelican/comms/DataBlobResponse.h"
 #include "pelican/comms/StreamData.h"
 #include "pelican/comms/StreamDataRequest.h"
 #include "pelican/comms/ServiceDataRequest.h"
@@ -85,6 +86,13 @@ QHash<QString, DataBlob*> PelicanServerClient::_response(QIODevice& device,
         case ServerResponse::Error:
             std::cerr << "PelicanServerClient: Server Error: " << r->message().toStdString() << std::endl;
             break;
+        case ServerResponse::Blob:
+            {
+                DataBlobResponse* res = static_cast<DataBlobResponse*>(r.get());
+                validData[res->dataName()] = dataHash[ res->dataName()];
+                validData[res->dataName()]->deserialise(device);
+                Q_ASSERT( res->blobClass() == validData[res->dataName()]->type() );
+            }
         case ServerResponse::StreamData:
             {
                 ServiceDataRequest req;

@@ -3,8 +3,10 @@
 #include <QTcpSocket>
 #include <QCoreApplication>
 #include "pelican/comms/ServerRequest.h"
+#include "pelican/comms/ServerResponse.h"
 #include "pelican/comms/StreamDataRequest.h"
 #include "pelican/comms/PelicanClientProtocol.h"
+#include "pelican/data/test/TestDataBlob.h"
 
 
 #include "pelican/utility/memCheck.h"
@@ -33,6 +35,7 @@ void TCPConnectionManagerTest::setUp()
     char *argv[] = {(char*)"pelican"};
     _app = new QCoreApplication(argc,argv);
 
+    _clientProtocol = new PelicanClientProtocol;
     _server = new TCPConnectionManager(0);
     _server->start();
     bool i;
@@ -43,7 +46,31 @@ void TCPConnectionManagerTest::tearDown()
 {
     _server->quit();
     delete _server;
+    delete _clientProtocol;
     delete _app;
+}
+
+void TCPConnectionManagerTest::test_send()
+{
+    // Use Case:
+    // client requests a connection
+    // expect client to be registered for any data
+    StreamDataRequest req;
+    DataRequirements require;
+    require.setStreamData("testData");
+    req.addDataOption(require);
+
+    QTcpSocket* client = _createClient();
+    _sendRequest( client, req );
+    sleep(1);
+    CPPUNIT_ASSERT_EQUAL( 1, _server->clientsForType("testData") );
+    TestDataBlob blob;
+    blob.setData("sometestData");
+    _server->send("testData",blob);
+
+    boost::shared_ptr<ServerResponse> r = _clientProtocol->receive(*client);
+    //CPPUNIT_ASSERT( r->type() == ServerResponse::Blob );
+    //CPPUNIT_ASSERT(  blob == static_cast<TestDataBlob*>(r->dataBlob());
 }
 
 void TCPConnectionManagerTest::test_brokenConnection()
@@ -81,6 +108,7 @@ QTcpSocket* TCPConnectionManagerTest::_createClient() const
    if (!tcpSocket->waitForConnected(5000) || tcpSocket->state() == QAbstractSocket::UnconnectedState)
    {
        delete tcpSocket;
+       tcpSocket = 0;
        CPPUNIT_FAIL("Client could not connect to server");
    }
    return tcpSocket;
@@ -88,8 +116,7 @@ QTcpSocket* TCPConnectionManagerTest::_createClient() const
 
 void TCPConnectionManagerTest::_sendRequest(QTcpSocket* tcpSocket, const ServerRequest& req)
 {
-    PelicanClientProtocol clientProtocol;
-    QByteArray data = clientProtocol.serialise(req);
+    QByteArray data = _clientProtocol->serialise(req);
     tcpSocket->write(data);
     tcpSocket->waitForBytesWritten(data.size());
     tcpSocket->flush();

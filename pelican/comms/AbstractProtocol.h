@@ -48,8 +48,8 @@ class AbstractProtocol
         /// Write service data to an I/O device.
         virtual void send(QIODevice& device, const ServiceData_t&) = 0;
 
-        /// Write out a DataBlob object to an I/O Device
-        virtual void send(QIODevice& device, const DataBlob& ) = 0;
+        /// Write out a DataBlob object to an I/O Device, as a stream of "name"
+        virtual void send(QIODevice& device, const QString& name, const DataBlob& ) = 0;
 
         /// Write a non-error message to an I/O device.
         virtual void send(QIODevice& device, const QString& message) = 0;

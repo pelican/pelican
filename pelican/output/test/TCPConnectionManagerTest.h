@@ -12,6 +12,7 @@ class QCoreApplication;
 namespace pelican {
     class ServerRequest;
     class TCPConnectionManager;
+    class PelicanClientProtocol;
 
 /**
  * @class TCPConnectionManagerTest
@@ -26,6 +27,7 @@ class TCPConnectionManagerTest : public CppUnit::TestFixture
 {
     public:
         CPPUNIT_TEST_SUITE( TCPConnectionManagerTest );
+        CPPUNIT_TEST( test_send );
         CPPUNIT_TEST( test_brokenConnection );
         CPPUNIT_TEST( test_multiClients );
         CPPUNIT_TEST_SUITE_END();
@@ -35,6 +37,7 @@ class TCPConnectionManagerTest : public CppUnit::TestFixture
         void tearDown();
 
         // Test Methods
+        void test_send();
         void test_brokenConnection();
         void test_multiClients();
 
@@ -47,6 +50,7 @@ class TCPConnectionManagerTest : public CppUnit::TestFixture
         void _sendRequest(QTcpSocket* tcpSocket, const ServerRequest& req);
         TCPConnectionManager* _server;
         QCoreApplication* _app;
+        PelicanClientProtocol* _clientProtocol;
 };
 
 } // namespace pelican

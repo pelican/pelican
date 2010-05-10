@@ -70,12 +70,12 @@ QByteArray PelicanClientProtocol::serialise(const ServerRequest& req)
 
 boost::shared_ptr<ServerResponse> PelicanClientProtocol::receive(QAbstractSocket& socket)
 {
-//     std::cout << "PelicanClientProtocol::receive()" << std::endl;
+    //std::cout << "PelicanClientProtocol::receive()" << std::endl;
     int timeout = 2000;
     ServerResponse::Response type = ServerResponse::Error;
     while (socket.bytesAvailable() < (int)sizeof(quint16)) {
         if ( !socket.waitForReadyRead(timeout) ) {
-            std::cout << "PelicanClientProtocol::receive error!!!!!!!!!!" << std::endl;
+            std::cout << "PelicanClientProtocol:: receive error!!!!!!!!!!" << std::endl;
             return boost::shared_ptr<ServerResponse>(new ServerResponse(type,  socket.errorString() ));
         }
     }
@@ -140,16 +140,10 @@ boost::shared_ptr<ServerResponse> PelicanClientProtocol::receive(QAbstractSocket
             {
                 QString type;
                 in >> type;
-                try {
-                    DataBlob* blob = _getDataBlob(type);
-                    boost::shared_ptr<DataBlobResponse> s( new DataBlobResponse(blob) );
-                    blob->deserialise(*(in.device()));
-                    return s;
-                }
-                catch( const QString& msg )
-                {
-                    return boost::shared_ptr<ServerResponse>(new ServerResponse(ServerResponse::Error, msg ));
-                }
+                QString name;
+                in >> name;
+                boost::shared_ptr<DataBlobResponse> s( new DataBlobResponse(type, name) );
+                return s;
             }
             break;
         default:

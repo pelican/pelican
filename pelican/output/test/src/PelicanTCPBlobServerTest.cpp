@@ -8,6 +8,7 @@
 #include "pelican/comms/StreamDataRequest.h"
 #include "pelican/comms/PelicanProtocol.h"
 #include "pelican/comms/StreamData.h"
+#include "pelican/comms/ServerResponse.h"
 #include "pelican/server/DataManager.h"
 #include "pelican/utility/memCheck.h"
 #include "pelican/comms/Data.h"
@@ -90,6 +91,11 @@ void PelicanTCPBlobServerTest::test_connection()
     TestDataBlob blob;
     blob.setData("Testing TCPServer");
     server.send("testData", blob);
+
+    // Evaluate the response from the server
+    //tcpSocket.waitForReadyRead();
+    //boost::shared_ptr<ServerResponse> r = clientProtocol.receive(tcpSocket);
+    //CPPUNIT_ASSERT( r->type() == ServerResponse::Blob );
 }
 
 } // namespace pelican
