@@ -9,6 +9,7 @@ SUBPACKAGE(adapters utility data)
 set(adapters_src
     src/AdapterLofarStationVisibilities.cpp
     src/AdapterAntennaList.cpp
+    src/AdapterRealData.cpp
 )
 
 SUBPACKAGE_LIBRARY(adapters ${adapters_src})

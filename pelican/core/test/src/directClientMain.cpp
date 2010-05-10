@@ -4,7 +4,7 @@
 #include "pelican/core/DataClientFactory.h"
 #include "pelican/adapters/AbstractAdapter.h"
 #include "pelican/data/DataBlob.h"
-#include "pelican/data/VisibilityData.h"
+#include "pelican/data/RealData.h"
 #include "pelican/server/test/TestUdpChunker.h"
 
 #include <iostream>
@@ -16,20 +16,10 @@
 
 using namespace pelican;
 
-void printVisibilities(VisibilityData* visData)
+void printData(RealData* data)
 {
-    unsigned nChan = visData->nChannels();
-    unsigned nAnt = visData->nAntennas();
-    unsigned nPol = visData->nPolarisations();
-    for (unsigned p = 0; p < nPol; p++) {
-        for (unsigned c = 0; c < nChan; c++) {
-            complex_t* ptr = visData->ptr(c, p);
-            for (unsigned j = 0; j < nAnt; j++) {
-                for (unsigned i = 0; i < nAnt; i++) {
-                    std::cout << "VisData: " << ptr[i + j * nAnt] << std::endl;
-                }
-            }
-        }
+    for (unsigned i = 0; i < data->size(); ++i) {
+        std::cout << "Data " << data->ptr()[i] << std::endl;
     }
 }
 
@@ -51,28 +41,22 @@ int main(int argc, char** argv)
 
     QString pipelineXml = ""
             "<buffers>"
-            "   <VisibilityData>"
+            "   <RealData>"
             "       <buffer maxSize=\"2000000\" maxChunkSize=\"2000000\"/>"
-            "   </VisibilityData>"
+            "   </RealData>"
             "</buffers>"
             "<chunkers>"
             "    <TestUdpChunker name=\"a\">"
             "       <connection host=\"" + host + "\" port=\"" + QString::number(port) + "\"/>"
-            "       <data type=\"VisibilityData\" chunkSize=\"" + QString::number(chunkSize) + "\"/>"
+            "       <data type=\"RealData\" chunkSize=\"" + QString::number(chunkSize) + "\"/>"
             "    </TestUdpChunker>"
             "</chunkers>"
             "<clients>"
             "    <DirectStreamDataClient>"
-            "        <data type=\"VisibilityData\" adapter=\"AdapterLofarStationVisibilities\"/>"
+            "        <data type=\"RealData\" adapter=\"AdapterRealData\"/>"
             "    </DirectStreamDataClient>"
             "</clients>"
             "<adapters>"
-            "   <AdapterLofarStationVisibilities>"
-            "       <antennas number=\"8\"/>"
-            "       <channels start=\"0\" end=\"1\"/>"
-            "       <polarisation value=\"both\"/>"
-            "       <dataBytes number=\"8\"/>"
-            "   </AdapterLofarStationVisibilities>"
             "</adapters>";
     Config config;
     config.setFromString(pipelineXml);
@@ -87,7 +71,7 @@ int main(int argc, char** argv)
     Factory<DataBlob> blobFactory;
 
     // Create a list of data requirements.
-    QString dataType = "VisibilityData";
+    QString dataType = "RealData";
     DataRequirements req;
     QList<DataRequirements> requirements;
     req.addStreamData(dataType);
@@ -113,8 +97,9 @@ int main(int argc, char** argv)
         QHash<QString, DataBlob*> validData = client->getData(dataHash);
 
         // Check the content of the data blob.
-        VisibilityData* visData = (VisibilityData*)validData.value(dataType);
-        value = visData->ptr()[0];
+        RealData* realData = (RealData*)validData.value(dataType);
+        //printData(realData);
+        value = realData->ptr()[0];
         if (counter == 0)
             initValue = value;
     }
@@ -125,13 +110,13 @@ int main(int argc, char** argv)
 
     // Compute bandwidth.
     double sec = (double)timer.elapsed() / 1e3;
-    double megaBytesReceived = (double)(chunkSize * iterations) / 1e6;
+    double megaBytesReceived = (long double)chunkSize * iterations / (1024 * 1024);
 
     // Print summary.
     std::cout << "---------------------------------------------------------\n";
     std::cout << "Data range " << dataRange << " over " << iterations
             << " iterations. (Missed " << lostPackets << " packets.)\n";
-    std::cout << "Received " << megaBytesReceived << " MB in "
+    std::cout << "Received " << megaBytesReceived << " MiB in "
             << sec << " seconds.\n";
     std::cout << "Bandwidth: " << ((megaBytesReceived * 8) / sec)
             << " Mb/sec" << std::endl;

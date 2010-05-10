@@ -14,6 +14,7 @@ set(data_src
     src/FlagTable.cpp
     src/ImageData.cpp
     src/ModelVisibilityData.cpp
+    src/RealData.cpp
     src/VisibilityData.cpp
     src/VisibilityPositions.cpp
 )

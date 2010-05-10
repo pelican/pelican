@@ -4,6 +4,7 @@ set(adaptersTest_src
     src/adaptersTest.cpp
     src/AdapterLofarStationVisibilitiesTest.cpp
     src/AdapterAntennaListTest.cpp
+    src/AdapterRealDataTest.cpp
 )
 
 set(adaptersTestLibrary_src
