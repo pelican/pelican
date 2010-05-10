@@ -75,6 +75,11 @@ void TCPConnectionManagerTest::test_send()
     CPPUNIT_ASSERT( r->type() == ServerResponse::Blob );
     DataBlobResponse* res = static_cast<DataBlobResponse*>(r.get());
     CPPUNIT_ASSERT( res->dataName() == "testData" );
+    CPPUNIT_ASSERT( res->blobClass() == "TestDataBlob" );
+    TestDataBlob recvBlob;
+    recvBlob.deserialise(*client);
+    CPPUNIT_ASSERT(recvBlob == blob);
+
 }
 
 void TCPConnectionManagerTest::test_brokenConnection()
