@@ -24,7 +24,7 @@ class ConfigNode;
  * @details Constructs the DirectStreamDataClient.
  */
 DirectStreamDataClient::DirectStreamDataClient(const ConfigNode& configNode)
-    : AbstractDataClient(configNode)//, QThread()
+    : AbstractDataClient(configNode)
 {
     // Initialise members.
     _started = false;
@@ -37,10 +37,6 @@ DirectStreamDataClient::DirectStreamDataClient(const ConfigNode& configNode)
  */
 DirectStreamDataClient::~DirectStreamDataClient()
 {
-//    // Wait for the thread to finish.
-//    if (isRunning()) while (!isFinished()) quit();
-//    wait();
-
     // Delete managers.
     delete _chunkerManager;
     delete _dataManager;
@@ -106,32 +102,6 @@ void DirectStreamDataClient::start()
     }
 }
 
-///**
-// * @details
-// * Runs the thread owned by this data client, which creates the data manager.
-// * This starts the thread's event loop running.
-// */
-//void DirectStreamDataClient::run()
-//{
-//    if( ! _started ) {
-//        // Lock the mutex.
-//        _mutex.lock();
-//
-//        // Create the data manager in this thread.
-//        _dataManager = new DataManager(_config, QString("pipeline"));
-//        _chunkerManager->init(*_dataManager);
-//
-//        // Set started flag and unlock the mutex.
-//        _started = true;
-//        _mutex.unlock();
-//
-//        // Enter the thread's event loop.
-//        exec();
-//
-//        // Delete the data manager.
-//        delete _dataManager;
-//    }
-//}
 
 QHash<QString, DataBlob*> DirectStreamDataClient::getData(QHash<QString, DataBlob*>& dataHash)
 {
@@ -142,10 +112,8 @@ QHash<QString, DataBlob*> DirectStreamDataClient::getData(QHash<QString, DataBlo
                 "contain objects for all possible requests"));
 
     // Check that the client is ready.
-//    _mutex.lock();
     if (!_started)
         throw QString("DirectStreamDataClient::getData(): Call start() first.");
-//    _mutex.unlock();
 
     // keep polling the data manager until we can match a suitable request
     QList<LockedData> dataList; // will contain the list of valid StreamDataObjects
