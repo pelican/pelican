@@ -52,6 +52,7 @@ class AbstractProtocol
 
         /// Send an error to an I/O device.
         virtual void sendError(QIODevice& device, const QString&) = 0;
+
 };
 
 } // namespace pelican
