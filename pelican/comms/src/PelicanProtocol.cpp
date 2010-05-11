@@ -154,13 +154,14 @@ void PelicanProtocol::send(QIODevice& stream, const AbstractProtocol::ServiceDat
     }
 }
 
-void PelicanProtocol::send(QIODevice& stream, const DataBlob& data )
+void PelicanProtocol::send(QIODevice& stream, const QString& name, const DataBlob& data )
 {
     QByteArray array;
     QDataStream out(&array, QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_4_0);
     out << (quint16)ServerResponse::Blob;
     out << data.type();
+    out << name;
     stream.write(array);
     data.serialise(stream);
 }

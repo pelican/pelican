@@ -25,7 +25,7 @@ OutputStreamer::~OutputStreamer()
 
 void OutputStreamer::send(DataBlob* blob)
 {
-    _server->queue(_name, blob);
+    _server->send(_name, *blob);
 }
 
 } // namespace pelican

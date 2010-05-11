@@ -24,7 +24,7 @@ class PelicanTCPBlobServerTest : public CppUnit::TestFixture
 {
     public:
         CPPUNIT_TEST_SUITE( PelicanTCPBlobServerTest );
-        CPPUNIT_TEST( test_method );
+        CPPUNIT_TEST( test_connection );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -32,7 +32,7 @@ class PelicanTCPBlobServerTest : public CppUnit::TestFixture
         void tearDown();
 
         // Test Methods
-        void test_method();
+        void test_connection();
 
     public:
         PelicanTCPBlobServerTest(  );

@@ -9,8 +9,8 @@ namespace pelican {
 /**
  *@details DataBlobResponse 
  */
-DataBlobResponse::DataBlobResponse(DataBlob* blob)
-    : ServerResponse( ServerResponse::Blob ), _data(blob)
+DataBlobResponse::DataBlobResponse( const QString& blobType, const QString& streamName )
+    : ServerResponse( ServerResponse::Blob ), _type(blobType), _name(streamName)
 {
 }
 

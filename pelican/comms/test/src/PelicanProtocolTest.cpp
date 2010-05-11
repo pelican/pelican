@@ -147,11 +147,12 @@ void PelicanProtocolTest::test_sendDataBlob()
         QByteArray block;
         QBuffer stream(&block);
         stream.open(QIODevice::WriteOnly);
+        QString streamName("teststream");
 
         TestDataBlob blob;
         blob.setData("testdata");
         PelicanProtocol proto;
-        proto.send(stream,blob);
+        proto.send(stream, streamName, blob);
         CPPUNIT_ASSERT( ! block.isEmpty() );
 
         // send it over a TCP Socket
@@ -163,7 +164,7 @@ void PelicanProtocolTest::test_sendDataBlob()
         // make sure we get the correct type back
         CPPUNIT_ASSERT( resp->type() == ServerResponse::Blob );
         DataBlobResponse* db = static_cast<DataBlobResponse*>(resp.get());
-        CPPUNIT_ASSERT( *(static_cast<TestDataBlob*>(db->dataBlob())) == blob );
+        CPPUNIT_ASSERT( blob.type() == db->blobClass() );
     }
 }
 

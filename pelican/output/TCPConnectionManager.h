@@ -15,6 +15,9 @@
 
 namespace pelican {
 
+    class AbstractProtocol;
+    class DataBlob;
+
 /**
  * @class TCPConnectionManager
  *
@@ -29,29 +32,31 @@ class TCPConnectionManager : public QThread
     Q_OBJECT
 
     public:
-        TCPConnectionManager(const   ConfigNode& configNode, QObject *parent = 0);
+        TCPConnectionManager(quint16 port=0, QObject *parent = 0);
         ~TCPConnectionManager();
-
-    public:
-        virtual void run();
-
-    public:
-        QMap<QString, QList<QTcpSocket*> >* getClientsReference() { return &_clients; }
         qint16 serverPort() const;
+        int clientsForType(const QString&) const;
+
+    protected:
+        virtual void run();
+        void _killClient(QTcpSocket*);
 
     public slots:
-        void send(const QString& streamName, const QByteArray& incoming);
+        void send(const QString& streamName, const DataBlob& incoming);
 
     private:
         quint16                            _port;
-        QMap<QString, QList<QTcpSocket*> > _clients;
+        typedef QList<QTcpSocket*>         clients_t;
+        QMap<QString, clients_t > _clients;
         QTcpServer*                        _tcpServer;
-        QMutex                             _mutex;
+        QMutex                             _mutex; // controls access to _clients
+        QMutex                             _sendMutex; // controls access to send method
+        AbstractProtocol*                  _protocol;
 
     private slots:
         void connectionError(QAbstractSocket::SocketError socketError);
         void acceptClientConnection();
-        void connectionLost();
+
 };
 
 } // namespace pelican

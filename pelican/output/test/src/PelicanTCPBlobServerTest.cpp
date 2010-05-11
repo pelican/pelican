@@ -3,10 +3,12 @@
 #include "test/PelicanTCPBlobServerTest.h"
 #include "PelicanTCPBlobServer.h"
 
+#include "pelican/data/test/TestDataBlob.h"
 #include "pelican/comms/PelicanClientProtocol.h"
 #include "pelican/comms/StreamDataRequest.h"
 #include "pelican/comms/PelicanProtocol.h"
 #include "pelican/comms/StreamData.h"
+#include "pelican/comms/ServerResponse.h"
 #include "pelican/server/DataManager.h"
 #include "pelican/utility/memCheck.h"
 #include "pelican/comms/Data.h"
@@ -53,23 +55,23 @@ void PelicanTCPBlobServerTest::tearDown()
 /**
  * @details
  */
-void PelicanTCPBlobServerTest::test_method()
+void PelicanTCPBlobServerTest::test_connection()
 {
+    // Use Case:
+    // ?????? TODO
+    // Expect: TODO
+    //
     // Create and configure TCP server
     QString xml = "<TCPBlob>"
-                  "   <connection port=\"8888\"/>"
+                  "   <connection port=\"0\"/>"  // 0 = find unused system port
                   "</TCPBlob>";
     ConfigNode config(xml);
     PelicanTCPBlobServer server(config, _app);
     sleep(1);
-    printf("Created server\n");
-    
-    // Create a client
-    QHostAddress address("127.0.0.1");
-    QTcpSocket tcpSocket;
 
-    // Connected to server
-    tcpSocket.connectToHost(address, 8888);
+    // Create a client and connect it to the server
+    QTcpSocket tcpSocket;
+    tcpSocket.connectToHost( QHostAddress::LocalHost, server.serverPort() );
     if (!tcpSocket.waitForConnected(5000) || tcpSocket.state() == QAbstractSocket::UnconnectedState)
         CPPUNIT_FAIL("Client could not connect to server");
 
@@ -85,15 +87,15 @@ void PelicanTCPBlobServerTest::test_method()
     tcpSocket.waitForBytesWritten(data.size());
     tcpSocket.flush();
 
-    // Make sure client data structure has been set up properly
-    sleep(1);
-    CPPUNIT_ASSERT_EQUAL(server._clients -> keys().count(), 1);
-    CPPUNIT_ASSERT(server._clients -> keys()[0] == QString("testData"));
-    CPPUNIT_ASSERT_EQUAL((*server._clients)["testData"].count(), 1);
-
     // Test Server send
-    QByteArray serverData("Testing TCPServer");
-    server.send("testData", serverData);
+    TestDataBlob blob;
+    blob.setData("Testing TCPServer");
+    server.send("testData", blob);
+
+    // Evaluate the response from the server
+    //tcpSocket.waitForReadyRead();
+    //boost::shared_ptr<ServerResponse> r = clientProtocol.receive(tcpSocket);
+    //CPPUNIT_ASSERT( r->type() == ServerResponse::Blob );
 }
 
 } // namespace pelican
