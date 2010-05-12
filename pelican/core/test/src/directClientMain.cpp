@@ -91,7 +91,7 @@ int main(int argc, char** argv)
     QTime timer;
     timer.start();
     int counter = 0;
-    complex_t initValue, value;
+    real_t initValue, value;
     for (counter = 0; counter < iterations; counter++) {
         // Get the data.
         QHash<QString, DataBlob*> validData = client->getData(dataHash);
@@ -105,7 +105,7 @@ int main(int argc, char** argv)
     }
 
     // Check for lost packets.
-    double dataRange = value.real() - initValue.real();
+    double dataRange = value - initValue;
     double lostPackets = dataRange + 1 - iterations;
 
     // Compute bandwidth.

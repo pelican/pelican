@@ -54,10 +54,10 @@ template<class B> class Factory
                 const QString& group = "") :
                     _config(config), _section(section), _group(group) {}
 
-        /// Destroys the factory and deletes any objects created by it.
+        /// Destroys the factory and any objects created by it.
         virtual ~Factory() {
             for (int i = 0; i < _objects.size(); ++i) {
-                identifiers().remove(_objects[i]);
+//                identifiers().remove((void*)_objects[i]); // Not thread-safe.
                 delete _objects[i];
             }
         }
@@ -79,9 +79,7 @@ template<class B> class Factory
         /// It returns a base class pointer to the allocated object.
         virtual B* create(const QString& type, const QString& name = "")
         {
-            if (CreatorBase<B>::types().count(type) == 0)
-                throw QString("Factory::create(): Unknown type '%1'").arg(type);
-
+            _check(type); // Check the type is known.
             if (!_config)
                 _objects.append(CreatorBase<B>::types()[type]->create());
             else
@@ -104,6 +102,13 @@ template<class B> class Factory
         static QMap<void*, QString>& identifiers() {
             static QMap<void*, QString> ids;
             return ids;
+        }
+
+    private:
+        /// Checks that the type has been registered with the factory.
+        void _check(const QString& type) {
+            if (CreatorBase<B>::types().count(type) == 0)
+                throw QString("Factory::create(): Unknown type '%1'").arg(type);
         }
 };
 
