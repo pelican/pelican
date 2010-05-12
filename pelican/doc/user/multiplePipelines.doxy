@@ -1,0 +1,19 @@
+/**
+@page user_framework_multiplePipelines Supporting Multiple Pipelines
+
+@section mutliplePipelines_overview Overview
+
+It is possible to configure more than one pipeline to be operational in a single
+pelican binary. The appropriate pipeline will be run, depending on the data that
+is available.
+
+Multiple pipelines that require the same data sets are, however, \em not supported for 
+efficiency reasons (copies of potentially very large data sets would need to be made for each pipeline).
+
+@section pipelineConfigurationFiles_examples A Multiple Pipeline Example
+@todo example code
+
+@section pipelineConfigurationFiles_configuration Configuration Files for Multiple Pipeline Binaries
+@todo example config
+
+*/

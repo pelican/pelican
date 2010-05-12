@@ -1,0 +1,21 @@
+/**
+@page user_framework_pipelineConfigurationFiles Pipeline Configuration Files
+
+@section pipelineConfigurationFiles_overview Overview
+The configuration file allows you to control various aspects of the 
+runtime binary.
+
+As well as such things as server IP addresses and port information, the config file can 
+also be used to set parameters for inividual modules in the pipeline.
+
+@section pipelineConfigurationFiles_location Location of Configuration Files
+
+There are currently no default locations for pelican to search for configuration 
+files. You must specify the configuration file on the command line.
+
+Note that this may change in future revisions. In order to suppport more
+advanced configurations.
+
+@section pipelineConfigurationFiles_examples Examples
+
+*/
