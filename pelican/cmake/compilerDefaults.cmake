@@ -22,11 +22,6 @@ set (BUILD_SHARED_LIBS TRUE)
 
 set(CPP_PLATFORM_LIBS ${CMAKE_THREAD_LIBS_INIT})
 
-# Add openmp flags.
-find_package(OpenMP REQUIRED)
-list(APPEND CMAKE_CXX_FLAGS "${OpenMP_CXX_FLAGS}")
-list(APPEND CMAKE_C_FLAGS "${OpenMP_C_FLAGS}")
-
 #=== Include the pelican base source directory.
 include_directories(${PROJECT_SOURCE_DIR}/..)
 

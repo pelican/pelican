@@ -275,14 +275,13 @@ endmacro(SUBPACKAGE_LIBRARY)
 #  Macro to create a target to build a single global library that includes
 #  the contents of all the subpackage libraries (defined by SUBPACKAGE_LIBRARY)
 #
-MACRO (PROJECT_LIBRARY libname)
-    ##if( CMAKE_BUILD_TYPE MATCHES RELEASE|[rR]elease )
+macro(PROJECT_LIBRARY libname)
     if(BUILD_SINGLE_LIB)
         include( ${SUBPACKAGE_GLOBAL_FILE} )
 
         # Mark the object files as generated to avoid a search/missing targets.
         foreach(obj ${SUBPACKAGE_SHARED_OBJECTS})
-            SET_SOURCE_FILES_PROPERTIES(${obj} PROPERTIES GENERATED 1)
+            set_source_files_properties(${obj} PROPERTIES GENERATED 1)
         endforeach(obj)
 
         if(BUILD_STATIC)
@@ -291,10 +290,10 @@ MACRO (PROJECT_LIBRARY libname)
             endforeach(obj)
         endif(BUILD_STATIC)
 
-        add_library("${libname}" SHARED ${SUBPACKAGE_SHARED_OBJECTS} )
+        add_library("${libname}" SHARED ${SUBPACKAGE_SHARED_OBJECTS})
         
         if(BUILD_STATIC)
-            add_library("${libname}_static" STATIC ${SUBPACKAGE_STATIC_OBJECTS} )
+            add_library("${libname}_static" STATIC ${SUBPACKAGE_STATIC_OBJECTS})
             set_target_properties("${libname}_static" PROPERTIES OUTPUT_NAME "${libname}")
             set_target_properties("${libname}_static" PROPERTIES PREFIX "lib")
             set_target_properties("${libname}_static" PROPERTIES CLEAN_DIRECT_OUTPUT 1)
@@ -312,6 +311,13 @@ MACRO (PROJECT_LIBRARY libname)
         install(TARGETS "${libname}" DESTINATION ${LIBRARY_INSTALL_DIR})
         target_link_libraries("${libname}" ${PROJECT_LIBRARIES})
         
+        # Hack inserted to add omp to the link table as seeminly it doesnt
+        # pick it up from libmodules.so ...
+        set_target_properties("${libname}" PROPERTIES 
+           COMPILE_FLAGS "${OpenMP_CXX_FLAGS}"
+           LINK_FLAGS "${OpenMP_CXX_FLAGS}"
+        )
+        
         if(BUILD_STATIC)
             target_link_libraries("${libname}_static" ${PROJECT_LIBRARIES})
         endif(BUILD_STATIC)
@@ -323,9 +329,10 @@ MACRO (PROJECT_LIBRARY libname)
         #endforeach()
         #=======================================================================
 
-##    endif( CMAKE_BUILD_TYPE MATCHES RELEASE|[rR]elease )
     endif(BUILD_SINGLE_LIB)
-ENDMACRO (PROJECT_LIBRARY)
+endmacro(PROJECT_LIBRARY)
+
+
 
 # ------- some utility macros
 MACRO(ADD_SUFFIX rootlist suffix)

@@ -23,8 +23,10 @@ set(modules_src
 SUBPACKAGE_LIBRARY(modules ${modules_src})
 
 # Link modules with openmp.
-#set_target_properties(modules PROPERTIES COMPILE_FLAGS "${OpenMP_CXX_FLAGS}")
-
+set_target_properties(modules PROPERTIES 
+    COMPILE_FLAGS "${OpenMP_CXX_FLAGS}"
+    LINK_FLAGS "${OpenMP_CXX_FLAGS}"
+)
 
 SUBPACKAGE_ADD_LIBRARIES(
     ${pelican_math_libs}
