@@ -1,19 +1,21 @@
-#ifndef TESTCONFIG_H_
-#define TESTCONFIG_H_
+#ifndef TEST_CONFIG_H_
+#define TEST_CONFIG_H_
 
 /**
  * @file TestConfig.h
  */
 
 #include "pelican/utility/Config.h"
-#include <QDir>
-#include <QFile>
-#include <QStringList>
-#include <QString>
-#include <iostream>
+
+#include <QtCore/QDir>
+#include <QtCore/QFile>
+#include <QtCore/QStringList>
+#include <QtCore/QString>
+#include <QtCore/QFileInfo>
+
 #include <cstdlib>
 #include <cstring>
-#include <QFileInfo>
+#include <iostream>
 
 namespace pelican {
 
@@ -60,9 +62,9 @@ class TestConfig : public Config
             _freeArgv();
             QString path = findTestFile(fileName, package);
             QStringList args = QStringList() << "pelican" << "--config=" + path;
-            int argc = args.count();
-            _argv = (char**) malloc(argc * sizeof(char*));
-            for (int i = 0; i < argc; i++) {
+            _argc = args.count();
+            _argv = (char**) malloc(_argc * sizeof(char*));
+            for (int i = 0; i < _argc; i++) {
                 _argv[i] = (char*) malloc(args[i].size() * sizeof(char) + 1);
                 strcpy(_argv[i], args[i].toLatin1().data());
             }
@@ -81,7 +83,7 @@ class TestConfig : public Config
         static QString findTestFile(const QString& fileName, const QString& package)
         {
             QStringList searchPaths;
-            searchPaths << "../../../" + package + "/test/data";
+            searchPaths << "../../../" + package + "/   test/data";
             searchPaths << "../../" + package + "/test/data";
             searchPaths << "../" + package + "/test/data";
             searchPaths << package + "/test/data";
@@ -114,4 +116,4 @@ class TestConfig : public Config
 };
 
 } // pelican
-#endif /* TESTCONFIG_H_ */
+#endif // TEST_CONFIG_H_
