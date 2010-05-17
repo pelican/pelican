@@ -30,7 +30,8 @@ class ServiceDataRequest;
 class PelicanServerClient : public AbstractDataClient
 {
     public:
-        PelicanServerClient (const ConfigNode& config);
+        PelicanServerClient(const ConfigNode& configNode,
+                const DataTypes& types, const Config* config);
         ~PelicanServerClient();
         virtual QHash<QString, DataBlob*> getData(QHash<QString, DataBlob*>& dataHash);
         void setPort (unsigned int port);

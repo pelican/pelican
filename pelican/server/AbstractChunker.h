@@ -3,7 +3,7 @@
 
 #include "pelican/server/DataManager.h"
 #include "pelican/server/WritableData.h"
-#include "pelican/utility/Factory.h"
+#include "pelican/utility/FactoryRegistrar.h"
 
 #include <QUdpSocket>
 #include <QString>
@@ -18,18 +18,8 @@ namespace pelican {
 /**
  * This macro is used to register the named chunker type with the factory.
  * It should be used within the global scope of the chunker's source file.
- *
- * @note
- * The macro expands to declare a dummy variable of the object's generator
- * type, which (when constructed), adds the type name to the creator's known
- * object types.
- *
- * The macro is placed within the global scope so that it is initialised as
- * soon as the program starts executing. It is placed within an anonymous
- * namespace so that the dummy creator variable is not accessible from outside
- * the file that instantiated it.
  */
-#define PELICAN_DECLARE_CHUNKER(type) namespace {Creator<type, AbstractChunker> reg(#type);}
+#define PELICAN_DECLARE_CHUNKER(type) PELICAN_DECLARE(AbstractChunker, type)
 
 
 class ConfigNode;
@@ -59,6 +49,7 @@ class AbstractChunker
             : _dataManager(0), _type(type), _host(host), _port(port), _device(0) {}
 
         /// Constructs a new AbstractChunker.
+        PELICAN_CONSTRUCT_TYPES(ConfigNode)
         AbstractChunker(const ConfigNode& config);
 
         AbstractChunker() :

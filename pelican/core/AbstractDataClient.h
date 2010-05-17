@@ -2,7 +2,8 @@
 #define ABSTRACTDATACLIENT_H
 
 #include "pelican/core/DataTypes.h"
-#include "pelican/utility/Factory.h"
+#include "pelican/utility/FactoryRegistrar.h"
+#include "pelican/utility/Config.h"
 #include "pelican/utility/ConfigNode.h"
 #include <QHash>
 #include <QList>
@@ -19,18 +20,8 @@ namespace pelican {
 /**
  * This macro is used to register the named client type with the factory.
  * It should be used within the global scope of the client's source file.
- *
- * @note
- * The macro expands to declare a dummy variable of the object's generator
- * type, which (when constructed), adds the type name to the creator's known
- * object types.
- *
- * The macro is placed within the global scope so that it is initialised as
- * soon as the program starts executing. It is placed within an anonymous
- * namespace so that the dummy creator variable is not accessible from outside
- * the file that instantiated it.
  */
-#define PELICAN_DECLARE_CLIENT(type) namespace {Creator<type, AbstractDataClient> reg(#type);}
+#define PELICAN_DECLARE_CLIENT(type) PELICAN_DECLARE(AbstractDataClient, type)
 
 class AbstractAdapter;
 class DataBlob;
@@ -75,6 +66,7 @@ class AbstractDataClient
         DataTypes _dataReqs;
 
     protected:
+        const Config* _config;
         QSet<QString> _requireSet;
 
     protected: // methods
@@ -104,7 +96,9 @@ class AbstractDataClient
 
     public:
         /// Data client constructor.
-        AbstractDataClient(const ConfigNode& config);
+        PELICAN_CONSTRUCT_TYPES(const ConfigNode&, const DataTypes&, const Config*)
+        AbstractDataClient(const ConfigNode& configNode,
+                const DataTypes& types, const Config* config);
 
         /// Data client destructor (virtual).
         virtual ~AbstractDataClient();
@@ -122,12 +116,6 @@ class AbstractDataClient
         /// Gets the requested data from the data server.
         /// This method gets tFills the given data hash, and returns another hash of valid data.
         virtual QHash<QString, DataBlob*> getData(QHash<QString, DataBlob*>&) = 0;
-
-        /// Sets the data requirements.
-        void setDataRequirements(const DataTypes& types);
-
-        /// Sets the chunker manager and data manager.
-        virtual void setManagers(const Config*) {}
 };
 
 } // namespace pelican

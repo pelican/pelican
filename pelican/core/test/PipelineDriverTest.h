@@ -1,7 +1,10 @@
 #ifndef PIPELINEDRIVERTEST_H
 #define PIPELINEDRIVERTEST_H
 
-#include "pelican/utility/Factory.h"
+#include "pelican/data/DataBlob.h"
+#include "pelican/modules/AbstractModule.h"
+#include "pelican/utility/FactoryConfig.h"
+#include "pelican/utility/FactoryGeneric.h"
 #include <cppunit/extensions/HelperMacros.h>
 
 /**
@@ -12,9 +15,7 @@ class QCoreApplication;
 
 namespace pelican {
 
-class AbstractModule;
 class PipelineDriver;
-class DataBlob;
 class DataClientFactory;
 
 /**
@@ -63,8 +64,8 @@ class PipelineDriverTest : public CppUnit::TestFixture
     private:
         QCoreApplication *_coreApp;
         PipelineDriver *_pipelineDriver;
-        Factory<DataBlob>* _dataBlobFactory;
-        Factory<AbstractModule>* _moduleFactory;
+        FactoryGeneric<DataBlob>* _dataBlobFactory;
+        FactoryConfig<AbstractModule>* _moduleFactory;
         DataClientFactory* _clientFactory;
 };
 

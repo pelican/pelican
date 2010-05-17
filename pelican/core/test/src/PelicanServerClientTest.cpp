@@ -71,8 +71,9 @@ void PelicanServerClientTest::test_getData()
         QList<DataRequirements> lreq;
         DataTypes dt;
         dt.addData(lreq);
-        PelicanServerClient client(configNode);
-        CPPUNIT_ASSERT_THROW(client.setDataRequirements(dt), QString);
+        PelicanServerClient* client = 0;
+        CPPUNIT_ASSERT_THROW(client = new PelicanServerClient(configNode, dt, 0), QString);
+        delete client;
     }
     QString stream1("stream1");
     QString version1("version1");
@@ -87,8 +88,7 @@ void PelicanServerClientTest::test_getData()
         lreq.append(req);
         DataTypes dt;
         dt.addData(lreq);
-        PelicanServerClient client(configNode);
-        client.setDataRequirements(dt);
+        PelicanServerClient client(configNode, dt, 0);
 
         QHash<QString, DataBlob*> dataHash;
         CPPUNIT_ASSERT_THROW(client.getData(dataHash), QString );
@@ -104,8 +104,7 @@ void PelicanServerClientTest::test_getData()
         lreq.append(req);
         DataTypes dt;
         dt.addData(lreq);
-        PelicanServerClient client(configNode);
-        client.setDataRequirements(dt);
+        PelicanServerClient client(configNode, dt, 0);
 
         QHash<QString, DataBlob*> dataHash;
         DataBlob db;
@@ -139,8 +138,7 @@ void PelicanServerClientTest::test_response()
         DataTypes dt;
         dt.addData(lreq);
         dt.setAdapter(stream1,&streamAdapter);
-        PelicanServerClient client(configNode);
-        client.setDataRequirements(dt);
+        PelicanServerClient client(configNode, dt, 0);
 
         // set up the memory for receiving data
         TestDataBlob db;
@@ -174,8 +172,7 @@ void PelicanServerClientTest::test_response()
         DataTypes dt;
         dt.addData(lreq);
         dt.setAdapter(service1,&serviceAdapter);
-        PelicanServerClient client(configNode);
-        client.setDataRequirements(dt);
+        PelicanServerClient client(configNode, dt, 0);
 
         SocketTester st;
         QTcpSocket& sock = st.send(data2);
@@ -208,8 +205,7 @@ void PelicanServerClientTest::test_response()
         dt.addData(lreq);
         dt.setAdapter(service1,&serviceAdapter);
         dt.setAdapter(service2,&serviceAdapter);
-        PelicanServerClient client(configNode);
-        client.setDataRequirements(dt);
+        PelicanServerClient client(configNode, dt, 0);
 
         SocketTester st;
         QTcpSocket& sock = st.send( data1 + data2 );

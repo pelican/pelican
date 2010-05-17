@@ -1,5 +1,5 @@
 #include "ChunkerFactoryTest.h"
-#include "pelican/utility/Factory.h"
+#include "pelican/utility/FactoryConfig.h"
 #include "pelican/utility/Config.h"
 #include "pelican/server/test/TestUdpChunker.h"
 
@@ -64,7 +64,7 @@ void ChunkerFactoryTest::test_create()
         config.setFromString("", serverXml);
 
         // Create the chunker factory.
-        Factory<AbstractChunker> factory(&config, "server", "chunkers");
+        FactoryConfig<AbstractChunker> factory(&config, "server", "chunkers");
 
         // Create the chunker.
         AbstractChunker* chunker = factory.create("TestUdpChunker", "2");

@@ -4,7 +4,7 @@
 #include <QList>
 #include <QString>
 #include "pelican/core/AbstractDataClient.h"
-#include "pelican/utility/Factory.h"
+#include "pelican/utility/FactoryConfig.h"
 
 /**
  * @file DataClientFactory.h
@@ -25,17 +25,17 @@ class DataRequirements;
  * @details
  * 
  */
-class DataClientFactory : public Factory<AbstractDataClient>
+class DataClientFactory : public FactoryConfig<AbstractDataClient>
 {
     private:
-        Factory<AbstractAdapter>* _adapterFactory;
+        FactoryConfig<AbstractAdapter>* _adapterFactory;
 
     public:
         /// Constructs the data client factory.
         DataClientFactory(const Config* config, const QString& section,
-                const QString& group, Factory<AbstractAdapter>* aFactory) :
-                    Factory<AbstractDataClient>(config, section, group),
-                    _adapterFactory(aFactory) {}
+                const QString& group, FactoryConfig<AbstractAdapter>* aFactory)
+        : FactoryConfig<AbstractDataClient>(config, section, group),
+          _adapterFactory(aFactory) {}
 
         /// Create a configured object with the given name and type from a list of data requirements.
         AbstractDataClient* create(const QString& type,

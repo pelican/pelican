@@ -19,7 +19,7 @@ ChunkerManager::ChunkerManager(const Config* config, const QString section)
     _config = config;
 
     // Create the chunker factory.
-    _factory = new Factory<AbstractChunker>(config, section, "chunkers");
+    _factory = new FactoryConfig<AbstractChunker>(config, section, "chunkers");
 }
 
 /**

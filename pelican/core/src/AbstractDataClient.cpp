@@ -21,9 +21,19 @@ namespace pelican {
  *
  * @param[in] config Reference to the data client configuration node.
  */
-AbstractDataClient::AbstractDataClient(const ConfigNode& config) :
-    _configNode(config)
+AbstractDataClient::AbstractDataClient(const ConfigNode& configNode,
+        const DataTypes& types, const Config* config) :
+        _configNode(configNode), _dataReqs(types), _config(config)
 {
+    // Quick sanity check.
+    if (_dataReqs.dataRequirements().size() == 0)
+        throw QString("AbstractDataClient: "
+                "No data requirements specified");
+
+    // Construct the total set of requirements.
+    foreach (const DataRequirements dr, dataRequirements()) {
+        _requireSet += dr.allData();
+    }
 }
 
 /**
@@ -89,29 +99,6 @@ QHash<QString, DataBlob*> AbstractDataClient::adaptService(QIODevice& device,
     adapter->deserialise(&device);
     validData.insert(type, dataHash.value(type));
     return validData;
-}
-
-/**
- * @details
- * Sets the requirements of the data client.
- * This method is called by the data client factory.
- *
- * @param[in] types  Object containing the requirements and adapters for each pipeline.
- */
-void AbstractDataClient::setDataRequirements(const DataTypes& types)
-{
-    // Store the data requirements.
-    _dataReqs = types;
-
-    // Quick sanity check.
-    if ( _dataReqs.dataRequirements().size()== 0 )
-        throw QString("AbstractDataClient::setDataRequirements(): "
-                "No data requirements specified");
-
-    // Construct the total set of requirements.
-    foreach( const DataRequirements dr, dataRequirements() ) {
-        _requireSet += dr.allData();
-    }
 }
 
 } // namespace pelican

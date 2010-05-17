@@ -1,4 +1,5 @@
 #include "TestDataBlob.h"
+#include <QDataStream>
 #include <iostream>
 
 

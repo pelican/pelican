@@ -3,6 +3,7 @@
 
 
 #include "AbstractDataClient.h"
+#include "pelican/core/DataTypes.h"
 
 /**
  * @file TestDataClient.h
@@ -23,7 +24,7 @@ class TestDataClient : public AbstractDataClient
 {
     public:
         /// Constructs a new test data client.
-        TestDataClient(const ConfigNode& config);
+        TestDataClient(const ConfigNode& config, const DataTypes& types);
 
         /// Destroys the test data client.
         ~TestDataClient();

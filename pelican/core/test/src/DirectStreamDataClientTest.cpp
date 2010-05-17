@@ -7,7 +7,8 @@
 #include "pelican/data/DataRequirements.h"
 #include "pelican/server/test/TelescopeEmulator.h"
 #include "pelican/utility/Config.h"
-#include "pelican/utility/Factory.h"
+#include "pelican/utility/FactoryConfig.h"
+#include "pelican/utility/FactoryGeneric.h"
 
 #include <QCoreApplication>
 #include <QList>
@@ -94,13 +95,13 @@ void DirectStreamDataClientTest::test_singleChunker()
         TelescopeEmulator telescope1(0.2, 2002);
 
         // Create the adapter factory.
-        Factory<AbstractAdapter> adapterFactory(_config, "pipeline", "adapters");
+        FactoryConfig<AbstractAdapter> adapterFactory(_config, "pipeline", "adapters");
 
         // Create the data client factory.
         DataClientFactory clientFactory(_config, "pipeline", "clients", &adapterFactory);
 
         // Create the data blob factory.
-        Factory<DataBlob> blobFactory;
+        FactoryGeneric<DataBlob> blobFactory;
 
         // Create a list of data requirements.
         QString dataType = "VisibilityData";
@@ -114,7 +115,6 @@ void DirectStreamDataClientTest::test_singleChunker()
                 clientFactory.create("DirectStreamDataClient", requirements));
         CPPUNIT_ASSERT(DataClientFactory::whatIs(client) == "DirectStreamDataClient");
         client->addStreamChunker("TestUdpChunker", "a");
-        client->start();
 
         // Set up the data hash.
         QHash<QString, DataBlob*> dataHash;
@@ -146,7 +146,7 @@ void DirectStreamDataClientTest::test_twoChunkersMultipleStarts()
             TelescopeEmulator telescope2(0.4, 2003);
 
             // Create the adapter factory.
-            Factory<AbstractAdapter> adapterFactory(_config,
+            FactoryConfig<AbstractAdapter> adapterFactory(_config,
                     "pipeline", "adapters");
 
             // Create the data client factory.
@@ -154,7 +154,7 @@ void DirectStreamDataClientTest::test_twoChunkersMultipleStarts()
                     "clients", &adapterFactory);
 
             // Create the data blob factory.
-            Factory<DataBlob> blobFactory;
+            FactoryGeneric<DataBlob> blobFactory;
 
             // Create a list of data requirements.
             QString dataType = "VisibilityData";
@@ -169,7 +169,6 @@ void DirectStreamDataClientTest::test_twoChunkersMultipleStarts()
             CPPUNIT_ASSERT(DataClientFactory::whatIs(client) == "DirectStreamDataClient");
             client->addStreamChunker("TestUdpChunker", "a");
             client->addStreamChunker("TestUdpChunker", "b");
-            client->start();
 
             // Set up the data hash.
             QHash<QString, DataBlob*> dataHash;
@@ -202,7 +201,7 @@ void DirectStreamDataClientTest::test_twoChunkersSingleStart()
         TelescopeEmulator telescope2(0.4, 2003);
 
         // Create the adapter factory.
-        Factory<AbstractAdapter> adapterFactory(_config,
+        FactoryConfig<AbstractAdapter> adapterFactory(_config,
                 "pipeline", "adapters");
 
         // Create the data client factory.
@@ -210,7 +209,7 @@ void DirectStreamDataClientTest::test_twoChunkersSingleStart()
                 "clients", &adapterFactory);
 
         // Create the data blob factory.
-        Factory<DataBlob> blobFactory;
+        FactoryGeneric<DataBlob> blobFactory;
 
         // Create a list of data requirements.
         QString dataType = "VisibilityData";
@@ -225,7 +224,6 @@ void DirectStreamDataClientTest::test_twoChunkersSingleStart()
         CPPUNIT_ASSERT(DataClientFactory::whatIs(client) == "DirectStreamDataClient");
         client->addStreamChunker("TestUdpChunker", "a");
         client->addStreamChunker("TestUdpChunker", "b");
-        client->start();
 
         // Set up the data hash.
         QHash<QString, DataBlob*> dataHash;

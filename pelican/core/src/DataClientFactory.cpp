@@ -27,7 +27,7 @@ AbstractDataClient* DataClientFactory::create(const QString& type,
         dataTypes.addData(req);
 
     // Find the configuration information for adapters.
-    QHash<QString, QString> adapterNames = configuration(type, name).
+    QHash<QString, QString> adapterNames = conf(type, name).
             getOptionHash("data", "type", "adapter");
 
     // Construct the adapters and add them to the DataTypes structure.
@@ -46,9 +46,8 @@ AbstractDataClient* DataClientFactory::create(const QString& type,
     }
 
     // Call the base class implementation and set the data requirements.
-    AbstractDataClient* client = Factory<AbstractDataClient>::create(type, name);
-    client->setManagers(_config);
-    client->setDataRequirements(dataTypes);
+    AbstractDataClient* client = FactoryConfig<AbstractDataClient>::create(
+            type, dataTypes, _config, name);
     return client;
 }
 

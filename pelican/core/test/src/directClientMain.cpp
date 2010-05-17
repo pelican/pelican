@@ -1,6 +1,7 @@
 #include "pelican/core/DirectStreamDataClient.h"
 #include "pelican/utility/Config.h"
-#include "pelican/utility/Factory.h"
+#include "pelican/utility/FactoryConfig.h"
+#include "pelican/utility/FactoryGeneric.h"
 #include "pelican/core/DataClientFactory.h"
 #include "pelican/adapters/AbstractAdapter.h"
 #include "pelican/data/DataBlob.h"
@@ -62,13 +63,13 @@ int main(int argc, char** argv)
     config.setFromString(pipelineXml);
 
     // Create the adapter factory.
-    Factory<AbstractAdapter> adapterFactory(&config, "pipeline", "adapters");
+    FactoryConfig<AbstractAdapter> adapterFactory(&config, "pipeline", "adapters");
 
     // Create the data client factory.
     DataClientFactory clientFactory(&config, "pipeline", "clients", &adapterFactory);
 
     // Create the data blob factory.
-    Factory<DataBlob> blobFactory;
+    FactoryGeneric<DataBlob> blobFactory;
 
     // Create a list of data requirements.
     QString dataType = "RealData";
@@ -81,7 +82,6 @@ int main(int argc, char** argv)
     DirectStreamDataClient* client = static_cast<DirectStreamDataClient*>(
             clientFactory.create("DirectStreamDataClient", requirements));
     client->addStreamChunker("TestUdpChunker", "a");
-    client->start();
 
     // Set up the data hash.
     QHash<QString, DataBlob*> dataHash;

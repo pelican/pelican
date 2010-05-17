@@ -2,6 +2,7 @@
 #define IMAGEDATA_H
 
 #include "pelican/data/DataBlob.h"
+#include "pelican/utility/constants.h"
 #include <QString>
 #include <vector>
 #include <cmath>

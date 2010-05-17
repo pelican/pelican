@@ -2,7 +2,6 @@
 #define DIRECTSTREAMDATACLIENT_H
 
 #include "pelican/core/AbstractDataClient.h"
-#include "pelican/server/DataManager.h"
 
 /**
  * @file DirectStreamDataClient.h
@@ -11,38 +10,40 @@
 namespace pelican {
 
 class ChunkerManager;
+class DataManager;
 class Config;
 
 /**
  * @class DirectStreamDataClient
  *
  * @brief
- *    A Data Client that allows you to connect to one or more data streams
- *    directly using specialist chunkers, rather than through the PelicanServer
- *    This is useful when the data rates on the stream can be handled in a single
- *    pipeline.
- * @details
- *    To use:
- *    1) Set up the client in the usual way with adapters etc.
- *    2) add a chunker for each stream
- *    3) setup your configuration file
- *    4) call the start() method to launch all the chunkers in separate threads
- *    5) now ready to call getData
+ * A data client that connects directly to one or more data streams.
  *
+ * @details
+ * This data client connects directly to one or more data streams using
+ * specialist chunkers, rather than to the PelicanServer.
+ * This is useful when the data rates on the stream can be handled in a single
+ * pipeline.
+ *
+ * Add the chunkers using the addChunker() method in a derived class
+ * constructor.
  */
-
 class DirectStreamDataClient : public AbstractDataClient
 {
     public:
-        DirectStreamDataClient( const ConfigNode& configNode);
+        /// Constructs the direct stream data client.
+        DirectStreamDataClient(const ConfigNode& configNode,
+                const DataTypes& types, const Config* config);
+
+        /// Destroys the direct stream data client.
         virtual ~DirectStreamDataClient();
-        void setPort(unsigned int port);
-        void setIP_Address(const QString& ipaddress);
+
+        /// Obtains a hash of data blobs for the pipeline.
         QHash<QString, DataBlob*> getData(QHash<QString, DataBlob*>& dataHash);
 
-//        /// Sets the chunker for the given data type (DEPRECATED).
-//        void setChunker(const QString& dataType, const QString& chunkerType,
-//                const QString& chunkerName = QString());
+        /// Sets the chunker for the given data type.
+        void addChunker(const QString& dataType, const QString& chunkerType,
+                const QString& chunkerName = QString());
 
         /// Sets the service chunker for the given data type.
         void addServiceChunker(const QString& chunkerType,
@@ -52,20 +53,10 @@ class DirectStreamDataClient : public AbstractDataClient
         void addStreamChunker(const QString& chunkerType,
                 const QString& chunkerName = QString());
 
-        void setManagers(const Config* config);
-
-        void start();
-
-    protected:
-        bool _started;
-        //virtual void connect(const QString& address, unsigned int port);
-
     private:
-        const Config* _config;
+        bool _started;
         ChunkerManager* _chunkerManager;
         DataManager* _dataManager;
-        QString _server;
-        unsigned int _port;
 };
 
 } // namespace pelican

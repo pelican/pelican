@@ -83,8 +83,7 @@ void PelicanServerClientTestMT::test_getData()
         lreq.append(req);
         DataTypes dt;
         dt.addData(lreq);
-        PelicanServerClient client(configNode);
-        client.setDataRequirements(dt);
+        PelicanServerClient client(configNode, dt, 0);
         client.setPort(port);
 
         QHash<QString, DataBlob*> dataHash;
@@ -108,8 +107,7 @@ void PelicanServerClientTestMT::test_getData()
         DataTypes dt;
         dt.addData(lreq);
         dt.setAdapter(stream1, &streamAdapter);
-        PelicanServerClient client(configNode);
-        client.setDataRequirements(dt);
+        PelicanServerClient client(configNode, dt, 0);
         client.setPort(port);
 
         QHash<QString, DataBlob*> dataHash;
@@ -141,8 +139,7 @@ void PelicanServerClientTestMT::test_getData()
         dt.addData(lreq);
         dt.setAdapter(stream1, &streamAdapter);
         dt.setAdapter(service1, &serviceAdapter);
-        PelicanServerClient client(configNode);
-        client.setDataRequirements(dt);
+        PelicanServerClient client(configNode, dt, 0);
         client.setPort(port);
 
         QHash<QString, DataBlob*> dataHash;

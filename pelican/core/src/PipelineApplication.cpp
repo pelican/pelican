@@ -54,9 +54,10 @@ PipelineApplication::~PipelineApplication()
  * @details
  * Returns a pointer to the application's adapter factory.
  */
-Factory<AbstractAdapter>* PipelineApplication::adapterFactory()
+FactoryConfig<AbstractAdapter>* PipelineApplication::adapterFactory()
 {
-    static Factory<AbstractAdapter> factory(config(), "pipeline", "adapters");
+    static FactoryConfig<AbstractAdapter> factory(config(),
+            "pipeline", "adapters");
     return &factory;
 }
 
@@ -95,9 +96,9 @@ Config* PipelineApplication::config(std::string configFilename)
  * @details
  * Returns a pointer to the application's data blob factory.
  */
-Factory<DataBlob>* PipelineApplication::dataBlobFactory()
+FactoryGeneric<DataBlob>* PipelineApplication::dataBlobFactory()
 {
-    static Factory<DataBlob> factory;
+    static FactoryGeneric<DataBlob> factory;
     return &factory;
 }
 
@@ -105,9 +106,9 @@ Factory<DataBlob>* PipelineApplication::dataBlobFactory()
  * @details
  * Returns a pointer to the application's module factory.
  */
-Factory<AbstractModule>* PipelineApplication::moduleFactory()
+FactoryConfig<AbstractModule>* PipelineApplication::moduleFactory()
 {
-    static Factory<AbstractModule> factory(config(), "pipeline", "modules");
+    static FactoryConfig<AbstractModule> factory(config(), "pipeline", "modules");
     return &factory;
 }
 

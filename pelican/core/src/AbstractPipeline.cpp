@@ -81,7 +81,7 @@ const DataRequirements& AbstractPipeline::requiredDataRemote() const
  *
  * @param[in] factory Pointer to the module factory to use.
  */
-void AbstractPipeline::setModuleFactory(Factory<AbstractModule>* factory)
+void AbstractPipeline::setModuleFactory(FactoryConfig<AbstractModule>* factory)
 {
     _moduleFactory = factory;
 }

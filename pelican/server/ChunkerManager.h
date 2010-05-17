@@ -1,7 +1,7 @@
 #ifndef CHUNKERMANAGER_H
 #define CHUNKERMANAGER_H
 
-#include "pelican/utility/Factory.h"
+#include "pelican/utility/FactoryConfig.h"
 #include "pelican/server/DataReceiver.h"
 #include <QSet>
 #include <QMap>
@@ -55,7 +55,7 @@ class ChunkerManager
 
     private:
         const Config* _config;
-        Factory<AbstractChunker> *_factory;
+        FactoryConfig<AbstractChunker> *_factory;
         QMap<QPair<QString,quint16>,AbstractChunker* > _chunkerPortMap;
         QSet<QString> _streamDataTypes;
         QSet<QString> _serviceDataTypes;

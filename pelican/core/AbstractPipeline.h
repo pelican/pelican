@@ -2,7 +2,8 @@
 #define ABSTRACTPIPELINE_H
 
 #include "pelican/data/DataRequirements.h"
-#include "pelican/utility/Factory.h"
+#include "pelican/modules/AbstractModule.h"
+#include "pelican/utility/FactoryConfig.h"
 #include <QString>
 #include <QList>
 
@@ -91,7 +92,7 @@ class AbstractPipeline
         DataRequirements _requiredDataRemote;
 
         /// Pointer to the PipelineApplication module factory (private, not protected).
-        Factory<AbstractModule>* _moduleFactory;
+        FactoryConfig<AbstractModule>* _moduleFactory;
 
         /// Pointer to the pipeline driver.
         PipelineDriver* _pipelineDriver;
@@ -149,7 +150,7 @@ class AbstractPipeline
         virtual void run(QHash<QString, DataBlob*>& data) = 0;
 
         /// Sets the module factory.
-        void setModuleFactory(Factory<AbstractModule>* factory);
+        void setModuleFactory(FactoryConfig<AbstractModule>* factory);
 
         /// Sets the pipeline driver.
         void setPipelineDriver(PipelineDriver* driver);

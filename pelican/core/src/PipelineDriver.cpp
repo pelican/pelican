@@ -22,8 +22,9 @@ namespace pelican {
  * @details
  * PipelineDriver constructor, which takes pointers to the allocated factories.
  */
-PipelineDriver::PipelineDriver(Factory<DataBlob>* blobFactory,
-        Factory<AbstractModule>* moduleFactory, DataClientFactory* clientFactory
+PipelineDriver::PipelineDriver(FactoryGeneric<DataBlob>* blobFactory,
+        FactoryConfig<AbstractModule>* moduleFactory,
+        DataClientFactory* clientFactory
 ){
     // Initialise member variables.
     _run = false;
@@ -84,10 +85,6 @@ void PipelineDriver::registerPipeline(AbstractPipeline *pipeline)
  * Sets the given data client based on the named argument.
  * The client is only created after the pipelines have been initialised,
  * when start() is called.
- *
- * The recognised values are:
- * - FileDataClient
- * - PelicanServerClient
  *
  * @param[in] name The type of the data client to create.
  */

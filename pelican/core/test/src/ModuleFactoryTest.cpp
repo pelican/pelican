@@ -1,9 +1,10 @@
 #include "ModuleFactoryTest.h"
 #include "pelican/modules/AbstractModule.h"
-#include "pelican/utility/Factory.h"
+#include "pelican/utility/FactoryConfig.h"
 #include "pelican/utility/Config.h"
-#include "pelican/utility/memCheck.h"
 #include <iostream>
+
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 
@@ -53,7 +54,7 @@ void ModuleFactoryTest::test_createModule_EmptyModule()
     // Expect to be given a basic object
     {
         Config emptyConfig;
-        Factory<AbstractModule> factory(&emptyConfig, "", "");
+        FactoryConfig<AbstractModule> factory(&emptyConfig, "", "");
         AbstractModule* module = 0;
         CPPUNIT_ASSERT_NO_THROW(module = factory.create("EmptyModule"));
         CPPUNIT_ASSERT(module != 0);
@@ -70,7 +71,7 @@ void ModuleFactoryTest::test_createModule_EmptyModule()
         Config::TreeAddress address(base);
         address.append(Config::NodeId("EmptyModule", ""));
         config.set(address);
-        Factory<AbstractModule> factory(&config, section, group);
+        FactoryConfig<AbstractModule> factory(&config, section, group);
 
         AbstractModule* module = 0;
         CPPUNIT_ASSERT_NO_THROW(module = factory.create("EmptyModule"));

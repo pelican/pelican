@@ -18,8 +18,9 @@ PELICAN_DECLARE_CLIENT(FileDataClient)
  * @details
  * This creates a new file data client.
  */
-FileDataClient::FileDataClient(const ConfigNode& config) :
-    AbstractDataClient(config)
+FileDataClient::FileDataClient(const ConfigNode& configNode,
+        const DataTypes& types, const Config* config) :
+    AbstractDataClient(configNode, types, config)
 {
     // Get the configuration options.
     _getConfig();

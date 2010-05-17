@@ -2,7 +2,11 @@
 #define PIPELINEAPPLICATION_H
 
 #include <QString>
-#include "pelican/utility/Factory.h"
+#include "pelican/adapters/AbstractAdapter.h"
+#include "pelican/data/DataBlob.h"
+#include "pelican/modules/AbstractModule.h"
+#include "pelican/utility/FactoryConfig.h"
+#include "pelican/utility/FactoryGeneric.h"
 
 /**
  * @file PipelineApplication.h
@@ -10,12 +14,8 @@
 
 namespace pelican {
 
-class AbstractAdapter;
-class AbstractChunker;
-class AbstractModule;
 class AbstractPipeline;
 class Config;
-class DataBlob;
 class PipelineDriver;
 class DataClientFactory;
 
@@ -84,7 +84,7 @@ class PipelineApplication
         ~PipelineApplication();
 
         /// Return a pointer to the adapter factory.
-        static Factory<AbstractAdapter>* adapterFactory();
+        static FactoryConfig<AbstractAdapter>* adapterFactory();
 
         /// Return a pointer to the client factory.
         static DataClientFactory* clientFactory();
@@ -93,10 +93,10 @@ class PipelineApplication
         static Config* config(std::string configFilename = "");
 
         /// Return a pointer to the data blob factory.
-        static Factory<DataBlob>* dataBlobFactory();
+        static FactoryGeneric<DataBlob>* dataBlobFactory();
 
         /// Return a pointer to the module factory.
-        static Factory<AbstractModule>* moduleFactory();
+        static FactoryConfig<AbstractModule>* moduleFactory();
 
         /// Register a pipeline with the pipeline driver.
         void registerPipeline(AbstractPipeline *pipeline);

@@ -25,14 +25,15 @@ namespace pelican {
 PELICAN_DECLARE_CLIENT(PelicanServerClient)
 
 // class PelicanServerClient
-PelicanServerClient::PelicanServerClient(const ConfigNode& config)
-    : AbstractDataClient(config), _protocol(0)
+PelicanServerClient::PelicanServerClient(const ConfigNode& configNode,
+        const DataTypes& types, const Config* config)
+    : AbstractDataClient(configNode, types, config), _protocol(0)
 {
 
     _protocol = new PelicanClientProtocol;
 
-    setIP_Address(config.getOption("server", "host"));
-    setPort(config.getOption("server", "port").toUInt());
+    setIP_Address(configNode.getOption("server", "host"));
+    setPort(configNode.getOption("server", "port").toUInt());
 }
 
 PelicanServerClient::~PelicanServerClient()

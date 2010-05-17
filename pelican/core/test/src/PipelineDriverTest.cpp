@@ -50,10 +50,10 @@ void PipelineDriverTest::setUp()
     _coreApp = new QCoreApplication(argc, argv);
 
     // Create the factories.
-    _dataBlobFactory = new Factory<DataBlob>;
+    _dataBlobFactory = new FactoryGeneric<DataBlob>;
     Config config;
 
-    _moduleFactory = new Factory<AbstractModule>(0, "", "");
+    _moduleFactory = new FactoryConfig<AbstractModule>(0, "", "");
 
     _clientFactory = new DataClientFactory(0, "", "", 0);
 
@@ -176,8 +176,7 @@ void PipelineDriverTest::test_start_singlePipelineClientReturnsGoodData()
         ConfigNode config;
         DataTypes types;
         types.addData(req);
-        TestDataClient client(config);
-        client.setDataRequirements(types);
+        TestDataClient client(config, types);
         _pipelineDriver->_dataClient = &client;
 
         // Start the pipeline driver.
@@ -214,8 +213,7 @@ void PipelineDriverTest::test_start_singlePipelineClientReturnsWrongData()
         DataRequirements clientTypes;
         clientTypes.addStreamData("OtherStreamData");
         types.addData(clientTypes);
-        TestDataClient client(config);
-        client.setDataRequirements(types);
+        TestDataClient client(config, types);
         _pipelineDriver->_dataClient = &client;
 
         // Start the pipeline driver.
@@ -258,8 +256,7 @@ void PipelineDriverTest::test_start_multiPipelineRunDifferentData()
         clientTypes.addStreamData(type1); // Add both types of required data.
         clientTypes.addStreamData(type2); // Add both types of required data.
         types.addData(clientTypes);
-        TestDataClient client(config);
-        client.setDataRequirements(types);
+        TestDataClient client(config, types);
         _pipelineDriver->_dataClient = &client;
 
         // Start the pipeline driver.
@@ -303,8 +300,7 @@ void PipelineDriverTest::test_start_multiPipelineRunOne()
         DataRequirements clientTypes;
         clientTypes.addStreamData(type1); // Add one type of required data.
         types.addData(clientTypes);
-        TestDataClient client(config);
-        client.setDataRequirements(types);
+        TestDataClient client(config, types);
         _pipelineDriver->_dataClient = &client;
 
         // Start the pipeline driver.
