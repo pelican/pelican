@@ -30,7 +30,7 @@ set(CMAKE_CXX_FLAGS_RELEASE "-O2 -DQT_NO_DEBUG -DNDEBUG")
 
 if(CMAKE_COMPILER_IS_GNUCXX)
     # Note that -std=c++0x is needed for -pedantic.
-    add_definitions(-Wall -Wextra -pedantic -std=c++0x)
+    add_definitions(-Wall -Wextra)
     add_definitions(-Wno-deprecated -Wno-unknown-pragmas)
     list(APPEND CPP_PLATFORM_LIBS util dl)
 elseif(CMAKE_CXX_COMPILER MATCHES icpc)
