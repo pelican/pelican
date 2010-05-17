@@ -134,7 +134,8 @@ void DirectStreamDataClientTest::test_singleChunker()
 
 /**
  * @details
- * Tests two chunkers, starting them multiple times.
+ * Tests two chunkers, starting them multiple times (test for random segfaults
+ * and threading problems).
  */
 void DirectStreamDataClientTest::test_twoChunkersMultipleStarts()
 {
@@ -191,7 +192,8 @@ void DirectStreamDataClientTest::test_twoChunkersMultipleStarts()
 
 /**
  * @details
- * Tests two chunkers, starting them only once.
+ * Tests two chunkers, starting them only once and calling getData()
+ * multiple times.
  */
 void DirectStreamDataClientTest::test_twoChunkersSingleStart()
 {

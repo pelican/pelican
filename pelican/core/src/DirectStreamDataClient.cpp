@@ -10,8 +10,8 @@
 #include "pelican/server/LockedData.h"
 #include "pelican/utility/Config.h"
 
-#include <QBuffer>
-#include <QCoreApplication>
+#include <QtCore/QBuffer>
+#include <QtCore/QCoreApplication>
 
 #include "pelican/utility/memCheck.h"
 
