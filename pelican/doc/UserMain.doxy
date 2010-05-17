@@ -12,6 +12,7 @@ This is a user guide to Pelican!
 @li @subpage user_framework_pipelineConfigurationFiles
 @li @subpage user_framework_multiplePipelines
 @li @subpage user_framework_performanceTesting
+@li @subpage user_framework_dataEmulators
 @li @subpage user_server
 
 */
