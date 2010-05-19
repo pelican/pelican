@@ -21,5 +21,4 @@ class AdapterExample : public AbstractStreamAdapter
     private:
 };
 
-} // namespace pelican
 #endif // ADAPTEREXAMPLE_H 

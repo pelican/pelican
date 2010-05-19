@@ -19,6 +19,7 @@ namespace pelican {
 #define PELICAN_DECLARE_ADAPTER(type) PELICAN_DECLARE(AbstractAdapter, type)
 
 class DataBlob;
+class ConfigNode;
 
 /**
  * @class AbstractAdapter
