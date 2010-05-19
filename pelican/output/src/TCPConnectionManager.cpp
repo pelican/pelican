@@ -17,9 +17,11 @@ namespace pelican {
  *@details TCPConnectionManager 
  */
 TCPConnectionManager::TCPConnectionManager(quint16 port, QObject *parent)
-                     : QThread(parent), _port(port)
+                     : QObject(parent), _port(port)
 {
     _protocol = new PelicanProtocol; // TODO - make configurable
+    _tcpServer = new QTcpServer;
+    run();
 }
 
 /**
@@ -27,9 +29,9 @@ TCPConnectionManager::TCPConnectionManager(quint16 port, QObject *parent)
  */
 TCPConnectionManager::~TCPConnectionManager()
 {
-
+    delete _tcpServer;
     // Wait for main thread to finish.
-    do { quit(); } while( ! wait(10) );
+    //do { quit(); } while( ! wait(10) );
 }
 
 
@@ -46,7 +48,6 @@ void TCPConnectionManager::acceptClientConnection()
     std::cout << "adding new client" << std::endl;
     // Get new client connection
     QTcpSocket *client = _tcpServer -> nextPendingConnection();
-    Q_ASSERT( client->thread() == currentThread() );
 
     // Wait for client to send in request type
     boost::shared_ptr<ServerRequest> request = _protocol->request(*client);
@@ -90,13 +91,6 @@ void TCPConnectionManager::acceptClientConnection()
 
 void TCPConnectionManager::send(const QString& streamName, const DataBlob& blob)
 {
-    /*if( currentThread() != this )
-    {
-        std::cout << "other thread" << std::endl;
-        emit _sendCalled(streamName, blob);
-    }
-    */
-
     QMutexLocker sendlocker(&_sendMutex);
 
     // Check if there are any client reading streamName type data
@@ -131,7 +125,6 @@ void TCPConnectionManager::send(const QString& streamName, const DataBlob& blob)
 void TCPConnectionManager::_killClient(QTcpSocket* client)
 {
     QMutexLocker locker(&_mutex);
-    Q_ASSERT( client->thread() == currentThread() );
     foreach(const QString& stream, _clients.keys() ) {
         _clients[stream].removeAll(client);
     }
@@ -154,16 +147,14 @@ void TCPConnectionManager::connectionError(QAbstractSocket::SocketError)
 void TCPConnectionManager::run() 
 {
     // start TCP Server, which listens for incoming connections
-    _tcpServer = new QTcpServer;
 
     if (!_tcpServer -> listen( QHostAddress::Any, _port))
         std::cerr << QString("Unable to start QTcpServer: %1").arg( _tcpServer -> errorString()).toStdString();
     else {
         connect(_tcpServer, SIGNAL(newConnection()), this, SLOT(acceptClientConnection()), Qt::DirectConnection );
-        exec();
+        //exec();
     }
 
-    delete _tcpServer;
 }
 
 int TCPConnectionManager::clientsForType(const QString& type) const

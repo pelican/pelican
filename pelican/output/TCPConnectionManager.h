@@ -2,7 +2,7 @@
 #define TCPCONNECTIONMANAGER_H
 
 #include <QtNetwork>
-#include <QThread>
+#include <QObject>
 #include <QMutex>
 #include <QList>
 #include <QMap>
@@ -27,7 +27,7 @@ namespace pelican {
  *
  */
 
-class TCPConnectionManager : public QThread
+class TCPConnectionManager : public QObject
 {
     Q_OBJECT
 

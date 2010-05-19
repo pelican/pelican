@@ -38,14 +38,14 @@ void TCPConnectionManagerTest::setUp()
 
     _clientProtocol = new PelicanClientProtocol;
     _server = new TCPConnectionManager(0);
-    _server->start();
-    bool i;
-    do { i = _server->isRunning(); sleep(1); } while ( ! i );
+//    _server->start();
+//    bool i;
+//    do { i = _server->isRunning(); sleep(1); } while ( ! i );
 }
 
 void TCPConnectionManagerTest::tearDown()
 {
-    _server->quit();
+//    _server->quit();
     delete _server;
     delete _clientProtocol;
     delete _app;
@@ -63,7 +63,7 @@ void TCPConnectionManagerTest::test_send()
 
     QTcpSocket* client = _createClient();
     _sendRequest( client, req );
-    sleep(1);
+    _app->processEvents();
     CPPUNIT_ASSERT_EQUAL( 1, _server->clientsForType("testData") );
     TestDataBlob blob;
     blob.setData("sometestData");
@@ -95,13 +95,15 @@ void TCPConnectionManagerTest::test_brokenConnection()
     QTcpSocket* client = _createClient();
     _sendRequest( client, req );
     sleep(1);
+    _app->processEvents();
+
     CPPUNIT_ASSERT_EQUAL( 1, _server->clientsForType("testData") );
 
     // Use Case:
     // client dies after connection
     // expect to be removed from the system
     delete client;
-    sleep(1);
+    _app->processEvents();
     CPPUNIT_ASSERT_EQUAL( 0, _server->clientsForType("testData") );
 }
 
