@@ -14,7 +14,6 @@ class PipelineExample : public AbstractPipeline
         virtual void init();
         virtual void run(QHash<QString, DataBlob*>& data);
 
-    private:
 };
 
 #endif // PIPELINEEXAMPLE_H 
