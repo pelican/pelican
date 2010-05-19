@@ -12,6 +12,7 @@ class QCoreApplication;
 namespace pelican {
 
 class Config;
+class ConfigNode;
 class VisibilityData;
 
 /**
@@ -51,6 +52,8 @@ class DirectStreamDataClientTest : public CppUnit::TestFixture
     private:
         QCoreApplication* _app;
         Config* _config;
+        ConfigNode* _emulatorConfig1;
+        ConfigNode* _emulatorConfig2;
 };
 
 } // namespace pelican

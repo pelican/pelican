@@ -1,24 +1,32 @@
-#include "AbstractUdpEmulator.h"
+#include "pelican/testutils/AbstractUdpEmulator.h"
+#include "pelican/utility/ConfigNode.h"
 
+#include <QtNetwork/QUdpSocket>
 
 #include "pelican/utility/memCheck.h"
 
 namespace pelican {
 
-
 /**
- *@details AbstractUdpEmulator 
+ * @details AbstractUdpEmulator
  */
-AbstractUdpEmulator::AbstractUdpEmulator()
+AbstractUdpEmulator::AbstractUdpEmulator(const ConfigNode& configNode)
     : AbstractEmulator()
 {
+    _host = QHostAddress(configNode.getOption("connection", "host",
+            "127.0.0.1"));
+    _port = configNode.getOption("connection", "port", "2001").toShort();
 }
 
 /**
- *@details
+ * @details
+ * Creates an open UDP socket. The socket will be deleted by the base class.
  */
-AbstractUdpEmulator::~AbstractUdpEmulator()
+QIODevice* AbstractUdpEmulator::createDevice()
 {
+    QUdpSocket* socket = new QUdpSocket;
+    socket->connectToHost(_host, _port);
+    return socket;
 }
 
 } // namespace pelican

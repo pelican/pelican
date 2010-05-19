@@ -10,6 +10,7 @@
 
 namespace pelican {
 
+class ConfigNode;
 class TestConfig;
 
 /**
@@ -47,6 +48,8 @@ class TestPipelineServerTest : public CppUnit::TestFixture
         ~TestPipelineServerTest();
 
     private:
+        ConfigNode* _emulatorConfig1;
+        ConfigNode* _emulatorConfig2;
 };
 
 

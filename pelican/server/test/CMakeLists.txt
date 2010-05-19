@@ -1,17 +1,15 @@
-SUBPACKAGE(serverTest server)
+SUBPACKAGE(serverTest server testutils)
 set(serverTestlib_src
     src/TestChunker.cpp
     src/TestUdpChunker.cpp
     src/TestProtocol.cpp
     src/TestServer.cpp
     src/PelicanTestClient.cpp
-    src/TelescopeEmulator.cpp
 )
 
 set(serverTestLib_moc_sources
     TestServer.h
     TestChunker.h
-    TelescopeEmulator.h
 )
 
 set(serverTest_src

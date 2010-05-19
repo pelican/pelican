@@ -6,10 +6,11 @@
 #include "pelican/comms/PelicanProtocol.h"
 #include "pelican/utility/pelicanTimer.h"
 #include "pelican/utility/TestConfig.h"
-#include "pelican/server/test/TelescopeEmulator.h"
+#include "pelican/testutils/EmulatorDriver.h"
+#include "pelican/testutils/RealUdpEmulator.h"
 #include "pelican/server/test/TestUdpChunker.h"
-#include <QCoreApplication>
-#include <QTimer>
+#include <QtCore/QCoreApplication>
+#include <QtCore/QTimer>
 #include "pelican/utility/Config.h"
 
 #include "pelican/utility/memCheck.h"
@@ -41,6 +42,21 @@ TestPipelineServerTest::~TestPipelineServerTest()
  */
 void TestPipelineServerTest::setUp()
 {
+    // Set up the emulator configuration.
+    _emulatorConfig1 = new ConfigNode;
+    _emulatorConfig2 = new ConfigNode;
+    _emulatorConfig1->setFromString(""
+            "<RealUdpEmulator>"
+            "    <connection host=\"127.0.0.1\" port=\"2002\"/>"
+            "    <packet size=\"512\" interval=\"1000\" initialValue=\"0.1\"/>"
+            "</RealUdpEmulator>"
+            );
+    _emulatorConfig2->setFromString(""
+            "<RealUdpEmulator>"
+            "    <connection host=\"127.0.0.1\" port=\"2003\"/>"
+            "    <packet size=\"512\" interval=\"1000\" initialValue=\"0.2\"/>"
+            "</RealUdpEmulator>"
+            );
 }
 
 /**
@@ -119,7 +135,7 @@ void TestPipelineServerTest::test_testUdpChunker()
         while (!server.isReady()) {}
         
         // Set up the telescope emulator (turn on the telescope)
-        TelescopeEmulator telescope(0.5, 2002);
+        EmulatorDriver emulator(new RealUdpEmulator(*_emulatorConfig1));
         
         // Start the pipeline binary.
         PipelineBinaryEmulator pipelineBinary(&config);
@@ -141,9 +157,9 @@ void TestPipelineServerTest::test_testUdpChunker()
  */
 void TestPipelineServerTest::test_testTwoUdpChunkers()
 {
-        // Set up the telescope emulators (turn on the telescope)
-        TelescopeEmulator telescope1(0.1, 2002);
-        TelescopeEmulator telescope2(0.2, 2003);
+    // Set up the telescope emulators (turn on the telescope)
+    EmulatorDriver emulator1(new RealUdpEmulator(*_emulatorConfig1));
+    EmulatorDriver emulator2(new RealUdpEmulator(*_emulatorConfig2));
 
     for (int i = 0; i < 10; i++) {
     try {

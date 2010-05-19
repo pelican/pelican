@@ -1,4 +1,4 @@
-SUBPACKAGE(coreTest core data utility adaptersTest serverTest)
+SUBPACKAGE(coreTest core data utility adaptersTest serverTest testutils)
 set( coreTest_src
      src/coreTest.cpp
      src/DataTypesTest.cpp

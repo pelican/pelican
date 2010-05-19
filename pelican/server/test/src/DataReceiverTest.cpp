@@ -2,13 +2,14 @@
 #include "pelican/server/DataReceiver.h"
 #include "pelican/server/test/TestChunker.h"
 #include "pelican/server/test/TestUdpChunker.h"
-#include "pelican/server/test/TelescopeEmulator.h"
+#include "pelican/testutils/EmulatorDriver.h"
+#include "pelican/testutils/RealUdpEmulator.h"
 #include "pelican/server/DataManager.h"
 #include "pelican/utility/pelicanTimer.h"
 #include "pelican/utility/Config.h"
 
-#include <QThread>
-#include <QCoreApplication>
+#include <QtCore/QThread>
+#include <QtCore/QCoreApplication>
 
 #include "pelican/utility/memCheck.h"
 
@@ -118,7 +119,13 @@ void DataReceiverTest::test_listen_udpChunker()
         dataManager.getStreamBuffer("VisibilityData");
 
         // Start the telescope.
-        TelescopeEmulator telescope(0.2, 2002);
+        ConfigNode emulatorConfig(""
+                "<RealUdpEmulator>"
+                "    <connection host=\"127.0.0.1\" port=\"2002\"/>"
+                "    <packet size=\"512\" interval=\"1000\" initialValue=\"0.1\"/>"
+                "</RealUdpEmulator>"
+                );
+        EmulatorDriver emulator(new RealUdpEmulator(emulatorConfig));
 
         // Create and set up chunker.
         QString chunkerNodeString = ""

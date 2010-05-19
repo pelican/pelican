@@ -1,4 +1,5 @@
-#include "TelescopeEmulator.h"
+#include "pelican/testutils/EmulatorDriver.h"
+#include "pelican/testutils/RealUdpEmulator.h"
 #include <iostream>
 #include <QCoreApplication>
 #include <QHostAddress>
@@ -17,10 +18,18 @@ int main(int argc, char** argv)
         return 1;
     }
     int port = atoi(argv[1]);
-    QHostAddress host(QString::fromAscii((argv[2])));
+    QString host = QString::fromAscii(argv[2]);
     int interval = atoi(argv[3]);
     int chunkSize = atoi(argv[4]);
-    TelescopeEmulator emulator(0, port, host, interval, chunkSize);
+
+    // Start the telescope.
+    ConfigNode emulatorConfig(""
+            "<RealUdpEmulator>"
+            "    <connection host=\"" + host + "\" port=\"" + QString::number(port) + "\"/>"
+            "    <packet size=\"" + QString::number(chunkSize) + "\" interval=\"" + QString::number(interval) + "\"/>"
+            "</RealUdpEmulator>"
+            );
+    EmulatorDriver emulator(new RealUdpEmulator(emulatorConfig));
 
     return app.exec();
 }

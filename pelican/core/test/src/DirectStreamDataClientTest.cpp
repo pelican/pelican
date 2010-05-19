@@ -5,13 +5,14 @@
 #include "pelican/data/DataBlob.h"
 #include "pelican/data/VisibilityData.h"
 #include "pelican/data/DataRequirements.h"
-#include "pelican/server/test/TelescopeEmulator.h"
+#include "pelican/testutils/EmulatorDriver.h"
+#include "pelican/testutils/RealUdpEmulator.h"
 #include "pelican/utility/Config.h"
 #include "pelican/utility/FactoryConfig.h"
 #include "pelican/utility/FactoryGeneric.h"
 
-#include <QCoreApplication>
-#include <QList>
+#include <QtCore/QCoreApplication>
+#include <QtCore/QList>
 #include <iostream>
 
 #include "pelican/utility/memCheck.h"
@@ -79,12 +80,30 @@ void DirectStreamDataClientTest::setUp()
             "</adapters>";
     _config = new Config;
     _config->setFromString(pipelineXml);
+
+    // Set up the emulator configuration.
+    _emulatorConfig1 = new ConfigNode;
+    _emulatorConfig2 = new ConfigNode;
+    _emulatorConfig1->setFromString(""
+            "<RealUdpEmulator>"
+            "    <connection host=\"127.0.0.1\" port=\"2002\"/>"
+            "    <packet size=\"512\" interval=\"1000\" initialValue=\"0.1\"/>"
+            "</RealUdpEmulator>"
+            );
+    _emulatorConfig2->setFromString(""
+            "<RealUdpEmulator>"
+            "    <connection host=\"127.0.0.1\" port=\"2003\"/>"
+            "    <packet size=\"512\" interval=\"1000\" initialValue=\"0.2\"/>"
+            "</RealUdpEmulator>"
+            );
 }
 
 void DirectStreamDataClientTest::tearDown()
 {
     delete _config;
     delete _app;
+    delete _emulatorConfig1;
+    delete _emulatorConfig2;
 }
 
 void DirectStreamDataClientTest::test_singleChunker()
@@ -92,7 +111,7 @@ void DirectStreamDataClientTest::test_singleChunker()
     std::cout << "----------------------------------" << std::endl;
     try {
         // Start the telescope emulator on port 2002.
-        TelescopeEmulator telescope1(0.2, 2002);
+        EmulatorDriver emulator(new RealUdpEmulator(*_emulatorConfig1));
 
         // Create the adapter factory.
         FactoryConfig<AbstractAdapter> adapterFactory(_config, "pipeline", "adapters");
@@ -143,8 +162,8 @@ void DirectStreamDataClientTest::test_twoChunkersMultipleStarts()
         std::cout << "---------------------------------- " << i << std::endl;
         try {
             // Start two telescope emulators.
-            TelescopeEmulator telescope1(0.2, 2002);
-            TelescopeEmulator telescope2(0.4, 2003);
+            EmulatorDriver emulator1(new RealUdpEmulator(*_emulatorConfig1));
+            EmulatorDriver emulator2(new RealUdpEmulator(*_emulatorConfig2));
 
             // Create the adapter factory.
             FactoryConfig<AbstractAdapter> adapterFactory(_config,
@@ -199,8 +218,8 @@ void DirectStreamDataClientTest::test_twoChunkersSingleStart()
 {
     try {
         // Start two telescope emulators.
-        TelescopeEmulator telescope1(0.2, 2002);
-        TelescopeEmulator telescope2(0.4, 2003);
+        EmulatorDriver emulator1(new RealUdpEmulator(*_emulatorConfig1));
+        EmulatorDriver emulator2(new RealUdpEmulator(*_emulatorConfig2));
 
         // Create the adapter factory.
         FactoryConfig<AbstractAdapter> adapterFactory(_config,

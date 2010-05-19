@@ -1,8 +1,10 @@
 #ifndef ABSTRACTUDPEMULATOR_H
 #define ABSTRACTUDPEMULATOR_H
 
+#include "pelican/testutils/AbstractEmulator.h"
+#include <QtNetwork/QHostAddress>
 
-#include "AbstractEmulator.h"
+class QIODevice;
 
 /**
  * @file AbstractUdpEmulator.h
@@ -10,23 +12,41 @@
 
 namespace pelican {
 
+class ConfigNode;
+
 /**
  * @class AbstractUdpEmulator
  *  
- * @brief
+ * @brief A data packet emulator that uses a UDP socket.
  * 
  * @details
+ * This emulator uses a UDP socket as its output device.
+ * It should be constructed with a configuration node that contains
+ * a hostname and a port number using a connection tag.
+ *
+ * The default values are:
  * 
+ * @verbatim
+   <connection host="127.0.0.1" port="2001" />
+ * @endverbatim
  */
-
 class AbstractUdpEmulator : public AbstractEmulator
 {
     public:
-        AbstractUdpEmulator(  );
-        ~AbstractUdpEmulator();
+        /// Constructs the abstract UDP data emulator.
+        AbstractUdpEmulator(const ConfigNode& configNode);
+
+        /// Destroys the abstract UDP data emulator
+        ~AbstractUdpEmulator() {}
+
+        /// Creates an open UDP socket.
+        QIODevice* createDevice();
 
     private:
+        QHostAddress _host;
+        qint16 _port;
 };
 
 } // namespace pelican
+
 #endif // ABSTRACTUDPEMULATOR_H 
