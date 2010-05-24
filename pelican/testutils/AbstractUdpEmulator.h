@@ -26,9 +26,7 @@ class ConfigNode;
  *
  * The default values are:
  * 
- * @verbatim
-   <connection host="127.0.0.1" port="2001" />
- * @endverbatim
+ * @verbatim <connection host="127.0.0.1" port="2001" /> @endverbatim
  */
 class AbstractUdpEmulator : public AbstractEmulator
 {

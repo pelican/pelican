@@ -17,8 +17,9 @@ EmulatorDriver::EmulatorDriver(AbstractEmulator* emulator) : QThread()
     _abort = false;
     _emulator = emulator;
 
-    // Start the thread.
-    start();
+    // Start the thread if required.
+    if (_emulator->autoStart())
+        start();
 }
 
 /**
@@ -44,10 +45,17 @@ void EmulatorDriver::run()
     // Create the device.
     _device = _emulator->createDevice();
     _emulator->setDevice(_device); // The base class deletes the device.
+    sleep(_emulator->startDelay());
 
-    // Enter infinite loop.
+    // Set up loop conditions.
     bool noData = false;
-    while (!_abort && !noData) {
+    bool continuous = _emulator->nPackets() < 0;
+    long int interval = _emulator->interval();
+    long int packetCounter = 0;
+
+    // Enter loop.
+    while (!_abort && !noData &&
+            (packetCounter < _emulator->nPackets() || continuous)) {
         // Get the data.
         char* ptr = 0;
         unsigned long size = 0;
@@ -58,8 +66,8 @@ void EmulatorDriver::run()
         _device->write(ptr, size);
 
         // Sleep.
-        if (_emulator->interval() != 0)
-            usleep(_emulator->interval());
+        if (interval != 0) usleep(interval);
+        packetCounter++;
     }
 
     // Warn if no data returned.
