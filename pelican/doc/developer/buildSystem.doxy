@@ -1,0 +1,92 @@
+/**
+@page developer_build The Pelican Build System
+
+@section developer_buildSystem_overview Overview
+The Pelican Build System is a CMake (www.cmake.org) based build system with a
+number of extensions to meet the build system requirements not met by this package.
+These extensions are in the form of Cmake macros, which does restrict the versions of
+cmake that can be used.
+
+@section developer_buildSystem_reqs Build System Requirements
+@li Platform independence
+@li Support c++
+@li Support the Qt framework
+@li Support debug and optimsed libraries
+@li Produce both shared and static libraries
+@li Support regression testing
+@li Support building of documentation
+@li Support developer subpackages
+@li Support subpackage declaration of dependencies
+@li Support @em "make install"
+@li Support @em "DESTDIR"
+@li Support dependency tracking between developer packages
+@li Produce small "developer" libraries containing a subset of the code corresponding
+    to a package and "product libraries" containing all the relevant code to an end user.
+
+@section developer_buildSystem_subpackages SubPackages
+The concept of a subpackage is important in software development, especially as a project grows in size with many
+developers. Subpackaging allows:
+@li The restriction of access to parts of the code to specific developer teams
+@li Rebuild and test at the subpackage level rather than the whole project, saving time.
+@li provision of a well defined interface to use the other subpackages as a client.
+@li easy to switch in/out functionality
+@li encourages good interface design, documentation etc.
+
+Subpackages are generally created one level below the main source directory. They consist of a set directory
+structure and a few required files.
+
+The package should contain:
+@li A @b CMakeLists.txt file for the build system. here we will declare dependencies etc.
+@li A @b src subdirectory for putting .cpp files and .h files that you do not wish to be exported.
+Header files that need to be exported in order to use the subpackage library should be left in the 
+top subpackage directory.
+@li A @b test subdirectory for regression tests
+
+@subsection developer_buildSystem_subpackage_create Creating a new Subpackage
+
+You can use the @em newpacakge script inside the @em tools directory of Pelican to generate the directory
+structure and templates for the various required files. This script is designed to be run from the top level source 
+code directory (the directory with the first CMakeLists.txt and modules.cmake files).
+e.g. to create a package call @em myPackage on a unix like system.
+
+@code
+../tools/newpackage myPackage
+@endcode
+
+To activate a subpackage it must be added to the @em modules.cmake file in the top level source directory.
+The list of modules in @em modules.cmake must be in the correct dependency order. CMake will build the
+subpackages in the order specified in this file. Please ensure you make a clean build area to test this before
+checking in any modifications to this file.
+
+@p Note that if you used the newpackage script to generate the subpackage, the modules.cmake will already
+contain an entry for this package. You should still verify that it is in the correct place within this list however.
+
+@subsection developer_buildSystem_subpackage_CMake The Subpackage CMakeLists.txt file
+A subpackage needs to declare the environment it requires in order to work. Users of the subpackage will then automatically
+have their environment set appropriately by simply declaring that they are users of the subpackage.
+
+The library dependencies, needed for linking, will be available in the subpackage CMakeLists.txt file through 
+the @em ${SUBPACKAGE_LIBRARIES} variable.
+
+@subsubsection developer_buildSystem_subpackage_decl Declaring a Subpackage and its dependencies
+
+@code
+SUBPACKAGE(myPackageName packageDependency_1 pacakageDependency_2)
+@endcode
+
+Declare that this directory represents a subpackage using the \em SUBPACKAGE macro.
+The first argument is the name of the subpackage. Any other argument defines a dependecy on another subpackage.
+This macro will create appropriate build and install targets for a local library (with the name of the package).
+
+@subsubsection _developer_externals To declare an external dependecy
+Add any include paths for the external package to the CMakeLists.txt with the  @em INCLUDE_DIRECTORIES( .. ) command.
+If is important that this is done BEFORE the \em SUBPACKAGE declaration, in order that this is exported as part of your
+packages build environment. Any declaration of INCLUDE paths after the @em SUBPACKAGE macro will not be exported.
+
+External Libraries should be added usisng the @em SUBPACKAGE_ADD_LIBRARIES() macro which, in contrast to the INCLUDE directories, must 
+come after the @em SUBPACKAGE macro.
+
+@subsection developer_buildSystem_using Using cmake inside pelican
+See the @em install.txt and readme.txt files for more information
+
+*/
