@@ -1,4 +1,26 @@
 /**
 @page user_framework_dataEmulators Data Emulation
 
+@section dataEmulators_introduction Introduction
+ 
+Synthetic packets of data are often required when testing new data chunkers.
+These synthetic data packets can be generated conveniently using the classes
+provided in the data emulation framework.
+
+The EmulatorDriver class takes care of the common, low-level details.
+It creates a separate thread in which to run the data emulator, and is
+responsible for writing the data packets to the output device.
+On construction, the EmulatorDriver takes ownership of a pointer to an
+AbstractEmulator derived class, which is called repeatedly by the driver to
+generate the required data packets.
+
+The primary function of the AbstractEmulator is to provide a pointer to a block
+of memory to use when sending data packets. 
+
+@section dataEmulators_overview Overview
+
+To create a new data emulator:
+
+@li Create a derived class of a suitable abstract emulator.
+
 */

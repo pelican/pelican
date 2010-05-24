@@ -5,26 +5,27 @@
 @li indentation is @em 4 blank spaces. Please set your editor to use this instead of @em tab
 
 @section developer_codeConventions_files Filename conventions
-@li Each class, even private classes, will have its own file
-@li The name of the file must match that of the class
-@li c++ class implementation files must end in .cpp
-@li c++ header files must end in .h
-    template c++ header files must end in .hpp
+@li Each class, even private classes, will have its own file.
+@li The name of the file must match that of the class.
+@li C++ class implementation files must end in .cpp
+@li C++ header files must end in .h
+    template C++ header files must end in .hpp
 
 @section developer_codeConventions_naming Variable and Class Naming Convetions
 
 @li In general CamelCase @link http://en.wikipedia.org/wiki/CamelCase @endlink is used throughout to represent compund words.
-@li class names should always start with a capital letter e.g. MyClass
-@li variable names and class members shall always start with a lower case letter e.g. myVariable
-@li private members should generally start with an underscore \em _.
-@li hyphens \em - cannot be used in variable names
-@li underscores shall be used in cases where a compound word contains a capitalised abbreviation. Where the 
-    CamelCase rules would require a capitalisation next to the the abbreviation, use an underscore to seperate them.
-    e.g. FFT_Transform
-@li unit tests classes will be the name of the class being tested with the word @b Test appended.
+@li Class names should always start with a capital letter e.g. MyClass
+@li Variable names and class members shall always start with a lower case letter e.g. myVariable
+@li Private members should generally start with an underscore (_).
+@li Hyphens (-) cannot be used in variable names.
+@li Underscores shall be used in cases where a compound word contains a capitalised acronym. Where the 
+    camel-case rules would require a capitalisation next to the the acronym, use an underscore to separate them.
+    e.g. UDP_Chunker
+    Alternatively, camel-case the acronym, e.g. UdpChunker.
+@li Unit tests classes will be the name of the class being tested with the word @b Test appended.
     e.g. MyClass -> MyClassTest
 
-@section developer_codeConventions_doc Documentation Convetions
+@section developer_codeConventions_doc Documentation Conventions
 Documentation is produced with doxygen.
 
 @section developer_codeConventions_namespace Namespaces

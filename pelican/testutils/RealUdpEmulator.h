@@ -26,7 +26,7 @@ class ConfigNode;
  * 
  * The default values are:
  *
- * @verbatim <packet size="8192" interval="100000" /> @endverbatim
+ * @verbatim <packet size="8192" interval="100000" initialValue="0" /> @endverbatim
  */
 class RealUdpEmulator : public AbstractUdpEmulator
 {
