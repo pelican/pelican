@@ -37,10 +37,11 @@ my $cmfile=$name."/CMakeLists.txt";
 my $fh=FileHandle->new(">$cmfile") or die "unable to create file $cmfile :$!";
 print $fh "SUBPACKAGE($name)\n";
 print $fh "set( ".$name."_src\n)\n";
-print $fh "add_library($name \${".$name."_src} )\n";
-print $fh "target_link_libraries($name \${SUBPACKAGE_LIBRARIES} )\n";
-print $fh "install(TARGETS $name DESTINATION \${LIBRARY_INSTALL_DIR} )\n";
-print $fh "SUBPACKAGE_ADD_LIBRARIES($name)\n";
+print $fh "SUBPACKAGE_LIBRARY($name \${".$name."_src} )\n";
+#print $fh "add_library($name \${".$name."_src} )\n";
+#print $fh "target_link_libraries($name \${SUBPACKAGE_LIBRARIES} )\n";
+#print $fh "install(TARGETS $name DESTINATION \${LIBRARY_INSTALL_DIR} )\n";
+#print $fh "SUBPACKAGE_ADD_LIBRARIES($name)\n";
 print $fh "\nadd_subdirectory(test)\n";
 $fh->close();
 

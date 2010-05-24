@@ -1,0 +1,24 @@
+/**
+@page developer_codeConventions Pelican Coding Conventions
+
+@section developer_codeConventions_indent Indentation
+@li indentation is @em 4 blank spaces. Please set your editor to use this instead of @em tab
+
+@section developer_codeConventions_naming Variable and Class Naming Convetions
+
+@li In general CamelCase @link http://en.wikipedia.org/wiki/CamelCase @endlink is used throughout to represent compund words.
+@li class names should always start with a capital letter e.g. MyClass
+@li variable names and class members shall always start with a lower case letter e.g. myVariable
+@li private members should generally start with an underscore \em _.
+@li hyphens \em - cannot be used in variable names
+@li underscores shall be used in cases where a compound word contains a capitalised abbreviation. Where the 
+    CamelCase rules would require a capitalisation next to the the abbreviation, use an underscore to seperate them.
+    e.g. FFT_Transform
+
+@section developer_codeConventions_doc Documentation Convetions
+Documentation is produced with doxygen.
+
+@section developer_codeConventions_namespace Namespaces
+All pelican core classes must be inside the @em pelican namespace
+
+*/
