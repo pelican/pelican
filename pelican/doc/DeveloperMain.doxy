@@ -8,6 +8,7 @@ This is a developer guide to Pelican!
 
 @li @subpage developer_codeConventions
 @li @subpage developer_build
+@li @subpage developer_regressionTesting
 @li @subpage dev_server
 
 */

@@ -1,0 +1,37 @@
+/**
+@page developer_regressionTesting The unit/regression testing framework
+
+@section testing_intro Introduction
+
+The pelican framework uses the CppUnit framework that is driven by CTest
+integrated with the build environment. This allows you to type @em ctest or 
+@em make @em test from your build area to run all the available tests and produce
+a report.
+
+@section testing_locations Location of tests and test libraries
+Each package will have a subdirectory test within it. All unit tests should
+be placed inside the src directory within this test directory.
+At least one test executable should exist for each subpackage. 
+
+This is also the location to specify a testing library to support the package.
+Typically this will provide dummy classes etc. to facilitate users of the package to
+write integration tests for their own code.
+
+@section testing_memory Memory Leak Checker
+
+Pelican has its own memory checking class available "pelican/utility/memCheck.h".
+It is limited in that it can only be used with non-threaded classes that 
+do not have singletons. The mem checker provides a handy way of producing 
+a memory leak report every time you run a test executable.
+
+To use it you must link against the @em memoryChecker library, and will only be active in debug mode.
+
+@section testing_cppunit Using CppUnit
+
+The easiest way to create a new unit test is to 
+use the @em class tool with the \em -t option,
+available in the @em tools folder, to generate an appropriate template.
+
+
+
+*/
