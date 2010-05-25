@@ -65,7 +65,7 @@ class Config
         /// Returns the text node at the specified address.
         QString getText(const TreeAddress& address) const;
 
-        /// Prints a summary of the configuration to specified tree depth
+        /// Prints a summary of the configuration.
         void summary() const;
 
         /// Saves the configuration to the specified file name
@@ -91,6 +91,9 @@ class Config
         /// Creates a child configuration node
         void _createChildNode(QDomElement &parent, const QString& tag,
                 const QString& name);
+
+        /// Pre-processes the XML document.
+        void _preprocess();
 
     private:
         QString _fileName;

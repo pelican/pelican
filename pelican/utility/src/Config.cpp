@@ -355,4 +355,53 @@ void Config::_createChildNode(QDomElement &parent, const QString& tag, const QSt
     parent.appendChild(e);
 }
 
+/**
+ * @details
+ * Pre-processes the current XML document, expanding any <import> tags.
+ * The contents of the destination are deep-copied into the current document.
+ *
+ * Valid use cases are:
+ * - @verbatim <import nodeset=" [nodeset name] " /> @endverbatim
+ *
+ * The following are reserved for future use:
+ * - @verbatim <import file=" [file name] " /> @endverbatim
+ * - @verbatim <import url=" [address] " /> @endverbatim
+ */
+void Config::_preprocess()
+{
+    // Get the list of import nodes.
+    QDomNodeList importNodes = _document.elementsByTagName("import");
+    std::cout << "Total number of import nodes: " << importNodes.size() << std::endl;
+    for (int i = 0; i < importNodes.size(); ++i) {
+        // Get the import tag.
+        QDomElement importTag = importNodes.at(i).toElement();
+
+        // Check if importing a nodeset.
+        QString nodesetName = importTag.attribute("nodeset");
+        if (!nodesetName.isEmpty()) {
+            // Import the nodeset.
+            Config::TreeAddress nodesetAddress;
+            nodesetAddress << Config::NodeId("nodesets", "");
+            nodesetAddress << Config::NodeId("nodeset", nodesetName);
+            QDomElement nodeset = _get(nodesetAddress);
+
+            // Loop over each child in the nodeset and append it.
+            QDomNodeList list = nodeset.childNodes();
+            for (int j = 0; j < list.size(); j++) {
+                importTag.parentNode().appendChild(list.at(j).cloneNode());
+            }
+        }
+
+        // Check if importing a file.
+        QString fileName = importTag.attribute("file");
+        if (!fileName.isEmpty()) {
+            // Import the file.
+            std::cerr << "WARNING: Configuration file import not yet implemented.\n";
+        }
+
+    }
+
+    summary();
+}
+
 } // namespace pelican

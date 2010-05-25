@@ -288,4 +288,21 @@ void ConfigTest::test_testConfig()
     }
 }
 
+/**
+ * @details
+ * Tests preprocessing the XML document.
+ */
+void ConfigTest::test_preprocess()
+{
+    QString xml =
+            "<modules>"
+            "   <moduleType name=\"test\">"
+            "       <param value=\"2.0\"/>"
+            "   </moduleType>"
+            "</modules>";
+
+    Config config;
+    config.setFromString(xml);
+}
+
 } // namespace pelican

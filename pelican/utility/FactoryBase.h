@@ -33,8 +33,16 @@ template<class B> class FactoryBase
     public:
         /// Constructs the factory, setting the configuration object.
         FactoryBase(const Config* config = 0, const QString& section = "",
-                const QString& group = "") :
-                    _config(config), _section(section), _group(group) {}
+                const QString& group = "") : _config(config)
+        {
+            _base << Config::NodeId(section, "");
+            _base << Config::NodeId(group, "");
+        }
+
+        /// Constructs the factory, setting the default configuration root.
+        FactoryBase(const Config* config, const Config::TreeAddress& base) {
+            _base = base;
+        }
 
         /// Destroys the factory and any objects created by it.
         virtual ~FactoryBase() {
@@ -52,9 +60,7 @@ template<class B> class FactoryBase
         /// Return the configuration node for a type (named type if supplied).
         ConfigNode conf(const QString& type, const QString& name="") const {
             if (!_config) throw QString("Factory configuration not set");
-            Config::TreeAddress address;
-            address << Config::NodeId(_section, "");
-            address << Config::NodeId(_group, "");
+            Config::TreeAddress address(_base);
             address << Config::NodeId(type, name);
             return _config->get(address);
         }
@@ -78,8 +84,7 @@ template<class B> class FactoryBase
 
     private:
         std::vector<B*> _obs;  ///< List of all objects created by the factory.
-        QString _section;      ///< Configuration section (pipeline or server).
-        QString _group;        ///< Configuration group name. (e.g. chunkers).
+        Config::TreeAddress _base; ///< Configuration root node.
 };
 
 } // namespace pelican
