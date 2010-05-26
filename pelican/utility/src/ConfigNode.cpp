@@ -28,13 +28,16 @@ ConfigNode::ConfigNode(const QDomElement& config)
  */
 ConfigNode::ConfigNode(const QList<QDomElement>& config)
 {
+    // Do nothing if list is empty.
+    if (config.size() == 0) return;
+
     // Copy the base node.
     _config = config[0];
 
-    // Loop over each varset.
+    // Loop over additional nodes.
     for (int i = 1; i < config.size(); i++) {
 
-        // Loop over each child in the varset and append it.
+        // Loop over each child in the node set and append it.
         QDomNodeList list = config[i].childNodes();
         for (int j = 0; j < list.size(); j++) {
             _config.appendChild(list.at(j).cloneNode());
@@ -45,9 +48,10 @@ ConfigNode::ConfigNode(const QList<QDomElement>& config)
 
 /**
  * @details
- * Set the config node from the xml string
+ * Sets the contents of the configuration node from the supplied XML string.
+ * Note that the string should contain exactly one top-level XML node.
  *
- * @param xmlString
+ * @param xmlString The XML string to use.
  */
 void ConfigNode::setFromString(const QString xmlString)
 {
@@ -130,17 +134,17 @@ QString ConfigNode::getOptionText(const QString& tagName,
  *
  * Using this XML with tagName="data", attr1="type" and attr2="file",
  *
- * \verbatim
+ * @verbatim
       <data type="VisibilityData" adapter="VisibilityAdapter" file="vis.dat"/>
       <data type="AntennaPositions" adapter="PositionAdapter" file="pos.dat"/>
- * \endverbatim
+   @endverbatim
  *
  * would produce a hash containing the following keys and values:
  *
- * \verbatim
+ * @verbatim
       VisibilityData -> vis.dat
       AntennaPositions -> pos.dat
- * \endverbatim
+   @endverbatim
  */
 QHash<QString, QString> ConfigNode::getOptionHash(const QString& tagName,
         const QString& attr1, const QString& attr2) const
@@ -163,17 +167,17 @@ QHash<QString, QString> ConfigNode::getOptionHash(const QString& tagName,
  *
  * Using this XML with tagName="data" and attr="adapter",
  *
- * \verbatim
+ * @verbatim
       <data type="VisibilityData" adapter="VisibilityAdapter" file="vis.dat"/>
       <data type="AntennaPositions" adapter="PositionAdapter" file="pos.dat"/>
- * \endverbatim
+   @endverbatim
  *
  * would produce a list containing the following strings:
  *
- * \verbatim
+ * @verbatim
       VisibilityAdapter
       PositionAdapter
- * \endverbatim
+   @endverbatim
  */
 QStringList ConfigNode::getOptionList(const QString& tagName,
         const QString& attr) const
@@ -194,15 +198,11 @@ QStringList ConfigNode::getOptionList(const QString& tagName,
  * Returns a vector containing the list of channels, if any.
  * Channels are specified in the XML configuration as
  *
- * \verbatim
-      <channels>1,5,182</channels>
- * \endverbatim
+ * @verbatim <channels>1,5,182</channels> @endverbatim
  *
  * or, for many contiguous channels,
  *
- * \verbatim
-      <channels start="0" end="511"/>
- * \endverbatim
+ * @verbatim <channels start="0" end="511"/> @endverbatim
  */
 std::vector<unsigned> ConfigNode::getChannels(const QString& tagName) const
 {

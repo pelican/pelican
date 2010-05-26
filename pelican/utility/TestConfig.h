@@ -39,7 +39,7 @@ class TestConfig : public Config
         /// file of name \p fileName in the specified Pelican package folder
         /// \p package.
         TestConfig(const QString& fileName, const QString& package) : Config() {
-            read(findTestFile(fileName, package));
+            setDocument(read(findTestFile(fileName, package)));
             _argc = 0;
             _argv = NULL;
         }

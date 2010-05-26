@@ -40,7 +40,7 @@ class ConfigNode
         /// Constructs the configuration node from the specified QDomElement list.
         ConfigNode(const QList<QDomElement>& config);
 
-        /// Constructs the configuration node from the xml string.
+        /// Constructs the configuration node from the XML string.
         ConfigNode(const QString& xmlString) { setFromString(xmlString); }
 
         /// Destroys the configuration object.

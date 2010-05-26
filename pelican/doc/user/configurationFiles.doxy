@@ -32,9 +32,9 @@ The most basic valid configuration file is:
 
 Inside the \c configuration tag, there can be up to three sections (tags):
 
-\li \c nodesets
-\li \c server
 \li \c pipeline
+\li \c server
+\li \c nodesets
 
 The only other reserved tag name at global scope is the \c import tag, which
 can be used to make preprocessor-like node substitutions.

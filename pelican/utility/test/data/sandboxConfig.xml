@@ -2,10 +2,10 @@
 <!DOCTYPE pelican>
 <configuration version="1.0">
 
-    <varsets>
-        <varset name="myName">
-        </varset>
-    </varsets>
+    <nodesets>
+        <nodeset name="myName">
+        </nodeset>
+    </nodesets>
 
     <pipeline>
         <modules>

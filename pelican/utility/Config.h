@@ -6,10 +6,10 @@
  */
 
 #include "pelican/utility/ConfigNode.h"
-#include <QDomDocument>
-#include <QString>
-#include <QHash>
-#include <QPair>
+#include <QtXml/QDomDocument>
+#include <QtCore/QString>
+#include <QtCore/QHash>
+#include <QtCore/QPair>
 
 namespace pelican {
 
@@ -43,57 +43,76 @@ class Config
         /// Returns the configuration file name
         QString fileName() const { return _fileName; }
 
-        /// Creates and returns a configuration option at the specified address.
-        ConfigNode set(const TreeAddress &address) {
-            return ConfigNode(_set(address));
+        /// Returns the configuration node at the specified address.
+        ConfigNode get(const TreeAddress &address) const {
+            return ConfigNode(_get(address, _document));
         }
-
-        /// Returns the specified configuration node.
-        ConfigNode get(const TreeAddress &address) const;
-
-        /// Sets a configuration option attribute at the specified address.
-        void setAttribute(const TreeAddress &address, const QString &key,
-                const QString &value);
 
         /// Returns the attribute at specified address and key.
         QString getAttribute(const TreeAddress& address,
                 const QString& key) const;
 
-        /// Set the text node at the specified address.
-        void setText(const TreeAddress& address, const QString& text);
-
         /// Returns the text node at the specified address.
         QString getText(const TreeAddress& address) const;
 
-        /// Prints a summary of the configuration.
-        void summary() const;
+        /// Imports a file.
+        void importFile(QDomDocument& document,
+                QDomNode& parent, const QString& name);
+
+        /// Imports a nodeset.
+        void importNodeset(QDomDocument& document,
+                QDomNode& parent, const QString& name);
+
+        /// Imports a URL.
+        void importUrl(QDomDocument& document,
+                QDomNode& parent, const QString& url);
+
+        /// Pre-processes the XML document.
+        void preprocess(QDomDocument& document);
 
         /// Saves the configuration to the specified file name
         void save(const QString& fileName) const;
+
+        /// Creates and returns a configuration option at the specified address.
+        ConfigNode set(const TreeAddress &address) {
+            return ConfigNode(_set(address));
+        }
+
+        /// Sets a configuration option attribute at the specified address.
+        void setAttribute(const TreeAddress &address, const QString &key,
+                const QString &value);
+
+        /// Sets the document.
+        void setDocument(const QDomDocument& document) {_document = document;}
 
         /// Sets the configuration from the QString text.
         /// Warning: This method is added for testing only and will destroy
         /// any previous configuration.
         void setFromString(const QString& pipelineConfig,
-                           const QString& serverConfig = "");
+                           const QString& serverConfig = "",
+                           const QString& nodesets = "");
+
+        /// Set the text node at the specified address.
+        void setText(const TreeAddress& address, const QString& text);
+
+        /// Prints a summary of the configuration.
+        void summary() const;
 
     protected:
         /// Reads and parses the configuration file.
-        void read(QString fileName);
+        QDomDocument read(const QString& fileName);
 
     private:
-        /// Returns a pointer to the specified configuration node.
-        QDomElement _get(const TreeAddress &address) const;
-
-        /// Creates and returns a configuration option at the specified address.
-        QDomElement _set(const TreeAddress &address);
-
         /// Creates a child configuration node
         void _createChildNode(QDomElement &parent, const QString& tag,
                 const QString& name);
 
-        /// Pre-processes the XML document.
-        void _preprocess();
+        /// Returns a pointer to the specified configuration node.
+        QDomElement _get(const TreeAddress &address,
+                const QDomDocument& document) const;
+
+        /// Creates and returns a configuration option at the specified address.
+        QDomElement _set(const TreeAddress &address);
 
     private:
         QString _fileName;

@@ -10,57 +10,23 @@
 
 namespace pelican {
 
+/*=============================================================================
+ * CONSTRUCTOR
+ *---------------------------------------------------------------------------*/
+
 /**
  * @details
  * Configuration constructor.
  */
 Config::Config(const QString& fileName)
 {
-    read(fileName);
+    _fileName = fileName;
+    _document = read(fileName);
 }
 
-
-/**
- * @details
- * Return the specified configuration node together with any extra required
- * varsets.
- */
-ConfigNode Config::get(const TreeAddress &address) const
-{
-    // Declare the list of returned DOM elements.
-    QList<QDomElement> elementList;
-
-    // Get the specified address and put it into index 0.
-    QDomElement node = _get(address);
-    elementList.insert(0, node);
-
-    // Check and get addresses for all varsets.
-    QDomNodeList varsetList = node.elementsByTagName("varset");
-    for (int i = 0; i < varsetList.size(); ++i) {
-        QString varsetName = varsetList.at(i).toElement().attribute("name");
-        Config::TreeAddress varsetAddress;
-        varsetAddress.append(Config::NodeId("varsets", ""));
-        varsetAddress.append(Config::NodeId("varset", varsetName));
-
-        // Get the varset at the address.
-        elementList.insert(i + 1, _get(varsetAddress));
-    }
-
-    return ConfigNode(elementList);
-}
-
-
-/**
- * @details
- * Set the the attribute at the specified address to the key, value.
- */
-void Config::setAttribute(const TreeAddress &address, const QString &key,
-        const QString &value)
-{
-    QDomElement e = _set(address);
-    e.setAttribute(key, value);
-}
-
+/*=============================================================================
+ * PUBLIC MEMBERS
+ *---------------------------------------------------------------------------*/
 
 /**
  * @details
@@ -69,25 +35,12 @@ void Config::setAttribute(const TreeAddress &address, const QString &key,
  */
 QString Config::getAttribute(const TreeAddress& address, const QString& key) const
 {
-    QDomElement e = _get(address);
+    QDomElement e = _get(address, _document);
     if (e.isNull())
         return QString();
     else
         return e.attribute(key);
 }
-
-
-/**
- * @details
- * Sets the text node at the address.
- */
-void Config::setText(const TreeAddress& address, const QString& text)
-{
-    QDomElement e = _set(address);
-    QDomText t = _document.createTextNode(text);
-    e.appendChild(t);
-}
-
 
 /**
  * @details
@@ -96,7 +49,7 @@ void Config::setText(const TreeAddress& address, const QString& text)
  */
 QString Config::getText(const TreeAddress& address) const
 {
-    QDomElement e = _get(address);
+    QDomElement e = _get(address, _document);
     QDomNodeList children = e.childNodes();
     QString text = QString();
     if (children.isEmpty()) {
@@ -112,20 +65,137 @@ QString Config::getText(const TreeAddress& address) const
     return text;
 }
 
+/**
+ * @details
+ * Imports and appends a file to the given \p parent XML node.
+ * All element nodes under (but not including) the root node of the
+ * file are copied to the \p document.
+ *
+ * If not an absolute path, the name of the file to import must be relative
+ * to the executable.
+ *
+ * @param[in] document A reference to the XML document.
+ * @param[in] parent   A reference to the parent XML node.
+ * @param[in] name     Name of the file to import.
+ */
+void Config::importFile(QDomDocument& document,
+        QDomNode& parent, const QString& name)
+{
+    // Return if name is empty.
+    if (name.isEmpty()) return;
+
+    // Write comment.
+    parent.appendChild(document.createComment(
+            "% Imported file " + name) );
+
+    // Import the file.
+    QDomDocument newDoc = read(name);
+
+    // Loop over each child under the root node of the file, and append it.
+    QDomNodeList list = newDoc.documentElement().childNodes();
+    for (int j = 0; j < list.size(); j++) {
+        parent.appendChild(list.at(j).cloneNode());
+    }
+}
 
 /**
  * @details
- * Prints a summary of the configuration tree to STDOUT.
+ * Imports and appends a nodeset from the current \p document to the
+ * given \p parent XML node.
+ *
+ * @param[in] document A reference to the XML document.
+ * @param[in] parent   A reference to the parent XML node.
+ * @param[in] name     Name of the nodeset to import.
  */
-void Config::summary() const
+void Config::importNodeset(QDomDocument& document,
+        QDomNode& parent, const QString& name)
 {
-    std::cout << std::endl;
-    std::cout << QString(70, QChar('=')).toStdString() << std::endl;
-    std::cout << _document.toString(4).toStdString();
-    std::cout << QString(70, QChar('=')).toStdString() << std::endl;
-    std::cout << std::endl;
+    // Return if name is empty.
+    if (name.isEmpty()) return;
+
+    // Write comment.
+    parent.appendChild(document.createComment(
+            "% Imported nodeset " + name) );
+
+    // Import the nodeset.
+    Config::TreeAddress nodesetAddress;
+    nodesetAddress << Config::NodeId("nodesets", "");
+    nodesetAddress << Config::NodeId("nodeset", name);
+    QDomElement nodeset = _get(nodesetAddress, document);
+
+    // Loop over each child in the nodeset and append it.
+    QDomNodeList list = nodeset.childNodes();
+    for (int j = 0; j < list.size(); j++) {
+        parent.appendChild(list.at(j).cloneNode());
+    }
 }
 
+/**
+ * @details
+ * Imports and appends a URL to the given \p parent XML node.
+ * Note that this functionality is not yet implemented.
+ *
+ * @param[in] document A reference to the XML document.
+ * @param[in] parent   A reference to the parent XML node.
+ * @param[in] url      URL to import.
+ */
+void Config::importUrl(QDomDocument& document,
+        QDomNode& parent, const QString& url)
+{
+    // Return if URL is empty.
+    if (url.isEmpty()) return;
+
+    // Write comment.
+    parent.appendChild(document.createComment(
+            "% Could not import URL " + url) );
+
+    // Import the URL.
+    std::cerr << "Configuration URL import not yet implemented.\n";
+}
+
+/**
+ * @details
+ * Pre-processes the given XML document, expanding any <import> tags.
+ * The contents of the destination are deep-copied into the current document.
+ *
+ * This pre-processor will add comments starting with '%' to record where
+ * nodes have been imported. On import, nodes are appended to the end of the
+ * current list of child nodes, so that local settings can override them.
+ *
+ * Valid use cases are:
+ * - @verbatim <import nodeset=" [nodeset name] " /> @endverbatim
+ * - @verbatim <import file=" [file name] " /> @endverbatim
+ *
+ * The following are reserved for future use:
+ * - @verbatim <import url=" [address] " /> @endverbatim
+ *
+ * @param[in] document A reference to the document to process.
+ */
+void Config::preprocess(QDomDocument& document)
+{
+    for (;;) {
+        // Get the list of import nodes.
+        QDomNodeList importNodes = document.elementsByTagName("import");
+        if (importNodes.size() == 0) break;
+        for (int i = 0; i < importNodes.size(); ++i) {
+            // Get the import tag.
+            QDomElement tag = importNodes.at(i).toElement();
+            QDomNode parent = tag.parentNode();
+
+            // Perform import as required.
+            importNodeset(document, parent, tag.attribute("nodeset"));
+            importFile(document, parent, tag.attribute("file"));
+            importUrl(document, parent, tag.attribute("url"));
+        }
+
+        // Remove the import nodes.
+        int nNodes = importNodes.size();
+        for (int i = 0; i < nNodes; ++i) {
+            QDomNode parent = importNodes.at(0).parentNode();
+            parent.removeChild(importNodes.at(0));
+        }
+    }
+}
 
 /**
  * @details
@@ -133,11 +203,9 @@ void Config::summary() const
  */
 void Config::save(const QString& fileName) const
 {
-    if (fileName.isEmpty())
-        return;
+    if (fileName.isEmpty()) return;
 
     QFile file(fileName);
-
     if (!file.open(QFile::WriteOnly | QFile::Truncate))
         return;
 
@@ -145,16 +213,27 @@ void Config::save(const QString& fileName) const
     out << _document.toByteArray(4);
 }
 
+/**
+ * @details
+ * Set the the attribute at the specified address to the key, value.
+ */
+void Config::setAttribute(const TreeAddress &address, const QString &key,
+        const QString &value)
+{
+    QDomElement e = _set(address);
+    e.setAttribute(key, value);
+}
 
 /**
  * @details
  * Sets the content of the configuration QDomDocument from the QStrings
- * \p pipelineConfig and \p serverConfig.
+ * \p pipelineConfig, \p serverConfig and \p nodesets.
  *
  * @param[in] pipelineConfig String containing the pipeline XML configuration.
  * @param[in] serverConfig String containing server XML configuration.
  */
-void Config::setFromString(const QString& pipelineConfig, const QString& serverConfig)
+void Config::setFromString(const QString& pipelineConfig,
+        const QString& serverConfig, const QString& nodesets)
 {
     _document.clear();
     _document = QDomDocument("pelican");
@@ -173,14 +252,157 @@ void Config::setFromString(const QString& pipelineConfig, const QString& serverC
             "<server>"
             "" + serverConfig + ""
             "</server>"
+            "<nodesets>"
+            "" + nodesets + ""
+            "</nodesets>"
             "</configuration>";
 
     if (!_document.setContent(xmlDoc, true, &error, &line, &column)) {
         throw QString("Config::setFromString(): Error parsing XML "
                 "(Line: %1 Col: %2): %3.").arg(line).arg(column).arg(error);
     }
+
+    // Pre-process the document.
+    preprocess(_document);
 }
 
+/**
+ * @details
+ * Sets the text node at the address.
+ */
+void Config::setText(const TreeAddress& address, const QString& text)
+{
+    QDomElement e = _set(address);
+    QDomText t = _document.createTextNode(text);
+    e.appendChild(t);
+}
+
+/**
+ * @details
+ * Prints a summary of the configuration tree to STDOUT.
+ */
+void Config::summary() const
+{
+    std::cout << std::endl;
+    std::cout << QString(70, QChar('=')).toStdString() << std::endl;
+    std::cout << _document.toString(4).toStdString();
+    std::cout << QString(70, QChar('=')).toStdString() << std::endl;
+    std::cout << std::endl;
+}
+
+
+/*=============================================================================
+ * PROTECTED MEMBERS
+ *---------------------------------------------------------------------------*/
+
+/**
+ * @details
+ * Read a configuration from the Pelican XML file specified when the
+ * configuration object is instantiated.
+ */
+QDomDocument Config::read(const QString& fileName)
+{
+    QDomDocument document("pelican");
+    if (fileName.isEmpty()) return document;
+
+    QFile file(fileName);
+    if (!file.open(QFile::ReadOnly | QFile::Text))
+        throw QString("Config::read(): Cannot open file '%1'").arg(fileName);
+
+    // Read the XML configuration file into the QDomDocument.
+    QString error;
+    int line, column;
+    if (!document.setContent(&file, true, &error, &line, &column)) {
+        throw QString("Config::read(): Parse error "
+                "(Line: %1 Col: %2): %3.").arg(line).arg(column).arg(error);
+    }
+
+    if (document.doctype().name() != "pelican")
+        throw QString("Config::read(): Invalid doctype (must be 'pelican').");
+
+    // Pre-process and return the document.
+    preprocess(document);
+    return document;
+}
+
+/*=============================================================================
+ * PRIVATE MEMBERS
+ *---------------------------------------------------------------------------*/
+
+/**
+ * @details
+ * Create a child node under the \p parent with the \p tag and \p name attribute.
+ */
+void Config::_createChildNode(QDomElement &parent, const QString& tag, const QString& name)
+{
+    if (parent.isNull())
+        throw QString("Config: Unable to create child node on null parent.");
+
+    QDomElement e = _document.createElement(tag);
+    if (!name.isEmpty())
+        e.setAttribute(QString("name"), name);
+
+    parent.appendChild(e);
+}
+
+/**
+ * @details
+ * Returns a QDomElement at the specified address in the given document.
+ * The element returned is null if the address doesn't exist.
+ *
+ * @param[in] address The address of the configuration node to get.
+ *
+ * @return A QDomElement at the address specified in the argument.
+ */
+QDomElement Config::_get(const TreeAddress &address,
+        const QDomDocument& document) const
+{
+    QDomElement parent = document.documentElement();
+
+    // Empty configuration, so return null element.
+    if (parent.isNull())
+        return QDomElement();
+
+    for (int a = 0; a < address.size(); a++) {
+
+        QString tag  = address.at(a).first;
+        QString name = address.at(a).second;
+
+        // Find child nodes of the specified tag type.
+        QDomNodeList children = parent.childNodes();
+        QList<QDomNode> nodes;
+        for (int i = 0; i < children.size(); i++) {
+            if (children.at(i).toElement().tagName() == tag) {
+                nodes << children.at(i);
+            }
+        }
+
+        // No node exists of the specified tag.
+        if (nodes.isEmpty())
+            return QDomElement();
+
+        // Nodes exist of the specified tag; find the right one to return.
+        else {
+
+            // Find if the tag already exists with the name.
+            int iNode = -1;
+            for (int n = 0; n < nodes.size(); n++) {
+                QString nodeName = nodes.at(n).toElement().attribute(QString("name"));
+                if (nodeName == name)
+                    iNode = n;
+            }
+
+            // Check if no tag exists with the name.
+            if (iNode == -1)
+                return QDomElement();
+
+            // Tag exists - move the parent pointer.
+            else
+                parent = nodes.at(iNode).toElement();
+        }
+    }
+    return parent;
+}
 
 /**
  * @details
@@ -188,7 +410,7 @@ void Config::setFromString(const QString& pipelineConfig, const QString& serverC
  *
  * @param[in] address The address of the configuration node element to be set.
  *
- * @return QDomElement at the address specified in the argument.
+ * @return A QDomElement at the address specified in the argument.
  */
 QDomElement Config::_set(const TreeAddress &address)
 {
@@ -246,162 +468,6 @@ QDomElement Config::_set(const TreeAddress &address)
     }
 
     return parent;
-}
-
-
-/**
- * @details
- * Returns a QDomElement at the specified address. The element returned is
- * null if the address doesn't exist.
- */
-QDomElement Config::_get(const TreeAddress &address) const
-{
-    QDomElement parent = _document.documentElement();
-
-    // Empty configuration return null element.
-    if (parent.isNull())
-        return QDomElement();
-
-    for (int a = 0; a < address.size(); a++) {
-
-        QString tag  = address.at(a).first;
-        QString name = address.at(a).second;
-
-        // Find child nodes of the specified tag type.
-        QDomNodeList children = parent.childNodes();
-        QList<QDomNode> nodes;
-        for (int i = 0; i < children.size(); i++) {
-            if (children.at(i).toElement().tagName() == tag) {
-                nodes << children.at(i);
-            }
-        }
-
-        // No node exists of the specified tag.
-        if (nodes.isEmpty())
-            return QDomElement();
-
-        // Nodes exist of the specified tag; find the right one to return.
-        else {
-
-            // Find if the tag already exists with the name.
-            int iNode = -1;
-            for (int n = 0; n < nodes.size(); n++) {
-                QString nodeName = nodes.at(n).toElement().attribute(QString("name"));
-                if (nodeName == name)
-                    iNode = n;
-            }
-
-            // Check if no tag exists with the name.
-            if (iNode == -1)
-                return QDomElement();
-
-            // Tag exists - move the parent pointer.
-            else
-                parent = nodes.at(iNode).toElement();
-        }
-    }
-    return parent;
-}
-
-
-/**
- * @details
- * Read a configuration from the Pelican XML file specified when the
- * configuration object is instantiated.
- */
-void Config::read(const QString fileName)
-{
-    _fileName = fileName;
-
-    if (fileName.isEmpty()) {
-        _document = QDomDocument("pelican");
-        return;
-    }
-
-    QFile file(fileName);
-    if (!file.exists())
-        throw QString("Config::read(): "
-                "Configuration file \"%1\" not found.").arg(fileName);
-
-    if (!file.open(QFile::ReadOnly | QFile::Text))
-        return;
-
-    // Read the XML configuration file into the QDomDocument.
-    QString error;
-    int line, column;
-    if (!_document.setContent(&file, true, &error, &line, &column)) {
-        throw QString("Config::read(): Parse error "
-                "(Line: %1 Col: %2): %3.").arg(line).arg(column).arg(error);
-    }
-
-    if (_document.doctype().name() != "pelican")
-        throw QString("Config::read(): Invalid doctype (must be \"pelican\".");
-}
-
-
-/**
- * @details
- * Create a child node under the \p parent with the \p tag and \p name attribute.
- */
-void Config::_createChildNode(QDomElement &parent, const QString& tag, const QString& name)
-{
-    if (parent.isNull())
-        throw QString("Config: Unable to create child node on null parent.");
-
-    QDomElement e = _document.createElement(tag);
-    if (!name.isEmpty())
-        e.setAttribute(QString("name"), name);
-
-    parent.appendChild(e);
-}
-
-/**
- * @details
- * Pre-processes the current XML document, expanding any <import> tags.
- * The contents of the destination are deep-copied into the current document.
- *
- * Valid use cases are:
- * - @verbatim <import nodeset=" [nodeset name] " /> @endverbatim
- *
- * The following are reserved for future use:
- * - @verbatim <import file=" [file name] " /> @endverbatim
- * - @verbatim <import url=" [address] " /> @endverbatim
- */
-void Config::_preprocess()
-{
-    // Get the list of import nodes.
-    QDomNodeList importNodes = _document.elementsByTagName("import");
-    std::cout << "Total number of import nodes: " << importNodes.size() << std::endl;
-    for (int i = 0; i < importNodes.size(); ++i) {
-        // Get the import tag.
-        QDomElement importTag = importNodes.at(i).toElement();
-
-        // Check if importing a nodeset.
-        QString nodesetName = importTag.attribute("nodeset");
-        if (!nodesetName.isEmpty()) {
-            // Import the nodeset.
-            Config::TreeAddress nodesetAddress;
-            nodesetAddress << Config::NodeId("nodesets", "");
-            nodesetAddress << Config::NodeId("nodeset", nodesetName);
-            QDomElement nodeset = _get(nodesetAddress);
-
-            // Loop over each child in the nodeset and append it.
-            QDomNodeList list = nodeset.childNodes();
-            for (int j = 0; j < list.size(); j++) {
-                importTag.parentNode().appendChild(list.at(j).cloneNode());
-            }
-        }
-
-        // Check if importing a file.
-        QString fileName = importTag.attribute("file");
-        if (!fileName.isEmpty()) {
-            // Import the file.
-            std::cerr << "WARNING: Configuration file import not yet implemented.\n";
-        }
-
-    }
-
-    summary();
 }
 
 } // namespace pelican

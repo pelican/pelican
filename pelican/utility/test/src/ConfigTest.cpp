@@ -121,7 +121,7 @@ void ConfigTest::test_getConfiguration()
     {
         Config::TreeAddress address;
         address << Config::NodeId("wibble", "wobble");
-        QDomElement e = config._get(address);
+        QDomElement e = config._get(address, config._document);
         CPPUNIT_ASSERT(e.isNull());
     }
 
@@ -165,7 +165,7 @@ void ConfigTest::test_configFileRead()
         Config::TreeAddress address;
         address << Config::NodeId("modules", "");
         address << Config::NodeId("moduleType", "testA");
-        QDomElement e = config._get(address);
+        QDomElement e = config._get(address, config._document);
         CPPUNIT_ASSERT(e.parentNode().nodeName() == "modules");
         CPPUNIT_ASSERT(e.childNodes().count() == 3);
         CPPUNIT_ASSERT(e.childNodes().at(0).nodeName() == "paramA");
@@ -187,7 +187,7 @@ void ConfigTest::test_configFileRead()
         Config::TreeAddress address;
         address << Config::NodeId("modules", "");
         address << Config::NodeId("moduleType", "default::testA");
-        QDomElement e = config._get(address);
+        QDomElement e = config._get(address, config._document);
         CPPUNIT_ASSERT(e.parentNode().nodeName() == "modules");
         CPPUNIT_ASSERT(e.nodeName() == "moduleType");
         CPPUNIT_ASSERT(e.childNodes().count() == 0);
@@ -225,7 +225,7 @@ void ConfigTest::test_configFileRead()
         Config::TreeAddress address;
         address << Config::NodeId("modules", "");
         address << Config::NodeId("moduleType", "testA");
-        QDomElement e = config._get(address);
+        QDomElement e = config._get(address, config._document);
 
         CPPUNIT_ASSERT(e.parentNode().nodeName() == "modules");
         CPPUNIT_ASSERT(e.namedItem("paramA").toElement().attribute("value") == "1");
@@ -294,15 +294,50 @@ void ConfigTest::test_testConfig()
  */
 void ConfigTest::test_preprocess()
 {
-    QString xml =
+    QString pipeline =
             "<modules>"
-            "   <moduleType name=\"test\">"
-            "       <param value=\"2.0\"/>"
-            "   </moduleType>"
-            "</modules>";
+            "    <Module1>"
+            "        <param value=\"1.0\"/>"
+            "        <import nodeset=\"A\"/>"
+            "    </Module1>"
+            "    <Module2>"
+            "        <param value=\"2.0\"/>"
+            "        <import nodeset=\"A\"/>"
+            "    </Module2>"
+            "</modules>"
+            "<import nodeset=\"B\"/>";
+    QString server =
+            "<import nodeset=\"B\"/>"
+            "<import file=\"data/testConfig.xml\"/>";
+    QString nodesets =
+            "<nodeset name=\"A\">"
+            "    <aTag1 value=\"Tag 1 from nodeset A.\"/>"
+            "    <aTag2 value=\"Tag 2 from nodeset A.\"/>"
+            "    <import nodeset=\"nested\"/>"
+            "</nodeset>"
+            "<nodeset name=\"B\">"
+            "    <group>"
+            "        <Object1>"
+            "            <bTag11 value=\"Tag 1 from nodeset B for Object1.\"/>"
+            "            <bTag12 value=\"Tag 2 from nodeset B for Object1.\"/>"
+            "        </Object1>"
+            "        <Object2>"
+            "            <bTag21 value=\"Tag 1 from nodeset B for Object2.\"/>"
+            "            <bTag22 value=\"Tag 2 from nodeset B for Object2.\"/>"
+            "        </Object2>"
+            "    </group>"
+            "</nodeset>"
+            "<nodeset name=\"nested\">"
+            "    <nested parameter=\"test\"/>"
+            "</nodeset>";
 
-    Config config;
-    config.setFromString(xml);
+    try {
+        Config config;
+        config.setFromString(pipeline, server, nodesets);
+        //config.summary();
+    } catch (QString e) {
+        CPPUNIT_FAIL("Unexpected exception: " + e.toStdString());
+    }
 }
 
 } // namespace pelican

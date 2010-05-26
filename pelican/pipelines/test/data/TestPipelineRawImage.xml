@@ -2,31 +2,31 @@
 <!DOCTYPE pelican>
 <configuration version="1.0">
 
-<varsets>
-    <varset name="channels">
+<nodesets>
+    <nodeset name="channels">
         <!-- <frequencies reference="3.554687500e7" delta="195312.5"/>  -->
         <frequencies reference="0.0" referenceChannel="0" delta="195312.5"/>
         <channels start="182" end="182">182</channels>
         <polarisation value="x"/>
-    </varset>
+    </nodeset>
 
 
-    <varset name="kso">
+    <nodeset name="kso">
         <!-- Site longitude and latitude of Karl Schwarzchild Observatory (AntennaArrays2.conf) -->
         <siteLongitude value="11.711272701"/>
         <siteLatitude value="50.979353262"/>
         <deltaUT value="0"/>
         <pressure value="1000"/>
-    </varset>
+    </nodeset>
 
-    <varset name="effelsberg">
+    <nodeset name="effelsberg">
         <!-- Site longitude and latitude of Effelsberg -->
         <siteLongitude value="6.882777778"/>
         <siteLatitude value="50.524222"/>
         <deltaUT value="0"/>
         <pressure value="1000"/>
-    </varset>
-</varsets>
+    </nodeset>
+</nodesets>
 
 
 <pipeline>
@@ -58,8 +58,8 @@
         <ZenithImagerDft>
             <size l="256" m="256" pixelCentred="true"/>
             <fullSky value="true" cutHemisphere="true"/>
-            <varset name="channels"/>
-            <varset name="kso"/>
+            <import nodeset="channels"/>
+            <import nodeset="kso"/>
         </ZenithImagerDft>
 
         <ImageWriterFits>
