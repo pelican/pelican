@@ -307,8 +307,8 @@ void ConfigTest::test_preprocess()
             "</modules>"
             "<import nodeset=\"B\"/>";
     QString server =
-            "<import nodeset=\"B\"/>"
-            "<import file=\"data/testConfig.xml\"/>";
+            "<import nodeset=\"B\"/>";
+//            "<import file=\"data/testConfig.xml\"/>";
     QString nodesets =
             "<nodeset name=\"A\">"
             "    <aTag1 value=\"Tag 1 from nodeset A.\"/>"
