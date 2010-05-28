@@ -11,8 +11,8 @@ individual modules in the pipeline.
 \section configurationFiles_location Location of Configuration Files
 
 There are currently no default locations for pelican to search for configuration 
-files. You must specify the configuration file on the command line. 
-Note that this may change in future revisions.
+files. You must specify the configuration file on the command line with the
+\c --config option. Note that this may change in future revisions.
 
 \section configurationFiles_structure File Structure
 
@@ -30,15 +30,165 @@ The most basic valid configuration file is:
 </configuration>
 \endverbatim
 
-Inside the \c configuration tag, there can be up to three sections (tags):
+Inside the \c configuration tag there can be up to three sections, delimited 
+by their own tags:
 
 \li \c pipeline
 \li \c server
 \li \c nodesets
 
-The only other reserved tag name at global scope is the \c import tag, which
-can be used to make preprocessor-like node substitutions.
+Some or all of these sections may be present.
+The \e pipeline section contains configuration details for the pipeline binary.
+The \e server section contains configuration details for the server binary.
+ \e Nodesets define groups of XML nodes that can be copied into specific
+locations using an \c import tag.
 
-\section configurationFiles_examples Examples
+\section configurationFiles_import Importing Configuration Data
+
+The only reserved global tag name is the \c import tag, which
+can be used to make preprocessor-like node substitutions.
+This can be useful if, for example, modules share common configuration
+options.
+
+Import tags may be used anywhere under the root node, so the imported nodes
+will be appended as children of the tag's parent node. The import source may
+be a special set of nodes (a nodeset) or another XML configuration file.
+
+\subsection configurationFiles_import_nodeset Importing Nodesets
+
+Groups of common nodes can be declared as nodesets by enclosing them
+inside \c nodeset tags within the \c nodesets section.
+Each nodeset must be given a unique name using the \c name attribute,
+so the nodeset can be copied into other locations in the document using
+an <tt>import nodeset="[name]"</tt> tag. Nodes within the nodeset will be
+appended to the end of the list of child nodes of the enlosing parent
+regardless of where they appear, so that local settings will override those
+from the nodeset if there is a conflict. It is possible for nodesets
+themselves to import nodes from other nodesets.
+
+\subsubsection Example
+
+For brevity, the XML header and root node have been omitted from this example.
+
+\verbatim
+<pipeline>
+    <modules>
+        <Module1>
+            <parameter value="1"/>
+            <import nodeset="set1"/>
+        </Module1>
+        <Module2>
+            <import nodeset="set1"/>
+            <parameter value="2"/>
+        </Module2>
+    </modules>
+</pipeline>
+<nodesets>
+    <nodeset name="set1">
+        <common1 value="first common parameter"/>
+        <common2 value="second common parameter"/>
+    </nodeset>
+</nodesets>
+\endverbatim
+
+The preprocessor will transform this into the following XML:
+
+\verbatim
+<pipeline>
+    <modules>
+        <Module1>
+            <parameter value="1"/>
+            <!--% Imported nodeset set1-->
+            <common1 value="first common parameter"/>
+            <common2 value="second common parameter"/>
+        </Module1>
+        <Module2>
+            <parameter value="2"/>
+            <!--% Imported nodeset set1-->
+            <common1 value="first common parameter"/>
+            <common2 value="second common parameter"/>
+        </Module2>
+    </modules>
+</pipeline>
+<nodesets>
+    <nodeset name="set1">
+        <common1 value="first common parameter"/>
+        <common2 value="second common parameter"/>
+    </nodeset>
+</nodesets>
+\endverbatim
+
+\subsection configurationFiles_import_file Importing Files
+
+It is possible to import all the child nodes under the root node of a
+document in another file. 
+
+To do this, use the <tt>import file="[file name]"</tt> tag.
+If not an absolute path, the file name must be relative to the binary
+location.
+
+\subsection configurationFiles_import_file Importing Remote Files
+
+The <tt>import url="[address]"</tt> tag is not currently implemented,
+but is reserved for future use.
+
+\section configurationFiles_configNode Obtaining Configuration Data
+
+Objects that are configurable (which are currently pipeline modules, adapters, 
+chunkers and data clients) can obtain their settings using convenience methods
+on the ConfigNode object passed to them in their constructors.
+
+To get the text for a single option, call ConfigNode::getOption() with the
+tag name and attribute name. The method returns a QString containing the
+required data.
+
+For example, a module might have this configuration XML in the \c modules
+section:
+
+\verbatim
+<Module1>
+    <option value="option"/>
+    <parameter value="1.0"/>
+</Module1>
+\endverbatim
+
+The configuration node for Module1 will be passed down in the module's
+constructor. To get the parameter value, one could use:
+
+\code
+double param = configNode.getOption("parameter", "value").toDouble();
+\endcode
+
+\section configurationFiles_modules Common Module Options
+
+In radio astronomy, it is usual to have to specify a subset of radio
+frequencies and/or channel indices when working with radio telescope data.
+This channel information often has to be supplied to many different
+processing modules.
+
+Frequency channels are specified in the XML configuration as 
+
+\verbatim <channels>1,5,182</channels> \endverbatim
+
+or, for many contiguous channels,
+
+\verbatim <channels start="0" end="511"/> \endverbatim
+
+To obtain this channel list, there is a convenience method
+ConfigNode::getChannels(), which returns the list of channel indices in a
+standard vector.
+
+\verbatim std::vector<unsigned> = configNode.getChannels("channels"); \endverbatim
+
+\section configurationFiles_chunker Common Chunker Options
+
+Chunkers can use any device, but are usually considered to work
+with network sockets. For this reason, the chunker base class will look for
+a \c connection tag in its configuration node, with attributes \c host
+(the hostname or IP address) and \c port number.
+
+\verbatim <connection host="127.0.0.1" port="2001" /> \endverbatim
+
+This XML tag should be provided for all chunkers that use network sockets.
 
 */

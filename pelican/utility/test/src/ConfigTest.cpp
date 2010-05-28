@@ -297,33 +297,33 @@ void ConfigTest::test_preprocess()
     QString pipeline =
             "<modules>"
             "    <Module1>"
-            "        <param value=\"1.0\"/>"
-            "        <import nodeset=\"A\"/>"
+            "        <parameter value=\"1\"/>"
+            "        <import nodeset=\"set1\"/>"
             "    </Module1>"
             "    <Module2>"
-            "        <param value=\"2.0\"/>"
-            "        <import nodeset=\"A\"/>"
+            "        <import nodeset=\"set1\"/>"
+            "        <parameter value=\"2\"/>"
             "    </Module2>"
             "</modules>"
-            "<import nodeset=\"B\"/>";
+            "<import nodeset=\"set2\"/>";
     QString server =
-            "<import nodeset=\"B\"/>";
+            "<import nodeset=\"set2\"/>";
 //            "<import file=\"data/testConfig.xml\"/>";
     QString nodesets =
-            "<nodeset name=\"A\">"
-            "    <aTag1 value=\"Tag 1 from nodeset A.\"/>"
-            "    <aTag2 value=\"Tag 2 from nodeset A.\"/>"
-            "    <import nodeset=\"nested\"/>"
+            "<nodeset name=\"set1\">"
+            "    <common1 value=\"first common parameter\"/>"
+            "    <common2 value=\"second common parameter\"/>"
+            //"    <import nodeset=\"nested\"/>"
             "</nodeset>"
-            "<nodeset name=\"B\">"
+            "<nodeset name=\"set2\">"
             "    <group>"
             "        <Object1>"
-            "            <bTag11 value=\"Tag 1 from nodeset B for Object1.\"/>"
-            "            <bTag12 value=\"Tag 2 from nodeset B for Object1.\"/>"
+            "            <tag1 value=\"tag1 from set2 for Object1.\"/>"
+            "            <tag2 value=\"tag2 from set2 for Object1.\"/>"
             "        </Object1>"
             "        <Object2>"
-            "            <bTag21 value=\"Tag 1 from nodeset B for Object2.\"/>"
-            "            <bTag22 value=\"Tag 2 from nodeset B for Object2.\"/>"
+            "            <tag1 value=\"tag1 from set2 for Object2.\"/>"
+            "            <tag2 value=\"tag2 from set2 for Object2.\"/>"
             "        </Object2>"
             "    </group>"
             "</nodeset>"
