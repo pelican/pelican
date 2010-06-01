@@ -55,6 +55,11 @@ derived class:
 
 The emulator can take a configuration node in its constructor if required.
 
+Classes derived from \c AbstractUdpEmulator must supply a configuration node
+containing at least the host address and port number. Use the
+\c connection tag with \c host and \c port attributes, as in the following
+example. 
+
 \section Example
 
 In the following, a new emulator is defined to send packets of real-valued UDP
