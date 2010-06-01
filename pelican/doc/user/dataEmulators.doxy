@@ -34,8 +34,6 @@ To create a new data emulator:
     The method must update the input parameters to set a pointer to a block
     of memory to use for the packet, and the packet size in bytes.
     This method fills the packet with emulated data.
-\li In the derived class, implement the \c interval() method to return the
-    interval in microseconds between packets.
 
 There are a number of other options that may be set via virtual methods in the
 derived class:
@@ -44,6 +42,9 @@ derived class:
     construction of the driver, reimplement the \c autostart() method to
     return \c true or \c false (default true).
     If false, then call start() on the EmulatorDriver to start the emulator.
+\li To set the duration between calls to getPacketData(), implement the
+    \c interval() method to return the interval in microseconds between
+    packets (default 100000).
 \li To set the number of packets sent by the emulator, reimplement the
     \c nPackets() method and return the number of packets required. If the
     number of packets is negative, then the emulator will run forever
