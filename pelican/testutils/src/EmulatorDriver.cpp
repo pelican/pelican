@@ -50,7 +50,6 @@ void EmulatorDriver::run()
     // Set up loop conditions.
     bool noData = false;
     bool continuous = _emulator->nPackets() < 0;
-    long int interval = _emulator->interval();
     long int packetCounter = 0;
 
     // Enter loop.
@@ -66,6 +65,7 @@ void EmulatorDriver::run()
         _device->write(ptr, size);
 
         // Sleep.
+        unsigned long interval = _emulator->interval();
         if (interval != 0) usleep(interval);
         packetCounter++;
     }
