@@ -54,6 +54,8 @@ derived class:
     (default 0).
 
 The emulator can take a configuration node in its constructor if required.
+The method \c ConfigNode::setFromString() can be used to set the XML contents
+of the configuration node.
 
 Classes derived from \c AbstractUdpEmulator must supply a configuration node
 containing at least the host address and port number. Use the
@@ -74,10 +76,10 @@ data down a socket. The XML contents of its configuration node are:
 
 The class definition is:
 
-@include EmulatorExample.h
+\include EmulatorExample.h
 
 and the class implementation is:
 
-@include EmulatorExample.cpp
+\include EmulatorExample.cpp
 
 */
