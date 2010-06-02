@@ -1,0 +1,23 @@
+/**
+\page user_referenceMain Writing main()
+
+\section user_referenceMain_pipeline Pipeline Binary
+
+\subsection user_referenceMain_pipeline_single Single Pipeline 
+
+\subsection user_referenceMain_pipeline_multiple Multiple Pipelines 
+
+It is possible to configure more than one pipeline to be operational in a
+single Pelican pipeline binary. The appropriate pipeline will be run,
+depending on the data that is available.
+
+Multiple pipelines that require the same data sets are, however, \em not
+supported for efficiency reasons, as copies of potentially very large data
+sets would need to be made for each pipeline.
+
+\subsubsection user_referenceMain_pipeline_multiple_ex Multi-Pipeline Example
+
+\section user_referenceMain_server Server Binary
+
+
+*/

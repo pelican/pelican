@@ -1,20 +1,20 @@
 /**
-\page user_framework_configurationFiles Pipeline Configuration Files
+\page user_referenceConfiguration Configuration Files
 
-\section configurationFiles_overview Overview
+\section user_referenceConfiguration_overview Overview
 
 The configuration file allows control over all aspects of the 
 runtime binary. As well as things such as server IP addresses and port
 information, the configuration file is also used to set parameters for
 individual modules in the pipeline.
 
-\section configurationFiles_location Location of Configuration Files
+\section user_referenceConfiguration_location Location of Configuration Files
 
 There are currently no default locations for pelican to search for configuration 
 files. You must specify the configuration file on the command line with the
 \c --config option. Note that this may change in future revisions.
 
-\section configurationFiles_structure File Structure
+\section user_referenceConfiguration_structure File Structure
 
 The configuration files are XML-based, and can be edited by hand using any
 text editor. The document type is \c pelican and the root node tag is
@@ -63,7 +63,7 @@ Within these sub-sections, the tag names must match the names of the objects
 different configurations can be distinguished by using the \c name attribute
 in the class tag.
 
-\subsection configurationFiles_structure_example Example
+\subsection user_referenceConfiguration_structureExample Example
 
 This is an example configuration file that contains both \e pipeline and 
 \e server sections. There are two chunkers of the same type that must connect
@@ -112,7 +112,7 @@ to different UDP ports, so the \c name attribute is used to disambiguate them.
 </configuration>
 \endverbatim
 
-\section configurationFiles_import Importing Configuration Data
+\section user_referenceConfiguration_import Importing Configuration Data
 
 The only reserved global tag name is the \c import tag, which
 can be used to make preprocessor-like node substitutions.
@@ -123,7 +123,7 @@ Import tags may be used anywhere under the root node, so the imported nodes
 will be appended as children of the tag's parent node. The import source may
 be a special set of nodes (a nodeset) or another XML configuration file.
 
-\subsection configurationFiles_import_nodeset Importing Nodesets
+\subsection user_referenceConfiguration_import_nodeset Importing Nodesets
 
 Groups of common nodes can be declared as nodesets by enclosing them
 inside \c nodeset tags within the \c nodesets section.
@@ -135,7 +135,7 @@ regardless of where they appear, so that local settings will override those
 from the nodeset if there is a conflict. It is possible for nodesets
 themselves to import nodes from other nodesets.
 
-\subsubsection Example
+\subsubsection user_referenceConfiguration_import_nodeset_example Example
 
 For brevity, the XML header and root node have been omitted from this example.
 
@@ -187,7 +187,7 @@ The preprocessor will transform this into the following XML:
 </nodesets>
 \endverbatim
 
-\subsection configurationFiles_import_file Importing Files
+\subsection user_referenceConfiguration_import_file Importing Files
 
 It is possible to import all the child nodes under the root node of a
 document in another file. 
@@ -196,12 +196,12 @@ To do this, use the <tt>import file="[file name]"</tt> tag.
 If not an absolute path, the file name must be relative to the current working
 directory.
 
-\subsection configurationFiles_import_remoteFiles Importing Remote Files
+\subsection user_referenceConfiguration_import_remote Importing Remote Files
 
 The <tt>import url="[address]"</tt> tag is not currently implemented,
 but is reserved for future use.
 
-\section configurationFiles_configNode Obtaining Configuration Data
+\section user_referenceConfiguration_configNode Obtaining Configuration Data
 
 Objects that are configurable (which are currently pipeline modules, adapters, 
 chunkers and data clients) can obtain their settings using convenience methods
@@ -228,7 +228,7 @@ constructor. To get the parameter value, one could use:
 double param = configNode.getOption("parameter", "value").toDouble();
 \endcode
 
-\section configurationFiles_modules Common Module Options
+\section user_referenceConfiguration_modules Common Module Options
 
 In radio astronomy, it is usual to have to specify a subset of radio
 frequencies and/or channel indices when working with radio telescope data.
@@ -251,7 +251,7 @@ standard vector.
 std::vector<unsigned> = configNode.getChannels("channels");
 \endcode
 
-\section configurationFiles_chunker Common Chunker Options
+\section user_referenceConfiguration_chunker Common Chunker Options
 
 Chunkers can use any device, but usually work with network sockets.
 For this reason, the chunker base class will look for
@@ -269,7 +269,7 @@ All chunkers must also declare the data type that they provide using the
 The data type string is the name of the data blob that will be eventually
 filled by the adapter. 
 
-\section configurationFiles_dataClient Common Data Client Options
+\section user_referenceConfiguration_dataClient Common Data Client Options
 
 Data clients that connect to the Pelican server must specify the hostname
 and port for the TCP connection, using the \c server tag:

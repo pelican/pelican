@@ -1,0 +1,56 @@
+/**
+\page user_dataImporter Importing Data
+
+\section user_dataImporter_introduction Introduction 
+
+\li Chunker reference
+\li Data Blob reference 
+\li Adapter reference 
+\li Configuration reference
+
+\section user_dataImporter_overview Overview
+
+This section of the guide is about reading in and preparing data.
+
+To import data into the application you need to tell Pelican some important
+details:
+@li The type of socket the stream is on
+@li The host and port of the stream
+@li How to chop the data into units for processing (Chunking the data)
+@li How to interpret the data stream (Adapting the data)
+
+To do this you will need to implement two C++ classes, one for chunking and
+one for data adaption. These classes slot into the Pelican framework to 
+deliver data to the pipeline.
+
+@subsection dataTypes Two Data Types
+
+Pelican distinguishes between two classes of data, namely @b StreamData
+and @b ServiceData.
+There can be any number of StreamData and ServiceData types, but each one
+will need its own adapter and chunker. It is also possible to have multiple
+inputs of the same type. Each source of incoming data, either stream or
+service, must have its own unique identifier in the form of a string.
+
+@subsubsection streamData StreamData 
+
+This is an incoming data stream that is expected to be a fairly continuous
+series of similarly structured data. As it arrives it is automatically
+associated with any available service data.
+
+@subsubsection serviceData ServiceData. 
+
+This is relatively static data that is updated occassionally and
+supports the stream data. e.g. describing the incoming stream data format,
+or status information of instruments collecting the data.
+There is always a "current" version of any type of ServiceData
+and it is this version that is associated with any incoming stream data.
+
+@section connecting_dataClientDirect Using the Direct Stream Client
+
+@section connecting_dataClientServer Using the Pelican Server Client
+
+\section user_dataImporter_examples Examples
+
+
+*/

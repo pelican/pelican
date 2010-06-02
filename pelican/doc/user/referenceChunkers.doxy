@@ -1,0 +1,36 @@
+/**
+\page user_referenceChunkers Data Chunkers
+
+\section user_referenceChunkers_introduction Introduction
+
+The function of the chunker is to take an incoming data stream and turn it
+into suitable size chunks that can be fed into the data adapter.
+
+\section user_referenceChunkers_overview Overview
+
+\li All chunkers must implement the \c AbstractChunker class interface.
+\li In the derived class, implement the \c newDevice() method.
+    This method must create and return an open \c QIODevice ready for
+    input (for example, a \c QUdpSocket).
+    The base class will take ownership of the device, so it must not be
+    deleted explicitly.
+\li In the derived class, implement the \c next() method.
+    This method will be called automatically whenever data is available
+    on the device created in \c newDevice(). You must check and read off the
+    number of bytes available from the device, and store them in a local
+    buffer before returning.
+    When enough data has arrived to make a chunk, call \c getDataStorage()
+    to return a \c WritableData object. Finally, use WritableData::write()
+    to save the chunk of data into the appropriate buffer.  
+\li New chunkers must register their existence with the chunker factory.
+    Use the PELICAN_DECLARE_CHUNKER() macro in the chunker's source
+    (*.cpp) file to register the chunker, supplying the name of the chunker
+    class as the macro argument. Do not use quotes around the name.
+
+\section user_referenceChunkers_configuration Configuration
+
+\section user_referenceChunkers_example Example
+
+\include ChunkerExample.cpp
+
+*/

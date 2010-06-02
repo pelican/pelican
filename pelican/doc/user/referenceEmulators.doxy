@@ -1,7 +1,7 @@
 /**
-\page user_framework_dataEmulators Data Emulation
+\page user_referenceEmulators Data Emulation
 
-\section dataEmulators_introduction Introduction
+\section user_referenceEmulators_introduction Introduction
  
 Synthetic packets of data are often required when testing new data chunkers.
 These synthetic data packets can be generated conveniently using the classes
@@ -18,7 +18,7 @@ with the EmulatorDriver object, so it must not be explicitly deleted.
 The primary function of the AbstractEmulator is to provide a pointer to a block
 of memory to use when sending data packets. 
 
-\section dataEmulators_overview Overview
+\section user_referenceEmulators_overview Overview
 
 To create a new data emulator:
 
@@ -53,6 +53,8 @@ derived class:
     \c startDelay() method to return the number of seconds to wait initially
     (default 0).
 
+\section user_referenceEmulators_configuration Configuration
+
 The emulator can take a configuration node in its constructor if required.
 The method \c ConfigNode::setFromString() can be used to set the XML contents
 of the configuration node.
@@ -62,7 +64,7 @@ containing at least the host address and port number. Use the
 \c connection tag with \c host and \c port attributes, as in the following
 example. 
 
-\section Example
+\section user_referenceEmulators_example Example
 
 In the following, a new emulator is defined to send packets of real-valued UDP
 data down a socket. The XML contents of its configuration node are:

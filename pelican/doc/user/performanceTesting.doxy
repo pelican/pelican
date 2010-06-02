@@ -1,13 +1,13 @@
 /**
-@page user_framework_performanceTesting Performance Testing
+\page user_performanceTesting Performance Testing
 
-@section performanceTesting_overview Overview
-A number of utilities exist in pelican to aid in producing benchmark
+\section user_performanceTesting_overview Overview
+
+A number of utilities exist in Pelican to aid in producing benchmark
 performace tests.
 
-@section performanceTesting_bandwidth Bandwidth (Data Throughput) Performance Testing
-@todo Bandwidth testing
+\section user_performanceTesting_bandwidth Bandwidth Testing
 
-@section performanceTesting_pipeline Monitoring full throughput performance
+\section user_performanceTesting_pipeline Pipeline Testing
 
 */

@@ -1,0 +1,14 @@
+/**
+@page user_referenceOutputStreamers Output Streamers
+
+@section Overview
+
+You will need to send your processed data elsewhere, perhaps to a storage
+system, a monitoring and control system or a further processing pipeline.
+Pelican allows you to separate the details of the destination of the data
+from the specification of what to write out using the OutputStreamer framework.
+
+You can insert an @em OutputStreamer anywhere in a pipeline and specify the
+appropriate data sets.
+
+*/

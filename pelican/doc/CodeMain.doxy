@@ -2,8 +2,8 @@
 
 @mainpage Pelican API
 
-@section intro Introduction.
+@section intro Introduction
 
-This is a API to Pelican!
+This document describes the Application Programming Interface (API) for Pelican.
 
 */

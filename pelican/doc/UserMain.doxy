@@ -1,18 +1,52 @@
 /**
 
-@mainpage Pelican User Guide
+\mainpage Pelican User Guide
 
-@section intro Introduction.
+\section introFramework Introduction
 
-This is a user guide to Pelican!
+The Pelican framework is an efficient C++ library for processing data in
+quasi-real time. It provides a system to chunk and buffer data streams
+from network sockets or other input devices, and to serve these data chunks
+to multiple parallel computational pipelines. Each pipeline may contain
+any number of processing modules, which operate on specific data types.
 
-@li @subpage user_framework_intro
-@li @subpage user_framework_deploymentExamples
-@li @subpage user_framework_gettingStarted
-@li @subpage user_framework_configurationFiles
-@li @subpage user_framework_multiplePipelines
-@li @subpage user_framework_performanceTesting
-@li @subpage user_framework_dataEmulators
-@li @subpage user_server
+Pelican was not designed to be a highly interactive system.
+Instead, components can be configured using XML parameter files, which
+are read on initialisation. Pipelines can then be run indefinitely to process
+data streams using suitable dedicated compute resources.
+
+With its origin in radio astronomical data processing, Pelican was originally
+an acronym for the <em>Pipeline for Extensible, Lightweight Imaging and
+CAlibratioN</em>. However, the framework is sufficiently generic to be useful
+for processing other data streams.
+
+The library aims to:
+\li Separate data acquisition from data processing, allowing
+    scalability and flexibility to fit a number of scenarios.
+\li Provide a number of reusable data processing modules with
+    applications in signal processing.
+
+\section introDeployment Pelican Deployment
+
+Pelican can be deployed in two ways. 
+
+The first way utilises a server-client architecture to provide a scalable
+processing framework. Data is divided into chunks and is buffered by the
+Pelican server. Pelican pipelines run on other machines, where data clients 
+request chunks of data from the server as often as they become available.
+If the existing pipelines cannot keep up with the input data rate, then
+more pipelines can be added as required.  
+
+The second use of Pelican is to connect a special data client directly to
+the input data stream, instead of to the Pelican server. In this case,
+the data client contains one or more data chunkers, and buffers the data
+itself until the pipeline is ready to process it.
+
+\section introContents Contents
+
+\li \subpage user_structuralOverview
+\li \subpage user_gettingStarted
+\li \subpage user_reference
+\li \subpage user_performanceTesting
 
 */

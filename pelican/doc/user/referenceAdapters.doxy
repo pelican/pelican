@@ -1,0 +1,29 @@
+/**
+\page user_referenceAdapters Data Adapters
+
+\section user_referenceAdapters_introduction Introduction
+
+The role of the adapter is to take a block of data and convert it to a
+C++ class structure (a data blob) suitable for handing down to the
+processing pipeline.
+
+\section user_referenceAdapters_overview Overview
+
+\li All adapters must inherit from either the \c AbstractStreamAdapter,
+    or the \c AbstractServiceAdapter class.
+\li In the derived class, implement the \c deserialise() method.
+\li The data class must inherit from \c DataBlob. There are a number of
+    existing data blob types that are currently used in the modules, so you
+    may not need to create your own if these are suitable.
+\li New adapters must register their existence with the adapter factory.
+    Use the PELICAN_DECLARE_ADAPTER() macro in the adapter's source
+    (*.cpp) file to register the adapter, supplying the name of the adapter
+    class as the macro argument. Do not use quotes around the name.
+
+\section user_referenceAdapters_configuration Configuration
+
+\section user_referenceAdapters_example Example
+
+\include AdapterExample.cpp
+
+*/
