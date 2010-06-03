@@ -59,7 +59,7 @@ endif()
 
 if(DOXYGEN_FOUND AND DOXYFILE_IN_${name})
     set(DOXYFILE_OUTPUT_DIR)
-    add_custom_target(doc_${doxyfile_name} ${DOXYGEN_EXECUTABLE}
+    add_custom_target(doc_${name} ${DOXYGEN_EXECUTABLE}
                      ${CMAKE_CURRENT_BINARY_DIR}/${doxyfile_name})
     usedoxygen_set_default(DOXYFILE_OUTPUT_DIR
                      ${CMAKE_CURRENT_BINARY_DIR}/doc/${name})
@@ -100,7 +100,7 @@ if(DOXYGEN_FOUND AND DOXYFILE_IN_${name})
         add_custom_target(doc)
     endif()
 
-    add_dependencies(doc doc_${doxyfile_name})
+    add_dependencies(doc doc_${name})
 
 endif()
 
