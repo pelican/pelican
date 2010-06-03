@@ -32,7 +32,7 @@ AdapterLofarStationVisibilities::AdapterLofarStationVisibilities(const ConfigNod
     _timeDelta = config.getOption("time", "delta", "0.0").toDouble();
 
     // Get the channel and polarisation selection.
-    _channels = config.getChannels();
+    _channels = config.getUnsignedList("channels");
     _polarisation = config.getPolarisation();
     _nPol = (_polarisation == POL_BOTH) ? 2 : 1;
     _nChan = _channels.size();

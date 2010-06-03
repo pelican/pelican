@@ -243,7 +243,7 @@ void ZenithImagerDft::_getConfiguration(const ConfigNode& config)
     }
 
     // Get the channel and polarisation selection.
-    _channels = config.getChannels();
+    _channels = config.getUnsignedList("channels");
     _polarisation = config.getPolarisation();
 
     /* A/D-converter - to be able to cope with expected interference levels - operating at either

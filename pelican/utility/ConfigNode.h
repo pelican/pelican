@@ -88,9 +88,8 @@ class ConfigNode
         /// Returns the QDomElement that this class wraps.
         const QDomElement getDomElement() const {return _config;}
 
-        /// Returns the list of channels, if any.
-        std::vector<unsigned> getChannels(
-                const QString& tagName = QString("channels")) const;
+        /// Returns the list of unsigned integers, if any.
+        std::vector<unsigned> getUnsignedList(const QString& tagName) const;
 
         /// Returns the polarisation, if any.
         Polarisation getPolarisation(

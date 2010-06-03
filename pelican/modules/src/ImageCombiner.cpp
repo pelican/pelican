@@ -253,8 +253,8 @@ void ImageCombiner::_getConfiguration(const ConfigNode& config)
     if (!ok) throw QString("ImageCombiner: Invalid coefficient a3.");
 
     // Get the channels.
-    _channelsInput1 = config.getChannels("channelsInput1");
-    _channelsInput2 = config.getChannels("channelsInput2");
+    _channelsInput1 = config.getUnsignedList("channelsInput1");
+    _channelsInput2 = config.getUnsignedList("channelsInput2");
     _nChannels = _channelsInput1.size();
     if (_channelsInput1.size() != _channelsInput2.size())
         throw QString("ImageCombiner: Inconsistent channel mapping.");

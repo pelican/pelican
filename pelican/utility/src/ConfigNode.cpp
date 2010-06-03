@@ -195,8 +195,10 @@ QStringList ConfigNode::getOptionList(const QString& tagName,
 
 /**
  * @details
- * Returns a vector containing the list of channels, if any.
- * Channels are specified in the XML configuration as
+ * Returns a vector containing the comma-separated list of unsigned integers
+ * inside the given tag name.
+ *
+ * Channels can be specified in the XML configuration as
  *
  * @verbatim <channels>1,5,182</channels> @endverbatim
  *
@@ -204,42 +206,44 @@ QStringList ConfigNode::getOptionList(const QString& tagName,
  *
  * @verbatim <channels start="0" end="511"/> @endverbatim
  */
-std::vector<unsigned> ConfigNode::getChannels(const QString& tagName) const
+std::vector<unsigned> ConfigNode::getUnsignedList(const QString& tagName) const
 {
-    // Declare channel vector.
-    std::vector<unsigned> channels;
+    // Declare vector.
+    std::vector<unsigned> list;
 
     // Check if "start" and "end" attributes are present.
-    const int beg = getOption(tagName, "start", "-1").toInt();
-    const int end = getOption(tagName, "end", "-1").toInt();
+    QString startString = getOption(tagName, "start");
+    QString endString = getOption(tagName, "end");
 
-    // If start or end are negative, check for text content.
-    if (beg < 0 || end < 0) {
+    // If start or end are not present, check for text content.
+    if (startString.isEmpty() || endString.isEmpty()) {
         QString channelStr = getOptionText(tagName, "0");
         QStringList chanList = channelStr.split(",", QString::SkipEmptyParts);
         unsigned size = chanList.size();
-        channels.resize(size);
+        list.resize(size);
         for (unsigned i = 0; i < size; ++i) {
-            channels[i] = chanList.at(i).toUInt();
+            list[i] = chanList.at(i).toUInt();
         }
     }
 
-    // Otherwise use start and end channels.
+    // Otherwise use start and end.
     else {
+        const int beg = startString.toInt();
+        const int end = endString.toInt();
         const unsigned size = 1 + abs(end - beg);
         const int dir = (end - beg >= 0) ? 1 : -1;
-        channels.resize(size);
+        list.resize(size);
 
         // Fill the channel indices.
         for (unsigned i = 0; i < size; ++i) {
-            channels[i] = beg + (i * dir);
+            list[i] = beg + (i * dir);
         }
     }
 
-    // Check and throw if there are no channels.
-    if (channels.size() == 0)
-        throw QString("%1: No channels specified.").arg(_config.tagName());
-    return channels;
+    // Check and throw if list is empty.
+    if (list.size() == 0)
+        throw QString("%1: No integer list specified.").arg(_config.tagName());
+    return list;
 }
 
 /**
