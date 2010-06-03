@@ -8,16 +8,17 @@
 # Defines:
 #  MKL_FOUND:
 #  MKL_LIBRARIES:   The libraries needed to use MKL BLAS & LAPACK.
+#  MKL_INCLUDE_DIR
 #
 
 # Find the include directory.
 # ==============================================================================
-#find_path(MKL_INCLUDE_DIR mkl.h
-#    PATHS
-#    /opt/intel/Compiler/*/*/mkl/include/
-#    /opt/intel/mkl/*/include/
-#    /usr/include/
-#)
+find_path(MKL_INCLUDE_DIR mkl.h
+    PATHS
+    /opt/intel/Compiler/*/*/mkl/include/
+    /opt/intel/mkl/*/include/
+    /usr/include/
+)
 
 # Set the architecture specfic interface layer library.
 # ==============================================================================

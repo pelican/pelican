@@ -26,7 +26,6 @@ endif(CMAKE_BUILD_TYPE MATCHES DEBUG|[Dd]ebug)
 
 add_test(utilityTest utilityTest )
 
-
 include(CopyFiles)
 copy_files(${CMAKE_CURRENT_SOURCE_DIR}/data/*.xml . testXMLFiles)
 
