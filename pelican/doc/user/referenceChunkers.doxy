@@ -8,7 +8,9 @@ into suitable size chunks that can be fed into the data adapter.
 
 \section user_referenceChunkers_overview Overview
 
-\li All chunkers must inherit from the \c AbstractChunker class interface.
+To create a new data chunker:
+
+\li All chunkers must inherit the \c AbstractChunker class interface.
 \li In the derived class, implement the \c newDevice() method.
     This method must create and return an open \c QIODevice ready for
     input (for example, a \c QUdpSocket).
