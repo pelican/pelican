@@ -1,10 +1,7 @@
 #include "pelican/server/test/TestUdpChunker.h"
 #include "pelican/utility/Config.h"
 
-#include <QCoreApplication>
-#include <QBuffer>
-#include <QTimer>
-#include <QUdpSocket>
+#include <QtNetwork/QUdpSocket>
 #include <iostream>
 
 #include "pelican/utility/memCheck.h"
@@ -18,16 +15,14 @@ PELICAN_DECLARE_CHUNKER(TestUdpChunker)
  * @details
  * Constructs a new TestUdpChunker.
  */
-TestUdpChunker::TestUdpChunker(const ConfigNode& config) : AbstractChunker()
+TestUdpChunker::TestUdpChunker(const ConfigNode& config)
+    : AbstractChunker(config)
 {
     // Check configuration node is correct.
     if (config.type() != "TestUdpChunker")
         throw QString("TestUdpChunker: Wrong configuration node.");
 
     // Get configuration options.
-    setHost(config.getOption("connection", "host"));
-    setPort(qint16(config.getOption("connection", "port").toUInt()));
-    setType(config.getOption("data", "type"));
     _chunkSize = config.getOption("data", "chunkSize").toUInt();
 
     // Some sanity checking.

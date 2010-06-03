@@ -3,10 +3,9 @@
 
 #include "pelican/server/AbstractChunker.h"
 
-#include <QString>
-#include <QObject>
-#include <cstring>
-#include <QByteArray>
+#include <QtCore/QString>
+#include <QtCore/QObject>
+#include <QtCore/QByteArray>
 
 /**
  * @file TestUdpChunker.h
@@ -14,13 +13,11 @@
 
 namespace pelican {
 
-class DataManager;
-
 /**
  * @class TestUdpChunker
  *
  * @brief
- * Implementation of an AbstractChunker to work with the Telescope emulator.
+ * Implementation of an AbstractChunker to work with the telescope emulator.
  *
  * @details
  *
