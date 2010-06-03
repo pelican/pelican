@@ -84,4 +84,11 @@ and the class implementation is:
 
 \include EmulatorExample.cpp
 
+To use the emulator, invoke the emulator driver as follows:
+
+\code
+ConfigNode emulatorConfig(xmlString);
+EmulatorDriver emulator(new EmulatorExample(emulatorConfig));
+\endcode
+
 */
