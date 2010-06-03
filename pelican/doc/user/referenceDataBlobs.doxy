@@ -24,12 +24,17 @@ To create a new type of DataBlob:
 \li There are no abstract methods that define the data storage, so you have
     considerable freedom in choosing the internal structure of the blob to
     suit the needs of the module(s) that will use it. Declare the required
-    data structures in the blob's \c private section, and implement any the
+    data structures in the blob's \c private section, and implement any
     \c public methods that will be used to interact with the data.
 \li If the blob needs to be sent to an output device, reimplement the
     \c serialise() method to send the contents of the blob to the device. 
 \li If the blob needs to be filled from an input device, reimplement the
     \c deserialise() method to read the contents of the blob from the device.
+\li New data blobs must register their existence with the blob factory.
+    Use the PELICAN_DECLARE_DATABLOB() macro in the global scope of the
+    data blob's source (*.cpp) file to register it, supplying the name
+    of the data blob class as the macro argument. Do not use quotes around
+    the name.
 
 \section user_referenceDataBlobs_example Example
 

@@ -5,6 +5,7 @@ set( examples_src
      ChunkerExample.cpp
      PipelineExample.cpp
      DataBlobExample.cpp
+     ModuleExample.cpp
 )
 
 add_library(examples ${examples_src} )

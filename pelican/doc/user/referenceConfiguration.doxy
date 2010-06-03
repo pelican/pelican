@@ -1,14 +1,12 @@
 /**
 \page user_referenceConfiguration Configuration Files
 
-\section user_referenceConfiguration_overview Overview
+\section user_referenceConfiguration_introduction Introduction
 
 The configuration file allows control over all aspects of the 
 runtime binary. As well as things such as server IP addresses and port
 information, the configuration file is also used to set parameters for
 individual modules in the pipeline.
-
-\section user_referenceConfiguration_location Location of Configuration Files
 
 There are currently no default locations for pelican to search for configuration 
 files. You must specify the configuration file on the command line with the
@@ -244,11 +242,11 @@ or, for many contiguous channels,
 \verbatim <channels start="0" end="511"/> \endverbatim
 
 To obtain this channel list, there is a convenience method
-ConfigNode::getChannels(), which returns the list of channel indices in a
+ConfigNode::getUnsignedList(), which returns the list of channel indices in a
 standard vector.
 
 \code
-std::vector<unsigned> = configNode.getChannels("channels");
+std::vector<unsigned> = configNode.getUnsignedList("channels");
 \endcode
 
 \section user_referenceConfiguration_chunker Common Chunker Options
