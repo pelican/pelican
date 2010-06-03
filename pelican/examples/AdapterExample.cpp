@@ -1,18 +1,51 @@
 #include "AdapterExample.h"
+#include "pelican/examples/DataBlobExample.h"
+
+
+// Register the adapter with the factory.
+PELICAN_DECLARE_ADAPTER(AdapterExample)
 
 /**
  * @details AdapterExample
  * You will be passed a config node in the constructor
  * to help you set the Adapter up.
  * You can specify whatever requirements you want in your
- * config
- *
+ * configuration.
  */
+
+
+// Construct the example adatper.
 AdapterExample::AdapterExample(const ConfigNode& config)
     : AbstractStreamAdapter(config)
 {
+    // Read the configuration using configuation node utility methods.
+    _nSamples = config.getOption("samples", "number").toUInt();
+    _nBitsPerSample = config.getOption("samples", "bitsPerSample").toUInt();
 }
 
-AdapterExample::~AdapterExample()
+
+// Called to de-serialise a chunk of data in the I/0 device.
+void AdapterExample::deserialise(QIODevice* in)
 {
+    // Set the size of the data blob to fill. Note the data pointer being
+    // adapted into (_data) is an potiner to an abstract data blob in the
+    // adapter base class.
+    DataBlobExample* blob = static_cast<DataBlobExample*>(_data);
+    unsigned length = _chunkSize / _nBitsPerSample;
+    blob->resize(length);
+
+    // Create a temporary buffer to storing the chunk.
+    std::vector<char> temp(_chunkSize);
+
+    // Read the chunk from the I/O device.
+    in->read(&temp[0], _chunkSize);
+
+    // Get the pointer to the data array in the data blob being filled.
+    float* data = blob->ptr();
+
+    // Fill the data blob.
+    for (unsigned i = 0; i < length; ++i) {
+        data[i] = *reinterpret_cast<float*>(temp[i]);
+    }
 }
+

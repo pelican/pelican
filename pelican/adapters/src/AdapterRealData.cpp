@@ -1,7 +1,7 @@
 #include "pelican/adapters/AdapterRealData.h"
 #include "pelican/data/RealData.h"
 #include "pelican/utility/ConfigNode.h"
-#include <QIODevice>
+#include <QtCore/QIODevice>
 
 #include "pelican/utility/memCheck.h"
 
@@ -33,7 +33,7 @@ void AdapterRealData::deserialise(QIODevice* in)
 {
     // Set the size of the data blob to fill.
     RealData* blob = static_cast<RealData*>(_data);
-    int length = _chunkSize / sizeof(real_t);
+    unsigned length = _chunkSize / sizeof(real_t);
     if (_chunkSize % sizeof(real_t) != 0) length++;
     blob->resize(length);
 

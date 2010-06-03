@@ -3,7 +3,7 @@
 
 #include "pelican/utility/ConfigNode.h"
 #include "pelican/utility/FactoryRegistrar.h"
-#include <QIODevice>
+#include <QtCore/QIODevice>
 #include <iostream>
 
 /**

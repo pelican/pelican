@@ -29,13 +29,13 @@ class DataBlobExample : public DataBlob
         DataBlobExample() : DataBlob() {}
 
         /// Returns a pointer to the start of the data.
-        float* ptr() {return (_data.size() > 0 ? &_data[0] : NULL);}
+        float* ptr() { return (_data.size() > 0 ? &_data[0] : NULL); }
 
         /// Resizes the data blob.
-        void resize(int length) {_data.resize(length);}
+        void resize(unsigned length) { _data.resize(length); }
 
         /// Returns the size of the data.
-        unsigned size() {return _data.size();}
+        unsigned size() { return _data.size(); }
 };
 
 #endif // DATABLOBEXAMPLE_H

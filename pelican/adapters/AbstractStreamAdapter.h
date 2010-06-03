@@ -2,9 +2,9 @@
 #define ABSTRACTSTREAMADAPTER_H
 
 #include "pelican/adapters/AbstractAdapter.h"
-#include <QHash>
-#include <QString>
-#include <QIODevice>
+#include <QtCore/QHash>
+#include <QtCore/QString>
+#include <QtCore/QIODevice>
 
 /**
  * @file AbstractStreamAdapter.h
