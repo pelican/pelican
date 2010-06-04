@@ -8,17 +8,17 @@ PELICAN_DECLARE_ADAPTER(AdapterExample)
 /**
  * @details AdapterExample
  * You will be passed a config node in the constructor
- * to help you set the Adapter up.
+ * to help set up the adapter.
  * You can specify whatever requirements you want in your
  * configuration.
  */
 
 
-// Construct the example adatper.
+// Construct the example adapter.
 AdapterExample::AdapterExample(const ConfigNode& config)
     : AbstractStreamAdapter(config)
 {
-    // Read the configuration using configuation node utility methods.
+    // Read the configuration using configuration node utility methods.
     _nSamples = config.getOption("samples", "number").toUInt();
     _nBitsPerSample = config.getOption("samples", "bitsPerSample").toUInt();
 }
@@ -27,14 +27,14 @@ AdapterExample::AdapterExample(const ConfigNode& config)
 // Called to de-serialise a chunk of data in the I/0 device.
 void AdapterExample::deserialise(QIODevice* in)
 {
-    // Set the size of the data blob to fill. Note the data pointer being
-    // adapted into (_data) is an potiner to an abstract data blob in the
+    // Set the size of the data blob to fill. Note that the pointer to the
+    // blob being filled (_data) is a pointer to an abstract data blob in the
     // adapter base class.
     DataBlobExample* blob = static_cast<DataBlobExample*>(_data);
     unsigned length = _chunkSize / _nBitsPerSample;
     blob->resize(length);
 
-    // Create a temporary buffer to storing the chunk.
+    // Create a temporary buffer for storing the chunk.
     std::vector<char> temp(_chunkSize);
 
     // Read the chunk from the I/O device.
@@ -48,4 +48,3 @@ void AdapterExample::deserialise(QIODevice* in)
         data[i] = *reinterpret_cast<float*>(temp[i]);
     }
 }
-

@@ -18,7 +18,7 @@ class AdapterExample : public AbstractStreamAdapter
         AdapterExample(const ConfigNode& config);
 
     protected:
-        /// Method to deserialise chunks of memory held in the I/O device.
+        /// Method to deserialise chunks of memory provided by the I/O device.
         void deserialise(QIODevice* in);
 
     private:
