@@ -6,6 +6,10 @@
 The function of the chunker is to take an incoming data stream and turn it
 into suitable size chunks that can be fed into the data adapter.
 
+\b Note: Each chunk should contain all the data required for a single
+iteration of the pipeline. This may mean that chunks will need to be assembled
+from many smaller network packets, if the chunker connects to a UDP stream.
+
 \section user_referenceChunkers_overview Overview
 
 To create a new data chunker:
