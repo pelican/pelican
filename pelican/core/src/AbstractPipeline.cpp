@@ -2,7 +2,7 @@
 #include "pelican/core/AbstractPipeline.h"
 #include "pelican/core/PipelineApplication.h"
 #include "pelican/core/PipelineDriver.h"
-#include <QtGlobal>
+#include <QtCore/QtGlobal>
 #include "pelican/utility/memCheck.h"
 
 namespace pelican {
@@ -84,18 +84,6 @@ const DataRequirements& AbstractPipeline::requiredDataRemote() const
 void AbstractPipeline::setModuleFactory(FactoryConfig<AbstractModule>* factory)
 {
     _moduleFactory = factory;
-}
-
-/**
- * @details
- * Sets the name of the pipeline to \p name.
- * This should be called from inside init().
- *
- * @param[in] name The name of the pipeline.
- */
-void AbstractPipeline::setName(const QString& name)
-{
-    _pipelineName = name;
 }
 
 /**

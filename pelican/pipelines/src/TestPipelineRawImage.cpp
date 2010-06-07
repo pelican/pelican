@@ -36,7 +36,6 @@ TestPipelineRawImage::~TestPipelineRawImage()
  */
 void TestPipelineRawImage::init()
 {
-    setName("TestPipelineRawImage");
     _imager = (ZenithImagerDft*) createModule("ZenithImagerDft");
     _fitsWriter = (ImageWriterFits*) createModule("ImageWriterFits");
 

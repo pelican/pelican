@@ -31,7 +31,6 @@ TestPipelineServer::~TestPipelineServer()
  */
 void TestPipelineServer::init()
 {
-    setName("TestPipelineServer");
     _visPrinter = (VisibilityPrinter*) createModule("VisibilityPrinter");
 
     requestRemoteData("VisibilityData");

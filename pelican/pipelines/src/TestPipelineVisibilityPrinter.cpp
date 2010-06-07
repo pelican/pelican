@@ -29,7 +29,6 @@ TestPipelineVisibilityPrinter::~TestPipelineVisibilityPrinter()
  */
 void TestPipelineVisibilityPrinter::init()
 {
-    setName("TestPipelineVisibilityPrinter");
     _visPrinter = (VisibilityPrinter*) createModule("VisibilityPrinter");
 
     requestRemoteData("VisibilityData");

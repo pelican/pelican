@@ -40,7 +40,6 @@ TestPipelineMultipleImages::~TestPipelineMultipleImages()
  */
 void TestPipelineMultipleImages::init()
 {
-    setName("TestPipelineMultipleImages");
     _visModel = (ZenithModelVisibilities*) createModule("ZenithModelVisibilities");
     _imagerA = (ZenithImagerDft*) createModule("ZenithImagerDft", "a");
     _imagerB = (ZenithImagerDft*) createModule("ZenithImagerDft", "b");

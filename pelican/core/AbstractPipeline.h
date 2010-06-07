@@ -4,8 +4,8 @@
 #include "pelican/data/DataRequirements.h"
 #include "pelican/modules/AbstractModule.h"
 #include "pelican/utility/FactoryConfig.h"
-#include <QString>
-#include <QList>
+#include <QtCore/QString>
+#include <QtCore/QList>
 
 /**
  * @file AbstractPipeline.h
@@ -51,9 +51,6 @@ class PipelineDriver;
  *     public:
  *         void init()
  *         {
- *             // Set the name of the pipeline.
- *             setName("MyPipeline");
- *
  *             // Create the pipeline modules.
  *             imager = (ZenithImagerDft*) createModule("ZenithImagerDft");
  *             fitsWriter = (ImageWriterFits*) createModule("ImageWriterFits");
@@ -63,7 +60,6 @@ class PipelineDriver;
  *
  *             // Request remote data.
  *             requestRemoteData("VisibilityData");
- *             return;
  *         }
  *
  *         void run(QHash<QString, DataBlob*>& data)
@@ -74,7 +70,6 @@ class PipelineDriver;
  *             // Run each module as required.
  *             imager->run(visData, imageData);
  *             fitsWriter->run(imageData);
- *             return;
  *         }
  * };
  * \endcode
@@ -97,9 +92,6 @@ class AbstractPipeline
         /// Pointer to the pipeline driver.
         PipelineDriver* _pipelineDriver;
 
-        /// The name of the pipeline.
-        QString _pipelineName;
-
         /// List of pointers to modules in this pipeline.
         QList<AbstractModule*> _modules;
 
@@ -107,9 +99,6 @@ class AbstractPipeline
         /// Create a pipeline module using the module factory.
         AbstractModule* createModule(const QString& type,
                 const QString& name = QString());
-
-        /// Sets the name of the pipeline.
-        void setName(const QString& name);
 
         /// Stops the pipeline driver.
         void stop();
@@ -126,11 +115,6 @@ class AbstractPipeline
         /// This method creates the required modules when the pipeline is
         /// initialised, and should be implemented in a subclass.
         virtual void init() = 0;
-
-        /// Returns the name of the pipeline.
-        /// This method returns the name of the pipeline for use when finding
-        /// configuration settings for the pipeline modules.
-        const QString& name() const {return _pipelineName;}
 
         /// Requests remote data from the client.
         /// This method requests a type of remote data from the client.
