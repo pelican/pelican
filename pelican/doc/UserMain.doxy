@@ -47,6 +47,5 @@ itself until the pipeline is ready to process it.
 \li \subpage user_structuralOverview
 \li \subpage user_gettingStarted
 \li \subpage user_reference
-\li \subpage user_performanceTesting
 
 */
