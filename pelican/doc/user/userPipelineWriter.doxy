@@ -3,10 +3,13 @@
 
 \section user_pipelineWriter_introduction Introduction 
 
-\li Module reference
-\li Data Blob reference 
-\li Pipeline reference
-\li Writing main()
+The following sections of the reference documentation are relevant
+for writing Pelican pipelines:
+
+\li \link user_referencePipelines Pipeline reference\endlink
+\li \link user_referenceModules Module reference\endlink
+\li \link user_referenceDataBlobs Data Blob reference\endlink
+\li \link user_referenceMain Writing main()\endlink
 
 \section user_pipelineWriter_overview Overview
 

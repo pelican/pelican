@@ -3,12 +3,10 @@
 
 \section user_sysadmin_introduction Introduction 
 
-\li Configuration reference
-\li Running Pelican
+The following sections of the reference documentation are relevant
+for running and administering Pelican:
 
-\section user_sysadmin_overview Overview
-
-\section user_sysadmin_examples Examples
-
+\li \link user_referenceConfiguration Configuration reference\endlink
+\li \link user_referenceRunning Running Pelican\endlink
 
 */

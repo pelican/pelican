@@ -3,10 +3,13 @@
 
 \section user_dataImporter_introduction Introduction 
 
-\li Chunker reference
-\li Data Blob reference 
-\li Adapter reference 
-\li Configuration reference
+The following sections of the reference documentation are relevant
+for importing data into Pelican:
+
+\li \link user_referenceChunkers Chunker reference\endlink
+\li \link user_referenceDataBlobs Data Blob reference\endlink
+\li \link user_referenceAdapters Adapter reference\endlink
+\li \link user_referenceConfiguration Configuration reference\endlink
 
 \section user_dataImporter_overview Overview
 
