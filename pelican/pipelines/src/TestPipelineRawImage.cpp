@@ -27,7 +27,6 @@ TestPipelineRawImage::TestPipelineRawImage()
  */
 TestPipelineRawImage::~TestPipelineRawImage()
 {
-    delete _image;
 }
 
 
@@ -43,7 +42,7 @@ void TestPipelineRawImage::init()
     requestRemoteData("AntennaPositions");
     requestRemoteData("VisibilityData");
 
-    _image = new ImageData;
+    _image = (ImageData*) createBlob("ImageData");
 }
 
 

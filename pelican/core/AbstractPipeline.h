@@ -4,6 +4,7 @@
 #include "pelican/data/DataRequirements.h"
 #include "pelican/modules/AbstractModule.h"
 #include "pelican/utility/FactoryConfig.h"
+#include "pelican/utility/FactoryGeneric.h"
 #include <QtCore/QString>
 #include <QtCore/QList>
 
@@ -55,20 +56,24 @@ class PipelineDriver;
  *             imager = (ZenithImagerDft*) createModule("ZenithImagerDft");
  *             fitsWriter = (ImageWriterFits*) createModule("ImageWriterFits");
  *
- *             // Create the data blobs.
- *             imageData = new ImageData;
+ *             // Create local data blobs.
+ *             imageData = (ImageData*) createBlob("ImageData");
  *
  *             // Request remote data.
+ *             requestRemoteData("AntennaPositions");
  *             requestRemoteData("VisibilityData");
  *         }
  *
- *         void run(QHash<QString, DataBlob*>& data)
+ *         void run(QHash<QString, DataBlob*>& remoteData)
  *         {
- *             // Get the remote visibility data.
- *             VisibilityData* visData = data["VisibilityData"];
+ *             // Get the remote data.
+ *             AntennaPositions* antPos = (AntennaPositions*)
+ *                     remoteData["AntennaPositions"];
+ *             VisibilityData* visData = (VisibilityData*)
+ *                     remoteData["VisibilityData"];
  *
  *             // Run each module as required.
- *             imager->run(visData, imageData);
+ *             imager->run(imageData, antPos, visData);
  *             fitsWriter->run(imageData);
  *         }
  * };
@@ -86,6 +91,9 @@ class AbstractPipeline
         /// The data required by the pipeline.
         DataRequirements _requiredDataRemote;
 
+        /// Pointer to the PipelineApplication blob factory (private, not protected).
+        FactoryGeneric<DataBlob>* _blobFactory;
+
         /// Pointer to the PipelineApplication module factory (private, not protected).
         FactoryConfig<AbstractModule>* _moduleFactory;
 
@@ -96,6 +104,9 @@ class AbstractPipeline
         QList<AbstractModule*> _modules;
 
     protected:
+        /// Create a data blob using the data blob factory.
+        DataBlob* createBlob(const QString& type);
+
         /// Create a pipeline module using the module factory.
         AbstractModule* createModule(const QString& type,
                 const QString& name = QString());
@@ -132,6 +143,9 @@ class AbstractPipeline
         /// @param[in,out] data A non-const reference to the data hash,
         ///                     which may be modified by the pipeline.
         virtual void run(QHash<QString, DataBlob*>& data) = 0;
+
+        /// Sets the data blob factory.
+        void setBlobFactory(FactoryGeneric<DataBlob>* factory);
 
         /// Sets the module factory.
         void setModuleFactory(FactoryConfig<AbstractModule>* factory);

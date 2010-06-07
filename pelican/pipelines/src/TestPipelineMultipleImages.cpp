@@ -28,9 +28,6 @@ TestPipelineMultipleImages::TestPipelineMultipleImages()
  */
 TestPipelineMultipleImages::~TestPipelineMultipleImages()
 {
-    delete _imageA;
-    delete _imageB;
-    delete _modelVis;
 }
 
 
@@ -48,9 +45,9 @@ void TestPipelineMultipleImages::init()
 
     requestRemoteData("AntennaPositions");
 
-    _modelVis = new ModelVisibilityData;
-    _imageA = new ImageData;
-    _imageB = new ImageData;
+    _modelVis = (ModelVisibilityData*) createBlob("ModelVisibilityData");
+    _imageA = (ImageData*) createBlob("ImageData");
+    _imageB = (ImageData*) createBlob("ImageData");
 }
 
 

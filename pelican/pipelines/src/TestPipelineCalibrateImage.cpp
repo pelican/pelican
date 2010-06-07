@@ -32,13 +32,6 @@ TestPipelineCalibrateImage::TestPipelineCalibrateImage()
  */
 TestPipelineCalibrateImage::~TestPipelineCalibrateImage()
 {
-    delete _calImage;
-    delete _rawImage;
-    delete _psfImage;
-    delete _modelImage;
-    delete _diffImage;
-    delete _modelVis;
-    delete _correctedVis;
 }
 
 
@@ -58,13 +51,13 @@ void TestPipelineCalibrateImage::init()
     requestRemoteData("AntennaPositions");
     requestRemoteData("VisibilityData");
 
-    _calImage = new ImageData;
-    _psfImage = new ImageData;
-    _rawImage = new ImageData;
-    _modelImage = new ImageData;
-    _diffImage = new ImageData;
-    _modelVis = new ModelVisibilityData;
-    _correctedVis = new CorrectedVisibilityData;
+    _calImage = (ImageData*) createBlob("ImageData");
+    _psfImage = (ImageData*) createBlob("ImageData");
+    _rawImage = (ImageData*) createBlob("ImageData");
+    _modelImage = (ImageData*) createBlob("ImageData");
+    _diffImage = (ImageData*) createBlob("ImageData");
+    _modelVis = (ModelVisibilityData*) createBlob("ModelVisibilityData");
+    _correctedVis = (CorrectedVisibilityData*) createBlob("CorrectedVisibilityData");
 }
 
 
