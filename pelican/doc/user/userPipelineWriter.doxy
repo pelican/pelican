@@ -13,27 +13,4 @@
 This section will tell you how to build your own data processing pipeline and
 compile it into a working binary that you can launch on your data stream.
 
-@section user_pipelineWriter_create Creating Your Pipeline Class
-
-All pipelines must implement the \em AbstractPipeline interface
-
-@include PipelineExample.h
-
-The pipelines must implement the \em init() and \em run() virtual methods.
-
-@subsection user_pipelineWriter_create_init The init() method
-
-Here you need to specify what types of data you need to do your processing, and which
-streams to get them from using the \em requestRemoteData method.
-
-You should also perform one off initialisation, such as instantiating computing modules.
-
-@subsection user_pipelineWriter_create_run The run() method
-
-This is where your data processing happens, and will be called each time new
-data is avaialable to be processed.
-
-\section user_pipelineWriter_examples Example
-
-
 */
