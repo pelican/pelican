@@ -3,6 +3,9 @@
 #include <QIODevice>
 #include <QTimer>
 #include <iostream>
+//#include <sys/types.h>
+//#include <sys/syscall.h>
+//#include <unistd.h>
 
 #include "pelican/utility/memCheck.h"
 
@@ -42,6 +45,8 @@ void DataReceiver::run()
     // Open up the device to use.
     _device = _chunker->newDevice();
     _chunker->setDevice(_device);
+//    int tid = syscall(__NR_gettid);
+//    std::cout << "Thread ID : " << tid << std::endl;
     if (_device) {
         connect(_device, SIGNAL(readyRead()), SLOT(_processIncomingData()),
                 Qt::DirectConnection);

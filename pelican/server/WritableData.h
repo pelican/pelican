@@ -22,6 +22,8 @@ namespace pelican {
 class WritableData
 {
     public:
+        WritableData() : _data(0) {}
+
         WritableData(AbstractLockableData* d);
 
         ~WritableData();
@@ -30,21 +32,13 @@ class WritableData
 
         AbstractLockableData* data() const {return _data;}
 
-        void* ptr() { return _data->data()->operator*(); }
+        /// Returns a pointer to the start of the memory block.
+        void* ptr() {return _data->data()->data();}
 
         /// returns true if there is a valid Data object
         bool isValid() const {return _data ? _data->isValid() : false;}
 
-        WritableData& operator=(const WritableData& other) {
-            // Protect against invalid self-assignment.
-            if (this != &other) {
-                if (other.data()) {
-                    _data = other.data();
-                    _data->writeLock();
-                }
-            }
-            return *this;
-        }
+        WritableData& operator=(const WritableData& other);
 
     private:
         AbstractLockableData* _data;

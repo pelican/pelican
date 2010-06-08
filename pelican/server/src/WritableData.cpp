@@ -11,25 +11,33 @@ namespace pelican {
 WritableData::WritableData(AbstractLockableData* data)
     : _data(data)
 {
-    if( _data )
-        _data->writeLock();
+    if (_data) _data->writeLock();
 }
 
 WritableData::~WritableData()
 {
-    if( _data )
-        _data->writeUnlock();
+    if (_data) _data->writeUnlock();
 }
 
-void WritableData::write(const void* buf, size_t size, size_t offset )
+void WritableData::write(const void* buf, size_t size, size_t offset)
 {
-//  Q_ASSERT( size + offset <= _data->data()->size() );
+    if (size + offset > _data->data()->size()) throw QString("Write overflow!");
 
-    if ( size + offset > _data->data()->size() )
-        throw QString("ARRRG!");
+    void* mem = (char*)(_data->data()->data()) + offset;
+    memcpy(mem, buf, size);
+}
 
-    void* mem = (char*)(_data->data()->operator*()) + offset;
-    memcpy( mem, buf , size);
+
+WritableData& WritableData::operator=(const WritableData& other)
+{
+    // Protect against invalid self-assignment.
+    if (this != &other) {
+        if (other.data()) {
+            _data = other.data();
+            _data->writeLock();
+        }
+    }
+    return *this;
 }
 
 } // namespace pelican
