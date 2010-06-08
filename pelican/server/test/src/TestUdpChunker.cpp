@@ -112,24 +112,24 @@ void TestUdpChunker::next(QIODevice* device)
 
     ///////////////////////////////////////////////////////////
 
-    // Read the data off the UDP socket.
-    QUdpSocket* socket = static_cast<QUdpSocket*>(device);
-    qint64 sizeRead = socket->readDatagram(_buffer.data(), _chunkSize);
-
-    // Sanity check.
-    if (sizeRead != _chunkSize)
-        throw QString("TestUdpChunker::next(): Size mismatch, sizeRead %1 != chunkSize %2.").arg(sizeRead).arg(_chunkSize);
-
-    // Get writable data object.
-    WritableData writableData = getDataStorage(_chunkSize);
-
-    // If the writable data object is not valid, then return.
-    if (!writableData.isValid())
-        return;
-
-    // Write the data into the buffer.
-    writableData.write((void*)_buffer.data(), _chunkSize, 0);
-    //writableData.write((void*)_buffer.data(), 1, 0);
+//    // Read the data off the UDP socket.
+//    QUdpSocket* socket = static_cast<QUdpSocket*>(device);
+//    qint64 sizeRead = socket->readDatagram(_buffer.data(), _chunkSize);
+//
+//    // Sanity check.
+//    if (sizeRead != _chunkSize)
+//        throw QString("TestUdpChunker::next(): Size mismatch, sizeRead %1 != chunkSize %2.").arg(sizeRead).arg(_chunkSize);
+//
+//    // Get writable data object.
+//    WritableData writableData = getDataStorage(_chunkSize);
+//
+//    // If the writable data object is not valid, then return.
+//    if (!writableData.isValid())
+//        return;
+//
+//    // Write the data into the buffer.
+//    writableData.write((void*)_buffer.data(), _chunkSize, 0);
+//    //writableData.write((void*)_buffer.data(), 1, 0);
 }
 
 } // namespace pelican
