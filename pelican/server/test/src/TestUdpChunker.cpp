@@ -2,6 +2,7 @@
 #include "pelican/utility/Config.h"
 
 #include <QtNetwork/QUdpSocket>
+//#include <sys/socket.h>
 #include <iostream>
 
 #include "pelican/utility/memCheck.h"
@@ -48,6 +49,12 @@ QIODevice* TestUdpChunker::newDevice()
     QUdpSocket* socket = new QUdpSocket;
     socket->bind(QHostAddress(host()), port());
     while (socket->state() != QUdpSocket::BoundState) {}
+
+//    int v = 5000000;
+//    if (::setsockopt(socket->socketDescriptor(), SOL_SOCKET, SO_RCVBUF, (char*) &v, sizeof(v)) == -1) {
+//        std::cout << "Error!" << std::endl;
+//    }
+
     return socket;
 }
 
@@ -99,7 +106,11 @@ void TestUdpChunker::next(QIODevice* device)
         while (isActive() && _bytesRead < _chunkSize) {
             // Read the datagram.
             qint64 length = udpSocket->pendingDatagramSize();
-            if (length < 0) continue;
+            if (length < 0) {
+                // Must wait here for the next datagram.
+                udpSocket->waitForReadyRead(1000);
+                continue;
+            }
             if (_bytesRead + length <= _chunkSize)
                 udpSocket->readDatagram(ptr + _bytesRead, length);
             _bytesRead += length;

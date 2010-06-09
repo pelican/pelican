@@ -97,11 +97,11 @@ int main(int argc, char** argv)
         QHash<QString, DataBlob*> validData = client->getData(dataHash);
 
         // Check the content of the data blob.
-        RealData* realData = (RealData*)validData.value(dataType);
-        //printData(realData);
-        value = realData->ptr()[0];
-        if (counter == 0)
-            initValue = value;
+//        RealData* realData = (RealData*)validData.value(dataType);
+//        //printData(realData);
+//        value = realData->ptr()[0];
+//        if (counter == 0)
+//            initValue = value;
     }
 
     // Check for lost packets.
