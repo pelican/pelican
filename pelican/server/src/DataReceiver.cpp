@@ -18,6 +18,7 @@ namespace pelican {
 DataReceiver::DataReceiver(AbstractChunker* chunker) :
         QThread(), _chunker(chunker), _device(0)
 {
+    _abort = false;
     _device = 0;
     if (!chunker)
         throw QString("DataReceiver: Invalid chunker.");
@@ -30,6 +31,8 @@ DataReceiver::DataReceiver(AbstractChunker* chunker) :
  */
 DataReceiver::~DataReceiver()
 {
+    _abort = true;
+    _chunker->stop();
     do quit(); while (!wait(10));
 }
 

@@ -122,7 +122,7 @@ QHash<QString, DataBlob*> DirectStreamDataClient::getData(QHash<QString, DataBlo
     QHash<QString, DataBlob*> validData;
     QList<LockedData> dataList; // Will contain the list of valid StreamDataObjects
     while (dataList.size() == 0) {
-        // Must cycle the event loop for unlocked signals to be transmitted.
+        // Must cycle the event loop for unlocked signals to be processed.
         QCoreApplication::processEvents();
         QList<DataRequirements>::const_iterator it = dataRequirements().begin();
         while (it != dataRequirements().end() && dataList.size() == 0)

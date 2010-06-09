@@ -85,27 +85,28 @@ void TestUdpChunker::next(QIODevice* device)
 
     ///////////////////////////////////////////////////////////
 
-    // Get writable buffer space for the chunk, if required.
-    WritableData writableData = getDataStorage(_chunkSize);
-
+    // Get a pointer to the UDP socket.
     QUdpSocket* udpSocket = static_cast<QUdpSocket*>(device);
+    _bytesRead = 0;
 
-    // If the writable data object is not valid, then discard the data.
+    // Get writable buffer space for the chunk.
+    WritableData writableData = getDataStorage(_chunkSize);
     if (writableData.isValid()) {
         // Get pointer to start of writable memory.
-        char* ptr = (char*)(writableData.ptr());
+        char* ptr = (char*) (writableData.ptr());
 
-        // Read all pending datagrams off the UDP socket.
-        while (_bytesRead < _chunkSize) {
+        // Read all datagrams off the UDP socket.
+        while (isActive() && _bytesRead < _chunkSize) {
             // Read the datagram.
             qint64 length = udpSocket->pendingDatagramSize();
-            udpSocket->readDatagram(ptr + _bytesRead, length);
+            if (length < 0) continue;
+            if (_bytesRead + length <= _chunkSize)
+                udpSocket->readDatagram(ptr + _bytesRead, length);
             _bytesRead += length;
         }
-
-        // Check if we have received enough for a chunk.
-        if (_bytesRead >= _chunkSize) _bytesRead = 0;
     }
+
+    // Must discard the datagram if there is no available space.
     else {
         udpSocket->readDatagram(0, 0);
     }

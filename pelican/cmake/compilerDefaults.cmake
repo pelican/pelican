@@ -41,6 +41,8 @@ else(CMAKE_COMPILER_IS_GNUCXX)
     # use defaults (and pray it works...)
 endif(CMAKE_COMPILER_IS_GNUCXX)
 
+#list(APPEND CMAKE_CXX_FLAGS "-pg")
+
 if(APPLE)
     add_definitions(-DDARWIN)
 endif(APPLE)
