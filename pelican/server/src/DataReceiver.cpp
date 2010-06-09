@@ -3,6 +3,9 @@
 #include <QIODevice>
 #include <QTimer>
 #include <iostream>
+//#include <sys/types.h>
+//#include <sys/syscall.h>
+//#include <unistd.h>
 
 #include "pelican/utility/memCheck.h"
 
@@ -15,6 +18,7 @@ namespace pelican {
 DataReceiver::DataReceiver(AbstractChunker* chunker) :
         QThread(), _chunker(chunker), _device(0)
 {
+    _abort = false;
     _device = 0;
     if (!chunker)
         throw QString("DataReceiver: Invalid chunker.");
@@ -27,6 +31,8 @@ DataReceiver::DataReceiver(AbstractChunker* chunker) :
  */
 DataReceiver::~DataReceiver()
 {
+    _abort = true;
+    _chunker->stop();
     do quit(); while (!wait(10));
 }
 
@@ -42,6 +48,8 @@ void DataReceiver::run()
     // Open up the device to use.
     _device = _chunker->newDevice();
     _chunker->setDevice(_device);
+//    int tid = syscall(__NR_gettid);
+//    std::cout << "Thread ID : " << tid << std::endl;
     if (_device) {
         connect(_device, SIGNAL(readyRead()), SLOT(_processIncomingData()),
                 Qt::DirectConnection);

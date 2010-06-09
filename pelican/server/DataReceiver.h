@@ -31,6 +31,7 @@ class DataReceiver : public QThread
     Q_OBJECT
 
     private:
+        bool _abort;
         QMutex _mutex;
         AbstractChunker* _chunker;
         QIODevice* _device; // This is usually a UDP socket.

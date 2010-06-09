@@ -19,7 +19,7 @@ void PipelineExample::init()
 // Defines a single iteration of the pipeline.
 void PipelineExample::run(QHash<QString, DataBlob*>& remoteData)
 {
-    // Get the remote data.
+    // Get pointers to the remote data blobs from the supplied hash.
     AntennaPositions* antPos = (AntennaPositions*)
             remoteData["AntennaPositions"];
     VisibilityData* visData = (VisibilityData*) remoteData["VisibilityData"];

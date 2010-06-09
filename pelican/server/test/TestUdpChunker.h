@@ -38,9 +38,10 @@ class TestUdpChunker : public AbstractChunker
         virtual void next(QIODevice*);
 
     private:
-        unsigned _nextCount;
-        size_t _chunkSize;
-        QByteArray _tempBuffer;
+        qint64 _chunkSize;
+        qint64 _bytesRead;
+        QByteArray _buffer;
+        //WritableData* _writableData;
 };
 
 } // namespace pelican
