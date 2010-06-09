@@ -43,6 +43,9 @@ else (MKL_FOUND)
     set(pelican_math_libs ${LAPACK_LIBRARIES} ${CBLAS_LIBRARIES})
 endif (MKL_FOUND)
 
+# needed?
+include_directories(${CFITSIO_INCLUDE_DIR})
+
 # === List of all libraries for single library install.
 set(PROJECT_LIBRARIES
     pelican
