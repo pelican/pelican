@@ -11,6 +11,7 @@
 
 find_path(CFITSIO_INCLUDE_DIR fitsio.h
     PATHS
+    /usr/include/cfitsio/
     /usr/include/
 )
 

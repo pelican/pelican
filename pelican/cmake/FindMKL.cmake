@@ -1,15 +1,17 @@
 #
 # Find Intel MKL.
 #
-# WARNING:
-#   THIS SCRIPT WILL MOST LIKELY FAIL TRUE 64BIT PROCESSORS SUCH AS
+# Warning:
+#   This script will most likely fail with true 64-bit processors such as the
 #   Intel Itanium 2.
 #
-# Defines:
-#  MKL_FOUND:
-#  MKL_LIBRARIES:   The libraries needed to use MKL BLAS & LAPACK.
-#  MKL_INCLUDE_DIR
+# This script defines the following variables:
+#  MKL_FOUND:        True if MKL is found.
+#  MKL_INCLUDE_DIR:  MKL include directory.
+#  MKL_LIBRARIES:    MKL libraries to link against.
+#  MKL_LIBRARY_PATH: MKL library path. (TODO)
 #
+
 
 # Find the include directory.
 # ==============================================================================
@@ -20,7 +22,8 @@ find_path(MKL_INCLUDE_DIR mkl.h
     /usr/include/
 )
 
-# Set the architecture specfic interface layer library.
+
+# Set the architecture specfic interface layer library name to look for.
 # ==============================================================================
 if(CMAKE_SIZEOF_VOID_P EQUAL 8)
     set(mkl_lib_names mkl_intel_lp64)
@@ -30,16 +33,17 @@ else(CMAKE_SIZEOF_VOID_P EQUAL 8)
     set(intel_64 false)
 endif(CMAKE_SIZEOF_VOID_P EQUAL 8)
 
-# Set the computation layer library:  see http://bit.ly/bMCczV.
+
+# Set the computation layer library name to look for. (see http://bit.ly/bMCczV)
 # ==============================================================================
 list(APPEND mkl_lib_names
     mkl_core
     # mkl_lapack # only needed for extended LAPACK functions.
 )
 
-# Set the threading model.
+# Set the threading model library name to look for.
 # ==============================================================================
-set(use_threaded_mkl false)
+set(use_threaded_mkl false) # Turns of use of threaded mkl (default for pelican)
 
 if(use_threaded_mkl)
     if(CMAKE_COMPILER_IS_GNUCXX)
@@ -58,6 +62,7 @@ endif(use_threaded_mkl)
 # Loop over required library names adding to MKL_LIBRARIES.
 # ==============================================================================
 foreach(mkl_lib ${mkl_lib_names})
+    
     if (intel_64)
         find_library(${mkl_lib}_LIBRARY
             NAMES ${mkl_lib}
@@ -75,21 +80,22 @@ foreach(mkl_lib ${mkl_lib_names})
             /usr/lib
             /usr/local/lib)
     endif (intel_64)
+    
     set(tmp_library ${${mkl_lib}_LIBRARY})
+    message(STATUS "==================== ${${mkl_lib}_LIBRARY}")
     if (tmp_library)
         list(APPEND MKL_LIBRARIES ${tmp_library})
     endif(tmp_library)
+    
 endforeach(mkl_lib ${mkl_lib_names})
+
 
 # Handle the QUIETLY and REQUIRED arguments.
 # ==============================================================================
 include(FindPackageHandleCompat)
 FIND_PACKAGE_HANDLE_STANDARD_ARGS(MKL DEFAULT_MSG MKL_LIBRARIES)
 
-#if(NOT MKL_FOUND)
-#    set(MKL_LIBRARIES)
-#endif(NOT MKL_FOUND)
 
-# Hide in cache.
+# Put variables in advanced section of cmake cache
 # ==============================================================================
 mark_as_advanced(MKL_LIBRARIES tmp_library)

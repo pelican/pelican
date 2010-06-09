@@ -16,7 +16,9 @@
 #ifdef USING_MKL
     #include <mkl.h>
 #else
-    #include <cblas.h>
+    extern "C" {
+        #include <cblas.h>
+    }
 #endif
 
 #include "pelican/utility/memCheck.h"
