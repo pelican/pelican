@@ -46,8 +46,5 @@ target_link_libraries(serverTest ${SUBPACKAGE_LIBRARIES} ${CPPUNIT_LIBRARIES} me
 add_executable(serverTestMT ${serverTestMT_src} )
 target_link_libraries(serverTestMT ${SUBPACKAGE_LIBRARIES} ${CPPUNIT_LIBRARIES} memoryTracerDummy )
 
-add_executable(telescopeEmulator src/telescopeEmulatorMain.cpp )
-target_link_libraries(telescopeEmulator ${SUBPACKAGE_LIBRARIES} memoryTracerDummy)
-
 add_test(serverTest serverTest )
 add_test(serverTestMT serverTestMT )
