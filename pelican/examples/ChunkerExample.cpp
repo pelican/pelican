@@ -11,7 +11,7 @@ ChunkerExample::ChunkerExample(const ConfigNode& config)
 {
     // Set chunk size from the configuration.
     // The host, port and data type are set in the base class.
-    chunkSize = config.getOption("data", "chunkSize").toInt();
+    _chunkSize = config.getOption("data", "chunkSize").toInt();
 }
 
 // Creates a suitable device ready for reading.
@@ -29,29 +29,33 @@ QIODevice* ChunkerExample::newDevice()
 // Called whenever there is data available on the device.
 void ChunkerExample::next(QIODevice* device)
 {
-    // Read all pending datagrams off the UDP socket.
+    // Get a pointer to the UDP socket.
     QUdpSocket* udpSocket = static_cast<QUdpSocket*>(device);
-    while (udpSocket->hasPendingDatagrams()) {
-        // Ensure enough space in the local buffer.
-        qint64 length = udpSocket->pendingDatagramSize();
-        int oldSize = buffer.size();
-        buffer.resize(oldSize + length);
+    _bytesRead = 0;
 
-        // Read the datagram.
-        udpSocket->readDatagram(buffer.data() + oldSize, length);
+    // Get writable buffer space for the chunk.
+    WritableData writableData = getDataStorage(_chunkSize);
+    if (writableData.isValid()) {
+        // Get pointer to start of writable memory.
+        char* ptr = (char*) (writableData.ptr());
+
+        // Read datagrams for chunk from the UDP socket.
+        while (isActive() && _bytesRead < _chunkSize) {
+            // Read the datagram.
+            qint64 length = udpSocket->pendingDatagramSize();
+            if (length < 0) {
+                // MUST WAIT for the next datagram.
+                udpSocket->waitForReadyRead(100);
+                continue;
+            }
+            if (_bytesRead + length <= _chunkSize)
+                udpSocket->readDatagram(ptr + _bytesRead, length);
+            _bytesRead += length;
+        }
     }
 
-    // Check if the local buffer contains enough data for a chunk.
-    if (buffer.size() >= chunkSize) {
-        // Get some writable buffer space.
-        WritableData writableData = getDataStorage(chunkSize);
-
-        if (writableData.isValid()) {
-            // Write the chunk into the data manager.
-            writableData.write((void*)buffer.constData(), chunkSize, 0);
-        }
-
-        // Compact the local buffer.
-        buffer.remove(0, chunkSize);
+    // Must discard the datagram if there is no available space.
+    else {
+        udpSocket->readDatagram(0, 0);
     }
 }
