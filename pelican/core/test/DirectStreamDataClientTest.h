@@ -28,9 +28,11 @@ class DirectStreamDataClientTest : public CppUnit::TestFixture
 {
     public:
         CPPUNIT_TEST_SUITE( DirectStreamDataClientTest );
-        CPPUNIT_TEST( test_singleChunker );
-        CPPUNIT_TEST( test_twoChunkersMultipleStarts );
-        CPPUNIT_TEST( test_twoChunkersSingleStart );
+//        FIXME: Visibility dat cant be used for general pelican framwork testing.
+//        CPPUNIT_TEST( test_singleChunker ); 
+//        FIXME: LofarVisibility adapter cant be used for general testing.
+//        CPPUNIT_TEST( test_twoChunkersMultipleStarts );      
+//        CPPUNIT_TEST( test_twoChunkersSingleStart );
         CPPUNIT_TEST_SUITE_END();
 
     public:

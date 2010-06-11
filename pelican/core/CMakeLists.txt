@@ -3,7 +3,6 @@ include_directories(
     ${QT_QTCORE_INCLUDE_DIR}
 )
 
-
 SUBPACKAGE(core modules server comms data adapters)
 
 set(core_src

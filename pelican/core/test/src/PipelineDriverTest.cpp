@@ -167,7 +167,7 @@ void PipelineDriverTest::test_start_singlePipelineClientReturnsGoodData()
         // Create the pipeline.
         int num = 10;
         DataRequirements req;
-        req.addStreamData("VisibilityData");
+        req.addStreamData("FloatData");
         TestPipeline *pipeline = new TestPipeline(req, num);
         _pipelineDriver->registerPipeline(pipeline);
         CPPUNIT_ASSERT_EQUAL(0, pipeline->count());
@@ -202,7 +202,7 @@ void PipelineDriverTest::test_start_singlePipelineClientReturnsWrongData()
         // Create the pipeline.
         int num = 10;
         DataRequirements pipelineReq;
-        pipelineReq.addStreamData("VisibilityData");
+        pipelineReq.addStreamData("FloatData");
         TestPipeline *pipeline = new TestPipeline(pipelineReq, num);
         _pipelineDriver->registerPipeline(pipeline);
         CPPUNIT_ASSERT_EQUAL(0, pipeline->count());
@@ -239,7 +239,7 @@ void PipelineDriverTest::test_start_multiPipelineRunDifferentData()
         // Create both pipelines.
         int num = 10;
         DataRequirements pipelineReq1, pipelineReq2;
-        QString type1 = "VisibilityData", type2 = "ImageData";
+        QString type1 = "FloatData", type2 = "DoubleData";
         pipelineReq1.addStreamData(type1);
         pipelineReq2.addStreamData(type2);
         TestPipeline *pipeline1 = new TestPipeline(pipelineReq1, num);
@@ -284,7 +284,7 @@ void PipelineDriverTest::test_start_multiPipelineRunOne()
         // Create both pipelines.
         int num = 10;
         DataRequirements pipelineReq1, pipelineReq2;
-        QString type1 = "VisibilityData", type2 = "ImageData";
+        QString type1 = "FloatData", type2 = "DoubleData";
         pipelineReq1.addStreamData(type1);
         pipelineReq2.addStreamData(type2);
         TestPipeline *pipeline1 = new TestPipeline(pipelineReq1, num);

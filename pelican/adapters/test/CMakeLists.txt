@@ -2,13 +2,13 @@ SUBPACKAGE(adaptersTest adapters utility data)
 
 set(adaptersTest_src
     src/adaptersTest.cpp
-    src/AdapterLofarStationVisibilitiesTest.cpp
-    src/AdapterAntennaListTest.cpp
+#    src/AdapterLofarStationVisibilitiesTest.cpp
+#    src/AdapterAntennaListTest.cpp
     src/AdapterRealDataTest.cpp
 )
 
 set(adaptersTestLibrary_src
-    src/VisGen.cpp
+#    src/VisGen.cpp
     src/TestAdapter.cpp
     src/TestStreamAdapter.cpp
 )
@@ -29,11 +29,11 @@ target_link_libraries(adaptersTest
 )
 
 # Create the visibility generator.
-add_executable(testVisGen src/testVisGen.cpp)
-target_link_libraries(testVisGen
-    ${SUBPACKAGE_LIBRARIES}
-    memoryTracer
-)
+#add_executable(testVisGen src/testVisGen.cpp)
+#target_link_libraries(testVisGen
+#    ${SUBPACKAGE_LIBRARIES}
+#    memoryTracer
+#)
 
 # Add to the adapters test to the test target.
 add_test(adaptersTest adaptersTest)

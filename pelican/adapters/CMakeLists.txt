@@ -7,9 +7,9 @@ include_directories(
 SUBPACKAGE(adapters utility data)
 
 set(adapters_src
-    src/AdapterLofarStationVisibilities.cpp
-    src/AdapterAntennaList.cpp
     src/AdapterRealData.cpp
+#    src/AdapterLofarStationVisibilities.cpp
+#    src/AdapterAntennaList.cpp
 )
 
 SUBPACKAGE_LIBRARY(adapters ${adapters_src})
