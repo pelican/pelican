@@ -25,7 +25,6 @@ TestUdpChunker::TestUdpChunker(const ConfigNode& config)
 
     // Get configuration options.
     _chunkSize = config.getOption("data", "chunkSize").toInt();
-    _bytesRead = 0;
 
     // Some sanity checking.
     if (type().isEmpty())

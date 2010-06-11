@@ -2,7 +2,6 @@
 #define CHUNKEREXAMPLE_H
 
 #include "pelican/server/AbstractChunker.h"
-#include <QtCore/QByteArray>
 
 /**
  * @file ChunkerExample.h
@@ -24,8 +23,8 @@ class ChunkerExample : public AbstractChunker
         virtual void next(QIODevice*);
 
     private:
-        QByteArray buffer;
-        int chunkSize;
+        qint64 _chunkSize;
+        qint64 _bytesRead;
 };
 
 #endif // CHUNKEREXAMPLE_H 
