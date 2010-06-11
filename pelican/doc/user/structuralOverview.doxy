@@ -2,13 +2,42 @@
 
 @page user_structuralOverview Structural Overview of Pelican
 
-@image html images/dataFlow.png "Data Flow Components in The Pelican Framework"
-@image latex images/dataFlow.eps "Data Flow Components in The Pelican Framework"
+@section user_structuralOverview_intro Introduction
 
-A pelican application is designed to allow the flexible deployment of hardware resources to
-cope with the data rates and data processing requirements of an incoming data stream. 
+The Pelican framework is designed to allow the flexible deployment of hardware
+resources to cope with the data rates and data processing requirements of an
+incoming data stream.
 
-Within the framework the data flow is split three distinct logical units with well defined interfaces between them. 
+The diagram below provides an overview of the various components which make up
+the Pelican framework, and the two deployment options for Pelican applications.
+
+The left diagram shows the server-client configuration, where a Pelican data
+server collects the various input data streams and makes them available to
+one or more processing pipelines. The diagram on the right shows a configuration
+where pipelines connect directly to data streams using a special data client.
+
+It is clear from the diagram that each configuration shares a number of common
+components
+
+
+@anchor figPelicanFramework
+@image html images/pelicanOverviewDiagram.png "The Pelican Framework"
+@image latex images/pelicanOverviewDiagram.eps "The Pelican Framework" width=10cm
+
+
+<!-- =================
+\li <b>Chunkers:</b> Describe how the input streams should be split.
+\li <b>Adapters:</b> Specify how chunks of stream data should be de-serialised
+    into data objects suitable for processing.
+\li <b>DataBlobs:</b> Describe the data structures used for processing modules.
+\li <b>Processing Modules:</b> Define the computational units to be carried out.
+\li <b>Pipelines:</b> Describe the type and order or processing modules.
+\li <b>Output Modules:</b> Define what to do with data products from pipeline
+    processing.
+============= 
+
+Within the framework the data flow is split three distinct logical units with
+well defined interfaces between them.
 
 These units are Data Input (with the \p AbstractDataClient interface),
 Pipeline Processing (with the \p AbstractPipeline interface), and 
@@ -47,4 +76,8 @@ Data can be sent for output streaming at any time in the pipeline by calling an 
 @p OutputStreamer module. The available streaming types are
 
 @li TCP Server running the pelican protocol
+
+-->
+
+
 */
