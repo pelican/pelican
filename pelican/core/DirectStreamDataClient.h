@@ -55,6 +55,7 @@ class DirectStreamDataClient : public AbstractDataClient
 
     private:
         bool _started;
+        int _nPipelines;
         ChunkerManager* _chunkerManager;
         DataManager* _dataManager;
 };

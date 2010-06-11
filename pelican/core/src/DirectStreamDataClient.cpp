@@ -116,22 +116,30 @@ QHash<QString, DataBlob*> DirectStreamDataClient::getData(QHash<QString, DataBlo
         if (!reqs.subtract(QSet<QString>::fromList(dataHash.keys())).isEmpty())
             throw QString("DirectStreamDataClient::getData(): Data hash does not "
                     "contain objects for all possible requests.");
+
+        // Check that the data requested is held by the data manager.
+        _nPipelines = dataRequirements().size();
+        QList<DataRequirements>::const_iterator it = dataRequirements().begin();
+        while (it != dataRequirements().end())
+        {
+            if (!it->isCompatible( _dataManager->dataSpec() ))
+                throw QString("DirectStreamDataClient::getData(): "
+                        "Data requested not supported by client.");
+            ++it;
+        }
     }
 
     // Keep polling the data manager until we can match a suitable request.
     QHash<QString, DataBlob*> validData;
     QList<LockedData> dataList; // Will contain the list of valid StreamDataObjects
+
+    // FIXME This loop needs serious optimisation.
     while (dataList.size() == 0) {
         // Must cycle the event loop for unlocked signals to be processed.
         QCoreApplication::processEvents();
-        QList<DataRequirements>::const_iterator it = dataRequirements().begin();
-        while (it != dataRequirements().end() && dataList.size() == 0)
-        {
-            if (!it->isCompatible( _dataManager->dataSpec() ))
-                throw QString("DirectStreamDataClient::getData(): "
-                        "Data requested not supported by client.");
-            dataList = _dataManager->getDataRequirements(*it);
-            ++it;
+        for (int i = 0; i < _nPipelines; ++i) {
+            dataList = _dataManager->getDataRequirements(dataRequirements().at(i));
+            if (dataList.size() != 0) break;
         }
     }
 
