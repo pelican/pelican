@@ -41,16 +41,17 @@ void ChunkerExample::next(QIODevice* device)
 
         // Read datagrams for chunk from the UDP socket.
         while (isActive() && _bytesRead < _chunkSize) {
-            // Read the datagram.
-            qint64 length = udpSocket->pendingDatagramSize();
-            if (length < 0) {
+            // Read the datagram, but avoid using pendingDatagramSize().
+            bool ok = udpSocket->hasPendingDatagrams();
+            if (!ok) {
                 // MUST WAIT for the next datagram.
                 udpSocket->waitForReadyRead(100);
                 continue;
             }
-            if (_bytesRead + length <= _chunkSize)
-                udpSocket->readDatagram(ptr + _bytesRead, length);
-            _bytesRead += length;
+            qint64 maxlen = _chunkSize - _bytesRead;
+            qint64 length = udpSocket->readDatagram(ptr + _bytesRead, maxlen);
+            if (length > 0)
+                _bytesRead += length;
         }
     }
 
