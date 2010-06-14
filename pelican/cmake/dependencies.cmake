@@ -44,7 +44,7 @@ endif(NOT DEFINED pelican_mkl)
 #endif (MKL_FOUND)
 
 # needed?
-include_directories(${CFITSIO_INCLUDE_DIR})
+#include_directories(${CFITSIO_INCLUDE_DIR})
 
 # === List of all libraries for single library install.
 set(PROJECT_LIBRARIES
