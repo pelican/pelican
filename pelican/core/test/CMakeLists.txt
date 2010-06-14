@@ -13,7 +13,7 @@ set(coreTest_src
 
 set(coreTestMT_src
     src/PelicanServerClientTestMT.cpp
-    #src/DirectStreamDataClientTest.cpp
+    src/DirectStreamDataClientTest.cpp
 )
 
 set(coreTestLibrary_src

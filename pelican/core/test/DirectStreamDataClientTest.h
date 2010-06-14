@@ -13,7 +13,7 @@ namespace pelican {
 
 class Config;
 class ConfigNode;
-class VisibilityData;
+class DoubleData;
 
 /**
  * @class DirectStreamDataClientTest
@@ -28,11 +28,9 @@ class DirectStreamDataClientTest : public CppUnit::TestFixture
 {
     public:
         CPPUNIT_TEST_SUITE( DirectStreamDataClientTest );
-//        FIXME: Visibility dat cant be used for general pelican framwork testing.
-//        CPPUNIT_TEST( test_singleChunker ); 
-//        FIXME: LofarVisibility adapter cant be used for general testing.
-//        CPPUNIT_TEST( test_twoChunkersMultipleStarts );      
-//        CPPUNIT_TEST( test_twoChunkersSingleStart );
+        CPPUNIT_TEST( test_singleChunker );
+        CPPUNIT_TEST( test_twoChunkersMultipleStarts );
+        CPPUNIT_TEST( test_twoChunkersSingleStart );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -49,7 +47,7 @@ class DirectStreamDataClientTest : public CppUnit::TestFixture
         ~DirectStreamDataClientTest();
 
     private:
-        void _printVisibilities(VisibilityData* visData);
+        void _printData(DoubleData* data);
 
     private:
         QCoreApplication* _app;
