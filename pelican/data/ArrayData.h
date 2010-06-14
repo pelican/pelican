@@ -29,7 +29,7 @@ class ArrayData : public DataBlob
         /// Constructor.
         ArrayData() : DataBlob() {}
         
-        // Destructor.
+        /// Destructor.
         virtual ~ArrayData() {}
 
         /// Returns a pointer to the start of the data.
@@ -59,10 +59,10 @@ class ArrayData : public DataBlob
 class FloatData : public ArrayData<float>
 {
     public:
-        // Contructor.
+        /// Constructor.
         FloatData() : ArrayData<float> () {}
         
-        // Destructor.
+        /// Destructor.
         ~FloatData() {}
 };
 
@@ -79,10 +79,10 @@ class FloatData : public ArrayData<float>
 class DoubleData : public ArrayData<double>
 {
     public:
-        // Contructor.
+        /// Constructor.
         DoubleData() : ArrayData<double> () {}
         
-        // Destructor.
+        /// Destructor.
         ~DoubleData() {}
 };
 
