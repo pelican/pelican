@@ -1,32 +1,32 @@
 #include "PipelineExample.h"
 
-
 // Initialises the pipeline, creating any modules and data blobs required,
 // and requesting any remote data.
 void PipelineExample::init()
 {
     // Create the pipeline modules.
-    imager = (ZenithImagerDft*) createModule("ZenithImagerDft");
-    fitsWriter = (ImageWriterFits*) createModule("ImageWriterFits");
+    adder = (ModuleExample*) createModule("ModuleExample", "adder");
+    multipler = (ModuleExample*) createModule("ModuleExample", "multiplier");
 
     // Create local data blobs.
-    imageData = (ImageData*) createBlob("ImageData");
+    outputData = (DataBlobExample*) createBlob("DataBlobExample");
 
     // Request remote data.
-    requestRemoteData("AntennaPositions");
-    requestRemoteData("VisibilityData");
+    requestRemoteData("DataBlobExample1");
+    requestRemoteData("DataBlobExample2");
 }
 
 
 // Defines a single iteration of the pipeline.
+// This performs the operation on the two vectors x and y such that
+// the output is given by x * (x + y)
 void PipelineExample::run(QHash<QString, DataBlob*>& remoteData)
 {
     // Get pointers to the remote data blobs from the supplied hash.
-    AntennaPositions* antPos = (AntennaPositions*)
-            remoteData["AntennaPositions"];
-    VisibilityData* visData = (VisibilityData*) remoteData["VisibilityData"];
+    DataBlobExample1* x = (DataBlobExample1*) remoteData["DataBlobExample1"];
+    DataBlobExample2* y = (DataBlobExample2*) remoteData["DataBlobExample2"];
 
     // Run each module as required.
-    imager->run(imageData, antPos, visData);
-    fitsWriter->run(imageData);
+    adder->run(x, y, outputData);
+    multipler->run(x, outputData, outputData);
 }

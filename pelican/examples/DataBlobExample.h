@@ -14,10 +14,10 @@ using namespace pelican;
  * @class DataBlobExample
  *
  * @brief
- * Data blob to hold an array of real-valued data.
+ * Data blob to hold an array of floating-point data.
  *
  * @details
- * This data blob holds an array of real-valued data.
+ * This data blob holds an array of floating-point data.
  */
 class DataBlobExample : public DataBlob
 {
@@ -40,5 +40,9 @@ class DataBlobExample : public DataBlob
         /// Returns the size of the data.
         unsigned size() const { return _data.size(); }
 };
+
+// Other example data blobs used by the example pipeline.
+typedef DataBlobExample DataBlobExample1;
+typedef DataBlobExample DataBlobExample2;
 
 #endif // DATABLOBEXAMPLE_H

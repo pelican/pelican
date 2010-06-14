@@ -2,9 +2,7 @@
 #define PIPELINEEXAMPLE_H
 
 #include "pelican/core/AbstractPipeline.h"
-#include "pelican/modules/ZenithImagerDft.h"
-#include "pelican/modules/ImageWriterFits.h"
-#include "pelican/data/ImageData.h"
+#include "pelican/examples/ModuleExample.h"
 
 using namespace pelican;
 
@@ -12,11 +10,11 @@ class PipelineExample : public AbstractPipeline
 {
     private:
         // Module pointers.
-        ZenithImagerDft* imager;
-        ImageWriterFits *fitsWriter;
+        ModuleExample* adder;
+        ModuleExample* multipler;
 
-        // Local data blobs.
-        ImageData* imageData;
+        // Local data blob pointers.
+        DataBlobExample* outputData;
 
     public:
         PipelineExample() : AbstractPipeline() {}

@@ -3,7 +3,7 @@ SUBPACKAGE(pipelines data modules core server)
 set( examples_src
      AdapterExample.cpp
      ChunkerExample.cpp
-     #PipelineExample.cpp
+     PipelineExample.cpp
      DataBlobExample.cpp
      ModuleExample.cpp
 )
