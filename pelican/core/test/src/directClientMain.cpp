@@ -3,17 +3,17 @@
 #include "pelican/utility/FactoryConfig.h"
 #include "pelican/utility/FactoryGeneric.h"
 #include "pelican/core/DataClientFactory.h"
-#include "pelican/adapters/AbstractAdapter.h"
+#include "pelican/core/AbstractAdapter.h"
 #include "pelican/data/DataBlob.h"
 #include "pelican/data/ArrayData.h"
-#include "pelican/server/test/TestUdpChunker.h"
+#include "pelican/testutils/TestUdpChunker.h"
 
+#include <QtCore/QCoreApplication>
+#include <QtCore/QTime>
+#include <QtCore/QString>
+#include <QtCore/QList>
+#include <QtCore/QHash>
 #include <iostream>
-#include <QCoreApplication>
-#include <QTime>
-#include <QString>
-#include <QList>
-#include <QHash>
 
 using namespace pelican;
 

@@ -1,7 +1,8 @@
 SUBPACKAGE(serverTest server testutils)
+
 set(serverTestlib_src
-    src/TestChunker.cpp
-    src/TestUdpChunker.cpp
+    #src/TestChunker.cpp
+    #src/TestUdpChunker.cpp
     src/TestProtocol.cpp
     src/TestServer.cpp
     src/PelicanTestClient.cpp
@@ -9,7 +10,7 @@ set(serverTestlib_src
 
 set(serverTestLib_moc_sources
     TestServer.h
-    TestChunker.h
+#    TestChunker.h
 )
 
 set(serverTest_src

@@ -1,14 +1,11 @@
-#include <QList>
-#include <QString>
-#include <QDomElement>
-#include <QCoreApplication>
-#include <QTcpSocket>
 #include "PelicanServerClientTest.h"
 #include "PelicanServerClient.h"
 #include "pelican/data/DataRequirements.h"
-#include "pelican/adapters/test/TestDataBlob.h"
-#include "pelican/adapters/test/TestAdapter.h"
-#include "pelican/adapters/test/TestStreamAdapter.h"
+
+#include "pelican/core/test/TestDataBlob.h"
+#include "pelican/core/test/TestAdapter.h"
+#include "pelican/core/test/TestStreamAdapter.h"
+
 #include "pelican/utility/Config.h"
 #include "pelican/utility/ConfigNode.h"
 #include "pelican/utility/SocketTester.h"
@@ -18,6 +15,11 @@
 #include "pelican/comms/ServiceDataResponse.h"
 #include "pelican/server/test/TestServer.h"
 
+#include <QtCore/QList>
+#include <QtCore/QString>
+#include <QtXml/QDomElement>
+#include <QtCore/QCoreApplication>
+#include <QtNetwork/QTcpSocket>
 
 #include "pelican/utility/memCheck.h"
 

@@ -1,9 +1,12 @@
-#include "DirectStreamDataClientTest.h"
-#include "pelican/adapters/AbstractAdapter.h"
+#include "pelican/core/test/DirectStreamDataClientTest.h"
+
+#include "pelican/core/AbstractAdapter.h"
 #include "pelican/core/DataClientFactory.h"
 #include "pelican/core/DirectStreamDataClient.h"
 #include "pelican/data/DataBlob.h"
-#include "pelican/data/VisibilityData.h"
+
+//#include "pelican/data/VisibilityData.h"
+
 #include "pelican/data/DataRequirements.h"
 #include "pelican/testutils/EmulatorDriver.h"
 #include "pelican/testutils/RealUdpEmulator.h"

@@ -4,8 +4,9 @@
 #include "pelican/server/AbstractChunker.h"
 #include "pelican/utility/Config.h"
 
-#include <QString>
-#include <QThread>
+#include <QtCore/QString>
+#include <QtCore/QThread>
+
 #include <cstring>
 
 class QTimer;
@@ -22,7 +23,7 @@ class DataManager;
  * @class TestChunker
  *
  * @brief
- * Implemnetation of an AbstractChunker to monitor calling.
+ * Implementation of an AbstractChunker to monitor calling.
  *
  * @details
  *

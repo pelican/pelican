@@ -1,7 +1,7 @@
 #ifndef ADAPTERREALDATA_H
 #define ADAPTERREALDATA_H
 
-#include "pelican/adapters/AbstractStreamAdapter.h"
+#include "pelican/core/AbstractStreamAdapter.h"
 #include "pelican/utility/constants.h"
 
 /**

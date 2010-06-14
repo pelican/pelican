@@ -3,10 +3,11 @@ include_directories(
     ${QT_QTCORE_INCLUDE_DIR}
 )
 
-SUBPACKAGE(core modules server comms data adapters)
+SUBPACKAGE(core modules server comms data)
 
 set(core_src
     src/AbstractDataClient.cpp
+    src/AdapterRealData.cpp
     src/DirectStreamDataClient.cpp
     src/AbstractPipeline.cpp
     src/DataClientFactory.cpp
@@ -22,8 +23,8 @@ SUBPACKAGE_LIBRARY(core ${core_src})
 
 SUBPACKAGE_ADD_LIBRARIES(
     ${SUBPACKAGE_LIBRARIES}
-    ${Boost_PROGRAM_OPTIONS_LIBRARY}
     ${QT_QTCORE_LIBRARY}
+    ${Boost_PROGRAM_OPTIONS_LIBRARY}
 )
 
 add_subdirectory(test)

@@ -1,7 +1,7 @@
 #ifndef ABSTRACTSTREAMADAPTER_H
 #define ABSTRACTSTREAMADAPTER_H
 
-#include "pelican/adapters/AbstractAdapter.h"
+#include "pelican/core/AbstractAdapter.h"
 #include <QtCore/QHash>
 #include <QtCore/QString>
 #include <QtCore/QIODevice>

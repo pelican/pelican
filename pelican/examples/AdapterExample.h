@@ -1,7 +1,7 @@
 #ifndef ADAPTER_EXAMPLE_H
 #define ADAPTER_EXAMPLE_H
 
-#include "pelican/adapters/AbstractStreamAdapter.h"
+#include "pelican/core/AbstractStreamAdapter.h"
 
 using namespace pelican;
 

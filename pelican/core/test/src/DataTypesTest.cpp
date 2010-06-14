@@ -1,7 +1,7 @@
 #include "pelican/core/test/DataTypesTest.h"
 #include "pelican/core/DataTypes.h"
-#include "pelican/adapters/test/TestAdapter.h"
-#include "pelican/adapters/test/TestStreamAdapter.h"
+#include "pelican/core/test/TestAdapter.h"
+#include "pelican/core/test/TestStreamAdapter.h"
 #include "pelican/data/DataRequirements.h"
 
 #include "pelican/utility/memCheck.h"

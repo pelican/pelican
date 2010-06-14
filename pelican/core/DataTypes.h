@@ -1,10 +1,12 @@
 #ifndef DATATYPES_H
 #define DATATYPES_H
 
-#include <QString>
-#include <QList>
 #include "pelican/data/DataRequirements.h"
-#include "pelican/adapters/AbstractAdapter.h"
+#include "pelican/core/AbstractAdapter.h"
+
+#include <QtCore/QString>
+#include <QtCore/QList>
+
 
 /**
  * @file DataTypes.h

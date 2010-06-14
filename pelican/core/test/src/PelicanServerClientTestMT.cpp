@@ -1,14 +1,15 @@
-#include <QCoreApplication>
 #include "PelicanServerClientTestMT.h"
 #include "PelicanServerClient.h"
 #include "pelican/server/test/TestServer.h"
 #include "pelican/comms/StreamData.h"
 #include "pelican/comms/Data.h"
-#include "pelican/adapters/test/TestAdapter.h"
-#include "pelican/adapters/test/TestStreamAdapter.h"
-#include "pelican/adapters/test/TestDataBlob.h"
+#include "pelican/core/test/TestAdapter.h"
+#include "pelican/core/test/TestStreamAdapter.h"
+#include "pelican/core/test/TestDataBlob.h"
 #include "pelican/utility/Config.h"
 #include "pelican/utility/ConfigNode.h"
+
+#include <QtCore/QCoreApplication>
 
 namespace pelican {
 

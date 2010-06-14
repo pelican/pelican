@@ -1,12 +1,13 @@
 #include "AdapterRealDataTest.h"
-#include "pelican/adapters/AdapterRealData.h"
-#include "pelican/data/RealData.h"
+#include "pelican/core/AdapterRealData.h"
+#include "pelican/data/ArrayData.h"
 #include "pelican/utility/ConfigNode.h"
 #include "pelican/utility/constants.h"
 
-#include <QCoreApplication>
-#include <QString>
-#include <QBuffer>
+#include <QtCore/QCoreApplication>
+#include <QtCore/QString>
+#include <QtCore/QBuffer>
+
 #include <iostream>
 #include <iomanip>
 
@@ -50,7 +51,7 @@ void AdapterRealDataTest::test_deserialise_buffer()
     buffer.open(QBuffer::ReadOnly);
 
     // Create the data blob and the adapter.
-    RealData data;
+    DoubleData data;
     ConfigNode config;
     AdapterRealData adapter(config);
     adapter.config(&data, chunkSize, QHash<QString, DataBlob*>());

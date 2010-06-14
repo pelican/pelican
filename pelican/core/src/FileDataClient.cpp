@@ -1,12 +1,12 @@
 #include "pelican/core/FileDataClient.h"
-#include "pelican/adapters/AbstractServiceAdapter.h"
-#include "pelican/adapters/AbstractStreamAdapter.h"
+#include "pelican/core/AbstractServiceAdapter.h"
+#include "pelican/core/AbstractStreamAdapter.h"
 #include "pelican/data/DataRequirements.h"
 #include "pelican/utility/ConfigNode.h"
 
-#include <QFile>
-#include <QSet>
-#include <QtGlobal>
+#include <QtCore/QFile>
+#include <QtCore/QSet>
+#include <QtCore/QtGlobal>
 
 #include "pelican/utility/memCheck.h"
 

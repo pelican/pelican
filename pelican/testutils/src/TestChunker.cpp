@@ -1,7 +1,7 @@
-#include "pelican/server/test/TestChunker.h"
+#include "pelican/testutils/TestChunker.h"
 
-#include <QCoreApplication>
-#include <QBuffer>
+#include <QtCore/QCoreApplication>
+#include <QtCore/QBuffer>
 
 #include <iostream>
 

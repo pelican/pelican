@@ -4,7 +4,7 @@ include_directories(
     ${QT_QTGUI_INCLUDE_DIR}
 )
 
-SUBPACKAGE(server adapters comms utility)
+SUBPACKAGE(server comms utility)
 
 # files requiring MOC pre-processing (i.e. QObjects)
 set(server_moc_headers

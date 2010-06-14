@@ -1,7 +1,7 @@
 #ifndef ABSTRACTSERVICEADAPTER_H
 #define ABSTRACTSERVICEADAPTER_H
 
-#include "pelican/adapters/AbstractAdapter.h"
+#include "pelican/core/AbstractAdapter.h"
 
 /**
  * @file AbstractServiceAdapter.h
