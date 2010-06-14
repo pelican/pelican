@@ -1,7 +1,7 @@
 add_subdirectory(utility)
 add_subdirectory(data)
 add_subdirectory(comms)
-add_subdirectory(testutils)
+add_subdirectory(emulator)
 add_subdirectory(server)
 add_subdirectory(modules)
 add_subdirectory(core)

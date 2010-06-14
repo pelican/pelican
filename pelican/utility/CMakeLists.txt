@@ -1,11 +1,4 @@
-include_directories(
-    ${QT_INCLUDE_DIR}
-    ${QT_QTCORE_INCLUDE_DIR}
-    ${QT_QTXML_INCLUDE_DIR}
-    ${QT_QTNETWORK_INCLUDE_DIR}
-)
-
-SUBPACKAGE(utility)
+SUBPACKAGE(utility pelican)
 
 # Thread safe library.
 set(utility_src
@@ -15,7 +8,7 @@ set(utility_src
 )
 
 # The general utility library.
-SUBPACKAGE_LIBRARY(utility ${utility_src})
+SUBPACKAGE_LIBRARY(utility pelican ${utility_src})
 
 SUBPACKAGE_ADD_LIBRARIES(
     ${QT_QTCORE_LIBRARY}

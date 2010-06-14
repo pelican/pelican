@@ -62,15 +62,15 @@ option(BUILD_STATIC "Build static versions of pelican library" OFF)
 
 # === Installtion locations.
 if(NOT LIBRARY_INSTALL_DIR)
-    set(LIBRARY_INSTALL_DIR lib)
+    set(LIBRARY_INSTALL_DIR "pelican/lib")
 endif(NOT LIBRARY_INSTALL_DIR)
 
 if(NOT INCLUDE_INSTALL_DIR)
-    set(INCLUDE_INSTALL_DIR "include/pelican")
+    set(INCLUDE_INSTALL_DIR "pelican/include")
 endif(NOT INCLUDE_INSTALL_DIR)
 
 if(NOT MODULES_INSTALL_DIR)
-    set (MODULES_INSTALL_DIR "share/pelican")
+    set (MODULES_INSTALL_DIR "pelican/modules")
 endif(NOT MODULES_INSTALL_DIR)
 
 # === Installation target for project cmake files.
@@ -98,3 +98,6 @@ add_doxygen_target(developer DoxyfileDeveloper)
 
 # === libpelican.so build target.
 PROJECT_LIBRARY(pelican)
+
+# === libpelican-test.so build target.
+#PROJECT_LIBRARY(pelican-test)

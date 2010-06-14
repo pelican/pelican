@@ -1,4 +1,4 @@
-#include "pelican/testutils/RealUdpEmulator.h"
+#include "pelican/emulator/RealUdpEmulator.h"
 #include "pelican/utility/ConfigNode.h"
 
 #include "pelican/utility/memCheck.h"

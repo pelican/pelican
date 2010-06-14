@@ -1,7 +1,7 @@
 #ifndef ABSTRACTUDPEMULATOR_H
 #define ABSTRACTUDPEMULATOR_H
 
-#include "pelican/testutils/AbstractEmulator.h"
+#include "pelican/emulator/AbstractEmulator.h"
 #include <QtNetwork/QHostAddress>
 
 class QIODevice;

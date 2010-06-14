@@ -1,4 +1,4 @@
-SUBPACKAGE(coreTest core data utility serverTest testutils)
+SUBPACKAGE(coreTest core data utility serverTest emulator)
 
 set(coreTest_src
     src/coreTest.cpp
@@ -9,6 +9,8 @@ set(coreTest_src
     src/PipelineDriverTest.cpp
     src/PelicanServerClientTest.cpp
 )
+
+
 set(coreTestMT_src
     src/PelicanServerClientTestMT.cpp
     #src/DirectStreamDataClientTest.cpp

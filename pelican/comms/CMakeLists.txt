@@ -1,9 +1,4 @@
-include_directories(
-    ${QT_INCLUDE_DIR}
-    ${QT_QTCORE_INCLUDE_DIR}
-)
-
-SUBPACKAGE(comms data utility)
+SUBPACKAGE(comms pelican data utility)
 
 set(comms_src
     src/AbstractClientProtocol.cpp
@@ -16,6 +11,6 @@ set(comms_src
     src/StreamDataRequest.cpp
     src/StreamDataResponse.cpp
 )
-SUBPACKAGE_LIBRARY(comms ${comms_src})
+SUBPACKAGE_LIBRARY(comms pelican ${comms_src})
 
 add_subdirectory(test)

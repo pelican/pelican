@@ -5,8 +5,8 @@
  * @file EmulatorDriver.h
  */
 
+#include "pelican/emulator/EmulatorDriver.h"
 #include "pelican/utility/ConfigNode.h"
-#include "pelican/testutils/EmulatorDriver.h"
 #include <QtCore/QThread>
 
 class QIODevice;

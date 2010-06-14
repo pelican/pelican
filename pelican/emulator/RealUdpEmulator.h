@@ -1,7 +1,7 @@
 #ifndef REALUDPEMULATOR_H
 #define REALUDPEMULATOR_H
 
-#include "pelican/testutils/AbstractUdpEmulator.h"
+#include "pelican/emulator/AbstractUdpEmulator.h"
 #include <QtCore/QByteArray>
 
 /**

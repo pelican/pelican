@@ -46,6 +46,13 @@ endif(NOT DEFINED pelican_mkl)
 # needed?
 #include_directories(${CFITSIO_INCLUDE_DIR})
 
+include_directories(
+    ${QT_INCLUDE_DIR}
+    ${QT_QTCORE_INCLUDE_DIR}
+    ${QT_QTNETWORK_INCLUDE_DIR}
+    ${QT_QTXML_INCLUDE_DIR}
+)
+
 # === List of all libraries for single library install.
 set(PROJECT_LIBRARIES
     pelican
