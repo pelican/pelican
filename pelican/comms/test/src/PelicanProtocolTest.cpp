@@ -1,4 +1,3 @@
-#include <QBuffer>
 #include "PelicanProtocolTest.h"
 #include "PelicanProtocol.h"
 #include "ServerRequest.h"
@@ -13,6 +12,8 @@
 #include "pelican/data/DataRequirements.h"
 #include "pelican/utility/SocketTester.h"
 #include "pelican/data/test/TestDataBlob.h"
+
+#include <QtCore/QBuffer>
 
 #include <iostream>
 #include <cstdlib>

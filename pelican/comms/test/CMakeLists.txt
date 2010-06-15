@@ -1,4 +1,4 @@
-SUBPACKAGE(commsTest comms dataTest)
+SUBPACKAGE(commsTest dataTest comms)
 
 set(commsTest_src
     src/commsTest.cpp
@@ -8,6 +8,7 @@ set(commsTest_src
 )
 
 add_executable(commsTest ${commsTest_src} )
+
 
 target_link_libraries(commsTest
     ${SUBPACKAGE_LIBRARIES}

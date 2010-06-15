@@ -1,14 +1,16 @@
-#include <QBuffer>
-#include <QMutexLocker>
 #include <iostream>
-#include "TCPConnectionManager.h"
 
+#include "pelican/output/TCPConnectionManager.h"
 #include "pelican/comms/StreamDataRequest.h"
 #include "pelican/comms/PelicanProtocol.h"
 #include "pelican/comms/ServerRequest.h"
 #include "pelican/utility/ConfigNode.h"
 #include "pelican/comms/StreamData.h"
-#include "pelican/utility/memCheck.h"
+
+#include <QtCore/QBuffer>
+#include <QtCore/QMutexLocker>
+#include <QtNetwork/QTcpSocket>
+
 #include "pelican/utility/memCheck.h"
 
 namespace pelican {

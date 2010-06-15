@@ -5,8 +5,8 @@
 #include "pelican/server/WritableData.h"
 #include "pelican/utility/FactoryRegistrar.h"
 
-#include <QUdpSocket>
-#include <QString>
+#include <QtNetwork/QUdpSocket>
+#include <QtCore/QString>
 
 
 /**

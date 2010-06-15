@@ -2,7 +2,7 @@
 #define PELICANPORTSERVER_H
 
 
-#include <QTcpServer>
+#include <QtNetwork/QTcpServer>
 
 /**
  * @file PelicanPortServer.h

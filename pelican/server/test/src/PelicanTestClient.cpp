@@ -1,6 +1,7 @@
-#include "PelicanTestClient.h"
-#include <QTcpSocket>
-//#include <QtNetwork>
+#include "pelican/server/test/PelicanTestClient.h"
+
+#include <QtNetwork/QTcpSocket>
+
 #include <iostream>
 
 #include "pelican/utility/memCheck.h"

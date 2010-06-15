@@ -1,7 +1,8 @@
 #ifndef PELICANTESTCLIENT_H
 #define PELICANTESTCLIENT_H
-#include <QString>
-#include <QTcpSocket>
+
+#include <QtCore/QString>
+#include <QtNetwork/QTcpSocket>
 
 /**
  * @file PelicanTestClient.h

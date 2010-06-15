@@ -1,4 +1,4 @@
-SUBPACKAGE(core pelican modules server comms data)
+SUBPACKAGE(core modules server comms data)
 
 set(core_src
     src/AbstractDataClient.cpp
@@ -14,8 +14,7 @@ set(core_src
     src/OutputStreamer.cpp
 )
 
-
-SUBPACKAGE_LIBRARY(core pelican ${core_src})
+SUBPACKAGE_LIBRARY(core ${core_src})
 
 SUBPACKAGE_ADD_LIBRARIES(
     ${SUBPACKAGE_LIBRARIES}

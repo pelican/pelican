@@ -1,21 +1,22 @@
 #ifndef PELICANTCPBLOBSERVER_H
 #define PELICANTCPBLOBSERVER_H
 
-#include "TCPConnectionManager.h"
-#include "AbstractBlobServer.h"
-#include <QtNetwork>
-#include <QList>
-#include <QMap>
+#include "pelican/output/TCPConnectionManager.h"
+#include "pelican/output/AbstractBlobServer.h"
+
+#include <QtCore/QList>
+#include <QtCore/QMap>
 
 /**
  * @file PelicanTCPBlobServer.h
  */
 
 namespace pelican {
-    class DataManager;
-    class ConfigNode;
-    class DataBlob;
-    class ThreadedBlobServer;
+
+class DataManager;
+class ConfigNode;
+class DataBlob;
+class ThreadedBlobServer;
 
 /**
  * @class PelicanTCPBlobServer

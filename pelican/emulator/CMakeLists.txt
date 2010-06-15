@@ -1,4 +1,4 @@
-SUBPACKAGE(emulator pelican utility)
+SUBPACKAGE(emulator utility)
 
 set(emulator_src
     src/AbstractUdpEmulator.cpp
@@ -15,7 +15,7 @@ set(emulator_moc_headers
 QT4_WRAP_CPP(emulator_src ${emulator_moc_headers})
 
 # Create the emulator subpackage library.
-SUBPACKAGE_LIBRARY(emulator pelican ${emulator_src})
+SUBPACKAGE_LIBRARY(emulator ${emulator_src})
 
 # Specify dependencies.
 SUBPACKAGE_ADD_LIBRARIES(

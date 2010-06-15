@@ -1,10 +1,10 @@
-SUBPACKAGE(modules pelican data utility)
+SUBPACKAGE(modules data utility)
 
 set(modules_src
     src/AbstractModule.cpp
     src/EmptyModule.cpp
 )
 
-SUBPACKAGE_LIBRARY(modules pelican ${modules_src})
+SUBPACKAGE_LIBRARY(modules ${modules_src})
 
 add_subdirectory(test)

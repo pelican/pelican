@@ -10,10 +10,10 @@
 #include "pelican/comms/StreamDataRequest.h"
 #include "pelican/comms/ServiceDataRequest.h"
 
-#include <QTcpSocket>
-#include <QString>
-#include <QHash>
-#include <QTime>
+#include <QtNetwork/QTcpSocket>
+#include <QtCore/QString>
+#include <QtCore/QHash>
+#include <QtCore/QTime>
 
 #include <iostream>
 

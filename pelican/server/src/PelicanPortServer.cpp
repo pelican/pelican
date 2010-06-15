@@ -1,7 +1,8 @@
-#include <QTcpSocket>
 #include "pelican/server/PelicanPortServer.h"
 #include "pelican/server/Session.h"
 #include "pelican/comms/AbstractProtocol.h"
+
+#include <QtNetwork/QTcpSocket>
 
 #include "pelican/utility/memCheck.h"
 

@@ -1,9 +1,11 @@
 #include "pelican/utility/ConfigNode.h"
 #include "pelican/data/DataBlob.h"
-#include <QDomNode>
-#include <QDomNodeList>
-#include <QStringList>
-#include <QTextStream>
+
+#include <QtXml/QDomNode>
+#include <QtXml/QDomNodeList>
+#include <QtCore/QStringList>
+#include <QtCore/QTextStream>
+
 #include <cstdlib>
 #include <iostream>
 

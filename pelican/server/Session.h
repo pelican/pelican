@@ -1,9 +1,9 @@
 #ifndef SESSION_H
 #define SESSION_H
 
-#include <QThread>
-#include <QList>
-#include <QTcpSocket>
+#include <QtCore/QThread>
+#include <QtCore/QList>
+#include <QtNetwork/QTcpSocket>
 
 /**
  * @file Session.h

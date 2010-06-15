@@ -1,11 +1,10 @@
 SUBPACKAGE(utilityTest utility)
 
-set(
-   utilityTest_src
-   src/utilityTest.cpp
-   src/SocketTesterTest.cpp
-   src/ConfigTest.cpp
-   src/ConfigNodeTest.cpp
+set(utilityTest_src
+    src/utilityTest.cpp
+    src/SocketTesterTest.cpp
+    src/ConfigTest.cpp
+    src/ConfigNodeTest.cpp
 )
 
 if(CMAKE_BUILD_TYPE MATCHES DEBUG|[Dd]ebug)
@@ -24,10 +23,9 @@ else(CMAKE_BUILD_TYPE MATCHES DEBUG|[Dd]ebug)
     )
 endif(CMAKE_BUILD_TYPE MATCHES DEBUG|[Dd]ebug)
 
-add_test(utilityTest utilityTest )
+add_test(utilityTest utilityTest)
 
+
+# Copy test xml files to build directory.
 include(CopyFiles)
 copy_files(${CMAKE_CURRENT_SOURCE_DIR}/data/*.xml . testXMLFiles)
-
-
-

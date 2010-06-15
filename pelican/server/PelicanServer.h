@@ -1,14 +1,14 @@
 #ifndef PELICANSERVER_H
 #define PELICANSERVER_H
 
-#include <QObject>
-#include <QTcpServer>
-#include <QMap>
-#include <QSet>
-#include <QPair>
-#include <QThread>
-#include <QMutex>
-#include <QMutexLocker>
+#include <QtNetwork/QTcpServer>
+#include <QtCore/QObject>
+#include <QtCore/QMap>
+#include <QtCore/QSet>
+#include <QtCore/QPair>
+#include <QtCore/QThread>
+#include <QtCore/QMutex>
+#include <QtCore/QMutexLocker>
 
 /**
  * @file PelicanServer.h

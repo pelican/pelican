@@ -1,8 +1,8 @@
 #ifndef SOCKETTESTER_H
 #define SOCKETTESTER_H
-#include <QTcpSocket>
-#include <QTcpServer>
 
+#include <QtNetwork/QTcpSocket>
+#include <QtNetwork/QTcpServer>
 
 /**
  * @file SocketTester.h

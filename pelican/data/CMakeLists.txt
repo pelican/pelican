@@ -1,4 +1,4 @@
-SUBPACKAGE(data pelican utility)
+SUBPACKAGE(data utility)
 
 set(data_src
     src/DataBlob.cpp
@@ -6,7 +6,7 @@ set(data_src
     src/ArrayData.cpp
 )
 
-SUBPACKAGE_LIBRARY(data pelican ${data_src} )
+SUBPACKAGE_LIBRARY(data ${data_src} )
 
 SUBPACKAGE_ADD_LIBRARIES(
     ${QT_QTCORE_LIBRARY}

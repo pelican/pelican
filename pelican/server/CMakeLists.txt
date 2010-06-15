@@ -1,10 +1,4 @@
-SUBPACKAGE(server pelican comms utility)
-
-include_directories(
-    ${QT_INCLUDE_DIR}
-    ${QT_QTCORE_INCLUDE_DIR}
-    ${QT_QTGUI_INCLUDE_DIR}
-)
+SUBPACKAGE(server comms utility)
 
 # files requiring MOC pre-processing (i.e. QObjects)
 set(server_moc_headers
@@ -42,7 +36,7 @@ set(server_src
 QT4_WRAP_CPP(server_moc_sources ${server_moc_headers})
 
 # Build the subpackage library.
-SUBPACKAGE_LIBRARY(server pelican ${server_src} ${server_moc_sources})
+SUBPACKAGE_LIBRARY(server ${server_src} ${server_moc_sources})
 
 # Specify dependencies.
 SUBPACKAGE_ADD_LIBRARIES(
@@ -53,12 +47,9 @@ SUBPACKAGE_ADD_LIBRARIES(
 # Recurse into test directory.
 add_subdirectory(test)
 
-
 # Create the server executable.
 #===============================================================================
-set(serverExe_src
-    src/main.cpp
-)
+set(serverExe_src src/main.cpp)
 add_executable(pelicanServer ${serverExe_src})
 target_link_libraries(pelicanServer ${SUBPACKAGE_LIBRARIES} memoryTracerDummy )
 

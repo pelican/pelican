@@ -1,7 +1,5 @@
-#include "TCPConnectionManagerTest.h"
-#include "TCPConnectionManager.h"
-#include <QTcpSocket>
-#include <QCoreApplication>
+#include "pelican/output/test/TCPConnectionManagerTest.h"
+#include "pelican/output/TCPConnectionManager.h"
 #include "pelican/comms/ServerRequest.h"
 #include "pelican/comms/ServerResponse.h"
 #include "pelican/comms/DataBlobResponse.h"
@@ -9,6 +7,8 @@
 #include "pelican/comms/PelicanClientProtocol.h"
 #include "pelican/data/test/TestDataBlob.h"
 
+#include <QtNetwork/QTcpSocket>
+#include <QtCore/QCoreApplication>
 
 #include "pelican/utility/memCheck.h"
 

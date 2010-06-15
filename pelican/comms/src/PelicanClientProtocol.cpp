@@ -10,9 +10,12 @@
 #include "pelican/comms/StreamDataRequest.h"
 #include "pelican/data/DataRequirements.h"
 #include "pelican/data/DataBlob.h"
-#include <QByteArray>
-#include <QAbstractSocket>
-#include <QDataStream>
+
+#include <QtCore/QByteArray>
+#include <QtCore/QDataStream>
+
+#include <QtNetwork/QAbstractSocket>
+
 #include <iostream>
 
 #include "pelican/utility/memCheck.h"

@@ -1,4 +1,4 @@
-SUBPACKAGE(utility pelican)
+SUBPACKAGE(utility)
 
 # Thread safe library.
 set(utility_src
@@ -8,7 +8,7 @@ set(utility_src
 )
 
 # The general utility library.
-SUBPACKAGE_LIBRARY(utility pelican ${utility_src})
+SUBPACKAGE_LIBRARY(utility ${utility_src})
 
 SUBPACKAGE_ADD_LIBRARIES(
     ${QT_QTCORE_LIBRARY}
@@ -18,6 +18,8 @@ SUBPACKAGE_ADD_LIBRARIES(
 
 # Recurse into test sub-directory to build tests.
 add_subdirectory(test)
+
+
 
 #===============================================================================
 # Memory tracer.

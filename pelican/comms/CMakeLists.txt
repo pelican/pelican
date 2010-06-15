@@ -1,4 +1,4 @@
-SUBPACKAGE(comms pelican data utility)
+SUBPACKAGE(comms data utility)
 
 set(comms_src
     src/AbstractClientProtocol.cpp
@@ -11,6 +11,6 @@ set(comms_src
     src/StreamDataRequest.cpp
     src/StreamDataResponse.cpp
 )
-SUBPACKAGE_LIBRARY(comms pelican ${comms_src})
+SUBPACKAGE_LIBRARY(comms ${comms_src})
 
 add_subdirectory(test)

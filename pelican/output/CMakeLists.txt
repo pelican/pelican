@@ -1,4 +1,4 @@
-SUBPACKAGE(output pelican comms data server)
+SUBPACKAGE(output comms data server)
 
 set ( output_moc_headers
       PelicanTCPBlobServer.h
@@ -15,7 +15,7 @@ set( output_src
 
 QT4_WRAP_CPP(output_moc_src ${output_moc_headers})
 
-SUBPACKAGE_LIBRARY(output pelican ${output_src} ${output_moc_src} )
+SUBPACKAGE_LIBRARY(output ${output_src} ${output_moc_src} )
 
 # Specify dependencies.
 SUBPACKAGE_ADD_LIBRARIES(

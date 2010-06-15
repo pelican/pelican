@@ -34,7 +34,7 @@ class SocketTesterTest : public CppUnit::TestFixture
         void test_method();
 
     public:
-        SocketTesterTest(  );
+        SocketTesterTest();
         ~SocketTesterTest();
 
     private:

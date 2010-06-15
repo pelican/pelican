@@ -1,11 +1,11 @@
 #ifndef TCPCONNECTIONMANAGER_H
 #define TCPCONNECTIONMANAGER_H
 
-#include <QtNetwork>
-#include <QObject>
-#include <QMutex>
-#include <QList>
-#include <QMap>
+#include <QtNetwork/QTcpServer>
+#include <QtCore/QObject>
+#include <QtCore/QMutex>
+#include <QtCore/QList>
+#include <QtCore/QMap>
 
 #include "pelican/utility/ConfigNode.h"
 

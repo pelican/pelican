@@ -29,21 +29,16 @@ include_directories(${PROJECT_SOURCE_DIR}/..)
 set(CMAKE_CXX_FLAGS_RELEASE "-O2 -DQT_NO_DEBUG -DNDEBUG")
 
 if(CMAKE_COMPILER_IS_GNUCXX)
-    # Note that -std=c++0x is needed for -pedantic.
     add_definitions(-Wall -Wextra)
     add_definitions(-Wno-deprecated -Wno-unknown-pragmas)
     list(APPEND CPP_PLATFORM_LIBS util dl)
 elseif(CMAKE_CXX_COMPILER MATCHES icpc)
     add_definitions(-Wall -Wcheck)
-    add_definitions(-wd383 -wd981)  # suppress remark/warning
-    add_definitions(-ww111 -ww1572) # promote remark to warning
-    #add_definitions(-static-intel)
-    #add_definitions(-pg)
+    add_definitions(-wd383 -wd981)  # Suppress remarks / warnings.
+    add_definitions(-ww111 -ww1572) # Promote remarks to warnings.
 else(CMAKE_COMPILER_IS_GNUCXX)
     # use defaults (and pray it works...)
 endif(CMAKE_COMPILER_IS_GNUCXX)
-
-#list(APPEND CMAKE_CXX_FLAGS "-pg")
 
 if(APPLE)
     add_definitions(-DDARWIN)

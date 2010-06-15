@@ -1,7 +1,8 @@
-#include "SocketTesterTest.h"
-#include "SocketTester.h"
-#include <QByteArray>
-#include <QCoreApplication>
+#include "pelican/utility/test/SocketTesterTest.h"
+#include "pelican/utility/SocketTester.h"
+
+#include <QtCore/QByteArray>
+#include <QtCore/QCoreApplication>
 
 #include "pelican/utility/memCheck.h"
 

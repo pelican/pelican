@@ -1,8 +1,3 @@
-#include <QTcpSocket>
-#include <QByteArray>
-#include <QStringList>
-#include <QString>
-#include <QMapIterator>
 #include "pelican/comms/Data.h"
 #include "pelican/comms/PelicanProtocol.h"
 #include "pelican/comms/ServerRequest.h"
@@ -13,6 +8,12 @@
 #include "pelican/comms/StreamData.h"
 #include "pelican/data/DataRequirements.h"
 #include "pelican/data/DataBlob.h"
+
+#include <QtNetwork/QTcpSocket>
+#include <QtCore/QByteArray>
+#include <QtCore/QStringList>
+#include <QtCore/QString>
+#include <QtCore/QMapIterator>
 
 #include "pelican/utility/memCheck.h"
 

@@ -6,11 +6,13 @@
  */
 
 #include "pelican/utility/constants.h"
-#include <QDomElement>
-#include <QString>
-#include <QHash>
-#include <QStringList>
-#include <QList>
+
+#include <QtXml/QDomElement>
+#include <QtCore/QString>
+#include <QtCore/QHash>
+#include <QtCore/QStringList>
+#include <QtCore/QList>
+
 #include <vector>
 
 namespace pelican {

@@ -1,10 +1,11 @@
 #include "pelican/utility/Config.h"
+
+#include <QtCore/QTextStream>
+#include <QtCore/QFile>
+#include <QtCore/QStringList>
+#include <QtXml/QDomDocumentType>
+
 #include <iostream>
-#include <QTextStream>
-#include <QFile>
-#include <QStringList>
-#include <iostream>
-#include <QDomDocumentType>
 
 #include "pelican/utility/memCheck.h"
 

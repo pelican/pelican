@@ -1,7 +1,5 @@
-#include <QString>
-#include <QCoreApplication>
-#include "test/PelicanTCPBlobServerTest.h"
-#include "PelicanTCPBlobServer.h"
+#include "pelican/output/test/PelicanTCPBlobServerTest.h"
+#include "pelican/output/PelicanTCPBlobServer.h"
 
 #include "pelican/data/test/TestDataBlob.h"
 #include "pelican/comms/PelicanClientProtocol.h"
@@ -10,8 +8,13 @@
 #include "pelican/comms/StreamData.h"
 #include "pelican/comms/ServerResponse.h"
 #include "pelican/server/DataManager.h"
-#include "pelican/utility/memCheck.h"
 #include "pelican/comms/Data.h"
+
+#include <QtCore/QCoreApplication>
+#include <QtCore/QString>
+#include <QtNetwork/QTcpSocket>
+
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 

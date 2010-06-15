@@ -10,8 +10,9 @@
 #include "pelican/utility/Config.h"
 
 #include <boost/shared_ptr.hpp>
-#include <QtGlobal>
-#include <QTcpSocket>
+
+#include <QtCore/QtGlobal>
+#include <QtNetwork/QTcpSocket>
 
 #include <iostream>
 
