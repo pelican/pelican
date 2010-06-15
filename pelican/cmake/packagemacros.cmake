@@ -186,7 +186,7 @@ macro(LIBRARY_MODULE_REQUIREMENTS moduleName packageName)
         
     foreach(inc ${includes})
         file(APPEND ${SUBPACKAGE_FILE} "include_directories(${inc})\n")
-        file(APPEND ${SUBPACKAGE_GLOBAL_FILE} "include_directories(${inc})\n")
+        file(APPEND ${PACKAGE_LIBRARY_FILE} "include_directories(${inc})\n")
     endforeach(inc)
     
     foreach(pack ${ARGN})

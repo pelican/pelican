@@ -1,4 +1,4 @@
-#include "pelican/testutils/TestUdpChunker.h"
+#include "pelican/server/test/TestUdpChunker.h"
 #include "pelican/utility/Config.h"
 
 #include <QtNetwork/QUdpSocket>

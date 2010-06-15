@@ -7,8 +7,8 @@
 #include "pelican/data/ArrayData.h"
 
 #include "pelican/data/DataRequirements.h"
-#include "pelican/testutils/EmulatorDriver.h"
-#include "pelican/testutils/RealUdpEmulator.h"
+#include "pelican/emulator/EmulatorDriver.h"
+#include "pelican/emulator/RealUdpEmulator.h"
 #include "pelican/utility/Config.h"
 #include "pelican/utility/FactoryConfig.h"
 #include "pelican/utility/FactoryGeneric.h"

@@ -6,7 +6,7 @@
 #include "pelican/core/AbstractAdapter.h"
 #include "pelican/data/DataBlob.h"
 #include "pelican/data/ArrayData.h"
-#include "pelican/testutils/TestUdpChunker.h"
+#include "pelican/server/test/TestUdpChunker.h"
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QTime>
@@ -94,7 +94,7 @@ int main(int argc, char** argv)
     real_t initValue = 0, value = 0;
     for (counter = 0; counter < iterations; counter++) {
         // Get the data.
-        QHash<QString, DataBlob*> validData = client->getData(dataHash);
+//        QHash<QString, DataBlob*> validData = client->getData(dataHash);
 
         // Check the content of the data blob.
 //        DoubleData* realData = (DoubleData*)validData.value(dataType);
@@ -110,7 +110,7 @@ int main(int argc, char** argv)
 
     // Compute bandwidth.
     double sec = (double)timer.elapsed() / 1e3;
-    double megaBytesReceived = (long double)chunkSize * iterations / (1024 * 1024);
+    long double megaBytesReceived = (long double)chunkSize * iterations / (1024 * 1024);
 
     // Print summary.
     std::cout << "---------------------------------------------------------\n";
@@ -128,3 +128,4 @@ int main(int argc, char** argv)
 
     return 0;
 }
+
