@@ -32,7 +32,7 @@ class DataRequirements
         ~DataRequirements();
 
         /// Returns a set containing all required data types.
-        QSet<QString> allData() const {return _serviceData + _streamData;}
+        QSet<QString> allData() const;
 
         /// Adds the required service data type.
         void addServiceData(const QString& type);

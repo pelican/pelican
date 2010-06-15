@@ -64,6 +64,10 @@ void DataRequirements::addStreamData(const QSet<QString>& list)
     _streamData.unite(list);
 }
 
+QSet<QString> DataRequirements::allData() const {
+    return _serviceData + _streamData;
+}
+
 /**
  * @details
  * Clears all the current requirements.
