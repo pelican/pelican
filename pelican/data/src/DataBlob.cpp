@@ -54,7 +54,8 @@ void DataBlob::setTimeStamp()
  */
 void DataBlob::serialise(QIODevice&) const
 {
-    throw(QString("DataBlob: This object's (") + type() + QString(") serialise method is undefined."));
+    throw QString("DataBlob: This object's ('%1') serialise method "
+            "is undefined.").arg(type());
 }
 
 
@@ -64,7 +65,8 @@ void DataBlob::serialise(QIODevice&) const
  */
 void DataBlob::deserialise(QIODevice&)
 {
-    throw(QString("DataBlob: This object's (") + type() + QString(") deserialise method is undefined."));
+    throw QString("DataBlob: This object's ('%1') deserialise method "
+            "is undefined.").arg(type());
 }
 
 QString DataBlob::type() const {

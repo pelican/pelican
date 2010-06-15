@@ -1,12 +1,6 @@
-#include <vector>
-#include <QHash>
-#include <QTcpSocket>
-#include <QBuffer>
-#include <QByteArray>
-#include <QDebug>
 #include "PelicanServerClient.h"
-#include "pelican/adapters/AbstractServiceAdapter.h"
-#include "pelican/adapters/AbstractStreamAdapter.h"
+#include "pelican/core/AbstractServiceAdapter.h"
+#include "pelican/core/AbstractStreamAdapter.h"
 #include "pelican/data/DataRequirements.h"
 #include "pelican/data/DataBlob.h"
 #include "pelican/comms/ServerResponse.h"
@@ -17,6 +11,14 @@
 #include "pelican/comms/StreamDataResponse.h"
 #include "pelican/comms/ServiceDataResponse.h"
 #include "pelican/comms/PelicanClientProtocol.h"
+
+#include <QtNetwork/QTcpSocket>
+#include <QtCore/QHash>
+#include <QtCore/QBuffer>
+#include <QtCore/QByteArray>
+#include <QtCore/QDebug>
+
+#include <vector>
 
 #include "pelican/utility/memCheck.h"
 

@@ -7,16 +7,16 @@ INCLUDE_DIRECTORIES(
 SUBPACKAGE(data utility)
 
 set(data_src
-    src/AntennaPositions.cpp
-    src/CorrectedVisibilityData.cpp
+#    src/AntennaPositions.cpp
+#    src/CorrectedVisibilityData.cpp
     src/DataBlob.cpp
     src/DataRequirements.cpp
-    src/FlagTable.cpp
-    src/ImageData.cpp
-    src/ModelVisibilityData.cpp
-    src/RealData.cpp
-    src/VisibilityData.cpp
-    src/VisibilityPositions.cpp
+#    src/FlagTable.cpp
+#    src/ImageData.cpp
+#    src/ModelVisibilityData.cpp
+    src/ArrayData.cpp
+#    src/VisibilityData.cpp
+#    src/VisibilityPositions.cpp
 )
 
 SUBPACKAGE_LIBRARY(data ${data_src} )

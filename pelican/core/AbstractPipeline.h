@@ -4,8 +4,9 @@
 #include "pelican/data/DataRequirements.h"
 #include "pelican/modules/AbstractModule.h"
 #include "pelican/utility/FactoryConfig.h"
-#include <QString>
-#include <QList>
+#include "pelican/utility/FactoryGeneric.h"
+#include <QtCore/QString>
+#include <QtCore/QList>
 
 /**
  * @file AbstractPipeline.h
@@ -51,30 +52,29 @@ class PipelineDriver;
  *     public:
  *         void init()
  *         {
- *             // Set the name of the pipeline.
- *             setName("MyPipeline");
- *
  *             // Create the pipeline modules.
  *             imager = (ZenithImagerDft*) createModule("ZenithImagerDft");
  *             fitsWriter = (ImageWriterFits*) createModule("ImageWriterFits");
  *
- *             // Create the data blobs.
- *             imageData = new ImageData;
+ *             // Create local data blobs.
+ *             imageData = (ImageData*) createBlob("ImageData");
  *
  *             // Request remote data.
+ *             requestRemoteData("AntennaPositions");
  *             requestRemoteData("VisibilityData");
- *             return;
  *         }
  *
- *         void run(QHash<QString, DataBlob*>& data)
+ *         void run(QHash<QString, DataBlob*>& remoteData)
  *         {
- *             // Get the remote visibility data.
- *             VisibilityData* visData = data["VisibilityData"];
+ *             // Get the remote data.
+ *             AntennaPositions* antPos = (AntennaPositions*)
+ *                     remoteData["AntennaPositions"];
+ *             VisibilityData* visData = (VisibilityData*)
+ *                     remoteData["VisibilityData"];
  *
  *             // Run each module as required.
- *             imager->run(visData, imageData);
+ *             imager->run(imageData, antPos, visData);
  *             fitsWriter->run(imageData);
- *             return;
  *         }
  * };
  * \endcode
@@ -91,25 +91,25 @@ class AbstractPipeline
         /// The data required by the pipeline.
         DataRequirements _requiredDataRemote;
 
+        /// Pointer to the PipelineApplication blob factory (private, not protected).
+        FactoryGeneric<DataBlob>* _blobFactory;
+
         /// Pointer to the PipelineApplication module factory (private, not protected).
         FactoryConfig<AbstractModule>* _moduleFactory;
 
         /// Pointer to the pipeline driver.
         PipelineDriver* _pipelineDriver;
 
-        /// The name of the pipeline.
-        QString _pipelineName;
-
         /// List of pointers to modules in this pipeline.
         QList<AbstractModule*> _modules;
 
     protected:
+        /// Create a data blob using the data blob factory.
+        DataBlob* createBlob(const QString& type);
+
         /// Create a pipeline module using the module factory.
         AbstractModule* createModule(const QString& type,
                 const QString& name = QString());
-
-        /// Sets the name of the pipeline.
-        void setName(const QString& name);
 
         /// Stops the pipeline driver.
         void stop();
@@ -127,11 +127,6 @@ class AbstractPipeline
         /// initialised, and should be implemented in a subclass.
         virtual void init() = 0;
 
-        /// Returns the name of the pipeline.
-        /// This method returns the name of the pipeline for use when finding
-        /// configuration settings for the pipeline modules.
-        const QString& name() const {return _pipelineName;}
-
         /// Requests remote data from the client.
         /// This method requests a type of remote data from the client.
         void requestRemoteData(QString type);
@@ -148,6 +143,9 @@ class AbstractPipeline
         /// @param[in,out] data A non-const reference to the data hash,
         ///                     which may be modified by the pipeline.
         virtual void run(QHash<QString, DataBlob*>& data) = 0;
+
+        /// Sets the data blob factory.
+        void setBlobFactory(FactoryGeneric<DataBlob>* factory);
 
         /// Sets the module factory.
         void setModuleFactory(FactoryConfig<AbstractModule>* factory);

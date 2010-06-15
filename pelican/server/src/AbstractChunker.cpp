@@ -15,6 +15,7 @@ AbstractChunker::AbstractChunker(const ConfigNode& config)
     _type = config.getOption("data", "type", "");
     _host = config.getOption("connection", "host", "");
     _port = config.getOption("connection", "port", "0").toUInt();
+    _active = true;
 }
 
 /**
@@ -23,6 +24,7 @@ AbstractChunker::AbstractChunker(const ConfigNode& config)
  */
 AbstractChunker::~AbstractChunker()
 {
+    stop();
     if (_device)
         delete _device;
 }

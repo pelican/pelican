@@ -1,7 +1,8 @@
 SUBPACKAGE(serverTest server testutils)
+
 set(serverTestlib_src
-    src/TestChunker.cpp
-    src/TestUdpChunker.cpp
+    #src/TestChunker.cpp
+    #src/TestUdpChunker.cpp
     src/TestProtocol.cpp
     src/TestServer.cpp
     src/PelicanTestClient.cpp
@@ -9,7 +10,7 @@ set(serverTestlib_src
 
 set(serverTestLib_moc_sources
     TestServer.h
-    TestChunker.h
+#    TestChunker.h
 )
 
 set(serverTest_src
@@ -45,9 +46,6 @@ target_link_libraries(serverTest ${SUBPACKAGE_LIBRARIES} ${CPPUNIT_LIBRARIES} me
 
 add_executable(serverTestMT ${serverTestMT_src} )
 target_link_libraries(serverTestMT ${SUBPACKAGE_LIBRARIES} ${CPPUNIT_LIBRARIES} memoryTracerDummy )
-
-add_executable(telescopeEmulator src/telescopeEmulatorMain.cpp )
-target_link_libraries(telescopeEmulator ${SUBPACKAGE_LIBRARIES} memoryTracerDummy)
 
 add_test(serverTest serverTest )
 add_test(serverTestMT serverTestMT )

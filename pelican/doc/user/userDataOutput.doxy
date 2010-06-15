@@ -1,0 +1,12 @@
+/**
+\page user_dataOutput Data Output
+
+\section user_dataOutput_introduction Introduction 
+
+The following sections of the reference documentation are relevant
+for exporting data from Pelican:
+
+\li \link user_referenceDataBlobs Data Blob reference\endlink
+\li \link user_referenceOutputStreamers Output streamer reference\endlink
+
+*/

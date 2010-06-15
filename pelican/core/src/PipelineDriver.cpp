@@ -72,6 +72,7 @@ void PipelineDriver::registerPipeline(AbstractPipeline *pipeline)
     _registeredPipelines.append(pipeline);
 
     // Set up and initialise the pipeline.
+    pipeline->setBlobFactory(_blobFactory);
     pipeline->setModuleFactory(_moduleFactory);
     pipeline->setPipelineDriver(this);
     pipeline->init();

@@ -3,21 +3,21 @@
 #include "pelican/utility/FactoryConfig.h"
 #include "pelican/utility/FactoryGeneric.h"
 #include "pelican/core/DataClientFactory.h"
-#include "pelican/adapters/AbstractAdapter.h"
+#include "pelican/core/AbstractAdapter.h"
 #include "pelican/data/DataBlob.h"
-#include "pelican/data/RealData.h"
-#include "pelican/server/test/TestUdpChunker.h"
+#include "pelican/data/ArrayData.h"
+#include "pelican/testutils/TestUdpChunker.h"
 
+#include <QtCore/QCoreApplication>
+#include <QtCore/QTime>
+#include <QtCore/QString>
+#include <QtCore/QList>
+#include <QtCore/QHash>
 #include <iostream>
-#include <QCoreApplication>
-#include <QTime>
-#include <QString>
-#include <QList>
-#include <QHash>
 
 using namespace pelican;
 
-void printData(RealData* data)
+void printData(DoubleData* data)
 {
     for (unsigned i = 0; i < data->size(); ++i) {
         std::cout << "Data " << data->ptr()[i] << std::endl;
@@ -42,19 +42,19 @@ int main(int argc, char** argv)
 
     QString pipelineXml = ""
             "<buffers>"
-            "   <RealData>"
+            "   <DoubleData>"
             "       <buffer maxSize=\"2000000\" maxChunkSize=\"2000000\"/>"
-            "   </RealData>"
+            "   </DoubleData>"
             "</buffers>"
             "<chunkers>"
             "    <TestUdpChunker name=\"a\">"
             "       <connection host=\"" + host + "\" port=\"" + QString::number(port) + "\"/>"
-            "       <data type=\"RealData\" chunkSize=\"" + QString::number(chunkSize) + "\"/>"
+            "       <data type=\"DoubleData\" chunkSize=\"" + QString::number(chunkSize) + "\"/>"
             "    </TestUdpChunker>"
             "</chunkers>"
             "<clients>"
             "    <DirectStreamDataClient>"
-            "        <data type=\"RealData\" adapter=\"AdapterRealData\"/>"
+            "        <data type=\"DoubleData\" adapter=\"AdapterRealData\"/>"
             "    </DirectStreamDataClient>"
             "</clients>"
             "<adapters>"
@@ -72,7 +72,7 @@ int main(int argc, char** argv)
     FactoryGeneric<DataBlob> blobFactory;
 
     // Create a list of data requirements.
-    QString dataType = "RealData";
+    QString dataType = "DoubleData";
     DataRequirements req;
     QList<DataRequirements> requirements;
     req.addStreamData(dataType);
@@ -97,11 +97,11 @@ int main(int argc, char** argv)
         QHash<QString, DataBlob*> validData = client->getData(dataHash);
 
         // Check the content of the data blob.
-        RealData* realData = (RealData*)validData.value(dataType);
-        //printData(realData);
-        value = realData->ptr()[0];
-        if (counter == 0)
-            initValue = value;
+//        DoubleData* realData = (DoubleData*)validData.value(dataType);
+//        //printData(realData);
+//        value = realData->ptr()[0];
+//        if (counter == 0)
+//            initValue = value;
     }
 
     // Check for lost packets.

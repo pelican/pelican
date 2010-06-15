@@ -1,9 +1,11 @@
-#include "DirectStreamDataClientTest.h"
-#include "pelican/adapters/AbstractAdapter.h"
+#include "pelican/core/test/DirectStreamDataClientTest.h"
+
+#include "pelican/core/AbstractAdapter.h"
 #include "pelican/core/DataClientFactory.h"
 #include "pelican/core/DirectStreamDataClient.h"
 #include "pelican/data/DataBlob.h"
-#include "pelican/data/VisibilityData.h"
+#include "pelican/data/ArrayData.h"
+
 #include "pelican/data/DataRequirements.h"
 #include "pelican/testutils/EmulatorDriver.h"
 #include "pelican/testutils/RealUdpEmulator.h"
@@ -51,32 +53,32 @@ void DirectStreamDataClientTest::setUp()
 
     QString pipelineXml = ""
             "<buffers>"
-            "   <VisibilityData>"
+            "   <DoubleData>"
             "       <buffer maxSize=\"2000\" maxChunkSize=\"2000\"/>"
-            "   </VisibilityData>"
+            "   </DoubleData>"
             "</buffers>"
             "<chunkers>"
             "    <TestUdpChunker name=\"a\">"
             "       <connection host=\"127.0.0.1\" port=\"2002\"/>"
-            "       <data type=\"VisibilityData\" chunkSize=\"512\"/>"
+            "       <data type=\"DoubleData\" chunkSize=\"512\"/>"
             "    </TestUdpChunker>"
             "    <TestUdpChunker name=\"b\">"
             "       <connection host=\"127.0.0.1\" port=\"2003\"/>"
-            "       <data type=\"VisibilityData\" chunkSize=\"512\"/>"
+            "       <data type=\"DoubleData\" chunkSize=\"512\"/>"
             "    </TestUdpChunker>"
             "</chunkers>"
             "<clients>"
             "    <DirectStreamDataClient>"
-            "        <data type=\"VisibilityData\" adapter=\"AdapterLofarStationVisibilities\"/>"
+            "        <data type=\"DoubleData\" adapter=\"AdapterRealData\"/>"
             "    </DirectStreamDataClient>"
             "</clients>"
             "<adapters>"
-            "   <AdapterLofarStationVisibilities>"
+            "   <AdapterRealData>"
             "       <antennas number=\"2\"/>"
             "       <channels start=\"0\" end=\"1\"/>"
             "       <polarisation value=\"both\"/>"
             "       <dataBytes number=\"8\"/>"
-            "   </AdapterLofarStationVisibilities>"
+            "   </AdapterRealData>"
             "</adapters>";
     _config = new Config;
     _config->setFromString(pipelineXml);
@@ -123,7 +125,7 @@ void DirectStreamDataClientTest::test_singleChunker()
         FactoryGeneric<DataBlob> blobFactory;
 
         // Create a list of data requirements.
-        QString dataType = "VisibilityData";
+        QString dataType = "DoubleData";
         DataRequirements req;
         QList<DataRequirements> requirements;
         req.addStreamData(dataType);
@@ -143,8 +145,8 @@ void DirectStreamDataClientTest::test_singleChunker()
         QHash<QString, DataBlob*> validData = client->getData(dataHash);
 
         // Check the content of the data blob.
-        VisibilityData* visData = (VisibilityData*)validData.value("VisibilityData");
-        _printVisibilities(visData);
+        DoubleData* data = (DoubleData*)validData.value("DoubleData");
+        _printData(data);
     }
     catch (QString e) {
         CPPUNIT_FAIL("Unexpected exception: " + e.toStdString());
@@ -177,7 +179,7 @@ void DirectStreamDataClientTest::test_twoChunkersMultipleStarts()
             FactoryGeneric<DataBlob> blobFactory;
 
             // Create a list of data requirements.
-            QString dataType = "VisibilityData";
+            QString dataType = "DoubleData";
             DataRequirements req;
             QList<DataRequirements> requirements;
             req.addStreamData(dataType);
@@ -199,8 +201,8 @@ void DirectStreamDataClientTest::test_twoChunkersMultipleStarts()
                 QHash<QString, DataBlob*> validData = client->getData(dataHash);
 
                 // Check the content of the data blob.
-                VisibilityData* visData = (VisibilityData*)validData.value("VisibilityData");
-                _printVisibilities(visData);
+                DoubleData* data = (DoubleData*)validData.value("DoubleData");
+                _printData(data);
             }
         }
         catch (QString e) {
@@ -233,7 +235,7 @@ void DirectStreamDataClientTest::test_twoChunkersSingleStart()
         FactoryGeneric<DataBlob> blobFactory;
 
         // Create a list of data requirements.
-        QString dataType = "VisibilityData";
+        QString dataType = "DoubleData";
         DataRequirements req;
         QList<DataRequirements> requirements;
         req.addStreamData(dataType);
@@ -256,8 +258,8 @@ void DirectStreamDataClientTest::test_twoChunkersSingleStart()
             QHash<QString, DataBlob*> validData = client->getData(dataHash);
 
             // Check the content of the data blob.
-            VisibilityData* visData = (VisibilityData*)validData.value("VisibilityData");
-            _printVisibilities(visData);
+            DoubleData* data = (DoubleData*)validData.value("DoubleData");
+            _printData(data);
         }
     }
     catch (QString e) {
@@ -267,27 +269,18 @@ void DirectStreamDataClientTest::test_twoChunkersSingleStart()
 
 /**
  * @details
- * Prints the contents of a visibility data blob.
+ * Prints the contents of a data blob.
  *
- * @param visData
+ * @param data
  */
-void DirectStreamDataClientTest::_printVisibilities(VisibilityData* visData)
+void DirectStreamDataClientTest::_printData(DoubleData* data)
 {
-    CPPUNIT_ASSERT(visData); // Check that the blob exists.
-    CPPUNIT_ASSERT(visData->nAntennas() != 0);
+    CPPUNIT_ASSERT(data); // Check that the blob exists.
+    CPPUNIT_ASSERT(data->size() != 0);
 
-    unsigned nChan = visData->nChannels();
-    unsigned nAnt = visData->nAntennas();
-    unsigned nPol = visData->nPolarisations();
-    for (unsigned p = 0; p < nPol; p++) {
-        for (unsigned c = 0; c < nChan; c++) {
-            complex_t* ptr = visData->ptr(c, p);
-            for (unsigned j = 0; j < nAnt; j++) {
-                for (unsigned i = 0; i < nAnt; i++) {
-                    std::cout << "VisData: " << ptr[i + j * nAnt] << std::endl;
-                }
-            }
-        }
+    double* ptr = data->ptr();
+    for (unsigned i = 0; i < data->size(); i++) {
+        std::cout << "Data: " << ptr[i] << std::endl;
     }
 }
 

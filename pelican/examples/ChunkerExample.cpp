@@ -1,45 +1,62 @@
 #include "ChunkerExample.h"
-#include <QUdpSocket>
+#include "pelican/utility/Config.h"
+#include <QtNetwork/QUdpSocket>
 
-/**
- *@details ChunkerExample 
- */
+// Register the chunker with the factory.
+PELICAN_DECLARE_CHUNKER(ChunkerExample)
+
+// Construct the example chunker.
 ChunkerExample::ChunkerExample(const ConfigNode& config)
     : AbstractChunker(config)
 {
-    // set packet size from the config
-    packetSize = config.getOption("packet","size").toInt();
+    // Set chunk size from the configuration.
+    // The host, port and data type are set in the base class.
+    _chunkSize = config.getOption("data", "chunkSize").toInt();
 }
 
-ChunkerExample::~ChunkerExample()
-{
-}
-
-// Creates a suitable device ready for reading
+// Creates a suitable device ready for reading.
 QIODevice* ChunkerExample::newDevice()
 {
-    // return an opened QUdpSocket
+    // Return an opened QUdpSocket.
     QUdpSocket* socket = new QUdpSocket;
-    QHostAddress hostAddress(host());
-    socket -> bind( hostAddress, port() );
+    socket->bind(QHostAddress(host()), port());
+
+    // Wait for the socket to bind.
+    while (socket->state() != QUdpSocket::BoundState) {}
     return socket;
 }
 
-// Called whenever there is data available on the device
+// Called whenever there is data available on the device.
 void ChunkerExample::next(QIODevice* device)
 {
+    // Get a pointer to the UDP socket.
+    QUdpSocket* udpSocket = static_cast<QUdpSocket*>(device);
+    _bytesRead = 0;
 
-    if( device->bytesAvailable() < packetSize ){ return; };
+    // Get writable buffer space for the chunk.
+    WritableData writableData = getDataStorage(_chunkSize);
+    if (writableData.isValid()) {
+        // Get pointer to start of writable memory.
+        char* ptr = (char*) (writableData.ptr());
 
-    // get some buffer space to write to
-    WritableData writableData = getDataStorage( packetSize );
-
-    if ( writableData.isValid())
-    {
-        writableData.write(device->read(packetSize), packetSize); //TODO
+        // Read datagrams for chunk from the UDP socket.
+        while (isActive() && _bytesRead < _chunkSize) {
+            // Read the datagram, but avoid using pendingDatagramSize().
+            bool ok = udpSocket->hasPendingDatagrams();
+            if (!ok) {
+                // MUST WAIT for the next datagram.
+                udpSocket->waitForReadyRead(100);
+                continue;
+            }
+            qint64 maxlen = _chunkSize - _bytesRead;
+            qint64 length = udpSocket->readDatagram(ptr + _bytesRead, maxlen);
+            if (length > 0)
+                _bytesRead += length;
+        }
     }
+
+    // Must discard the datagram if there is no available space.
     else {
-        // no space left so throw this chunk away
-        device->read(packetSize);
+        udpSocket->readDatagram(0, 0);
     }
 }

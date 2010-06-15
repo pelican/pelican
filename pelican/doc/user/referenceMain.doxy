@@ -1,0 +1,43 @@
+/**
+\page user_referenceMain Writing main()
+
+This section of the documentation describes how to write the \c main()
+function for Pelican applications, for both the pipeline and server binaries.
+
+\section user_referenceMain_pipeline Pipeline Binary
+
+The pipeline binary contains the data client, the pipeline driver, and one or
+more pipelines. Like any other C++ program, execution begins in \c main().
+
+Since Pelican makes extensive use of the excellent cross-platform
+<a href="http://qt.nokia.com/">Qt Library</a> for its data structures, timers
+and network modules, a \c QCoreApplication object must be created before
+anything else. Almost all of the Pelican functionality is encapsulated by the
+\c PipelineApplication class. Both of these application objects require the
+command line arguments to be passed to their constructors.
+
+\subsection user_referenceMain_pipeline_single Single Pipeline
+
+For each pipeline that must be run, call the
+\c PipelineApplication::registerPipeline() method on the pipeline application
+object. The method requires a pointer to an \c AbstractPipeline object (the
+base class of all Pelican pipelines) as its argument. 
+
+\include examples/mainPipelineExample.cpp
+
+\subsection user_referenceMain_pipeline_multiple Multiple Pipelines 
+
+It is possible to configure more than one pipeline to be operational in a
+single Pelican pipeline binary. The appropriate pipeline will be run,
+depending on the data that is available.
+
+Multiple pipelines that require the same remote data sets are, however, \em
+not supported for efficiency reasons, as copies of potentially very large data
+sets would need to be made for each pipeline.
+
+
+
+\section user_referenceMain_server Server Binary
+
+
+*/

@@ -92,7 +92,6 @@ include(modules.cmake)
 
 # === Doxygen documentation targets.
 include(UseDoxygen)
-set(DOXYFILE_LATEX "NO")
 add_doxygen_target(code DoxyfileCode)
 add_doxygen_target(user DoxyfileUser)
 add_doxygen_target(developer DoxyfileDeveloper)

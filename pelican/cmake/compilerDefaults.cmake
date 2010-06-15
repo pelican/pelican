@@ -37,9 +37,13 @@ elseif(CMAKE_CXX_COMPILER MATCHES icpc)
     add_definitions(-Wall -Wcheck)
     add_definitions(-wd383 -wd981)  # suppress remark/warning
     add_definitions(-ww111 -ww1572) # promote remark to warning
+    #add_definitions(-static-intel)
+    #add_definitions(-pg)
 else(CMAKE_COMPILER_IS_GNUCXX)
     # use defaults (and pray it works...)
 endif(CMAKE_COMPILER_IS_GNUCXX)
+
+#list(APPEND CMAKE_CXX_FLAGS "-pg")
 
 if(APPLE)
     add_definitions(-DDARWIN)

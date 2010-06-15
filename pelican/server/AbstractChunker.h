@@ -42,18 +42,19 @@ class AbstractChunker
         QString _host;
         quint16 _port;
         QIODevice* _device;
+        bool _active;
 
     public:
         /// Constructs a new AbstractChunker.
         AbstractChunker(const QString& type, QString host = "", quint16 port = 0)
-            : _dataManager(0), _type(type), _host(host), _port(port), _device(0) {}
+            : _dataManager(0), _type(type), _host(host), _port(port), _device(0), _active(true){}
 
         /// Constructs a new AbstractChunker.
         PELICAN_CONSTRUCT_TYPES(ConfigNode)
         AbstractChunker(const ConfigNode& config);
 
         AbstractChunker() :
-            _dataManager(0), _type(""), _host(""), _port(0), _device(0) {}
+            _dataManager(0), _type(""), _host(""), _port(0), _device(0), _active(true) {}
 
         /// Destroys the AbstractChunker.
         virtual ~AbstractChunker();
@@ -88,6 +89,9 @@ class AbstractChunker
         /// Sets the type name to be associated with this data.
         void setType(const QString& type) {_type = type;}
 
+        /// Stops the chunker.
+        void stop() {_active = false;}
+
         /// Return the type name to be associated with this data.
         const QString& type() const {return _type;}
 
@@ -98,6 +102,9 @@ class AbstractChunker
         /// out of scope the data will become available to be served
         /// automatically if it is valid.
         WritableData getDataStorage(size_t size) const;
+
+        /// Returns the state of the chunker (running or not).
+        bool isActive() {return _active;}
 };
 
 } // namespace pelican

@@ -2,9 +2,9 @@
 
 @mainpage Pelican Developer Guide
 
-@section intro Introduction.
+@section intro Introduction
 
-This is a developer guide to Pelican!
+This document provides a developer guide for Pelican.
 
 @li @subpage developer_codeConventions
 @li @subpage developer_build

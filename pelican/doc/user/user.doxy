@@ -1,0 +1,16 @@
+/**
+
+@page user_gettingStarted Getting Started
+
+Pelican provides a number of elements to build an efficient and
+flexible data processing pipeline. This guide will indicate what is required
+in order to:
+
+@li @subpage user_newProject "Create a new project and link against Pelican."
+@li @subpage user_dataImporter "Connect to and interpret an incoming data stream."
+@li @subpage user_pipelineWriter "Create a pipeline to process data."
+@li @subpage user_moduleWriter "Create new pipeline modules."
+@li @subpage user_dataOutput "Output data from the pipeline."
+@li @subpage user_sysadmin "Run and administer Pelican."
+
+*/

@@ -13,7 +13,7 @@ namespace pelican {
 
 class Config;
 class ConfigNode;
-class VisibilityData;
+class DoubleData;
 
 /**
  * @class DirectStreamDataClientTest
@@ -47,7 +47,7 @@ class DirectStreamDataClientTest : public CppUnit::TestFixture
         ~DirectStreamDataClientTest();
 
     private:
-        void _printVisibilities(VisibilityData* visData);
+        void _printData(DoubleData* data);
 
     private:
         QCoreApplication* _app;

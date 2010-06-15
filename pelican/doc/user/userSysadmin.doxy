@@ -1,0 +1,12 @@
+/**
+\page user_sysadmin Running and Administering Pelican
+
+\section user_sysadmin_introduction Introduction 
+
+The following sections of the reference documentation are relevant
+for running and administering Pelican:
+
+\li \link user_referenceConfiguration Configuration reference\endlink
+\li \link user_referenceRunning Running Pelican\endlink
+
+*/

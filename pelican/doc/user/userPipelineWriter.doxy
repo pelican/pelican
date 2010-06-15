@@ -1,0 +1,19 @@
+/**
+\page user_pipelineWriter Writing a New Pipeline
+
+\section user_pipelineWriter_introduction Introduction 
+
+The following sections of the reference documentation are relevant
+for writing Pelican pipelines:
+
+\li \link user_referencePipelines Pipeline reference\endlink
+\li \link user_referenceModules Module reference\endlink
+\li \link user_referenceDataBlobs Data Blob reference\endlink
+\li \link user_referenceMain Writing main()\endlink
+
+\section user_pipelineWriter_overview Overview
+
+This section will tell you how to build your own data processing pipeline and
+compile it into a working binary that you can launch on your data stream.
+
+*/

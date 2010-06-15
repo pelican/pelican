@@ -13,20 +13,18 @@ using namespace pelican;
  * @class ChunkerExample
  *  
  * @brief
- *   A simple example to demonstrate how to write a 
- *   Chunker
+ * A simple example to demonstrate how to write a data chunker.
  */
-
 class ChunkerExample : public AbstractChunker
 {
     public:
-        ChunkerExample( const ConfigNode& config );
-        virtual ~ChunkerExample();
+        ChunkerExample(const ConfigNode& config);
         virtual QIODevice* newDevice();
         virtual void next(QIODevice*);
 
     private:
-        int packetSize;
+        qint64 _chunkSize;
+        qint64 _bytesRead;
 };
 
 #endif // CHUNKEREXAMPLE_H 

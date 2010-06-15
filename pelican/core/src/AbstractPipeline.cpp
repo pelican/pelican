@@ -2,7 +2,7 @@
 #include "pelican/core/AbstractPipeline.h"
 #include "pelican/core/PipelineApplication.h"
 #include "pelican/core/PipelineDriver.h"
-#include <QtGlobal>
+#include <QtCore/QtGlobal>
 #include "pelican/utility/memCheck.h"
 
 namespace pelican {
@@ -14,6 +14,7 @@ namespace pelican {
 AbstractPipeline::AbstractPipeline()
 {
     // Initialise members.
+    _blobFactory = NULL;
     _moduleFactory = NULL;
     _pipelineDriver = NULL;
 }
@@ -29,14 +30,33 @@ AbstractPipeline::~AbstractPipeline()
 
 /**
  * @details
+ * Creates a new data blob using the pipeline application's data blob factory.
+ *
+ * This function should be called from the init() method to create the data
+ * blobs local to the pipeline.
+ *
+ * @param[in] type The type-name of the data blob to create.
+ *
+ * @return The method returns a pointer to the newly-created data blob.
+ */
+DataBlob* AbstractPipeline::createBlob(const QString& type)
+{
+    // Check that the blob factory exists.
+    if (_blobFactory == NULL)
+           throw QString("AbstractPipeline::createBlob(): No data blob factory.");
+
+    DataBlob* blob = _blobFactory->create(type);
+    return blob;
+}
+
+/**
+ * @details
  * Creates a new module using the pipeline application's module factory.
- * The known module types are listed in the ModuleFactory class description.
  *
  * This function should be called from the init() method to create the modules
  * required by the pipeline.
  *
  * @param[in] type The type-name of the module to create.
- *                 See the list of known module types in ModuleFactory.
  * @param[in] name The name of the module to create. Name is used in the XML
  *                 configuration to differentiate the use of several modules
  *                 of the same type within a pipeline.
@@ -77,6 +97,17 @@ const DataRequirements& AbstractPipeline::requiredDataRemote() const
 
 /**
  * @details
+ * Sets the pointer to the data blob factory.
+ *
+ * @param[in] factory Pointer to the data blob factory to use.
+ */
+void AbstractPipeline::setBlobFactory(FactoryGeneric<DataBlob>* factory)
+{
+    _blobFactory = factory;
+}
+
+/**
+ * @details
  * Sets the pointer to the module factory.
  *
  * @param[in] factory Pointer to the module factory to use.
@@ -84,18 +115,6 @@ const DataRequirements& AbstractPipeline::requiredDataRemote() const
 void AbstractPipeline::setModuleFactory(FactoryConfig<AbstractModule>* factory)
 {
     _moduleFactory = factory;
-}
-
-/**
- * @details
- * Sets the name of the pipeline to \p name.
- * This should be called from inside init().
- *
- * @param[in] name The name of the pipeline.
- */
-void AbstractPipeline::setName(const QString& name)
-{
-    _pipelineName = name;
 }
 
 /**

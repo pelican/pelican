@@ -1,12 +1,14 @@
 #ifndef PIPELINEAPPLICATION_H
 #define PIPELINEAPPLICATION_H
 
-#include <QString>
-#include "pelican/adapters/AbstractAdapter.h"
+#include "pelican/core/AbstractAdapter.h"
 #include "pelican/data/DataBlob.h"
 #include "pelican/modules/AbstractModule.h"
 #include "pelican/utility/FactoryConfig.h"
 #include "pelican/utility/FactoryGeneric.h"
+
+#include <QtCore/QString>
+
 
 /**
  * @file PipelineApplication.h
