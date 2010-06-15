@@ -4,12 +4,16 @@
 @section Overview
 
 You will need to send your processed data elsewhere, perhaps to a storage system, a monitoring and control system or 
-further processing pipeline. Pelican allows you to seperate the details of the destination of the data from the specification of
-what to write out using the OutputStreamer framework.
+further processing pipeline. Pelican allows you to separate the details of the destination of the data from the specification of
+what to write out using the @em OutputStreamer framework.
 
 You can insert an @em OutputStreamer anywhere in your pipeline to specify the appropriate data sets.
 
-The OutputStreamer framework should then be configured seperately to direct this data to its ultimate destination, using plugins for
-each supported seanario.
+The OutputStreamer framework should then be configured separately to direct this data to its ultimate destination, using plug-ins for
+each supported sceanario.
+
+@section user_framework_outputStreamerEssentials_pipeline OutputStreamers in the Pipeline
+
+@section user_framework_outputStreamerEssentials_plugins OutputStreamer Plugins
 
 */
