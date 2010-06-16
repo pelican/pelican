@@ -30,21 +30,13 @@ set(PELICAN_LIBRARIES ${PELICAN_LIBRARY})
 
 # Load Pelican library build configuration and find dependencies.
 # ==============================================================================
-include(pelicanBuildConfig)
-
-if (NOT pelican_mkl)
-    set(IGNORE_MKL true)
-endif (NOT pelican_mkl)
 
 include(dependencies)
 
 list(APPEND PELICAN_INCLUDES
     ${Boost_PROJECT_OPTIONS_INCLUDE_DIR}
-    ${CFITSIO_INCLUDE_DIR}
     ${QT_INCLUDE_DIR}
     ${QT_QTCORE_INCLUDE_DIR}
-    ${QT_QTXML_INCLUDE_DIR}
-    ${QT_QTNETWORK_INCLUDE_DIR}
 )
 
 list(APPEND PELICAN_LIBRARIES
@@ -52,8 +44,6 @@ list(APPEND PELICAN_LIBRARIES
     #${QT_QTXML_LIBRARY}
     #${QT_QTNETWORK_LIBRARY}
     #${Boost_PROGRAM_OPTIONS_LIBRARY}
-    #${pelican_math_libs}
-    #${CFITSIO_LIBRARIES}
 )
 
 # Handle the QUIETLY and REQUIRED arguments.

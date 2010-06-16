@@ -89,9 +89,6 @@ if( QT_VERSION_MINOR LESS 3 )
     add_definitions(-DBROKEN_QT_SET_HEADER)
 endif( QT_VERSION_MINOR LESS 3 )
 
-# === Save the build configuration for use with FindPelicanInstall.cmake.
-include(cmake/saveBuildConfig.cmake)
-
 # === Sub modules (recurse into sub-directories to build modules).
 include(modules.cmake)
 
@@ -105,4 +102,4 @@ add_doxygen_target(developer DoxyfileDeveloper)
 PROJECT_LIBRARY(pelican)
 
 # === libpelican-test.so build target.
-#PROJECT_LIBRARY(pelican-test)
+TEST_LIBRARY(pelican-testutils)

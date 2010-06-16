@@ -1,5 +1,8 @@
-SUBPACKAGE(serverTest server emulator)
+# Set dependencies for Pelican server tests.
+TEST_SUBPACKAGE(serverTest server emulator)
 
+# Build Pelican server testing library module.
+# ==============================================================================
 set(serverTestlib_src
     src/TestChunker.cpp
     src/TestUdpChunker.cpp
@@ -7,12 +10,20 @@ set(serverTestlib_src
     src/TestServer.cpp
     src/PelicanTestClient.cpp
 )
-
 set(serverTestLib_moc_sources
     TestServer.h
     TestChunker.h
 )
+QT4_WRAP_CPP(serverTestLib_moc_headers ${serverTestLib_moc_sources})
+TEST_SUBPACKAGE_LIBRARY(serverTestUtilities
+    ${serverTestlib_src}
+    ${serverTestLib_moc_headers}
+)
+SUBPACKAGE_ADD_LIBRARIES(serverTestUtilities)
 
+
+# Build single-threaded Pelcain server tests.
+# ==============================================================================
 set(serverTest_src
     src/serverTest.cpp
     src/ChunkerFactoryTest.cpp
@@ -24,28 +35,26 @@ set(serverTest_src
     src/SessionTest.cpp
     src/WritableDataTest.cpp
 )
+add_executable(serverTest ${serverTest_src} )
+target_link_libraries(serverTest
+    ${SUBPACKAGE_LIBRARIES}
+    ${CPPUNIT_LIBRARIES}
+    memoryTracer
+)
+add_test(serverTest serverTest)
 
-QT4_WRAP_CPP(
-    serverTestLib_moc_headers
-    ${serverTestLib_moc_sources} )
 
-# multi-threaded tests
-# these need to be seperate so as not to use the
-# single threaded utility libs
+# Build single-threaded Pelcain server tests.
+# ==============================================================================
 set(serverTestMT_src
     src/serverTest.cpp
     src/PelicanServerTest.cpp
     src/DataReceiverTest.cpp
 )
-
-add_library( serverTestUtilities ${serverTestlib_src} ${serverTestLib_moc_headers} )
-SUBPACKAGE_ADD_LIBRARIES(serverTestUtilities)
-
-add_executable(serverTest ${serverTest_src} )
-target_link_libraries(serverTest ${SUBPACKAGE_LIBRARIES} ${CPPUNIT_LIBRARIES} memoryTracer )
-
-add_executable(serverTestMT ${serverTestMT_src} )
-target_link_libraries(serverTestMT ${SUBPACKAGE_LIBRARIES} ${CPPUNIT_LIBRARIES} memoryTracerDummy )
-
-add_test(serverTest serverTest )
-add_test(serverTestMT serverTestMT )
+add_executable(serverTestMT ${serverTestMT_src})
+target_link_libraries(serverTestMT
+    ${SUBPACKAGE_LIBRARIES}
+    ${CPPUNIT_LIBRARIES}
+    memoryTracerDummy
+)
+add_test(serverTestMT serverTestMT)

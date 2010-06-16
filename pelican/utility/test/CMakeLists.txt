@@ -1,12 +1,15 @@
-SUBPACKAGE(utilityTest utility)
+# Set dependencies for Pelican utility tests.
+TEST_SUBPACKAGE(utilityTest utility)
 
+# Build Pelcain utility tests.
+# Note: The memory tracer utility is only availaible for linking in debug mode.        
+# ==============================================================================
 set(utilityTest_src
     src/utilityTest.cpp
     src/SocketTesterTest.cpp
     src/ConfigTest.cpp
     src/ConfigNodeTest.cpp
 )
-
 if(CMAKE_BUILD_TYPE MATCHES DEBUG|[Dd]ebug)
     list(APPEND utilityTest_src src/memoryTracerTest.cpp)
     add_executable(utilityTest ${utilityTest_src} )
@@ -22,9 +25,7 @@ else(CMAKE_BUILD_TYPE MATCHES DEBUG|[Dd]ebug)
         ${CPPUNIT_LIBRARIES}
     )
 endif(CMAKE_BUILD_TYPE MATCHES DEBUG|[Dd]ebug)
-
 add_test(utilityTest utilityTest)
-
 
 # Copy test xml files to build directory.
 include(CopyFiles)

@@ -23,6 +23,7 @@ include_directories(
 
 # === List of all libraries for single library install.
 set(PROJECT_LIBRARIES
+    #pelican-testutils
     pelican
     ${QT_QTCORE_LIBRARY}
     ${QT_QTXML_LIBRARY}
