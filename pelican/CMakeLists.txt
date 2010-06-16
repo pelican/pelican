@@ -84,6 +84,11 @@ add_definitions(-DUSE_MEMORY_TRACKER) # needed for release mode too?
 # === Setup project dependencies.
 include(cmake/dependencies.cmake)
 
+# === Set Broken Package flags
+if( QT_MINOR_VERSION LESS 3 )
+    add_definitions(-DBROKEN_QT_SET_HEADER)
+endif( QT_MINOR_VERSION LESS 3 )
+
 # === Save the build configuration for use with FindPelicanInstall.cmake.
 include(cmake/saveBuildConfig.cmake)
 
