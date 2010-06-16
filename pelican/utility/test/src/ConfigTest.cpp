@@ -273,7 +273,11 @@ void ConfigTest::test_testConfig()
     // Test configuration file that exists
     // Expect not to throw.
     {
-        CPPUNIT_ASSERT_NO_THROW(TestConfig("testConfig.xml", "utility"));
+#if QT_VERSION >= 0x040300
+            CPPUNIT_ASSERT_NO_THROW(TestConfig("testConfig.xml", "utility"));
+#else
+            // below Qt 4.3 searching for a file in a directory is not supported
+#endif
     }
 
     // Use case:

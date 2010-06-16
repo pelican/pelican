@@ -82,6 +82,7 @@ class TestConfig : public Config
         /// package library \p package.
         static QString findTestFile(const QString& fileName, const QString& package)
         {
+#if QT_VERSION >= 0x040300
             QStringList searchPaths;
             searchPaths << "../../../" + package + "/   test/data";
             searchPaths << "../../" + package + "/test/data";
@@ -91,6 +92,9 @@ class TestConfig : public Config
             searchPaths << "data";
             QDir::setSearchPaths("testData", searchPaths);
             QString name = "testData:" + fileName;
+#else
+            QString name = fileName;
+#endif
             QFile file(name);
             if (!file.exists()) {
                 throw QString("TestConfig: Configuration file %1 not found.").arg(fileName);
