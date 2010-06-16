@@ -177,7 +177,12 @@ void PipelineDriver::_checkDataRequirements()
      * try to modify the same data. */
     DataRequirements totalReq;
     foreach (DataRequirements req, _dataClient->dataRequirements()) {
+#ifdef BROKEN_QT_SET_HEADER
+        QSet<QString> temp = totalReq.streamData();
+        if ((temp & req.streamData()).size() > 0) {
+#else
         if ((totalReq.streamData() & req.streamData()).size() > 0) {
+#endif
             throw QString("Multiple pipelines requiring the same remote stream data are not supported.");
         }
         totalReq += req;

@@ -147,7 +147,12 @@ LockedData DataManager::getNext(const QString& type, const QSet<QString>& associ
                 static_cast<LockableStreamData*>(lockedData.object());
         QSet<QString> test = streamData->associateDataTypes();
 
+#ifdef BROKEN_QT_SET_HEADER
+        QSet<QString> temp = associateData;
+        if(! ( temp - test ).isEmpty() ) {
+#else
         if(! ( associateData - test ).isEmpty() ) {
+#endif // BROKEN_QT_SET_HEADER
             return LockedData(0);
         }
     }

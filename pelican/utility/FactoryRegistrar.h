@@ -66,7 +66,8 @@ template<class B> struct RegBase<B, n> { \
         if (types().count(id) == 0) \
             throw QString("FactoryRegistrar: Unknown type '" + id + "'"); \
     } \
-\
+       \
+    virtual ~RegBase() {}; \
     /* Interface to create the object */ \
     virtual B* create(BOOST_PP_ENUM(n, PARAM, ~)) const = 0; \
 \

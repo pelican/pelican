@@ -65,7 +65,14 @@ void DataRequirements::addStreamData(const QSet<QString>& list)
 }
 
 QSet<QString> DataRequirements::allData() const {
+#ifdef BROKEN_QT_SET_HEADER
+    // The Qt header misses a const declaration so we have to make
+    // a double copy
+    QSet<QString> temp = _serviceData;
+    return temp + _streamData;
+#else 
     return _serviceData + _streamData;
+#endif
 }
 
 /**

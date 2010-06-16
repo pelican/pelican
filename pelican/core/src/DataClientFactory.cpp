@@ -33,7 +33,7 @@ AbstractDataClient* DataClientFactory::create(const QString& type,
     // Construct the adapters and add them to the DataTypes structure.
     foreach (const DataRequirements& req, requirements)
     {
-        QSet<QString> all = req.streamData() + req.serviceData();
+        QSet<QString> all = req.allData();
         foreach (const QString& dataType, all)
         {
             if (!adapterNames.contains(dataType))
