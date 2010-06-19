@@ -1,0 +1,78 @@
+Updated cmake scripts:
+
+top level interface:
+
+Build the library pelican from the listed sub-packages comm, data, server, and
+emulator.
+    PACKAGE_LIBRARY(pelican comms data server emulator)
+
+Build the library pelican-testutils from the sub-packages dataTest and serverTest.
+    PACKAGE_LIBRARY(pelican-testutils dataTest serverTest ...)
+    
+    
+This macro will have to load the sub-package files created with the macros 
+described below and link the list of objects gathered into the single library.
+
+ie.
+--------------------------------------------------------------------------------
+-- load list of objects from sub-packages.
+add_library(pelican ${list of all objects from sub packages})
+
+-- load list of external dependencies of sub-packages
+target_link_libraries(pelican
+    externalLib1
+    externalLib2
+)
+--------------------------------------------------------------------------------
+
+    
+================================================================================
+To create the module1 subpackage library.
+    
+/module1/CMakeLists.txt
+
+-  has to know:
+     == includes for its source and any other that are used by dependencies
+     == objects needed to link from other subpackages and from external libs.
+     == source code for the subpackage
+
+- needs to create a file from cmake script that lists:
+    == all includes needed for the subpackage
+    == all libs needed to link with the subpackage (subpackage lib deps.)
+    == a list of the object files created by the subpackage build.
+    
+eg.
+--------------------------------------------------------------------------------
+# List of source code for the sub-package
+set(module1_SRC
+    src/class1.cpp
+    src/class2.cpp
+)
+
+# Include directories for the sub-package (other than those of other sub-packages)
+include_directories(
+    /path/to/include/for/module
+    /another/include/path
+)
+
+# Declare the subpackage and set dependencies to other sub-packages
+SUBPACKAGE(module1 dependModule2 ...)
+
+# Create the sub-package library and 
+SUBPACKAGE_LIBRARY(module1 ${module1_SRC})
+
+# Link the sub-package library with the following libraries.
+target_link_libraries(module1
+    ${SUBPACKAGE_LIBS}
+    externalLib1
+    externalLib2
+)
+---------------------------------------------------------------------------------
+
+
+SUBPACKAGE -- ges include paths, module libs and external libs of dependent subpackages setting subpackage variables.
+
+SUBPACKAGE_LIBRARY -- builds the libraray and creates the subpackage module file
+which contains the list of subpackage objects, include paths, lib deps etc.
+
+
