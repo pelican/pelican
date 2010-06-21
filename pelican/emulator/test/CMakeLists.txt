@@ -1,12 +1,13 @@
-# Set dependencies for Pelican data tests.
-USE_SUBPACKAGES(emulator)
 
 # Build Pelican emulator tests.
 # ==============================================================================
+USE_SUBPACKAGES(emulator)
+
 set(emulatorTest_src
     src/emulatorTest.cpp
 )
-add_executable(emulatorTest ${emulatorTest_src} )
+add_executable(emulatorTest ${emulatorTest_src})
+
 target_link_libraries(emulatorTest
     ${SUBPACKAGE_LIBRARIES}
     ${CPPUNIT_LIBRARIES}

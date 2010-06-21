@@ -99,7 +99,7 @@ add_doxygen_target(user DoxyfileUser)
 add_doxygen_target(developer DoxyfileDeveloper)
 
 # === libpelican.so build target.
-#PROJECT_LIBRARY(pelican)
+PROJECT_LIBRARY(pelican comms core data emulator modules output server utility)
 
 # === libpelican-test.so build target.
-#TEST_LIBRARY(pelican-testutils)
+PROJECT_LIBRARY(pelican-testutils dataTestUtils serverTestUtils coreTestUtils)

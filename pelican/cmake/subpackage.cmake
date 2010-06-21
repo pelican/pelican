@@ -182,8 +182,6 @@ endmacro(SUBPACKAGE_ADD_LIBRARIES)
 #
 macro(USE_SUBPACKAGES)
 
-    # Process packages that the sub-package depends on.
-    # --------------------------------------------------------------------------
     set(subpackage_${name}_DEPS ${ARGN})
 
     # If any dependencies exist.    
@@ -212,6 +210,9 @@ macro(USE_SUBPACKAGES)
         _SUBPACKAGE_GET_LIBS(${dep})        
     endforeach(dep)
     
+    
+    ## remove duplicates in SUBPACKAGE_LIBRARIES
+    
 endmacro(USE_SUBPACKAGES)
 
 
@@ -226,13 +227,17 @@ endmacro(USE_SUBPACKAGES)
 #
 macro(_SUBPACKAGE_GET_LIBS name)
     if(NOT subpackage_${name}_added)
-        foreach(pack ${SUBPACKAGE_${name}_DEPS})
+    
+        foreach(pack ${subpackage_${name}_DEPS})
             _SUBPACKAGE_GET_LIBS(${pack})
         endforeach(pack)
-        if(SUBPACKAGE_${name}_LIBS)
-            list(INSERT SUBPACKAGE_LIBRARIES 0 ${SUBPACKAGE_${name}_LIBS})
-        endif(SUBPACKAGE_${name}_LIBS)
+        
+        if(subpackage_${name}_LIBS)
+            list(INSERT SUBPACKAGE_LIBRARIES 0 ${subpackage_${name}_LIBS})
+        endif(subpackage_${name}_LIBS)
+        
         set(subpackage_${name}_added TRUE)
+        
     endif(NOT subpackage_${name}_added)
 endmacro(_SUBPACKAGE_GET_LIBS)
 
