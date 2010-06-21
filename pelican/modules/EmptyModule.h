@@ -23,7 +23,7 @@ class EmptyModule : public AbstractModule
 {
     public:
         /// Module constructor.
-        EmptyModule(const ConfigNode& config) {}
+        EmptyModule(const ConfigNode& config) : AbstractModule(config) {}
 
         /// Module destructor.
         ~EmptyModule() {}
