@@ -1,5 +1,5 @@
 # Set dependencies for Pelican utility tests.
-TEST_SUBPACKAGE(utilityTest utility)
+USE_SUBPACKAGES(utility)
 
 # Build Pelcain utility tests.
 # Note: The memory tracer utility is only availaible for linking in debug mode.        

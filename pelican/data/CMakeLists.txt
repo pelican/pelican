@@ -7,7 +7,7 @@ set(data_src
 
 SUBPACKAGE_LIBRARY(data ${data_src} )
 
-SUBPACKAGE_ADD_LIBRARIES(
+SUBPACKAGE_ADD_LIBRARIES(data
     ${QT_QTCORE_LIBRARY}
 )
 

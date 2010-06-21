@@ -1,8 +1,7 @@
-# Set dependencies for Pelican core tests.
-TEST_SUBPACKAGE(coreTest core data utility serverTest emulator)
 
 # Build Pelican core testing library module.
 # ==============================================================================
+SUBPACKAGE(coreTestUtils core data utility serverTestUtils emulator)
 set(coreTestLibrary_src
     src/coreTest.cpp
     src/TestPipeline.cpp
@@ -10,12 +9,12 @@ set(coreTestLibrary_src
     src/TestAdapter.cpp
     src/TestStreamAdapter.cpp
 )
-TEST_SUBPACKAGE_LIBRARY(coreTestUtilities ${coreTestLibrary_src})
-SUBPACKAGE_ADD_LIBRARIES(coreTestUtilities)
+SUBPACKAGE_LIBRARY(coreTestUtils ${coreTestLibrary_src})
 
 
 # Build single-threaded Pelcain core tests.
 # ==============================================================================
+USE_SUBPACKAGES(core data utility serverTestUtils emulator coreTestUtils)
 set(coreTest_src
     src/coreTest.cpp
     src/AdapterRealDataTest.cpp

@@ -1,17 +1,15 @@
-# Set dependencies for Pelican data tests.
-TEST_SUBPACKAGE(dataTest data)
-
-
 # Build Pelican data testing library module.
 # ==============================================================================
+SUBPACKAGE(dataTestUtils data)
 set(dataTestLib_src
     src/TestDataBlob.cpp
 )
-TEST_SUBPACKAGE_LIBRARY(dataTestLib ${dataTestLib_src})
-SUBPACKAGE_ADD_LIBRARIES(dataTestLib) ## HACK remove soon.
+SUBPACKAGE_LIBRARY(dataTestUtils ${dataTestLib_src})
+
 
 # Build Pelcain data tests.
 # ==============================================================================
+USE_SUBPACKAGES(dataTestUtils)
 set(dataTest_src
     src/dataTest.cpp
     src/DataRequirementsTest.cpp

@@ -39,7 +39,7 @@ QT4_WRAP_CPP(server_moc_sources ${server_moc_headers})
 SUBPACKAGE_LIBRARY(server ${server_src} ${server_moc_sources})
 
 # Specify dependencies.
-SUBPACKAGE_ADD_LIBRARIES(
+SUBPACKAGE_ADD_LIBRARIES(server
     ${QT_QTCORE_LIBRARY}
     ${QT_QTNETWORK_LIBRARY}
 )

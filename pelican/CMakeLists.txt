@@ -48,7 +48,7 @@ set(${PROJECT_NAME}_PATCH_LEVEL 0)
 
 # === CMake setup.
 list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_SOURCE_DIR}/cmake)
-include(cmake/packagemacros.cmake)
+include(cmake/packagemacrosNew.cmake)
 enable_testing()
 
 # === Options.
@@ -99,7 +99,7 @@ add_doxygen_target(user DoxyfileUser)
 add_doxygen_target(developer DoxyfileDeveloper)
 
 # === libpelican.so build target.
-PROJECT_LIBRARY(pelican)
+#PROJECT_LIBRARY(pelican)
 
 # === libpelican-test.so build target.
-TEST_LIBRARY(pelican-testutils)
+#TEST_LIBRARY(pelican-testutils)

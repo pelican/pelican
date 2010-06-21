@@ -1,8 +1,9 @@
-# Set dependencies for Pelican comms tests.
-TEST_SUBPACKAGE(commsTest dataTest comms)
 
 # Build Pelican comms tests.
 # ==============================================================================
+# Set dependencies for Pelican comms tests.
+USE_SUBPACKAGES(dataTestUtils comms)
+
 set(commsTest_src
     src/commsTest.cpp
     src/DataTest.cpp

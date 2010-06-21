@@ -1,5 +1,5 @@
 # Set dependencies for Pelican data tests.
-TEST_SUBPACKAGE(emulatorTest emulator)
+USE_SUBPACKAGES(emulator)
 
 # Build Pelican emulator tests.
 # ==============================================================================

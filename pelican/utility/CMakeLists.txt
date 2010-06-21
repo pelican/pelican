@@ -10,7 +10,7 @@ set(utility_src
 # The general utility library.
 SUBPACKAGE_LIBRARY(utility ${utility_src})
 
-SUBPACKAGE_ADD_LIBRARIES(
+SUBPACKAGE_ADD_LIBRARIES(utility
     ${QT_QTCORE_LIBRARY}
     ${QT_QTXML_LIBRARY}
     ${QT_QTNETWORK_LIBRARY}
