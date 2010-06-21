@@ -1,9 +1,6 @@
 #include "ModuleExample.h"
 #include "pelican/utility/Config.h"
 
-// Register the module with the factory.
-PELICAN_DECLARE_MODULE(ModuleExample)
-
 // Construct the example module.
 ModuleExample::ModuleExample(const ConfigNode& config)
     : AbstractModule(config)

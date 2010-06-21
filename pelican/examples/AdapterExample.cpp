@@ -1,10 +1,6 @@
 #include "AdapterExample.h"
 #include "pelican/examples/DataBlobExample.h"
 
-
-// Register the adapter with the factory.
-PELICAN_DECLARE_ADAPTER(AdapterExample)
-
 /**
  * @details AdapterExample
  * You will be passed a config node in the constructor

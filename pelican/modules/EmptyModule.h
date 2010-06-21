@@ -30,6 +30,8 @@ class EmptyModule : public AbstractModule
 
 };
 
+PELICAN_DECLARE_MODULE(EmptyModule)
+
 } // namespace pelican
 
 #endif // EMPTYMODULE_H

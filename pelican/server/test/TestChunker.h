@@ -61,6 +61,8 @@ class TestChunker : public QThread, public AbstractChunker
         size_t _size;
 };
 
+PELICAN_DECLARE_CHUNKER(TestChunker)
+
 } // namespace pelican
 
 #endif // TESTCHUNKER_H

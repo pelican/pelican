@@ -11,7 +11,6 @@ using namespace pelican;
  * @brief
  *    An example of a Stream Adapter class
  */
-
 class AdapterExample : public AbstractStreamAdapter
 {
     public:
@@ -25,5 +24,8 @@ class AdapterExample : public AbstractStreamAdapter
         unsigned _nSamples;
         unsigned _nBitsPerSample;
 };
+
+// Register the adapter.
+PELICAN_DECLARE_ADAPTER(AdapterExample)
 
 #endif // ADAPTER_EXAMPLE_H

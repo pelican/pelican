@@ -28,4 +28,7 @@ class ModuleExample : public AbstractModule
         Operation optype;
 };
 
+// Register the module.
+PELICAN_DECLARE_MODULE(ModuleExample)
+
 #endif // MODULEEXAMPLE_H

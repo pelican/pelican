@@ -42,7 +42,5 @@ void TestDataBlob::deserialise(QIODevice& device)
     in >> _data;
 }
 
-PELICAN_DECLARE_DATABLOB(TestDataBlob)
-
 } // namespace pelican
 

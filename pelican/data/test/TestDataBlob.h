@@ -18,7 +18,6 @@ namespace pelican {
  * @details
  * 
  */
-
 class TestDataBlob : public DataBlob
 {
     public:
@@ -33,5 +32,8 @@ class TestDataBlob : public DataBlob
         QString _data;
 };
 
+PELICAN_DECLARE_DATABLOB(TestDataBlob)
+
 } // namespace pelican
+
 #endif // TESTDATABLOB_H 

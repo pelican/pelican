@@ -41,8 +41,13 @@ class DataBlobExample : public DataBlob
         unsigned size() const { return _data.size(); }
 };
 
+PELICAN_DECLARE_DATABLOB(DataBlobExample)
+
 // Other example data blobs used by the example pipeline.
 typedef DataBlobExample DataBlobExample1;
 typedef DataBlobExample DataBlobExample2;
+
+PELICAN_DECLARE_DATABLOB(DataBlobExample1)
+PELICAN_DECLARE_DATABLOB(DataBlobExample2)
 
 #endif // DATABLOBEXAMPLE_H

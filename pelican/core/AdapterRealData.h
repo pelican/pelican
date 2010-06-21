@@ -36,6 +36,8 @@ class AdapterRealData : public AbstractStreamAdapter
         void deserialise(QIODevice* in);
 };
 
+PELICAN_DECLARE_ADAPTER(AdapterRealData)
+
 } // namespace pelican
 
 #endif // ADAPTERREALDATA_H

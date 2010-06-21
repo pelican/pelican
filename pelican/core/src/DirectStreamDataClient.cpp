@@ -17,8 +17,6 @@
 
 namespace pelican {
 
-PELICAN_DECLARE_CLIENT(DirectStreamDataClient)
-
 class ConfigNode;
 
 /**

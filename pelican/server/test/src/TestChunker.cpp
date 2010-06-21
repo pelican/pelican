@@ -9,8 +9,6 @@
 
 namespace pelican {
 
-PELICAN_DECLARE_CHUNKER(TestChunker)
-
 /**
  * @details
  * Constructs a new TestChunker.

@@ -66,6 +66,7 @@ class FloatData : public ArrayData<float>
         ~FloatData() {}
 };
 
+PELICAN_DECLARE_DATABLOB(FloatData)
 
 /**
  * @class DoubleData
@@ -86,6 +87,7 @@ class DoubleData : public ArrayData<double>
         ~DoubleData() {}
 };
 
+PELICAN_DECLARE_DATABLOB(DoubleData)
 
 } // namespace pelican
 

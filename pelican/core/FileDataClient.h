@@ -47,6 +47,8 @@ class FileDataClient : public AbstractDataClient
         void _getConfig();
 };
 
+PELICAN_DECLARE_CLIENT(FileDataClient)
+
 } // namespace pelican
 
 #endif // FILEDATACLIENT_H

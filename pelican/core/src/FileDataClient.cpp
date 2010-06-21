@@ -12,8 +12,6 @@
 
 namespace pelican {
 
-PELICAN_DECLARE_CLIENT(FileDataClient)
-
 /**
  * @details
  * This creates a new file data client.

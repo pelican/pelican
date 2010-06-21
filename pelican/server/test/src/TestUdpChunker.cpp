@@ -9,9 +9,6 @@
 
 namespace pelican {
 
-// Register the chunker with the factory.
-PELICAN_DECLARE_CHUNKER(TestUdpChunker)
-
 /**
  * @details
  * Constructs a new TestUdpChunker.

@@ -7,8 +7,6 @@
 
 namespace pelican {
 
-PELICAN_DECLARE_ADAPTER(AdapterRealData)
-
 /**
  * @details
  * Constructs a stream adapter for a real-valued data set.

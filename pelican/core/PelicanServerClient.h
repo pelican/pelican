@@ -52,6 +52,8 @@ class PelicanServerClient : public AbstractDataClient
         friend class PelicanServerClientTest;
 };
 
+PELICAN_DECLARE_CLIENT(PelicanServerClient)
+
 } // namespace pelican
 
 #endif // PELICANSERVERCLIENT_H 

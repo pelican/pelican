@@ -27,4 +27,7 @@ class ChunkerExample : public AbstractChunker
         qint64 _bytesRead;
 };
 
+// Register the chunker.
+PELICAN_DECLARE_CHUNKER(ChunkerExample)
+
 #endif // CHUNKEREXAMPLE_H 

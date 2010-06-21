@@ -4,8 +4,6 @@
 
 namespace pelican {
 
-PELICAN_DECLARE_MODULE(EmptyModule)
-
 /**
  * @details
  * Module constructor.

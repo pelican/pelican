@@ -60,6 +60,8 @@ class DirectStreamDataClient : public AbstractDataClient
         DataManager* _dataManager;
 };
 
+PELICAN_DECLARE_CLIENT(DirectStreamDataClient)
+
 } // namespace pelican
 
 #endif // DIRECTSTREAMDATACLIENT_H

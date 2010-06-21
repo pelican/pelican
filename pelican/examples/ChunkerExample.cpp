@@ -2,9 +2,6 @@
 #include "pelican/utility/Config.h"
 #include <QtNetwork/QUdpSocket>
 
-// Register the chunker with the factory.
-PELICAN_DECLARE_CHUNKER(ChunkerExample)
-
 // Construct the example chunker.
 ChunkerExample::ChunkerExample(const ConfigNode& config)
     : AbstractChunker(config)

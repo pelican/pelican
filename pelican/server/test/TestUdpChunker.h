@@ -42,6 +42,9 @@ class TestUdpChunker : public AbstractChunker
         qint64 _bytesRead;
 };
 
+// Register the chunker.
+PELICAN_DECLARE_CHUNKER(TestUdpChunker)
+
 } // namespace pelican
 
 #endif // TESTUDPCHUNKER_H
