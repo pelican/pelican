@@ -28,9 +28,9 @@ To create a new data chunker:
     When enough data has arrived to make a chunk, call \c getDataStorage()
     to return a \c WritableData object. Finally, use WritableData::write()
     to save the chunk of data into the data manager.
-\li New chunkers must register their existence with the chunker factory.
-    Use the PELICAN_DECLARE_CHUNKER() macro in the global scope of the
-    chunker's source (*.cpp) file to register the chunker, supplying the name
+\li Chunkers must register their existence with the chunker factory.
+    Use the \c PELICAN_DECLARE_CHUNKER() macro under the class definition
+    in the chunker's header file to register the chunker, supplying the name
     of the chunker class as the macro argument. Do not use quotes around
     the name.
     

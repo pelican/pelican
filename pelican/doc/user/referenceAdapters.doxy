@@ -52,8 +52,8 @@ To create a new adapter :
         the adapter by though data members of the base class, set by the data client
         _chunkSize and _serviceData.
 \li Adapters must register their existence with the adapter factory.
-    Use the \c PELICAN_DECLARE_ADAPTER() macro in the global scope of the
-    adapter's source (*.cpp) file to register the adapter, supplying the name
+    Use the \c PELICAN_DECLARE_ADAPTER() macro under the class definition
+    in the adapter's header file to register the adapter, supplying the name
     of the adapter class as the macro argument. Do not use quotes around the
     name.
 \li The data object being populated by the adapter must be a Pelican data blob

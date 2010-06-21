@@ -24,9 +24,9 @@ To create a new pipeline module:
     you have considerable freedom to define the interfaces required.
     By convention, a \c run() method should be called with one or more input
     and output data blobs as function arguments.
-\li New modules must register their existence with the module factory.
-    Use the PELICAN_DECLARE_MODULE() macro in the global scope of the
-    module's source (*.cpp) file to register the module, supplying the name
+\li Modules must register their existence with the module factory.
+    Use the PELICAN_DECLARE_MODULE() macro in the under the class definition
+    in the module's header file to register the module, supplying the name
     of the module class as the macro argument. Do not use quotes around
     the name.
 
