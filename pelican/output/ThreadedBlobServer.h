@@ -30,7 +30,7 @@ class ThreadedBlobServer : public QThread
     public:
         ThreadedBlobServer( quint16 port, QObject* parent=0 );
         ~ThreadedBlobServer();
-        void send(const QString& streamName, const DataBlob& blob);
+        void send(const QString& streamName, const DataBlob* incoming);
         qint16 serverPort() const;
 
     protected:

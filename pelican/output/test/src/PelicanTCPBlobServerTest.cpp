@@ -65,9 +65,9 @@ void PelicanTCPBlobServerTest::test_connection()
     // Expect: TODO
     //
     // Create and configure TCP server
-    QString xml = "<TCPBlob>"
+    QString xml = "<PelicanTCPBlobServer>"
                   "   <connection port=\"0\"/>"  // 0 = find unused system port
-                  "</TCPBlob>";
+                  "</PelicanTCPBlobServer>";
     ConfigNode config(xml);
     PelicanTCPBlobServer server(config, _app);
     sleep(1);
@@ -93,7 +93,7 @@ void PelicanTCPBlobServerTest::test_connection()
     // Test Server send
     TestDataBlob blob;
     blob.setData("Testing TCPServer");
-    server.send("testData", blob);
+    server.send("testData", &blob);
 
     // Evaluate the response from the server
     //tcpSocket.waitForReadyRead();

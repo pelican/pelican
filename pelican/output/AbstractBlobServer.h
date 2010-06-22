@@ -6,6 +6,8 @@
 class QBuffer;
 
 #include "pelican/server/DataManager.h"
+#include "pelican/modules/AbstractModule.h"
+#include "pelican/utility/ConfigNode.h"
 
 /**
  * @file AbstractBlobServer.h
@@ -23,16 +25,16 @@ namespace pelican {
  * 
  */
 
-class AbstractBlobServer
+class AbstractBlobServer: public AbstractModule
 {
 
     public:
         /// comment
-        AbstractBlobServer();
+        AbstractBlobServer(const ConfigNode& configNode): AbstractModule(configNode) { }
         /// comment
-        virtual ~AbstractBlobServer();
+        virtual ~AbstractBlobServer() { }
         /// comment
-        virtual void send(const QString& streamName, const DataBlob&) = 0;
+        virtual void send(const QString& streamName, const DataBlob* dataBlob) = 0;
 
     protected:
         DataManager* _dataManager;

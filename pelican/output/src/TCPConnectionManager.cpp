@@ -16,7 +16,8 @@
 namespace pelican {
 
 /**
- *@details TCPConnectionManager 
+ * @details 
+ * TCPConnectionManager constructor
  */
 TCPConnectionManager::TCPConnectionManager(quint16 port, QObject *parent)
                      : QObject(parent), _port(port)
@@ -27,27 +28,32 @@ TCPConnectionManager::TCPConnectionManager(quint16 port, QObject *parent)
 }
 
 /**
- *@details
+ * @details
+ * TCPConnectionManager destructor
  */
 TCPConnectionManager::~TCPConnectionManager()
 {
     delete _tcpServer;
-    // Wait for main thread to finish.
-    //do { quit(); } while( ! wait(10) );
 }
 
 
+/**
+ * @details
+ * Return the port bound to the server
+ */
 qint16 TCPConnectionManager::serverPort() const
 {
     return _tcpServer->serverPort();
 }
 
 /**
- *@details
+ * @details
+ * Accpet client connections for data
  */
 void TCPConnectionManager::acceptClientConnection() 
 {
-    std::cout << "adding new client" << std::endl;
+    std::cout << "Adding new client" << std::endl;
+    
     // Get new client connection
     QTcpSocket *client = _tcpServer -> nextPendingConnection();
 
@@ -57,7 +63,7 @@ void TCPConnectionManager::acceptClientConnection()
     // Check if client sent the correct request
     if (static_cast<ServerRequest&>(*request).type() != ServerRequest::StreamData) {
         std::cerr << "Invalid client request" << std::endl;
-        client->close();
+        client -> close();
         return;
     }
 
@@ -66,7 +72,7 @@ void TCPConnectionManager::acceptClientConnection()
     // Check for invalid data requirements
     if (req.isEmpty()) {
         std::cerr << "Invalid client data requrements" << std::endl;
-        client->close();
+        client -> close();
         return;
     }
 
@@ -83,14 +89,16 @@ void TCPConnectionManager::acceptClientConnection()
         ++it;
     }
 
-    // Connect socket disconnected() and error() signals
-    //connect(client, SIGNAL(disconnected()), this, SLOT(connectionLost()), Qt::DirectConnection);
+    // Connect socket error() signals
     connect(client, SIGNAL(error(QAbstractSocket::SocketError)), this, 
                     SLOT(connectionError(QAbstractSocket::SocketError)), 
                     Qt::DirectConnection);
-
 }
 
+/**
+ * @details
+ * Send data to connected clients
+ */
 void TCPConnectionManager::send(const QString& streamName, const DataBlob& blob)
 {
     QMutexLocker sendlocker(&_sendMutex);
@@ -105,15 +113,18 @@ void TCPConnectionManager::send(const QString& streamName, const DataBlob& blob)
         QMutexLocker locker(&_mutex);
         clientListCopy = _clients[streamName];
     }
-    for(int i=0; i < clientListCopy.size(); ++i ) {
+
+    for(int i = 0; i < clientListCopy.size(); ++i ) {
+
         QTcpSocket* client =  clientListCopy[i];
+
         // Send data to client
         try {
-            std::cout << "sending to:" << client->peerName().toStdString() << std::endl;
-            Q_ASSERT( client->state() == QAbstractSocket::ConnectedState );
-            _protocol->send(*client, streamName, blob);
-            client->flush();
-            std::cout << "finished sending" << std::endl;
+            std::cout << "Sending to:" << client->peerName().toStdString() << std::endl;
+            Q_ASSERT( client -> state() == QAbstractSocket::ConnectedState );
+            _protocol -> send(*client, streamName, blob);
+            client -> flush();
+            std::cout << "Finished sending" << std::endl;
         }
         catch ( ... ) 
         {
@@ -124,6 +135,10 @@ void TCPConnectionManager::send(const QString& streamName, const DataBlob& blob)
     }
 }
 
+/**
+ * @details
+ * Disconnect client socket
+ */
 void TCPConnectionManager::_killClient(QTcpSocket* client)
 {
     QMutexLocker locker(&_mutex);
@@ -136,7 +151,8 @@ void TCPConnectionManager::_killClient(QTcpSocket* client)
 
 
 /**
- *@details
+ * @details
+ * Socket error slot
  */
 void TCPConnectionManager::connectionError(QAbstractSocket::SocketError)
 {
@@ -144,21 +160,22 @@ void TCPConnectionManager::connectionError(QAbstractSocket::SocketError)
 }
 
 /**
- *@details
+ * @details
+ * Run the TCP server, listening for incoming client requests
  */
 void TCPConnectionManager::run() 
 {
     // start TCP Server, which listens for incoming connections
-
     if (!_tcpServer -> listen( QHostAddress::Any, _port))
         std::cerr << QString("Unable to start QTcpServer: %1").arg( _tcpServer -> errorString()).toStdString();
-    else {
+    else
         connect(_tcpServer, SIGNAL(newConnection()), this, SLOT(acceptClientConnection()), Qt::DirectConnection );
-        //exec();
-    }
-
 }
 
+/**
+ * @details
+ * Return the clients which are registered for a certain datablob type
+ */
 int TCPConnectionManager::clientsForType(const QString& type) const
 {
     if( _clients.contains(type) )

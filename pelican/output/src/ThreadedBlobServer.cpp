@@ -42,10 +42,10 @@ void ThreadedBlobServer::run()
  * @details
  * emit a signal to the connection manager in the thread
  */
-void ThreadedBlobServer::send(const QString& streamName, const DataBlob& blob)
+void ThreadedBlobServer::send(const QString& streamName, const DataBlob* blob)
 {
     _sendStream = streamName;
-    _sendBlob = &blob;
+    _sendBlob = blob;
     QTimer::singleShot( 0, this , SLOT( _send()) );
 }
 

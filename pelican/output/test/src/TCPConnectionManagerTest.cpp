@@ -38,14 +38,10 @@ void TCPConnectionManagerTest::setUp()
 
     _clientProtocol = new PelicanClientProtocol;
     _server = new TCPConnectionManager(0);
-//    _server->start();
-//    bool i;
-//    do { i = _server->isRunning(); sleep(1); } while ( ! i );
 }
 
 void TCPConnectionManagerTest::tearDown()
 {
-//    _server->quit();
     delete _server;
     delete _clientProtocol;
     delete _app;
