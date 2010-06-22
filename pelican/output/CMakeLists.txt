@@ -6,19 +6,12 @@ set(output_moc_headers
     TCPConnectionManager.h
 )
 
-<<<<<<< HEAD
+
 set(output_src
-    src/AbstractBlobServer.cpp
+#    src/AbstractBlobServer.cpp
     src/PelicanTCPBlobServer.cpp
     src/TCPConnectionManager.cpp
     src/ThreadedBlobServer.cpp
-=======
-set( output_src
-#     src/AbstractBlobServer.cpp
-     src/PelicanTCPBlobServer.cpp
-     src/TCPConnectionManager.cpp
-     src/ThreadedBlobServer.cpp
->>>>>>> 03ee30cb832b305edbc3b0322d32f0d3486eced6
 )
 
 QT4_WRAP_CPP(output_moc_src ${output_moc_headers})
