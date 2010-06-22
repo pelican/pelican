@@ -63,7 +63,7 @@ void TCPConnectionManagerTest::test_send()
     CPPUNIT_ASSERT_EQUAL( 1, _server->clientsForType("testData") );
     TestDataBlob blob;
     blob.setData("sometestData");
-    _server->send("testData",blob);
+    _server->send("testData",&blob);
     sleep(1);
 
     CPPUNIT_ASSERT( client->state() == QAbstractSocket::ConnectedState );

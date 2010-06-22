@@ -43,7 +43,7 @@ TCPConnectionManager::~TCPConnectionManager()
  */
 qint16 TCPConnectionManager::serverPort() const
 {
-    return _tcpServer->serverPort();
+    return _tcpServer -> serverPort();
 }
 
 /**
@@ -99,7 +99,7 @@ void TCPConnectionManager::acceptClientConnection()
  * @details
  * Send data to connected clients
  */
-void TCPConnectionManager::send(const QString& streamName, const DataBlob& blob)
+void TCPConnectionManager::send(const QString& streamName, const DataBlob* blob)
 {
     QMutexLocker sendlocker(&_sendMutex);
 
@@ -122,7 +122,7 @@ void TCPConnectionManager::send(const QString& streamName, const DataBlob& blob)
         try {
             std::cout << "Sending to:" << client->peerName().toStdString() << std::endl;
             Q_ASSERT( client -> state() == QAbstractSocket::ConnectedState );
-            _protocol -> send(*client, streamName, blob);
+            _protocol -> send(*client, streamName, *blob);
             client -> flush();
             std::cout << "Finished sending" << std::endl;
         }

@@ -42,7 +42,7 @@ class TCPConnectionManager : public QObject
         void _killClient(QTcpSocket*);
 
     public slots:
-        void send(const QString& streamName, const DataBlob& incoming);
+        void send(const QString& streamName, const DataBlob* incoming);
 
     private:
         quint16                            _port;

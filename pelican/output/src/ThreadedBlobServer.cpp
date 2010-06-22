@@ -5,6 +5,8 @@
 
 #include "pelican/utility/memCheck.h"
 
+#include <iostream>
+
 namespace pelican {
 
 
@@ -56,7 +58,7 @@ void ThreadedBlobServer::send(const QString& streamName, const DataBlob* blob)
  */
 void ThreadedBlobServer::_send()
 {
-    _manager->send( _sendStream, *_sendBlob );
+    _manager->send( _sendStream, _sendBlob );
 }
 
 } // namespace pelican
