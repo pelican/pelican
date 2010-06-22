@@ -48,5 +48,7 @@ class PelicanTCPBlobServer : public QObject, public AbstractBlobServer
 
 };
 
+PELICAN_DECLARE_MODULE(PelicanTCPBlobServer)
+
 } // namespace pelican
 #endif // PELICANTCPBLOBSERVER_H

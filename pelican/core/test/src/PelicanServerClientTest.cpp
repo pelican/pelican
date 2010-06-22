@@ -109,7 +109,7 @@ void PelicanServerClientTest::test_getData()
         PelicanServerClient client(configNode, dt, 0);
 
         QHash<QString, DataBlob*> dataHash;
-        DataBlob db;
+        DataBlob db("DataBlob");
         dataHash.insert("pelican/data2", &db);
 
         CPPUNIT_ASSERT_THROW(client.getData(dataHash), QString);
