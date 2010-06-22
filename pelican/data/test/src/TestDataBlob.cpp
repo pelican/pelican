@@ -1,6 +1,6 @@
-#include "TestDataBlob.h"
-#include <QDataStream>
-#include <iostream>
+#include "pelican/data/test/TestDataBlob.h"
+
+#include <QtCore/QDataStream>
 
 
 namespace pelican {

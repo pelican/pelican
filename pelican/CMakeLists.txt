@@ -84,13 +84,27 @@ add_definitions(-DUSE_MEMORY_TRACKER) # needed for release mode too?
 # === Setup project dependencies.
 include(cmake/dependencies.cmake)
 
-# === Set Broken Package flags
-if( QT_VERSION_MINOR LESS 3 )
+# === Set Broken Package flags.
+if(QT_VERSION_MINOR LESS 3)
     add_definitions(-DBROKEN_QT_SET_HEADER)
-endif( QT_VERSION_MINOR LESS 3 )
+endif(QT_VERSION_MINOR LESS 3)
+
+#set(PROJECT_LIBS
+#    pelican
+#    pelican-testutils
+#)
 
 # === Sub modules (recurse into sub-directories to build modules).
 include(modules.cmake)
+
+# === libpelican.so build target.
+PROJECT_LIBRARY(pelican
+    comms core data emulator modules output server utility
+    #dataTestUtils serverTestUtils coreTestUtils
+)
+
+# === libpelican-test.so build target.
+PROJECT_LIBRARY(pelican-testutils dataTestUtils serverTestUtils coreTestUtils)
 
 # === Doxygen documentation targets.
 include(UseDoxygen)
@@ -98,8 +112,3 @@ add_doxygen_target(code DoxyfileCode)
 add_doxygen_target(user DoxyfileUser)
 add_doxygen_target(developer DoxyfileDeveloper)
 
-# === libpelican.so build target.
-PROJECT_LIBRARY(pelican comms core data emulator modules output server utility)
-
-# === libpelican-test.so build target.
-PROJECT_LIBRARY(pelican-testutils dataTestUtils serverTestUtils coreTestUtils)

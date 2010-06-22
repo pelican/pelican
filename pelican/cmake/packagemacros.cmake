@@ -363,7 +363,9 @@ macro(CREATE_LIBRARY_MODULE moduleName packageName)
         endif(BUILD_STATIC)
         
         # Set properties for the library targets.
+        # Prevent STATIC and SHARED trashing each others files.
         set_target_properties("${moduleName}" PROPERTIES CLEAN_DIRECT_OUTPUT 1)
+        # Let both libs have the same name.
         if(BUILD_STATIC)
             set_target_properties("${moduleName}_static" PROPERTIES OUTPUT_NAME "${moduleName}")
             set_target_properties("${moduleName}_static" PROPERTIES PREFIX "lib")
@@ -500,6 +502,7 @@ macro(LINK_PROJECT_LIBRARY libname packageName)
         endif(BUILD_STATIC)
         
         set_target_properties("${libname}" PROPERTIES LINKER_LANGUAGE CXX)
+        
         add_dependencies("${libname}" ${SUBPACKAGE_SHARED_LIBRARIES})
         
         if(BUILD_STATIC)

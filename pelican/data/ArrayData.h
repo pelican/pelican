@@ -27,7 +27,7 @@ class ArrayData : public DataBlob
 
     public:
         /// Constructor.
-        ArrayData() : DataBlob() {}
+        ArrayData(const QString& type) : DataBlob(type) {}
         
         /// Destructor.
         virtual ~ArrayData() {}
@@ -60,7 +60,7 @@ class FloatData : public ArrayData<float>
 {
     public:
         /// Constructor.
-        FloatData() : ArrayData<float> () {}
+        FloatData() : ArrayData<float> ("FloatData") {}
         
         /// Destructor.
         ~FloatData() {}
@@ -81,7 +81,7 @@ class DoubleData : public ArrayData<double>
 {
     public:
         /// Constructor.
-        DoubleData() : ArrayData<double> () {}
+        DoubleData() : ArrayData<double> ("DoubleData") {}
         
         /// Destructor.
         ~DoubleData() {}

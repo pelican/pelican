@@ -6,12 +6,13 @@
 #if !defined DEBUGNEW_H
 #define DEBUGNEW_H
 #pragma warning (disable:4786)
+#include <QtCore/QMutex>
+
 #include <cstdlib>
 #include <string>
-#include <QMutex>
 #include <new>
 #include <boost/pool/detail/singleton.hpp>
-#include "memoryCheckInterface.h"
+#include "pelican/utility/memoryCheckInterface.h"
 
 #include <map>
 

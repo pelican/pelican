@@ -4,7 +4,7 @@
  * http://www.relisoft.com/book/tech/9new.html
  */
 
-#include "memoryTracer.h"
+#include "pelican/utility/memoryTracer.h"
 #include <sstream>
 #include <iostream>
 

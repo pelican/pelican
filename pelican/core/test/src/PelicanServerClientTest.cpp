@@ -109,7 +109,7 @@ void PelicanServerClientTest::test_getData()
         PelicanServerClient client(configNode, dt, 0);
 
         QHash<QString, DataBlob*> dataHash;
-        DataBlob db;
+        DataBlob db("DataBlob");
         dataHash.insert("pelican/data2", &db);
 
         CPPUNIT_ASSERT_THROW(client.getData(dataHash), QString);
@@ -218,7 +218,7 @@ void PelicanServerClientTest::test_response()
         CPPUNIT_ASSERT_EQUAL( std::string( data1.data() ) , std::string( static_cast<TestDataBlob*>(vhash[service1])->data() ) );
         CPPUNIT_ASSERT_EQUAL( std::string( data2.data() ) , std::string( static_cast<TestDataBlob*>(vhash[service2])->data() ) );
     }
-    /*
+  
     {
         // Use Case
         // receive a StreamData response with associated service data (single stream, single service data)
@@ -238,7 +238,7 @@ void PelicanServerClientTest::test_response()
         dt.addData(lreq);
         dt.setAdapter(stream1,&streamAdapter);
         dt.setAdapter(service1,&serviceAdapter);
-        PelicanServerClient client(configNode, dt);
+        PelicanServerClient client(configNode, dt, 0);
 
         // set up the memory for receiving data
         TestDataBlob db;
@@ -256,7 +256,7 @@ void PelicanServerClientTest::test_response()
         CPPUNIT_ASSERT_EQUAL( std::string( data1.data() ) , std::string( static_cast<TestDataBlob*>( vhash[stream1])->data() ) );
         CPPUNIT_ASSERT_EQUAL( std::string( data2.data() ) , std::string( static_cast<TestDataBlob*>( vhash[service1])->data() ) );
     }
-    */
+ 
 }
 
 } // namespace pelican

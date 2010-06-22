@@ -16,6 +16,7 @@ set(core_src
 
 SUBPACKAGE_LIBRARY(core ${core_src})
 
+# Set external library depencencies for core.
 SUBPACKAGE_ADD_LIBRARIES(core
     ${QT_QTCORE_LIBRARY}
     ${Boost_PROGRAM_OPTIONS_LIBRARY}

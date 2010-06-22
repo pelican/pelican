@@ -1,8 +1,7 @@
 
 # Build Pelican emulator tests.
 # ==============================================================================
-USE_SUBPACKAGES(emulator)
-
+USE_SUBPACKAGES(emulator utility)
 set(emulatorTest_src
     src/emulatorTest.cpp
 )
@@ -22,6 +21,7 @@ add_test(emulatorTest emulatorTest)
 add_executable(realUdpEmulator src/realUdpEmulator.cpp)
 target_link_libraries(realUdpEmulator
     ${SUBPACKAGE_LIBRARIES}
+    ${CPPUNIT_LIBRARIES}
     memoryTracerDummy
 )
 

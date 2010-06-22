@@ -1,6 +1,16 @@
 /**
 \page user_referenceBuildSystem Build System
 
-TODO: ref. to developer guide and creating a new project section.
+Pelican uses a CMake build system and requires CMake 2.4 or higher.
+
+In order to build Pelican:
+
+\li Create a folder for the build.
+\li Move into the build folder.
+\li Run CMake and point at the top level CMakeLists.txt file
+\li Run Make
+
+In order to check if the Pelican build was sucessful run 'Make test' from 
+the top level build directory. 
 
 */

@@ -49,8 +49,12 @@ add_subdirectory(test)
 
 # Create the server executable.
 #===============================================================================
+USE_SUBPACKAGES(server comms utility)
 set(serverExe_src src/main.cpp)
 add_executable(pelicanServer ${serverExe_src})
-target_link_libraries(pelicanServer ${SUBPACKAGE_LIBRARIES} memoryTracerDummy )
+target_link_libraries(pelicanServer
+    ${SUBPACKAGE_LIBRARIES}
+    memoryTracerDummy
+)
 
 

@@ -38,14 +38,10 @@ void TCPConnectionManagerTest::setUp()
 
     _clientProtocol = new PelicanClientProtocol;
     _server = new TCPConnectionManager(0);
-//    _server->start();
-//    bool i;
-//    do { i = _server->isRunning(); sleep(1); } while ( ! i );
 }
 
 void TCPConnectionManagerTest::tearDown()
 {
-//    _server->quit();
     delete _server;
     delete _clientProtocol;
     delete _app;
@@ -67,7 +63,7 @@ void TCPConnectionManagerTest::test_send()
     CPPUNIT_ASSERT_EQUAL( 1, _server->clientsForType("testData") );
     TestDataBlob blob;
     blob.setData("sometestData");
-    _server->send("testData",blob);
+    _server->send("testData",&blob);
     sleep(1);
 
     CPPUNIT_ASSERT( client->state() == QAbstractSocket::ConnectedState );

@@ -3,7 +3,6 @@
 # ==============================================================================
 SUBPACKAGE(coreTestUtils core data utility serverTestUtils emulator)
 set(coreTestLibrary_src
-    src/coreTest.cpp
     src/TestPipeline.cpp
     src/TestDataClient.cpp
     src/TestAdapter.cpp
@@ -38,10 +37,10 @@ add_test(coreTest coreTest)
 # Build multi-threaded threaded Pelcain core tests.
 # ==============================================================================
 set(coreTestMT_src
+    src/coreTest.cpp
     src/PelicanServerClientTestMT.cpp
     src/DirectStreamDataClientTest.cpp
 )
-
 add_executable(coreTestMT ${coreTestMT_src})
 target_link_libraries(coreTestMT
     ${SUBPACKAGE_LIBRARIES}
@@ -57,7 +56,6 @@ add_test(coreTestMT coreTestMT)
 add_executable(directClient src/directClientMain.cpp)
 target_link_libraries(directClient
     ${SUBPACKAGE_LIBRARIES}
-    ${CPPUNIT_LIBRARIES}
     memoryTracerDummy
 )
 

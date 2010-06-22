@@ -1,5 +1,5 @@
-#include "memoryTracerTest.h"
-#include "memoryTracer.h"
+#include "pelican/utility/test/memoryTracerTest.h"
+#include "pelican/utility/memoryTracer.h"
 
 class DummyData {
     public: 

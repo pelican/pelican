@@ -1,5 +1,5 @@
-#include "memoryCheckInterface.h"
-#include "memoryTracer.h"
+#include "pelican/utility/memoryCheckInterface.h"
+#include "pelican/utility/memoryTracer.h"
 #include <new>
 
 void* operator new(std::size_t size, char const * /*file*/, int /*line*/)

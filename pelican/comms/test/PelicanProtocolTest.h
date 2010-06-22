@@ -2,7 +2,9 @@
 #define PELICANPROTOCOLTEST_H
 
 #include <cppunit/extensions/HelperMacros.h>
-#include "PelicanClientProtocol.h"
+
+#include "pelican/comms/PelicanClientProtocol.h"
+
 class QTcpSocket;
 
 /**

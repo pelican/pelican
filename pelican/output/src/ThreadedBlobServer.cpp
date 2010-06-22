@@ -5,6 +5,8 @@
 
 #include "pelican/utility/memCheck.h"
 
+#include <iostream>
+
 namespace pelican {
 
 
@@ -42,10 +44,10 @@ void ThreadedBlobServer::run()
  * @details
  * emit a signal to the connection manager in the thread
  */
-void ThreadedBlobServer::send(const QString& streamName, const DataBlob& blob)
+void ThreadedBlobServer::send(const QString& streamName, const DataBlob* blob)
 {
     _sendStream = streamName;
-    _sendBlob = &blob;
+    _sendBlob = blob;
     QTimer::singleShot( 0, this , SLOT( _send()) );
 }
 
@@ -56,7 +58,7 @@ void ThreadedBlobServer::send(const QString& streamName, const DataBlob& blob)
  */
 void ThreadedBlobServer::_send()
 {
-    _manager->send( _sendStream, *_sendBlob );
+    _manager->send( _sendStream, _sendBlob );
 }
 
 } // namespace pelican

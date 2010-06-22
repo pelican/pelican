@@ -1,4 +1,4 @@
-#include "AbstractClientProtocol.h"
+#include "pelican/comms/AbstractClientProtocol.h"
 
 #include "pelican/utility/memCheck.h"
 

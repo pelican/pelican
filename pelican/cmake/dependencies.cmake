@@ -17,16 +17,17 @@ find_package(CppUnit REQUIRED)
 
 # Global include directories set for all sub-packages
 include_directories(
+    #${CMAKE_CURRENT_SOURCE_DIR}
     ${QT_INCLUDE_DIR}
-    ${QT_QTCORE_INCLUDE_DIR} ## remove when all includes fixed for QtCore/... etc
+    ${QT_QTCORE_INCLUDE_DIR}
 )
 
 # === List of all libraries for single library install.
-set(PROJECT_LIBRARIES
-    #pelican-testutils
-    pelican
-    ${QT_QTCORE_LIBRARY}
-    ${QT_QTXML_LIBRARY}
-    ${QT_QTNETWORK_LIBRARY}
-    ${Boost_PROGRAM_OPTIONS_LIBRARY}
-)
+#set(PROJECT_LIBRARIES
+#    #pelican-testutils
+#    pelican
+#    ${QT_QTCORE_LIBRARY}
+#    ${QT_QTXML_LIBRARY}
+#    ${QT_QTNETWORK_LIBRARY}
+#    ${Boost_PROGRAM_OPTIONS_LIBRARY}
+#)

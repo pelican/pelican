@@ -9,7 +9,7 @@
 #include "pelican/comms/PelicanProtocol.h"
 #include "pelican/utility/Config.h"
 
-#include <QCoreApplication>
+#include <QtCore/QCoreApplication>
 
 using namespace pelican;
 

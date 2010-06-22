@@ -1,6 +1,7 @@
-#include "ConfigNodeTest.h"
-#include "ConfigNode.h"
-#include <QCoreApplication>
+#include "pelican/utility/test/ConfigNodeTest.h"
+#include "pelican/utility/ConfigNode.h"
+
+#include <QtCore/QCoreApplication>
 
 #include "pelican/utility/memCheck.h"
 

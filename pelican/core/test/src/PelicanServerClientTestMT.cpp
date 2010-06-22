@@ -88,7 +88,7 @@ void PelicanServerClientTestMT::test_getData()
         client.setPort(port);
 
         QHash<QString, DataBlob*> dataHash;
-        DataBlob db;
+        DataBlob db("DataBlob");
         dataHash.insert(service1, &db);
         CPPUNIT_ASSERT_THROW( client.getData(dataHash), QString );
     }

@@ -37,7 +37,7 @@ class PelicanTCPBlobServer : public QObject, public AbstractBlobServer
         quint16 serverPort() const;
 
     public:
-        virtual void send(const QString& streamName, const DataBlob&);
+        virtual void send(const QString& streamName, const DataBlob* dataBlob);
 
     private:
         ThreadedBlobServer* _server;
@@ -47,6 +47,8 @@ class PelicanTCPBlobServer : public QObject, public AbstractBlobServer
         friend class PelicanTCPBlobServerTest;
 
 };
+
+PELICAN_DECLARE_MODULE(PelicanTCPBlobServer)
 
 } // namespace pelican
 #endif // PELICANTCPBLOBSERVER_H
