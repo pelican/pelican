@@ -48,7 +48,7 @@ class DataBlob
     public:
         /// Data blob constructor.
         PELICAN_CONSTRUCT_TYPES_EMPTY
-        DataBlob(const QString& type = QString("") );
+        DataBlob(const QString& type);
 
         /// Data blob destructor.
         virtual ~DataBlob();

@@ -26,7 +26,7 @@ class TestDataBlob : public DataBlob
 
     public:
         /// Constructs the test data blob.
-        TestDataBlob() : DataBlob() {}
+        TestDataBlob() : DataBlob("TestDataBlob") {}
 
         /// Returns a pointer to the first element of the buffer.
         char* data() {return &_buffer[0];}
