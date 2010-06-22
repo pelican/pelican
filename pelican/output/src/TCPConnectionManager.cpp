@@ -104,8 +104,10 @@ void TCPConnectionManager::send(const QString& streamName, const DataBlob& blob)
     QMutexLocker sendlocker(&_sendMutex);
 
     // Check if there are any client reading streamName type data
-    if (!_clients.contains(streamName) )
+    if (!_clients.contains(streamName) ) {
+        std::cout << "TCPConnectionManager: Nobody to receive data" << std::endl;
         return;  // No client to stream to
+    }
 
     clients_t clientListCopy;
     {
