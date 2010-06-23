@@ -155,7 +155,7 @@ void PelicanProtocol::send(QIODevice& stream, const AbstractProtocol::ServiceDat
     }
 }
 
-void PelicanProtocol::send(QIODevice& stream, const QString& name, const DataBlob& data )
+void PelicanProtocol::send(QIODevice& device, const QString& name, const DataBlob& data )
 {
     QByteArray array;
     QDataStream out(&array, QIODevice::WriteOnly);
@@ -163,11 +163,12 @@ void PelicanProtocol::send(QIODevice& stream, const QString& name, const DataBlo
     out << (quint16)ServerResponse::Blob;
     out << data.type();
     out << name;
-    stream.write(array);
-    data.serialise(stream);
+    if (device.write(array) < 0)
+        throw QString("PelicanProtocol::send: Unable to write.");
+    data.serialise(device);
 }
 
-void PelicanProtocol::send(QIODevice& stream, const QString& msg )
+void PelicanProtocol::send(QIODevice& device, const QString& msg )
 {
     QByteArray array;
     QDataStream out(&array, QIODevice::WriteOnly);
@@ -176,7 +177,7 @@ void PelicanProtocol::send(QIODevice& stream, const QString& msg )
     out << msg;
     out.device()->seek(0);
     out << (quint16)(array.size() - sizeof(quint16));
-    stream.write(array);
+    device.write(array);
 }
 
 void PelicanProtocol::sendError(QIODevice& stream, const QString& msg)
