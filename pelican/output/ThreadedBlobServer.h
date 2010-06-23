@@ -36,14 +36,13 @@ class ThreadedBlobServer : public QThread
     protected:
         void run();
 
-    private slots:
-        void _send();
+    signals:
+        /// private signal to communicate internally
+        void sending( const QString& , const DataBlob*);
 
     private:
         boost::shared_ptr<TCPConnectionManager> _manager;
         quint16 _port;
-        QString _sendStream;
-        const DataBlob* _sendBlob;
 
 };
 
