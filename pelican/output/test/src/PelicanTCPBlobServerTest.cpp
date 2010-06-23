@@ -90,15 +90,23 @@ void PelicanTCPBlobServerTest::test_connection()
     tcpSocket.waitForBytesWritten(data.size());
     tcpSocket.flush();
 
+    /// ensure we are registered before continuing
+    while( server.clientsForType("testData") == 0 )
+    {
+        sleep(1);
+    }
+
     // Test Server send
     TestDataBlob blob;
     blob.setData("Testing TCPServer");
     server.send("testData", &blob);
 
+
+
     // Evaluate the response from the server
-    //tcpSocket.waitForReadyRead();
-    //boost::shared_ptr<ServerResponse> r = clientProtocol.receive(tcpSocket);
-    //CPPUNIT_ASSERT( r->type() == ServerResponse::Blob );
+    tcpSocket.waitForReadyRead();
+    boost::shared_ptr<ServerResponse> r = clientProtocol.receive(tcpSocket);
+    CPPUNIT_ASSERT( r->type() == ServerResponse::Blob );
 }
 
 } // namespace pelican

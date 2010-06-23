@@ -32,6 +32,15 @@ qint16 ThreadedBlobServer::serverPort() const
     return _manager->serverPort();
 }
 
+/**
+ * @details
+ * method to tell if there are any clients listening for data
+ */
+int ThreadedBlobServer::clientsForType(const QString& stream) const
+{
+    return _manager->clientsForType(stream);
+}
+
 void ThreadedBlobServer::run()
 {
     // Create a connection manager in the thread and run it inside the event loop

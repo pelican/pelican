@@ -33,6 +33,8 @@ class ThreadedBlobServer : public QThread
         void send(const QString& streamName, const DataBlob* incoming);
         qint16 serverPort() const;
 
+        int clientsForType(const QString&) const;
+
     protected:
         void run();
 

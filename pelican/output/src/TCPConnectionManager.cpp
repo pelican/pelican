@@ -52,7 +52,6 @@ qint16 TCPConnectionManager::serverPort() const
  */
 void TCPConnectionManager::acceptClientConnection() 
 {
-    std::cout << "Adding new client" << std::endl;
     
     // Get new client connection
     QTcpSocket *client = _tcpServer -> nextPendingConnection();
@@ -81,8 +80,9 @@ void TCPConnectionManager::acceptClientConnection()
     while(it != req.end()) {
 
         // Add all client data requirement to type-client list
-        foreach(const QString& streamData, it -> streamData() ) {
+        foreach(const QString& streamData, it->streamData() ) {
             // Check if clients map already has the key, if so add client to list
+            std::cout << "Adding new client for stream: " << streamData.toStdString()  << std::endl;
             _clients[streamData].push_back(client);
         }
 
@@ -176,7 +176,7 @@ void TCPConnectionManager::run()
 
 /**
  * @details
- * Return the clients which are registered for a certain datablob type
+ * Return the clients which are registered for a certain datablob stream
  */
 int TCPConnectionManager::clientsForType(const QString& type) const
 {
