@@ -7,7 +7,8 @@ set ( output_moc_headers
     )
 
 set( output_src
-#     src/AbstractBlobServer.cpp
+     src/AbstractOutputStream.cpp
+     src/OutputStreamManager.cpp
      src/PelicanTCPBlobServer.cpp
      src/TCPConnectionManager.cpp
      src/ThreadedBlobServer.cpp

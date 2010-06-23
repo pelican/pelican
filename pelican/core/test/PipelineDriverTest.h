@@ -17,6 +17,7 @@ namespace pelican {
 
 class PipelineDriver;
 class DataClientFactory;
+class OutputStreamManager;
 
 /**
  * @class PipelineDriverTest
@@ -67,6 +68,7 @@ class PipelineDriverTest : public CppUnit::TestFixture
         FactoryGeneric<DataBlob>* _dataBlobFactory;
         FactoryConfig<AbstractModule>* _moduleFactory;
         DataClientFactory* _clientFactory;
+        OutputStreamManager* _osmanager;
 };
 
 } // namespace pelican

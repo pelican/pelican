@@ -19,6 +19,7 @@ class AbstractPipeline;
 class AbstractDataClient;
 class AbstractAdapter;
 class DataClientFactory;
+class OutputStreamManager;
 
 /**
  * @class PipelineDriver
@@ -44,6 +45,8 @@ class PipelineDriver
 
         /// Pointer to the module factory.
         FactoryConfig<AbstractModule>* _moduleFactory;
+
+        OutputStreamManager* _osmanager;
 
         /// Pointer to the module factory.
         DataClientFactory* _clientFactory;
@@ -79,7 +82,8 @@ class PipelineDriver
         /// Constructs a new pipeline driver.
         PipelineDriver(FactoryGeneric<DataBlob>* blobFactory,
                 FactoryConfig<AbstractModule>* moduleFactory,
-                DataClientFactory* clientFactory);
+                DataClientFactory* clientFactory,
+                OutputStreamManager* outputManager);
 
         /// Destroys the pipeline driver.
         ~PipelineDriver();

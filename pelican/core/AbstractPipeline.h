@@ -17,6 +17,7 @@ namespace pelican {
 class AbstractModule;
 class DataBlob;
 class PipelineDriver;
+class OutputStreamManager;
 
 /**
  * @class AbstractPipeline
@@ -103,6 +104,9 @@ class AbstractPipeline
         /// List of pointers to modules in this pipeline.
         QList<AbstractModule*> _modules;
 
+        /// Pointer to the output stream manager
+        OutputStreamManager* _osmanager;
+
     protected:
         /// Create a data blob using the data blob factory.
         DataBlob* createBlob(const QString& type);
@@ -134,6 +138,9 @@ class AbstractPipeline
         /// Return the remote data requirements for the pipeline.
         const DataRequirements& requiredDataRemote() const;
 
+        /// Primary interface for pipelines to emit data from the pipeline
+        void dataOutput( DataBlob*, const QString& stream = "" ) const;
+
         /// Defines a single iteration of the pipeline (pure virtual).
         /// This method defines what happens when the pipeline is run once,
         /// and should be implemented in a subclass. It is called each
@@ -152,6 +159,9 @@ class AbstractPipeline
 
         /// Sets the pipeline driver.
         void setPipelineDriver(PipelineDriver* driver);
+
+        /// Sets the output stream manager
+        void setOutputStreamManager(OutputStreamManager* osmanager);
 };
 
 } // namespace pelican
