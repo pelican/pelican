@@ -40,9 +40,8 @@ template<class B> class FactoryBase
         }
 
         /// Constructs the factory, setting the default configuration root.
-        FactoryBase(const Config* config, const Config::TreeAddress& base) {
-            _base = base;
-        }
+        FactoryBase(const Config* config, const Config::TreeAddress& base) :
+            _config(config), _base(base) {}
 
         /// Destroys the factory and any objects created by it.
         virtual ~FactoryBase() {
@@ -80,11 +79,11 @@ template<class B> class FactoryBase
         }
 
     protected:
-        const Config* _config; ///< Pointer to the configuration object.
+        const Config* _config;     ///< Pointer to the configuration object.
 
     private:
-        std::vector<B*> _obs;  ///< List of all objects created by the factory.
         Config::TreeAddress _base; ///< Configuration root node.
+        std::vector<B*> _obs;      ///< List of all objects created by the factory.
 };
 
 } // namespace pelican
