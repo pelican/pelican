@@ -105,7 +105,7 @@ void TCPConnectionManager::send(const QString& streamName, const DataBlob* blob)
 
     // Check if there are any client reading streamName type data
     if (!_clients.contains(streamName) ) {
-        std::cout << "TCPConnectionManager: Nobody to receive data" << std::endl;
+        //std::cout << "TCPConnectionManager: Nobody to receive data" << std::endl;
         return;  // No client to stream to
     }
 
@@ -122,11 +122,11 @@ void TCPConnectionManager::send(const QString& streamName, const DataBlob* blob)
 
         // Send data to client
         try {
-            std::cout << "Sending to:" << client->peerName().toStdString() << std::endl;
+            //std::cout << "Sending to:" << client->peerName().toStdString() << std::endl;
             Q_ASSERT( client -> state() == QAbstractSocket::ConnectedState );
             _protocol -> send(*client, streamName, *blob);
             client -> flush();
-            std::cout << "Finished sending" << std::endl;
+            //std::cout << "Finished sending" << std::endl;
         }
         catch ( ... ) 
         {
