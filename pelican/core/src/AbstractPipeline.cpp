@@ -1,8 +1,9 @@
+#include <QtCore/QtGlobal>
 #include "pelican/modules/AbstractModule.h"
 #include "pelican/core/AbstractPipeline.h"
 #include "pelican/core/PipelineApplication.h"
 #include "pelican/core/PipelineDriver.h"
-#include <QtCore/QtGlobal>
+#include "pelican/output/OutputStreamManager.h"
 #include "pelican/utility/memCheck.h"
 
 namespace pelican {
@@ -119,6 +120,18 @@ void AbstractPipeline::setModuleFactory(FactoryConfig<AbstractModule>* factory)
 
 /**
  * @details
+ * Sends data to the output streams managed by the OutputStreamManger
+ *
+ * @param[in] DataBlob to be sent.
+ * @param[in] name of the output stream (defaults to DataBlob->type()).
+ */
+void AbstractPipeline::dataOutput( DataBlob* data, const QString& stream ) const
+{
+     _osmanager->send(data, stream);
+}
+
+/**
+ * @details
  * Sets the pointer to the pipeline driver.
  *
  * @param[in] driver Pointer to the pipeline driver to use.
@@ -126,6 +139,17 @@ void AbstractPipeline::setModuleFactory(FactoryConfig<AbstractModule>* factory)
 void AbstractPipeline::setPipelineDriver(PipelineDriver* driver)
 {
     _pipelineDriver = driver;
+}
+
+/**
+ * @details
+ * Sets the pointer to the output streamer to be used for dataOuput() calls.
+ *
+ * @param[in] driver Pointer to the Output Stream Manager.
+ */
+void AbstractPipeline::setOutputStreamManager(OutputStreamManager* osmanager)
+{
+    _osmanager = osmanager;
 }
 
 /**

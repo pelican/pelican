@@ -9,4 +9,29 @@ for exporting data from Pelican:
 \li \link user_referenceDataBlobs Data Blob reference\endlink
 \li \link user_referenceOutputStreamers Output streamer reference\endlink
 
+\section user_dataOuput Sending Data to an output stream from your pipeline
+
+For simple cases, you just call the \em dataOutput() method :
+@code
+MyBlob* data;
+dataOutput(data);
+@endcode
+
+This will push data onto an output stream called after the datas type ("MyBlob" in this case)
+stream. The \em dataOutput() method can take a QString as a second argument to assign the data 
+to an alternatively named stream. This can be useful where there you are exporting multiple streams
+of the same data type.
+
+It is important to realise that any DataBlob destined for output should implement the \em serialise() and \em deserialise() methods.
+
+The actual destination of the data is controlled by the OutputStreamManager object. This can be configured
+either through the configuration file, or you can manipulate the object directly. See @ref user_dataOutput Output Stream Management 
+for more details.
+
+\section Creating custom output modules
+Pelican comes with a number of modules to stream data, e.g. via TCP to another machine, or to a file.
+But maybe these are insufficient for your needs. perhaps you have a custom file format, or a specific database
+to fill. In this case you will need to write your own OutputStreamers.
+
+
 */
