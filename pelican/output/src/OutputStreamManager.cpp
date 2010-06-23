@@ -11,9 +11,9 @@ namespace pelican {
 OutputStreamManager::OutputStreamManager( const Config* config , const Config::TreeAddress& base )
 {
     // facotry to allow us to generate streamers from the XML
-    _factory = new FactoryConfig<AbstractOutputStream>(config, base);
+//    _factory = new FactoryConfig<AbstractOutputStream>(config, base);
     // parse the config file
-    ConfigNode c = config->get(base);
+    //ConfigNode c = config->get(base);
 
 }
 
@@ -22,7 +22,7 @@ OutputStreamManager::OutputStreamManager( const Config* config , const Config::T
  */
 OutputStreamManager::~OutputStreamManager()
 {
-    delete _factory;
+//    delete _factory;
 }
 
 /**
