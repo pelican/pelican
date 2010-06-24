@@ -89,22 +89,20 @@ if(QT_VERSION_MINOR LESS 3)
     add_definitions(-DBROKEN_QT_SET_HEADER)
 endif(QT_VERSION_MINOR LESS 3)
 
-#set(PROJECT_LIBS
-#    pelican
-#    pelican-testutils
-#)
+# Declare project libraries to be created from the following subpackages. 
+DECLARE_PROJECT_LIBRARY(pelican 
+    comms core data emulator modules output server utility)
+
+DECLARE_PROJECT_LIBRARY(pelican-testutils
+    dataTest coreTest serverTest) 
 
 # === Sub modules (recurse into sub-directories to build modules).
 include(modules.cmake)
 
-# === libpelican.so build target.
-PROJECT_LIBRARY(pelican
-    comms core data emulator modules output server utility
-    #dataTestUtils serverTestUtils coreTestUtils
-)
 
-# === libpelican-test.so build target.
-PROJECT_LIBRARY(pelican-testutils dataTestUtils serverTestUtils coreTestUtils)
+# Project libraries to produce.
+CREATE_PROJECT_LIBRARY(pelican)
+CREATE_PROJECT_LIBRARY(pelican-testutils)
 
 # === Doxygen documentation targets.
 include(UseDoxygen)

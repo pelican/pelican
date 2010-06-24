@@ -18,7 +18,7 @@ QT4_WRAP_CPP(emulator_src ${emulator_moc_headers})
 SUBPACKAGE_LIBRARY(emulator ${emulator_src})
 
 # Specify dependencies.
-SUBPACKAGE_ADD_LIBRARIES(emulator
+SUBPACKAGE_SET_EXTERNAL_LIBRARIES(
     ${QT_QTCORE_LIBRARY}
     ${QT_QTNETWORK_LIBRARY}
 )

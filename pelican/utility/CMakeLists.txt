@@ -1,13 +1,16 @@
 SUBPACKAGE(utility)
+
 # Thread safe library.
 set(utility_src
     src/ConfigNode.cpp
     src/Config.cpp
     src/SocketTester.cpp
 )
-# The general utility library.
+
+
 SUBPACKAGE_LIBRARY(utility ${utility_src})
-SUBPACKAGE_ADD_LIBRARIES(utility
+
+SUBPACKAGE_SET_EXTERNAL_LIBRARIES(
     ${QT_QTCORE_LIBRARY}
     ${QT_QTXML_LIBRARY}
     ${QT_QTNETWORK_LIBRARY}

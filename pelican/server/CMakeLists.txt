@@ -33,13 +33,13 @@ set(server_src
 )
 
 # MOC Compile headers.
-QT4_WRAP_CPP(server_moc_sources ${server_moc_headers})
+QT4_WRAP_CPP(server_src ${server_moc_headers})
 
 # Build the subpackage library.
-SUBPACKAGE_LIBRARY(server ${server_src} ${server_moc_sources})
+SUBPACKAGE_LIBRARY(server ${server_src})
 
 # Specify dependencies.
-SUBPACKAGE_ADD_LIBRARIES(server
+SUBPACKAGE_SET_EXTERNAL_LIBRARIES(
     ${QT_QTCORE_LIBRARY}
     ${QT_QTNETWORK_LIBRARY}
 )
@@ -49,7 +49,6 @@ add_subdirectory(test)
 
 # Create the server executable.
 #===============================================================================
-USE_SUBPACKAGES(server comms utility)
 set(serverExe_src src/main.cpp)
 add_executable(pelicanServer ${serverExe_src})
 target_link_libraries(pelicanServer

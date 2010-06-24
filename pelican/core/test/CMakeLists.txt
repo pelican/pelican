@@ -1,7 +1,7 @@
 
 # Build Pelican core testing library module.
 # ==============================================================================
-SUBPACKAGE(coreTestUtils core data utility serverTestUtils emulator)
+SUBPACKAGE(coreTest core data utility serverTest emulator)
 set(coreTestLibrary_src
     src/TestPipeline.cpp
     src/TestDataClient.cpp
@@ -9,11 +9,13 @@ set(coreTestLibrary_src
     src/TestStreamAdapter.cpp
 )
 SUBPACKAGE_LIBRARY(coreTestUtils ${coreTestLibrary_src})
-
+SUBPACKAGE_SET_EXTERNAL_LIBRARIES(
+    ${QT_QTCORE_LIBRARY}
+    ${Boost_PROGRAM_OPTIONS_LIBRARY}
+)
 
 # Build single-threaded Pelcain core tests.
 # ==============================================================================
-USE_SUBPACKAGES(core data utility serverTestUtils emulator coreTestUtils)
 set(coreTest_src
     src/coreTest.cpp
     src/AdapterRealDataTest.cpp
@@ -23,7 +25,6 @@ set(coreTest_src
     src/PipelineDriverTest.cpp
     src/PelicanServerClientTest.cpp
 )
-
 add_executable(coreTest ${coreTest_src})
 target_link_libraries(coreTest
     ${SUBPACKAGE_LIBRARIES}
@@ -31,7 +32,6 @@ target_link_libraries(coreTest
     memoryTracer
 )
 add_test(coreTest coreTest)
-
 
 
 # Build multi-threaded threaded Pelcain core tests.
@@ -48,7 +48,6 @@ target_link_libraries(coreTestMT
     memoryTracerDummy
 )
 add_test(coreTestMT coreTestMT)
-
 
 
 # Build test direct streaming client (used for bandwidth testing) 

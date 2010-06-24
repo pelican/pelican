@@ -1,7 +1,7 @@
 
 # Build Pelican server testing library module.
 # ==============================================================================
-SUBPACKAGE(serverTestUtils server emulator)
+SUBPACKAGE(serverTest server emulator data comms utility)
 set(serverTestlib_src
     src/TestChunker.cpp
     src/TestUdpChunker.cpp
@@ -15,10 +15,13 @@ set(serverTestLib_moc_sources
 )
 QT4_WRAP_CPP(serverTestlib_src ${serverTestLib_moc_sources})
 SUBPACKAGE_LIBRARY(serverTestUtils ${serverTestlib_src})
+SUBPACKAGE_SET_EXTERNAL_LIBRARIES(
+    ${QT_QTCORE_LIBRARY}
+)
+
 
 # Build single-threaded Pelcain server tests.
 # ==============================================================================
-USE_SUBPACKAGES(server emulator serverTestUtils)
 set(serverTest_src
     src/serverTest.cpp
     src/ChunkerFactoryTest.cpp
