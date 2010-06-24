@@ -39,6 +39,9 @@ class PelicanTCPBlobServer : public QObject, public AbstractBlobServer
     public:
         virtual void send(const QString& streamName, const DataBlob* dataBlob);
 
+        /// return the number of clients listening to a specified stream
+        int clientsForType(const QString& stream) const;
+
     private:
         ThreadedBlobServer* _server;
         TCPConnectionManager*  _connectionManager;

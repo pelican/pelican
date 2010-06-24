@@ -24,8 +24,9 @@ namespace pelican {
  */
 PipelineDriver::PipelineDriver(FactoryGeneric<DataBlob>* blobFactory,
         FactoryConfig<AbstractModule>* moduleFactory,
-        DataClientFactory* clientFactory
-){
+        DataClientFactory* clientFactory, OutputStreamManager* osmanager)
+    : _osmanager(osmanager)
+{
     // Initialise member variables.
     _run = false;
     _dataClient = NULL;
@@ -75,6 +76,7 @@ void PipelineDriver::registerPipeline(AbstractPipeline *pipeline)
     pipeline->setBlobFactory(_blobFactory);
     pipeline->setModuleFactory(_moduleFactory);
     pipeline->setPipelineDriver(this);
+    pipeline->setOutputStreamManager(_osmanager);
     pipeline->init();
 
     // Store the remote data requirements.

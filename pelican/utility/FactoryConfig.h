@@ -70,6 +70,10 @@ public: \
     FactoryConfig(const Config* config, const QString& section, \
             const QString& group) : FactoryBase<B>(config, section, group) {} \
 \
+    /* Constructs a factory for creating configurable objects */ \
+    FactoryConfig(const Config* config, const Config::TreeAddress& base) \
+            : FactoryBase<B>(config, base) {} \
+\
     /* Creates and configures a concrete object with a registered ID */ \
     B* create(const QString& id BOOST_PP_ENUM_TRAILING(BOOST_PP_DEC(n),PARAM1,~) , \
     		const QString& name="") { \

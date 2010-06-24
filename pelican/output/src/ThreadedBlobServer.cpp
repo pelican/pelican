@@ -32,11 +32,23 @@ qint16 ThreadedBlobServer::serverPort() const
     return _manager->serverPort();
 }
 
+/**
+ * @details
+ * method to tell if there are any clients listening for data
+ */
+int ThreadedBlobServer::clientsForType(const QString& stream) const
+{
+    return _manager->clientsForType(stream);
+}
+
 void ThreadedBlobServer::run()
 {
     // Create a connection manager in the thread and run it inside the event loop
     // using a boost shared_ptr will ensure it gets deleted when we leave the scope
     _manager.reset( new TCPConnectionManager(_port) );
+    bool res = connect( this, SIGNAL( sending(const QString&, const DataBlob*) ),
+             _manager.get(), SLOT( send( const QString&, const DataBlob* )));
+    Q_ASSERT( res );
     exec();
 }
 
@@ -46,19 +58,7 @@ void ThreadedBlobServer::run()
  */
 void ThreadedBlobServer::send(const QString& streamName, const DataBlob* blob)
 {
-    _sendStream = streamName;
-    _sendBlob = blob;
-    QTimer::singleShot( 0, this , SLOT( _send()) );
-}
-
-/*
- * @details
- * This method should be called as a slot - ensures we call it in the thread
- * rather than the callers thread
- */
-void ThreadedBlobServer::_send()
-{
-    _manager->send( _sendStream, _sendBlob );
+    emit sending(streamName, blob);
 }
 
 } // namespace pelican

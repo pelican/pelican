@@ -5,13 +5,14 @@
 # Finds include direcotry, library and associated dependencies.
 #
 # Defines the following variables:
-#   PELICAN_FOUND            = True if PELICAN found
+#   PELICAN_FOUND             = True if PELICAN found
 #
-#   PELICAN_INCLUDE_DIR      = Top level pelican include directory.
-#   PELICAN_LIBRARY          = The PELICAN library
+#   PELICAN_INCLUDE_DIR       = Top level pelican include directory.
+#   PELICAN_LIBRARY           = The PELICAN framework library
+#   PELICAN_TESTUTILS_LIBRARY = The PELICAN test utilities library.
 #
-#   PELICAN_INCLUDES         = Set of include directories needed by PELICAN.
-#   PELICAN_LIBRARIES        = Set of libraries required for linking.
+#   PELICAN_INCLUDES          = Set of include directories needed by PELICAN.
+#   PELICAN_LIBRARIES         = Set of libraries required for linking.
 #
 
 
@@ -22,11 +23,17 @@ find_path(PELICAN_INCLUDE_DIR pelican
     /usr/include/
     /usr/local/include
 )
+set(PELICAN_INCLUDES ${PELICAN_INCLUDE_DIR})
+
 
 # Find the pelican library.
 # ==============================================================================
 find_library(PELICAN_LIBRARY pelican NAMES pelican)
 set(PELICAN_LIBRARIES ${PELICAN_LIBRARY})
+
+#find_library(PELICAN_TESTUTILS_LIBRARY pelican-testutils NAMES pelican-testutils)
+#list(APPEND PELICAN_LIBRARIES ${PELICAN_TESTUTILS_LIBRARY})
+
 
 # Load Pelican library build configuration and find dependencies.
 # ==============================================================================
@@ -37,13 +44,6 @@ list(APPEND PELICAN_INCLUDES
     ${Boost_PROJECT_OPTIONS_INCLUDE_DIR}
     ${QT_INCLUDE_DIR}
     ${QT_QTCORE_INCLUDE_DIR}
-)
-
-list(APPEND PELICAN_LIBRARIES
-    #${QT_QTCORE_LIBRARY}
-    #${QT_QTXML_LIBRARY}
-    #${QT_QTNETWORK_LIBRARY}
-    #${Boost_PROGRAM_OPTIONS_LIBRARY}
 )
 
 # Handle the QUIETLY and REQUIRED arguments.
