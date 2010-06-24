@@ -1,5 +1,6 @@
 #include "pelican/core/test/PipelineDriverTest.h"
 #include "pelican/modules/AbstractModule.h"
+#include "pelican/output/OutputStreamManager.h"
 #include "pelican/core/DataClientFactory.h"
 #include "pelican/core/DataTypes.h"
 #include "pelican/core/PipelineDriver.h"
@@ -57,9 +58,11 @@ void PipelineDriverTest::setUp()
 
     _clientFactory = new DataClientFactory(0, "", "", 0);
 
+    _osmanager = new OutputStreamManager(0,Config::TreeAddress());
+
     // Create the pipeline driver.
     _pipelineDriver = new PipelineDriver(_dataBlobFactory, _moduleFactory,
-            _clientFactory);
+            _clientFactory, _osmanager);
 }
 
 /**
@@ -75,6 +78,7 @@ void PipelineDriverTest::tearDown()
     delete _dataBlobFactory;
     delete _moduleFactory;
     delete _clientFactory;
+    delete _osmanager;
 
     // Delete the QCoreApplication.
     delete _coreApp;

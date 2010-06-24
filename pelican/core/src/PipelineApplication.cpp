@@ -7,6 +7,7 @@
 #include "boost/program_options.hpp"
 #include "pelican/utility/Config.h"
 #include "pelican/utility/ConfigNode.h"
+#include "pelican/output/OutputStreamManager.h"
 #include <string>
 #include <iostream>
 
@@ -38,7 +39,7 @@ PipelineApplication::PipelineApplication(int argc, char** argv)
 
     // Construct the pipeline driver.
     _driver = new PipelineDriver( dataBlobFactory(), moduleFactory(),
-            clientFactory() );
+            clientFactory(), outputStreamManager() );
 }
 
 /**
@@ -70,6 +71,17 @@ DataClientFactory* PipelineApplication::clientFactory()
     static DataClientFactory factory(config(), "pipeline", "clients",
             adapterFactory() );
     return &factory;
+}
+
+/**
+ * @details
+ * Returns a pointer to the application's data output stream manager.
+ */
+OutputStreamManager* PipelineApplication::outputStreamManager()
+{
+    static OutputStreamManager osmanager( config(), 
+            Config::TreeAddress() <<  Config::NodeId("output", "") );
+    return &osmanager;
 }
 
 /**

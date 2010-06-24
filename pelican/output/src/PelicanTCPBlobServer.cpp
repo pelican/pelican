@@ -33,6 +33,15 @@ PelicanTCPBlobServer::~PelicanTCPBlobServer()
 
 /**
  * @details
+ * method to tell if there are any clients listening for data
+ */
+int PelicanTCPBlobServer::clientsForType(const QString& stream) const
+{
+    return _server->clientsForType(stream);
+}
+
+/**
+ * @details
  * Send datablob to connected clients 
  */
 void PelicanTCPBlobServer::send(const QString& streamName, const DataBlob* incoming)

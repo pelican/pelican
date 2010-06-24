@@ -20,6 +20,7 @@ class AbstractPipeline;
 class Config;
 class PipelineDriver;
 class DataClientFactory;
+class OutputStreamManager;
 
 /**
  * @class PipelineApplication
@@ -91,6 +92,9 @@ class PipelineApplication
         /// Return a pointer to the client factory.
         static DataClientFactory* clientFactory();
 
+        /// Return a pointer to the output stream manager
+        OutputStreamManager* outputStreamManager();
+
         /// Return a pointer to the application configuration object.
         static Config* config(std::string configFilename = "");
 
@@ -115,6 +119,10 @@ class PipelineApplication
     private:
         /// Creates the configuration object based on the command line arguments.
         void _createConfig(int argc, char** argv);
+
+    private:
+        /// base nodes to define configuration file
+        Config::TreeAddress _osmanagerBase;
 };
 
 } // namespace pelican
