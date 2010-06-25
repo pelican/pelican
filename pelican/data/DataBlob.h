@@ -4,6 +4,7 @@
 #include <QtCore/QString>
 #include <complex>
 #include "pelican/utility/FactoryRegistrar.h"
+
 class QIODevice;
 
 /**
@@ -20,7 +21,6 @@ typedef std::complex<real_t> complex_t;
 
 /**
  * This macro is used to register the named data blob type with the factory.
- * It should be used within the global scope of the data blob source file.
  */
 #define PELICAN_DECLARE_DATABLOB(type) PELICAN_DECLARE(DataBlob, type)
 

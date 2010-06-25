@@ -8,11 +8,13 @@ namespace pelican {
 
 /**
  * @details
- * Constructs a new data blob.
+ * Constructs a new data blob, setting the type-name
+ * and the time stamp at the time of creation using the system clock.
+ *
+ * @param[in] type The name of the data blob derived class.
  */
 DataBlob::DataBlob(const QString& type) : _type(type)
 {
-    // Set the default time stamp.
     setTimeStamp();
 }
 
@@ -41,7 +43,9 @@ void DataBlob::setTimeStamp()
 
 /**
  * @details
- * Serialises the data blob.
+ * Serialises the DataBlob into the QIODevice.
+ * This method should be reimplemented in a derived class if needed,
+ * since the default implementation will throw an exception of type QString.
  */
 void DataBlob::serialise(QIODevice&) const
 {
@@ -53,6 +57,8 @@ void DataBlob::serialise(QIODevice&) const
 /**
  * @details
  * Deserialises the data blob.
+ * This method should be reimplemented in a derived class if needed,
+ * since the default implementation will throw an exception of type QString.
  */
 void DataBlob::deserialise(QIODevice&)
 {
