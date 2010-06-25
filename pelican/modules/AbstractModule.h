@@ -59,19 +59,15 @@ class AbstractModule
         template <typename T>
         unsigned findIndex(const T value, const std::vector<T>& data) const
         {
-            int index = -1;
-            for (unsigned i = 0; i < data.size(); i++) {
-                if (data[i] == value) {
-                    index = i;
-                    break;
-                }
-            }
-            if (index == -1) {
+            unsigned i;
+            for (i = 0; i < data.size(); ++i)
+                if (data[i] == value) break;
+            if (i == data.size()) {
                 QString moduleName = _config.getDomElement().tagName();
                 throw QString("%1: Index for selected value not found.").arg(moduleName);
             }
 
-            return static_cast<unsigned>(index);
+            return i;
         }
 };
 
