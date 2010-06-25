@@ -1,8 +1,8 @@
 #ifndef TESTDATABLOB_H
 #define TESTDATABLOB_H
 
-
 #include "pelican/data/DataBlob.h"
+#include <QtCore/QByteArray>
 
 /**
  * @file TestDataBlob.h
@@ -17,7 +17,7 @@ namespace pelican {
  * Data blob to support unit testing.
  * 
  * @details
- * A minimalist data blob that contains only a string.
+ * A minimal data blob that contains only a byte array.
  * This data blob is used in unit tests.
  */
 class TestDataBlob : public DataBlob
@@ -30,22 +30,28 @@ class TestDataBlob : public DataBlob
         ~TestDataBlob() {}
 
         /// Sets the content of the data blob.
-        void setData(const QString& data) {_data = data;}
+        void setData(const QByteArray& data) {_data = data;}
 
-        /// Tests for equality with another data test blob.
-        bool operator==(const TestDataBlob& blob) {return _data == blob._data;}
+        /// Returns a reference to the byte array that this data blob wraps.
+        QByteArray& data() {return _data;}
 
         /// Deserialises the content from a QIODevice.
         void deserialise(QIODevice&, QSysInfo::Endian);
+
+        /// Resizes the byte array in the data blob.
+        void resize(int size) {_data.resize(size);}
 
         /// Serialises the data blob content.
         void serialise(QIODevice&) const;
 
         /// Returns the number of bytes in the serialised data blob.
-        quint64 serialisedBytes() const {return _data.length();}
+        quint64 serialisedBytes() const {return _data.size();}
+
+        /// Tests for equality with another data test blob.
+        bool operator==(const TestDataBlob& blob) {return _data == blob._data;}
 
     private:
-        QString _data;
+        QByteArray _data;
 };
 
 PELICAN_DECLARE_DATABLOB(TestDataBlob)

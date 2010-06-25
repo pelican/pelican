@@ -1,5 +1,5 @@
 # Set dependencies for Pelican core tests.
-TEST_SUBPACKAGE(coreTest core data utility serverTest emulator)
+TEST_SUBPACKAGE(coreTest core data utility serverTest emulator dataTest)
 
 # Build Pelican core testing library module.
 # ==============================================================================
@@ -7,7 +7,7 @@ set(coreTestLibrary_src
     src/coreTest.cpp
     src/TestPipeline.cpp
     src/TestDataClient.cpp
-    src/TestAdapter.cpp
+    src/TestServiceAdapter.cpp
     src/TestStreamAdapter.cpp
 )
 TEST_SUBPACKAGE_LIBRARY(coreTestUtilities ${coreTestLibrary_src})

@@ -1,6 +1,6 @@
 #include "pelican/core/test/DataTypesTest.h"
 #include "pelican/core/DataTypes.h"
-#include "pelican/core/test/TestAdapter.h"
+#include "pelican/core/test/TestServiceAdapter.h"
 #include "pelican/core/test/TestStreamAdapter.h"
 #include "pelican/data/DataRequirements.h"
 
@@ -34,7 +34,7 @@ void DataTypesTest::tearDown()
 
 void DataTypesTest::test_method()
 {
-    TestAdapter service_adapter;
+    TestServiceAdapter service_adapter;
     TestStreamAdapter stream_adapter;
     {
         // Use case:

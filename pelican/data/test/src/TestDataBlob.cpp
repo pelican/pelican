@@ -6,11 +6,9 @@ namespace pelican {
 
 void TestDataBlob::serialise(QIODevice& device) const
 {
-    QByteArray array;
-    QDataStream out(&array, QIODevice::WriteOnly);
+    QDataStream out(&device);
     out.setVersion(QDataStream::Qt_4_0);
     out << _data;
-    device.write(array);
 }
 
 void TestDataBlob::deserialise(QIODevice& device, QSysInfo::Endian)
@@ -21,4 +19,3 @@ void TestDataBlob::deserialise(QIODevice& device, QSysInfo::Endian)
 }
 
 } // namespace pelican
-
