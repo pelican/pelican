@@ -47,8 +47,20 @@ macro(SUBPACKAGE_LIBRARY name)
 
         # Add target for the dynamic library.
         add_library("${name}" SHARED ${ARGN})
+        set_target_properties("${name}" PROPERTIES CLEAN_DIRECT_OUTPUT 1)
 
-        # TODO: link the library with externals....
+        # Add a target for a shared library. (note this will compile a 2nd set
+        # of objects and therefore be expensive.)
+        if(BUILD_STATIC)
+            add_library("${name}_static" STATIC ${ARGN})
+            set_target_properties("${name}_static" PROPERTIES CLEAN_DIRECT_OUTPUT 1)
+            set_target_properties("${name}_static" PREFIX "lib")
+            set_target_properties("${name}_static" OUTPUT_NAME "${name}")
+        endif(BUILD_STATIC)
+
+        # TODO: link the library with externals.... ?
+
+        # TODO: save static objects in single library files...
 
         # Add list of object files created by the sub-pacakge to project files
         # using the sub-pacakge.

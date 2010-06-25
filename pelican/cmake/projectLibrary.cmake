@@ -11,15 +11,13 @@ macro(CREATE_PROJECT_LIBRARY name)
     # Only proceed if in single library mode.
     if(BUILD_SINGLE_LIB)
 
-        # Load the project library file to get objects / includes / link deps.
-
-        # Set the name of the sub-package file.
+        # Set the name of the project library file.
         set(project_file "${SUBPACKAGE_WORK_DIR}/_${name}.cmake")
 
-        # Reset shared object list.
+        # Reset shared object list to be loaded from the project library file.
         set(shared_objects "")
 
-        # Load the project file.
+        # Load the project library file.
         include(${project_file})
 
         # Mark objects as generated ## why?
