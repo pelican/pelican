@@ -29,6 +29,17 @@ macro(SUBPACKAGE name)
     # Save and process packages that the sub-package depends on.
     _GET_SUBPACKAGE_DEPS(${ARGN})
 
+    if(BUILD_STATIC)
+        #foreach(pack ${SUBPACKAGE_LIBRARIES})
+        #    list(APPEND SUBPACKAGE_LIBRARIES_TEMP ${pack}_static)
+        #endforeach(pack)
+        #set(SUBPACKAGE_LIBRARIES ${SUBPACKAGE_LIBRARIES_TEMP})
+        link_directories(${link_dirs})
+        link_directories(${CMAKE_CURRENT_BINARY_DIR})
+    endif(BUILD_STATIC)
+
+    list(APPEND SUBPACKAGE_LIBRARIES ${SUBPACKAGE_EXTERNAL_LIBRARIES})
+
     # Create the install target for header files of the sub-package.
     file(GLOB public_headers RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "*.h")
     install(FILES ${public_headers} DESTINATION ${INCLUDE_INSTALL_DIR}/${name})
@@ -46,40 +57,58 @@ macro(SUBPACKAGE_LIBRARY name)
     if(subpackage_current)
 
         # Add target for the dynamic library.
-        add_library("${name}" SHARED ${ARGN})
-        set_target_properties("${name}" PROPERTIES CLEAN_DIRECT_OUTPUT 1)
+        if(BUILD_SHARED)
+            add_library("${name}" SHARED ${ARGN})
+            set_target_properties("${name}" PROPERTIES CLEAN_DIRECT_OUTPUT 1)
+        endif(BUILD_SHARED)
 
         # Add a target for a shared library. (note this will compile a 2nd set
         # of objects and therefore be expensive.)
         if(BUILD_STATIC)
             add_library("${name}_static" STATIC ${ARGN})
             set_target_properties("${name}_static" PROPERTIES CLEAN_DIRECT_OUTPUT 1)
-            set_target_properties("${name}_static" PREFIX "lib")
-            set_target_properties("${name}_static" OUTPUT_NAME "${name}")
+            set_target_properties("${name}_static" PROPERTIES PREFIX "lib")
+            set_target_properties("${name}_static" PROPERTIES OUTPUT_NAME "${name}")
         endif(BUILD_STATIC)
 
         # TODO: link the library with externals.... ?
 
-        # TODO: save static objects in single library files...
-
         # Add list of object files created by the sub-pacakge to project files
         # using the sub-pacakge.
-        _SUBPROJECT_OBJECT_FILES("${name}" "${name}_shared_objects")
-        foreach(project_file ${project_files})
-            file(APPEND ${project_file}
-                "list(INSERT shared_libs 0 "${name}")\n\n"
-                "list(INSERT shared_objects 0 ${${name}_shared_objects})\n\n"
-            )
-        endforeach(project_file)
+        if(BUILD_SHARED)
+            _SUBPROJECT_OBJECT_FILES("${name}" "${name}_shared_objects")
+            foreach(project_file ${project_files})
+                file(APPEND ${project_file}
+                    "list(INSERT shared_libs 0 "${name}")\n\n"
+                    "list(INSERT shared_objects 0 ${${name}_shared_objects})\n\n"
+                )
+            endforeach(project_file)
+            # Add the library generated to list of sub-package libs in the sub-pacakge file.
+            file(APPEND ${subpackage_file}
+                "list(INSERT ${subpackage_current}_shared_libs 0 "${name}")\n\n")
+        endif(BUILD_SHARED)
 
-        # Add the library generated to list of sub-package libs in the sub-pacakge file.
-        file(APPEND ${subpackage_file}
-            "list(INSERT ${subpackage_current}_shared_libs 0 "${name}")\n\n")
+        if(BUILD_STATIC)
+            _SUBPROJECT_OBJECT_FILES("${name}_static" "${name}_static_objects")
+            foreach(project_file ${project_files})
+                file(APPEND ${project_file}
+                    "list(INSERT static_libs 0 "${name}_static")\n\n"
+                    "list(INSERT static_objects 0 ${${name}_static_objects})\n\n"
+                )
+            endforeach(project_file)
+            # Add the library generated to list of sub-package libs in the sub-pacakge file.
+            file(APPEND ${subpackage_file}
+                "list(INSERT ${subpackage_current}_static_libs 0 "${name}")\n\n"
+                "list(INSERT ${subpackage_current}_lib_dir 0 "${CMAKE_CURRENT_BINARY_DIR}")\n\n"
+            )
+        endif(BUILD_STATIC)
 
         # Add the library to the list of sub-pacakge libraries.
         # This is required for the case in which subpacakge binaries depend
         # locally on the subpackage library.
         _SET_SUBPACKAGE_LIBRARIES(${subpackage_current})
+        list(REMOVE_DUPLICATES SUBPACKAGE_LIBRARIES)
+
 
     else(subpackage_current)
         message(FATAL_ERROR "ERROR: SUBPACKAGE_LIBRARY "
@@ -132,6 +161,7 @@ macro(_SET_SUBPACKAGE_LIBRARIES)
     # In single library mode work out which project libraries the sub-package
     # DEPS list belong to.
     if(BUILD_SINGLE_LIB)
+
         if(subpackage_deps)
             foreach(dep ${subpackage_deps})
                 #message(STATUS "++ dep: ${dep}\n")
@@ -140,27 +170,43 @@ macro(_SET_SUBPACKAGE_LIBRARIES)
                     foreach(subpackage ${${project_lib}_subpackage_DEPS})
                         #message(STATUS "     ++ subpackage: ${subpackage}")
                         if("${dep}" STREQUAL "${subpackage}")
-                            list(APPEND SUBPACKAGE_LIBRARIES ${project_lib})
+                            if(BUILD_SHARED)
+                                list(INSERT SUBPACKAGE_LIBRARIES 0 ${project_lib})
+                            endif(BUILD_SHARED)
+                            if(BUILD_STATIC)
+                                list(INSERT SUBPACKAGE_LIBRARIES 0 ${project_lib}_static)
+                            endif(BUILD_STATIC)
                         endif("${dep}" STREQUAL "${subpackage}")
                     endforeach(subpackage)
                 endforeach(project_lib)
             endforeach(dep)
         endif(subpackage_deps)
+
     else(BUILD_SINGLE_LIB)
+
         foreach(dep ${subpackage_deps})
             include(${SUBPACKAGE_WORK_DIR}/${dep}.cmake)
-            list(APPEND SUBPACKAGE_LIBRARIES ${${dep}_shared_libs})
+            if(BUILD_SHARED)
+                list(INSERT SUBPACKAGE_LIBRARIES 0 ${${dep}_shared_libs})
+            endif(BUILD_SHARED)
+            if(BUILD_STATIC)
+                foreach(pack ${${dep}_static_libs})
+                    list(INSERT SUBPACKAGE_LIBRARIES 0 ${pack}_static)
+                endforeach(pack)
+            endif(BUILD_STATIC)
         endforeach(dep)
+        list(REMOVE_DUPLICATES SUBPACKAGE_LIBRARIES)
     endif(BUILD_SINGLE_LIB)
 
     # Grab external libraries ... ? NEEDED?
     foreach(dep ${subpackage_deps})
         include("${SUBPACKAGE_WORK_DIR}/${dep}.cmake")
         #message(STATUS "^^^ ${dep}_external_LIBS = ${${dep}_external_LIBS}")
-        list(APPEND SUBPACKAGE_LIBRARIES ${${dep}_external_LIBS})
+        list(APPEND SUBPACKAGE_EXTERNAL_LIBRARIES ${${dep}_external_LIBS})
     endforeach(dep)
 
-    list(REMOVE_DUPLICATES SUBPACKAGE_LIBRARIES)
+    #list(REMOVE_DUPLICATES SUBPACKAGE_LIBRARIES)
+    list(REMOVE_DUPLICATES SUBPACKAGE_EXTERNAL_LIBRARIES)
 
     #message(STATUS "**** subpackage = '${subpackage_current}' (deps = ${subpackage_deps})")
     #message(STATUS "**** SUBPACKAGE_LIBRARIES = '${SUBPACKAGE_LIBRARIES}'\n")
@@ -286,13 +332,23 @@ macro(_SET_SUBPACKAGE_PROJECT_FILES)
         foreach(subpackage ${${project_lib}_subpackage_DEPS})
             if("${subpackage}" STREQUAL "${subpackage_current}")
                 #message(STATUS "**** subpackage ${name} found in project lib '${project_lib}', (${subpackage})")
-                list(APPEND project_libs ${project_lib})
+
+                if(BUILD_SHARED)
+                    list(APPEND project_libs ${project_lib})
+                endif(BUILD_SHARED)
+
+                if(BUILD_STATIC)
+                    list(APPEND project_libs ${project_lib}_static)
+                endif(BUILD_STATIC)
+
             endif("${subpackage}" STREQUAL "${subpackage_current}")
         endforeach(subpackage)
     endforeach(project_lib)
+
     foreach(project ${project_libs})
         list(APPEND project_files "${SUBPACKAGE_WORK_DIR}/_${project}.cmake")
     endforeach(project)
+
 endmacro(_SET_SUBPACKAGE_PROJECT_FILES)
 
 
@@ -325,6 +381,10 @@ macro(_SUBPACKAGE_FIND_DEPS name)
         #message(STATUS "  **** ${name}")
 
         include(${SUBPACKAGE_WORK_DIR}/${name}.cmake)
+        if(BUILD_STATIC)
+            list(INSERT link_dirs 0 ${${name}_lib_dir})
+            list(REMOVE_DUPLICATES link_dirs)
+       endif(BUILD_STATIC)
 
         #message(STATUS "     DEPS = ${${name}_subpackage_DEPS}")
 
@@ -371,12 +431,13 @@ macro(_GET_SUBPACKAGE_DEPS)
         endforeach(dep)
     endif(dependencies)
     #message(STATUS "+++ ${subpackage_current} ==> ${dependencies}\n")
-
+    #message(STATUS "+++ ${subpackage_current} ==> ${link_dirs}\n")
 
     # Get the list of subpackage libraries to link against.
     # In single library build mode this will be the project libraries
     # for which the module dependencies belong.
     set(SUBPACKAGE_LIBRARIES "")
+    set(SUBPACKAGE_EXTERNAL_LIBRARIES "")
     _SET_SUBPACKAGE_LIBRARIES(${dependencies})
 
     # TODO also pull in external libraries (only really needed in STATIC mode)

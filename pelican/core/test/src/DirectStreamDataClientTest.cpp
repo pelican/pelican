@@ -5,6 +5,8 @@
 #include "pelican/core/DirectStreamDataClient.h"
 #include "pelican/data/DataBlob.h"
 #include "pelican/data/ArrayData.h"
+#include "pelican/core/AdapterRealData.h"
+#include "pelican/server/test/TestUdpChunker.h"
 
 #include "pelican/data/DataRequirements.h"
 #include "pelican/emulator/EmulatorDriver.h"

@@ -19,6 +19,7 @@ set(dataTest_src
     src/DataRequirementsTest.cpp
 )
 add_executable(dataTest ${dataTest_src})
+#message(STATUS ">>>>>>>> dataTest: subpackage libs = ${SUBPACKAGE_LIBRARIES}")
 target_link_libraries(dataTest
     ${SUBPACKAGE_LIBRARIES}
     ${CPPUNIT_LIBRARIES}

@@ -41,6 +41,8 @@ set(coreTestMT_src
     src/PelicanServerClientTestMT.cpp
     src/DirectStreamDataClientTest.cpp
 )
+#message(STATUS "$$$$$$$$$$$$$$$$$$$ coreTestMT: sub libs: ${SUBPACKAGE_LIBRARIES}")
+
 add_executable(coreTestMT ${coreTestMT_src})
 target_link_libraries(coreTestMT
     ${SUBPACKAGE_LIBRARIES}
@@ -50,7 +52,7 @@ target_link_libraries(coreTestMT
 add_test(coreTestMT coreTestMT)
 
 
-# Build test direct streaming client (used for bandwidth testing) 
+# Build test direct streaming client (used for bandwidth testing)
 # ==============================================================================
 add_executable(directClient src/directClientMain.cpp)
 target_link_libraries(directClient
