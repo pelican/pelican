@@ -1,8 +1,8 @@
 #include "pelican/data/DataBlob.h"
-#include <QDate>
-#include <QTime>
-#include <QDateTime>
-#include <QIODevice>
+#include <QtCore/QDate>
+#include <QtCore/QTime>
+#include <QtCore/QDateTime>
+#include <QtCore/QIODevice>
 
 namespace pelican {
 
@@ -10,19 +10,10 @@ namespace pelican {
  * @details
  * Constructs a new data blob.
  */
-DataBlob::DataBlob(const QString& type)
-    : _type(type)
+DataBlob::DataBlob(const QString& type) : _type(type)
 {
     // Set the default time stamp.
     setTimeStamp();
-}
-
-/**
- * @details
- * Data blob destructor.
- */
-DataBlob::~DataBlob()
-{
 }
 
 /**
@@ -67,17 +58,6 @@ void DataBlob::deserialise(QIODevice&)
 {
     throw QString("DataBlob: This object's ('%1') deserialise method "
             "is undefined.").arg(type());
-}
-
-QString DataBlob::type() const {
-    if( _type == ""  )
-    {
-        // Noone has specified the type in the constructor
-        // Maybe we can find it out from the factory.
-        // this will throw if not factory created
-       // _type = Factory::whatIs(this);
-    }
-    return _type;
 }
 
 } // namespace pelican
