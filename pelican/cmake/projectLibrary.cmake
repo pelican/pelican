@@ -1,3 +1,14 @@
+# Declare a project library to be build from the specified subpackages.
+macro(DECLARE_PROJECT_LIBRARY name)
+    set(${name}_subpackage_DEPS ${ARGN})
+    list(APPEND project_libraries ${name})
+    file(WRITE "${SUBPACKAGE_WORK_DIR}/_${name}.cmake"
+        "# Project library '${name}' - this file is auto-generated "
+        "do not edit!\n\n"
+    )
+endmacro(DECLARE_PROJECT_LIBRARY)
+
+
 
 # Create the project library specfied by the name argument.
 macro(CREATE_PROJECT_LIBRARY name)
@@ -11,7 +22,7 @@ macro(CREATE_PROJECT_LIBRARY name)
     # Only proceed if in single library mode.
     if(BUILD_SINGLE_LIB)
 
-        # Create a target for the project library.
+        # Create a target for a static project library.
         if(BUILD_SHARED)
             set(project_file "${SUBPACKAGE_WORK_DIR}/_${name}.cmake")
             set(shared_objects "")
@@ -28,7 +39,7 @@ macro(CREATE_PROJECT_LIBRARY name)
             target_link_libraries("${name}" ${external_libs})
         endif(BUILD_SHARED)
 
-        # Create a target for the project library.
+        # Create a target for a shared project library.
         if(BUILD_STATIC)
             set(project_file_static "${SUBPACKAGE_WORK_DIR}/_${name}_static.cmake")
             set(static_objects "")
@@ -41,7 +52,6 @@ macro(CREATE_PROJECT_LIBRARY name)
             set_target_properties("${name}_static" PROPERTIES PREFIX "lib")
             set_target_properties("${name}_static" PROPERTIES OUTPUT_NAME "${name}")
             set_target_properties("${name}_static" PROPERTIES LINKER_LANGUAGE CXX)
-            #message(STATUS "------------------------ static libs: ${static_libs}")
             add_dependencies("${name}_static" ${static_libs})
             install(TARGETS "${name}_static" DESTINATION ${LIBRARY_INSTALL_DIR})
             list(REMOVE_DUPLICATES external_libs)
@@ -51,17 +61,3 @@ macro(CREATE_PROJECT_LIBRARY name)
     endif(BUILD_SINGLE_LIB)
 
 endmacro(CREATE_PROJECT_LIBRARY)
-
-
-
-# Declare a project library to be build from the specified subpackages.
-macro(DECLARE_PROJECT_LIBRARY name)
-    set(${name}_subpackage_DEPS ${ARGN})
-    list(APPEND project_libraries ${name})
-
-    file(WRITE "${SUBPACKAGE_WORK_DIR}/_${name}.cmake"
-        "# Project library '${name}' - this file is auto-generated "
-        "do not edit!\n\n"
-    )
-endmacro(DECLARE_PROJECT_LIBRARY)
-

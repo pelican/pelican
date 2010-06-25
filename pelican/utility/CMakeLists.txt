@@ -29,17 +29,16 @@ set(memoryTracerDummy_src
 )
 
 # Build the non-thread safe library.
-add_library(memoryTracer ${memoryTracer_src})
+add_library(memoryTracer SHARED ${memoryTracer_src})
 
 # Build the thread safe library (dummies).
-add_library(memoryTracerDummy ${memoryTracerDummy_src})
+add_library(memoryTracerDummy SHARED ${memoryTracerDummy_src})
 
 # Only install the memory tracer if debug mode.
 if(CMAKE_BUILD_TYPE MATCHES DEBUG|[Dd]ebug)
     install(TARGETS memoryTracerDummy DESTINATION ${LIBRARY_INSTALL_DIR} )
     install(TARGETS memoryTracer DESTINATION ${LIBRARY_INSTALL_DIR} )
 endif(CMAKE_BUILD_TYPE MATCHES DEBUG|[Dd]ebug)
-
 
 # Recurse into test sub-directory to build tests.
 add_subdirectory(test)
