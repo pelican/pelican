@@ -26,9 +26,6 @@ macro(SUBPACKAGE name)
     # Add include_directories() defined before this macro to the sub-package file.
     _SET_INCLUDE_DIRECTORIES()
 
-    #TODO TODO: need to iterate though the dependencies of dependant supacakges to
-    # load their libs see _SUBPACKAGE_GET_LIBS()
-
     # Save and process packages that the sub-package depends on.
     _GET_SUBPACKAGE_DEPS(${ARGN})
 
@@ -36,6 +33,7 @@ macro(SUBPACKAGE name)
     file(GLOB public_headers RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "*.h")
     install(FILES ${public_headers} DESTINATION ${INCLUDE_INSTALL_DIR}/${name})
 
+    #message(STATUS "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
 endmacro(SUBPACKAGE)
 
 
@@ -53,7 +51,7 @@ macro(SUBPACKAGE_LIBRARY name)
         # TODO: link the library with externals....
 
         # Add list of object files created by the sub-pacakge to project files
-        # using the sub-pacakge.  
+        # using the sub-pacakge.
         _SUBPROJECT_OBJECT_FILES("${name}" "${name}_shared_objects")
         foreach(project_file ${project_files})
             file(APPEND ${project_file}
@@ -63,7 +61,7 @@ macro(SUBPACKAGE_LIBRARY name)
         endforeach(project_file)
 
         # Add the library generated to list of sub-package libs in the sub-pacakge file.
-        file(APPEND ${subpackage_file} 
+        file(APPEND ${subpackage_file}
             "list(INSERT ${subpackage_current}_shared_libs 0 "${name}")\n\n")
 
         # Add the library to the list of sub-pacakge libraries.
@@ -85,18 +83,18 @@ endmacro(SUBPACKAGE_LIBRARY)
 macro(SUBPACKAGE_SET_EXTERNAL_LIBRARIES)
     if(subpackage_current)
         list(APPEND ${SUBPACKAGE_LIBRARIES} ${ARGN})
-        file(APPEND ${subpackage_file} 
+        file(APPEND ${subpackage_file}
             "set(${subpackage_current}_external_LIBS ${ARGN})\n")
         foreach(project_file ${project_files})
             file(APPEND ${project_file}
                 "list(APPEND external_libs ${ARGN})\n\n")
         endforeach(project_file)
-        
+
     else(subpackage_current)
         message(FATAL_ERROR "ERROR: SUBPACKAGE_SET_EXTERNAL_LIBRARIES "
             " specified outside of a SUBPACKAGE context")
-    endif(subpackage_current)      
-        
+    endif(subpackage_current)
+
 endmacro(SUBPACKAGE_SET_EXTERNAL_LIBRARIES)
 
 
@@ -116,19 +114,19 @@ endmacro(SUBPACKAGE_SET_EXTERNAL_LIBRARIES)
 # by the dependency list of the SUBPACKGE macro.
 #
 macro(_SET_SUBPACKAGE_LIBRARIES)
-    
+
     set(subpackage_deps ${ARGN})
 
     # In single library mode work out which project libraries the sub-package
     # DEPS list belong to.
     if(BUILD_SINGLE_LIB)
-        if(subpackage_deps)    
+        if(subpackage_deps)
             foreach(dep ${subpackage_deps})
                 #message(STATUS "++ dep: ${dep}\n")
                 foreach(project_lib ${project_libraries})
-                 #   message(STATUS "   ++ project lib: ${project_lib}\n")
+                    #message(STATUS "   ++ project lib: ${project_lib}\n")
                     foreach(subpackage ${${project_lib}_subpackage_DEPS})
-                  #      message(STATUS "     ++ subpackage: ${subpackage}")
+                        #message(STATUS "     ++ subpackage: ${subpackage}")
                         if("${dep}" STREQUAL "${subpackage}")
                             list(APPEND SUBPACKAGE_LIBRARIES ${project_lib})
                         endif("${dep}" STREQUAL "${subpackage}")
@@ -152,16 +150,16 @@ macro(_SET_SUBPACKAGE_LIBRARIES)
 
     list(REMOVE_DUPLICATES SUBPACKAGE_LIBRARIES)
 
-    #message(STATUS "*** subpackage = ${subpackage_current}, deps = ${subpackage_deps}")
-    #message(STATUS "*** SUBPACKAGE_LIBRARIES = '${SUBPACKAGE_LIBRARIES}'")
-    
+    #message(STATUS "**** subpackage = '${subpackage_current}' (deps = ${subpackage_deps})")
+    #message(STATUS "**** SUBPACKAGE_LIBRARIES = '${SUBPACKAGE_LIBRARIES}'\n")
+
 endmacro(_SET_SUBPACKAGE_LIBRARIES)
 
 
 
 
 #
-# Adds to the the SUBPACKAGE_LIBRARIES variable for libraries of subpacakge 
+# Adds to the the SUBPACKAGE_LIBRARIES variable for libraries of subpacakge
 # dependencies.
 #
 macro(_SUBPACKAGE_GET_LIBS name)
@@ -171,21 +169,19 @@ macro(_SUBPACKAGE_GET_LIBS name)
         foreach(pack ${subpackage_${name}_DEPS})
             _SUBPACKAGE_GET_LIBS(${pack})
         endforeach(pack)
-        
+
         if(subpackage_${name}_LIBS)
             list(INSERT SUBPACKAGE_LIBRARIES 0 ${subpackage_${name}_LIBS})
         endif(subpackage_${name}_LIBS)
-        
+
         if(subpackage_${name}_external_LIBS)
             list(INSERT SUBPACKAGE_LIBRARIES 0 ${subpackage_${name}_external_LIBS})
         endif(subpackage_${name}_external_LIBS)
- 
+
         set(subpackage_${name}_added TRUE)
-        
+
     endif(NOT subpackage_${name}_added)
 endmacro(_SUBPACKAGE_GET_LIBS)
-
-
 
 
 #
@@ -218,7 +214,7 @@ macro(_SUBPROJECT_OBJECT_FILES target outputObjectFiles)
     # Now we know what directory the objects live in. Construct the actual list of objects:
     # from the sources. We cannot glob as these files do not exist yet
     get_property( target_sources TARGET ${target} PROPERTY SOURCES )
-    
+
     foreach( sourcefile ${target_sources} )
         if(IS_ABSOLUTE ${sourcefile})
             # absolutes will appear in the top level object dir
@@ -229,7 +225,7 @@ macro(_SUBPROJECT_OBJECT_FILES target outputObjectFiles)
         endif(IS_ABSOLUTE ${sourcefile})
         list(APPEND ${outputObjectFiles} ${source_name}${CMAKE_C_OUTPUT_EXTENSION})
     endforeach( sourcefile )
-    
+
     _ADD_DIR_PREFIX(${STATIC_OBJ_DIR}/ ${outputObjectFiles})
 endmacro(_SUBPROJECT_OBJECT_FILES )
 
@@ -272,7 +268,7 @@ endmacro(_INIT_SUBPACKAGE_FILE)
 macro(_SET_SUBPACKAGE_PROJECT_FILES)
     # Work out which project libraries the sub-package belongs to and set
     # the project file names.
-    set(project_libs "") 
+    set(project_libs "")
     set(project_files "")
     foreach(project_lib ${project_libraries})
         foreach(subpackage ${${project_lib}_subpackage_DEPS})
@@ -284,7 +280,7 @@ macro(_SET_SUBPACKAGE_PROJECT_FILES)
     endforeach(project_lib)
     foreach(project ${project_libs})
         list(APPEND project_files "${SUBPACKAGE_WORK_DIR}/_${project}.cmake")
-    endforeach(project)        
+    endforeach(project)
 endmacro(_SET_SUBPACKAGE_PROJECT_FILES)
 
 
@@ -309,6 +305,30 @@ endmacro(_SET_INCLUDE_DIRECTORIES)
 
 
 
+
+
+macro(_SUBPACKAGE_FIND_DEPS name)
+    #message(STATUS "  ** ${name}")
+    if(NOT ${subpackage_current}_${name}_added)
+        #message(STATUS "  **** ${name}")
+
+        include(${SUBPACKAGE_WORK_DIR}/${name}.cmake)
+
+        #message(STATUS "     DEPS = ${${name}_subpackage_DEPS}")
+
+        foreach(dep ${${name}_subpackage_DEPS})
+            list(INSERT dependencies 0 ${dep})
+            _SUBPACKAGE_FIND_DEPS(${dep})
+        endforeach(dep)
+
+        list(REMOVE_DUPLICATES dependencies)
+
+        set(${subpackage_current}_${name}_added TRUE)
+   endif(NOT ${subpackage_current}_${name}_added)
+endmacro(_SUBPACKAGE_FIND_DEPS)
+
+
+
 #
 # Process subpackage dependencies.
 #
@@ -317,7 +337,7 @@ endmacro(_SET_INCLUDE_DIRECTORIES)
 # - Sets SUBPACKAGE_LIBRARIES
 #
 macro(_GET_SUBPACKAGE_DEPS)
-    
+
     # Set teh variable dependencies from the argument list of passed down
     # from the SUBPACKAGE macro.
     set(dependencies ${ARGN})
@@ -330,29 +350,39 @@ macro(_GET_SUBPACKAGE_DEPS)
         file(APPEND ${subpackage_file}
             "set(${subpackage_current}_subpackage_DEPS ${dependencies})\n\n")
     endif(dependencies)
-    
+
+    # Add depedencies of dependencies to the list.
+    #message(STATUS "+++ ${subpackage_current} ==> ${dependencies}")
+    if(dependencies)
+        foreach(dep ${dependencies})
+            _SUBPACKAGE_FIND_DEPS(${dep})
+        endforeach(dep)
+    endif(dependencies)
+    #message(STATUS "+++ ${subpackage_current} ==> ${dependencies}\n")
+
+
     # Get the list of subpackage libraries to link against.
     # In single library build mode this will be the project libraries
     # for which the module dependencies belong.
     set(SUBPACKAGE_LIBRARIES "")
     _SET_SUBPACKAGE_LIBRARIES(${dependencies})
-    
+
     # TODO also pull in external libraries (only really needed in STATIC mode)
     # as libs should be linked properly in SHARED mode.
-    
-    file(APPEND ${subpackage_file} 
+
+    file(APPEND ${subpackage_file}
         "set(${subpackage_current}_SUBPACKAGE_LIBRARIES ${SUBPACKAGE_LIBRARIES})\n\n")
-    
+
     # Add the package files of dependent sub-packages to the sub-package file. #TODO: needed?
     foreach(pack ${ARGN})
-        file(APPEND ${subpackage_file} 
+        file(APPEND ${subpackage_file}
             "include(${SUBPACKAGE_WORK_DIR}/${pack}.cmake)\n")
         foreach(project_file ${project_files})
-            file(APPEND ${project_file} 
+            file(APPEND ${project_file}
                 "include(${SUBPACKAGE_WORK_DIR}/${pack}.cmake)\n")
         endforeach(project_file)
 
     endforeach(pack)
     file(APPEND ${subpackage_file} "\n")
-    
+
 endmacro(_GET_SUBPACKAGE_DEPS)

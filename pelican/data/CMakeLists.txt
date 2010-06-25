@@ -4,7 +4,7 @@ set(data_src
     src/DataRequirements.cpp
 )
 SUBPACKAGE_LIBRARY(data ${data_src} )
-SUBPACKAGE_SET_EXTERNAL_LIBRARIES(data
+SUBPACKAGE_SET_EXTERNAL_LIBRARIES(
     ${QT_QTCORE_LIBRARY}
 )
 add_subdirectory(test)
