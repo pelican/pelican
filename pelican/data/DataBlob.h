@@ -1,9 +1,11 @@
 #ifndef DATABLOB_H
 #define DATABLOB_H
 
-#include <QString>
+#include <QtCore/QString>
+#include <QtCore/QSysInfo>
 #include <complex>
 #include "pelican/utility/FactoryRegistrar.h"
+
 class QIODevice;
 
 /**
@@ -20,7 +22,6 @@ typedef std::complex<real_t> complex_t;
 
 /**
  * This macro is used to register the named data blob type with the factory.
- * It should be used within the global scope of the data blob source file.
  */
 #define PELICAN_DECLARE_DATABLOB(type) PELICAN_DECLARE(DataBlob, type)
 
@@ -51,10 +52,10 @@ class DataBlob
         DataBlob(const QString& type);
 
         /// Data blob destructor.
-        virtual ~DataBlob();
+        virtual ~DataBlob() {}
 
-        /// return a QString of the type of DataBlob (should be the same as the class name)
-        QString type() const;
+        /// Returns the type of DataBlob (should be the class name).
+        const QString& type() const {return _type;}
 
         /// Sets the time stamp using the current value of the system clock.
         void setTimeStamp();
@@ -65,17 +66,20 @@ class DataBlob
         /// Returns the MJD timestamp of the data blob.
         double timeStamp() const { return _modifiedJulianDate; }
 
-        /// set the version id of the DataBlob
-        void setVersion(const QString& v) { _version = v; };
+        /// Set the version ID of the DataBlob.
+        void setVersion(const QString& v) {_version = v;}
 
-        /// Returns the version of the DataBlob
-        QString version() const { return _version; };
+        /// Returns the version of the DataBlob.
+        const QString& version() const {return _version;}
 
         /// Serialise the DataBlob into the QIODevice.
         virtual void serialise(QIODevice&) const;
 
-        /// Deserialises the DataBlob from the QIODevice
-        virtual void deserialise(QIODevice&);
+        /// Returns the number of serialised bytes.
+        virtual quint64 serialisedBytes() const;
+
+        /// Deserialises the DataBlob from the QIODevice.
+        virtual void deserialise(QIODevice&, QSysInfo::Endian endianness);
 };
 
 } // namespace pelican

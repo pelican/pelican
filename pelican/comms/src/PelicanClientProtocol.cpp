@@ -145,7 +145,11 @@ boost::shared_ptr<ServerResponse> PelicanClientProtocol::receive(QAbstractSocket
                 in >> type;
                 QString name;
                 in >> name;
-                boost::shared_ptr<DataBlobResponse> s( new DataBlobResponse(type, name) );
+                quint64 dataSize;
+                in >> dataSize;
+                boost::shared_ptr<DataBlobResponse> s(
+                        new DataBlobResponse(type, name, dataSize,
+                                (QSysInfo::Endian)in.byteOrder()) );
                 return s;
             }
             break;

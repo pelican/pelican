@@ -73,7 +73,7 @@ void TCPConnectionManagerTest::test_send()
     CPPUNIT_ASSERT( res->dataName() == "testData" );
     CPPUNIT_ASSERT( res->blobClass() == "TestDataBlob" );
     TestDataBlob recvBlob;
-    recvBlob.deserialise(*client);
+    recvBlob.deserialise(*client, res->byteOrder());
     CPPUNIT_ASSERT(recvBlob == blob);
 
 }

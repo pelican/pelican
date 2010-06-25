@@ -141,7 +141,7 @@ void PelicanProtocolTest::test_sendServiceData()
 
 void PelicanProtocolTest::test_sendDataBlob()
 {
-    {
+    try {
         // Use Case
         // DataBlob type known
         // expect safe transfer
@@ -166,6 +166,8 @@ void PelicanProtocolTest::test_sendDataBlob()
         CPPUNIT_ASSERT( resp->type() == ServerResponse::Blob );
         DataBlobResponse* db = static_cast<DataBlobResponse*>(resp.get());
         CPPUNIT_ASSERT( blob.type() == db->blobClass() );
+    } catch (const QString& e) {
+        CPPUNIT_FAIL("Caught exception: " + e.toStdString());
     }
 }
 

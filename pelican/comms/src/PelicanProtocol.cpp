@@ -163,6 +163,7 @@ void PelicanProtocol::send(QIODevice& device, const QString& name, const DataBlo
     out << (quint16)ServerResponse::Blob;
     out << data.type();
     out << name;
+    out << data.serialisedBytes();
     if (device.write(array) < 0)
         throw QString("PelicanProtocol::send: Unable to write.");
     data.serialise(device);
