@@ -53,6 +53,16 @@ void DataBlob::serialise(QIODevice&) const
             "is undefined.").arg(type());
 }
 
+/**
+ * @details
+ * This method must return the number of bytes saved to the QIODevice
+ * for the serialised data blob when calling the serialise() method.
+ */
+quint64 DataBlob::serialisedBytes() const
+{
+    throw QString("DataBlob: This object's ('%1') serialisedBytes method "
+            "is undefined.").arg(type());
+}
 
 /**
  * @details
@@ -60,7 +70,7 @@ void DataBlob::serialise(QIODevice&) const
  * This method should be reimplemented in a derived class if needed,
  * since the default implementation will throw an exception of type QString.
  */
-void DataBlob::deserialise(QIODevice&)
+void DataBlob::deserialise(QIODevice&, QSysInfo::Endian)
 {
     throw QString("DataBlob: This object's ('%1') deserialise method "
             "is undefined.").arg(type());

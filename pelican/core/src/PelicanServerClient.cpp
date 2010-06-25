@@ -91,7 +91,9 @@ QHash<QString, DataBlob*> PelicanServerClient::_response(QIODevice& device,
             {
                 DataBlobResponse* res = static_cast<DataBlobResponse*>(r.get());
                 validData[res->dataName()] = dataHash[ res->dataName()];
-                validData[res->dataName()]->deserialise(device);
+                while (device.bytesAvailable() < (qint64)res->dataSize())
+                    device.waitForReadyRead(-1);
+                validData[res->dataName()]->deserialise(device, res->byteOrder());
                 Q_ASSERT( res->blobClass() == validData[res->dataName()]->type() );
             }
         case ServerResponse::StreamData:

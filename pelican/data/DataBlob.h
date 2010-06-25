@@ -2,6 +2,7 @@
 #define DATABLOB_H
 
 #include <QtCore/QString>
+#include <QtCore/QSysInfo>
 #include <complex>
 #include "pelican/utility/FactoryRegistrar.h"
 
@@ -74,8 +75,11 @@ class DataBlob
         /// Serialise the DataBlob into the QIODevice.
         virtual void serialise(QIODevice&) const;
 
-        /// Deserialises the DataBlob from the QIODevice
-        virtual void deserialise(QIODevice&);
+        /// Returns the number of serialised bytes.
+        virtual quint64 serialisedBytes() const;
+
+        /// Deserialises the DataBlob from the QIODevice.
+        virtual void deserialise(QIODevice&, QSysInfo::Endian endianness);
 };
 
 } // namespace pelican
