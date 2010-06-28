@@ -69,12 +69,11 @@ void ThreadedBlobServer::send(const QString& streamName, const DataBlob* blob)
  */
 void ThreadedBlobServer::blockingSend(const QString& streamName, const DataBlob* incoming)
 {
-    _mutex.lock();
+    QMutexLocker locker(&_mutex);
     _waiting[incoming] = new QWaitCondition; // ensure waiting object is created before we send
     send(streamName, incoming ); // Tell the threaded blob server to send data
     _waiting[incoming]->wait(&_mutex); // go to sleep until send() has completed
     delete _waiting.take(incoming);
-    _mutex.unlock();
 }
 
 /**
