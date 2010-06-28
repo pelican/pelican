@@ -103,7 +103,7 @@ macro(SUBPACKAGE_LIBRARY name)
         # This is required for the case in which subpacakge binaries depend
         # locally on the subpackage library.
         _SET_SUBPACKAGE_LIBRARIES(${subpackage_current})
-        #list(REMOVE_DUPLICATES SUBPACKAGE_LIBRARIES)
+        list(REMOVE_DUPLICATES SUBPACKAGE_LIBRARIES)
 
 
     else(subpackage_current)
