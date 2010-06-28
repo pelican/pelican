@@ -202,7 +202,7 @@ macro(_SET_SUBPACKAGE_LIBRARIES)
     endforeach(dep)
 
     #list(REMOVE_DUPLICATES SUBPACKAGE_LIBRARIES)
-    list(REMOVE_DUPLICATES SUBPACKAGE_EXTERNAL_LIBRARIES)
+    #list(REMOVE_DUPLICATES SUBPACKAGE_EXTERNAL_LIBRARIES)
 
     #message(STATUS "**** subpackage = '${subpackage_current}' (deps = ${subpackage_deps})")
     #message(STATUS "**** SUBPACKAGE_LIBRARIES = '${SUBPACKAGE_LIBRARIES}'\n")
