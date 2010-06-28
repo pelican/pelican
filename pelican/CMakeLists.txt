@@ -84,17 +84,19 @@ add_definitions(-DUSE_MEMORY_TRACKER) # needed for release mode too?
 # === Setup project dependencies.
 include(cmake/dependencies.cmake)
 
+#_PELICAN()
+
 # === Set Broken Package flags.
 if(QT_VERSION_MINOR LESS 3)
     add_definitions(-DBROKEN_QT_SET_HEADER)
 endif(QT_VERSION_MINOR LESS 3)
 
-# Declare project libraries to be created from the following subpackages. 
-DECLARE_PROJECT_LIBRARY(pelican 
+# Declare project libraries to be created from the following subpackages.
+DECLARE_PROJECT_LIBRARY(pelican
     comms core data emulator modules output server utility)
 
 DECLARE_PROJECT_LIBRARY(pelican-testutils
-    dataTest coreTest serverTest) 
+    dataTest coreTest serverTest)
 
 # === Sub modules (recurse into sub-directories to build modules).
 include(modules.cmake)
