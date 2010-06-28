@@ -84,7 +84,7 @@ add_definitions(-DUSE_MEMORY_TRACKER) # needed for release mode too?
 # === Setup project dependencies.
 include(cmake/dependencies.cmake)
 
-#_PELICAN()
+_PELICAN_PIC()
 
 # === Set Broken Package flags.
 if(QT_VERSION_MINOR LESS 3)
