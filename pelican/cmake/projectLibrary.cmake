@@ -1,54 +1,63 @@
+# Declare a project library to be build from the specified subpackages.
+macro(DECLARE_PROJECT_LIBRARY name)
+    set(${name}_subpackage_DEPS ${ARGN})
+    list(APPEND project_libraries ${name})
+    file(WRITE "${SUBPACKAGE_WORK_DIR}/_${name}.cmake"
+        "# Project library '${name}' - this file is auto-generated "
+        "do not edit!\n\n"
+    )
+endmacro(DECLARE_PROJECT_LIBRARY)
 
 
-macro(PROJECT_LIBRARY name)
 
-    ## write project library file for linking modules in single library mode.
+# Create the project library specfied by the name argument.
+macro(CREATE_PROJECT_LIBRARY name)
 
+    # Die horribly if the project library has not been declared.
+    if(NOT ${name}_subpackage_DEPS)
+        message(FATAL_ERROR "Trying to build a project library '${name}' "
+            "which has not been declared.")
+    endif(NOT ${name}_subpackage_DEPS)
+
+    # Only proceed if in single library mode.
     if(BUILD_SINGLE_LIB)
-        #message(STATUS "++ ${name}")
-        
-            # Set the name of the sub-package file.
-        set(project_lib_file "${SUBPACKAGE_WORK_DIR}/_${name}.cmake")
 
-        file(WRITE "${project_lib_file}"
-            "set(${name}_dependencies ${ARGN})\n\n")
-    
-        ## link subpackage objects into single library
-        #---------------------------------------------
-        
-        # Reset shared object list. 
-        set(shared_objects "")
-        
-        # Load the shared objects for the single library target.
-        foreach(subpackage ${ARGN})
-            #message(STATUS "     ${subpackage}")
-            include("${SUBPACKAGE_WORK_DIR}/${subpackage}.cmake")
-            list(APPEND subpackage_external_libs ${subpackage_${subpackage}_external_LIBS})
-        endforeach(subpackage)
-        
-        list(REMOVE_DUPLICATES subpackage_external_libs)
-        
-        file(APPEND "${project_lib_file}"
-            "set(${name}_shared_objs ${shared_objects})\n\n")
-        file(APPEND "${project_lib_file}"
-            "set(${name}_libs ${subpackage_external_libs})\n\n")
-        
-        foreach(obj ${shared_objects}) 
-            #message(STATUS "*** ${obj}")
-            set_source_files_properties(${obj} PROPERTIES GENERATED 1)
-        endforeach(obj)
-        
-        add_library("${name}" SHARED ${shared_objects})
-        set_target_properties("${name}" PROPERTIES LINKER_LANGUAGE CXX)
-        
-        add_dependencies("${name}" ${shared_libs})
-        install(TARGETS "${name}" DESTINATION ${LIBRARY_INSTALL_DIR})
-        
-        target_link_libraries("${name}" ${subpackage_external_libs})
-        
+        # Create a target for a static project library.
+        if(BUILD_SHARED)
+            set(project_file "${SUBPACKAGE_WORK_DIR}/_${name}.cmake")
+            set(shared_objects "")
+            include(${project_file})
+            foreach(obj ${shared_objects})
+                set_source_files_properties(${obj} PROPERTIES GENERATED 1)
+            endforeach(obj)
+            add_library("${name}" SHARED ${shared_objects})
+            set_target_properties("${name}" PROPERTIES CLEAN_DIRECT_OUTPUT 1)
+            set_target_properties("${name}" PROPERTIES LINKER_LANGUAGE CXX)
+            add_dependencies("${name}" ${shared_libs})
+            install(TARGETS "${name}" DESTINATION ${LIBRARY_INSTALL_DIR})
+            list(REMOVE_DUPLICATES external_libs)
+            target_link_libraries("${name}" ${external_libs})
+        endif(BUILD_SHARED)
+
+        # Create a target for a shared project library.
+        if(BUILD_STATIC)
+            set(project_file_static "${SUBPACKAGE_WORK_DIR}/_${name}_static.cmake")
+            set(static_objects "")
+            include(${project_file_static})
+            foreach(obj ${static_objects})
+                set_source_files_properties(${obj} PROPERTIES GENERATED 1)
+            endforeach(obj)
+            add_library("${name}_static" STATIC ${static_objects})
+            set_target_properties("${name}_static" PROPERTIES CLEAN_DIRECT_OUTPUT 1)
+            set_target_properties("${name}_static" PROPERTIES PREFIX "lib")
+            set_target_properties("${name}_static" PROPERTIES OUTPUT_NAME "${name}")
+            set_target_properties("${name}_static" PROPERTIES LINKER_LANGUAGE CXX)
+            add_dependencies("${name}_static" ${static_libs})
+            install(TARGETS "${name}_static" DESTINATION ${LIBRARY_INSTALL_DIR})
+            list(REMOVE_DUPLICATES external_libs)
+            target_link_libraries("${name}_static" ${external_libs})
+        endif(BUILD_STATIC)
+
     endif(BUILD_SINGLE_LIB)
 
-endmacro(PROJECT_LIBRARY)
-
-
-
+endmacro(CREATE_PROJECT_LIBRARY)

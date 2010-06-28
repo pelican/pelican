@@ -1,7 +1,8 @@
 
 # Build Pelican server testing library module.
 # ==============================================================================
-SUBPACKAGE(serverTestUtils server emulator)
+SUBPACKAGE(serverTest server emulator data comms utility)
+#message(STATUS "+++++++++++++++++ serverTestMT: sub libs: ${SUBPACKAGE_LIBRARIES}\n")
 set(serverTestlib_src
     src/TestChunker.cpp
     src/TestUdpChunker.cpp
@@ -15,10 +16,13 @@ set(serverTestLib_moc_sources
 )
 QT4_WRAP_CPP(serverTestlib_src ${serverTestLib_moc_sources})
 SUBPACKAGE_LIBRARY(serverTestUtils ${serverTestlib_src})
+SUBPACKAGE_SET_EXTERNAL_LIBRARIES(
+    ${QT_QTCORE_LIBRARY}
+)
+
 
 # Build single-threaded Pelcain server tests.
 # ==============================================================================
-USE_SUBPACKAGES(server emulator serverTestUtils)
 set(serverTest_src
     src/serverTest.cpp
     src/ChunkerFactoryTest.cpp
@@ -30,7 +34,8 @@ set(serverTest_src
     src/SessionTest.cpp
     src/WritableDataTest.cpp
 )
-add_executable(serverTest ${serverTest_src} )
+add_executable(serverTest ${serverTest_src})
+#message(STATUS "+++++++++++++++++ serverTest: sub libs: ${SUBPACKAGE_LIBRARIES}\n")
 target_link_libraries(serverTest
     ${SUBPACKAGE_LIBRARIES}
     ${CPPUNIT_LIBRARIES}
@@ -47,6 +52,7 @@ set(serverTestMT_src
     src/DataReceiverTest.cpp
 )
 add_executable(serverTestMT ${serverTestMT_src})
+#message(STATUS "+++++++++++++++++ serverTestMT: sub libs: ${SUBPACKAGE_LIBRARIES}\n")
 target_link_libraries(serverTestMT
     ${SUBPACKAGE_LIBRARIES}
     ${CPPUNIT_LIBRARIES}

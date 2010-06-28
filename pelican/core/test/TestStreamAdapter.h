@@ -1,8 +1,7 @@
 #ifndef TESTSTREAMADAPTER_H
 #define TESTSTREAMADAPTER_H
 
-
-#include "AbstractStreamAdapter.h"
+#include "pelican/core/AbstractStreamAdapter.h"
 
 /**
  * @file TestStreamAdapter.h
@@ -14,20 +13,25 @@ namespace pelican {
  * @class TestStreamAdapter
  *  
  * @brief
+ * Simple pass through adapter for use with the TestBataBlob object.
  * 
  * @details
  * 
  */
-
 class TestStreamAdapter : public AbstractStreamAdapter
 {
     public:
-        TestStreamAdapter( const ConfigNode& = ConfigNode() );
-        ~TestStreamAdapter();
-        virtual void deserialise(QIODevice* in);
+        /// Constructs the test stream adapter.
+        TestStreamAdapter( const ConfigNode& config = ConfigNode() )
+        : AbstractStreamAdapter(config) {}
 
-    private:
+        /// Destroys the test stream adapter.
+        ~TestStreamAdapter() {}
+
+        /// Deserialises the data into a TestDataBlob.
+        virtual void deserialise(QIODevice* in);
 };
 
 } // namespace pelican
+
 #endif // TESTSTREAMADAPTER_H 

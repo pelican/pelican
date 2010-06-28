@@ -1,28 +1,21 @@
 #include "pelican/data/DataBlob.h"
-#include <QDate>
-#include <QTime>
-#include <QDateTime>
-#include <QIODevice>
+#include <QtCore/QDate>
+#include <QtCore/QTime>
+#include <QtCore/QDateTime>
+#include <QtCore/QIODevice>
 
 namespace pelican {
 
 /**
  * @details
- * Constructs a new data blob.
+ * Constructs a new data blob, setting the type-name
+ * and the time stamp at the time of creation using the system clock.
+ *
+ * @param[in] type The name of the data blob derived class.
  */
-DataBlob::DataBlob(const QString& type)
-    : _type(type)
+DataBlob::DataBlob(const QString& type) : _type(type)
 {
-    // Set the default time stamp.
     setTimeStamp();
-}
-
-/**
- * @details
- * Data blob destructor.
- */
-DataBlob::~DataBlob()
-{
 }
 
 /**
@@ -50,7 +43,9 @@ void DataBlob::setTimeStamp()
 
 /**
  * @details
- * Serialises the data blob.
+ * Serialises the DataBlob into the QIODevice.
+ * This method should be reimplemented in a derived class if needed,
+ * since the default implementation will throw an exception of type QString.
  */
 void DataBlob::serialise(QIODevice&) const
 {
@@ -58,26 +53,27 @@ void DataBlob::serialise(QIODevice&) const
             "is undefined.").arg(type());
 }
 
+/**
+ * @details
+ * This method must return the number of bytes saved to the QIODevice
+ * for the serialised data blob when calling the serialise() method.
+ */
+quint64 DataBlob::serialisedBytes() const
+{
+    throw QString("DataBlob: This object's ('%1') serialisedBytes method "
+            "is undefined.").arg(type());
+}
 
 /**
  * @details
  * Deserialises the data blob.
+ * This method should be reimplemented in a derived class if needed,
+ * since the default implementation will throw an exception of type QString.
  */
-void DataBlob::deserialise(QIODevice&)
+void DataBlob::deserialise(QIODevice&, QSysInfo::Endian)
 {
     throw QString("DataBlob: This object's ('%1') deserialise method "
             "is undefined.").arg(type());
-}
-
-QString DataBlob::type() const {
-    if( _type == ""  )
-    {
-        // Noone has specified the type in the constructor
-        // Maybe we can find it out from the factory.
-        // this will throw if not factory created
-       // _type = Factory::whatIs(this);
-    }
-    return _type;
 }
 
 } // namespace pelican

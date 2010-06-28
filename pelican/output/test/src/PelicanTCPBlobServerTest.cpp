@@ -7,6 +7,7 @@
 #include "pelican/comms/PelicanProtocol.h"
 #include "pelican/comms/StreamData.h"
 #include "pelican/comms/ServerResponse.h"
+#include "pelican/comms/DataBlobResponse.h"
 #include "pelican/server/DataManager.h"
 #include "pelican/comms/Data.h"
 
@@ -107,7 +108,7 @@ void PelicanTCPBlobServerTest::test_connection()
         boost::shared_ptr<ServerResponse> r = clientProtocol.receive(tcpSocket);
         CPPUNIT_ASSERT( r->type() == ServerResponse::Blob );
         TestDataBlob blobResult;
-        blobResult.deserialise(tcpSocket);
+        blobResult.deserialise(tcpSocket, ((DataBlobResponse*)r.get())->byteOrder());
         CPPUNIT_ASSERT(blobResult == blob);
     }
 
@@ -122,7 +123,7 @@ void PelicanTCPBlobServerTest::test_connection()
         boost::shared_ptr<ServerResponse> r = clientProtocol.receive(tcpSocket);
         CPPUNIT_ASSERT( r->type() == ServerResponse::Blob );
         TestDataBlob blobResult;
-        blobResult.deserialise(tcpSocket);
+        blobResult.deserialise(tcpSocket, ((DataBlobResponse*)r.get())->byteOrder());
         CPPUNIT_ASSERT(blobResult == blob);
     }
 }

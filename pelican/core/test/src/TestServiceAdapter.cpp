@@ -1,4 +1,4 @@
-#include "TestStreamAdapter.h"
+#include "TestServiceAdapter.h"
 #include "pelican/data/test/TestDataBlob.h"
 
 #include "pelican/utility/memCheck.h"
@@ -12,7 +12,7 @@ namespace pelican {
  *
  * @param[in] in    A pointer to the input device.
  */
-void TestStreamAdapter::deserialise(QIODevice* in)
+void TestServiceAdapter::deserialise(QIODevice* in)
 {
     TestDataBlob* blob = static_cast<TestDataBlob*>(_data);
     blob->resize(_chunkSize);

@@ -18,7 +18,43 @@ if(CMAKE_BUILD_TYPE MATCHES RELEASE|[Rr]elease)
     set(BUILD_SINGLE_LIB ON)
 endif(CMAKE_BUILD_TYPE MATCHES RELEASE|[Rr]elease)
 
-set (BUILD_SHARED_LIBS TRUE)
+# Option to build shared and static libraries.
+set(BUILD_SHARED TRUE)
+set(BUILD_STATIC FALSE)
+
+# Check for option consistency.
+if(BUILD_SINGLE_LIB)
+    if(NOT BUILD_SHARED AND NOT BUILD_STATIC)
+        message(FATAL_ERROR "Error: Both STATIC and SHARED single"
+            " library targets cannot be disabled in single library mode!")
+    endif(NOT BUILD_SHARED AND NOT BUILD_STATIC)
+endif(BUILD_SINGLE_LIB)
+
+# Sort out if binaries are to be linked with static or shared libs.
+if(BUILD_SHARED AND BUILD_STATIC)
+    # Change to TRUE to build static when building both libraries.
+    set(STATIC_LINK_BINARIES FALSE)
+endif(BUILD_SHARED AND BUILD_STATIC)
+
+if(BUILD_SHARED AND NOT BUILD_STATIC)
+    set(STATIC_LINK_BINARIES FALSE)
+endif(BUILD_SHARED AND NOT BUILD_STATIC)
+
+if(BUILD_STATIC AND NOT BUILD_SHARED)
+    set(STATIC_LINK_BINARIES TRUE)
+endif(BUILD_STATIC AND NOT BUILD_SHARED)
+
+# Consistency checking of options
+if(STATIC_LINK_BINARIES AND NOT BUILD_STATIC)
+    message(FATAL_ERROR "Error: Cannot link binaries with static libraries "
+        "with BUILD_STATIC disabled!")
+endif(STATIC_LINK_BINARIES AND NOT BUILD_STATIC)
+
+if(NOT STATIC_LINK_BINARIES AND NOT BUILD_SHARED)
+    message(FATAL_ERROR "Error: Cannot link binaries with shared libraries "
+        "with BUILD_SHARED disabled!")
+endif(NOT STATIC_LINK_BINARIES AND NOT BUILD_SHARED)
+
 
 set(CPP_PLATFORM_LIBS ${CMAKE_THREAD_LIBS_INIT})
 

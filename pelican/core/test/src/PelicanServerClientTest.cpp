@@ -2,8 +2,8 @@
 #include "PelicanServerClient.h"
 #include "pelican/data/DataRequirements.h"
 
-#include "pelican/core/test/TestDataBlob.h"
-#include "pelican/core/test/TestAdapter.h"
+#include "pelican/data/test/TestDataBlob.h"
+#include "pelican/core/test/TestServiceAdapter.h"
 #include "pelican/core/test/TestStreamAdapter.h"
 
 #include "pelican/utility/Config.h"
@@ -118,7 +118,7 @@ void PelicanServerClientTest::test_getData()
 
 void PelicanServerClientTest::test_response()
 {
-    TestAdapter serviceAdapter;
+    TestServiceAdapter serviceAdapter;
     TestStreamAdapter streamAdapter;
     ConfigNode configNode;
     configNode.setFromString(

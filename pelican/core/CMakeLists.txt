@@ -13,11 +13,8 @@ set(core_src
     src/PipelineDriver.cpp
     src/OutputStreamer.cpp
 )
-
 SUBPACKAGE_LIBRARY(core ${core_src})
-
-# Set external library depencencies for core.
-SUBPACKAGE_ADD_LIBRARIES(core
+SUBPACKAGE_SET_EXTERNAL_LIBRARIES(
     ${QT_QTCORE_LIBRARY}
     ${Boost_PROGRAM_OPTIONS_LIBRARY}
 )

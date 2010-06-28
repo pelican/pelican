@@ -1,5 +1,5 @@
 # Set dependencies for Pelican modules tests.
-USE_SUBPACKAGES(modules utility)
+SUBPACKAGE(modulesTest modules utility)
 
 # Build Pelican module tests.
 # ==============================================================================

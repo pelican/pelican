@@ -3,9 +3,9 @@
 #include "pelican/server/test/TestServer.h"
 #include "pelican/comms/StreamData.h"
 #include "pelican/comms/Data.h"
-#include "pelican/core/test/TestAdapter.h"
+#include "pelican/core/test/TestServiceAdapter.h"
 #include "pelican/core/test/TestStreamAdapter.h"
-#include "pelican/core/test/TestDataBlob.h"
+#include "pelican/data/test/TestDataBlob.h"
 #include "pelican/utility/Config.h"
 #include "pelican/utility/ConfigNode.h"
 
@@ -44,7 +44,7 @@ void PelicanServerClientTestMT::test_getData()
 {
     try{
     // set up the test server
-    TestAdapter serviceAdapter;
+    TestServiceAdapter serviceAdapter;
     TestStreamAdapter streamAdapter;
     TestServer server;
     QString stream1("stream1");

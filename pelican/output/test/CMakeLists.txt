@@ -1,5 +1,5 @@
 # Set dependencies for Pelican output tests.
-USE_SUBPACKAGES(output dataTestUtils)
+SUBPACKAGE(outputTest output dataTest)
 
 # Build Pelican output tests.
 # ==============================================================================

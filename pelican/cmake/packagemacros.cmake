@@ -80,7 +80,7 @@ macro(SUBPACKAGE_ADD_LIBRARIES)
         message(FATAL_ERROR
             "SUBPACKAGE_ADD_LIBRARIES specified outside of a SUBPACKAGE context")
     endif(SUBPACKAGE_CURRENT)
-    
+
 endmacro(SUBPACKAGE_ADD_LIBRARIES)
 
 
@@ -89,13 +89,13 @@ endmacro(SUBPACKAGE_ADD_LIBRARIES)
 #
 MACRO(SUBPACKAGE_GET_LIBS package)
     IF(NOT SUBPACKAGE_${package}_ADDED)
-    FOREACH(pack ${SUBPACKAGE_${package}_DEPS} )
-        SUBPACKAGE_GET_LIBS(${pack})
-    ENDFOREACH(pack)
-    IF(SUBPACKAGE_${package}_LIBS)
-    LIST(INSERT SUBPACKAGE_LIBRARIES 0 ${SUBPACKAGE_${package}_LIBS})
-    ENDIF(SUBPACKAGE_${package}_LIBS)
-    SET(SUBPACKAGE_${package}_ADDED TRUE)
+        FOREACH(pack ${SUBPACKAGE_${package}_DEPS} )
+           SUBPACKAGE_GET_LIBS(${pack})
+        ENDFOREACH(pack)
+        IF(SUBPACKAGE_${package}_LIBS)
+            LIST(INSERT SUBPACKAGE_LIBRARIES 0 ${SUBPACKAGE_${package}_LIBS})
+        ENDIF(SUBPACKAGE_${package}_LIBS)
+        SET(SUBPACKAGE_${package}_ADDED TRUE)
     ENDIF(NOT SUBPACKAGE_${package}_ADDED)
 ENDMACRO(SUBPACKAGE_GET_LIBS)
 
@@ -224,21 +224,21 @@ mark_as_advanced(SUBPACKAGE_LIBRARIES)
 #
 # Description:
 #       Set and gather the requirements of a single library module
-#       and load its dependencies. 
+#       and load its dependencies.
 #
 # Usage:
 #       LIBRARY_MODULE_REQUIREMENTS([module library name] [single library name]
 #
 # Note:
-#       This is used by the SUBPACKAGE and TEST_SUBPACKAGE macro        
+#       This is used by the SUBPACKAGE and TEST_SUBPACKAGE macro
 #===============================================================================
 macro(LIBRARY_MODULE_REQUIREMENTS moduleName packageName)
 
     # Set the current subpackage name.
     set(SUBPACKAGE_CURRENT "${moduleName}")
-    
+
     # Set the name of the global package library file to append to
-    set(PACKAGE_LIBRARY_FILE "${SUBPACKAGE_WORK_DIR}/_${packageName}.cmake") 
+    set(PACKAGE_LIBRARY_FILE "${SUBPACKAGE_WORK_DIR}/_${packageName}.cmake")
 
     # Set the name of the sub-package file/
     set(SUBPACKAGE_FILE "${SUBPACKAGE_WORK_DIR}/${moduleName}.cmake")
@@ -261,13 +261,13 @@ macro(LIBRARY_MODULE_REQUIREMENTS moduleName packageName)
         "endif(SUBPACKAGE_${moduleName}_LIBS)\n"
         "list(APPEND PROJECT_PACKAGES ${moduleName} ${ARGN})\n"
     )
-    
+
     if(SUBPACKAGE_${moduleName}_DEPS)
         file(APPEND ${SUBPACKAGE_FILE}
             "set(SUBPACKAGE_${moduleName}_DEPS ${SUBPACKAGE_${moduleName}_DEPS})\n"
         )
     endif(SUBPACKAGE_${moduleName}_DEPS)
-    
+
     # -- All include directories defined before the macro call are exported
     if(COMMAND GET_PROPERTY)
         get_property(includes DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)
@@ -275,38 +275,38 @@ macro(LIBRARY_MODULE_REQUIREMENTS moduleName packageName)
         # -- cmake 2.4 compatablity, just include everything
         set(includes ${CMAKE_INCLUDE_PATH})
     endif(COMMAND GET_PROPERTY)
-    
+
     file(APPEND ${PACKAGE_LIBRARY_FILE}
             "list(INSERT ALL_SUBPACKAGES 0 ${SUBPACKAGE_CURRENT})\n"
             #"SUBPACKAGE_GET_LIBS(${moduleName})\n"
             #"include_directories(${SUBPACKAGE_CURRENT})\n"
     )
-        
+
     foreach(inc ${includes})
         file(APPEND ${SUBPACKAGE_FILE} "include_directories(${inc})\n")
         file(APPEND ${PACKAGE_LIBRARY_FILE} "include_directories(${inc})\n")
     endforeach(inc)
-    
+
     foreach(pack ${ARGN})
-        file(APPEND ${SUBPACKAGE_FILE} 
+        file(APPEND ${SUBPACKAGE_FILE}
             "include(${SUBPACKAGE_WORK_DIR}/${pack}.cmake)\n")
     endforeach(pack)
-    
+
     # Top level package directory for includes
-    include_directories(${CMAKE_CURRENT_SOURCE_DIR}) 
-    
+    include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+
     foreach(dep ${SUBPACKAGE_${moduleName}_DEPS} )
         include(${SUBPACKAGE_WORK_DIR}/${dep}.cmake)
         SUBPACKAGE_GET_LIBS(${dep})
     endforeach(dep)
-    
+
     if(SUBPACKAGE_LIBRARIES)
         #===========================================================================
         # CHANGE: uncommented (probably needs to be removed for static library)
         # list(REMOVE_DUPLICATES SUBPACKAGE_LIBRARIES)
         #===========================================================================
     endif(SUBPACKAGE_LIBRARIES)
-    
+
     file(APPEND ${SUBPACKAGE_FILE}
         "if(PROJECT_PACKAGES)\n"
            "list(REMOVE_DUPLICATES PROJECT_PACKAGES)\n"
@@ -320,11 +320,11 @@ endmacro(LIBRARY_MODULE_REQUIREMENTS)
 # and load dependencies
 #
 macro(SUBPACKAGE package)
-   LIBRARY_MODULE_REQUIREMENTS(${package} global ${ARGN})  
+   LIBRARY_MODULE_REQUIREMENTS(${package} global ${ARGN})
 endmacro(SUBPACKAGE)
 
 macro(TEST_SUBPACKAGE package)
-   LIBRARY_MODULE_REQUIREMENTS(${package} test ${ARGN})  
+   LIBRARY_MODULE_REQUIREMENTS(${package} test ${ARGN})
 endmacro(TEST_SUBPACKAGE)
 
 
@@ -340,13 +340,13 @@ endmacro(TEST_SUBPACKAGE)
 #       This is required for a CMAKE project that builds a single library but
 #       splits the project code into a number of sub-folders for which it also
 #       required to build library with the code in that folder.
-# 
+#
 # Usage:
-#       CREATE_MODULE_LIBRARY([module library name] [single library name] 
+#       CREATE_MODULE_LIBRARY([module library name] [single library name]
 #               [module library source])
 #
 # Note:
-#       This macro is used by the SUBPACKAGE_LIBRARY and 
+#       This macro is used by the SUBPACKAGE_LIBRARY and
 #        TEST_SUBPACKAGE_LIBRARY macros.
 #===============================================================================
 macro(CREATE_LIBRARY_MODULE moduleName packageName)
@@ -357,11 +357,11 @@ macro(CREATE_LIBRARY_MODULE moduleName packageName)
         # Add target for the dynamic library.
         add_library("${moduleName}" SHARED ${ARGN})
 
-        # Add target for static library.        
+        # Add target for static library.
         if(BUILD_STATIC)
             add_library("${moduleName}_static" STATIC ${ARGN})
         endif(BUILD_STATIC)
-        
+
         # Set properties for the library targets.
         # Prevent STATIC and SHARED trashing each others files.
         set_target_properties("${moduleName}" PROPERTIES CLEAN_DIRECT_OUTPUT 1)
@@ -384,8 +384,8 @@ macro(CREATE_LIBRARY_MODULE moduleName packageName)
             SUBPACKAGE_ADD_LIBRARIES("${moduleName}")
         endif(BUILD_SINGLE_LIB)
 
-        # Set the name of the package library file build file 
-        set(PACKAGE_LIBRARY_FILE "${SUBPACKAGE_WORK_DIR}/_${packageName}.cmake") 
+        # Set the name of the package library file build file
+        set(PACKAGE_LIBRARY_FILE "${SUBPACKAGE_WORK_DIR}/_${packageName}.cmake")
 
         SUBPROJECT_OBJECT_FILES("${moduleName}" "${moduleName}_shared_objects")
         file(APPEND ${PACKAGE_LIBRARY_FILE}
@@ -440,7 +440,7 @@ macro(SUBPACKAGE_LIBRARY libname)
 #        )
 
     CREATE_LIBRARY_MODULE(${libname} global ${ARGN})
-    
+
 endmacro(SUBPACKAGE_LIBRARY)
 
 
@@ -461,7 +461,7 @@ macro(TEST_SUBPACKAGE_LIBRARY libname)
 #        )
 
     CREATE_LIBRARY_MODULE(${libname} test ${ARGN})
-    
+
 endmacro(TEST_SUBPACKAGE_LIBRARY)
 
 
@@ -476,7 +476,7 @@ endmacro(TEST_SUBPACKAGE_LIBRARY)
 macro(LINK_PROJECT_LIBRARY libname packageName)
 
     if(BUILD_SINGLE_LIB)
-    
+
         set(SUBPACKAGE_GLOBAL_FILE "${SUBPACKAGE_WORK_DIR}/_${packageName}.cmake")
         include(${SUBPACKAGE_GLOBAL_FILE})
 
@@ -492,7 +492,7 @@ macro(LINK_PROJECT_LIBRARY libname packageName)
         endif(BUILD_STATIC)
 
         add_library("${libname}" SHARED ${SUBPACKAGE_SHARED_OBJECTS})
-        
+
         if(BUILD_STATIC)
             add_library("${libname}_static" STATIC ${SUBPACKAGE_STATIC_OBJECTS})
             set_target_properties("${libname}_static" PROPERTIES OUTPUT_NAME "${libname}")
@@ -500,26 +500,26 @@ macro(LINK_PROJECT_LIBRARY libname packageName)
             set_target_properties("${libname}_static" PROPERTIES CLEAN_DIRECT_OUTPUT 1)
             set_target_properties("${libname}_static" PROPERTIES  LINKER_LANGUAGE CXX)
         endif(BUILD_STATIC)
-        
+
         set_target_properties("${libname}" PROPERTIES LINKER_LANGUAGE CXX)
-        
+
         add_dependencies("${libname}" ${SUBPACKAGE_SHARED_LIBRARIES})
-        
+
         if(BUILD_STATIC)
             add_dependencies("${libname}_static" ${SUBPACKAGE_STATIC_LIBRARIES})
             install(TARGETS "${libname}_static" DESTINATION ${LIBRARY_INSTALL_DIR})
         endif(BUILD_STATIC)
-        
+
         install(TARGETS "${libname}" DESTINATION ${LIBRARY_INSTALL_DIR})
         target_link_libraries("${libname}" ${PROJECT_LIBRARIES})
-        
+
         # Hack inserted to add omp to the link table as seeminly it doesnt
         # pick it up from libmodules.so ...
-        set_target_properties("${libname}" PROPERTIES 
+        set_target_properties("${libname}" PROPERTIES
            COMPILE_FLAGS "${OpenMP_CXX_FLAGS}"
            LINK_FLAGS "${OpenMP_CXX_FLAGS}"
         )
-        
+
         if(BUILD_STATIC)
             target_link_libraries("${libname}_static" ${PROJECT_LIBRARIES})
         endif(BUILD_STATIC)
@@ -537,11 +537,11 @@ endmacro(LINK_PROJECT_LIBRARY)
 
 
 macro(PROJECT_LIBRARY libName)
-    LINK_PROJECT_LIBRARY(${libName} global)  
+    LINK_PROJECT_LIBRARY(${libName} global)
 endmacro(PROJECT_LIBRARY)
 
 macro(TEST_LIBRARY libName)
-    LINK_PROJECT_LIBRARY(${libName} test)  
+    LINK_PROJECT_LIBRARY(${libName} test)
 endmacro(TEST_LIBRARY)
 
 

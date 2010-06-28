@@ -1,19 +1,20 @@
-
 # Build Pelican core testing library module.
 # ==============================================================================
-SUBPACKAGE(coreTestUtils core data utility serverTestUtils emulator)
+SUBPACKAGE(coreTest core data utility serverTest emulator dataTest)
 set(coreTestLibrary_src
     src/TestPipeline.cpp
     src/TestDataClient.cpp
-    src/TestAdapter.cpp
+    src/TestServiceAdapter.cpp
     src/TestStreamAdapter.cpp
 )
 SUBPACKAGE_LIBRARY(coreTestUtils ${coreTestLibrary_src})
-
+SUBPACKAGE_SET_EXTERNAL_LIBRARIES(
+    ${QT_QTCORE_LIBRARY}
+    ${Boost_PROGRAM_OPTIONS_LIBRARY}
+)
 
 # Build single-threaded Pelcain core tests.
 # ==============================================================================
-USE_SUBPACKAGES(core data utility serverTestUtils emulator coreTestUtils)
 set(coreTest_src
     src/coreTest.cpp
     src/AdapterRealDataTest.cpp
@@ -23,7 +24,6 @@ set(coreTest_src
     src/PipelineDriverTest.cpp
     src/PelicanServerClientTest.cpp
 )
-
 add_executable(coreTest ${coreTest_src})
 target_link_libraries(coreTest
     ${SUBPACKAGE_LIBRARIES}
@@ -33,7 +33,6 @@ target_link_libraries(coreTest
 add_test(coreTest coreTest)
 
 
-
 # Build multi-threaded threaded Pelcain core tests.
 # ==============================================================================
 set(coreTestMT_src
@@ -41,6 +40,8 @@ set(coreTestMT_src
     src/PelicanServerClientTestMT.cpp
     src/DirectStreamDataClientTest.cpp
 )
+#message(STATUS "$$$$$$$$$$$$$$$$$$$ coreTestMT: sub libs: ${SUBPACKAGE_LIBRARIES}")
+
 add_executable(coreTestMT ${coreTestMT_src})
 target_link_libraries(coreTestMT
     ${SUBPACKAGE_LIBRARIES}
@@ -50,8 +51,7 @@ target_link_libraries(coreTestMT
 add_test(coreTestMT coreTestMT)
 
 
-
-# Build test direct streaming client (used for bandwidth testing) 
+# Build test direct streaming client (used for bandwidth testing)
 # ==============================================================================
 add_executable(directClient src/directClientMain.cpp)
 target_link_libraries(directClient

@@ -1,8 +1,6 @@
 # Build Pelican comms tests.
 # ==============================================================================
-# Set dependencies for Pelican comms tests.
-USE_SUBPACKAGES(comms dataTestUtils)
-
+SUBPACKAGE(commsTest comms dataTest)
 set(commsTest_src
     src/commsTest.cpp
     src/DataTest.cpp
@@ -11,6 +9,7 @@ set(commsTest_src
 )
 add_executable(commsTest ${commsTest_src})
 
+#message(STATUS ">>>>>>>>>>>>>>>>>>>> commsTest: sub libs: ${SUBPACKAGE_LIBRARIES}")
 target_link_libraries(commsTest
     ${SUBPACKAGE_LIBRARIES}
     ${CPPUNIT_LIBRARIES}

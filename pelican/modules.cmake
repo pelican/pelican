@@ -1,8 +1,9 @@
+add_subdirectory(utility)  # depends on: !nothing!
 
-add_subdirectory(utility)
-add_subdirectory(data)
-add_subdirectory(emulator)
-add_subdirectory(modules)
+add_subdirectory(emulator) # depends on: utility
+add_subdirectory(data)     # depends on: utility
+
+add_subdirectory(modules)  # depends on: data, utility
 
 add_subdirectory(comms)
 add_subdirectory(server)

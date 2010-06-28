@@ -3,7 +3,7 @@
 #include "LockableData.h"
 #include "LockedData.h"
 #include "pelican/comms/StreamData.h"
-#include <QString>
+#include <QtCore/QString>
 
 
 #include "pelican/utility/memCheck.h"
