@@ -49,6 +49,8 @@ void ThreadedBlobServer::run()
     bool res = connect( this, SIGNAL( sending(const QString&, const DataBlob*) ),
              _manager.get(), SLOT( send( const QString&, const DataBlob* )));
     Q_ASSERT( res );
+    res = connect( _manager.get(), SIGNAL( sent(const DataBlob*) ),
+            this , SLOT( sent( const DataBlob* )), Qt::DirectConnection);
     exec();
 }
 
@@ -59,6 +61,36 @@ void ThreadedBlobServer::run()
 void ThreadedBlobServer::send(const QString& streamName, const DataBlob* blob)
 {
     emit sending(streamName, blob);
+}
+
+/**
+ * @details
+ * Send datablob to connected clients, and block until data is sent
+ */
+void ThreadedBlobServer::blockingSend(const QString& streamName, const DataBlob* incoming)
+{
+    _mutex.lock();
+    _waiting[incoming] = new QWaitCondition; // ensure waiting object is created before we send
+    send(streamName, incoming ); // Tell the threaded blob server to send data
+    _waiting[incoming]->wait(&_mutex); // go to sleep until send() has completed
+    delete _waiting.take(incoming);
+    _mutex.unlock();
+}
+
+/**
+ * @details
+ * This slot is called by the TCP Connection manager whenever it has finished sending data
+ * It should be run in the TCPManager's thread, and is used to wake up any thread that has called 
+ * blockingSend()
+ */
+void ThreadedBlobServer::sent(const DataBlob* blob)
+{
+    Q_ASSERT( currentThread() == this );
+    if( _waiting.contains(blob) )
+    {
+        QMutexLocker locker(&_mutex);
+        _waiting[blob]->wakeAll();
+    }
 }
 
 } // namespace pelican

@@ -47,7 +47,7 @@ int PelicanTCPBlobServer::clientsForType(const QString& stream) const
 void PelicanTCPBlobServer::send(const QString& streamName, const DataBlob* incoming)
 {
     // Tell the threaded blob server to send data
-    _server->send(streamName, incoming);
+    _server->blockingSend(streamName, incoming);
 }
 
 /**

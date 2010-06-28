@@ -4,6 +4,9 @@
 
 #include <QThread>
 #include <QString>
+#include <QMap>
+#include <QMutex>
+#include <QWaitCondition>
 #include <boost/shared_ptr.hpp>
 
 /**
@@ -30,9 +33,17 @@ class ThreadedBlobServer : public QThread
     public:
         ThreadedBlobServer( quint16 port, QObject* parent=0 );
         ~ThreadedBlobServer();
+
+        /// send in a seperate background
         void send(const QString& streamName, const DataBlob* incoming);
+
+        /// send and block until sent
+        void blockingSend(const QString& streamName, const DataBlob* incoming);
+
+        /// return the port on which the server is listening
         qint16 serverPort() const;
 
+        /// returns the number of clients listening for the specified stream
         int clientsForType(const QString&) const;
 
     protected:
@@ -42,9 +53,14 @@ class ThreadedBlobServer : public QThread
         /// private signal to communicate internally
         void sending( const QString& , const DataBlob*);
 
+    private slots:
+        void sent(const DataBlob*);
+
     private:
         boost::shared_ptr<TCPConnectionManager> _manager;
         quint16 _port;
+        QMap<const DataBlob*, QWaitCondition*> _waiting;
+        QMutex _mutex;
 
 };
 
