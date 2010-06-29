@@ -31,8 +31,8 @@ set(PELICAN_INCLUDES ${PELICAN_INCLUDE_DIR})
 find_library(PELICAN_LIBRARY pelican NAMES pelican)
 set(PELICAN_LIBRARIES ${PELICAN_LIBRARY})
 
-#find_library(PELICAN_TESTUTILS_LIBRARY pelican-testutils NAMES pelican-testutils)
-#list(APPEND PELICAN_LIBRARIES ${PELICAN_TESTUTILS_LIBRARY})
+find_library(PELICAN_TESTUTILS_LIBRARY pelican-testutils NAMES pelican-testutils)
+list(APPEND PELICAN_LIBRARIES ${PELICAN_TESTUTILS_LIBRARY})
 
 
 # Load Pelican library build configuration and find dependencies.

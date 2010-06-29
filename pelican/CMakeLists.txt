@@ -88,12 +88,13 @@ add_definitions(-DUSE_MEMORY_TRACKER) # needed for release mode too?
 
 # === Setup project dependencies.
 include(dependencies)
+#_PELICAN_PIC()
 
+#message(STATUS "BUILD_STATIC = ${BUILD_STATIC}")
 list(INSERT CMAKE_MODULE_PATH 0 "/usr/local/bang")
 include(bang)
 BANG_VERSION(0.1)
 
-_PELICAN_PIC()
 
 # === Set Broken Package flags.
 if(QT_VERSION_MINOR LESS 3)
