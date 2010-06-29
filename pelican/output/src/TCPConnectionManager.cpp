@@ -43,7 +43,7 @@ TCPConnectionManager::~TCPConnectionManager()
  */
 qint16 TCPConnectionManager::serverPort() const
 {
-    return _tcpServer -> serverPort();
+    return _tcpServer->serverPort();
 }
 
 /**
@@ -54,7 +54,7 @@ void TCPConnectionManager::acceptClientConnection()
 {
     
     // Get new client connection
-    QTcpSocket *client = _tcpServer -> nextPendingConnection();
+    QTcpSocket *client = _tcpServer->nextPendingConnection();
 
     // Wait for client to send in request type
     boost::shared_ptr<ServerRequest> request = _protocol->request(*client);
@@ -62,7 +62,7 @@ void TCPConnectionManager::acceptClientConnection()
     // Check if client sent the correct request
     if (static_cast<ServerRequest&>(*request).type() != ServerRequest::StreamData) {
         std::cerr << "Invalid client request" << std::endl;
-        client -> close();
+        client->close();
         return;
     }
 
@@ -71,7 +71,7 @@ void TCPConnectionManager::acceptClientConnection()
     // Check for invalid data requirements
     if (req.isEmpty()) {
         std::cerr << "Invalid client data requrements" << std::endl;
-        client -> close();
+        client->close();
         return;
     }
 
@@ -123,9 +123,9 @@ void TCPConnectionManager::send(const QString& streamName, const DataBlob* blob)
         // Send data to client
         try {
             //std::cout << "Sending to:" << client->peerName().toStdString() << std::endl;
-            Q_ASSERT( client -> state() == QAbstractSocket::ConnectedState );
-            _protocol -> send(*client, streamName, *blob);
-            client -> flush();
+            Q_ASSERT( client->state() == QAbstractSocket::ConnectedState );
+            _protocol->send(*client, streamName, *blob);
+            client->flush();
             //std::cout << "Finished sending" << std::endl;
         }
         catch ( ... ) 
@@ -135,6 +135,7 @@ void TCPConnectionManager::send(const QString& streamName, const DataBlob* blob)
             _killClient(client); 
         }
     }
+    emit sent(blob);
 }
 
 /**

@@ -57,6 +57,9 @@ class TCPConnectionManager : public QObject
         void connectionError(QAbstractSocket::SocketError socketError);
         void acceptClientConnection();
 
+    signals:
+        void sent(const DataBlob*);
+
 };
 
 } // namespace pelican

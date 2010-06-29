@@ -93,6 +93,8 @@ list(INSERT CMAKE_MODULE_PATH 0 "/usr/local/bang")
 include(bang)
 BANG_VERSION(0.1)
 
+_PELICAN_PIC()
+
 # === Set Broken Package flags.
 if(QT_VERSION_MINOR LESS 3)
     add_definitions(-DBROKEN_QT_SET_HEADER)
