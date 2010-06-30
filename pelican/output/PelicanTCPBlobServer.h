@@ -60,5 +60,7 @@ class PelicanTCPBlobServer : public AbstractOutputStream
 
 };
 
+PELICAN_DECLARE(AbstractOutputStream, PelicanTCPBlobServer )
+
 } // namespace pelican
 #endif // PELICANTCPBLOBSERVER_H
