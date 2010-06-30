@@ -38,6 +38,9 @@
 # === Specify minimum cmake version.
 cmake_minimum_required(VERSION 2.6 FATAL_ERROR)
 
+#include(path/bang.cmake)
+#BANG_VERSION(2.4)
+
 # === Set the project name (creates name_BINARY_DIR and name_SOURCE_DIR).
 project(pelican CXX C)
 
@@ -48,7 +51,9 @@ set(${PROJECT_NAME}_PATCH_LEVEL 0)
 
 # === CMake setup.
 list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_SOURCE_DIR}/cmake)
-include(cmake/packagemacrosNew.cmake)
+#include(cmake/packagemacrosNew.cmake)
+
+
 enable_testing()
 
 # === Options.
@@ -78,23 +83,30 @@ install(DIRECTORY cmake DESTINATION ${MODULES_INSTALL_DIR}
         FILES_MATCHING PATTERN "*.cmake")
 
 # === Compiler defaults.
-include(cmake/compilerDefaults.cmake)
+include(compilerDefaults)
 add_definitions(-DUSE_MEMORY_TRACKER) # needed for release mode too?
 
 # === Setup project dependencies.
-include(cmake/dependencies.cmake)
+include(dependencies)
+#_PELICAN_PIC()
+
+#message(STATUS "BUILD_STATIC = ${BUILD_STATIC}")
+list(INSERT CMAKE_MODULE_PATH 0 "/usr/local/bang")
+include(bang)
+BANG_VERSION(0.1)
+
 
 # === Set Broken Package flags.
 if(QT_VERSION_MINOR LESS 3)
     add_definitions(-DBROKEN_QT_SET_HEADER)
 endif(QT_VERSION_MINOR LESS 3)
 
-# Declare project libraries to be created from the following subpackages. 
-DECLARE_PROJECT_LIBRARY(pelican 
+# Declare project libraries to be created from the following subpackages.
+DECLARE_PROJECT_LIBRARY(pelican
     comms core data emulator modules output server utility)
 
 DECLARE_PROJECT_LIBRARY(pelican-testutils
-    dataTest coreTest serverTest) 
+    dataTest coreTest serverTest)
 
 # === Sub modules (recurse into sub-directories to build modules).
 include(modules.cmake)
