@@ -71,6 +71,26 @@ void ConfigNode::setFromString(const QString xmlString)
 
 /**
  * @details
+ * Query function for the top level tag
+ * @returns
+ * true when the attribute exists, false otherwise
+ */
+bool ConfigNode::hasAttribute(const QString& attribute) const
+{
+    return _config.hasAttribute(attribute);
+}
+
+/**
+ * @details
+ * direct access to attributes set in the top level tag
+ */
+QString ConfigNode::getAttribute(const QString& attribute) const
+{
+    return _config.attribute(attribute); 
+}
+
+/**
+ * @details
  * Gets the configuration for the given \p tagName and \p attribute.
  * If the \p tagName and/or \p attribute do not exist, \p defValue is returned.
  */

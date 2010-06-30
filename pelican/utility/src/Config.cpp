@@ -43,6 +43,12 @@ QString Config::getAttribute(const TreeAddress& address, const QString& key) con
         return e.attribute(key);
 }
 
+bool Config::verifyAddress( const TreeAddress &address) const
+{
+    QDomElement e = _get(address, _document);
+    return ! e.isNull();
+}
+
 /**
  * @details
  * Gets value of the text node at the address. If multiple text nodes are
@@ -227,6 +233,26 @@ void Config::setAttribute(const TreeAddress &address, const QString &key,
 
 /**
  * @details
+ *  sets the contents from the xml provided in the string
+ * */
+void Config::setXML( const QString& xml )
+{
+    _document.clear();
+    _document = QDomDocument("pelican");
+
+    // Read the XML configuration file into the QDomDocument.
+    QString error;
+    int line, column;
+
+    if (!_document.setContent( xml, true, &error, &line, &column)) {
+        throw QString("Config::setXML(): Error parsing XML "
+                "(Line: %1 Col: %2): %3.").arg(line).arg(column).arg(error);
+    }
+    preprocess(_document);
+}
+
+/**
+ * @details
  * Sets the content of the configuration QDomDocument from the QStrings
  * \p pipelineConfig, \p serverConfig and \p nodesets.
  *
@@ -238,10 +264,6 @@ void Config::setFromString(const QString& pipelineConfig,
 {
     _document.clear();
     _document = QDomDocument("pelican");
-
-    // Read the XML configuration file into the QDomDocument.
-    QString error;
-    int line, column;
 
     QString xmlDoc =
             "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
@@ -258,13 +280,7 @@ void Config::setFromString(const QString& pipelineConfig,
             "</nodesets>"
             "</configuration>";
 
-    if (!_document.setContent(xmlDoc, true, &error, &line, &column)) {
-        throw QString("Config::setFromString(): Error parsing XML "
-                "(Line: %1 Col: %2): %3.").arg(line).arg(column).arg(error);
-    }
-
-    // Pre-process the document.
-    preprocess(_document);
+    setXML( xmlDoc );
 }
 
 /**
@@ -361,10 +377,16 @@ QDomElement Config::_get(const TreeAddress &address,
     QDomElement parent = document.documentElement();
 
     // Empty configuration, so return null element.
-    if (parent.isNull())
+    if (parent.isNull()) 
         return QDomElement();
 
-    for (int a = 0; a < address.size(); a++) {
+    int indx = 0;
+    // addresses can refer from the top node, or one level below the
+    // top node. Need to check which one.
+    if( address.at(0).first == parent.tagName() ) {
+        ++indx;
+    }
+    for (int a = indx; a < address.size(); a++) {
 
         QString tag  = address.at(a).first;
         QString name = address.at(a).second;
@@ -379,8 +401,9 @@ QDomElement Config::_get(const TreeAddress &address,
         }
 
         // No node exists of the specified tag.
-        if (nodes.isEmpty())
-            return QDomElement();
+        if (nodes.isEmpty()) {
+std::cout << "no node exists : parent = " << parent.tagName().toStdString() << std::endl;
+            return QDomElement(); }
 
         // Nodes exist of the specified tag; find the right one to return.
         else {

@@ -60,6 +60,12 @@ class ConfigNode
             return _config.parentNode().toElement().tagName();
         }
 
+        /// Returns true if the named attribute is specified in the top level tag.
+        bool hasAttribute(const QString& attribute) const;
+
+        /// Returns the named attribute of the top level tag.
+        QString getAttribute(const QString& attribute) const;
+
         /// Sets the node from the xml string (NOTE: use for testing)
         void setFromString(const QString xmlString);
 

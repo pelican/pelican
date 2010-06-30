@@ -18,7 +18,8 @@ namespace pelican {
  * @brief
  *    Base class for all data output modules
  * @details
- * 
+ *    Need to implement the send() method to export data
+ *    as required
  */
 
 class AbstractOutputStream

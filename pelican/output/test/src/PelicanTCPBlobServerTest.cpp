@@ -70,7 +70,7 @@ void PelicanTCPBlobServerTest::test_connection()
                   "   <connection port=\"0\"/>"  // 0 = find unused system port
                   "</PelicanTCPBlobServer>";
     ConfigNode config(xml);
-    PelicanTCPBlobServer server(config, _app);
+    PelicanTCPBlobServer server(config);
     sleep(1);
 
     // Create a client and connect it to the server

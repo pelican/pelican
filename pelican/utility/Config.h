@@ -48,6 +48,9 @@ class Config
             return ConfigNode(_get(address, _document));
         }
 
+        /// returns true if a node at the specified address exists
+        bool verifyAddress( const TreeAddress &address) const;
+
         /// Returns the attribute at specified address and key.
         QString getAttribute(const TreeAddress& address,
                 const QString& key) const;
@@ -91,6 +94,10 @@ class Config
         void setFromString(const QString& pipelineConfig,
                            const QString& serverConfig = "",
                            const QString& nodesets = "");
+
+        /// Sets the document as actually specifed without the machinations
+        //  of the setFromString method
+        void setXML( const QString& xml );
 
         /// Set the text node at the specified address.
         void setText(const TreeAddress& address, const QString& text);
