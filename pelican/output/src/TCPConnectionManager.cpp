@@ -106,6 +106,7 @@ void TCPConnectionManager::send(const QString& streamName, const DataBlob* blob)
     // Check if there are any client reading streamName type data
     if (!_clients.contains(streamName) ) {
         //std::cout << "TCPConnectionManager: Nobody to receive data" << std::endl;
+        emit sent(blob);
         return;  // No client to stream to
     }
 
