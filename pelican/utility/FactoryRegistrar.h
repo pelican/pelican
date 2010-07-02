@@ -117,7 +117,7 @@ BOOST_PP_REPEAT(MAX_FACTORIES, FACTORYREGISTRAR, ~)
  * object of type T, which has a base class of type B.
  */
 #define PELICAN_DECLARE(B,T) \
-namespace {pelican::FactoryRegistrar<B,T> fr_##T(#T);}
+namespace {pelican::FactoryRegistrar< B, T > BOOST_PP_CAT(fr_##B, __LINE__)(#T);}
 
 /**
  * This is a convenience macro that is used to declare the types of
