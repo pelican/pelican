@@ -19,6 +19,7 @@ OutputStreamManager::OutputStreamManager( const Config* config , const Config::T
         Config::TreeAddress streamerBase(base);
         streamerBase << Config::NodeId("streamers","");
         _factory = new FactoryConfig<AbstractOutputStream>(config, streamerBase);
+
         // parse the config file
         ConfigNode c = config->get(base);
 
@@ -36,8 +37,8 @@ OutputStreamManager::OutputStreamManager( const Config* config , const Config::T
                     id = n.attribute("name");
                 if(localStreamers.contains(id)) 
                     throw(QString("OutputStreamManager configuration error: Multiple OutputStreamers with the same \"name\" defined \"%1\% on line : %2").arg(id).arg(n.lineNumber()) );
-                if( ! n.hasAttribute("active") || QString::compare( n.attribute("active"), "true", Qt::CaseInsensitive) ) {
-                    AbstractOutputStream* streamer = _factory->create(n.tagName(),id);
+                if( !n.hasAttribute("active") ||  n.attribute("active") == QString("true") ) { //FIXME: QCompare screws up
+                    AbstractOutputStream* streamer = _factory -> create(n.tagName(),id);
                     if( ! streamer )
                         throw(QString("OutputStreamManager configuration error: Unknown OuputStreamer type \"%1\%").arg(n.tagName()) );
                     localStreamers[id] = streamer;
@@ -61,7 +62,7 @@ OutputStreamManager::OutputStreamManager( const Config* config , const Config::T
                     if( ! localStreamers.contains(id) && ! inactive.contains(id) ) {
                         throw( QString("OutputStreamManager configuration error: <stream> tag refers to unknown output streamer \"%s\"").arg(id) );
                     }
-                    connectToStream(localStreamers[id], stream.attribute("name").toLower() );
+                    connectToStream(localStreamers[id], stream.attribute("name"));
                 }
             }
         }

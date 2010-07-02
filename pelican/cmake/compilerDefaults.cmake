@@ -19,8 +19,8 @@ if(CMAKE_BUILD_TYPE MATCHES RELEASE|[Rr]elease)
 endif(CMAKE_BUILD_TYPE MATCHES RELEASE|[Rr]elease)
 
 # Option to build shared and static libraries.
-set(BUILD_SHARED FALSE)
-set(BUILD_STATIC TRUE)
+set(BUILD_SHARED TRUE)
+set(BUILD_STATIC FALSE)
 
 # Check for option consistency.
 if(BUILD_SINGLE_LIB)

@@ -79,7 +79,10 @@ DataClientFactory* PipelineApplication::clientFactory()
  */
 OutputStreamManager* PipelineApplication::outputStreamManager()
 {
-    Config::TreeAddress address; address <<  Config::NodeId("output", "");
+    Config::TreeAddress address; 
+   address <<  Config::NodeId("configuration", "");
+   address <<  Config::NodeId("pipeline", "");
+   address <<  Config::NodeId("output", "");
     static OutputStreamManager osmanager( config(), address );
             //Config::TreeAddress() <<  Config::NodeId("output", "") );
     return &osmanager;
