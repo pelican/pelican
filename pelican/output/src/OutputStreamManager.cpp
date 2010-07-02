@@ -76,7 +76,7 @@ OutputStreamManager::OutputStreamManager( const Config* config , const Config::T
  */
 OutputStreamManager::~OutputStreamManager()
 {
-    delete _factory;
+    delete _factory; // the factory is assumed to delete the objects it created
 }
 
 /**
