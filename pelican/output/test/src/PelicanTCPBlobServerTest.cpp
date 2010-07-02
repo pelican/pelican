@@ -128,4 +128,14 @@ void PelicanTCPBlobServerTest::test_connection()
     }
 }
 
+void PelicanTCPBlobServerTest::test_portConfig()
+{
+    QString xml = "<PelicanTCPBlobServer>"
+                  "   <connection port=\"8899\"/>"  // 0 = find unused system port
+                  "</PelicanTCPBlobServer>";
+    ConfigNode config(xml);
+    PelicanTCPBlobServer server(config);
+    sleep(1);
+    CPPUNIT_ASSERT_EQUAL( (unsigned int)server.serverPort(),  (unsigned int)8899 );
+}
 } // namespace pelican

@@ -10,6 +10,10 @@
 #include "pelican/utility/Config.h"
 #include "pelican/utility/ConfigNode.h"
 
+// include the basic types available for all pelican users
+// to ensure the factory is aware of them
+#include "pelican/output/PelicanTCPBlobServer.h"
+
 /**
  * @file OutputStreamManager.h
  */
@@ -31,9 +35,9 @@ class DataBlob;
  *   @code
  *   <output>
  *     <streamers>
- *        <TCP_BlobServer active="true" >
+ *        <PelicanTCPBlobServer active="true" >
  *            <connection port="1234" />
- *        <TCP_BlobServer/>
+ *        <PelicanTCPBlobServer/>
  *        <FileStreamer name="networkdrive">
  *              <Directory path="/share/dataout" />
  *        </FileStreamer>

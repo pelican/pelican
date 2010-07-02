@@ -15,6 +15,9 @@ TestOutputStreamer::TestOutputStreamer( const QString& id)
 TestOutputStreamer::TestOutputStreamer( const ConfigNode& config )
     : AbstractOutputStream(config), _config(config)
 {
+    // Check configuration node is correct.
+    if (config.type() != "TestOutputStreamer")
+        throw QString("TestOutputStreamer: Wrong configuration node. Got \"%1\"").arg(config.type());
 }
 /**
  *@details

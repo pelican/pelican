@@ -17,7 +17,6 @@ PelicanTCPBlobServer::PelicanTCPBlobServer(const ConfigNode& configNode )
 {
     // Initliase connection manager thread
     int port = configNode.getOption("connection", "port").toInt();
-    port = 6969;
 
     // decide to run in threaded/ or non-threaded mode
     bool threaded = true;
