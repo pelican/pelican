@@ -5,9 +5,13 @@ SUBPACKAGE(outputTest output dataTest)
 # ==============================================================================
 set(outputTestUtils_src
     src/TestOutputStreamer.cpp
-    )
+)
 
 SUBPACKAGE_LIBRARY(outputTestUtils ${outputTestUtils_src})
+SUBPACKAGE_SET_EXTERNAL_LIBRARIES(
+    ${QT_QTCORE_LIBRARY}
+    ${QT_QTXML_LIBRARY}
+)
 
 # Build Pelican output tests.
 # ==============================================================================
@@ -18,11 +22,11 @@ set(outputTest_src
     src/OutputStreamManagerTest.cpp
 )
 add_executable(outputTestMT ${outputTest_src})
-target_link_libraries(outputTestMT 
+target_link_libraries(outputTestMT
     outputTestUtils
-    ${SUBPACKAGE_LIBRARIES} 
-    ${CPPUNIT_LIBRARIES} 
-    memoryTracerDummy 
+    ${SUBPACKAGE_LIBRARIES}
+    ${CPPUNIT_LIBRARIES}
+    memoryTracerDummy
 )
 add_test(outputTestMT outputTestMT)
 

@@ -114,6 +114,8 @@ include(modules.cmake)
 # Project libraries to produce.
 CREATE_PROJECT_LIBRARY(pelican)
 CREATE_PROJECT_LIBRARY(pelican-testutils)
+target_link_libraries(pelican-testutils
+    pelican)
 
 # === Doxygen documentation targets.
 include(UseDoxygen)

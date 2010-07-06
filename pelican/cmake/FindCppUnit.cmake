@@ -10,13 +10,26 @@ IF (CPPUNIT_INCLUDE_DIR)
     SET(CPPUNIT_FIND_QUIETLY TRUE)
 ENDIF (CPPUNIT_INCLUDE_DIR)
 
-FIND_PATH(CPPUNIT_INCLUDE_DIR TestSuite.h PATHS /usr/include/cppunit /usr/include/libcppunit )
+FIND_PATH(CPPUNIT_INCLUDE_DIR TestSuite.h 
+	PATHS
+	/usr/include/cppunit
+	/usr/local/include/
+	/usr/local/include/cppunit
+	/usr/include/libcppunit
+)
 
 SET(CPPUNIT_NAMES cppunit)
-FOREACH( lib ${CPPUNIT_NAMES} )
-    FIND_LIBRARY(CPPUNIT_LIBRARY_${lib} NAMES ${lib} )
+FOREACH(lib ${CPPUNIT_NAMES} )
+    FIND_LIBRARY(CPPUNIT_LIBRARY_${lib}
+        NAMES ${lib}
+        PATHS
+        /usr/lib
+        /usr/local/lib
+    )
     LIST(APPEND CPPUNIT_LIBRARIES ${CPPUNIT_LIBRARY_${lib}})
+    message(STATUS "===== ${CPPUNIT_LIBRARY_${lib}}")
 ENDFOREACH(lib)
+
 
 # handle the QUIETLY and REQUIRED arguments and set CPPUNIT_FOUND to TRUE if.
 # all listed variables are TRUE
