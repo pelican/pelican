@@ -129,7 +129,8 @@ macro(SUBPACKAGE_SET_EXTERNAL_LIBRARIES)
         endforeach(project_file)
 
         #message(STATUS "***** ${current_library_target} ${ARGN}")
-        target_link_libraries(${current_library_target} ${ARGN})
+        target_link_libraries(${current_library_target}
+             ${ARGN} ${SUBPACKAGE_LIBRARIES})
 
     else(subpackage_current)
         message(FATAL_ERROR "ERROR: SUBPACKAGE_SET_EXTERNAL_LIBRARIES "
