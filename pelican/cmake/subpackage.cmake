@@ -131,7 +131,7 @@ macro(SUBPACKAGE_SET_EXTERNAL_LIBRARIES)
 
         set(link_libs ${ARGN})
         list(APPEND link_libs ${SUBPACKAGE_COMPONENT_LIBRARIES})
-        list(REMOVE_DUPLICATES link_libs)
+        #list(REMOVE_DUPLICATES link_libs)
         message(STATUS "***** ${current_library_target} ====  ${link_libs}")
         target_link_libraries(${current_library_target}
              ${link_libs})
@@ -407,7 +407,7 @@ macro(_SUBPACKAGE_FIND_DEPS name)
         include(${SUBPACKAGE_WORK_DIR}/${name}.cmake)
         if(BUILD_STATIC)
             list(INSERT link_dirs 0 ${${name}_lib_dir})
-            list(REMOVE_DUPLICATES link_dirs)
+            #list(REMOVE_DUPLICATES link_dirs)
        endif(BUILD_STATIC)
 
         #message(STATUS "     DEPS = ${${name}_subpackage_DEPS}")
