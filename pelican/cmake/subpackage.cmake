@@ -99,12 +99,13 @@ macro(SUBPACKAGE_LIBRARY name)
             )
         endif(BUILD_STATIC)
 
+        set(current_library_target ${name})
+
         # Add the library to the list of sub-pacakge libraries.
         # This is required for the case in which subpacakge binaries depend
         # locally on the subpackage library.
         _SET_SUBPACKAGE_LIBRARIES(${subpackage_current})
         list(REMOVE_DUPLICATES SUBPACKAGE_LIBRARIES)
-
 
     else(subpackage_current)
         message(FATAL_ERROR "ERROR: SUBPACKAGE_LIBRARY "
@@ -126,6 +127,9 @@ macro(SUBPACKAGE_SET_EXTERNAL_LIBRARIES)
             file(APPEND ${project_file}
                 "list(APPEND external_libs ${ARGN})\n\n")
         endforeach(project_file)
+
+        #message(STATUS "***** ${current_library_target} ${ARGN}")
+        target_link_libraries(${current_library_target} ${ARGN})
 
     else(subpackage_current)
         message(FATAL_ERROR "ERROR: SUBPACKAGE_SET_EXTERNAL_LIBRARIES "
