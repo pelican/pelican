@@ -105,7 +105,7 @@ macro(SUBPACKAGE_LIBRARY name)
         # This is required for the case in which subpacakge binaries depend
         # locally on the subpackage library.
         _SET_SUBPACKAGE_LIBRARIES(${subpackage_current})
-        list(REMOVE_DUPLICATES SUBPACKAGE_LIBRARIES)
+        #list(REMOVE_DUPLICATES SUBPACKAGE_LIBRARIES)
 
     else(subpackage_current)
         message(FATAL_ERROR "ERROR: SUBPACKAGE_LIBRARY "
@@ -197,7 +197,8 @@ macro(_SET_SUBPACKAGE_LIBRARIES)
                 endforeach(pack)
             endif(BUILD_STATIC AND STATIC_LINK_BINARIES)
         endforeach(dep)
-        list(REMOVE_DUPLICATES SUBPACKAGE_LIBRARIES)
+        #list(REMOVE_DUPLICATES SUBPACKAGE_LIBRARIES)
+
     endif(BUILD_SINGLE_LIB)
 
     # Grab external libraries ... ? NEEDED?
@@ -395,7 +396,7 @@ macro(_SUBPACKAGE_FIND_DEPS name)
             _SUBPACKAGE_FIND_DEPS(${dep})
         endforeach(dep)
 
-        list(REMOVE_DUPLICATES dependencies)
+        #list(REMOVE_DUPLICATES dependencies)
 
         set(${subpackage_current}_${name}_added TRUE)
    endif(NOT ${subpackage_current}_${name}_added)
