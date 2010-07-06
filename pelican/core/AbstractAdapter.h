@@ -31,8 +31,9 @@ class ConfigNode;
  * This class is the base class for all Pelican data adapters, which
  * de-serialise data from an input device.
  *
- * Inherit this class and implement the deserialise method to create a new
- * adapter.
+ * do not Inherit this class directly, but from either AbstractStreamAdapter or AbstractServiceData
+ * and implement the deserialise method to create a new
+ * adapter
  */
 class AbstractAdapter
 {
