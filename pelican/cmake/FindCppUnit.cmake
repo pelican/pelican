@@ -14,7 +14,12 @@ FIND_PATH(CPPUNIT_INCLUDE_DIR TestSuite.h PATHS /usr/include/cppunit /usr/includ
 
 SET(CPPUNIT_NAMES cppunit)
 FOREACH( lib ${CPPUNIT_NAMES} )
-    FIND_LIBRARY(CPPUNIT_LIBRARY_${lib} NAMES ${lib} )
+    FIND_LIBRARY(CPPUNIT_LIBRARY_${lib}
+        NAMES ${lib}
+        PATHS
+        /usr/lib
+        /usr/local/lib
+    )
     LIST(APPEND CPPUNIT_LIBRARIES ${CPPUNIT_LIBRARY_${lib}})
 ENDFOREACH(lib)
 
