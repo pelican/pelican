@@ -40,6 +40,7 @@ class AbstractChunker
         DataManager* _dataManager;
         QString _type;
         QString _host;
+        QString _watchFile;
         quint16 _port;
         QIODevice* _device;
         bool _active;
@@ -47,7 +48,9 @@ class AbstractChunker
     public:
         /// Constructs a new AbstractChunker.
         AbstractChunker(const QString& type, QString host = "", quint16 port = 0)
-            : _dataManager(0), _type(type), _host(host), _port(port), _device(0), _active(true){}
+            : _dataManager(0), _type(type), _host(host), _port(port), _device(0), 
+              _active(true)
+        {}
 
         /// Constructs a new AbstractChunker.
         PELICAN_CONSTRUCT_TYPES(ConfigNode)
@@ -71,6 +74,9 @@ class AbstractChunker
 
         /// Returns the port.
         quint16 port() {return _port;}
+
+        /// Returns the port.
+        QString watchFile() {return _watchFile;}
 
         /// Sets the data manager.
         void setDataManager(DataManager* dataManager) {

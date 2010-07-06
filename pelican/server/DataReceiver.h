@@ -8,6 +8,7 @@
 #include <QString>
 
 class QIODevice;
+class QFileSystemWatcher;
 
 /**
  * @file DataReceiver.h
@@ -35,6 +36,7 @@ class DataReceiver : public QThread
         QMutex _mutex;
         AbstractChunker* _chunker;
         QIODevice* _device; // This is usually a UDP socket.
+        QFileSystemWatcher* _watcher;
 
     public:
         /// Constructor.
@@ -48,7 +50,8 @@ class DataReceiver : public QThread
 
     private slots:
         /// This slot is called when data is available on the device.
-        void _processIncomingData() {_chunker->next(_device);}
+        void _processIncomingData();
+        void _fileChanged(const QString & file);
 
     protected:
         /// Runs the thread for the data receiver.

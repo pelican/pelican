@@ -57,6 +57,7 @@ class ChunkerManager
         const Config* _config;
         FactoryConfig<AbstractChunker> *_factory;
         QMap<QPair<QString,quint16>,AbstractChunker* > _chunkerPortMap;
+        QMap<QString,AbstractChunker* > _watchingChunkers;
         QSet<QString> _streamDataTypes;
         QSet<QString> _serviceDataTypes;
         QVector<DataReceiver*> _dataReceivers;
