@@ -36,6 +36,8 @@ macro(SUBPACKAGE name)
 
     list(APPEND SUBPACKAGE_LIBRARIES ${SUBPACKAGE_EXTERNAL_LIBRARIES})
 
+    set(${name}_subpackage_comonent_libs ${ARGN})
+
     # Create the install target for header files of the sub-package.
     file(GLOB public_headers RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "*.h")
     install(FILES ${public_headers} DESTINATION ${INCLUDE_INSTALL_DIR}/${name})
@@ -130,7 +132,7 @@ macro(SUBPACKAGE_SET_EXTERNAL_LIBRARIES)
 
         #message(STATUS "***** ${current_library_target} ${ARGN}")
         target_link_libraries(${current_library_target}
-             ${ARGN} ${SUBPACKAGE_LIBRARIES})
+             ${ARGN} ${${name}_subpackage_comonent_libs})
 
     else(subpackage_current)
         message(FATAL_ERROR "ERROR: SUBPACKAGE_SET_EXTERNAL_LIBRARIES "
