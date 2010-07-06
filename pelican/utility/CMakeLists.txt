@@ -41,4 +41,5 @@ if(CMAKE_BUILD_TYPE MATCHES DEBUG|[Dd]ebug)
 endif(CMAKE_BUILD_TYPE MATCHES DEBUG|[Dd]ebug)
 
 # Recurse into test sub-directory to build tests.
-add_subdirectory(test)
+
+#add_subdirectory(test)
