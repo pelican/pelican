@@ -22,6 +22,18 @@ include_directories(
     ${QT_QTCORE_INCLUDE_DIR}
 )
 
+
+
+
+
+
+
+
+
+
+
+
+
 macro(_PELICAN_PIC)
 if(printed_macro_printed)
     return()

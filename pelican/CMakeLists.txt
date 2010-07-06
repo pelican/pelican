@@ -51,7 +51,7 @@ set(${PROJECT_NAME}_PATCH_LEVEL 0)
 
 # === CMake setup.
 list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_SOURCE_DIR}/cmake)
-#include(cmake/packagemacrosNew.cmake)
+include(cmake/packagemacrosNew.cmake)
 
 
 enable_testing()
@@ -92,8 +92,8 @@ include(dependencies)
 
 #message(STATUS "BUILD_STATIC = ${BUILD_STATIC}")
 list(INSERT CMAKE_MODULE_PATH 0 "/usr/local/bang")
-include(bang)
-BANG_VERSION(0.1)
+#include(bang)
+#BANG_VERSION(0.1)
 
 
 # === Set Broken Package flags.
@@ -110,7 +110,6 @@ DECLARE_PROJECT_LIBRARY(pelican-testutils
 
 # === Sub modules (recurse into sub-directories to build modules).
 include(modules.cmake)
-
 
 # Project libraries to produce.
 CREATE_PROJECT_LIBRARY(pelican)
