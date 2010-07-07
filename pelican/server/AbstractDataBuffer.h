@@ -1,12 +1,12 @@
-#ifndef DATABUFFER_H
-#define DATABUFFER_H
+#ifndef ABSTRACTDATABUFFER_H
+#define ABSTRACTDATABUFFER_H
 
 #include <QtCore/QObject>
 #include <QtCore/QMutex>
 #include <QtCore/QString>
 
 /**
- * @file DataBuffer.h
+ * @file AbstractDataBuffer.h
  */
 
 namespace pelican {
@@ -14,7 +14,7 @@ namespace pelican {
 class WritableData;
 
 /**
- * @class DataBuffer
+ * @class AbstractDataBuffer
  *  
  * @brief
  * Interface class for generic data buffers.
@@ -25,17 +25,17 @@ class WritableData;
  * 
  * The class is inherited by StreamDataBuffer and ServiceDataBuffer.
  */
-class DataBuffer : public QObject
+class AbstractDataBuffer : public QObject
 {
     Q_OBJECT
 
     public:
         /// Constructs a new abstract data buffer object.
-        DataBuffer(const QString& type, QObject* parent = 0) :
+        AbstractDataBuffer(const QString& type, QObject* parent = 0) :
             QObject(parent), _type(type) {}
 
         /// Destroys the data buffer object.
-        virtual ~DataBuffer() {}
+        virtual ~AbstractDataBuffer() {}
 
         /// Returns a WritableData object of the specified size from the buffer.
         virtual WritableData getWritable(size_t size) = 0;
@@ -48,4 +48,4 @@ class DataBuffer : public QObject
 
 } // namespace pelican
 
-#endif // DATABUFFER_H 
+#endif // ABSTRACTDATABUFFER_H

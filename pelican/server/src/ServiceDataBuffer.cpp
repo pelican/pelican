@@ -14,7 +14,7 @@ namespace pelican {
 
 // class ServiceDataBuffer
 ServiceDataBuffer::ServiceDataBuffer(const QString& type)
-    : DataBuffer(type)
+    : AbstractDataBuffer(type)
 {
     _current = "";
     _newData = 0;

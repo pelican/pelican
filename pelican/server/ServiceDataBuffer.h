@@ -1,7 +1,7 @@
 #ifndef SERVICEDATABUFFER_H
 #define SERVICEDATABUFFER_H
 
-#include "pelican/server/DataBuffer.h"
+#include "pelican/server/AbstractDataBuffer.h"
 
 #include <QtCore/QObject>
 #include <QtCore/QMutex>
@@ -32,7 +32,7 @@ class LockedData;
  *
  */
 
-class ServiceDataBuffer : public DataBuffer
+class ServiceDataBuffer : public AbstractDataBuffer
 {
     Q_OBJECT
 

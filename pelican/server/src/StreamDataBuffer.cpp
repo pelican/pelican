@@ -25,7 +25,7 @@ namespace pelican {
  */
 StreamDataBuffer::StreamDataBuffer(const QString& type, DataManager* manager,
         const size_t max, const size_t maxChunkSize, QObject* parent) :
-        DataBuffer(type, parent),_manager(manager)
+        AbstractDataBuffer(type, parent),_manager(manager)
 {
     _max = max;
     _maxChunkSize = maxChunkSize;

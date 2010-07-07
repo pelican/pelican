@@ -367,7 +367,7 @@ void SessionTest::test_streamDataBufferFull()
  *
  * @return The ID string.
  */
-QString SessionTest::_injectData(DataBuffer* buffer, const QString& id, int size)
+QString SessionTest::_injectData(AbstractDataBuffer* buffer, const QString& id, int size)
 {
     // Writable data has to go out of scope to be activated.
     {

@@ -5,7 +5,7 @@
 #include "pelican/server/AbstractLockableData.h"
 
 /**
- * @file LockableData.h
+ * @file LockableServiceData.h
  */
 
 namespace pelican {
@@ -13,7 +13,7 @@ namespace pelican {
 class Data;
 
 /**
- * @class LockableData
+ * @class LockableServiceData
  *  
  * @brief
  * Primary interface to access chunks of data in the server.
@@ -26,11 +26,11 @@ class LockableServiceData : public AbstractLockableData
     Q_OBJECT
 
     public:
-        /// Constructs a new LockableData object.
+        /// Constructs a new LockableServiceData object.
         LockableServiceData(const QString& name = "", void* data = 0,
                 size_t size = 0, QObject* parent = 0);
 
-        /// Destroys the LockableData object.
+        /// Destroys the LockableServiceData object.
         virtual ~LockableServiceData() {}
 
         /// Return the size of the stored data.

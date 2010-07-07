@@ -1,7 +1,7 @@
 #ifndef STREAMDATABUFFER_H
 #define STREAMDATABUFFER_H
 
-#include "pelican/server/DataBuffer.h"
+#include "pelican/server/AbstractDataBuffer.h"
 #include <QtCore/QQueue>
 #include <QtCore/QObject>
 
@@ -27,7 +27,7 @@ class WritableData;
  * Encapsulates memory allocation for streams, with locking and data
  * consistency checking.
  */
-class StreamDataBuffer : public DataBuffer
+class StreamDataBuffer : public AbstractDataBuffer
 {
     Q_OBJECT
 

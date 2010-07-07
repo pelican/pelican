@@ -2,10 +2,10 @@ SUBPACKAGE(server comms utility)
 
 # files requiring MOC pre-processing (i.e. QObjects)
 set(server_moc_headers
+    AbstractDataBuffer.h
     AbstractLockable.h
     AbstractLockableData.h
     LockableServiceData.h
-    DataBuffer.h
     DataReceiver.h
     ServiceDataBuffer.h
     StreamDataBuffer.h

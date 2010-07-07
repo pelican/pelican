@@ -3,7 +3,7 @@
 
 #include <QtCore/QSet>
 #include <QtCore/QString>
-#include "AbstractLockableData.h"
+#include "pelican/server/AbstractLockableData.h"
 
 /**
  * @file LockableStreamData.h
