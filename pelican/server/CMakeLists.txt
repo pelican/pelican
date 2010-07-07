@@ -4,7 +4,7 @@ SUBPACKAGE(server comms utility)
 set(server_moc_headers
     AbstractLockable.h
     AbstractLockableData.h
-    LockableData.h
+    LockableServiceData.h
     DataBuffer.h
     DataReceiver.h
     ServiceDataBuffer.h
@@ -19,7 +19,7 @@ set(server_src
     src/AbstractChunker.cpp
     src/AbstractLockable.cpp
     src/ChunkerManager.cpp
-    src/LockableData.cpp
+    src/LockableServiceData.cpp
     src/DataReceiver.cpp
     src/LockedData.cpp
     src/DataManager.cpp

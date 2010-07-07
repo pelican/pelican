@@ -1,8 +1,8 @@
 #ifndef LOCKABLESTREAMDATA_H
 #define LOCKABLESTREAMDATA_H
 
-#include <QSet>
-#include <QString>
+#include <QtCore/QSet>
+#include <QtCore/QString>
 #include "AbstractLockableData.h"
 
 /**

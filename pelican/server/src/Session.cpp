@@ -4,7 +4,7 @@
 #include "pelican/server/DataManager.h"
 #include "pelican/server/LockedData.h"
 #include "pelican/server/LockableStreamData.h"
-#include "pelican/server/LockableData.h"
+#include "pelican/server/LockableServiceData.h"
 #include "pelican/comms/StreamData.h"
 #include "pelican/comms/ServerRequest.h"
 #include "pelican/comms/StreamDataRequest.h"
@@ -98,7 +98,7 @@ void Session::processRequest(const ServerRequest& req, QIODevice& out, const uns
                     if( d.size() > 0 ) {
                         AbstractProtocol::ServiceData_t data;
                         for( int i=0; i < d.size(); ++i ) {
-                            LockableData* lockedData = static_cast<LockableData*>(d[i].object());
+                            LockableServiceData* lockedData = static_cast<LockableServiceData*>(d[i].object());
                             data.append(lockedData->data().get());
                         }
                         _protocol->send( out, data );

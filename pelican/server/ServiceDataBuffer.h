@@ -3,9 +3,9 @@
 
 #include "pelican/server/DataBuffer.h"
 
-#include <QObject>
-#include <QMutex>
-#include <QHash>
+#include <QtCore/QObject>
+#include <QtCore/QMutex>
+#include <QtCore/QHash>
 
 
 /**
@@ -14,7 +14,7 @@
 
 namespace pelican {
 
-class LockableData;
+class LockableServiceData;
 class LockedData;
 
 
@@ -56,13 +56,13 @@ class ServiceDataBuffer : public DataBuffer
         void deactivateData();
 
     protected:
-        void activateData(LockableData*);
-        void deactivateData(LockableData*);
+        void activateData(LockableServiceData*);
+        void deactivateData(LockableServiceData*);
 
     private:
-        QHash<QString,LockableData*> _data;
-        QList<LockableData*> _expiredData;
-        LockableData* _newData; // temporary store until activated
+        QHash<QString, LockableServiceData*> _data;
+        QList<LockableServiceData*> _expiredData;
+        LockableServiceData* _newData; // temporary store until activated
         QString _current;
         size_t _max;
         size_t _maxChunkSize;

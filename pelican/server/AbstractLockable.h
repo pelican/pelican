@@ -1,9 +1,10 @@
 #ifndef ABSTRACTLOCKABLE_H
 #define ABSTRACTLOCKABLE_H
+
 #include <cstring>
-#include <QObject>
-#include <QMutex>
-#include <QMutexLocker>
+#include <QtCore/QObject>
+#include <QtCore/QMutex>
+#include <QtCore/QMutexLocker>
 
 /**
  * @file AbstractLockable.h

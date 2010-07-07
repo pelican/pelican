@@ -3,9 +3,9 @@
 
 #include "pelican/server/DataManager.h"
 
-#include <QList>
-#include <QString>
-#include <QThread>
+#include <QtCore/QList>
+#include <QtCore/QString>
+#include <QtCore/QThread>
 
 /**
  * @file TestServer.h

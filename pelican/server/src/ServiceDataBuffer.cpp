@@ -2,9 +2,9 @@
 
 #include "pelican/server/LockedData.h"
 #include "pelican/server/WritableData.h"
-#include "pelican/server/LockableData.h"
+#include "pelican/server/LockableServiceData.h"
 
-#include <QMutexLocker>
+#include <QtCore/QMutexLocker>
 #include <stdlib.h>
 
 #include "pelican/utility/memCheck.h"
@@ -28,7 +28,7 @@ ServiceDataBuffer::ServiceDataBuffer(const QString& type)
 ServiceDataBuffer::~ServiceDataBuffer()
 {
     delete _newData;
-    foreach(LockableData* data, _data ) {
+    foreach (LockableServiceData* data, _data) {
         free(data->data()->data());
         delete data;
     }
@@ -51,7 +51,7 @@ WritableData ServiceDataBuffer::getWritable(size_t size)
     if( ! _newData ) {
         QMutexLocker lock(&_mutex);
         for (int i = 0; i < _expiredData.size(); ++i) {
-            LockableData* lockableData = _expiredData[i];
+            LockableServiceData* lockableData = _expiredData[i];
             if( lockableData->maxSize() >= size ) {
                 // We found one, ensure we remove it from the
                 // active data queue.
@@ -66,7 +66,7 @@ WritableData ServiceDataBuffer::getWritable(size_t size)
             void* d = calloc(size, sizeof(char)); // Released in destructor.
             if( d ) {
                 _space -= size;
-                _newData = new LockableData(_type,d, size);
+                _newData = new LockableServiceData(_type,d, size);
                 connect(_newData, SIGNAL(unlockedWrite()), SLOT(activateData()));
                 connect(_newData, SIGNAL(unlocked()), SLOT(deactivateData()));
                 return WritableData( _newData );
@@ -78,15 +78,15 @@ WritableData ServiceDataBuffer::getWritable(size_t size)
 
 void ServiceDataBuffer::activateData()
 {
-    activateData( static_cast<LockableData*>( sender() ) );
+    activateData(static_cast<LockableServiceData*>(sender()));
 }
 
 void ServiceDataBuffer::deactivateData()
 {
-    deactivateData( static_cast<LockableData*>( sender() ) );
+    deactivateData(static_cast<LockableServiceData*>(sender()));
 }
 
-void ServiceDataBuffer::deactivateData(LockableData* data)
+void ServiceDataBuffer::deactivateData(LockableServiceData* data)
 {
     // We cannot delete the data immediately there is no
     // longer any stream data referencing the data as a client
@@ -98,11 +98,11 @@ void ServiceDataBuffer::deactivateData(LockableData* data)
         _expiredData.append(data);
 }
 
-void ServiceDataBuffer::activateData(LockableData* data)
+void ServiceDataBuffer::activateData(LockableServiceData* data)
 {
-    QMutexLocker lock(&_mutex);
     if( data->isValid() )
     {
+        QMutexLocker lock(&_mutex);
         // determine the version id for this object
         QString id = data->id();
         if( id == "" ) {

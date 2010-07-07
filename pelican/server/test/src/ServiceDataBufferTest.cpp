@@ -1,10 +1,9 @@
-#include "ServiceDataBufferTest.h"
-#include "ServiceDataBuffer.h"
-#include "WritableData.h"
-#include "LockedData.h"
-#include "LockableData.h"
-#include <QCoreApplication>
-
+#include "pelican/server/test/ServiceDataBufferTest.h"
+#include "pelican/server/ServiceDataBuffer.h"
+#include "pelican/server/WritableData.h"
+#include "pelican/server/LockedData.h"
+#include "pelican/server/LockableServiceData.h"
+#include <QtCore/QCoreApplication>
 
 #include "pelican/utility/memCheck.h"
 
@@ -52,8 +51,8 @@ void ServiceDataBufferTest::test_getWritable()
         // to getWritable() to return a valid object
         ServiceDataBuffer buffer("test");
         {
-            LockableData* data = 0;
-            data = static_cast<LockableData*>(buffer.getWritable(1).data());
+            LockableServiceData* data = 0;
+            data = static_cast<LockableServiceData*>(buffer.getWritable(1).data());
             CPPUNIT_ASSERT( data != 0 );
             CPPUNIT_ASSERT( data->isValid() );
         }
@@ -88,11 +87,11 @@ void ServiceDataBufferTest::test_retiredData()
         LockedData locker("test",0);
         buffer.getCurrent(locker);
         CPPUNIT_ASSERT( d1 == locker.object() );
-        buffer.deactivateData(static_cast<LockableData*>(d1) );
+        buffer.deactivateData(static_cast<LockableServiceData*>(d1) );
         LockedData locker2("test",0);
         buffer.getCurrent(locker2);
         CPPUNIT_ASSERT( d1 == locker2.object() );
-        CPPUNIT_ASSERT( ! buffer._expiredData.contains(static_cast<LockableData*>(d1) ) );
+        CPPUNIT_ASSERT( ! buffer._expiredData.contains(static_cast<LockableServiceData*>(d1) ) );
     }
     {
         // Use Case:
@@ -116,8 +115,8 @@ void ServiceDataBufferTest::test_retiredData()
         LockedData locker("test",0);
         buffer.getCurrent(locker);
         CPPUNIT_ASSERT( d2 == locker.object() );
-        buffer.deactivateData(static_cast<LockableData*>(d1) );
-        CPPUNIT_ASSERT( buffer._expiredData.contains( static_cast<LockableData*>(d1) ) );
+        buffer.deactivateData(static_cast<LockableServiceData*>(d1) );
+        CPPUNIT_ASSERT( buffer._expiredData.contains( static_cast<LockableServiceData*>(d1) ) );
     }
 }
 

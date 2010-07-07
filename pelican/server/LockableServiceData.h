@@ -1,8 +1,8 @@
-#ifndef LOCKABLEDATA_H
-#define LOCKABLEDATA_H
+#ifndef LOCKABLESERVICEDATA_H
+#define LOCKABLESERVICEDATA_H
 
 #include <cstring>
-#include "AbstractLockableData.h"
+#include "pelican/server/AbstractLockableData.h"
 
 /**
  * @file LockableData.h
@@ -21,17 +21,17 @@ class Data;
  * @details
  * This class takes care of locking etc.
  */
-class LockableData : public AbstractLockableData
+class LockableServiceData : public AbstractLockableData
 {
     Q_OBJECT
 
     public:
         /// Constructs a new LockableData object.
-        LockableData(const QString& name = "", void* data = 0,
+        LockableServiceData(const QString& name = "", void* data = 0,
                 size_t size = 0, QObject* parent = 0);
 
         /// Destroys the LockableData object.
-        virtual ~LockableData() {}
+        virtual ~LockableServiceData() {}
 
         /// Return the size of the stored data.
         size_t size() const {return _data->size();}
@@ -50,9 +50,9 @@ class LockableData : public AbstractLockableData
 
     private:
         /// Disallow the copy constructor.
-        LockableData(const LockableData&);
+        LockableServiceData(const LockableServiceData&);
 };
 
 } // namespace pelican
 
-#endif // LOCKABLEDATA_H 
+#endif // LOCKABLESERVICEDATA_H

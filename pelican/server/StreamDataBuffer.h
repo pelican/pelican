@@ -2,8 +2,8 @@
 #define STREAMDATABUFFER_H
 
 #include "pelican/server/DataBuffer.h"
-#include <QQueue>
-#include <QObject>
+#include <QtCore/QQueue>
+#include <QtCore/QObject>
 
 /**
  * @file StreamDataBuffer.h
