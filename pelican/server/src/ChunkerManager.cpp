@@ -63,6 +63,13 @@ void ChunkerManager::init(DataManager& dataManager)
         _dataReceivers.append(receiver);
         receiver->start();
     }
+    // Set up file watchers.
+    foreach (AbstractChunker* chunker, _watchingChunkers.values() ) {
+        chunker->setDataManager(&dataManager);
+        DataReceiver* receiver = new DataReceiver(chunker);
+        _dataReceivers.append(receiver);
+        receiver->start();
+    }
 }
 
 /**
@@ -104,13 +111,24 @@ void ChunkerManager::_addChunker(AbstractChunker* chunker)
         //    throw( QString("PelicanServer:  input stream \"") + chunker->type() + "\" is already assigned");
         //}
         QPair<QString,quint16> pair(chunker->host(), chunker->port());
-        if (!chunker->host().isEmpty()) {
-            if( _chunkerPortMap.contains(pair) ) {
-                throw QString("Cannot map multiple chunkers to the same host/port ("
-                        + chunker->host() + "/" + QString().setNum(chunker->port())) + ")";
+        if ( chunker->watchFile() != "" ) 
+        {
+            QString file = chunker->watchFile();
+            if( _watchingChunkers.contains(file) ) {
+                throw QString("Cannot map multiple chunkers to the same file ("
+                        + file + ")" );
             }
+            _watchingChunkers[chunker->watchFile()] = chunker;
         }
-        _chunkerPortMap[pair] = chunker;
+        else {
+            if (!chunker->host().isEmpty()) {
+                if( _chunkerPortMap.contains(pair) ) {
+                    throw QString("Cannot map multiple chunkers to the same host/port ("
+                            + chunker->host() + "/" + QString().setNum(chunker->port())) + ")";
+                }
+            }
+            _chunkerPortMap[pair] = chunker;
+        }
     }
 }
 

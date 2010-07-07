@@ -29,14 +29,13 @@ macro(SUBPACKAGE name)
     # Save and process packages that the sub-package depends on.
     _GET_SUBPACKAGE_DEPS(${ARGN})
 
+
     if(BUILD_STATIC)
         link_directories(${link_dirs})
         link_directories(${CMAKE_CURRENT_BINARY_DIR})
     endif(BUILD_STATIC)
 
     list(APPEND SUBPACKAGE_LIBRARIES ${SUBPACKAGE_EXTERNAL_LIBRARIES})
-
-    set(${name}_subpackage_comonent_libs ${ARGN})
 
     # Create the install target for header files of the sub-package.
     file(GLOB public_headers RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "*.h")
@@ -130,9 +129,15 @@ macro(SUBPACKAGE_SET_EXTERNAL_LIBRARIES)
                 "list(APPEND external_libs ${ARGN})\n\n")
         endforeach(project_file)
 
-        #message(STATUS "***** ${current_library_target} ${ARGN}")
+	list(REMOVE_DUPLICATES SUBPACKAGE_COMPONENT_LIBRARIES)
+        set(link_libs ${ARGN})
+	list(APPEND link_libs ${SUBPACKAGE_COMPONENT_LIBRARIES})
+#        list(APPEND link_libs ${SUBPACKAGE_COMPONENT_LIBRARIES})
+        #list(REMOVE_DUPLICATES link_libs)
+        message(STATUS "***** ${current_library_target} ====  ${link_libs}")
         target_link_libraries(${current_library_target}
-             ${ARGN} ${${name}_subpackage_comonent_libs})
+             ${link_libs})
+
 
     else(subpackage_current)
         message(FATAL_ERROR "ERROR: SUBPACKAGE_SET_EXTERNAL_LIBRARIES "
@@ -186,6 +191,21 @@ macro(_SET_SUBPACKAGE_LIBRARIES)
                 endforeach(project_lib)
             endforeach(dep)
         endif(subpackage_deps)
+
+    ### HACK
+        foreach(dep ${subpackage_deps})
+            include(${SUBPACKAGE_WORK_DIR}/${dep}.cmake)
+            if(BUILD_SHARED AND NOT STATIC_LINK_BINARIES)
+                list(INSERT SUBPACKAGE_COMPONENT_LIBRARIES 0 ${${dep}_shared_libs})
+            endif(BUILD_SHARED AND NOT STATIC_LINK_BINARIES)
+            if(BUILD_STATIC AND STATIC_LINK_BINARIES)
+                foreach(pack ${${dep}_static_libs})
+                    list(INSERT SUBPACKAGE_COMPONENT_LIBRARIES 0 ${pack}_static)
+                endforeach(pack)
+            endif(BUILD_STATIC AND STATIC_LINK_BINARIES)
+        endforeach(dep)
+        #list(REMOVE_DUPLICATES SUBPACKAGE_LIBRARIES)
+
 
     else(BUILD_SINGLE_LIB)
 
@@ -389,7 +409,7 @@ macro(_SUBPACKAGE_FIND_DEPS name)
         include(${SUBPACKAGE_WORK_DIR}/${name}.cmake)
         if(BUILD_STATIC)
             list(INSERT link_dirs 0 ${${name}_lib_dir})
-            list(REMOVE_DUPLICATES link_dirs)
+            #list(REMOVE_DUPLICATES link_dirs)
        endif(BUILD_STATIC)
 
         #message(STATUS "     DEPS = ${${name}_subpackage_DEPS}")

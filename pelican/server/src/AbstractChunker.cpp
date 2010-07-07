@@ -7,6 +7,17 @@
 
 namespace pelican {
 
+/**
+ * @details
+ *  Setup from the configuration file
+ *  option 1:
+ *    listen to an incomming port
+ *    <connection host="dataHost" port="12345" />
+ *  option 2:
+ *    watch a specified file
+ *    <watch filename="/full/path/to/file" />
+ */
+
 AbstractChunker::AbstractChunker(const ConfigNode& config)
 {
     // Initialise members.
@@ -15,6 +26,7 @@ AbstractChunker::AbstractChunker(const ConfigNode& config)
     _type = config.getOption("data", "type", "");
     _host = config.getOption("connection", "host", "");
     _port = config.getOption("connection", "port", "0").toUInt();
+    _watchFile = config.getOption("watch", "filename");
     _active = true;
 }
 
