@@ -18,8 +18,7 @@ class QIODevice;
 namespace pelican {
 
 /**
- * This macro is used to register the named client type with the factory.
- * It should be used within the global scope of the client's source file.
+ * This macro is used to register the named client type.
  */
 #define PELICAN_DECLARE_CLIENT(type) PELICAN_DECLARE(AbstractDataClient, type)
 

@@ -16,7 +16,7 @@
 namespace pelican {
 
 /**
- * This macro is used to register the named chunker type with the factory.
+ * This macro is used to register the named chunker type.
  */
 #define PELICAN_DECLARE_CHUNKER(type) PELICAN_DECLARE(AbstractChunker, type)
 

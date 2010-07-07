@@ -19,8 +19,7 @@
 namespace pelican {
 
 /**
- * This macro is used to register the named module type with the factory.
- * It should be used within the global scope of the module's source file.
+ * This macro is used to register the named module type.
  */
 #define PELICAN_DECLARE_MODULE(type) PELICAN_DECLARE(AbstractModule, type)
 
