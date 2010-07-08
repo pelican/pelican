@@ -19,7 +19,7 @@ namespace pelican {
 class ServerResponse
 {
     public:
-        typedef enum { Error, Acknowledge, StreamData, ServiceData, Blob } Response;
+        typedef enum { Error, Acknowledge, StreamData, ServiceData, Blob, DataSupport } Response;
 
     private:
         Response _type;

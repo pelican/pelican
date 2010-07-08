@@ -5,6 +5,8 @@ SUBPACKAGE(comms ${comms_DEPS})
 set(comms_src
     src/AbstractClientProtocol.cpp
     src/DataBlobResponse.cpp
+    src/DataSupportRequest.cpp
+    src/DataSupportResponse.cpp
     src/PelicanClientProtocol.cpp
     src/PelicanProtocol.cpp
     src/ServiceDataRequest.cpp

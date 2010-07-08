@@ -2,6 +2,7 @@
 
 #include "pelican/output/TCPConnectionManager.h"
 #include "pelican/comms/StreamDataRequest.h"
+#include "pelican/comms/DataSupportResponse.h"
 #include "pelican/comms/PelicanProtocol.h"
 #include "pelican/comms/ServerRequest.h"
 #include "pelican/utility/ConfigNode.h"
@@ -58,35 +59,43 @@ void TCPConnectionManager::acceptClientConnection()
 
     // Wait for client to send in request type
     boost::shared_ptr<ServerRequest> request = _protocol->request(*client);
-    
-    // Check if client sent the correct request
-    if (static_cast<ServerRequest&>(*request).type() != ServerRequest::StreamData) {
-        std::cerr << "Invalid client request" << std::endl;
-        client->close();
-        return;
-    }
 
-    StreamDataRequest& req = static_cast<StreamDataRequest&>(*request);
-
-    // Check for invalid data requirements
-    if (req.isEmpty()) {
-        std::cerr << "Invalid client data requrements" << std::endl;
-        client->close();
-        return;
-    }
-
-    // Check data requirements
-    DataRequirementsIterator it = req.begin();
-    while(it != req.end()) {
-
-        // Add all client data requirement to type-client list
-        foreach(const QString& streamData, it->streamData() ) {
-            // Check if clients map already has the key, if so add client to list
-            std::cout << "Adding new client for stream: " << streamData.toStdString()  << std::endl;
-            _clients[streamData].push_back(client);
-        }
-
-        ++it;
+    switch ( request->type() )
+    {
+        case ServerRequest::DataSupport:
+            {
+            DataSupportResponse res( types() );
+            // _protocol->send(*client,res); 
+            }
+            break;
+        case ServerRequest::StreamData:
+            {
+                StreamDataRequest& req = static_cast<StreamDataRequest&>(*request);
+                // Check for invalid data requirements
+                if (req.isEmpty()) {
+                    std::cerr << "Invalid client data requrements" << std::endl;
+                    client->close();
+                    return;
+                }
+                // Check data requirements
+                DataRequirementsIterator it = req.begin();
+                while(it != req.end()) {
+                    // Add all client data requirement to type-client list
+                    foreach(const QString& streamData, it->streamData() ) {
+                        // Check if clients map already has the key, if so add client to list
+                        std::cout << "Adding new client for stream: " << streamData.toStdString()  << std::endl;
+                        _clients[streamData].push_back(client);
+                    }
+                    ++it;
+                }
+            }
+            break;
+        default:
+            {
+                std::cerr << "Invalid client request" << std::endl;
+                client->close();
+                return;
+            }
     }
 
     // Connect socket error() signals
@@ -101,6 +110,7 @@ void TCPConnectionManager::acceptClientConnection()
  */
 void TCPConnectionManager::send(const QString& streamName, const DataBlob* blob)
 {
+    _seenTypes.insert(streamName);
     QMutexLocker sendlocker(&_sendMutex);
 
     // Check if there are any client reading streamName type data
@@ -137,6 +147,10 @@ void TCPConnectionManager::send(const QString& streamName, const DataBlob* blob)
         }
     }
     emit sent(blob);
+}
+
+const QSet<QString>& TCPConnectionManager::types() const {
+    return _seenTypes;
 }
 
 /**
