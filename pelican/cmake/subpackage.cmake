@@ -134,7 +134,7 @@ macro(SUBPACKAGE_SET_EXTERNAL_LIBRARIES)
 	list(APPEND link_libs ${SUBPACKAGE_COMPONENT_LIBRARIES})
 #        list(APPEND link_libs ${SUBPACKAGE_COMPONENT_LIBRARIES})
         #list(REMOVE_DUPLICATES link_libs)
-        message(STATUS "***** ${current_library_target} ====  ${link_libs}")
+        #message(STATUS "***** ${current_library_target} ====  ${link_libs}")
         target_link_libraries(${current_library_target}
              ${link_libs})
 
