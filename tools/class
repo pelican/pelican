@@ -166,14 +166,14 @@ if ( ! -f $src_file ) {
     print $fh "namespace $namespace {\n\n", if ( defined $namespace );
     print $fh $cppincludesNamespace, "\n", if ( defined $namespace );
     print $fh "/**\n";
-    print $fh " *\@details $classname \n";
+    print $fh " * \@details Constructs a $classname object.\n";
     print $fh " */\n";
     print $fh $classname,"::", $classname, "($constructSig)\n",
               (( $baseclass ne "")?"    : ".$baseclass."()\n":"" ),
               "{\n",
               "}\n\n",
               "/**\n",
-              " *\@details\n",
+              " * \@details Destroys the $classname object.\n",
               " */\n",
               $classname, "::~", $classname, "()\n{\n",
               "}\n\n",
@@ -206,22 +206,24 @@ if ( ! -f $header_file ) {
     print $fh "namespace $namespace {\n\n", if ( defined $namespace );
     print $fh "/**\n",
               " * \@class $classname\n",
-              " *  \n",
+              " * \n",
               " * \@brief\n",
               " * \n",
               " * \@details\n",
               " * \n",
-              " */\n\n";
+              " */\n";
     print $fh "class $classname", (($baseclass eq "")?"":" : public $baseclass");
     print $fh  "\n{\n",
                $headtext,
                $i,"public:\n",
-               $i x 2, $classname, "( $constructHeadSig );\n",
+               $i x 2, "/// $classname constructor.\n",
+               $i x 2, $classname, "($constructHeadSig);\n\n",
+               $i x 2, "/// $classname destructor.\n",
                $i x 2,"~",$classname, "();\n",
                "\n",
                $i,"private:\n",
               "};\n\n";
-    print $fh "} // namespace $namespace\n", if ( defined $namespace );
+    print $fh "} // namespace $namespace\n\n", if ( defined $namespace );
     print $fh "#endif // $defname \n";
 }
 if ( ! $verbose ) {
