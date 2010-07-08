@@ -15,11 +15,11 @@
 #include "pelican/utility/pelicanTimer.h"
 #include "pelican/utility/Config.h"
 
-#include <QTime>
-#include <QBuffer>
-#include <QByteArray>
-#include <QDataStream>
-#include <QCoreApplication>
+#include <QtCore/QTime>
+#include <QtCore/QBuffer>
+#include <QtCore/QByteArray>
+#include <QtCore/QDataStream>
+#include <QtCore/QCoreApplication>
 #include <iostream>
 
 #include "pelican/utility/memCheck.h"
@@ -256,14 +256,12 @@ void SessionTest::test_streamData()
         // Request StreamData for a stream that is supported and the data exists
         // service data requested, but not available
         // Expect to throw after the timeout has been reached and the stream
-        // data to still be availaible in the buffer at the end.
+        // data to still be available in the buffer at the end.
         DataRequirements requirements;
         requirements.setStreamData(stream1);
         requirements.setServiceData(service1);
         StreamDataRequest request;
         request.addDataOption(requirements);
-        //_injectData(streambuffer); // NOTE Dont need to inject data again.
-
 
         try {
             _session->processStreamDataRequest(request, 10);
@@ -286,8 +284,6 @@ void SessionTest::test_streamData()
             // service data requested, and it exists
             // Expect to return data, and service data record
 
-            std::cout << "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%" << std::endl;
-
             DataRequirements requirements;
             requirements.setStreamData(stream1);
             requirements.setServiceData(service1);
@@ -297,7 +293,7 @@ void SessionTest::test_streamData()
             QString version("0");
             try {
                 _injectData(myServiceBuffer, version);
-                _injectData(myStreamBuffer); // NOTE dont need to inject data again
+                _injectData(myStreamBuffer); // NOTE don't need to inject data again
             }
             catch (QString error) {
                 std::cout << "ALERT !! " << error.toStdString() << std::endl;
@@ -320,13 +316,63 @@ void SessionTest::test_streamData()
     }
 }
 
+/**
+ * @details
+ * Use case:
+ * Request StreamData for a stream that is supported.
+ * Service data also requested, but not initially available.
+ * The stream data buffer is full with unassociated data, which will never
+ * be asked for.
+ *
+ * Expect:
+ * When service data arrives, expect to replace the first stream data chunk
+ * and not to throw. We need the service data and the first stream data
+ * that is associated with it.
+ */
+void SessionTest::test_streamDataBufferFull()
+{
+    // Set up stream and service data buffers.
+    QString stream1("stream1"), service1("service1");
+    StreamDataBuffer* streamBuffer = new StreamDataBuffer(stream1);
+    ServiceDataBuffer* serviceBuffer = new ServiceDataBuffer(service1);
+    _dataManager->setStreamDataBuffer(stream1, streamBuffer);
+    _dataManager->setServiceDataBuffer(service1, serviceBuffer);
 
-QString SessionTest::_injectData(DataBuffer* buffer, const QString& id)
+    DataRequirements requirements;
+    requirements.setStreamData(stream1);
+    requirements.setServiceData(service1);
+    StreamDataRequest request;
+    request.addDataOption(requirements);
+    for (int i = 0; i < 1023; ++i) {
+        _injectData(streamBuffer);
+    }
+
+    try {
+        _session->processStreamDataRequest(request, 10);
+    }
+    catch (QString error) {
+        CPPUNIT_ASSERT(error.contains("Request timed out"));
+    }
+    CPPUNIT_ASSERT(_dataManager->getNext(stream1).isValid() == true);
+}
+
+/**
+ * @details
+ * Injects the specified amount of data with the given ID into the
+ * required buffer.
+ *
+ * @param[in] buffer Pointer to the buffer to use.
+ * @param[in] id     Data ID string (default blank).
+ * @param[in] size   Size of the data in bytes (default 10).
+ *
+ * @return The ID string.
+ */
+QString SessionTest::_injectData(AbstractDataBuffer* buffer, const QString& id, int size)
 {
     // Writable data has to go out of scope to be activated.
     {
-        WritableData d = buffer->getWritable(10);
-        d.data()->setId(id);
+        WritableData writableData = buffer->getWritable(size);
+        writableData.data()->setId(id);
     }
     _app->processEvents(); // Connect signals and slots to activate data.
     return id;

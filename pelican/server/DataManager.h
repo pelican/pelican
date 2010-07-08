@@ -1,8 +1,8 @@
 #ifndef DATAMANAGER_H
 #define DATAMANAGER_H
 
-#include <QString>
-#include <QHash>
+#include <QtCore/QString>
+#include <QtCore/QHash>
 #include "pelican/server/StreamDataBuffer.h"
 #include "pelican/server/ServiceDataBuffer.h"
 #include "pelican/server/LockedData.h"

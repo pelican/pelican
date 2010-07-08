@@ -1,7 +1,7 @@
-#include "LockableStreamDataTest.h"
-#include "LockableStreamData.h"
-#include "LockableData.h"
-#include "LockedData.h"
+#include "pelican/server/test/LockableStreamDataTest.h"
+#include "pelican/server/LockableStreamData.h"
+#include "pelican/server/LockableServiceData.h"
+#include "pelican/server/LockedData.h"
 #include "pelican/comms/StreamData.h"
 #include <QtCore/QString>
 
@@ -38,7 +38,7 @@ void LockableStreamDataTest::test_addAssociates()
 {
     std::vector<char> data(10);
     QString name("locked1");
-    LockableData ld(name,&data[0],data.size()); // dummy associate data
+    LockableServiceData ld(name,&data[0],data.size()); // dummy associate data
     LockedData lockedData(name, &ld);   // lock the dummy
     LockableStreamData d("test", &data[0], data.size()); // create test object
     CPPUNIT_ASSERT_EQUAL( true, d.isValid() );

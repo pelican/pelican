@@ -1,9 +1,9 @@
 #ifndef LOCKABLESTREAMDATA_H
 #define LOCKABLESTREAMDATA_H
 
-#include <QSet>
-#include <QString>
-#include "AbstractLockableData.h"
+#include <QtCore/QSet>
+#include <QtCore/QString>
+#include "pelican/server/AbstractLockableData.h"
 
 /**
  * @file LockableStreamData.h

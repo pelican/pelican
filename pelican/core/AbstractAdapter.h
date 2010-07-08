@@ -13,8 +13,7 @@
 namespace pelican {
 
 /**
- * This macro is used to register the named adapter type with the factory.
- * It should be used within the global scope of the adapter's source file.
+ * This macro is used to register the named adapter type.
  */
 #define PELICAN_DECLARE_ADAPTER(type) PELICAN_DECLARE(AbstractAdapter, type)
 

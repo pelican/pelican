@@ -21,7 +21,7 @@ typedef double real_t;
 typedef std::complex<real_t> complex_t;
 
 /**
- * This macro is used to register the named data blob type with the factory.
+ * This macro is used to register the named data blob type.
  */
 #define PELICAN_DECLARE_DATABLOB(type) PELICAN_DECLARE(DataBlob, type)
 

@@ -4,7 +4,7 @@
 #include "pelican/server/StreamDataBuffer.h"
 #include "pelican/server/ServiceDataBuffer.h"
 #include "pelican/server/WritableData.h"
-#include "pelican/server/LockableData.h"
+#include "pelican/server/LockableServiceData.h"
 #include "pelican/server/LockableStreamData.h"
 #include "pelican/comms/PelicanProtocol.h"
 #include "pelican/comms/StreamData.h"

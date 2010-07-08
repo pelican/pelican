@@ -1,7 +1,7 @@
-#include "LockedDataTest.h"
-#include "LockedData.h"
-#include "LockableData.h"
-#include "LockableStreamData.h"
+#include "pelican/server/test/LockedDataTest.h"
+#include "pelican/server/LockedData.h"
+#include "pelican/server/LockableServiceData.h"
+#include "pelican/server/LockableStreamData.h"
 
 
 #include "pelican/utility/memCheck.h"
@@ -40,7 +40,7 @@ void LockedDataTest::test_isValid()
         //Use Case:
         // contains a single data object which is invalid
         // Expect invalid
-        LockableData d;
+        LockableServiceData d;
         LockedData ld("test",&d);
         CPPUNIT_ASSERT( ! d.isValid() );
         CPPUNIT_ASSERT( ! ld.isValid() );
@@ -53,7 +53,7 @@ void LockedDataTest::test_lock()
         // Use Case:
         // A valid lockeddata object is copied
         // Expect no unlock until last object is destroyed
-        LockableData d("",(void*)1000,100);
+        LockableServiceData d("",(void*)1000,100);
         CPPUNIT_ASSERT( d.isValid() ); // sanity check
         CPPUNIT_ASSERT( ! d.isLocked() );
         {
@@ -73,7 +73,7 @@ void LockedDataTest::test_lock()
         // Use Case:
         // An invalid lockeddata object is copied
         // Expect no unlock until last object is destroyed
-        LockableData d("",(void*)0,100);
+        LockableServiceData d("",(void*)0,100);
         CPPUNIT_ASSERT( ! d.isValid() ); // sanity check
         CPPUNIT_ASSERT( ! d.isLocked() );
         {
@@ -94,7 +94,7 @@ void LockedDataTest::test_lock()
         // A valid lockeddata object is copied but the lockeddata
         // are destroyed in the reverse order in which they are created
         // Expect no unlock until last object is destroyed
-        LockableData d("",(void*)1000,100);
+        LockableServiceData d("",(void*)1000,100);
         CPPUNIT_ASSERT( d.isValid() ); // sanity check
         CPPUNIT_ASSERT( ! d.isLocked() );
         {

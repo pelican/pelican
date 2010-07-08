@@ -2,10 +2,10 @@ SUBPACKAGE(server comms utility)
 
 # files requiring MOC pre-processing (i.e. QObjects)
 set(server_moc_headers
+    AbstractDataBuffer.h
     AbstractLockable.h
     AbstractLockableData.h
-    LockableData.h
-    DataBuffer.h
+    LockableServiceData.h
     DataReceiver.h
     ServiceDataBuffer.h
     StreamDataBuffer.h
@@ -19,7 +19,7 @@ set(server_src
     src/AbstractChunker.cpp
     src/AbstractLockable.cpp
     src/ChunkerManager.cpp
-    src/LockableData.cpp
+    src/LockableServiceData.cpp
     src/DataReceiver.cpp
     src/LockedData.cpp
     src/DataManager.cpp

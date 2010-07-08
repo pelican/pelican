@@ -16,8 +16,7 @@
 namespace pelican {
 
 /**
- * This macro is used to register the named chunker type with the factory.
- * It should be used within the global scope of the chunker's source file.
+ * This macro is used to register the named chunker type.
  */
 #define PELICAN_DECLARE_CHUNKER(type) PELICAN_DECLARE(AbstractChunker, type)
 
@@ -75,9 +74,6 @@ class AbstractChunker
         /// Returns the port.
         quint16 port() {return _port;}
 
-        /// Returns the port.
-        QString watchFile() {return _watchFile;}
-
         /// Sets the data manager.
         void setDataManager(DataManager* dataManager) {
             _dataManager = dataManager;
@@ -100,6 +96,9 @@ class AbstractChunker
 
         /// Return the type name to be associated with this data.
         const QString& type() const {return _type;}
+
+        /// Returns the name of the file that this chunker is watching, if any.
+        const QString& watchFile() {return _watchFile;}
 
     protected:
         /// Access to memory to store data is through this interface.

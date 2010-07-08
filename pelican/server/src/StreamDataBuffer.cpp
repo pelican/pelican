@@ -1,11 +1,11 @@
-#include "pelican/server/DataManager.h"
 #include "pelican/server/StreamDataBuffer.h"
+#include "pelican/server/DataManager.h"
 #include "pelican/server/LockableStreamData.h"
 #include "pelican/server/LockedData.h"
 #include "pelican/server/WritableData.h"
 #include "pelican/comms/StreamData.h"
 
-#include <QMutexLocker>
+#include <QtCore/QMutexLocker>
 #include <stdlib.h>
 #include <iostream>
 
@@ -25,7 +25,7 @@ namespace pelican {
  */
 StreamDataBuffer::StreamDataBuffer(const QString& type, DataManager* manager,
         const size_t max, const size_t maxChunkSize, QObject* parent) :
-        DataBuffer(type, parent),_manager(manager)
+        AbstractDataBuffer(type, parent),_manager(manager)
 {
     _max = max;
     _maxChunkSize = maxChunkSize;

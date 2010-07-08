@@ -1,4 +1,4 @@
-#include <QVector>
+#include <QtCore/QVector>
 #include <boost/shared_ptr.hpp>
 #include "pelican/server/ChunkerManager.h"
 #include "pelican/server/DataReceiver.h"
@@ -39,7 +39,7 @@ ChunkerManager::~ChunkerManager()
 
 /**
  * @details
- * Initialises the registered chunkers and calls the listen() method on each
+ * Initialises the registered chunkers and calls the start() method on each
  * data receiver.
  */
 void ChunkerManager::init(DataManager& dataManager)
@@ -102,30 +102,35 @@ void ChunkerManager::addServiceChunker(QString type, QString name)
 
 /**
  * @details
+ * Adds the allocated chunker to the map of known chunkers.
  *
+ * @param[in] chunker  Pointer to the allocated chunker.
  */
 void ChunkerManager::_addChunker(AbstractChunker* chunker)
 {
-    if( chunker ) {
-        //if( _streamDataTypes.contains(chunker->type()) || _serviceDataTypes.contains(chunker->type()) ) {
-        //    throw( QString("PelicanServer:  input stream \"") + chunker->type() + "\" is already assigned");
+    if (chunker) {
+        //if (_streamDataTypes.contains(chunker->type()) ||
+        //        _serviceDataTypes.contains(chunker->type())) {
+        //    throw QString("ChunkerManager: Input stream '%1' "
+        //            "is already assigned").arg(chunker->type());
         //}
+
         QPair<QString,quint16> pair(chunker->host(), chunker->port());
-        if ( chunker->watchFile() != "" ) 
+        if (!chunker->watchFile().isEmpty())
         {
             QString file = chunker->watchFile();
-            if( _watchingChunkers.contains(file) ) {
-                throw QString("Cannot map multiple chunkers to the same file ("
-                        + file + ")" );
+            if (_watchingChunkers.contains(file)) {
+                throw QString("ChunkerManager: Cannot map multiple chunkers "
+                        "to the same file (%1)").arg(file);
             }
             _watchingChunkers[chunker->watchFile()] = chunker;
         }
-        else {
-            if (!chunker->host().isEmpty()) {
-                if( _chunkerPortMap.contains(pair) ) {
-                    throw QString("Cannot map multiple chunkers to the same host/port ("
-                            + chunker->host() + "/" + QString().setNum(chunker->port())) + ")";
-                }
+        else if (!chunker->host().isEmpty())
+        {
+            if (_chunkerPortMap.contains(pair)) {
+                throw QString("ChunkerManager: Cannot map multiple chunkers "
+                        "to the same host/port (%1/%2)").
+                        arg(chunker->host()).arg(chunker->port());
             }
             _chunkerPortMap[pair] = chunker;
         }

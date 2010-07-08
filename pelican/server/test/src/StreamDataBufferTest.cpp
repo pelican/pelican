@@ -8,7 +8,7 @@
 #include "pelican/server/LockableStreamData.h"
 #include "pelican/utility/Config.h"
 
-#include <QCoreApplication>
+#include <QtCore/QCoreApplication>
 
 #include "pelican/utility/memCheck.h"
 
