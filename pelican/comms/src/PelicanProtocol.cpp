@@ -121,7 +121,7 @@ void PelicanProtocol::send(QIODevice& stream, const AbstractProtocol::StreamData
     while (i.hasNext())
     {
         StreamData* sd = i.next();
-        stream.write( (const char*)sd->operator*(), sd->size() );
+        stream.write( (const char*)sd->ptr(), sd->size() );
     }
 }
 
@@ -151,7 +151,7 @@ void PelicanProtocol::send(QIODevice& stream, const AbstractProtocol::ServiceDat
     while (i.hasNext())
     {
         Data* d = i.next();
-        stream.write( (const char*)d->operator*(), (quint64)d->size() );
+        stream.write( (const char*)d->ptr(), (quint64)d->size() );
     }
 }
 

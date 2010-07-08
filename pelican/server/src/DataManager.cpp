@@ -52,7 +52,6 @@ WritableData DataManager::getWritableData(const QString& type, size_t size)
 {
 //    std::cout << "DataManager::getWritableData, type : " << type.toStdString() << std::endl;
     if ( _streams.contains(type) ) {
-        // XXX remove
         //std::cout << "DataManager::Returning writable stream data" << std::endl;
         return _streams[type]->getWritable(size);
     }
@@ -79,7 +78,7 @@ StreamDataBuffer* DataManager::getStreamBuffer(const QString& type)
         ConfigNode config = _config->get(configAddress);
         size_t maxSize = config.getOption("buffer", "maxSize", "10240").toUInt();
         size_t maxChunkSize = config.getOption("buffer", "maxChunkSize", "10240").toUInt();
-        setStreamDataBuffer( type, new StreamDataBuffer(type, NULL, maxSize, maxChunkSize) );
+        setStreamDataBuffer( type, new StreamDataBuffer(type, maxSize, maxChunkSize) );
     }
     return _streams[type];
 }

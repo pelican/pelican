@@ -134,7 +134,6 @@ void PipelineDriverTest::test_start_noPipelinesRun()
     DataRequirements req;
     req.setStreamData("requiredData");
     _pipelineDriver->registerPipeline(new TestPipeline(req));
-    _pipelineDriver->setIgnoreEmptyHash(false);
 
     // No data client set, so no data will be returned.
     CPPUNIT_ASSERT_THROW(_pipelineDriver->start(), QString);

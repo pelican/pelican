@@ -60,10 +60,10 @@ class Data
         void setSize(size_t s) {_size = s;}
 
         /// Returns a pointer to the beginning of the memory block.
-        void* operator*() {return _data;}
+        void* ptr() {return _data;}
 
         /// Returns a pointer to the beginning of the memory block.
-        const void* operator*() const {return _data;}
+        const void* ptr() const {return _data;}
 
         /// Returns a pointer to the beginning of the memory block.
         void* data() {return _data;}

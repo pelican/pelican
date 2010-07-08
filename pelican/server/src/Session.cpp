@@ -180,12 +180,11 @@ QList<LockedData> Session::processStreamDataRequest(const StreamDataRequest& req
 QList<LockedData> Session::processServiceDataRequest(const ServiceDataRequest& req )
 {
     QList<LockedData> data;
-    foreach( QString type, req.types() ) {
+    foreach (QString type, req.types()) {
         LockedData d = _dataManager->getServiceData(type, req.version(type));
-        if( ! d.isValid() )
-        {
-            throw QString("Data requested does not exist :" + type + " " + req.version(type));
-        }
+        if (!d.isValid())
+            throw QString("Session: Data requested does not exist: "
+                    "%1 %2").arg(type).arg(req.version(type));
         data.append(d);
     }
     return data;

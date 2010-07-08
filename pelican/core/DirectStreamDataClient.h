@@ -54,6 +54,10 @@ class DirectStreamDataClient : public AbstractDataClient
                 const QString& chunkerName = QString());
 
     private:
+        /// Initialises the direct stream data client.
+        void _init(QHash<QString, DataBlob*>& dataHash);
+
+    private:
         bool _started;
         int _nPipelines;
         ChunkerManager* _chunkerManager;

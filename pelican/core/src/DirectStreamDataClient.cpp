@@ -105,33 +105,13 @@ QHash<QString, DataBlob*> DirectStreamDataClient::getData(QHash<QString, DataBlo
 {
     // Initialise and perform sanity checks.
     if (!_started) {
-        // Initialise the chunker manager.
-        _chunkerManager->init(*_dataManager);
+        _init(dataHash);
         _started = true;
-
-        // Check that the hash of data blobs is complete.
-        QSet<QString> reqs = _requireSet;
-        if (!reqs.subtract(QSet<QString>::fromList(dataHash.keys())).isEmpty())
-            throw QString("DirectStreamDataClient::getData(): Data hash does not "
-                    "contain objects for all possible requests.");
-
-        // Check that the data requested is held by the data manager.
-        _nPipelines = dataRequirements().size();
-        QList<DataRequirements>::const_iterator it = dataRequirements().begin();
-        while (it != dataRequirements().end())
-        {
-            if (!it->isCompatible( _dataManager->dataSpec() ))
-                throw QString("DirectStreamDataClient::getData(): "
-                        "Data requested not supported by client.");
-            ++it;
-        }
     }
 
     // Keep polling the data manager until we can match a suitable request.
     QHash<QString, DataBlob*> validData;
     QList<LockedData> dataList; // Will contain the list of valid StreamDataObjects
-
-    // FIXME This loop needs serious optimisation.
     while (dataList.size() == 0) {
         // Must cycle the event loop for unlocked signals to be processed.
         QCoreApplication::processEvents();
@@ -155,15 +135,15 @@ QHash<QString, DataBlob*> DirectStreamDataClient::getData(QHash<QString, DataBlo
             }
             else {
                 // send the associate data through the adapter
-                QByteArray tmp_array = QByteArray::fromRawData((char*)d->operator*(), d->size());
-                QBuffer device(&tmp_array);
+                QByteArray tmp = QByteArray::fromRawData((char*)d->ptr(), d->size());
+                QBuffer device(&tmp);
                 device.open(QIODevice::ReadOnly);
                 validData.unite(adaptService( device, d.get(), dataHash ));
             }
         }
         // send the data for adaption
-        QByteArray tmp_array = QByteArray::fromRawData((char*)sd->operator*(), sd->size());
-        QBuffer device(&tmp_array);
+        QByteArray tmp = QByteArray::fromRawData((char*)sd->ptr(), sd->size());
+        QBuffer device(&tmp);
         device.open(QIODevice::ReadOnly);
         validData.unite(adaptStream( device, sd, dataHash ));
 
@@ -171,6 +151,34 @@ QHash<QString, DataBlob*> DirectStreamDataClient::getData(QHash<QString, DataBlo
     }
 
     return validData;
+}
+
+/**
+ * @details
+ * Initialises the direct stream data client, setting up the chunker manager
+ * and checking that the data requested is available from the data manager.
+ */
+void DirectStreamDataClient::_init(QHash<QString, DataBlob*>& dataHash)
+{
+    // Initialise the chunker manager.
+    _chunkerManager->init(*_dataManager);
+
+    // Check that the hash of data blobs is complete.
+    QSet<QString> reqs = _requireSet;
+    if (!reqs.subtract(QSet<QString>::fromList(dataHash.keys())).isEmpty())
+        throw QString("DirectStreamDataClient::getData(): Data hash does not "
+                "contain objects for all possible requests.");
+
+    // Check that the data requested is held by the data manager.
+    _nPipelines = dataRequirements().size();
+    QList<DataRequirements>::const_iterator it = dataRequirements().begin();
+    while (it != dataRequirements().end())
+    {
+        if (!it->isCompatible( _dataManager->dataSpec() ))
+            throw QString("DirectStreamDataClient::getData(): "
+                    "Data requested not supported by client.");
+        ++it;
+    }
 }
 
 } // namespace pelican

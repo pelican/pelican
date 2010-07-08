@@ -30,7 +30,6 @@ PipelineDriver::PipelineDriver(FactoryGeneric<DataBlob>* blobFactory,
     // Initialise member variables.
     _run = false;
     _dataClient = NULL;
-    _ignoreEmptyHash = false;
 
     // Store pointers to factories.
     _blobFactory = blobFactory;
@@ -148,7 +147,7 @@ void PipelineDriver::start()
         }
 
         // Check if no pipelines were run.
-        if (!ranPipeline && !_ignoreEmptyHash)
+        if (!ranPipeline)
             throw QString("PipelineDriver::start(): No pipelines run.");
     }
 }

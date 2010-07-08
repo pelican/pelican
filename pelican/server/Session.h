@@ -22,12 +22,11 @@ class DataManager;
  * @class Session
  *  
  * @brief
- *    Class to process a single server request
+ * Class to process a single server request.
  *
  * @details
  *
  */
-
 class Session : public QThread
 {
     Q_OBJECT
@@ -48,10 +47,9 @@ class Session : public QThread
         void processRequest(const ServerRequest&, QIODevice&, const unsigned timeout = 0 );
 
     protected:
-        /// Iterates over the requirements in the stream data request (/p req) and
-        /// returns the first valid stream data with valid associated service data.
-        QList<LockedData> processStreamDataRequest(const StreamDataRequest& req,
-                                                   const unsigned timeout = 0);
+        /// Returns the first valid stream data with associated service data.
+        QList<LockedData> processStreamDataRequest(
+                const StreamDataRequest& req, const unsigned timeout = 0);
 
         QList<LockedData> processServiceDataRequest(const ServiceDataRequest& req);
 
@@ -62,10 +60,10 @@ class Session : public QThread
         int _socketDescriptor;
         DataManager* _dataManager;
         AbstractProtocol* _protocol;
-        static int _n;
 
     friend class SessionTest; // unit test
 };
 
 } // namespace pelican
+
 #endif // SESSION_H 

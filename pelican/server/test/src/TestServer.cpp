@@ -107,7 +107,7 @@ void TestServer::serveStreamData(const StreamData& d)
     LockableStreamData* data = static_cast<LockableStreamData*>(wd.data());
     StreamData* datas = data->streamData();
     datas->setId(d.id());
-    wd.write(d.operator*(), d.size());
+    wd.write(d.ptr(), d.size());
     Q_ASSERT( datas->size() == d.size() );
 }
 
@@ -127,7 +127,7 @@ void TestServer::serveServiceData(const Data& d )
         throw("unable to add ServiceBuffer Data");
     Data* data = wd.data()->data().get();
     data->setId(d.id());
-    wd.write(d.operator*(),d.size());
+    wd.write(d.ptr(), d.size());
 }
 
 } // namespace pelican

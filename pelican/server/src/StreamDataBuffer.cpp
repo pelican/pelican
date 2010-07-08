@@ -18,18 +18,18 @@ namespace pelican {
  * Constructs the stream data buffer.
  *
  * @param type         A string containing the type of data held in the buffer.
- * @param manager      A pointer to the data manager to use.
  * @param max          The maximum size of the buffer in bytes.
  * @param maxChunkSize The maximum chunk size in bytes.
  * @param parent       (Optional.) Pointer to the object's parent.
  */
-StreamDataBuffer::StreamDataBuffer(const QString& type, DataManager* manager,
+StreamDataBuffer::StreamDataBuffer(const QString& type,
         const size_t max, const size_t maxChunkSize, QObject* parent) :
-        AbstractDataBuffer(type, parent),_manager(manager)
+        AbstractDataBuffer(type, parent)
 {
     _max = max;
     _maxChunkSize = maxChunkSize;
-    _space = _max; // initially empty so the space = max size.
+    _space = _max; // Buffer initially empty so space = max size.
+    _manager = 0;
 }
 
 

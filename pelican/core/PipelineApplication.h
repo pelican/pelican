@@ -113,9 +113,6 @@ class PipelineApplication
         /// Starts the pipeline driver.
         void start();
 
-        /// FIXME Sets the option to ignore an empty hash from the client.
-        void setIgnoreEmptyHash(bool value);
-
     private:
         /// Creates the configuration object based on the command line arguments.
         void _createConfig(int argc, char** argv);

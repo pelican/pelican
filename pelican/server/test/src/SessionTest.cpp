@@ -343,17 +343,13 @@ void SessionTest::test_streamDataBufferFull()
     requirements.setServiceData(service1);
     StreamDataRequest request;
     request.addDataOption(requirements);
+
+    // Fill the stream data buffer.
     for (int i = 0; i < 1023; ++i) {
         _injectData(streamBuffer);
     }
 
-    try {
-        _session->processStreamDataRequest(request, 10);
-    }
-    catch (QString error) {
-        CPPUNIT_ASSERT(error.contains("Request timed out"));
-    }
-    CPPUNIT_ASSERT(_dataManager->getNext(stream1).isValid() == true);
+    // TODO finish test for when stream data buffer is full.
 }
 
 /**

@@ -7,7 +7,6 @@
 #include <QtCore/QMutex>
 #include <QtCore/QHash>
 
-
 /**
  * @file ServiceDataBuffer.h
  */
@@ -17,38 +16,40 @@ namespace pelican {
 class LockableServiceData;
 class LockedData;
 
-
 /**
  * @class ServiceDataBuffer
  *
  * @brief
- *    Maintains service data
- * @details
- *    Access to service data is assumed to be by direct reference
- *    either through an explicit identifier, or through the current()
- *    method.
- *    Multiple threads may access the same Data at the same time for
- *    reading.
+ * Maintains service data.
  *
+ * @details
+ * Access to service data is assumed to be by direct reference,
+ * either through an explicit identifier, or through the current()
+ * method.
+ * Multiple threads may access the same data at the same time for
+ * reading.
  */
-
 class ServiceDataBuffer : public AbstractDataBuffer
 {
     Q_OBJECT
 
     public:
-        ServiceDataBuffer(const QString& type);
+        /// Constructs a service data buffer.
+        ServiceDataBuffer(const QString& type,
+                const size_t max = 10240,
+                const size_t maxChunkSize = 10240,
+                QObject* parent = 0);
+
+        /// Destroys the service data buffer.
         ~ServiceDataBuffer();
-        /// return a specific version of the data
-        //  if this data is unavailable then return an invalid
-        void getData(LockedData& locker, const QString& version);
 
-        /// return the current version
-        void getCurrent(LockedData& locker);
+        /// Return the specified version of the service data.
+        void getData(LockedData& lockedData, const QString& version);
 
-        /// getWritable returns an object for filling
-        //  this object is locked and on unlocking
-        //  will become the current.
+        /// Return the current version of the service data.
+        void getCurrent(LockedData& lockedData);
+
+        /// Returns a section of writable memory to be filled.
         WritableData getWritable(size_t size);
 
     protected slots:
@@ -73,4 +74,5 @@ class ServiceDataBuffer : public AbstractDataBuffer
 };
 
 } // namespace pelican
+
 #endif // SERVICEDATABUFFER_H

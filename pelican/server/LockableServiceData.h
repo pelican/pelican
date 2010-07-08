@@ -36,16 +36,13 @@ class LockableServiceData : public AbstractLockableData
         /// Return the size of the stored data.
         size_t size() const {return _data->size();}
 
-        /// Sets the size of the stored data.
-        //void setSize(size_t);
-
         /// Returns a pointer to the beginning of the memory block.
-        void* memoryLocation() {return _data->operator*();}
+        void* memoryLocation() {return _data->ptr();}
 
         /// Return the name of the data.
         QString name() const {return _data->name();}
 
-        /// Returns true if there isany valid data in the object.
+        /// Returns true if there is any valid data in the object.
         virtual bool isValid() const {return _data->isValid();}
 
     private:

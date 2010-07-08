@@ -52,7 +52,7 @@ void TestProtocol::send( QIODevice& device, const AbstractProtocol::StreamData_t
     std::cout << "TestProtocol::send(): List length: " << d.size() << std::endl;
     Q_ASSERT(d.size() > 0);
     _last.clear();
-    char* data = static_cast<char*>(d[0]->operator *());
+    char* data = static_cast<char*>(d[0]->ptr());
     size_t size = d[0]->size() / sizeof(double);
     for (unsigned i = 0; i < size; i++) {
         std::cout << reinterpret_cast<double*>(data)[i];

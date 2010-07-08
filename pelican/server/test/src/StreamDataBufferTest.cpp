@@ -45,7 +45,8 @@ void StreamDataBufferTest::test_getNext()
         // Use case:
         // getNext called on an empty buffer
         // expect to return an invalid LockedData object
-        StreamDataBuffer b("test",_dataManager);
+        StreamDataBuffer b("test");
+        b.setDataManager(_dataManager);
         LockedData data("test");
         b.getNext(data);
         CPPUNIT_ASSERT( ! data.isValid() );
@@ -54,7 +55,8 @@ void StreamDataBufferTest::test_getNext()
     // Use case:
     // getNext called on an non-empty buffer
     // expect to return an valid LockedData object
-    StreamDataBuffer b("test",_dataManager);
+    StreamDataBuffer b("test");
+    b.setDataManager(_dataManager);
     b.getWritable(100);
     _app->processEvents();
     LockedData data("test");
@@ -71,12 +73,13 @@ void StreamDataBufferTest::test_getNext()
 
 void StreamDataBufferTest::test_getWritable()
 {
-    QByteArray data1("pelican/data1");
+    QByteArray data1("data1");
     {
         // Use case:
         // getWritable() called with no service data
         // Expect a valid object with no associate data.
-        StreamDataBuffer buffer("test",_dataManager);
+        StreamDataBuffer buffer("test");
+        buffer.setDataManager(_dataManager);
         WritableData data = buffer.getWritable(data1.size());
         CPPUNIT_ASSERT( data.isValid() );
         data.write(data1.data(),data1.size());
@@ -92,7 +95,8 @@ void StreamDataBufferTest::test_getWritable()
         // Use case:
         // getWritable() called with service data supported, but no data
         // expect valid object with no associate data
-        StreamDataBuffer b("test",_dataManager);
+        StreamDataBuffer b("test");
+        b.setDataManager(_dataManager);
         WritableData data = b.getWritable(data1.size());
         CPPUNIT_ASSERT( data.isValid() );
         data.write(data1.data(),data1.size());
@@ -106,7 +110,8 @@ void StreamDataBufferTest::test_getWritable()
         // Use case:
         // getWritable() called with service data supported, with data
         // expect valid object with associate data
-        StreamDataBuffer b("test",_dataManager);
+        StreamDataBuffer b("test");
+        b.setDataManager(_dataManager);
         WritableData data = b.getWritable(data1.size());
         CPPUNIT_ASSERT( data.isValid() );
         data.write(data1.data(),data1.size());
@@ -124,10 +129,11 @@ void StreamDataBufferTest::test_getWritableStreams()
     // Expect: unique data pointers to be returned.
     {
         size_t dataSize = 8;
-        StreamDataBuffer buffer("test", _dataManager);
+        StreamDataBuffer buffer("test");
+        buffer.setDataManager(_dataManager);
         {
             WritableData dataChunk = buffer.getWritable(dataSize);
-            void* dataPtr =  dataChunk.data()->data()->operator*();
+            void* dataPtr =  dataChunk.data()->data()->ptr();
             double value = 1;
             dataChunk.write(&value, 8, 0);
             std::cout << "[1] dataPtr = " << dataPtr << std::endl;
@@ -135,7 +141,7 @@ void StreamDataBufferTest::test_getWritableStreams()
         CPPUNIT_ASSERT_EQUAL(1, buffer._serveQueue.size());
         {
             WritableData dataChunk = buffer.getWritable(dataSize);
-            void* dataPtr =  dataChunk.data()->data()->operator*();
+            void* dataPtr =  dataChunk.data()->data()->ptr();
             double value = 2;
             dataChunk.write(&value, 8, 0);
             std::cout << "[2] dataPtr = " << dataPtr << std::endl;
@@ -143,7 +149,7 @@ void StreamDataBufferTest::test_getWritableStreams()
         CPPUNIT_ASSERT_EQUAL(2, buffer._serveQueue.size());
         {
             WritableData dataChunk = buffer.getWritable(dataSize);
-            void* dataPtr =  dataChunk.data()->data()->operator*();
+            void* dataPtr =  dataChunk.data()->data()->ptr();
             double value = 3;
             dataChunk.write(&value, 8, 0);
             std::cout << "[3] dataPtr = " << dataPtr << std::endl;
@@ -175,7 +181,7 @@ void StreamDataBufferTest::test_getWritableStreams()
         CPPUNIT_ASSERT_EQUAL(3, buffer._emptyQueue.size());
         {
             WritableData dataChunk = buffer.getWritable(dataSize);
-            void* dataPtr =  dataChunk.data()->data()->operator*();
+            void* dataPtr =  dataChunk.data()->data()->ptr();
             double value = 4;
             dataChunk.write(&value, 8, 0);
             std::cout << "[4] dataPtr = " << dataPtr << std::endl;

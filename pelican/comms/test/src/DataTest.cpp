@@ -55,7 +55,7 @@ void DataTest::test_pointer()
     QByteArray b;
     b.resize(100);
     Data d("test",b.data(),100);
-    CPPUNIT_ASSERT( b.data() == *d );
+    CPPUNIT_ASSERT( b.data() == d.ptr() );
 }
 
 } // namespace pelican

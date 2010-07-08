@@ -35,14 +35,13 @@ class StreamDataBuffer : public AbstractDataBuffer
         friend class StreamDataBufferTest;
 
     public:
-        /// StreamDataBuffer constructor.
-        /// FIXME: Is data manager ever not null other than in tests?
-        StreamDataBuffer(const QString& type, DataManager* manager = NULL,
+        /// Constructs a stream data buffer.
+        StreamDataBuffer(const QString& type,
                          const size_t max = 10240,
                          const size_t maxChunkSize = 10240,
                          QObject* parent = 0);
 
-        /// StreamDataBuffer destructor.
+        /// Destroys the stream data buffer.
         ~StreamDataBuffer();
 
         /// Get the next data object that is ready to be served.
