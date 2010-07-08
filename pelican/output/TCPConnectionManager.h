@@ -5,6 +5,7 @@
 #include <QtCore/QObject>
 #include <QtCore/QMutex>
 #include <QtCore/QList>
+#include <QtCore/QSet>
 #include <QtCore/QMap>
 
 #include "pelican/utility/ConfigNode.h"
@@ -40,6 +41,7 @@ class TCPConnectionManager : public QObject
     protected:
         virtual void run();
         void _killClient(QTcpSocket*);
+        const QSet<QString>& types() const;
 
     public slots:
         void send(const QString& streamName, const DataBlob* incoming);
@@ -52,6 +54,7 @@ class TCPConnectionManager : public QObject
         QMutex                             _mutex; // controls access to _clients
         QMutex                             _sendMutex; // controls access to send method
         AbstractProtocol*                  _protocol;
+        QSet<QString> _seenTypes; // record what types have been seen (via send() )
 
     private slots:
         void connectionError(QAbstractSocket::SocketError socketError);

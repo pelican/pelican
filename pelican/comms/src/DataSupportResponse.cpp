@@ -9,8 +9,9 @@ namespace pelican {
 /**
  *@details DataSupportResponse 
  */
-DataSupportResponse::DataSupportResponse()
+DataSupportResponse::DataSupportResponse( const QSet<QString>& streams )
     : ServerResponse(ServerResponse::DataSupport)
+      , _streams(streams)
 {
 }
 

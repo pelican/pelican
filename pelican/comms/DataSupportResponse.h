@@ -24,7 +24,7 @@ namespace pelican {
 class DataSupportResponse : public ServerResponse
 {
     public:
-        DataSupportResponse(  );
+        DataSupportResponse( const QSet<QString>& streams  );
         ~DataSupportResponse();
         const QSet<QString>& streams() { return _streams; };
 
