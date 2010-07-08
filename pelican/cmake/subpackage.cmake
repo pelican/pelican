@@ -38,8 +38,21 @@ macro(SUBPACKAGE name)
     list(APPEND SUBPACKAGE_LIBRARIES ${SUBPACKAGE_EXTERNAL_LIBRARIES})
 
     # Create the install target for header files of the sub-package.
-    file(GLOB public_headers RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "*.h")
-    install(FILES ${public_headers} DESTINATION ${INCLUDE_INSTALL_DIR}/${name})
+    #file(GLOB public_headers RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "*.h")
+    #install(FILES ${public_headers} DESTINATION ${INCLUDE_INSTALL_DIR}/${name})
+
+    # Create the install target for header files of the sub-package.
+    #file(GLOB public_headers RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "*.h")
+    file(GLOB public_headers RELATIVE "${PROJECT_SOURCE_DIR}" "*.h")
+    foreach(header_file ${public_headers})
+        get_filename_component(fileDir ${header_file} PATH)
+        get_filename_component(fileName ${header_file} NAME)
+        set(local_dir ${fileDir})
+        list(APPEND ${name}_headers ${fileName})
+    endforeach(header_file)
+
+    install(FILES ${${name}_headers}
+        DESTINATION "${INCLUDE_INSTALL_DIR}/${local_dir}")
 
     #message(STATUS "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
 endmacro(SUBPACKAGE)
@@ -129,9 +142,9 @@ macro(SUBPACKAGE_SET_EXTERNAL_LIBRARIES)
                 "list(APPEND external_libs ${ARGN})\n\n")
         endforeach(project_file)
 
-	list(REMOVE_DUPLICATES SUBPACKAGE_COMPONENT_LIBRARIES)
+    list(REMOVE_DUPLICATES SUBPACKAGE_COMPONENT_LIBRARIES)
         set(link_libs ${ARGN})
-	list(APPEND link_libs ${SUBPACKAGE_COMPONENT_LIBRARIES})
+    list(APPEND link_libs ${SUBPACKAGE_COMPONENT_LIBRARIES})
 #        list(APPEND link_libs ${SUBPACKAGE_COMPONENT_LIBRARIES})
         #list(REMOVE_DUPLICATES link_libs)
         #message(STATUS "***** ${current_library_target} ====  ${link_libs}")
