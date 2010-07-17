@@ -155,8 +155,9 @@ void PelicanProtocol::send(QIODevice& stream, const AbstractProtocol::ServiceDat
     }
 }
 
-void PelicanProtocol::send(QIODevice& device, const QString& name, const DataBlob& data )
+void PelicanProtocol::send(QIODevice& device, const QString& name, const DataBlob& data)
 {
+//    std::cout << "PelicanProtocol::send(): " << name.toStdString() << std::endl;
     QByteArray array;
     QDataStream out(&array, QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_4_0);

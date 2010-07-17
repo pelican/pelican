@@ -17,7 +17,7 @@
 namespace pelican {
 
 /**
- * @details 
+ * @details
  * TCPConnectionManager constructor
  */
 TCPConnectionManager::TCPConnectionManager(quint16 port, QObject *parent)
@@ -51,9 +51,9 @@ qint16 TCPConnectionManager::serverPort() const
  * @details
  * Accpet client connections for data
  */
-void TCPConnectionManager::acceptClientConnection() 
+void TCPConnectionManager::acceptClientConnection()
 {
-    
+
     // Get new client connection
     QTcpSocket *client = _tcpServer->nextPendingConnection();
 
@@ -65,7 +65,7 @@ void TCPConnectionManager::acceptClientConnection()
         case ServerRequest::DataSupport:
             {
             DataSupportResponse res( types() );
-            // _protocol->send(*client,res); 
+            // _protocol->send(*client,res);
             }
             break;
         case ServerRequest::StreamData:
@@ -83,7 +83,8 @@ void TCPConnectionManager::acceptClientConnection()
                     // Add all client data requirement to type-client list
                     foreach(const QString& streamData, it->streamData() ) {
                         // Check if clients map already has the key, if so add client to list
-                        std::cout << "Adding new client for stream: " << streamData.toStdString()  << std::endl;
+                        std::cout << "TCPConnectionManager: Adding new client for stream: "
+                                << streamData.toStdString()  << std::endl;
                         _clients[streamData].push_back(client);
                     }
                     ++it;
@@ -92,15 +93,15 @@ void TCPConnectionManager::acceptClientConnection()
             break;
         default:
             {
-                std::cerr << "Invalid client request" << std::endl;
+                std::cerr << "TCPConnectionManager: Invalid client request" << std::endl;
                 client->close();
                 return;
             }
     }
 
     // Connect socket error() signals
-    connect(client, SIGNAL(error(QAbstractSocket::SocketError)), this, 
-                    SLOT(connectionError(QAbstractSocket::SocketError)), 
+    connect(client, SIGNAL(error(QAbstractSocket::SocketError)), this,
+                    SLOT(connectionError(QAbstractSocket::SocketError)),
                     Qt::DirectConnection);
 }
 
@@ -139,11 +140,11 @@ void TCPConnectionManager::send(const QString& streamName, const DataBlob* blob)
             client->flush();
             //std::cout << "Finished sending" << std::endl;
         }
-        catch ( ... ) 
+        catch ( ... )
         {
             // kill the client if anything goes wrong
             std::cerr <<  "TCPConnectionManager: failed to send data to client" << std::endl;
-            _killClient(client); 
+            _killClient(client);
         }
     }
     emit sent(blob);
@@ -181,7 +182,7 @@ void TCPConnectionManager::connectionError(QAbstractSocket::SocketError)
  * @details
  * Run the TCP server, listening for incoming client requests
  */
-void TCPConnectionManager::run() 
+void TCPConnectionManager::run()
 {
     // start TCP Server, which listens for incoming connections
     if (!_tcpServer -> listen( QHostAddress::Any, _port))

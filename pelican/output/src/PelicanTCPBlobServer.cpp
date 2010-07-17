@@ -7,7 +7,7 @@
 namespace pelican {
 
 /**
- * @details 
+ * @details
  * PelicanTCPBlobServer constructor
  */
 PelicanTCPBlobServer::PelicanTCPBlobServer(const ConfigNode& configNode )
@@ -25,7 +25,7 @@ PelicanTCPBlobServer::PelicanTCPBlobServer(const ConfigNode& configNode )
         threaded = ! QString::compare(configNode.getAttribute("threaded"), "false",  Qt::CaseInsensitive);
     }
 
-    if( threaded ) 
+    if( threaded )
         _server = new ThreadedBlobServer(port);
     else {
         _connectionManager = new TCPConnectionManager;
@@ -33,7 +33,7 @@ PelicanTCPBlobServer::PelicanTCPBlobServer(const ConfigNode& configNode )
 }
 
 /**
- * @details 
+ * @details
  * PelicanTCPBlobServer destructor
  */
 PelicanTCPBlobServer::~PelicanTCPBlobServer()
@@ -54,17 +54,19 @@ int PelicanTCPBlobServer::clientsForType(const QString& stream) const
 
 /**
  * @details
- * Send datablob to connected clients 
+ * Send datablob to connected clients
  */
 void PelicanTCPBlobServer::send(const QString& streamName, const DataBlob* incoming)
 {
     // Tell the threaded blob server to send data
-    // This must be blocking, to avoid the DataBlob being recycled before 
+    // This must be blocking, to avoid the DataBlob being recycled before
     // the data has been sent
-    if( _server )
+    if( _server ) {
         _server->blockingSend(streamName, incoming);
-    if( _connectionManager )
+    }
+    if( _connectionManager ) {
         _connectionManager->send(streamName, incoming);
+    }
 }
 
 /**

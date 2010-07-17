@@ -73,12 +73,12 @@ QByteArray PelicanClientProtocol::serialise(const ServerRequest& req)
 
 boost::shared_ptr<ServerResponse> PelicanClientProtocol::receive(QAbstractSocket& socket)
 {
-    //std::cout << "PelicanClientProtocol::receive()" << std::endl;
+//    std::cout << "PelicanClientProtocol::receive()" << std::endl;
     int timeout = 2000;
     ServerResponse::Response type = ServerResponse::Error;
     while (socket.bytesAvailable() < (int)sizeof(quint16)) {
         if ( !socket.waitForReadyRead(timeout) ) {
-            std::cout << "PelicanClientProtocol:: receive error!!!!!!!!!!" << std::endl;
+            std::cout << "PelicanClientProtocol:: receive error!!!" << std::endl;
             return boost::shared_ptr<ServerResponse>(new ServerResponse(type,  socket.errorString() ));
         }
     }
@@ -86,9 +86,7 @@ boost::shared_ptr<ServerResponse> PelicanClientProtocol::receive(QAbstractSocket
     QDataStream in(&socket);
     in.setVersion(QDataStream::Qt_4_0);
     in >> (quint16&)type;
-
-//     std::cout << "PelicanClientProtocol::receive(): Type: " << type << std::endl;
-
+//    std::cout << "PelicanClientProtocol::receive(): Type: " << type << std::endl;
 
     switch(type) {
         case ServerResponse::Acknowledge:
@@ -141,6 +139,7 @@ boost::shared_ptr<ServerResponse> PelicanClientProtocol::receive(QAbstractSocket
             break;
         case ServerResponse::Blob:
             {
+//                std::cout << "PelicanClientProtocol:: blob" << std::endl;
                 QString type;
                 in >> type;
                 QString name;
@@ -156,7 +155,10 @@ boost::shared_ptr<ServerResponse> PelicanClientProtocol::receive(QAbstractSocket
         default:
             break;
     }
-    return boost::shared_ptr<ServerResponse>(new ServerResponse(ServerResponse::Error, QString("PelicanClientProtocol: Unknown type passed: %1").arg(type)));
+    return boost::shared_ptr<ServerResponse>(
+            new ServerResponse(ServerResponse::Error,
+                    QString("PelicanClientProtocol: Unknown type passed: %1")
+                    .arg(type)));
 }
 
 void PelicanClientProtocol::_serializeDataRequirements(QDataStream& stream, const DataRequirements& req) const
