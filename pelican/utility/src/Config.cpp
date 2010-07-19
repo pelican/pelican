@@ -377,7 +377,7 @@ QDomElement Config::_get(const TreeAddress &address,
     QDomElement parent = document.documentElement();
 
     // Empty configuration, so return null element.
-    if (parent.isNull()) 
+    if (parent.isNull())
         return QDomElement();
 
     int indx = 0;
@@ -402,8 +402,11 @@ QDomElement Config::_get(const TreeAddress &address,
 
         // No node exists of the specified tag.
         if (nodes.isEmpty()) {
-std::cout << "no node exists : parent = " << parent.tagName().toStdString() << std::endl;
-            return QDomElement(); }
+            std::cout << tag.toStdString() << std::endl;
+            std::cout << name.toStdString() << std::endl;
+            std::cout << "Config::_get(): No node exists : parent = " << parent.tagName().toStdString() << std::endl;
+            return QDomElement();
+        }
 
         // Nodes exist of the specified tag; find the right one to return.
         else {
