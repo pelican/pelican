@@ -142,7 +142,9 @@ macro(SUBPACKAGE_SET_EXTERNAL_LIBRARIES)
                 "list(APPEND external_libs ${ARGN})\n\n")
         endforeach(project_file)
 
-    list(REMOVE_DUPLICATES SUBPACKAGE_COMPONENT_LIBRARIES)
+    #message(STATUS "===========${subpackage_current} => ${SUBPACKAGE_COMPONENT_LIBRARIES}")
+    #list(REMOVE_DUPLICATES SUBPACKAGE_COMPONENT_LIBRARIES)
+
         set(link_libs ${ARGN})
     list(APPEND link_libs ${SUBPACKAGE_COMPONENT_LIBRARIES})
 #        list(APPEND link_libs ${SUBPACKAGE_COMPONENT_LIBRARIES})
