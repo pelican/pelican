@@ -219,6 +219,8 @@ macro(_SET_SUBPACKAGE_LIBRARIES)
                 endforeach(pack)
             endif(BUILD_STATIC AND STATIC_LINK_BINARIES)
         endforeach(dep)
+        #message(STATUS "&&&&&&&&&& ${SUBPACKAGE_COMPONENT_LIBRARIES}")
+
         #list(REMOVE_DUPLICATES SUBPACKAGE_LIBRARIES)
 
 
