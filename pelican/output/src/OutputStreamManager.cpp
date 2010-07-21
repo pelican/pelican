@@ -62,7 +62,8 @@ OutputStreamManager::OutputStreamManager( const Config* config , const Config::T
                     if( ! localStreamers.contains(id) && ! inactive.contains(id) ) {
                         throw( QString("OutputStreamManager configuration error: <stream> tag refers to unknown output streamer \"%s\"").arg(id) );
                     }
-                    connectToStream(localStreamers[id], stream.attribute("name"));
+		    if( localStreamers.contains(id) )
+			    connectToStream(localStreamers[id], stream.attribute("name"));
                 }
             }
         }

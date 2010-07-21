@@ -202,6 +202,26 @@ void OutputStreamManagerTest::test_configuration()
         CPPUNIT_ASSERT(os->connected("b").size() == 2 );
         delete os;
     }
+    {
+        // Use Case:
+	// Configuration contains an inactive output streamer
+        // that is refered to as a listener
+        // Expect:
+        //      no associations to be made
+        QString xml = 
+            "<output>"
+            "   <streamers>"
+            "     <TestOutputStreamer active=\"false\"/>"
+            "   </streamers>"
+            "   <dataStreams>"
+            "      <stream name=\"a\" listeners=\"TestOutputStreamer\" />"
+            "   </dataStreams>"
+            "</output>"
+            ;
+        OutputStreamManager* os = _getManager(xml, "output");
+        CPPUNIT_ASSERT(os->connected("a").size() == 0 );
+        delete os;
+    }
 }
 
 OutputStreamManager* OutputStreamManagerTest::_getManager(const QString& xml, const QString& base)
