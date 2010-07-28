@@ -30,7 +30,10 @@ namespace pelican {
  * in their constructor arguments would use
  *
  * @code
- * PELICAN_CONSTRUCT_TYPES(ConfigNode, double)
+ * #include "pelican/utility/FactoryConfig.h"
+ *
+ * public:
+ *    PELICAN_CONSTRUCT_TYPES(ConfigNode, double)
  * @endcode
  *
  * <b>For this factory to work, the first constructor argument must be of
