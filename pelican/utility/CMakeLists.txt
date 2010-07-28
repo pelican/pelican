@@ -7,7 +7,6 @@ set(utility_src
     src/SocketTester.cpp
 )
 
-
 SUBPACKAGE_LIBRARY(utility ${utility_src})
 
 SUBPACKAGE_SET_EXTERNAL_LIBRARIES(

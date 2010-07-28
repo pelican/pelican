@@ -103,7 +103,7 @@ endif(QT_VERSION_MINOR LESS 3)
 
 # Declare project libraries to be created from the following subpackages.
 DECLARE_PROJECT_LIBRARY(pelican
-    comms core data emulator modules output server utility)
+    comms core data emulator modules output server utility viewer)
 
 DECLARE_PROJECT_LIBRARY(pelican-testutils
     dataTest coreTest serverTest)
