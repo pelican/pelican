@@ -64,7 +64,8 @@ template<class B> struct RegBase<B, n> { \
     /* Performs a check to make sure the object's ID has been registered */ \
     static void check(const QString& id) { \
         if (types().count(id) == 0) \
-            throw QString("FactoryRegistrar: Unknown type '" + id + "'"); \
+            throw QString("FactoryRegistrar: Unknown type '" + id + "'") \
+            + QString("\nDid you include the object's header file?"); \
     } \
        \
     virtual ~RegBase() {}; \

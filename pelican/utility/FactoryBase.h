@@ -19,7 +19,10 @@ namespace pelican {
  * @details
  * This is the base class of all factories that produce abstract objects
  * of type B. The main function of the base class is to keep a record of all
- * objects created by the factory, so that they can be deleted on destruction.
+ * objects created by the factory, so that they can be optionally deleted
+ * on destruction (this is the default). If the factory does not own the
+ * objects, they will not be deleted by it.
+ *
  * The add() method is used to add the object to the list of objects created
  * by the factory.
  *
@@ -31,21 +34,27 @@ namespace pelican {
 template<class B> class FactoryBase
 {
     public:
+        /// Constructs the factory, setting the ownership flag.
+        FactoryBase(bool owner = true) : _config(0), _owner(owner) {}
+
         /// Constructs the factory, setting the configuration object.
-        FactoryBase(const Config* config = 0, const QString& section = "",
-                const QString& group = "") : _config(config)
+        FactoryBase(const Config* config, const QString& section,
+                const QString& group, bool owner = true) :
+                    _config(config), _owner(owner)
         {
             _base << Config::NodeId(section, "");
             _base << Config::NodeId(group, "");
         }
 
         /// Constructs the factory, setting the default configuration root.
-        FactoryBase(const Config* config, const Config::TreeAddress& base) :
-            _config(config), _base(base) {}
+        FactoryBase(const Config* config, const Config::TreeAddress& base,
+                bool owner = true) :
+            _config(config), _owner(owner), _base(base) {}
 
         /// Destroys the factory and any objects created by it.
         virtual ~FactoryBase() {
-            for (unsigned i = 0; i < _obs.size(); ++i) delete _obs[i];
+            if (_owner)
+                for (unsigned i = 0; i < _obs.size(); ++i) delete _obs[i];
         }
 
         /// Adds the given object to the list of those owned by the factory.
@@ -82,8 +91,9 @@ template<class B> class FactoryBase
         const Config* _config;     ///< Pointer to the configuration object.
 
     private:
+        bool _owner;               ///< Flag set if factory owns the objects.
         Config::TreeAddress _base; ///< Configuration root node.
-        std::vector<B*> _obs;      ///< List of all objects created by the factory.
+        std::vector<B*> _obs;      ///< List of objects created by the factory.
 };
 
 } // namespace pelican

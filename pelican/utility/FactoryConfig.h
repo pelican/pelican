@@ -30,17 +30,18 @@ namespace pelican {
  * in their constructor arguments would use
  *
  * @code
- * #include "pelican/utility/FactoryConfig.h"
+ * #include "pelican/utility/FactoryRegistrar.h"
  *
  * public:
- *    PELICAN_CONSTRUCT_TYPES(ConfigNode, double)
+ *     PELICAN_CONSTRUCT_TYPES(ConfigNode, double)
  * @endcode
  *
  * <b>For this factory to work, the first constructor argument must be of
  * type ConfigNode.</b>
  *
  * The factory can only create registered objects.
- * Use a PELICAN_DECLARE macro to register the object with the factory.
+ * Use a PELICAN_DECLARE(BaseClassName, ObjectName) macro in the object's
+ * header file to register the object with the factory.
  *
  * To create an object, call the create() method with the object's type ID
  * and all constructor arguments, <i>except</i> the first one
@@ -71,11 +72,13 @@ template<class B> class FactoryConfig<B, n> : public FactoryBase<B> { \
 public: \
     /* Constructs a factory for creating configurable objects */ \
     FactoryConfig(const Config* config, const QString& section, \
-            const QString& group) : FactoryBase<B>(config, section, group) {} \
+            const QString& group, bool owner = true) : \
+                FactoryBase<B>(config, section, group, owner) {} \
 \
     /* Constructs a factory for creating configurable objects */ \
-    FactoryConfig(const Config* config, const Config::TreeAddress& base) \
-            : FactoryBase<B>(config, base) {} \
+    FactoryConfig(const Config* config, const Config::TreeAddress& base, \
+            bool owner = true) \
+            : FactoryBase<B>(config, base, owner) {} \
 \
     /* Creates and configures a concrete object with a registered ID */ \
     B* create(const QString& id BOOST_PP_ENUM_TRAILING(BOOST_PP_DEC(n),PARAM1,~) , \

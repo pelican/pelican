@@ -28,14 +28,18 @@ namespace pelican {
  * constructor arguments would use
  *
  * @code
- * PELICAN_CONSTRUCT_TYPES(double, std::vector<double>)
+ * #include "pelican/utility/FactoryRegistrar.h"
+ *
+ * public:
+ *     PELICAN_CONSTRUCT_TYPES(double, std::vector<double>)
  * @endcode
  *
  * Objects that take no arguments must supply an empty list, using the
  * PELICAN_CONSTRUCT_TYPES_EMPTY macro.
  *
  * The factory can only create registered objects.
- * Use a PELICAN_DECLARE macro to register the object with the factory.
+ * Use a PELICAN_DECLARE(BaseClassName, ObjectName) macro in the object's
+ * header file to register the object with the factory.
  *
  * To create an object, call the create() method with the object's type ID
  * and all constructor arguments.
@@ -56,7 +60,7 @@ template<class B,
 template<class B> class FactoryGeneric<B, n> : public FactoryBase<B> { \
 public: \
     /* Constructs a generic object factory */ \
-    FactoryGeneric() : FactoryBase<B>() {} \
+    FactoryGeneric(bool owner = true) : FactoryBase<B>(owner) {} \
 \
     /* Creates a concrete object with a registered ID */ \
     B* create(const QString& id BOOST_PP_ENUM_TRAILING(n, PARAM, ~)) { \
