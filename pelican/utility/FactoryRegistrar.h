@@ -63,12 +63,14 @@ template<class B> struct RegBase<B, n> { \
 \
     /* Performs a check to make sure the object's ID has been registered */ \
     static void check(const QString& id) { \
-        if (types().count(id) == 0) \
+        if (!exists(id)) \
             throw QString("FactoryRegistrar: Unknown type '" + id + "'") \
             + QString("\nDid you include the object's header file?"); \
     } \
-       \
-    virtual ~RegBase() {}; \
+\
+    /* Returns true if the object's ID has been registered, false if not */ \
+    static bool exists(const QString& id) {return (types().count(id) > 0);} \
+\
     /* Interface to create the object */ \
     virtual B* create(BOOST_PP_ENUM(n, PARAM, ~)) const = 0; \
 \

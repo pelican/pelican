@@ -68,6 +68,9 @@ public: \
         return add(RegBase<B, n>::types()[id]->create( \
                 BOOST_PP_ENUM_PARAMS(n, P)), id); \
     } \
+\
+    /* Checks if the ID has been registered */ \
+    bool exists(const QString& id) {return RegBase<B, n>::exists(id);} \
 };
 BOOST_PP_REPEAT(MAX_FACTORIES, FACTORYGENERIC, ~)
 #undef FACTORYGENERIC

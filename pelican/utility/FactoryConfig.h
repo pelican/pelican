@@ -87,6 +87,9 @@ public: \
         return add(RegBase<B, n>::types()[id]->create(FactoryBase<B>::conf(id, name) \
             BOOST_PP_ENUM_TRAILING_PARAMS(BOOST_PP_DEC(n), P) ), id); \
     } \
+\
+    /* Checks if the ID has been registered */ \
+    bool exists(const QString& id) {return RegBase<B, n>::exists(id);} \
 };
 BOOST_PP_REPEAT(MAX_FACTORIES, FACTORYCONFIG, ~)
 #undef FACTORYCONFIG
