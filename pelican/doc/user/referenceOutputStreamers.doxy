@@ -5,17 +5,29 @@
 
 You will need to send your processed data elsewhere, perhaps to a storage
 system, a monitoring and control system or a further processing pipeline.
-Pelican allows you to separate the details of the destination of the data
-from the specification of what to write out using the @em OutputStreamer framework.
+Pelicans Output Manager allows you to separate the details of the destination of the data
+from the specification of what has to be written out.
 
-You can insert an @em OutputStreamer anywhere in a pipeline to specify the
-appropriate data sets to be recorded.
+There are a number of default OutputStreamers that may already meet your needs, however it may
+be that you have special requirements and need to write your own.
 
-The OutputStreamer framework should then be configured separately to direct this data to its ultimate destination, using plug-ins for
-each supported sceanario.
+@section user_framework_outputStreamers_pelican Pelicans Default OutputStreamers
 
-@section user_framework_outputStreamerEssentials_pipeline OutputStreamers in the Pipeline
+@subsection user_framework_outputStreamers_pelican_blobserver The TCP Blob Server ( \b PelicanTCPBlobServer )
+This streamer sets up a TCP streaming server to supply any connecting client with
+a copy of the data as it becomes available. Use this to move data to another machine for
+storage, further processing, online monitoring, etc.
 
-@section user_framework_outputStreamerEssentials_plugins OutputStreamer Plugins
+You can use the \em DataBlobClient class to connect and read from this server in your client applications.
+
+@section user_framework_outputStreamers_custom Custom OutputStreamers
+The \em AbstractOutputStreamer provides the base class for plug-ins into the OutputManager.
+Simply inherit from this and implement the virtual \em send() method to provide your required functionality.
+
+It is important to register this object with the PELICAN_DECLARE macro.
+e.g.
+@code
+PELICAN_DECLARE(AbstractOutputStreamer, MyStreamer)
+@endcode
 
 */
