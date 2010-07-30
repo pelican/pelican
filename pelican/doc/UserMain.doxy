@@ -11,24 +11,19 @@ The Pelican framework is an efficient, lightweight C++ library for processing
 data in quasi-real time. The library aims to separate data acquisition from data
 processing, allowing scalability and flexibility to fit a number of scenarios.
 
-With its origin as a radio astronomical data processing pipeline, Pelican was
-originally an acronym for the <em>Pipeline for Extensible, Lightweight Imaging
+With its origin in radio astronomy, processing data as it arrives from a telescope, 
+Pelican was originally an acronym for the <em>Pipeline for Extensible, Lightweight Imaging
 and CAlibratioN</em>. However, the framework is sufficiently generic to be
-useful in other applications.
-
+useful in any application that needs to efficiently process incomming data streams.
 
 
 
 \subsection intro_framework The Pelican Framework
 
 The Pelican framework provides a system to split one or more incoming data
-streams into buffered chunks of data, which can be served to any number of
-parallel computational pipelines. Pipelines act as containers for multiple
-processing modules, which operate on chunks of the input data streams. Pipelines
-are run in an iterative fashion, requesting a new set of data from the buffered
-input data chunks each time their processing is complete.
-
-
+streams into well defined chunks. These chunks are then passed on to any number of
+parallel computational pipelines for processing. As a chunk is passed to a pipeline 
+only when it is available to process the data, an efficient load balancing is achieved.
 
 
 
@@ -43,29 +38,32 @@ components which adhere to a well defined API and describe:
 \li The processing to be performed.
 \li The data products to deliver after processing.
 
-Pelican applications are not intended to be highly interactive. Instead,
+Pelican applications are not, in general, intended to be highly interactive. Instead,
 components can be configured using XML parameter files, which are read on
 initialisation.
 
 
 
 
-
 \subsection intro_running Running Pelican Applications
 
-Pelican applications can be configured to run in two ways. 
+Pelican applications can be run in two different configurations, depending
+on the data processing requirements. It is easy to switch between the two as
+needs arise.
 
-The first way utilises a server-client architecture to provide a scalable
-processing framework. Data is divided into chunks and is buffered by the
+For very high throughput and heavy data processing the most appropriate 
+to configure pelican in its server-client mode to provide a scalable
+processing framework. Data is divided into chunks that are buffered by the
 Pelican server. Pelican pipelines run on other machines, where data clients
 request chunks of data from the server as often as the pipelines become
 available. If the existing pipelines cannot keep up with the input data rate,
 then more pipelines can be added as required.
 
-The second use of Pelican is to connect a special data client directly to
-the input data stream, instead of to the Pelican server. In this case,
-the data client contains one or more data chunkers, and buffers the data
-itself until the pipeline is ready to process it.
+For more modest data processing needs, a single machine can be used by connecting a 
+data client directly to the input data stream, instead of to the Pelican server.
+In this case, the data client does all the chunking, and buffers the data
+until the pipeline is ready to process it.
+
 
 \section introContents Contents
 
