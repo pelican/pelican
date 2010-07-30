@@ -24,12 +24,14 @@ namespace pelican {
 class DataSupportResponse : public ServerResponse
 {
     public:
-        DataSupportResponse( const QSet<QString>& streams  );
+        DataSupportResponse( const QSet<QString>& streams, const QSet<QString>& serviceStreams = QSet<QString>()  );
         ~DataSupportResponse();
-        const QSet<QString>& streams() { return _streams; };
+        const QSet<QString>& streamData() const { return _streams; };
+        const QSet<QString>& serviceData() const { return _services; };
 
     private:
          QSet<QString> _streams;
+         QSet<QString> _services;
 };
 
 } // namespace pelican

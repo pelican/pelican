@@ -9,6 +9,7 @@
 #include "StreamDataResponse.h"
 #include "ServiceDataResponse.h"
 #include "StreamData.h"
+#include "pelican/comms/DataSupportRequest.h"
 #include "pelican/data/DataRequirements.h"
 #include "pelican/utility/SocketTester.h"
 #include "pelican/data/test/TestDataBlob.h"
@@ -299,6 +300,19 @@ void PelicanProtocolTest::test_request()
         req.addDataOption(require2);
         Socket_t& socket = _send(&req);
         CPPUNIT_ASSERT( req == *(proto.request(socket)) );
+    }
+}
+
+void PelicanProtocolTest::test_sendDataSupport()
+{
+    {
+        // Use Case:
+        // A Supported data query
+        // Expect to get a support request
+        DataSupportRequest req;
+        PelicanProtocol proto;
+        Socket_t& socket = _send(&req);
+        CPPUNIT_ASSERT( req.type() == proto.request(socket)->type() );
     }
 }
 

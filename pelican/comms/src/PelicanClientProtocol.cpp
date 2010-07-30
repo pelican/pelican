@@ -6,6 +6,7 @@
 #include "pelican/comms/ServiceDataResponse.h"
 #include "pelican/comms/DataBlobResponse.h"
 #include "pelican/comms/StreamDataResponse.h"
+#include "pelican/comms/DataSupportResponse.h"
 #include "pelican/comms/ServiceDataRequest.h"
 #include "pelican/comms/StreamDataRequest.h"
 #include "pelican/data/DataRequirements.h"
@@ -90,6 +91,16 @@ boost::shared_ptr<ServerResponse> PelicanClientProtocol::receive(QAbstractSocket
 
     switch(type) {
         case ServerResponse::Acknowledge:
+            break;
+        case ServerResponse::DataSupport:
+            {
+                QSet<QString> streams;
+                QSet<QString> services;
+                in >> streams;
+                in >> services;
+                boost::shared_ptr<DataSupportResponse> s(new DataSupportResponse(streams,services));
+                return s;
+            }
             break;
         case ServerResponse::StreamData:
             {

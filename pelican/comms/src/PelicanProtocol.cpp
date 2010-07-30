@@ -3,6 +3,8 @@
 #include "pelican/comms/ServerRequest.h"
 #include "pelican/comms/ServerResponse.h"
 #include "pelican/comms/AcknowledgementRequest.h"
+#include "pelican/comms/DataSupportResponse.h"
+#include "pelican/comms/DataSupportRequest.h"
 #include "pelican/comms/ServiceDataRequest.h"
 #include "pelican/comms/StreamDataRequest.h"
 #include "pelican/comms/StreamData.h"
@@ -84,10 +86,28 @@ boost::shared_ptr<ServerRequest> PelicanProtocol::request(QTcpSocket& socket)
                 return s;
             }
             break;
+        case ServerRequest::DataSupport:
+            {
+                boost::shared_ptr<DataSupportRequest> s(new DataSupportRequest);
+                return s;
+            }
+            break;
         default:
             break;
     }
     return boost::shared_ptr<ServerRequest>(new ServerRequest(ServerRequest::Error, "PelicanProtocol: Unknown type passed"));
+}
+
+void PelicanProtocol::send(QIODevice& device, const DataSupportResponse& supported)
+{
+    QByteArray array;
+    QDataStream out(&array, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_4_0);
+    out << (quint16)ServerResponse::DataSupport;
+    out << supported.serviceData();
+    out << supported.streamData();
+    device.write(array);
+
 }
 
 void PelicanProtocol::send(QIODevice& stream, const AbstractProtocol::StreamData_t& data )

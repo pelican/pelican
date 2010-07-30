@@ -16,6 +16,7 @@ class ServerRequest;
 class StreamData;
 class Data;
 class DataBlob;
+class DataSupportResponse;
 
 /**
  * @class AbstractProtocol
@@ -53,6 +54,9 @@ class AbstractProtocol
 
         /// Write a non-error message to an I/O device.
         virtual void send(QIODevice& device, const QString& message) = 0;
+
+        /// Write a non-error message to an I/O device.
+        virtual void send(QIODevice& device, const DataSupportResponse& message) = 0;
 
         /// Send an error to an I/O device.
         virtual void sendError(QIODevice& device, const QString&) = 0;

@@ -64,8 +64,10 @@ void TCPConnectionManager::acceptClientConnection()
     {
         case ServerRequest::DataSupport:
             {
-            DataSupportResponse res( types() );
-            // _protocol->send(*client,res);
+                DataSupportResponse res( types() );
+                _protocol->send(*client,res);
+                // add the client to the stream update channel
+                _clients["__streamInfo__"].push_back(client);
             }
             break;
         case ServerRequest::StreamData:
