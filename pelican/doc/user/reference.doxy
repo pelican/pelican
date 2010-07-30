@@ -16,5 +16,6 @@ components, how to use them and how to create new ones.
 @li @subpage user_referenceOutputStreamers
 @li @subpage user_referencePipelines
 @li @subpage user_referenceRunning
+@li @subpage user_dataViewer
 
 */

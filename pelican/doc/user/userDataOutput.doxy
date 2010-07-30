@@ -33,5 +33,8 @@ Pelican comes with a number of modules to stream data, e.g. via TCP to another m
 But maybe these are insufficient for your needs. perhaps you have a custom file format, or a specific database
 to fill. In this case you will need to write your own OutputStreamers.
 
+\section Viewing Data Output
+\link user_dataViewer The DataViewier widget \endlink allows you to monitor your data stream graphically when you use a PelicanTCPBlobServer
+as an output streamer.
 
 */

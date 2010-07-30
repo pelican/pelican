@@ -6,18 +6,20 @@
 
 The Pelican framework is designed to allow the flexible deployment of hardware
 resources to cope with the data rates and data processing requirements of an
-incoming data stream.
+incoming data stream. Pelican maintains three distinct layers with well defined 
+interfaces between them, namely:
+ data aquisition, data processing, and data output. 
+
+Within these layers the various functional elements, e.g. chunking of the data, 
+are modularised, to allow easy reuse and redeployment.
 
 The diagram below provides an overview of the various components which make up
 the Pelican framework, and the two deployment options for Pelican applications.
-
 The left diagram shows the server-client configuration, where a Pelican data
 server collects the various input data streams and makes them available to
-one or more processing pipelines. The diagram on the right shows a configuration
-where pipelines connect directly to data streams using a special data client.
-
-It is clear from the diagram that each configuration shares a number of common
-components
+one or more processing pipelines. 
+The diagram on the right shows a configuration
+where pipelines connect directly to data streams using a direct data client.
 
 
 @anchor figPelicanFramework
@@ -25,59 +27,19 @@ components
 @image latex images/pelicanOverviewDiagram.eps "The Pelican Framework" width=10cm
 
 
-<!-- =================
-\li <b>Chunkers:</b> Describe how the input streams should be split.
-\li <b>Adapters:</b> Specify how chunks of stream data should be de-serialised
-    into data objects suitable for processing.
-\li <b>DataBlobs:</b> Describe the data structures used for processing modules.
-\li <b>Processing Modules:</b> Define the computational units to be carried out.
-\li <b>Pipelines:</b> Describe the type and order or processing modules.
-\li <b>Output Modules:</b> Define what to do with data products from pipeline
+\subsection user_structuralOverview_modules The Modules Required for a Pelican Application
+All of the following functional units must be present in a pelican application.
+Each one has a base class from which to inherit and is the mechanism by which you extend pelican to your needs.
+More details can be found in the \link user_gettingStarted Getting Started Guide\endlink.
+
+\li <b>\link user_referenceChunkers Chunkers\endlink :</b> Describe how the input streams should be split.
+\li <b>\link user_referenceAdapters Adapters\endlink :</b> Specify how chunks of stream data should be de-serialised
+    into data objects (DataBlobs).
+\li <b>\link user_referenceDataBlobs DataBlobs\endlink :</b> Describe the data structures used for data processing.
+\li <b>\link user_referenceModules Processing Modules\endlink :</b> Define the computational units to be carried out.
+\li <b>\link user_referencePipelines Pipelines\endlink :</b> Describe the type and order or processing modules.
+\li <b>\link user_referenceOutputStreamers Output Streamers\endlink :</b> Define what to do with data products from pipeline
     processing.
-============= 
-
-Within the framework the data flow is split three distinct logical units with
-well defined interfaces between them.
-
-These units are Data Input (with the \p AbstractDataClient interface),
-Pipeline Processing (with the \p AbstractPipeline interface), and 
-Data Output (with the \p AbstractDataBlobStreamer interface)
-
-Each unit can be configured differently to give maximal flexibility in deployment.
-In this way, you can insert extra hardware to relieve bottle necks in processing and/or 
-bandwidth.
-
-@section user_structuralOverview_dataInput Data Import Configurations
-
-Data from the source can be either piped directly into the pipeline or via
-a Pelican Server. It is merely a question of specifying the type of Data Client required.
-The data clients job is to keep the pipeline supplied with data to process whenever it becomes idle.
-
-@subsection user_structuralOverview_dataStreamingClient The DataStreamingClient
-
-This scenario assumes that the entire processing can be performed on a single machine.
-
-The DataStreamingClient allows you to connect to one or more incoming streams on the same
-machine on which processing occurs, without an intervening data distribution server.
-
-
-@subsection user_structuralOverview_PelicanClient Pelican Server
-
-This scenario is useful when you are processing limited. You can extend the number of
-processing units to keep up with the incomming data stream.
-
-The Pelican Server attaches to the incoming data stream and chops this into chunks of
-self-contained data for processing in parallel. The pipelines then connect to the server
-to download a data chunk to process.
-
-@section user_structuralOverview_dataOutput Data Output Configurations
-
-Data can be sent for output streaming at any time in the pipeline by calling an appropriate
-@p OutputStreamer module. The available streaming types are
-
-@li TCP Server running the pelican protocol
-
--->
 
 
 */
