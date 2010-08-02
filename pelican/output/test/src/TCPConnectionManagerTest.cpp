@@ -1,5 +1,6 @@
 #include "pelican/output/test/TCPConnectionManagerTest.h"
 #include "pelican/output/TCPConnectionManager.h"
+#include "pelican/comms/DataSupportRequest.h"
 #include "pelican/comms/ServerRequest.h"
 #include "pelican/comms/ServerResponse.h"
 #include "pelican/comms/DataBlobResponse.h"
@@ -45,6 +46,29 @@ void TCPConnectionManagerTest::tearDown()
     delete _server;
     delete _clientProtocol;
     delete _app;
+}
+
+void TCPConnectionManagerTest::test_dataSupportedRequest()
+{
+    // Use Case:
+    // Send a dataSupport request with no data
+    // Expect: stream to return a DataSupportResponse
+    // and add us to the datasupport stream
+    DataSupportRequest req;
+    QTcpSocket* client = _createClient();
+    _sendRequest( client, req );
+    _app->processEvents();
+    CPPUNIT_ASSERT_EQUAL( 1, _server->clientsForType("__streamInfo__") );
+    return;
+
+    CPPUNIT_ASSERT( client->state() == QAbstractSocket::ConnectedState );
+    boost::shared_ptr<ServerResponse> r = _clientProtocol->receive( *client );
+    CPPUNIT_ASSERT( r->type() == ServerResponse::DataSupport );
+
+    // Use case:
+    // New stream type arrives
+    // Expect:
+    // to receive a new DataRequest with the new data
 }
 
 void TCPConnectionManagerTest::test_send()
