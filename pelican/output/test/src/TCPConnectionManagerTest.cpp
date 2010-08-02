@@ -1,6 +1,7 @@
 #include "pelican/output/test/TCPConnectionManagerTest.h"
 #include "pelican/output/TCPConnectionManager.h"
 #include "pelican/comms/DataSupportRequest.h"
+#include "pelican/comms/DataSupportResponse.h"
 #include "pelican/comms/ServerRequest.h"
 #include "pelican/comms/ServerResponse.h"
 #include "pelican/comms/DataBlobResponse.h"
@@ -54,13 +55,16 @@ void TCPConnectionManagerTest::test_dataSupportedRequest()
     // Send a dataSupport request with no data
     // Expect: stream to return a DataSupportResponse
     // and add us to the datasupport stream
+    QString streamInfo("__streamInfo__");
     DataSupportRequest req;
     QTcpSocket* client = _createClient();
+    CPPUNIT_ASSERT_EQUAL( 0, _server->clientsForType(streamInfo) );
     _sendRequest( client, req );
     _app->processEvents();
-    CPPUNIT_ASSERT_EQUAL( 1, _server->clientsForType("__streamInfo__") );
-    return;
+    CPPUNIT_ASSERT_EQUAL( 1, _server->clientsForType(streamInfo) );
 
+    sleep(1);
+    _app->processEvents();
     CPPUNIT_ASSERT( client->state() == QAbstractSocket::ConnectedState );
     boost::shared_ptr<ServerResponse> r = _clientProtocol->receive( *client );
     CPPUNIT_ASSERT( r->type() == ServerResponse::DataSupport );
@@ -69,6 +73,18 @@ void TCPConnectionManagerTest::test_dataSupportedRequest()
     // New stream type arrives
     // Expect:
     // to receive a new DataRequest with the new data
+    QString stream1("stream1");
+    TestDataBlob blob;
+    blob.setData("stream1Data");
+    _server->send(stream1,&blob);
+    sleep(1);
+    _app->processEvents();
+
+    r = _clientProtocol->receive(*client);
+    CPPUNIT_ASSERT( r->type() == ServerResponse::DataSupport );
+    DataSupportResponse* res = static_cast<DataSupportResponse*>(r.get());
+    CPPUNIT_ASSERT_EQUAL( 1, res->streamData().size() );
+    CPPUNIT_ASSERT( res->streamData().contains(stream1) );
 }
 
 void TCPConnectionManagerTest::test_send()

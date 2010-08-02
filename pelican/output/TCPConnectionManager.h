@@ -3,6 +3,7 @@
 
 #include <QtNetwork/QTcpServer>
 #include <QtCore/QObject>
+#include <QtCore/QString>
 #include <QtCore/QMutex>
 #include <QtCore/QList>
 #include <QtCore/QSet>
@@ -42,6 +43,7 @@ class TCPConnectionManager : public QObject
         virtual void run();
         void _killClient(QTcpSocket*);
         const QSet<QString>& types() const;
+        void _sendNewDataTypes();
 
     public slots:
         void send(const QString& streamName, const DataBlob* incoming);
@@ -55,6 +57,7 @@ class TCPConnectionManager : public QObject
         QMutex                             _sendMutex; // controls access to send method
         AbstractProtocol*                  _protocol;
         QSet<QString> _seenTypes; // record what types have been seen (via send() )
+        const QString _dataSupportStream;  // the name of the subscrition stream for data support requests
 
     private slots:
         void connectionError(QAbstractSocket::SocketError socketError);

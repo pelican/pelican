@@ -21,7 +21,8 @@ namespace pelican {
  * TCPConnectionManager constructor
  */
 TCPConnectionManager::TCPConnectionManager(quint16 port, QObject *parent)
-                     : QObject(parent), _port(port)
+                     : QObject(parent), _port(port), 
+                      _dataSupportStream("__streamInfo__")
 {
     _protocol = new PelicanProtocol; // TODO - make configurable
     _tcpServer = new QTcpServer;
@@ -67,7 +68,7 @@ void TCPConnectionManager::acceptClientConnection()
                 DataSupportResponse res( types() );
                 _protocol->send(*client,res);
                 // add the client to the stream update channel
-                _clients["__streamInfo__"].push_back(client);
+                _clients[_dataSupportStream].push_back(client);
             }
             break;
         case ServerRequest::StreamData:
@@ -109,27 +110,20 @@ void TCPConnectionManager::acceptClientConnection()
 
 /**
  * @details
- * Send data to connected clients
+ * Send dataSupport Information to connected clients
  */
-void TCPConnectionManager::send(const QString& streamName, const DataBlob* blob)
+void TCPConnectionManager::_sendNewDataTypes() 
 {
-    _seenTypes.insert(streamName);
-    QMutexLocker sendlocker(&_sendMutex);
-
-    // Check if there are any client reading streamName type data
-    if (!_clients.contains(streamName) ) {
-        //std::cout << "TCPConnectionManager: Nobody to receive data" << std::endl;
-        emit sent(blob);
-        return;  // No client to stream to
-    }
+    DataSupportResponse res( types() );
 
     clients_t clientListCopy;
     {
         // control access to the _clients
         QMutexLocker locker(&_mutex);
-        clientListCopy = _clients[streamName];
+        clientListCopy = _clients[_dataSupportStream];
     }
 
+    // iterate over all clients subscribed to the data support channel
     for(int i = 0; i < clientListCopy.size(); ++i ) {
 
         QTcpSocket* client =  clientListCopy[i];
@@ -138,9 +132,8 @@ void TCPConnectionManager::send(const QString& streamName, const DataBlob* blob)
         try {
             //std::cout << "Sending to:" << client->peerName().toStdString() << std::endl;
             Q_ASSERT( client->state() == QAbstractSocket::ConnectedState );
-            _protocol->send(*client, streamName, *blob);
+            _protocol->send(*client, res);
             client->flush();
-            //std::cout << "Finished sending" << std::endl;
         }
         catch ( ... )
         {
@@ -149,7 +142,56 @@ void TCPConnectionManager::send(const QString& streamName, const DataBlob* blob)
             _killClient(client);
         }
     }
-    emit sent(blob);
+}
+
+/**
+ * @details
+ * Send data to connected clients
+ */
+void TCPConnectionManager::send(const QString& streamName, const DataBlob* blob)
+{
+
+    QMutexLocker sendlocker(&_sendMutex);
+
+    // Check if there are any client reading streamName type data
+    if (_clients.contains(streamName) ) {
+        clients_t clientListCopy;
+        {
+            // control access to the _clients
+            QMutexLocker locker(&_mutex);
+            clientListCopy = _clients[streamName];
+        }
+
+        for(int i = 0; i < clientListCopy.size(); ++i ) {
+
+            QTcpSocket* client =  clientListCopy[i];
+
+            // Send data to client
+            try {
+                //std::cout << "Sending to:" << client->peerName().toStdString() << std::endl;
+                Q_ASSERT( client->state() == QAbstractSocket::ConnectedState );
+                _protocol->send(*client, streamName, *blob);
+                client->flush();
+                //std::cout << "Finished sending" << std::endl;
+            }
+            catch ( ... )
+            {
+                // kill the client if anything goes wrong
+                std::cerr <<  "TCPConnectionManager: failed to send data to client" << std::endl;
+                _killClient(client);
+            }
+        }
+    }
+    emit sent(blob); // let any blocked sends continue
+                     // now the blob is sent.
+
+    // Ensure we track the data streams and inform any interested
+    // clients of updates.
+    if( !_seenTypes.contains(streamName) )
+    {
+        _seenTypes.insert(streamName);
+        _sendNewDataTypes();
+    }
 }
 
 const QSet<QString>& TCPConnectionManager::types() const {
