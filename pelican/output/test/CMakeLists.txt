@@ -20,6 +20,7 @@ set(outputTest_src
     src/TCPConnectionManagerTest.cpp
     src/PelicanTCPBlobServerTest.cpp
     src/OutputStreamManagerTest.cpp
+    src/DataBlobClientTest.cpp
 )
 add_executable(outputTestMT ${outputTest_src})
 target_link_libraries(outputTestMT
