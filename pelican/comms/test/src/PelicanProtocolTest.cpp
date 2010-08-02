@@ -10,6 +10,7 @@
 #include "ServiceDataResponse.h"
 #include "StreamData.h"
 #include "pelican/comms/DataSupportRequest.h"
+#include "pelican/comms/DataSupportResponse.h"
 #include "pelican/data/DataRequirements.h"
 #include "pelican/utility/SocketTester.h"
 #include "pelican/data/test/TestDataBlob.h"
@@ -315,12 +316,71 @@ void PelicanProtocolTest::test_sendDataSupport()
 {
     {
         // Use Case:
-        // A Supported data query
-        // Expect to get a support request
-        DataSupportRequest req;
+        // Empty Stream and Service data
+        // Expect to get a valid response object
         PelicanProtocol proto;
-        Socket_t& socket = _send(&req);
-        CPPUNIT_ASSERT( req.type() == proto.request(socket)->type() );
+        QSet<QString> streams;
+        DataSupportResponse data(streams);
+
+        QByteArray block;
+        QBuffer stream(&block);
+        stream.open(QIODevice::WriteOnly);
+        proto.send(stream, data);
+
+        QTcpSocket& socket = _st->send(block);
+        boost::shared_ptr<ServerResponse> resp = _protocol.receive(socket);
+        CPPUNIT_ASSERT( resp->type() == ServerResponse::DataSupport);
+        DataSupportResponse* d = static_cast<DataSupportResponse*>(resp.get());
+        CPPUNIT_ASSERT( d->streamData().size() == 0 );
+    }
+    {
+        // Use Case:
+        // Stream data only
+        // Expect transfer of stream data
+        PelicanProtocol proto;
+        QSet<QString> streams;
+        streams.insert("test1");
+        streams.insert("test2");
+        streams.insert("test3");
+        DataSupportResponse data(streams);
+
+        QByteArray block;
+        QBuffer stream(&block);
+        stream.open(QIODevice::WriteOnly);
+        proto.send(stream, data);
+
+        QTcpSocket& socket = _st->send(block);
+        boost::shared_ptr<ServerResponse> resp = _protocol.receive(socket);
+        CPPUNIT_ASSERT( resp->type() == ServerResponse::DataSupport);
+        DataSupportResponse* d = static_cast<DataSupportResponse*>(resp.get());
+        CPPUNIT_ASSERT_EQUAL( 3, d->streamData().size() );
+        CPPUNIT_ASSERT( d->streamData() == streams );
+    }
+    {
+        // Use Case:
+        // Stream data and service stream
+        // Expect transfer of all service and stream data
+        PelicanProtocol proto;
+        QSet<QString> streams;
+        streams.insert("test1");
+        streams.insert("test2");
+        streams.insert("test3");
+        QSet<QString> service;
+        service.insert("service_test1");
+        service.insert("service test2");
+        DataSupportResponse data( streams, service );
+
+        QByteArray block;
+        QBuffer stream(&block);
+        stream.open(QIODevice::WriteOnly);
+        proto.send(stream, data);
+
+        QTcpSocket& socket = _st->send(block);
+        boost::shared_ptr<ServerResponse> resp = _protocol.receive(socket);
+        CPPUNIT_ASSERT( resp->type() == ServerResponse::DataSupport);
+        DataSupportResponse* d = static_cast<DataSupportResponse*>(resp.get());
+        CPPUNIT_ASSERT_EQUAL( 3, d->streamData().size() );
+        CPPUNIT_ASSERT_EQUAL( 2, d->serviceData().size() );
     }
 }
 

@@ -104,8 +104,8 @@ void PelicanProtocol::send(QIODevice& device, const DataSupportResponse& support
     QDataStream out(&array, QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_4_0);
     out << (quint16)ServerResponse::DataSupport;
-    out << supported.serviceData();
     out << supported.streamData();
+    out << supported.serviceData();
     device.write(array);
 
 }
