@@ -260,6 +260,14 @@ void PelicanProtocolTest::test_request()
     }
     {
         // Use Case:
+        // A DataSupportRequest 
+        DataSupportRequest req;
+        PelicanProtocol proto;
+        Socket_t& socket = _send(&req);
+        CPPUNIT_ASSERT( req == *(proto.request(socket)) );
+    }
+    {
+        // Use Case:
         // An empty ServiceData Request
         PelicanProtocol proto;
         ServiceDataRequest req;
