@@ -47,9 +47,9 @@ class TCPConnectionManager : public QObject
         void send(const QString& streamName, const DataBlob* incoming);
 
     private:
-        quint16                            _port;
         typedef QList<QTcpSocket*>         clients_t;
-        QMap<QString, clients_t > _clients;
+        quint16                            _port;
+        QMap<QString, clients_t >          _clients;
         QTcpServer*                        _tcpServer;
         QMutex                             _mutex; // controls access to _clients
         QMutex                             _sendMutex; // controls access to send method
