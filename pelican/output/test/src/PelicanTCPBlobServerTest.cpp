@@ -92,7 +92,7 @@ void PelicanTCPBlobServerTest::test_connection()
     tcpSocket.flush();
 
     /// ensure we are registered before continuing
-    while( server.clientsForType("testData") == 0 )
+    while( server.clientsForStream("testData") == 0 )
     {
         sleep(1);
     }

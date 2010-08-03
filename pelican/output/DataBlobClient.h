@@ -5,6 +5,7 @@
 #include <QObject>
 #include <QSet>
 #include <QString>
+#include <QHash>
 class QTcpSocket;
 
 /**
@@ -14,8 +15,10 @@ class QTcpSocket;
 namespace pelican {
     class AbstractClientProtocol;
     class ConfigNode;
+    class DataBlobFactory;
     class ServerRequest;
     class DataBlob;
+    class Stream;
 
 /**
  * @class DataBlobClient
@@ -39,25 +42,33 @@ class DataBlobClient : public QObject
         QSet<QString> streams();
 
         /// listen for the named streams
-        void subscribeToStreams( const QSet<QString>& streams );
+        void subscribe( const QSet<QString>& streams );
+        void subscribe( const QString& stream );
 
         /// set the host to listen to
-        void setIP_Address(const QString& host);
+        void setHost(const QString& host);
 
         /// set the port to listen on
         void setPort(quint16 port);
 
+        /// return the port of the host connected to
+        quint16 port() const;
+
     protected:
         void _sendRequest( const ServerRequest* req ) const;
         void _response();
+        // return a data blob ready to be deserialised
+        DataBlob* _blob(const QString& type, const QString& stream);
 
     signals:
-        void newData(DataBlob*);
+        void newData(const Stream& stream);
         void newStreamsAvailable();
 
     private:
+        QHash<QString, Stream*> _streamMap;
         AbstractClientProtocol* _protocol;
         QTcpSocket* _tcpSocket;
+        DataBlobFactory* _blobFactory;
         QString     _server;
         quint16     _port;
         QSet<QString> _streams;

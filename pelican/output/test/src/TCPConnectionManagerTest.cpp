@@ -58,10 +58,10 @@ void TCPConnectionManagerTest::test_dataSupportedRequest()
     QString streamInfo("__streamInfo__");
     DataSupportRequest req;
     QTcpSocket* client = _createClient();
-    CPPUNIT_ASSERT_EQUAL( 0, _server->clientsForType(streamInfo) );
+    CPPUNIT_ASSERT_EQUAL( 0, _server->clientsForStream(streamInfo) );
     _sendRequest( client, req );
     _app->processEvents();
-    CPPUNIT_ASSERT_EQUAL( 1, _server->clientsForType(streamInfo) );
+    CPPUNIT_ASSERT_EQUAL( 1, _server->clientsForStream(streamInfo) );
 
     sleep(1);
     _app->processEvents();
@@ -100,7 +100,7 @@ void TCPConnectionManagerTest::test_send()
     QTcpSocket* client = _createClient();
     _sendRequest( client, req );
     _app->processEvents();
-    CPPUNIT_ASSERT_EQUAL( 1, _server->clientsForType("testData") );
+    CPPUNIT_ASSERT_EQUAL( 1, _server->clientsForStream("testData") );
     TestDataBlob blob;
     blob.setData("sometestData");
     _server->send("testData",&blob);
@@ -133,14 +133,14 @@ void TCPConnectionManagerTest::test_brokenConnection()
     sleep(1);
     _app->processEvents();
 
-    CPPUNIT_ASSERT_EQUAL( 1, _server->clientsForType("testData") );
+    CPPUNIT_ASSERT_EQUAL( 1, _server->clientsForStream("testData") );
 
     // Use Case:
     // client dies after connection
     // expect to be removed from the system
     delete client;
     _app->processEvents();
-    CPPUNIT_ASSERT_EQUAL( 0, _server->clientsForType("testData") );
+    CPPUNIT_ASSERT_EQUAL( 0, _server->clientsForStream("testData") );
 }
 
 void TCPConnectionManagerTest::test_multiClients()

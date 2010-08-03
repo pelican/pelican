@@ -47,9 +47,14 @@ PelicanTCPBlobServer::~PelicanTCPBlobServer()
  * @details
  * method to tell if there are any clients listening for data
  */
-int PelicanTCPBlobServer::clientsForType(const QString& stream) const
+int PelicanTCPBlobServer::clientsForStream(const QString& stream) const
 {
-    return _server->clientsForType(stream);
+    if( _server ) {
+        return _server->clientsForStream(stream);
+    }
+    else {
+        return _connectionManager->clientsForStream(stream);
+    }
 }
 
 /**
@@ -66,6 +71,26 @@ void PelicanTCPBlobServer::send(const QString& streamName, const DataBlob* incom
     }
     if( _connectionManager ) {
         _connectionManager->send(streamName, incoming);
+    }
+}
+
+/**
+ */
+void PelicanTCPBlobServer::stop()
+{
+    if( _server )
+        _server->stop();
+    else {
+        _connectionManager->stop();
+    }
+}
+
+void PelicanTCPBlobServer::listen()
+{
+    if( _server )
+        _server->listen();
+    else {
+        _connectionManager->listen();
     }
 }
 

@@ -2,7 +2,6 @@ SUBPACKAGE(output comms data server)
 
 set(output_moc_headers
     DataBlobClient.h
-    PelicanTCPBlobServer.h
     ThreadedBlobServer.h
     TCPConnectionManager.h
 )
@@ -12,6 +11,7 @@ set(output_src
     src/DataBlobClient.cpp
     src/OutputStreamManager.cpp
     src/PelicanTCPBlobServer.cpp
+    src/Stream.cpp
     src/TCPConnectionManager.cpp
     src/ThreadedBlobServer.cpp
 )

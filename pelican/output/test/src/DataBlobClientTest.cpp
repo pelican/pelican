@@ -111,13 +111,73 @@ void DataBlobClientTest::test_streamInfo()
     }
 }
 
+void DataBlobClientTest::test_subscribe()
+{
+    QString stream1("stream1");
+    TestDataBlob blob1;
+    blob1.setData("somedata");
+    {
+        // Use Case:
+        // subscribe() called on server that is down
+        // Expect:
+        // subscription to remain in force - keep trying until server comes up
+        /*
+        PelicanTCPBlobServer* server = _server();
+        server->stop();
+        DataBlobClient* client = _client(server);
+        client->subscribe( stream1 );
+        server->listen();
+        QSignalSpy spy(client, SIGNAL( newData(const Stream&) ) );
+        server->send(stream1,&blob1);
+        CPPUNIT_ASSERT_EQUAL( 1, spy.count() );
+        delete client;
+        delete server;
+    }
+    {
+        // Use Case:
+        // subscribe() called on server with no known streams
+        // Expect:
+        // subscription to remain in force - no errors or messages
+        PelicanTCPBlobServer* server = _server();
+        DataBlobClient* client = _client(server);
+        client->subscribe( stream1 );
+        delete client;
+        delete server;
+        */
+    }
+    {
+        // Use Case:
+        // subscribe() called on server with stream
+        // Expect:
+        // to receive updates each time new data is sent
+        PelicanTCPBlobServer* server = _server();
+        server->send(stream1,&blob1); // ensure there is a stream on the server
+
+        // set up the client and subscribe to a stream
+        DataBlobClient* client = _client(server);
+        CPPUNIT_ASSERT_EQUAL( 0, server->clientsForStream( stream1 ) );
+        client->subscribe( stream1 );
+        CPPUNIT_ASSERT_EQUAL( 1, server->clientsForStream( stream1 ) );
+
+        // send some data and see if we get a copy
+        QSignalSpy spy(client, SIGNAL( newData(const Stream&) ) );
+        server->send(stream1,&blob1);
+        CPPUNIT_ASSERT_EQUAL( 1, spy.count() );
+        delete client;
+        delete server;
+    }
+}
+
 DataBlobClient* DataBlobClientTest::_client( PelicanTCPBlobServer* server, const QString& xml )
 {
     QString conf = xml;
     if( xml == "" )
-        conf = QString("<connection port=\"%1\" server=\"127.0.0.1\" />").arg(server->serverPort());
+        conf = QString("<connection host=\"127.0.0.1\" />");
     ConfigNode config(conf);
-    return new DataBlobClient(config);
+    DataBlobClient* client = new DataBlobClient(config);
+    client->setPort(server->serverPort());
+    client->setHost("127.0.0.1");
+    return client;
 }
 
 

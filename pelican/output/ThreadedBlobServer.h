@@ -44,7 +44,13 @@ class ThreadedBlobServer : public QThread
         qint16 serverPort() const;
 
         /// returns the number of clients listening for the specified stream
-        int clientsForType(const QString&) const;
+        int clientsForStream(const QString&) const;
+
+        /// stop the server from accepting new connections
+        void stop();
+
+        /// restart the serveraafter a stop()
+        void listen();
 
     protected:
         void run();

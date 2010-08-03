@@ -37,7 +37,11 @@ class TCPConnectionManager : public QObject
         TCPConnectionManager(quint16 port=0, QObject *parent = 0);
         ~TCPConnectionManager();
         qint16 serverPort() const;
-        int clientsForType(const QString&) const;
+        int clientsForStream(const QString&) const;
+        // stop listening for new connections, but preserve state
+        void stop(); 
+        // start listening for new connections, after a stop()
+        void listen(); 
 
     protected:
         virtual void run();

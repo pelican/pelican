@@ -17,6 +17,7 @@ ThreadedBlobServer::ThreadedBlobServer( quint16 port, QObject* parent )
     : QThread( parent ), _port(port)
 {
     start();
+    while( _manager.get() == 0 ) { wait(1); }
 }
 
 /**
@@ -36,9 +37,9 @@ qint16 ThreadedBlobServer::serverPort() const
  * @details
  * method to tell if there are any clients listening for data
  */
-int ThreadedBlobServer::clientsForType(const QString& stream) const
+int ThreadedBlobServer::clientsForStream(const QString& stream) const
 {
-    return _manager->clientsForType(stream);
+    return _manager->clientsForStream(stream);
 }
 
 void ThreadedBlobServer::run()
@@ -90,6 +91,17 @@ void ThreadedBlobServer::sent(const DataBlob* blob)
         QMutexLocker locker(&_mutex);
         _waiting[blob]->wakeAll();
     }
+}
+
+void ThreadedBlobServer::stop()
+{
+    if( _manager.get() )
+        _manager->stop();
+}
+
+void ThreadedBlobServer::listen()
+{
+    _manager->listen();
 }
 
 } // namespace pelican

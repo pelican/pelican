@@ -44,12 +44,16 @@ class PelicanTCPBlobServer : public AbstractOutputStream
         PelicanTCPBlobServer( const ConfigNode& config );
         ~PelicanTCPBlobServer();
         quint16 serverPort() const;
+        // stop the server from accepting connections
+        void stop();
+        // start listening for incomming connections
+        void listen();
 
     public:
         virtual void send(const QString& streamName, const DataBlob* dataBlob);
 
         /// return the number of clients listening to a specified stream
-        int clientsForType(const QString& stream) const;
+        int clientsForStream(const QString& stream) const;
 
     private:
         ThreadedBlobServer* _server;

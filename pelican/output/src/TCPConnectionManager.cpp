@@ -233,13 +233,25 @@ void TCPConnectionManager::run()
         std::cerr << QString("Unable to start QTcpServer: %1").arg( _tcpServer -> errorString()).toStdString();
     else
         connect(_tcpServer, SIGNAL(newConnection()), this, SLOT(acceptClientConnection()), Qt::DirectConnection );
+
+}
+
+void TCPConnectionManager::stop() 
+{
+    _tcpServer->close();
+}
+
+void TCPConnectionManager::listen()
+{
+    if (!_tcpServer -> listen( QHostAddress::Any, _port))
+        std::cerr << QString("Unable to start QTcpServer: %1").arg( _tcpServer -> errorString()).toStdString();
 }
 
 /**
  * @details
  * Return the clients which are registered for a certain datablob stream
  */
-int TCPConnectionManager::clientsForType(const QString& type) const
+int TCPConnectionManager::clientsForStream(const QString& type) const
 {
     if( _clients.contains(type) )
         return _clients[type].size();
