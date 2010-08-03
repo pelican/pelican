@@ -54,9 +54,13 @@ class DataBlobClient : public QObject
         /// return the port of the host connected to
         quint16 port() const;
 
-    protected:
-        void _sendRequest( const ServerRequest* req ) const;
+    protected slots:
         void _response();
+
+    protected:
+        void _sendRequest( const ServerRequest* req );
+        bool _connect();
+
         // return a data blob ready to be deserialised
         DataBlob* _blob(const QString& type, const QString& stream);
 

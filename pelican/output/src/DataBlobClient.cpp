@@ -30,6 +30,9 @@ DataBlobClient::DataBlobClient( const ConfigNode& configNode, QObject* parent )
 
     setHost(configNode.getOption("connection", "host"));
     setPort(configNode.getOption("connection", "port").toUInt());
+
+    connect(_tcpSocket, SIGNAL(readyRead()),
+                         this, SLOT( _response() ));
 }
 
 /**
@@ -61,11 +64,6 @@ QSet<QString> DataBlobClient::streams()
 {
     DataSupportRequest req;
     _sendRequest(&req);
-    _streamInfo = false;
-    while( ! _streamInfo ) {
-        _response(); // run in this Thread
-    }
-    emit newStreamsAvailable();
     return _streams;
 }
 
@@ -93,32 +91,34 @@ void DataBlobClient::subscribe(const QSet<QString>& streams)
 
 }
 
-void DataBlobClient::_sendRequest( const ServerRequest* req ) const
+void DataBlobClient::_sendRequest( const ServerRequest* req )
 {
     // construct request and connect to the port
-    if( _tcpSocket->isOpen() )
-        _tcpSocket->disconnectFromHost();
-
     QByteArray data = _protocol->serialise(*req);
 
-    while (_tcpSocket->state() == QAbstractSocket::UnconnectedState) {
-        _tcpSocket->connectToHost( _server, _port );
-
-        if (!_tcpSocket -> waitForConnected(5000) || _tcpSocket -> state() == QAbstractSocket::UnconnectedState) {
-            std::cerr << "Client could not connect to server:" << _server.toStdString() << " port:" << _port << std::endl;
-            sleep(2);
-            continue;
-        }
-
+    if ( _connect() )
+    {
         _tcpSocket->write(data);
         _tcpSocket->waitForBytesWritten(data.size());
         _tcpSocket->flush();
     }
 }
 
+bool DataBlobClient::_connect()
+{
+    while (_tcpSocket->state() == QAbstractSocket::UnconnectedState) {
+       _tcpSocket->connectToHost( _server, _port );
+       if (!_tcpSocket -> waitForConnected(5000) || _tcpSocket -> state() == QAbstractSocket::UnconnectedState) {
+           std::cerr << "Client could not connect to server:" << _server.toStdString() << " port:" << _port << std::endl;
+           sleep(2);
+           continue;
+       }
+    }
+    return true;
+}
+
 void DataBlobClient::_response()
 {
-    _tcpSocket->waitForReadyRead();
     boost::shared_ptr<ServerResponse> r = _protocol->receive(*_tcpSocket);
     // Check what type of response we have
     switch( r -> type() ) {
@@ -129,12 +129,11 @@ void DataBlobClient::_response()
             {
                 DataSupportResponse* res = static_cast<DataSupportResponse*>(r.get());
                 _streams = res->streamData() + res->serviceData();
-                _streamInfo = true;
+                emit newStreamsAvailable();
             }
             break;
         case ServerResponse::Blob:   // We have received a blob
             {
-                std::cout << "Blob Received" << std::endl;
                 DataBlobResponse* res = static_cast<DataBlobResponse*>(r.get());
                 while (_tcpSocket->bytesAvailable() < (qint64)res->dataSize())
                    _tcpSocket -> waitForReadyRead(-1);

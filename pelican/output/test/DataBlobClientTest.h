@@ -23,8 +23,8 @@ class DataBlobClientTest : public CppUnit::TestFixture
 {
     public:
         CPPUNIT_TEST_SUITE( DataBlobClientTest );
-//        CPPUNIT_TEST( test_streamInfo );
-//        CPPUNIT_TEST( test_subscribe );
+        CPPUNIT_TEST( test_streamInfo );
+        CPPUNIT_TEST( test_subscribe );
         CPPUNIT_TEST_SUITE_END();
 
     public:

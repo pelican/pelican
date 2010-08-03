@@ -23,7 +23,7 @@ class Stream
 {
     public:
         /// Stream constructor.
-        Stream(const QString& streamName);
+        Stream(const QString& streamName = QString() );
 
         /// return the name of the stream
         const QString& name() const { return _name; }

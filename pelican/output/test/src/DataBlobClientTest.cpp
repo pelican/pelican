@@ -6,6 +6,7 @@
 
 #include "pelican/data/test/TestDataBlob.h"
 #include "pelican/output/PelicanTCPBlobServer.h"
+#include "pelican/output/Stream.h"
 #include "pelican/utility/ConfigNode.h"
 #include "pelican/utility/memCheck.h"
 
@@ -18,6 +19,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION( DataBlobClientTest );
 DataBlobClientTest::DataBlobClientTest()
     : CppUnit::TestFixture()
 {
+    qRegisterMetaType<Stream>("Stream");
 }
 
 /**
@@ -82,6 +84,7 @@ void DataBlobClientTest::test_streamInfo()
         // correct data
         QSignalSpy spy(client, SIGNAL( newStreamsAvailable()) );
         server->send(stream1,&blob);
+        sleep(1);
         _app->processEvents();
         CPPUNIT_ASSERT( client->streams().contains(stream1) );
         CPPUNIT_ASSERT_EQUAL( 1, spy.count() );
@@ -116,6 +119,8 @@ void DataBlobClientTest::test_subscribe()
     QString stream1("stream1");
     TestDataBlob blob1;
     blob1.setData("somedata");
+    TestDataBlob blob2;
+    blob1.setData("datablob2");
     {
         // Use Case:
         // subscribe() called on server that is down
@@ -132,6 +137,7 @@ void DataBlobClientTest::test_subscribe()
         CPPUNIT_ASSERT_EQUAL( 1, spy.count() );
         delete client;
         delete server;
+        */
     }
     {
         // Use Case:
@@ -141,9 +147,9 @@ void DataBlobClientTest::test_subscribe()
         PelicanTCPBlobServer* server = _server();
         DataBlobClient* client = _client(server);
         client->subscribe( stream1 );
+        CPPUNIT_ASSERT_EQUAL( 0, server->clientsForStream( stream1 ) );
         delete client;
         delete server;
-        */
     }
     {
         // Use Case:
@@ -157,12 +163,28 @@ void DataBlobClientTest::test_subscribe()
         DataBlobClient* client = _client(server);
         CPPUNIT_ASSERT_EQUAL( 0, server->clientsForStream( stream1 ) );
         client->subscribe( stream1 );
+        sleep(1);
         CPPUNIT_ASSERT_EQUAL( 1, server->clientsForStream( stream1 ) );
 
         // send some data and see if we get a copy
         QSignalSpy spy(client, SIGNAL( newData(const Stream&) ) );
         server->send(stream1,&blob1);
+        _app->processEvents();
+        sleep(1);
+        _app->processEvents();
         CPPUNIT_ASSERT_EQUAL( 1, spy.count() );
+        server->send(stream1,&blob2);
+        sleep(1);
+        _app->processEvents();
+        CPPUNIT_ASSERT_EQUAL( 2, spy.count() );
+
+        // send a stream to the server that we are not subscribed to
+        // expect to receive no signal
+        server->send("otherstream", &blob2);
+        sleep(1);
+        _app->processEvents();
+        CPPUNIT_ASSERT_EQUAL( 2, spy.count() );
+
         delete client;
         delete server;
     }
