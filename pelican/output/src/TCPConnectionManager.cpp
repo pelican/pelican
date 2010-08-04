@@ -57,10 +57,32 @@ void TCPConnectionManager::acceptClientConnection()
 
     // Get new client connection
     QTcpSocket *client = _tcpServer->nextPendingConnection();
+    if ( _processIncomming(client) ) {
+        // Connect socket error() signals
+        connect(client, SIGNAL(error(QAbstractSocket::SocketError)), this,
+                SLOT(connectionError(QAbstractSocket::SocketError)),
+                Qt::DirectConnection);
+        connect(client, SIGNAL(readyRead()), this,
+                SLOT(_incomingFromClient()),
+                Qt::DirectConnection);
+    }
+    else {
+        client->close();
+    }
+}
+
+void TCPConnectionManager::_incomingFromClient()
+{
+     _processIncomming(static_cast<QTcpSocket*>( sender() ) );
+}
+
+bool TCPConnectionManager::_processIncomming(QTcpSocket *client)
+{
 
     // Wait for client to send in request type
     boost::shared_ptr<ServerRequest> request = _protocol->request(*client);
 
+    std::cout << "TCPConnectionManager: received request\n";
     switch ( request->type() )
     {
         case ServerRequest::DataSupport:
@@ -77,8 +99,8 @@ void TCPConnectionManager::acceptClientConnection()
                 // Check for invalid data requirements
                 if (req.isEmpty()) {
                     std::cerr << "Invalid client data requrements" << std::endl;
-                    client->close();
-                    return;
+                    //client->close();
+                    return false;
                 }
                 // Check data requirements
                 DataRequirementsIterator it = req.begin();
@@ -97,15 +119,12 @@ void TCPConnectionManager::acceptClientConnection()
         default:
             {
                 std::cerr << "TCPConnectionManager: Invalid client request" << std::endl;
-                client->close();
-                return;
+                //client->close();
+                return false;
             }
     }
+    return true;
 
-    // Connect socket error() signals
-    connect(client, SIGNAL(error(QAbstractSocket::SocketError)), this,
-                    SLOT(connectionError(QAbstractSocket::SocketError)),
-                    Qt::DirectConnection);
 }
 
 /**

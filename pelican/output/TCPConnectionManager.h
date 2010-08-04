@@ -48,6 +48,7 @@ class TCPConnectionManager : public QObject
         void _killClient(QTcpSocket*);
         const QSet<QString>& types() const;
         void _sendNewDataTypes();
+        bool _processIncomming(QTcpSocket*);
 
     public slots:
         void send(const QString& streamName, const DataBlob* incoming);
@@ -60,12 +61,13 @@ class TCPConnectionManager : public QObject
         QMutex                             _mutex; // controls access to _clients
         QMutex                             _sendMutex; // controls access to send method
         AbstractProtocol*                  _protocol;
-        QSet<QString> _seenTypes; // record what types have been seen (via send() )
-        const QString _dataSupportStream;  // the name of the subscrition stream for data support requests
+        QSet<QString>                      _seenTypes;          // record what types have been seen (via send() )
+        const QString                      _dataSupportStream;  // the name of the subscrition stream for data support requests
 
     private slots:
         void connectionError(QAbstractSocket::SocketError socketError);
         void acceptClientConnection();
+        void _incomingFromClient();
 
     signals:
         void sent(const DataBlob*);
