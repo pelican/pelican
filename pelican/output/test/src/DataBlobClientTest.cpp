@@ -3,6 +3,7 @@
 #include <QSet>
 #include <QString>
 #include <QtTest/QSignalSpy>
+#include <QtDebug>
 
 #include "pelican/data/test/TestDataBlob.h"
 #include "pelican/output/PelicanTCPBlobServer.h"
@@ -76,6 +77,8 @@ void DataBlobClientTest::test_streamInfo()
         // empty list
         DataBlobClient* client = _client(server);
         CPPUNIT_ASSERT( client->streams() == QSet<QString>() );
+        sleep(1);
+        _app->processEvents(); // give server chance to process subsciption request
 
         // Use Case: 
         // server updates streams
@@ -83,11 +86,14 @@ void DataBlobClientTest::test_streamInfo()
         // updatedStreams signal to be emitted and streams() to return the
         // correct data
         QSignalSpy spy(client, SIGNAL( newStreamsAvailable()) );
-        server->send(stream1,&blob);
+        server->send( stream1, &blob);
+        _app->processEvents(); // server side events
         sleep(1);
-        _app->processEvents();
-        CPPUNIT_ASSERT( client->streams().contains(stream1) );
+        _app->processEvents(); // process 
+        QSet<QString> streams = client->streams();
         CPPUNIT_ASSERT_EQUAL( 1, spy.count() );
+        CPPUNIT_ASSERT_EQUAL( 1, streams.size() );
+        CPPUNIT_ASSERT( streams.contains(stream1) );
 
         delete client;
         delete server;
@@ -117,6 +123,7 @@ void DataBlobClientTest::test_streamInfo()
 void DataBlobClientTest::test_subscribe()
 {
     QString stream1("stream1");
+    QString stream2("stream2");
     TestDataBlob blob1;
     blob1.setData("somedata");
     TestDataBlob blob2;
@@ -147,7 +154,8 @@ void DataBlobClientTest::test_subscribe()
         PelicanTCPBlobServer* server = _server();
         DataBlobClient* client = _client(server);
         client->subscribe( stream1 );
-        CPPUNIT_ASSERT_EQUAL( 0, server->clientsForStream( stream1 ) );
+        sleep(1);
+        CPPUNIT_ASSERT_EQUAL( 1, server->clientsForStream( stream1 ) );
         delete client;
         delete server;
     }
@@ -178,12 +186,40 @@ void DataBlobClientTest::test_subscribe()
         _app->processEvents();
         CPPUNIT_ASSERT_EQUAL( 2, spy.count() );
 
+        // Use Case:
         // send a stream to the server that we are not subscribed to
-        // expect to receive no signal
+        // Expect: to receive no signal
         server->send("otherstream", &blob2);
         sleep(1);
         _app->processEvents();
         CPPUNIT_ASSERT_EQUAL( 2, spy.count() );
+
+        // Use Case:
+        // subscribe() called for an additional stream
+        // Expect: to be subscribed to both streams
+        client->subscribe( stream2 );
+        server->send(stream1, &blob1);
+        sleep(1);
+        _app->processEvents();
+        CPPUNIT_ASSERT_EQUAL( 3, spy.count() );
+        server->send(stream2, &blob2);
+        client->streams();
+        sleep(1);
+        _app->processEvents();
+        CPPUNIT_ASSERT_EQUAL( 4, spy.count() );
+
+        // Use Case:
+        // streams() called when already listening to stream data
+        // Expect: no change in subscription
+        QSet<QString> streams = client->streams();
+        server->send(stream2, &blob1);
+        sleep(1);
+        _app->processEvents();
+        CPPUNIT_ASSERT_EQUAL( 3 , streams.size() );
+        CPPUNIT_ASSERT( streams.contains(stream1) );
+        CPPUNIT_ASSERT( streams.contains(stream2) );
+        CPPUNIT_ASSERT( streams.contains("otherstream") );
+        CPPUNIT_ASSERT_EQUAL( 5, spy.count() );
 
         delete client;
         delete server;
@@ -199,6 +235,7 @@ DataBlobClient* DataBlobClientTest::_client( PelicanTCPBlobServer* server, const
     DataBlobClient* client = new DataBlobClient(config);
     client->setPort(server->serverPort());
     client->setHost("127.0.0.1");
+    //connect( client, SIGNAL( newStreamsAvailable() ), this, SLOT( _newStreamsAvailable() ));
     return client;
 }
 

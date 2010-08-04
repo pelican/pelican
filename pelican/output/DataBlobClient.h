@@ -56,12 +56,16 @@ class DataBlobClient : public QObject
 
     protected slots:
         void _response();
+    
+        /// attempt to reconnect to the server and restore subscriptions
+        //in case of a sudden disconnect
+        void _reconnect();
 
     protected:
-        void _sendRequest( const ServerRequest* req );
+        bool  _sendRequest( const ServerRequest* req );
         bool _connect();
 
-        // return a data blob ready to be deserialised
+        /// return a data blob ready to be deserialised
         DataBlob* _blob(const QString& type, const QString& stream);
 
     signals:
@@ -69,14 +73,20 @@ class DataBlobClient : public QObject
         void newStreamsAvailable();
 
     private:
+        bool _requestStreamInfo();
+
+    private:
         QHash<QString, Stream*> _streamMap;
         AbstractClientProtocol* _protocol;
         QTcpSocket* _tcpSocket;
         DataBlobFactory* _blobFactory;
-        QString     _server;
-        quint16     _port;
+        QString       _server;
+        quint16       _port;
         QSet<QString> _streams;
-        mutable bool _streamInfo; // marker to test if stream response has been received
+        QSet<QString> _subscriptions;
+        mutable bool  _streamInfo; // marker to test if stream response has been received
+        mutable bool  _streamInfoSubscription;
+        bool _destructor;
 };
 
 } // namespace pelican

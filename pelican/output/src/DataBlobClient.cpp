@@ -1,5 +1,6 @@
 #include "DataBlobClient.h"
 #include <QtNetwork/QTcpSocket>
+#include <QCoreApplication>
 
 #include "pelican/output/Stream.h"
 #include "pelican/data/DataBlob.h"
@@ -22,8 +23,9 @@ namespace pelican {
  *@details DataBlobClient 
  */
 DataBlobClient::DataBlobClient( const ConfigNode& configNode, QObject* parent )
-    : QObject(parent)
+    : QObject(parent), _streamInfoSubscription(false)
 {
+    _destructor = false;
     _protocol = new PelicanClientProtocol;
     _tcpSocket = new QTcpSocket;
     _blobFactory = new DataBlobFactory;
@@ -31,8 +33,10 @@ DataBlobClient::DataBlobClient( const ConfigNode& configNode, QObject* parent )
     setHost(configNode.getOption("connection", "host"));
     setPort(configNode.getOption("connection", "port").toUInt());
 
-    connect(_tcpSocket, SIGNAL(readyRead()),
+    connect(_tcpSocket, SIGNAL( readyRead()),
                          this, SLOT( _response() ));
+    connect(_tcpSocket, SIGNAL( disconnected()),
+                         this, SLOT( _reconnect() ));
 }
 
 /**
@@ -40,6 +44,7 @@ DataBlobClient::DataBlobClient( const ConfigNode& configNode, QObject* parent )
  */
 DataBlobClient::~DataBlobClient()
 {
+    _destructor = true;
     delete _tcpSocket;
     delete _protocol;
 }
@@ -62,9 +67,24 @@ void DataBlobClient::setHost(const QString& ipaddress)
 
 QSet<QString> DataBlobClient::streams()
 {
-    DataSupportRequest req;
-    _sendRequest(&req);
+    if( ! _streamInfoSubscription ) {
+            _streamInfoSubscription = true;
+            _streamInfo = false;
+            if ( _requestStreamInfo() )
+            {
+                while ( (! _streamInfo) && _tcpSocket->state() == QAbstractSocket::ConnectedState ) {
+                    sleep(1);
+                    QCoreApplication::processEvents(); 
+                }
+            }
+    }
     return _streams;
+}
+
+bool DataBlobClient::_requestStreamInfo()
+{
+    DataSupportRequest req;
+    return _sendRequest(&req);
 }
 
 void DataBlobClient::subscribe(const QString& stream)
@@ -78,29 +98,44 @@ void DataBlobClient::subscribe(const QSet<QString>& streams)
 {
 
     // Define the data type which the client will except and send request
-    StreamDataRequest req;
-    DataRequirements require;
-    foreach( const QString& stream, streams )
-    {
-        if( ! _streamMap.contains(stream) )
-            _streamMap.insert(stream, new Stream(stream) );
-        require.setStreamData(stream);
+    if( streams.size() > 0 ) {
+        StreamDataRequest req;
+        DataRequirements require;
+        foreach( const QString& stream, streams )
+        {
+            if( ! _streamMap.contains(stream) )
+                _streamMap.insert(stream, new Stream(stream) );
+            require.setStreamData(stream);
+        }
+        req.addDataOption(require);
+        _sendRequest(&req);
+        _subscriptions.unite(streams);
     }
-    req.addDataOption(require);
-    _sendRequest(&req);
 
 }
 
-void DataBlobClient::_sendRequest( const ServerRequest* req )
+bool DataBlobClient::_sendRequest( const ServerRequest* req )
 {
     // construct request and connect to the port
     QByteArray data = _protocol->serialise(*req);
 
-    if ( _connect() )
+    bool sent = _connect() ;
+    if ( sent )
     {
         _tcpSocket->write(data);
         _tcpSocket->waitForBytesWritten(data.size());
         _tcpSocket->flush();
+    }
+    return sent;
+}
+
+void DataBlobClient::_reconnect()
+{
+    if( ! _destructor ) {
+        std::cout << "DataBlobClient: Connection lost - reconnecting()" << std::endl;
+        subscribe( _subscriptions );
+        if( _streamInfoSubscription )
+            _requestStreamInfo();
     }
 }
 
@@ -130,6 +165,7 @@ void DataBlobClient::_response()
                 DataSupportResponse* res = static_cast<DataSupportResponse*>(r.get());
                 _streams = res->streamData() + res->serviceData();
                 emit newStreamsAvailable();
+                _streamInfo = true;
             }
             break;
         case ServerResponse::Blob:   // We have received a blob
@@ -156,7 +192,7 @@ void DataBlobClient::_response()
 
 DataBlob* DataBlobClient::_blob(const QString& type, const QString& /*stream*/)
 {
-    // TODO speedup with circular Blob buffers etc.
+    // TODO speedup with circular Blob buffers etc?
     return _blobFactory->create(type);
 }
 

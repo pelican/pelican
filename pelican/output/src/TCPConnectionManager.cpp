@@ -82,7 +82,6 @@ bool TCPConnectionManager::_processIncomming(QTcpSocket *client)
     // Wait for client to send in request type
     boost::shared_ptr<ServerRequest> request = _protocol->request(*client);
 
-    std::cout << "TCPConnectionManager: received request\n";
     switch ( request->type() )
     {
         case ServerRequest::DataSupport:
@@ -90,7 +89,11 @@ bool TCPConnectionManager::_processIncomming(QTcpSocket *client)
                 DataSupportResponse res( types() );
                 _protocol->send(*client,res);
                 // add the client to the stream update channel
-                _clients[_dataSupportStream].push_back(client);
+                if( ! _clients[_dataSupportStream].contains(client) ) 
+                {
+                    //std::cout << "TCPConnectionManager: Adding new client for streamInfo\n";
+                    _clients[_dataSupportStream].push_back(client);
+                }
             }
             break;
         case ServerRequest::StreamData:
@@ -110,7 +113,8 @@ bool TCPConnectionManager::_processIncomming(QTcpSocket *client)
                         // Check if clients map already has the key, if so add client to list
                         std::cout << "TCPConnectionManager: Adding new client for stream: "
                                 << streamData.toStdString()  << std::endl;
-                        _clients[streamData].push_back(client);
+                        if( ! _clients[streamData].contains(client) ) 
+                            _clients[streamData].push_back(client);
                     }
                     ++it;
                 }
@@ -153,6 +157,7 @@ void TCPConnectionManager::_sendNewDataTypes()
             Q_ASSERT( client->state() == QAbstractSocket::ConnectedState );
             _protocol->send(*client, res);
             client->flush();
+            //std::cerr <<  "TCPConnectionManager: sending newdata types to client" << std::endl;
         }
         catch ( ... )
         {
