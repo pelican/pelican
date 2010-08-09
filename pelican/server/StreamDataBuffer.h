@@ -59,6 +59,9 @@ class StreamDataBuffer : public AbstractDataBuffer
         /// Sets the maximum chunk size of the in bytes.
         void setMaxChunkSize(const size_t size) { _maxChunkSize = size; }
 
+        /// get the number of chunks waiting on the serve queue
+        int numberOfActiveChunks() const;
+
     protected slots:
         /// Places the data chunk that emitted the signal on the serve queue.
         void activateData();

@@ -205,4 +205,8 @@ void StreamDataBuffer::activateData(LockableStreamData* data)
     }
 }
 
+int StreamDataBuffer::numberOfActiveChunks() const
+{
+    return _serveQueue.size();
+}
 } // namespace pelican
