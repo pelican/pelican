@@ -30,6 +30,7 @@ set(server_src
     src/StreamDataBuffer.cpp
     src/ServiceDataBuffer.cpp
     src/WritableData.cpp
+    src/FileChunker.cpp
 )
 
 # MOC Compile headers.
