@@ -5,7 +5,14 @@ set(utility_src
     src/ConfigNode.cpp
     src/Config.cpp
     src/SocketTester.cpp
+    src/WatchedFile.cpp
 )
+
+set(utility_moc_headers
+    WatchedFile.h
+   )
+
+QT4_WRAP_CPP(utility_src ${utility_moc_headers})
 
 SUBPACKAGE_LIBRARY(utility ${utility_src})
 
