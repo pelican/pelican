@@ -9,6 +9,7 @@ set(serverTestlib_src
     src/TestProtocol.cpp
     src/TestServer.cpp
     src/PelicanTestClient.cpp
+    src/ChunkerTester.cpp
 )
 set(serverTestLib_moc_sources
     TestServer.h
@@ -28,6 +29,7 @@ set(serverTest_src
     src/ChunkerFactoryTest.cpp
     src/LockableStreamDataTest.cpp
     src/LockedDataTest.cpp
+    #    src/FileChunkerTest.cpp
     src/DataManagerTest.cpp
     src/ServiceDataBufferTest.cpp
     src/StreamDataBufferTest.cpp
