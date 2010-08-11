@@ -244,9 +244,11 @@ void Config::setXML( const QString& xml )
     QString error;
     int line, column;
 
-    if (!_document.setContent( xml, true, &error, &line, &column)) {
+    if (!_document.setContent( xml, &error, &line, &column)) {
         throw QString("Config::setXML(): Error parsing XML "
-                "(Line: %1 Col: %2): %3.").arg(line).arg(column).arg(error);
+                "(Line: %1 Col: %2): %3.\n"
+                "-----------------------\n"
+                "%4\n---------------------\n").arg(line).arg(column).arg(error).arg(xml);
     }
     preprocess(_document);
 }
@@ -402,9 +404,9 @@ QDomElement Config::_get(const TreeAddress &address,
 
         // No node exists of the specified tag.
         if (nodes.isEmpty()) {
-            std::cout << tag.toStdString() << std::endl;
-            std::cout << name.toStdString() << std::endl;
             std::cout << "Config::_get(): No node exists : parent = " << parent.tagName().toStdString() << std::endl;
+            std::cout << "tag = '" << tag.toStdString() << "'" << std::endl;
+            std::cout << "name = '" << name.toStdString() << "'" << std::endl;
             return QDomElement();
         }
 
