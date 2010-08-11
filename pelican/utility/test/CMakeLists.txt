@@ -42,7 +42,7 @@ else(CMAKE_BUILD_TYPE MATCHES DEBUG|[Dd]ebug)
         )
 endif(CMAKE_BUILD_TYPE MATCHES DEBUG|[Dd]ebug)
 add_test(utilityTest utilityTest)
-add_test(utilityTestMT utilityTestMt)
+add_test(utilityTestMT utilityTestMT)
 
 # Copy test xml files to build directory.
 include(CopyFiles)
