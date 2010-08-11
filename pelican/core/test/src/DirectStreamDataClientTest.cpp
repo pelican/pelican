@@ -162,7 +162,7 @@ void DirectStreamDataClientTest::test_singleChunker()
  */
 void DirectStreamDataClientTest::test_twoChunkersMultipleStarts()
 {
-    for (int i = 0; i < 1000; ++i) {
+    for (int i = 0; i < 100; ++i) {
         std::cout << "---------------------------------- " << i << std::endl;
         try {
             // Start two telescope emulators.
