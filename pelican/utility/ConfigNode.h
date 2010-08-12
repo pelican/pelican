@@ -100,8 +100,8 @@ class ConfigNode
         std::vector<unsigned> getUnsignedList(const QString& tagName) const;
 
         /// Returns the polarisation, if any.
-        Polarisation getPolarisation(
-                const QString& tagName = QString("polarisation")) const;
+//        Polarisation getPolarisation(
+//                const QString& tagName = QString("polarisation")) const;
 };
 
 } // namespace pelican

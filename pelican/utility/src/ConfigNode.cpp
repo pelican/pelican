@@ -271,7 +271,7 @@ std::vector<unsigned> ConfigNode::getUnsignedList(const QString& tagName) const
 /**
  * @details
  * Returns the polarisation option.
- */
+
 Polarisation ConfigNode::getPolarisation(const QString& tagName) const
 {
     QString pol = getOption(tagName, "value", "x").toLower();
@@ -286,5 +286,6 @@ Polarisation ConfigNode::getPolarisation(const QString& tagName) const
 
     return POL_UNDEF;
 }
+ */
 
 } // namespace pelican
