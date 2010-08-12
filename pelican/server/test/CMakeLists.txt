@@ -29,7 +29,6 @@ set(serverTest_src
     src/ChunkerFactoryTest.cpp
     src/LockableStreamDataTest.cpp
     src/LockedDataTest.cpp
-    #    src/FileChunkerTest.cpp
     src/DataManagerTest.cpp
     src/ServiceDataBufferTest.cpp
     src/StreamDataBufferTest.cpp
@@ -52,6 +51,7 @@ set(serverTestMT_src
     src/serverTest.cpp
     src/PelicanServerTest.cpp
     src/DataReceiverTest.cpp
+    src/FileChunkerTest.cpp
 )
 add_executable(serverTestMT ${serverTestMT_src})
 #message(STATUS "+++++++++++++++++ serverTestMT: sub libs: ${SUBPACKAGE_LIBRARIES}\n")

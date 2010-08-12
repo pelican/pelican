@@ -32,6 +32,7 @@ class FileChunker : public AbstractChunker
         virtual void next(QIODevice*);
 
     private:
+        QString _fileName;
 };
 
 } // namespace pelican

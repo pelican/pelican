@@ -2,7 +2,6 @@
 #include "pelican/utility/pelicanTimer.h"
 #include <QIODevice>
 #include <QTimer>
-#include <QFileSystemWatcher>
 #include <QFile>
 #include <iostream>
 //#include <sys/types.h>
@@ -18,7 +17,7 @@ namespace pelican {
  * DataReceiver constructor.
  */
 DataReceiver::DataReceiver(AbstractChunker* chunker) :
-        QThread(), _chunker(chunker), _device(0), _watcher(0)
+        QThread(), _chunker(chunker), _device(0)
 {
     _abort = false;
     if (!chunker)
@@ -33,7 +32,6 @@ DataReceiver::DataReceiver(AbstractChunker* chunker) :
 DataReceiver::~DataReceiver()
 {
     _abort = true;
-    delete _watcher;
     _chunker->stop();
     do quit(); while (!wait(10));
 }
@@ -47,41 +45,24 @@ DataReceiver::~DataReceiver()
  */
 void DataReceiver::run()
 {
-    if(  _chunker->watchFile() == "" )
-    {
-        // Open up the device to use.
-        _device = _chunker->newDevice();
-        _chunker->setDevice(_device);
-        //    int tid = syscall(__NR_gettid);
-        //    std::cout << "Thread ID : " << tid << std::endl;
-        if (_device) {
-            connect(_device, SIGNAL(readyRead()), SLOT(_processIncomingData()),
-                    Qt::DirectConnection);
-            exec();
-        }
-    }
-    else {
-        // start watching the specified file
-        _watcher = new QFileSystemWatcher;
-        _watcher->addPath( _chunker->watchFile() );
-        connect( _watcher, SIGNAL(fileChanged ( const QString &) ),
-                 this,  SLOT(_fileChanged(const QString &) ),
-                 Qt::DirectConnection);
+    // Open up the device to use.
+    _device = _chunker->newDevice();
+    _chunker->setDevice(_device);
+    //    int tid = syscall(__NR_gettid);
+    //    std::cout << "Thread ID : " << tid << std::endl;
+    if (_device) {
+        connect(_device, SIGNAL(readyRead()), SLOT(_processIncomingData()),
+                Qt::DirectConnection);
+        // process any existing data on the stream
+        if( _device->bytesAvailable() > 0 )
+            _processIncomingData();
         exec();
-        delete _watcher; _watcher = 0;
     }
 }
 
 void DataReceiver::_processIncomingData() 
 {
     _chunker->next(_device);
-}
-
-void DataReceiver::_fileChanged(const QString & filename)
-{
-    QFile file(filename);
-    if (!file.open(QIODevice::ReadOnly )) return;
-    _chunker->next(&file);
 }
 
 } // namespace pelican

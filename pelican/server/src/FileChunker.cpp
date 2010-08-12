@@ -11,8 +11,17 @@ namespace pelican {
  * @details Constructs a FileChunker object.
  */
 FileChunker::FileChunker(const ConfigNode& config)
-    : AbstractChunker(config)
+    : AbstractChunker( config)
 {
+    if( config.getDomElement().isNull() )
+    {
+        throw( QString("FileChunker: empty config passed in constructor") );
+    }
+    if( ! config.hasAttribute("file") )
+        throw( QString("FileChunker: no \"file\" attribute specified" ));
+    _fileName = config.getAttribute("file");
+    if( _fileName == "" )
+        throw( QString("FileChunker: no filename specified" ));
 }
 
 /**
@@ -24,8 +33,10 @@ FileChunker::~FileChunker()
 
 QIODevice* FileChunker::newDevice()
 {
-    WatchedFile* device = new WatchedFile();
-    device->open(QIODevice::ReadOnly);
+    WatchedFile* device = new WatchedFile(_fileName);
+    if( ! device->open(QIODevice::ReadOnly) )
+        throw(QString("FileChunker: unable to open file:%1").arg(_fileName));
+    //std::cout << "Watching file " << device->fileName().toStdString() << std::endl;
     return device;
 }
 

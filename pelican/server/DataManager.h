@@ -27,6 +27,15 @@ class StreamData;
  * @details
  * Class to control access to the internal server data to ensure
  * locking etc.
+ *
+ * Configuration:
+ * Each stream has its own section with the tag of the stream name.
+ * Buffer sizes are set with the  buffer tags
+ * e.g.
+ *
+ * <MyStream>
+ * <buffer maxSize="10240"> tags
+ * </MyStream>
  */
 class DataManager
 {
@@ -38,6 +47,7 @@ class DataManager
     public:
         /// DataManager constructor.
         DataManager(const Config* config, const QString section = QString("server"));
+        DataManager(const Config* config, const Config::TreeAddress& base );
 
         /// DataManager destructor.
         virtual ~DataManager();

@@ -2,6 +2,9 @@
 #define FILECHUNKERTEST_H
 
 #include <cppunit/extensions/HelperMacros.h>
+#include <QString>
+class QCoreApplication;
+class QTemporaryFile;
 
 /**
  * @file FileChunkerTest.h
@@ -40,7 +43,15 @@ class FileChunkerTest : public CppUnit::TestFixture
         /// FileChunkerTest destructor.
         ~FileChunkerTest();
 
+    protected:
+        void _updateFile(const QString& data = QString() );
+
     private:
+        QCoreApplication* _app;
+        QTemporaryFile* _temp;
+        QString _testFile;
+        QString _msg;
+        
 };
 
 } // namespace pelican

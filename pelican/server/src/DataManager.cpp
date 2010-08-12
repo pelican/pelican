@@ -19,12 +19,17 @@ namespace pelican {
  * DataManager constructor.
  */
 DataManager::DataManager(const Config* config, const QString section)
+    : _config(config)
 {
-    _config = config;
     _bufferConfigBaseAddress << Config::NodeId(section,"");
     _bufferConfigBaseAddress << Config::NodeId("buffers","");
 }
 
+DataManager::DataManager(const Config* config, const Config::TreeAddress& base)
+    : _config(config)
+{
+    _bufferConfigBaseAddress = base;
+}
 
 /**
  * @details
@@ -70,6 +75,7 @@ WritableData DataManager::getWritableData(const QString& type, size_t size)
  */
 StreamDataBuffer* DataManager::getStreamBuffer(const QString& type)
 {
+    Q_ASSERT( type != "" );
     //std::cout << "DataManager::getStreamBuffer(): " << type.toStdString() << std::endl;
 
     if ( ! _streams.contains(type) ) {
@@ -128,8 +134,6 @@ void DataManager::setServiceDataBuffer(const QString& name, ServiceDataBuffer* b
 /**
  * @details
  *
- * TODO Please write a description of this!
- *
  * We make the assumption that this method will not be called with an
  * invalid type. No checking in order to speed things up.
  */
@@ -161,8 +165,6 @@ LockedData DataManager::getNext(const QString& type, const QSet<QString>& associ
 
 /**
  * @details
- *
- * TODO Please write a description of this!
  *
  * We make the assumption that this method will not be called with an
  * invalid type. No checking in order to speed things up.

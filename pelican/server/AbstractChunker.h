@@ -81,6 +81,8 @@ class AbstractChunker
 
         /// Sets the device pointer.
         void setDevice(QIODevice* device) {_device = device;}
+        /// Gets the device pointer.previously set with setDevice()
+        QIODevice* getDevice() { return _device; };
 
         /// Set the IP address to listen on for data.
         void setHost(const QString& ipaddress) {_host = ipaddress;}

@@ -13,15 +13,20 @@ namespace pelican {
  * @details
  * Constructs the ChunkerManager.
  */
-ChunkerManager::ChunkerManager(const Config* config, const QString section)
+ChunkerManager::ChunkerManager(const Config* config, const QString& section)
 {
-    // Initialise members.
-    _config = config;
-
     // Create the chunker factory.
     _factory = new FactoryConfig<AbstractChunker>(config, section, "chunkers");
 }
 
+ChunkerManager::ChunkerManager(const Config* config,  const Config::TreeAddress& base )
+{
+    // Create the chunker factory.
+    Config::TreeAddress chunkerBase = base;
+    chunkerBase << Config::NodeId("chunkers","");
+
+    _factory = new FactoryConfig<AbstractChunker>(config, chunkerBase);
+}
 /**
  * @details
  * Destroys the ChunkerManager and the chunker factory it contains.
@@ -53,23 +58,35 @@ void ChunkerManager::init(DataManager& dataManager)
         dataManager.getServiceBuffer(type);
     }
 
-    QList<QPair<QString,quint16> > inputPorts = _chunkerPortMap.keys();
+    //QList<QPair<QString,quint16> > inputPorts = _chunkerPortMap.keys();
 
     // Set up data-stream inputs.
-    for (int i = 0; i < inputPorts.size(); ++i) {
-        AbstractChunker* chunker = _chunkerPortMap[inputPorts[i]];
-        chunker->setDataManager(&dataManager);
-        DataReceiver* receiver = new DataReceiver(chunker);
-        _dataReceivers.append(receiver);
-        receiver->start();
-    }
+    //for (int i = 0; i < inputPorts.size(); ++i) {
+    //    AbstractChunker* chunker = _chunkerPortMap[inputPorts[i]];
+    //    chunker->setDataManager(&dataManager);
+    //    DataReceiver* receiver = new DataReceiver(chunker);
+    //    _dataReceivers.append(receiver);
+    //    receiver->start();
+    //}
     // Set up file watchers.
-    foreach (AbstractChunker* chunker, _watchingChunkers.values() ) {
+    foreach (AbstractChunker* chunker, _chunkers ) {
         chunker->setDataManager(&dataManager);
         DataReceiver* receiver = new DataReceiver(chunker);
         _dataReceivers.append(receiver);
         receiver->start();
     }
+}
+
+bool ChunkerManager::isRunning() const
+{
+    if( _dataReceivers.size() == 0 )
+        return false;
+
+    bool rv = true;
+    foreach (DataReceiver* dr, _dataReceivers ) {
+         rv &= dr->isRunning();
+    }
+    return rv;
 }
 
 /**
@@ -81,7 +98,10 @@ void ChunkerManager::init(DataManager& dataManager)
  */
 void ChunkerManager::addStreamChunker(QString type, QString name)
 {
+    Q_ASSERT(type != "" );
     AbstractChunker* chunker = _factory->create(type, name);
+    if( chunker->type() == "" )
+        chunker->setType(type);
     _addChunker(chunker);
     _streamDataTypes.insert(chunker->type());
 }
@@ -95,7 +115,10 @@ void ChunkerManager::addStreamChunker(QString type, QString name)
  */
 void ChunkerManager::addServiceChunker(QString type, QString name)
 {
+    Q_ASSERT(type != "" );
     AbstractChunker* chunker = _factory->create(type, name);
+    if( chunker->type() == "" )
+        chunker->setType(type);
     _addChunker(chunker);
     _serviceDataTypes.insert(chunker->type());
 }
@@ -116,24 +139,18 @@ void ChunkerManager::_addChunker(AbstractChunker* chunker)
         //}
 
         QPair<QString,quint16> pair(chunker->host(), chunker->port());
-        if (!chunker->watchFile().isEmpty())
-        {
-            QString file = chunker->watchFile();
-            if (_watchingChunkers.contains(file)) {
-                throw QString("ChunkerManager: Cannot map multiple chunkers "
-                        "to the same file (%1)").arg(file);
-            }
-            _watchingChunkers[chunker->watchFile()] = chunker;
-        }
-        else if (!chunker->host().isEmpty())
+        // check to see multiple chunkers are not assigned to the
+        // same host and port
+        if (!chunker->host().isEmpty())
         {
             if (_chunkerPortMap.contains(pair)) {
                 throw QString("ChunkerManager: Cannot map multiple chunkers "
-                        "to the same host/port (%1/%2)").
-                        arg(chunker->host()).arg(chunker->port());
+                        "to the same host/port (%1/%2) - already assigned to stream %3").
+                        arg(chunker->host()).arg(chunker->port()).arg(_chunkerPortMap[pair]->type());
             }
             _chunkerPortMap[pair] = chunker;
         }
+        _chunkers.insert(chunker);
     }
 }
 
