@@ -7,6 +7,10 @@
 
 #include "pelican/utility/memCheck.h"
 
+// include default chunkers
+// here to ensure they are available in the factory
+#include "pelican/server/FileChunker.h"
+
 namespace pelican {
 
 /**

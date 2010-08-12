@@ -39,7 +39,6 @@ class AbstractChunker
         DataManager* _dataManager;
         QString _type;
         QString _host;
-        QString _watchFile;
         quint16 _port;
         QIODevice* _device;
         bool _active;
@@ -99,8 +98,6 @@ class AbstractChunker
         /// Return the type name to be associated with this data.
         const QString& type() const {return _type;}
 
-        /// Returns the name of the file that this chunker is watching, if any.
-        const QString& watchFile() {return _watchFile;}
 
     protected:
         /// Access to memory to store data is through this interface.
