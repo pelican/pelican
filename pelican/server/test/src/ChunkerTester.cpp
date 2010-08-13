@@ -5,6 +5,8 @@
 
 #include "pelican/utility/memCheck.h"
 
+#include <iostream>
+
 namespace pelican {
 
 /**
