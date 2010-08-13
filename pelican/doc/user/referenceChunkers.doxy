@@ -49,6 +49,17 @@ data type that the chunker provides, so that the data manager returns a
 block of memory from the correct buffer. Use the \c data tag with the
 \c type attribute, as in the following example.
 
+\section user_referenceChunkers_builtin Built In Chunkers
+\subsection user_referenceChunkers_builtin_FileChunker FileChunker
+This chunker will monitor a file on the local file system. Every time the
+file is updated it will transfer the entire contents of the file into
+a new data chunk ready for serving.
+
+example configuration:
+@code
+<FileChunker file="/path/to/myfile" />
+@endcode
+
 \section user_referenceChunkers_example Example
 
 In the following, a new chunker is created to read data from a UDP socket.
