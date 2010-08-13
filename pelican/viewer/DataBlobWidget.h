@@ -36,6 +36,6 @@ class DataBlobWidget : public QWidget
     private:
 };
 
-PELICAN_DECLARE(DataBlobWidget, DataBlobWidget);
+PELICAN_DECLARE(DataBlobWidget, DataBlobWidget)
 } // namespace pelican
 #endif // DATABLOBWIDGET_H
