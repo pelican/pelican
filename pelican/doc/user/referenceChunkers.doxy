@@ -80,4 +80,8 @@ and the class implementation is:
 
 \include ChunkerExample.cpp
 
+\section user_referenceChunkers_Testing Testing your Chunker
+The \em pelicanTest library provides the \em ChunkerTester convenience class for easy
+unit/integration testing of your Chunker. See the API documentation for more details.
+
 */
