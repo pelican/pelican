@@ -82,8 +82,8 @@ StreamDataBuffer* DataManager::getStreamBuffer(const QString& type)
         Config::TreeAddress configAddress(_bufferConfigBaseAddress);
         configAddress << Config::NodeId(type, "");
         ConfigNode config = _config->get(configAddress);
-        size_t maxSize = config.getOption("buffer", "maxSize", "10240").toUInt();
-        size_t maxChunkSize = config.getOption("buffer", "maxChunkSize", "10240").toUInt();
+        size_t maxSize = config.getOption("buffer", "maxSize", "10240").toULongLong();
+        size_t maxChunkSize = config.getOption("buffer", "maxChunkSize", "10240").toULongLong();
         setStreamDataBuffer( type, new StreamDataBuffer(type, maxSize, maxChunkSize) );
     }
     return _streams[type];
