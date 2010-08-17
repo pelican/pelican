@@ -17,12 +17,12 @@
 
 using namespace pelican;
 
-void printData(DoubleData* data)
-{
-    for (unsigned i = 0; i < data->size(); ++i) {
-        std::cout << "Data " << data->ptr()[i] << std::endl;
-    }
-}
+//static void printData(DoubleData* data)
+//{
+//    for (unsigned i = 0; i < data->size(); ++i) {
+//        std::cout << "Data " << data->ptr()[i] << std::endl;
+//    }
+//}
 
 int main(int argc, char** argv)
 {
