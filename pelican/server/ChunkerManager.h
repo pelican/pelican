@@ -47,7 +47,7 @@ class ChunkerManager
         ~ChunkerManager();
 
         /// Initialise the passed data manager to support the contained chunkers.
-        void init(DataManager& dm);
+        bool init(DataManager& dm);
 
         /// Add a stream chunker.
         void addStreamChunker(QString type, QString name = QString());

@@ -10,6 +10,7 @@
 // include default chunkers
 // here to ensure they are available in the factory
 #include "pelican/server/FileChunker.h"
+#include <iostream>
 
 namespace pelican {
 
@@ -51,7 +52,7 @@ ChunkerManager::~ChunkerManager()
  * Initialises the registered chunkers and calls the start() method on each
  * data receiver.
  */
-void ChunkerManager::init(DataManager& dataManager)
+bool ChunkerManager::init(DataManager& dataManager)
 {
     // Create the stream and service data buffers.
     foreach (const QString& type, _streamDataTypes) {
@@ -83,7 +84,9 @@ void ChunkerManager::init(DataManager& dataManager)
     catch( const QString& msg )
     {
         std::cout << "Error Initiiating Chunkers: " << msg.toStdString() << std::endl;
+        return false;
     }
+    return true;
 }
 
 bool ChunkerManager::isRunning() const
