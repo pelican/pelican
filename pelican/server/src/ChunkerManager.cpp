@@ -72,12 +72,17 @@ void ChunkerManager::init(DataManager& dataManager)
     //    _dataReceivers.append(receiver);
     //    receiver->start();
     //}
-    // Set up file watchers.
-    foreach (AbstractChunker* chunker, _chunkers ) {
-        chunker->setDataManager(&dataManager);
-        DataReceiver* receiver = new DataReceiver(chunker);
-        _dataReceivers.append(receiver);
-        receiver->start();
+    try {
+        foreach (AbstractChunker* chunker, _chunkers ) {
+            chunker->setDataManager(&dataManager);
+            DataReceiver* receiver = new DataReceiver(chunker);
+            _dataReceivers.append(receiver);
+            receiver->start();
+        }
+    }
+    catch( const QString& msg )
+    {
+        std::cout << "Error Initiiating Chunkers: " << msg.toStdString() << std::endl;
     }
 }
 
