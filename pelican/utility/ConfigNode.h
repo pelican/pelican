@@ -5,8 +5,6 @@
  * @file ConfigNode.h
  */
 
-#include "pelican/utility/constants.h"
-
 #include <QtXml/QDomElement>
 #include <QtCore/QString>
 #include <QtCore/QHash>
@@ -56,9 +54,8 @@ class ConfigNode
         QString name() const { return _config.attribute("name"); }
 
         /// Returns the name of the parent node.
-        QString parentName() const {
-            return _config.parentNode().toElement().tagName();
-        }
+        QString parentName() const
+        { return _config.parentNode().toElement().tagName(); }
 
         /// Returns true if the named attribute is specified in the top level tag.
         bool hasAttribute(const QString& attribute) const;
@@ -98,10 +95,6 @@ class ConfigNode
 
         /// Returns the list of unsigned integers, if any.
         std::vector<unsigned> getUnsignedList(const QString& tagName) const;
-
-        /// Returns the polarisation, if any.
-//        Polarisation getPolarisation(
-//                const QString& tagName = QString("polarisation")) const;
 };
 
 } // namespace pelican

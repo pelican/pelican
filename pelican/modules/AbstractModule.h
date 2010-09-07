@@ -6,11 +6,13 @@
 #include "pelican/utility/constants.h"
 #include "pelican/data/DataBlob.h"
 
-#include <QString>
+#include <QtCore/QString>
 #include <algorithm>
 #include <vector>
 
 #include <iostream>
+
+using std::vector;
 
 /**
  * @file AbstractModule.h
@@ -49,26 +51,33 @@ class AbstractModule
         virtual ~AbstractModule() {}
 
     protected:
-        /// Checks the polarisation consistency between the selection in the
-        /// XML configuration and polarisation of input data blobs.
-        void checkPolarisationConsitency(const Polarisation dataPol,
-                const Polarisation modulePol) const;
-
         /// Returns the index of the first occurrence of value in the data.
         template <typename T>
-        unsigned findIndex(const T value, const std::vector<T>& data) const
-        {
-            unsigned i;
-            for (i = 0; i < data.size(); ++i)
-                if (data[i] == value) break;
-            if (i == data.size()) {
-                QString moduleName = _config.getDomElement().tagName();
-                throw QString("%1: Index for selected value not found.").arg(moduleName);
-            }
+        unsigned findIndex(T value, vector<T> const& data) const;
 
-            return i;
-        }
 };
+
+
+
+
+//------------------------------------------------------------------------------
+// Method definitions.
+
+template <typename T>
+inline
+unsigned AbstractModule::findIndex(T value, vector<T> const& data) const
+{
+    unsigned i;
+    for (i = 0; i < data.size(); ++i) if (data[i] == value) break;
+
+    if (i == data.size())
+    {
+        QString moduleName = _config.getDomElement().tagName();
+        throw QString("%1: Index for selected value not found.").arg(moduleName);
+    }
+    return i;
+}
+
 
 } // namespace pelican
 

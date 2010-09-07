@@ -86,7 +86,7 @@ bool ConfigNode::hasAttribute(const QString& attribute) const
  */
 QString ConfigNode::getAttribute(const QString& attribute) const
 {
-    return _config.attribute(attribute); 
+    return _config.attribute(attribute);
 }
 
 /**
@@ -267,25 +267,5 @@ std::vector<unsigned> ConfigNode::getUnsignedList(const QString& tagName) const
         throw QString("%1: No integer list specified.").arg(_config.tagName());
     return list;
 }
-
-/**
- * @details
- * Returns the polarisation option.
-
-Polarisation ConfigNode::getPolarisation(const QString& tagName) const
-{
-    QString pol = getOption(tagName, "value", "x").toLower();
-    if (pol.startsWith("x"))
-        return POL_X;
-    else if (pol.startsWith("y"))
-        return POL_Y;
-    else if (pol.startsWith("both"))
-        return POL_BOTH;
-    else
-        throw QString("%1: Unknown polarisation.").arg(_config.tagName());
-
-    return POL_UNDEF;
-}
- */
 
 } // namespace pelican
