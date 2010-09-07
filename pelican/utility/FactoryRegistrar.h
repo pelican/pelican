@@ -61,6 +61,9 @@ template<class B,
 template<class B> struct RegBase<B, n> { \
     typedef std::map<QString, RegBase<B, n>*> TypeMap; \
 \
+    /* Virtual destructor to suppress compiler warnings */ \
+    virtual ~RegBase<B, n>() {} \
+\
     /* Performs a check to make sure the object's ID has been registered */ \
     static void check(const QString& id) { \
         if (!exists(id)) \
