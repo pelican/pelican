@@ -68,6 +68,7 @@ void TCPConnectionManager::acceptClientConnection()
     }
     else {
         client->close();
+        delete client;
     }
 }
 
