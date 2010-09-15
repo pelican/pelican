@@ -9,7 +9,7 @@ namespace pelican {
 /**
  *@details DataBlobWidget
  */
-DataBlobWidget::DataBlobWidget(const ConfigNode& config, QWidget* parent)
+DataBlobWidget::DataBlobWidget(const ConfigNode& /*config*/, QWidget* parent)
     : QWidget(parent)
 {
 }

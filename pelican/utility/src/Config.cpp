@@ -9,6 +9,10 @@
 
 #include "pelican/utility/memCheck.h"
 
+using std::cout;
+using std::cerr;
+using std::endl;
+
 namespace pelican {
 
 /*=============================================================================
@@ -233,8 +237,8 @@ void Config::setAttribute(const TreeAddress &address, const QString &key,
 
 /**
  * @details
- *  sets the contents from the xml provided in the string
- * */
+ * sets the contents from the xml provided in the string
+ */
 void Config::setXML( const QString& xml )
 {
     _document.clear();
@@ -248,7 +252,8 @@ void Config::setXML( const QString& xml )
         throw QString("Config::setXML(): Error parsing XML "
                 "(Line: %1 Col: %2): %3.\n"
                 "-----------------------\n"
-                "%4\n---------------------\n").arg(line).arg(column).arg(error).arg(xml);
+                "%4\n---------------------\n").
+                arg(line).arg(column).arg(error).arg(xml);
     }
     preprocess(_document);
 }
@@ -373,8 +378,7 @@ void Config::_createChildNode(QDomElement &parent, const QString& tag, const QSt
  *
  * @return A QDomElement at the address specified in the argument.
  */
-QDomElement Config::_get(const TreeAddress &address,
-        const QDomDocument& document) const
+QDomElement Config::_get(const TreeAddress &address, const QDomDocument& document) const
 {
     QDomElement parent = document.documentElement();
 
@@ -382,14 +386,14 @@ QDomElement Config::_get(const TreeAddress &address,
     if (parent.isNull())
         return QDomElement();
 
-    int indx = 0;
+    int index = 0;
     // addresses can refer from the top node, or one level below the
     // top node. Need to check which one.
-    if( address.at(0).first == parent.tagName() ) {
-        ++indx;
-    }
-    for (int a = indx; a < address.size(); a++) {
+    if( address.at(0).first == parent.tagName() ) ++index;
 
+
+    for (int a = index; a < address.size(); a++)
+    {
         QString tag  = address.at(a).first;
         QString name = address.at(a).second;
 
@@ -403,15 +407,19 @@ QDomElement Config::_get(const TreeAddress &address,
         }
 
         // No node exists of the specified tag.
-        if (nodes.isEmpty()) {
-            std::cout << "Config::_get(): No node exists : parent = " << parent.tagName().toStdString() << std::endl;
-            std::cout << "tag = '" << tag.toStdString() << "'" << std::endl;
-            std::cout << "name = '" << name.toStdString() << "'" << std::endl;
+        if (nodes.isEmpty())
+        {
+//            cerr << "Config::_get(): No node exists." << endl;
+//            cerr << "tag = '" << tag.toStdString() << "'" << endl;
+//            cerr << "name = '" << name.toStdString() << "'" << endl;
+//            cerr << "parent = '" << parent.tagName().toStdString() << "'"<< endl;
+//            cerr << endl;
             return QDomElement();
         }
 
         // Nodes exist of the specified tag; find the right one to return.
-        else {
+        else
+        {
 
             // Find if the tag already exists with the name.
             int iNode = -1;

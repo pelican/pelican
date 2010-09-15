@@ -92,8 +92,8 @@ class Config
         /// Warning: This method is added for testing only and will destroy
         /// any previous configuration.
         void setFromString(const QString& pipelineConfig,
-                           const QString& serverConfig = "",
-                           const QString& nodesets = "");
+                const QString& serverConfig = "",
+                const QString& nodesets = "");
 
         /// Sets the document as actually specifed without the machinations
         //  of the setFromString method
