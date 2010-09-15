@@ -20,7 +20,7 @@ ClientTestServer::ClientTestServer( QObject* parent )
  */
 ClientTestServer::~ClientTestServer()
 {
-    delete _server;
+    do { quit(); } while(!wait(10));
 }
 
 const QString& ClientTestServer::hostname() const
@@ -65,7 +65,7 @@ QByteArray ClientTestServer::dataReceived()
 void ClientTestServer::acceptClientConnection()
 {
     QTcpSocket *client = _server->nextPendingConnection();
-    connect(client, SIGNAL(error(QAbstractSocket::SocketError)), 
+    connect(client, SIGNAL(error(QAbstractSocket::SocketError)),
             this, SLOT(_connectionError(QAbstractSocket::SocketError)),
             Qt::DirectConnection);
     connect( client, SIGNAL(readyRead()), this,
