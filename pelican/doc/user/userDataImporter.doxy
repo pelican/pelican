@@ -3,6 +3,8 @@
 
 \section user_dataImporter_introduction Introduction 
 
+This section of the guide is about reading in and preparing data.
+
 The following sections of the reference documentation are relevant
 for importing data into Pelican:
 
@@ -11,9 +13,11 @@ for importing data into Pelican:
 \li \link user_referenceAdapters Adapter reference\endlink
 \li \link user_referenceConfiguration Configuration reference\endlink
 
-\section user_dataImporter_overview Overview
+Each of thes reference pages will provide an example of the classes you need
+to implement, but before you delve into these it is important to understand
+a few data related concepts.
 
-This section of the guide is about reading in and preparing data.
+\section user_dataImporter_overview Overview
 
 To import data into the application you need to tell Pelican some important
 details:
@@ -29,7 +33,7 @@ deliver data to the pipeline.
 @subsection dataTypes Two Data Types
 
 Pelican distinguishes between two classes of data, namely @b StreamData
-and @b ServiceData.
+and @b ServiceData (described below).
 There can be any number of StreamData and ServiceData types, but each one
 will need its own adapter and chunker. It is also possible to have multiple
 inputs of the same type. Each source of incoming data, either stream or
@@ -49,11 +53,45 @@ or status information of instruments collecting the data.
 There is always a "current" version of any type of ServiceData
 and it is this version that is associated with any incoming stream data.
 
-@section connecting_dataClientDirect Using the Direct Stream Client
+@section dataClient The DataClient
 
-@section connecting_dataClientServer Using the Pelican Server Client
+Now that you have implemented your Chunker, Adapter and DataBlob classes,
+you can now use them in a DataClient. A DataClient is an implementation
+of the \em AbstractDataClient interface, which is the primary interface
+used in by the processing pipeline for accessing the data when it needs
+it.
 
-\section user_dataImporter_examples Examples
+Normally, you should implement your own DataClient by inheriting from 
+one of Pelican's two different DataClients options:
+@li The \em PelicanServerClient connects to a pelican server and so only
+    requires an Adapter (the Chunker being in the Server itself).
+@li The \em DirectStreamDataClient connects directly to the incomming
+data stream and so needs both an Adapter and a Chunker.
+
+@subsection connecting_dataClientServer Installing an Adapter into a DataClient
+
+@subsection connecting_dataClientDirect Inheriting from the DirectStreamDataClient
+In the constructor of your DataClient call the \em addChunker()
+method to attach your chunker to the named stream.
+
+e.g.
+\include DirectDataClientExample.h
+\include DirectDataClientExample.cpp
+
+In this example demonstrates how to attach two chunkers of the 
+same type to two differently named streams. The chunkers will be initialised
+with the relevant XML chunk that corresponds to the chunker and has
+the \em name parameter that corresponds to the final string passed to 
+\em addChunker.  By passing parameters through this config, you can setup 
+your chunker appropriately.
+
+@subsection specifyDataClient Specifying the DataClient to use
+The PelicanApplication needs to know which data client will be used
+for importing data. You specify the class by name, by calling the
+\em setDataClient(const QString& dataClientName) method on the 
+\em PipelineApplication class.
+
+@section pelicanServer The Pelican Server
 
 
 */
