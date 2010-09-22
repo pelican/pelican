@@ -4,7 +4,8 @@
 \section user_newProject_introduction Introduction 
 Pelican is primarily a c++ library and can be incorporated into your build system 
 in the same way as you incorporate any other c++ library. As with any other
-c++ library it has both headers (.h files) and libraries.
+c++ library it has comes complete with a set of header(.h) files.
+
 
 \section user_newProject_linking Linking against Pelican
 Pelican can be built in two modes: one targeted at developers of the pelican
@@ -21,7 +22,7 @@ g++ -o myApp myApp.cpp -I<path_to_pelican_include> -l myLib -l pelican
 
 The \em pelican-testutils library
 provides a number of convenience classes targeted at writing unit
-tests for the various classes that you are required to implement.
+tests for the various modules that you are required to implement.
 Link against this and the \em pelican library when building your unit tests.
 e.g.
 @code
