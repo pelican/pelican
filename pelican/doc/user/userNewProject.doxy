@@ -1,20 +1,36 @@
 /**
-\page user_newProject Creating a New Project
+\page user_newProject Linking against the Pelican library
 
 \section user_newProject_introduction Introduction 
-Pelican is primarily a c++ library and can be incorporated into your build system in the same
-way as you incorporate any other c++ library.
-
-Pelican itself uses a CMake system with a number of extensions to support large scale development.
-See the developer guide for more details.
-
-\section user_newProject_linking_cmake using the pelican CMake plugin
-Pelican should provide a CMake file to allow you to find pelican as installed on your system.
-If you are using Cmake for your build system then you can simply 
+Pelican is primarily a c++ library and can be incorporated into your build system 
+in the same way as you incorporate any other c++ library. As with any other
+c++ library it has both headers (.h files) and libraries.
 
 \section user_newProject_linking Linking against Pelican
+Pelican can be built in two modes: one targeted at developers of the pelican
+framework itself, and one optimised for the typical application developer 
+using pelican. Here we describe the latter case.
+
+Pelican is packaged as two libraries. \em pelican and \em pelican-testutils.
+\em pelican provides all the functionality of pelican and is the one to link 
+against when building your pelican application.
+e.g.
 @code
--l pelican
+g++ -o myApp myApp.cpp -I<path_to_pelican_include> -l myLib -l pelican
 @endcode
+
+The \em pelican-testutils library
+provides a number of convenience classes targeted at writing unit
+tests for the various classes that you are required to implement.
+Link against this and the \em pelican library when building your unit tests.
+e.g.
+@code
+g++ -o myUnitTest myUnitTest.cpp -l pelican-testutils -l pelican
+@endcode
+
+\section user_newProject_linking_cmake using the pelican CMake plugin
+Pelican should provide a CMake file to allow you to find pelican as installed 
+on your system. Look in your systems application data directory to find this
+file (e.g. /usr/share/pelican, /usr/local/share/pelican ).
 
 */

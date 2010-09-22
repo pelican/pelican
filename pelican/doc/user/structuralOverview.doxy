@@ -28,9 +28,7 @@ where pipelines connect directly to data streams using a direct data client.
 
 
 \subsection user_structuralOverview_modules The Modules Required for a Pelican Application
-All of the following functional units must be present in a pelican application.
-Each one has a base class from which to inherit and is the mechanism by which you extend pelican to your needs.
-More details can be found in the \link user_gettingStarted Getting Started Guide\endlink.
+All of the following functional units must be present in a pelican application:
 
 \li <b>\link user_referenceChunkers Chunkers\endlink :</b> Describe how the input streams should be split.
 \li <b>\link user_referenceAdapters Adapters\endlink :</b> Specify how chunks of stream data should be de-serialised
@@ -41,5 +39,7 @@ More details can be found in the \link user_gettingStarted Getting Started Guide
 \li <b>\link user_referenceOutputStreamers Output Streamers\endlink :</b> Define what to do with data products from pipeline
     processing.
 
+Each one has a base class from which to inherit and is the mechanism by which you extend pelican to your needs.
+More details can be found in the \link user_gettingStarted Getting Started Guide\endlink.
 
 */
