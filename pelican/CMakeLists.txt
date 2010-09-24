@@ -38,9 +38,6 @@
 # === Specify minimum cmake version.
 cmake_minimum_required(VERSION 2.6 FATAL_ERROR)
 
-#include(path/bang.cmake)
-#BANG_VERSION(2.4)
-
 # === Set the project name (creates name_BINARY_DIR and name_SOURCE_DIR).
 project(pelican CXX C)
 
@@ -52,7 +49,6 @@ set(${PROJECT_NAME}_PATCH_LEVEL 0)
 # === CMake setup.
 list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_SOURCE_DIR}/cmake)
 include(cmake/packagemacrosNew.cmake)
-
 
 enable_testing()
 

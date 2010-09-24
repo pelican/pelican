@@ -56,18 +56,9 @@ void StreamDataBuffer::getNext(LockedData& lockedData)
 
     // Check if the serve queue is empty.
     if (_serveQueue.isEmpty()) {
-        //std::cout << "StreamDataBuffer::getNext(): Queue empty." << std::endl;
         lockedData.setData(0); // Return an invalid data block.
         return;
     }
-
-    // XXX This loop is used for printing only - remove it.
-//    for (int i = 0; i < _serveQueue.size(); ++i) {
-//        LockableStreamData* lockable = _serveQueue[i];
-//        void *ptr = lockable->data()->data();
-//        std::cout << "StreamDataBuffer::getNext(): Queue position: " << i <<
-//                " Content: " << *reinterpret_cast<double*>(ptr) << std::endl;
-//    }
 
     // Remove the data from the serve queue.
     lockedData.setData(_serveQueue.dequeue());
@@ -93,7 +84,6 @@ WritableData StreamDataBuffer::getWritable(size_t size)
         _manager->associateServiceData(lockableStreamData);
     }
 
-    //std::cout << "StreamDataBuffer: Returning WritableData object" << std::endl;
     return WritableData(lockableStreamData);
 }
 
@@ -108,9 +98,6 @@ WritableData StreamDataBuffer::getWritable(size_t size)
  */
 LockableStreamData* StreamDataBuffer::_getWritable(size_t size)
 {
-//    std::cout << "StreamDataBuffer::_getWritable() Empty queue size: " <<
-//            _emptyQueue.size() << std::endl;
-
     // Return a pre-allocated block from the empty queue, if one exists.
     for (int i = 0; i < _emptyQueue.size(); ++i) {
         LockableStreamData* lockableData = _emptyQueue[i];
@@ -173,14 +160,11 @@ void StreamDataBuffer::deactivateData()
  */
 void StreamDataBuffer::deactivateData(LockableStreamData* data)
 {
-    //std::cout << "StreamDataBuffer::deactivateData()" << std::endl;
-
     QMutexLocker locker(&_mutex);
     if (!data->served()) {
         _serveQueue.prepend(data);
         return;
     }
-    //std::cout << "StreamDataBuffer: Deactivating data" << std::endl;
     data->reset();
 
     QMutexLocker writeLocker(&_writeMutex);
@@ -196,11 +180,9 @@ void StreamDataBuffer::activateData(LockableStreamData* data)
 {
     if (data->isValid()) {
         QMutexLocker locker(&_mutex);
-        //std::cout << "StreamDataBuffer::activateData(): Valid" << std::endl;
         _serveQueue.enqueue(data);
     } else {
         QMutexLocker writeLocker(&_writeMutex);
-        //std::cout << "StreamDataBuffer::activateData(): Not valid" << std::endl;
         _emptyQueue.push_back(data);
     }
 }

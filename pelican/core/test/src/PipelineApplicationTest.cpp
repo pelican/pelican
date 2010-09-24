@@ -1,6 +1,7 @@
 #include "PipelineApplicationTest.h"
 #include "pelican/core/PipelineApplication.h"
-#include <QCoreApplication>
+
+#include <QtCore/QCoreApplication>
 
 
 namespace pelican {

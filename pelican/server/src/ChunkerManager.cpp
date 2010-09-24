@@ -11,6 +11,8 @@
 // here to ensure they are available in the factory
 #include "pelican/server/FileChunker.h"
 #include <iostream>
+using std::cout;
+using std::endl;
 
 namespace pelican {
 
@@ -111,11 +113,17 @@ bool ChunkerManager::isRunning() const
 void ChunkerManager::addStreamChunker(QString type, QString name)
 {
     Q_ASSERT(type != "" );
+
     AbstractChunker* chunker = _factory->create(type, name);
     if( chunker->type() == "" )
         chunker->setType(type);
+
+    // FIXME remove debug printing.
+//    cout << "type = " << type.toStdString() << endl;
+//    cout << "chunker->type = " << chunker->type().toStdString() << endl;
+
     _addChunker(chunker);
-    _streamDataTypes.insert(chunker->type());
+    _streamDataTypes.insert(chunker->type()); // TODO chunker->type() need to be some sort of list?
 }
 
 /**
@@ -132,7 +140,7 @@ void ChunkerManager::addServiceChunker(QString type, QString name)
     if( chunker->type() == "" )
         chunker->setType(type);
     _addChunker(chunker);
-    _serviceDataTypes.insert(chunker->type());
+    _serviceDataTypes.insert(chunker->type()); // TODO chunker->type() need to be some sort of list?
 }
 
 /**
@@ -143,22 +151,19 @@ void ChunkerManager::addServiceChunker(QString type, QString name)
  */
 void ChunkerManager::_addChunker(AbstractChunker* chunker)
 {
-    if (chunker) {
-        //if (_streamDataTypes.contains(chunker->type()) ||
-        //        _serviceDataTypes.contains(chunker->type())) {
-        //    throw QString("ChunkerManager: Input stream '%1' "
-        //            "is already assigned").arg(chunker->type());
-        //}
-
+    if (chunker)
+    {
         QPair<QString,quint16> pair(chunker->host(), chunker->port());
-        // check to see multiple chunkers are not assigned to the
-        // same host and port
+
+        // check to see multiple chunkers are not assigned to the same host
+        // and port.
         if (!chunker->host().isEmpty())
         {
             if (_chunkerPortMap.contains(pair)) {
                 throw QString("ChunkerManager: Cannot map multiple chunkers "
-                        "to the same host/port (%1/%2) - already assigned to stream %3").
-                        arg(chunker->host()).arg(chunker->port()).arg(_chunkerPortMap[pair]->type());
+                        "to the same host/port (%1/%2) - already assigned to"
+                        " stream %3").arg(chunker->host()).arg(chunker->port())
+                        .arg(_chunkerPortMap[pair]->type());
             }
             _chunkerPortMap[pair] = chunker;
         }

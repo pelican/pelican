@@ -20,6 +20,8 @@ AbstractChunker::AbstractChunker(const ConfigNode& config)
     // Initialise members.
     _dataManager = NULL;
     _device = NULL;
+
+    // NOTE: type is ignored if using getDataStorage(size_t, QString)
     _type = config.getOption("data", "type", "");
     _host = config.getOption("connection", "host", "");
     _port = config.getOption("connection", "port", "0").toUInt();
@@ -33,8 +35,10 @@ AbstractChunker::AbstractChunker(const ConfigNode& config)
 AbstractChunker::~AbstractChunker()
 {
     stop();
-    if (_device)
+    if (_device) {
         delete _device;
+        _device = 0;
+    }
 }
 
 /**
@@ -52,6 +56,25 @@ WritableData AbstractChunker::getDataStorage(size_t size) const
     if (!_dataManager)
         throw QString("AbstractChunker::getDataStorage(): No data manager.");
     return _dataManager->getWritableData(_type, size);
+}
+
+
+/**
+ * @details
+ * Returns a writable data object of the specified \p size and \p type.
+ *
+ * This method should be used by the chunker to access memory in a stream
+ * or service FIFO buffer to ensure that the chunker only ever writes into an
+ * available, locked location.
+ *
+ * @param[in] size  The size of the chunk requested on the buffer.
+ * @param[in] type  The type of the data buffer.
+ */
+WritableData AbstractChunker::getDataStorage(size_t size, const QString& type) const
+{
+    if (!_dataManager)
+        throw QString("AbstractChunker::getDataStorage(): No data manager.");
+    return _dataManager->getWritableData(type, size);
 }
 
 } // namespace pelican

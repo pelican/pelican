@@ -55,13 +55,13 @@ DataManager::~DataManager()
  */
 WritableData DataManager::getWritableData(const QString& type, size_t size)
 {
-//    std::cout << "DataManager::getWritableData, type : " << type.toStdString() << std::endl;
     if ( _streams.contains(type) ) {
-        //std::cout << "DataManager::Returning writable stream data" << std::endl;
         return _streams[type]->getWritable(size);
     }
+
     if ( _service.contains(type) )
         return _service[type]->getWritable(size);
+
     return WritableData(0);
 }
 
@@ -76,7 +76,6 @@ WritableData DataManager::getWritableData(const QString& type, size_t size)
 StreamDataBuffer* DataManager::getStreamBuffer(const QString& type)
 {
     Q_ASSERT( type != "" );
-    //std::cout << "DataManager::getStreamBuffer(): " << type.toStdString() << std::endl;
 
     if ( ! _streams.contains(type) ) {
         Config::TreeAddress configAddress(_bufferConfigBaseAddress);
@@ -139,12 +138,10 @@ void DataManager::setServiceDataBuffer(const QString& name, ServiceDataBuffer* b
  */
 LockedData DataManager::getNext(const QString& type, const QSet<QString>& associateData )
 {
-    //std::cout << "DataManager::getNext() type = " << type.toStdString() << std::endl;
     LockedData lockedData = getNext(type);
 
-    if( lockedData.isValid() ) {
-        //std::cout << "DataManager::getNext(): Valid locked stream data found." << std::endl;
-
+    if( lockedData.isValid() )
+    {
         // check it contains valid associateData
         LockableStreamData* streamData =
                 static_cast<LockableStreamData*>(lockedData.object());
@@ -171,7 +168,6 @@ LockedData DataManager::getNext(const QString& type, const QSet<QString>& associ
  */
 LockedData DataManager::getNext(const QString& type)
 {
-//     std::cout << "DataManager::getNext: type : " << type.toStdString() << std::endl;
     LockedData lockedData(type, 0);
 
     _streams[type]->getNext(lockedData);
@@ -218,9 +214,11 @@ LockedData DataManager::getServiceData(const QString& type, const QString& versi
 }
 
 
+/**
+ * @details
+ */
 void DataManager::associateServiceData(LockableStreamData* data)
 {
-//     std::cout << "DataManager::associateServiceData()" << std::endl;
     QHashIterator<QString, ServiceDataBuffer*> i(_service);
     while (i.hasNext()) {
         i.next();

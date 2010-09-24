@@ -131,7 +131,6 @@ void PelicanServerTest::test_multiProtocol()
             CPPUNIT_FAIL("Unexpected exception: " +  e.toStdString());
         }
 
-        // TODO Understand what the ID means!
 //        CPPUNIT_ASSERT_EQUAL(id1.toStdString(), client1.processAcknowledgement().toStdString());
 //        CPPUNIT_ASSERT_EQUAL(id2.toStdString(), client2.processAcknowledgement().toStdString());
     }

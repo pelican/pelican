@@ -34,7 +34,7 @@ class StreamData;
  * e.g.
  *
  * <MyStream>
- * <buffer maxSize="10240"> tags
+ *      <buffer maxSize="10240"> tags
  * </MyStream>
  */
 class DataManager
@@ -52,7 +52,7 @@ class DataManager
         /// DataManager destructor.
         virtual ~DataManager();
 
-        /// AssociateServiceData
+        /// Associate service data
         void associateServiceData(LockableStreamData* data);
 
         /// Returns the data types handled by this manager.
