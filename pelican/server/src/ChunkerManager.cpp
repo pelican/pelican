@@ -1,39 +1,48 @@
-#include <QtCore/QVector>
-#include <boost/shared_ptr.hpp>
 #include "pelican/server/ChunkerManager.h"
 #include "pelican/server/DataReceiver.h"
 #include "pelican/server/DataManager.h"
 #include "pelican/server/AbstractChunker.h"
 
-#include "pelican/utility/memCheck.h"
-
-// include default chunkers
-// here to ensure they are available in the factory
+// NOTE: Include default chunkers here to ensure they are available in the
+// factory.
 #include "pelican/server/FileChunker.h"
+
+#include <QtCore/QVector>
+
+#include <boost/shared_ptr.hpp>
+
 #include <iostream>
 using std::cout;
+using std::cerr;
 using std::endl;
+
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 
 /**
  * @details
- * Constructs the ChunkerManager.
+ * Constructs the ChunkerManager, creating the chucker factory.
  */
 ChunkerManager::ChunkerManager(const Config* config, const QString& section)
 {
-    // Create the chunker factory.
     _factory = new FactoryConfig<AbstractChunker>(config, section, "chunkers");
 }
 
+
+/**
+ * @details
+ * Constructs the ChunkerManager, creating the chucker factory.
+ */
 ChunkerManager::ChunkerManager(const Config* config,  const Config::TreeAddress& base )
 {
-    // Create the chunker factory.
     Config::TreeAddress chunkerBase = base;
     chunkerBase << Config::NodeId("chunkers","");
 
     _factory = new FactoryConfig<AbstractChunker>(config, chunkerBase);
 }
+
+
 /**
  * @details
  * Destroys the ChunkerManager and the chunker factory it contains.
@@ -48,6 +57,7 @@ ChunkerManager::~ChunkerManager()
     // Delete the chunker factory.
     delete _factory;
 }
+
 
 /**
  * @details
@@ -65,16 +75,6 @@ bool ChunkerManager::init(DataManager& dataManager)
         dataManager.getServiceBuffer(type);
     }
 
-    //QList<QPair<QString,quint16> > inputPorts = _chunkerPortMap.keys();
-
-    // Set up data-stream inputs.
-    //for (int i = 0; i < inputPorts.size(); ++i) {
-    //    AbstractChunker* chunker = _chunkerPortMap[inputPorts[i]];
-    //    chunker->setDataManager(&dataManager);
-    //    DataReceiver* receiver = new DataReceiver(chunker);
-    //    _dataReceivers.append(receiver);
-    //    receiver->start();
-    //}
     try {
         foreach (AbstractChunker* chunker, _chunkers ) {
             chunker->setDataManager(&dataManager);
@@ -83,13 +83,14 @@ bool ChunkerManager::init(DataManager& dataManager)
             receiver->start();
         }
     }
-    catch( const QString& msg )
+    catch(const QString& msg)
     {
-        std::cout << "Error Initiiating Chunkers: " << msg.toStdString() << std::endl;
+        cout << "Error Initiating Chunkers: " << msg.toStdString() << endl;
         return false;
     }
     return true;
 }
+
 
 bool ChunkerManager::isRunning() const
 {
@@ -103,6 +104,7 @@ bool ChunkerManager::isRunning() const
     return rv;
 }
 
+
 /**
  * @details
  * Adds a stream chunker of the given \p type and \p name.
@@ -112,19 +114,30 @@ bool ChunkerManager::isRunning() const
  */
 void ChunkerManager::addStreamChunker(QString type, QString name)
 {
-    Q_ASSERT(type != "" );
+    Q_ASSERT(type != "");
 
+    // Create a chunker of the specified type with the factory.
     AbstractChunker* chunker = _factory->create(type, name);
-    if( chunker->type() == "" )
-        chunker->setType(type);
 
-    // FIXME remove debug printing.
-//    cout << "type = " << type.toStdString() << endl;
-//    cout << "chunker->type = " << chunker->type().toStdString() << endl;
+    // If no types are registered to the chunker set the chunker data type
+    // to the chunker name.
+    if (chunker->chunkTypes().empty())
+    {
+        cerr << "ChunkerManager::addStreamChunker(): WARNING Chunker '"
+             << type.toStdString() << "' has no registered chunk data types."
+             << endl;
+        chunker->addChunkType(type);
+    }
 
+    // Add the chunker to the chunker manager.
     _addChunker(chunker);
-    _streamDataTypes.insert(chunker->type()); // TODO chunker->type() need to be some sort of list?
+
+    // Loop over the list of chunk types written into the data buffer
+    // by the chunker and add them to the list of stream data types.
+    foreach (QString chunkType, chunker->chunkTypes())
+        _streamDataTypes.insert(chunkType);
 }
+
 
 /**
  * @details
@@ -136,12 +149,29 @@ void ChunkerManager::addStreamChunker(QString type, QString name)
 void ChunkerManager::addServiceChunker(QString type, QString name)
 {
     Q_ASSERT(type != "" );
+
+    // Create a chunker of the specified type with the factory.
     AbstractChunker* chunker = _factory->create(type, name);
-    if( chunker->type() == "" )
-        chunker->setType(type);
+
+    // If no types are registered to the chunker set the chunker data type
+    // to the chunker name.
+    if (chunker->chunkTypes().empty())
+    {
+        cerr << "ChunkerManager::addStreamChunker(): WARNING Chunker '"
+             << type.toStdString() << "' has no registered chunk data types."
+             << endl;
+        chunker->addChunkType(type);
+    }
+
+    // Add the chunker to the chunker manager.
     _addChunker(chunker);
-    _serviceDataTypes.insert(chunker->type()); // TODO chunker->type() need to be some sort of list?
+
+    // Loop over the list of chunk types written into the data buffer
+    // by the chunker and add them to the list of service data types.
+    foreach (QString chunkType, chunker->chunkTypes())
+        _serviceDataTypes.insert(chunkType);
 }
+
 
 /**
  * @details
@@ -153,17 +183,19 @@ void ChunkerManager::_addChunker(AbstractChunker* chunker)
 {
     if (chunker)
     {
-        QPair<QString,quint16> pair(chunker->host(), chunker->port());
+        QPair<QString, quint16> pair(chunker->host(), chunker->port());
 
-        // check to see multiple chunkers are not assigned to the same host
+        // Check to see any chunkers are already assigned to the same host
         // and port.
         if (!chunker->host().isEmpty())
         {
             if (_chunkerPortMap.contains(pair)) {
-                throw QString("ChunkerManager: Cannot map multiple chunkers "
-                        "to the same host/port (%1/%2) - already assigned to"
-                        " stream %3").arg(chunker->host()).arg(chunker->port())
-                        .arg(_chunkerPortMap[pair]->type());
+                QString err = "ChunkerManager::_addChunker(): ";
+                err += "Cannot map multiple chunkers to the same host/ port. ";
+                err += "(host %1, port %2 already assigned)";
+                err = err.arg(chunker->host());
+                err = err.arg(chunker->port());
+                throw err;
             }
             _chunkerPortMap[pair] = chunker;
         }

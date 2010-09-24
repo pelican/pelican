@@ -7,6 +7,7 @@
 
 #include <QtNetwork/QUdpSocket>
 #include <QtCore/QString>
+#include <QtCore/QStringList>
 
 
 /**
@@ -15,11 +16,8 @@
 
 namespace pelican {
 
-/**
- * This macro is used to register the named chunker type.
- */
+// Macro is used to register the named chunker type.
 #define PELICAN_DECLARE_CHUNKER(type) PELICAN_DECLARE(AbstractChunker, type)
-
 
 class ConfigNode;
 
@@ -33,38 +31,33 @@ class ConfigNode;
  * Methods on this class are called by the DataReceiver class
  * which sets up the necessary connections etc.
  */
+
 class AbstractChunker
 {
     private:
-        DataManager* _dataManager;
-        QString _type;
-        QString _host;
-        quint16 _port;
-        QIODevice* _device;
+        QString _host;      ///< Host address for incoming connections.
+        quint16 _port;      ///< Port for incoming connections.
+        QIODevice* _device; ///< QIODevice for receiving the incoming data.
+
+        DataManager* _dataManager; ///< Data manager used by the chunker to access writable data.
+        QStringList _chunkTypes;   ///< Data chunk data types written to by the chunker.
+
         bool _active;
 
     public:
         /// Constructs a new AbstractChunker.
-        AbstractChunker(const QString& type, QString host = "", quint16 port = 0)
-        : _dataManager(0), _type(type), _host(host), _port(port), _device(0),
-          _active(true)
-        {}
-
-        /// Constructs a new AbstractChunker.
         PELICAN_CONSTRUCT_TYPES(ConfigNode)
         AbstractChunker(const ConfigNode& config);
 
-        AbstractChunker()
-        : _dataManager(0), _type(""), _host(""), _port(0), _device(0),
-          _active(true)
+        /// Constructs a new AbstractChunker (used in testing).
+        AbstractChunker() : _host(""), _port(0), _device(0), _dataManager(0),
+        _chunkTypes(QStringList::QStringList()), _active(true)
         {}
 
         /// Destroys the AbstractChunker.
         virtual ~AbstractChunker();
 
-        /// Returns the host.
-        const QString& host() {return _host;}
-
+    public:
         /// Create a new device appropriate to the type expected on the data stream.
         virtual QIODevice* newDevice() = 0;
 
@@ -72,32 +65,39 @@ class AbstractChunker
         /// Derived classes must process a complete data chunk in this method.
         virtual void next(QIODevice*) = 0;
 
-        /// Returns the port.
-        quint16 port() {return _port;}
-
         /// Sets the data manager.
         void setDataManager(DataManager* dataManager)
         { _dataManager = dataManager; }
 
         /// Sets the device pointer.
-        void setDevice(QIODevice* device) {_device = device;}
-        /// Gets the device pointer.previously set with setDevice()
+        void setDevice(QIODevice* device) { _device = device; }
+
+        /// Returns the QIODevice pointer previously set with setDevice().
         QIODevice* getDevice() { return _device; };
 
         /// Set the IP address to listen on for data.
-        void setHost(const QString& ipaddress) {_host = ipaddress;}
+        void setHost(const QString& ipaddress) { _host = ipaddress; }
+
+        /// Returns the host.
+        const QString& host() { return _host; }
 
         /// Set the port to listen on for data.
-        void setPort(quint16 port) {_port = port;}
+        void setPort(quint16 port) { _port = port; }
+
+        /// Returns the port.
+        quint16 port() { return _port; }
 
         /// Sets the type name to be associated with this data.
-        void setType(const QString& type) {_type = type;}
+        void setChunkTypes(const QStringList& types) { _chunkTypes = types; }
 
-        /// Stops the chunker.
-        void stop() {_active = false;}
+        /// Adds a chunk type to the types written to by the chucker.
+        void addChunkType(const QString& type) { _chunkTypes.append(type); }
 
         /// Return the type name to be associated with this data.
-        const QString& type() const { return _type; }
+        const QStringList& chunkTypes() const { return _chunkTypes; }
+
+        /// Stops the chunker.
+        void stop() { _active = false; }
 
     protected:
         /// Access to memory to store data is through this interface.
@@ -107,13 +107,12 @@ class AbstractChunker
         /// automatically if it is valid.
         WritableData getDataStorage(size_t size) const;
 
-        /// Overloaded method specifying the buffer type.
-        WritableData getDataStorage(size_t size, const QString& type) const;
+        /// Overloaded method specifying the chunk type of the buffer.
+        WritableData getDataStorage(size_t size, const QString& chunkType) const;
 
         /// Returns the state of the chunker (running or not).
-        bool isActive() {return _active;}
+        bool isActive() { return _active; }
 };
 
 } // namespace pelican
-
 #endif // ABSTRACTCHUNKER_H

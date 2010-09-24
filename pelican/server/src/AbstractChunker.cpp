@@ -11,22 +11,23 @@ namespace pelican {
  * @details
  *  Setup from the configuration file
  *  option 1:
- *    listen to an incomming port
+ *    listen to an incoming port
  *    <connection host="dataHost" port="12345" />
  */
 
 AbstractChunker::AbstractChunker(const ConfigNode& config)
 {
     // Initialise members.
-    _dataManager = NULL;
-    _device = NULL;
+    _dataManager = 0;
+    _device = 0;
 
-    // NOTE: type is ignored if using getDataStorage(size_t, QString)
-    _type = config.getOption("data", "type", "");
+    _chunkTypes = config.getOptionList("data", "type");
     _host = config.getOption("connection", "host", "");
     _port = config.getOption("connection", "port", "0").toUInt();
+
     _active = true;
 }
+
 
 /**
  * @details
@@ -55,7 +56,12 @@ WritableData AbstractChunker::getDataStorage(size_t size) const
 {
     if (!_dataManager)
         throw QString("AbstractChunker::getDataStorage(): No data manager.");
-    return _dataManager->getWritableData(_type, size);
+
+    if (_chunkTypes.size() != 1)
+        throw QString("AbstractChunker::getDataStorage(): "
+                "More than one chunk type registered, ambiguous request.");
+
+    return _dataManager->getWritableData(_chunkTypes[0], size);
 }
 
 
@@ -68,13 +74,15 @@ WritableData AbstractChunker::getDataStorage(size_t size) const
  * available, locked location.
  *
  * @param[in] size  The size of the chunk requested on the buffer.
- * @param[in] type  The type of the data buffer.
+ * @param[in] type  The type (name) of the chunk in the data buffer.
  */
-WritableData AbstractChunker::getDataStorage(size_t size, const QString& type) const
+WritableData AbstractChunker::getDataStorage(size_t size,
+        const QString& chunkType) const
 {
     if (!_dataManager)
         throw QString("AbstractChunker::getDataStorage(): No data manager.");
-    return _dataManager->getWritableData(type, size);
+
+    return _dataManager->getWritableData(chunkType, size);
 }
 
 } // namespace pelican

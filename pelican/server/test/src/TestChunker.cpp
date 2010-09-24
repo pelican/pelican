@@ -14,9 +14,12 @@ namespace pelican {
  * Constructs a new TestChunker.
  */
 TestChunker::TestChunker(const QString& type, bool badSocket, size_t size,
-        QString host, quint16 port, QObject* parent) :
-            QThread(parent), AbstractChunker(type, host, port)
+        const QString& host, quint16 port, QObject* parent)
+: QThread(parent), AbstractChunker()
 {
+    addChunkType(type);
+    setHost(host);
+    setPort(port);
     _device = 0;
     _badSocket = badSocket;
     _size = size;
@@ -24,11 +27,11 @@ TestChunker::TestChunker(const QString& type, bool badSocket, size_t size,
 }
 
 /**
-* @details
-* Constructs a new TestChunker.
-*/
-TestChunker::TestChunker(const ConfigNode& config) : QThread(),
-        AbstractChunker(config)
+ * @details
+ * Constructs a new TestChunker.
+ */
+TestChunker::TestChunker(const ConfigNode& config)
+: QThread(), AbstractChunker(config)
 {
     _device = 0;
     _badSocket = false;
@@ -68,8 +71,6 @@ QIODevice* TestChunker::newDevice()
  */
 void TestChunker::next(QIODevice* device)
 {
-//    std::cout << "TestChunker::next()" << std::endl;
-
     // Read data off the device.
     device->open(QIODevice::ReadOnly);
     QByteArray array = device->readAll();
@@ -83,7 +84,8 @@ void TestChunker::next(QIODevice* device)
     WritableData writableData(0);
     try {
         writableData = getDataStorage(_size);
-    } catch (QString e) {
+    }
+    catch (QString e) {
         std::cout << "Unexpected exception: " << e.toStdString() << std::endl;
         return;
     }

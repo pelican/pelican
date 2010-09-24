@@ -24,8 +24,8 @@ TestUdpChunker::TestUdpChunker(const ConfigNode& config)
     _chunkSize = config.getOption("data", "chunkSize").toInt();
 
     // Some sanity checking.
-    if (type().isEmpty())
-        throw QString("TestUdpChunker: Data type unspecified.");
+    if (chunkTypes().empty())
+        throw QString("TestUdpChunker: No chunk types registered to the chunker.");
 
     if (_chunkSize == 0)
         throw QString("TestUdpChunker: Chunk size zero.");
@@ -40,12 +40,6 @@ QIODevice* TestUdpChunker::newDevice()
     QUdpSocket* socket = new QUdpSocket;
     socket->bind(QHostAddress(host()), port());
     while (socket->state() != QUdpSocket::BoundState) {}
-
-//    int v = 5000000;
-//    if (::setsockopt(socket->socketDescriptor(), SOL_SOCKET, SO_RCVBUF, (char*) &v, sizeof(v)) == -1) {
-//        std::cout << "Error!" << std::endl;
-//    }
-
     return socket;
 }
 

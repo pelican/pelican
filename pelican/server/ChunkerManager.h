@@ -1,20 +1,22 @@
 #ifndef CHUNKERMANAGER_H
 #define CHUNKERMANAGER_H
 
-#include <QSet>
-#include <QMap>
-#include <QString>
-#include <QPair>
-#include <QVector>
-#include <boost/shared_ptr.hpp>
+/**
+ * @file ChunkerManager.h
+ */
+
 
 #include "pelican/utility/FactoryConfig.h"
 #include "pelican/server/DataReceiver.h"
 #include "pelican/utility/Config.h"
 
-/**
- * @file ChunkerManager.h
- */
+#include <QtCore/QSet>
+#include <QtCore/QMap>
+#include <QtCore/QString>
+#include <QtCore/QPair>
+#include <QtCore/QVector>
+
+#include <boost/shared_ptr.hpp>
 
 namespace pelican {
 
@@ -35,13 +37,13 @@ class DataManager;
 class ChunkerManager
 {
     public:
-        /// Creates a chunker manager.
+        /// Creates a chunker manager. DO NOT USE.
         /// @deprecated
         ChunkerManager(const Config* config,
-                const QString& section = QString("server"));  /* deprecated */
+                const QString& section = QString("server"));
 
         /// Creates a chunker manager.
-        ChunkerManager(const Config* config,  const Config::TreeAddress& base );
+        ChunkerManager(const Config* config,  const Config::TreeAddress& base);
 
         /// Destroys the chunker manager.
         ~ChunkerManager();
@@ -49,16 +51,16 @@ class ChunkerManager
         /// Initialise the passed data manager to support the contained chunkers.
         bool init(DataManager& dm);
 
-        /// Add a stream chunker.
+        /// Adds a stream chunker.
         void addStreamChunker(QString type, QString name = QString());
 
-        /// Add a service chunker.
+        /// Adds a service chunker.
         void addServiceChunker(QString type, QString name = QString());
 
-        /// get a list of chunkers
+        /// Returns the list of chunkers.
         const QSet<AbstractChunker* >& chunkers() const { return _chunkers; };
 
-        /// returns true if all the data chunkers are operating/flase otherwise
+        /// Returns true if all the data chunkers are operating, otherwise false.
         bool isRunning() const;
 
     private:
@@ -75,5 +77,4 @@ class ChunkerManager
 };
 
 } // namespace pelican
-
 #endif // CHUNKERMANAGER_H

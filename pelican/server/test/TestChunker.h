@@ -35,7 +35,7 @@ class TestChunker : public QThread, public AbstractChunker
     public:
         /// Constructs a new TestChunker.
         TestChunker(const QString& type = "ChunkType", bool badSocket = false,
-                size_t size = 0, QString host = "", quint16 port = 0,
+                size_t size = 0, const QString& host = "", quint16 port = 0,
                 QObject* parent = 0);
 
         /// Constructs a new TestChunker.
@@ -64,5 +64,4 @@ class TestChunker : public QThread, public AbstractChunker
 PELICAN_DECLARE_CHUNKER(TestChunker)
 
 } // namespace pelican
-
 #endif // TESTCHUNKER_H

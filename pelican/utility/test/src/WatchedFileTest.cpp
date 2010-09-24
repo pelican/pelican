@@ -5,8 +5,7 @@
 
 #include "pelican/utility/WatchedFile.h"
 
-
-#include "pelican/utility/memCheck.h"
+//#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 
@@ -31,7 +30,7 @@ void WatchedFileTest::setUp()
 {
     int argc = 1;
     char *argv[] = {(char*)"pelican"};
-    _app = new QCoreApplication(argc,argv);
+    _app = new QCoreApplication(argc, argv);
 
     // create a temporary file to perform tests on
     _temp = new QTemporaryFile;
@@ -50,7 +49,7 @@ void WatchedFileTest::test_watch()
 {
     QString filename = _temp->fileName();
     CPPUNIT_ASSERT( filename != "" );
-    
+
     {
         // Use Case:
         // Filename passed via setfileName()

@@ -40,8 +40,8 @@ class StreamData;
 class DataManager
 {
     private:
-        QHash<QString,StreamDataBuffer*> _streams;
-        QHash<QString,ServiceDataBuffer*> _service;
+        QHash<QString, StreamDataBuffer*> _streams;
+        QHash<QString, ServiceDataBuffer*> _service;
         DataRequirements _specs;
 
     public:

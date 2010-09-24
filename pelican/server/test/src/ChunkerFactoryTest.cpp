@@ -52,14 +52,17 @@ void ChunkerFactoryTest::test_create()
         Config config;
         QString serverXml =
                 "<chunkers>"
+                ""
                 "   <TestUdpChunker name=\"1\">"
                 "       <connection host=\"127.0.0.1\" port=\"2002\"/>"
                 "       <data type=\"VisibilityData\" chunkSize=\"512\"/>"
                 "   </TestUdpChunker>"
+                ""
                 "   <TestUdpChunker name=\"2\">"
                 "       <connection host=\"127.0.0.1\" port=\"2003\"/>"
                 "       <data type=\"VisibilityData\" chunkSize=\"512\"/>"
                 "   </TestUdpChunker>"
+                ""
                 "</chunkers>";
         config.setFromString("", serverXml);
 
@@ -70,7 +73,8 @@ void ChunkerFactoryTest::test_create()
         AbstractChunker* chunker = factory.create("TestUdpChunker", "2");
 
         // Assert that the chunker has the correct configuration.
-        CPPUNIT_ASSERT(chunker->type() == "VisibilityData");
+        CPPUNIT_ASSERT_EQUAL(1, chunker->chunkTypes().size());
+        CPPUNIT_ASSERT(chunker->chunkTypes().at(0) == "VisibilityData");
         CPPUNIT_ASSERT(chunker->host() == "127.0.0.1");
         CPPUNIT_ASSERT(chunker->port() == 2003);
     }
