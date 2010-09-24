@@ -8,3 +8,6 @@ intel_debug/
 gnu_release/
 gnu_debug/
 /gnu_debug
+.cproject
+.project
+.settings/org.eclipse.cdt.ui.prefs
