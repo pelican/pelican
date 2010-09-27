@@ -1,61 +1,72 @@
 #include "ChunkerTester.h"
-#include <QCoreApplication>
 #include "pelican/server/StreamDataBuffer.h"
 #include "pelican/server/ChunkerManager.h"
 
-#include "pelican/utility/memCheck.h"
+#include <QtCore/QCoreApplication>
 
 #include <iostream>
+using std::cerr;
+using std::cout;
+using std::endl;
+
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 
 /**
  * @details Constructs a ChunkerTester object.
  */
-ChunkerTester::ChunkerTester( const QString& chunkerType, unsigned long bufferSize, const QString& XML_Config )
-    : _chunkManager(0), _dataManager(0)
+ChunkerTester::ChunkerTester(const QString& chunkerType,
+        unsigned long bufferSize, const QString& XML_Config)
+: _chunkManager(0), _dataManager(0)
 {
     _stream = chunkerType;
     Q_ASSERT( _stream != "" );
+
+    // Setup the XML configuration.
     Config::TreeAddress dataAddress, chunkerBase;
     chunkerBase << Config::NodeId("root", "");
     dataAddress << Config::NodeId("root", "") << Config::NodeId("data", "");
-    QString xml = "<root>\n"
-                  "<data>\n"
-                      "<" + _stream + ">\n"
-                          "<buffer maxSize=\"" + QString().setNum(bufferSize) + "\"/>\n"
-                      "</" + _stream + ">\n"
-                      "</data>\n"
-                  "<chunkers>\n"
-                      + XML_Config + "\n"
-                  "</chunkers>\n"
-                 "</root>\n";
-    _config.setXML( xml );
+    QString xml =
+            "<root>"
+            "   <data>"
+            "       <" + _stream + ">"
+            "           <buffer maxSize=\"" + QString::number(bufferSize) + "\"/>"
+            "       </" + _stream + ">"
+            "   </data>"
+            ""
+            "   <chunkers>"
+                    + XML_Config +
+            "   </chunkers>"
+            "</root>";
 
-    _chunkManager = new ChunkerManager( &_config, chunkerBase );
-    _chunkManager->addStreamChunker( chunkerType );
+    _config.setXML(xml);
 
-    // setup the data manager
-    _dataManager = new DataManager( &_config , dataAddress );
+    // Setup the chunker manager and add the stream chunker.
+    _chunkManager = new ChunkerManager(&_config, chunkerBase);
+    _chunkManager->addStreamChunker(chunkerType);
 
+    // Setup the data manager.
+    _dataManager = new DataManager(&_config , dataAddress);
 
     // start the chunkers listening
     try {
-        _chunkManager->init( *_dataManager );
+        _chunkManager->init(*_dataManager);
         do {
             sleep(1); // at least one second seems to be necessary
         }
-        while( ! _chunkManager->isRunning() );
+        while(! _chunkManager->isRunning());
     }
-    catch( const QString& msg) 
+    catch( const QString& msg)
     {
-        std::cerr << "ChunkerTester:throw during construction: " << msg.toStdString() << std::endl;
+        cerr << "ChunkerTester:throw during construction: " << msg.toStdString() << endl;
         throw msg;
     }
 }
 
 /**
- * @details Destroys the ChunkerTester object.
+ * @details
+ * Destroys the ChunkerTester object.
  */
 ChunkerTester::~ChunkerTester()
 {
@@ -63,22 +74,26 @@ ChunkerTester::~ChunkerTester()
     delete _dataManager;
 }
 
+
 AbstractChunker* ChunkerTester::chunker()
 {
     QList<AbstractChunker* > chunkers = _chunkManager->chunkers().values();
-    Q_ASSERT(chunkers.size() == 1 );
-    Q_ASSERT(chunkers.first() != 0 );
+    Q_ASSERT(chunkers.size() == 1);
+    Q_ASSERT(chunkers.first() != 0);
     return chunkers.first();
 }
 
+
 /**
- * @details gets the next valid data from the queue
+ * @details
+ * Gets the next valid data from the queue.
  */
 LockedData ChunkerTester::getData()
 {
     QCoreApplication::processEvents();
     return _dataManager->getNext(_stream);
 }
+
 
 int ChunkerTester::writeRequestCount() const
 {

@@ -55,16 +55,19 @@ DirectStreamDataClient::~DirectStreamDataClient()
 void DirectStreamDataClient::addChunker(const QString& dataType,
         const QString& chunkerType, const QString& chunkerName)
 {
-    switch (type(dataType)) {
-    case (AbstractAdapter::Stream):
-        _chunkerManager->addStreamChunker(chunkerType, chunkerName);
-        break;
-    case (AbstractAdapter::Service):
-        _chunkerManager->addServiceChunker(chunkerType, chunkerName);
-        break;
-    default:
-        throw QString("DirectStreamDataClient::addChunker(): "
-                "Data type %1 not set in requirements.").arg(dataType);
+    switch (type(dataType))
+    {
+        case AbstractAdapter::Stream:
+            _chunkerManager->addStreamChunker(chunkerType, chunkerName);
+            break;
+
+        case AbstractAdapter::Service:
+            _chunkerManager->addServiceChunker(chunkerType, chunkerName);
+            break;
+
+        default:
+            throw QString("DirectStreamDataClient::addChunker(): "
+                    "Data type %1 not set in requirements.").arg(dataType);
     }
 }
 

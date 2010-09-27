@@ -1,34 +1,38 @@
 #ifndef CHUNKERTESTER_H
 #define CHUNKERTESTER_H
 
-#include "pelican/utility/Config.h"
-
-class QString;
-
 /**
  * @file ChunkerTester.h
  */
 
+#include "pelican/utility/Config.h"
+
+class QString;
+
 namespace pelican {
-    class AbstractChunker;
-    class DataManager;
-    class LockedData;
-    class ChunkerManager;
-    class Config;
+
+class AbstractChunker;
+class DataManager;
+class LockedData;
+class ChunkerManager;
+class Config;
 
 /**
  * @class ChunkerTester
- * 
+ *
  * @brief
- *   Convenience class for testing a chunker
+ * Convenience class for testing a chunker.
+ *
  * @details
- * 
+ *
  */
+
 class ChunkerTester
 {
     public:
         /// ChunkerTester constructor.
-        ChunkerTester( const QString& chunkerType, unsigned long bufferSize, const QString& XMLconfig = QString() );
+        ChunkerTester(const QString& chunkerType, unsigned long bufferSize,
+                const QString& XMLconfig = QString());
 
         /// ChunkerTester destructor.
         ~ChunkerTester();
@@ -43,12 +47,11 @@ class ChunkerTester
         AbstractChunker* chunker();
 
     private:
-        QString            _stream; // name of the test stream
-        ChunkerManager*    _chunkManager;
-        DataManager*       _dataManager;
-        Config             _config;
+        QString          _stream; // name of the test stream
+        ChunkerManager*  _chunkManager;
+        DataManager*     _dataManager;
+        Config           _config;
 };
 
 } // namespace pelican
-
-#endif // CHUNKERTESTER_H 
+#endif // CHUNKERTESTER_H

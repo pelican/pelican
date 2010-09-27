@@ -96,6 +96,10 @@ class AbstractChunker
         /// Return the type name to be associated with this data.
         const QStringList& chunkTypes() const { return _chunkTypes; }
 
+        /// Returns the type name associated with the data.
+        /// NOTE: This will be depricated. DO NOT USE!.
+        const QString& type() const { return _chunkTypes[0]; }
+
         /// Stops the chunker.
         void stop() { _active = false; }
 

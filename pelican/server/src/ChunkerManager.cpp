@@ -112,21 +112,22 @@ bool ChunkerManager::isRunning() const
  * @param type The chunker type (class name).
  * @param name The optional chunker configuration name.
  */
-void ChunkerManager::addStreamChunker(QString type, QString name)
+void ChunkerManager::addStreamChunker(QString chunkerType, QString name)
 {
-    Q_ASSERT(type != "");
+    Q_ASSERT(chunkerType != "");
 
     // Create a chunker of the specified type with the factory.
-    AbstractChunker* chunker = _factory->create(type, name);
+    AbstractChunker* chunker = _factory->create(chunkerType, name);
 
-    // If no types are registered to the chunker set the chunker data type
-    // to the chunker name.
+    // If no data chunk types are registered to the chunker, set the chunker
+    // data type to the chunker name.
+    // NOTE: this should probably never happen!
     if (chunker->chunkTypes().empty())
     {
         cerr << "ChunkerManager::addStreamChunker(): WARNING Chunker '"
-             << type.toStdString() << "' has no registered chunk data types."
+             << chunkerType.toStdString() << "' has no registered chunk data types."
              << endl;
-        chunker->addChunkType(type);
+        chunker->addChunkType(chunkerType);
     }
 
     // Add the chunker to the chunker manager.

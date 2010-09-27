@@ -51,10 +51,10 @@ class ChunkerManager
         /// Initialise the passed data manager to support the contained chunkers.
         bool init(DataManager& dm);
 
-        /// Adds a stream chunker.
+        /// Adds a stream chunker by class name (\p type).
         void addStreamChunker(QString type, QString name = QString());
 
-        /// Adds a service chunker.
+        /// Adds a service chunker by class name (\p type).
         void addServiceChunker(QString type, QString name = QString());
 
         /// Returns the list of chunkers.
