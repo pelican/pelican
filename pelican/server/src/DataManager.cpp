@@ -164,7 +164,9 @@ LockedData DataManager::getNext(const QString& type, const QSet<QString>& associ
  * @details
  *
  * We make the assumption that this method will not be called with an
- * invalid type. No checking in order to speed things up.
+ * invalid type.
+ *
+ * WARNING: No checking in order to speed things up.
  */
 LockedData DataManager::getNext(const QString& type)
 {

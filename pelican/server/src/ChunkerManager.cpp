@@ -76,18 +76,19 @@ bool ChunkerManager::init(DataManager& dataManager)
     }
 
     try {
-        foreach (AbstractChunker* chunker, _chunkers ) {
+        foreach (AbstractChunker* chunker, _chunkers) {
             chunker->setDataManager(&dataManager);
             DataReceiver* receiver = new DataReceiver(chunker);
             _dataReceivers.append(receiver);
             receiver->start();
         }
     }
-    catch(const QString& msg)
+    catch (const QString& msg)
     {
-        cout << "Error Initiating Chunkers: " << msg.toStdString() << endl;
+        cerr << "Error Initiating Chunkers: " << msg.toStdString() << endl;
         return false;
     }
+
     return true;
 }
 
@@ -121,7 +122,7 @@ void ChunkerManager::addStreamChunker(QString chunkerType, QString name)
 
     // If no data chunk types are registered to the chunker, set the chunker
     // data type to the chunker name.
-    // NOTE: this should probably never happen!
+    // NOTE: This should probably never happen!
     if (chunker->chunkTypes().empty())
     {
         cerr << "ChunkerManager::addStreamChunker(): WARNING Chunker '"

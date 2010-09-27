@@ -1,6 +1,10 @@
 #ifndef ABSTRACTCHUNKER_H
 #define ABSTRACTCHUNKER_H
 
+/**
+ * @file AbstractChunker.h
+ */
+
 #include "pelican/server/DataManager.h"
 #include "pelican/server/WritableData.h"
 #include "pelican/utility/FactoryRegistrar.h"
@@ -8,11 +12,6 @@
 #include <QtNetwork/QUdpSocket>
 #include <QtCore/QString>
 #include <QtCore/QStringList>
-
-
-/**
- * @file AbstractChunker.h
- */
 
 namespace pelican {
 
