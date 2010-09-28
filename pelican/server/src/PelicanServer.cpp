@@ -13,6 +13,7 @@
 
 #include <QtCore/QtGlobal>
 #include <QtNetwork/QTcpSocket>
+#include <QtCore/QDebug>
 
 #include <iostream>
 

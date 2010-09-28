@@ -12,6 +12,8 @@
 #include <boost/preprocessor/repetition/enum.hpp>
 #include <boost/preprocessor/repetition/enum_params.hpp>
 
+#include <iostream>
+
 /**
  * @file FactoryRegistrar.h
  */
@@ -66,9 +68,12 @@ template<class B> struct RegBase<B, n> { \
 \
     /* Performs a check to make sure the object's ID has been registered */ \
     static void check(const QString& id) { \
-        if (!exists(id)) \
+        std::cout << "arrrg" << std::endl; \
+        if (!exists(id)) {\
+            std::cout << "arrrg2" << std::endl; \
             throw QString("FactoryRegistrar: Unknown type '" + id + "'") \
-            + QString("\nDid you include the object's header file?"); \
+            + QString("\nDid you include the object's header file?"); }\
+            std::cout << "arrrg3" << std::endl; \
     } \
 \
     /* Returns true if the object's ID has been registered, false if not */ \
