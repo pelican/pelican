@@ -117,13 +117,9 @@ bool ChunkerManager::isRunning() const
 void ChunkerManager::addStreamChunker(QString chunkerType, QString name)
 {
     Q_ASSERT(chunkerType != "");
-    qDebug() << "HERE" << chunkerType;
-    qDebug() << "HERE" << name;
 
     // Create a chunker of the specified type with the factory.
     AbstractChunker* chunker = _factory->create(chunkerType, name);
-
-    qDebug() << "HERE";
 
     // If no data chunk types are registered to the chunker, set the chunker
     // data type to the chunker name.
@@ -135,17 +131,14 @@ void ChunkerManager::addStreamChunker(QString chunkerType, QString name)
              << endl;
         chunker->addChunkType(chunkerType);
     }
-    qDebug() << "HERE";
 
     // Add the chunker to the chunker manager.
     _addChunker(chunker);
 
-    qDebug() << "HERE";
     // Loop over the list of chunk types written into the data buffer
     // by the chunker and add them to the list of stream data types.
     foreach (QString chunkType, chunker->chunkTypes())
         _streamDataTypes.insert(chunkType);
-    qDebug() << "HERE";
 }
 
 
