@@ -79,7 +79,7 @@ DataClientFactory* PipelineApplication::clientFactory()
  */
 OutputStreamManager* PipelineApplication::outputStreamManager()
 {
-    Config::TreeAddress address; 
+    Config::TreeAddress address;
    address <<  Config::NodeId("configuration", "");
    address <<  Config::NodeId("pipeline", "");
    address <<  Config::NodeId("output", "");
@@ -200,6 +200,11 @@ void PipelineApplication::_createConfig(int argc, char** argv)
     std::string configFilename = "";
     if (varMap.count("config"))
         configFilename = varMap["config"].as<std::string>();
+
+    // Check if no configuration file is supplied.
+    if (configFilename.empty()) {
+        std::cout << "WARNING: No configuration file supplied." << std::endl;
+    }
 
     // Construct the static configuration object.
     if (!config(configFilename))
