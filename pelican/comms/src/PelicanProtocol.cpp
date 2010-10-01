@@ -17,6 +17,10 @@
 #include <QtCore/QString>
 #include <QtCore/QMapIterator>
 
+#include <iostream>
+using std::cout;
+using std::endl;
+
 #include "pelican/utility/memCheck.h"
 
 namespace pelican {
@@ -124,7 +128,7 @@ void PelicanProtocol::send(QIODevice& stream, const AbstractProtocol::StreamData
     out << (quint16)ServerResponse::StreamData;
     out << (quint16)data.size();
     QListIterator<StreamData*> i(data);
-    // stream header info
+    // stream (socket) header info
     while (i.hasNext()) {
         StreamData* sd = i.next();
         out << sd->name() << sd->id() << (quint64)(sd->size());
@@ -142,6 +146,9 @@ void PelicanProtocol::send(QIODevice& stream, const AbstractProtocol::StreamData
     {
         StreamData* sd = i.next();
         stream.write( (const char*)sd->ptr(), sd->size() );
+//        FIXME
+        //cout << "ptr = " << sd->ptr() << endl;
+//        cout << "size = " << sd->size() << endl;
     }
 }
 

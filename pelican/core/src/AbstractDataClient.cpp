@@ -10,6 +10,8 @@
 #include <QtCore/QtGlobal>
 
 #include <iostream>
+using std::cout;
+using std::endl;
 
 #include "pelican/utility/memCheck.h"
 
