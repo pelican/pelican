@@ -58,6 +58,7 @@ void Session::run()
         socket.waitForDisconnected();
 }
 
+
 /**
  * @details
  * This routine processes a general ServerRequest, calling the appropriate
@@ -76,8 +77,9 @@ void Session::processRequest(const ServerRequest& req, QIODevice& out, const uns
                     QList<LockedData> dataList = processStreamDataRequest(static_cast<const StreamDataRequest&>(req), timeout );
 //                    cout << "Session::processRequest():  List size: " << dataList.size() << endl;
                     if( dataList.size() > 0 ) {
-                        AbstractProtocol::StreamData_t data;
-                        for( int i=0; i < dataList.size(); ++i ) {
+                        AbstractProtocol::StreamDataList data;
+                        for( int i=0; i < dataList.size(); ++i )
+                        {
                             LockableStreamData* lockedData = static_cast<LockableStreamData*>(dataList[i].object());
                             data.append(static_cast<StreamData*>(lockedData->streamData()));
                         }
@@ -96,7 +98,7 @@ void Session::processRequest(const ServerRequest& req, QIODevice& out, const uns
                 {
                     QList<LockedData> d = processServiceDataRequest(static_cast<const ServiceDataRequest&>(req) );
                     if( d.size() > 0 ) {
-                        AbstractProtocol::ServiceData_t data;
+                        AbstractProtocol::ServiceDataList data;
                         for( int i=0; i < d.size(); ++i ) {
                             LockableServiceData* lockedData = static_cast<LockableServiceData*>(d[i].object());
                             data.append(lockedData->data().get());

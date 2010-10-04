@@ -3,8 +3,8 @@
 
 #include "pelican/comms/Data.h"
 
-#include <QSet>
-#include <QString>
+#include <QtCore/QSet>
+#include <QtCore/QString>
 #include <boost/shared_ptr.hpp>
 
 

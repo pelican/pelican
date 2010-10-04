@@ -114,7 +114,8 @@ void PelicanProtocol::send(QIODevice& device, const DataSupportResponse& support
 
 }
 
-void PelicanProtocol::send(QIODevice& stream, const AbstractProtocol::StreamData_t& data)
+
+void PelicanProtocol::send(QIODevice& stream, const AbstractProtocol::StreamDataList& data)
 {
     // Construct the stream data header.
     // First integer is the number of Stream Data sets for each Stream Data
@@ -155,7 +156,7 @@ void PelicanProtocol::send(QIODevice& stream, const AbstractProtocol::StreamData
 }
 
 
-void PelicanProtocol::send(QIODevice& stream, const AbstractProtocol::ServiceData_t& data )
+void PelicanProtocol::send(QIODevice& stream, const AbstractProtocol::ServiceDataList& data )
 {
     // construct the service data header
     // first integer is the number of Service Data sets

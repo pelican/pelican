@@ -1,7 +1,7 @@
 #ifndef ABSTRACTPROTOCOL_H
 #define ABSTRACTPROTOCOL_H
 #include <boost/shared_ptr.hpp>
-#include <QMap>
+#include <QtCore/QMap>
 class QString;
 class QIODevice;
 class QTcpSocket;
@@ -20,10 +20,10 @@ class DataSupportResponse;
 
 /**
  * @class AbstractProtocol
- *  
+ *
  * @brief
  * Base class for all server side protocol interpretations.
- * 
+ *
  * @details
  * The protocol interprets the requests of a particular client type into
  * the ServerRequest Objects.
@@ -33,8 +33,8 @@ class DataSupportResponse;
 class AbstractProtocol
 {
     public:
-       typedef QList<StreamData*> StreamData_t;
-       typedef QList<Data*> ServiceData_t;
+       typedef QList<StreamData*> StreamDataList;
+       typedef QList<Data*> ServiceDataList;
 
     public:
         AbstractProtocol() {}
@@ -44,10 +44,10 @@ class AbstractProtocol
         virtual boost::shared_ptr<ServerRequest> request(QTcpSocket& socket) = 0;
 
         /// Write stream data to an I/O device.
-        virtual void send(QIODevice& device, const StreamData_t&) = 0;
+        virtual void send(QIODevice& device, const StreamDataList&) = 0;
 
         /// Write service data to an I/O device.
-        virtual void send(QIODevice& device, const ServiceData_t&) = 0;
+        virtual void send(QIODevice& device, const ServiceDataList&) = 0;
 
         /// Write out a DataBlob object to an I/O Device, as a stream of "name"
         virtual void send(QIODevice& device, const QString& name, const DataBlob& ) = 0;
@@ -65,4 +65,4 @@ class AbstractProtocol
 
 } // namespace pelican
 
-#endif // ABSTRACTPROTOCOL_H 
+#endif // ABSTRACTPROTOCOL_H
