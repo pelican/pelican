@@ -61,6 +61,9 @@ class DataViewer : public QWidget
         // set internal state from the configuration file
         void setConfig( const ConfigNode& config);
 
+        // set internal state from the configuration file
+        void setClient( DataBlobClient& client );
+
         /// the default streams to listen to (on reset/init)
         //  true = default listen false = default inactive
         void setStreamDefault(const QString& stream, bool value);

@@ -9,6 +9,7 @@
 
 #include "pelican/viewer/DataViewer.h"
 #include "pelican/viewer/DataBlobWidget.h"
+#include "pelican/output/DataBlobClient.h"
 #include "pelican/viewer/DataBlobWidgetFactory.h"
 #include "pelican/utility/ConfigNode.h"
 
@@ -155,6 +156,13 @@ void DataViewer::_updatedStreams( const QSet<QString>& streams )
         }
 
     }
+}
+
+void DataViewer::setClient(DataBlobClient& client)
+{
+    _client = &client;
+    connect(_client, SIGNAL(dataUpdated(const QString& , DataBlob*)),
+                        this, SLOT(dataUpdated(const QString& , DataBlob*)));
 }
 
 /**
