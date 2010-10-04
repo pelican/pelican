@@ -18,11 +18,11 @@ class ServerRequest;
 
 /**
  * @class PelicanProtocolTest
- *  
+ *
  * @brief
  *  Unit test for testing the Pelican server protocol
  * @details
- * 
+ *
  */
 
 class PelicanProtocolTest : public CppUnit::TestFixture
@@ -38,6 +38,7 @@ class PelicanProtocolTest : public CppUnit::TestFixture
         CPPUNIT_TEST( test_sendServiceData );
         CPPUNIT_TEST( test_sendDataBlob );
         CPPUNIT_TEST( test_sendDataSupport );
+        CPPUNIT_TEST( test_sendChunk );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -50,14 +51,14 @@ class PelicanProtocolTest : public CppUnit::TestFixture
         void test_sendServiceData();
         void test_sendDataBlob();
         void test_sendDataSupport();
+        void test_sendChunk();
 
     public:
-        PelicanProtocolTest(  );
+        PelicanProtocolTest();
         ~PelicanProtocolTest();
         SocketTester* _st;
         PelicanClientProtocol _protocol;
-
 };
 
 } // namespace pelican
-#endif // PELICANPROTOCOLTEST_H 
+#endif // PELICANPROTOCOLTEST_H

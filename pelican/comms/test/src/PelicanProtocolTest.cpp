@@ -141,6 +141,8 @@ void PelicanProtocolTest::test_sendServiceData()
     }
 }
 
+
+
 void PelicanProtocolTest::test_sendDataBlob()
 {
     try {
@@ -261,7 +263,7 @@ void PelicanProtocolTest::test_request()
     }
     {
         // Use Case:
-        // A DataSupportRequest 
+        // A DataSupportRequest
         DataSupportRequest req;
         PelicanProtocol proto;
         Socket_t& socket = _send(&req);
@@ -384,11 +386,21 @@ void PelicanProtocolTest::test_sendDataSupport()
     }
 }
 
+
+void PelicanProtocolTest::test_sendChunk()
+{
+}
+
+
+
 PelicanProtocolTest::Socket_t& PelicanProtocolTest::_send(ServerRequest* req)
 {
     // create a Socket
     Socket_t& socket = _st->send( _protocol.serialise(*req) );
     return socket;
 }
+
+
+
 
 } // namespace pelican

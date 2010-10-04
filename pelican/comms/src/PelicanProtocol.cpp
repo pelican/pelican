@@ -114,21 +114,22 @@ void PelicanProtocol::send(QIODevice& device, const DataSupportResponse& support
 
 }
 
-void PelicanProtocol::send(QIODevice& stream, const AbstractProtocol::StreamData_t& data )
+void PelicanProtocol::send(QIODevice& stream, const AbstractProtocol::StreamData_t& data)
 {
-    // construct the stream data header
-    // first integer is the number of Stream Data sets
-    // for each Stream Data set there is a name tag, version tag, and size integer
-    // following integer is the number of Service Data sets associated with the stream data
-    // for each Service Data set there is a name tag and version tag
-    // finally the binary data for the Stream itself is sent
+    // Construct the stream data header.
+    // First integer is the number of Stream Data sets for each Stream Data
+    // set there is a name tag, version tag, and size integer following integer
+    // is the number of Service Data sets associated with the stream data for
+    // each Service Data set there is a name tag and version tag finally
+    // the binary data for the Stream itself is sent.
     QByteArray array;
     QDataStream out(&array, QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_4_0);
     out << (quint16)ServerResponse::StreamData;
     out << (quint16)data.size();
     QListIterator<StreamData*> i(data);
-    // stream (socket) header info
+
+    // Stream (socket) header info.
     while (i.hasNext()) {
         StreamData* sd = i.next();
         out << sd->name() << sd->id() << (quint64)(sd->size());
@@ -140,17 +141,19 @@ void PelicanProtocol::send(QIODevice& stream, const AbstractProtocol::StreamData
         }
     }
     stream.write(array);
-    // actual stream data
+
+    // Actual stream data.
     i.toFront();
     while (i.hasNext())
     {
         StreamData* sd = i.next();
         stream.write( (const char*)sd->ptr(), sd->size() );
-//        FIXME
+//        FIXME BROKEN AROUND HERE?
         //cout << "ptr = " << sd->ptr() << endl;
 //        cout << "size = " << sd->size() << endl;
     }
 }
+
 
 void PelicanProtocol::send(QIODevice& stream, const AbstractProtocol::ServiceData_t& data )
 {
