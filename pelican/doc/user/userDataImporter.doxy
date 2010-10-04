@@ -98,6 +98,13 @@ app->setDataClient("DirectDataClientExample");
 @endcode
 
 @section pelicanServer The Pelican Server
+The Pelican Server requires you to specify one or more chunkers
+and associate these chunkers to named one or more named data streams.
 
+This is done via the \em addStreamChunker() and 
+\em addServiceChunker() methods of the \em PelicanServer
+object. As the names suggest the former is used to associate chunkers 
+with data streams that are to be treated as stream data and the latter for 
+data that is to be treated as service data.
 
 */
