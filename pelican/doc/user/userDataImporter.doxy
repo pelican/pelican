@@ -91,6 +91,12 @@ for importing data. You specify the class by name, by calling the
 \em setDataClient(const QString& dataClientName) method on the 
 \em PipelineApplication class.
 
+e.g. for the example above you would use
+@code
+PipelineApplication* app; // initialised application
+app->setDataClient("DirectDataClientExample");
+@endcode
+
 @section pelicanServer The Pelican Server
 
 
