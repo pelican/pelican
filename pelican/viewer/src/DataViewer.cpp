@@ -10,6 +10,7 @@
 #include "pelican/viewer/DataViewer.h"
 #include "pelican/viewer/DataBlobWidget.h"
 #include "pelican/output/DataBlobClient.h"
+#include "pelican/output/Stream.h"
 #include "pelican/viewer/DataBlobWidgetFactory.h"
 #include "pelican/utility/ConfigNode.h"
 
@@ -124,6 +125,11 @@ void DataViewer::setStreamDefault(const QString& stream, bool value)
     _defaultsEnabled[stream] = value;
 }
 
+void DataViewer::newStreamData()
+{
+    _updatedStreams( _client->streams() );
+}
+
 /*
  * @details
  * updates the Gui to reflect the specified streams
@@ -161,8 +167,11 @@ void DataViewer::_updatedStreams( const QSet<QString>& streams )
 void DataViewer::setClient(DataBlobClient& client)
 {
     _client = &client;
-    connect(_client, SIGNAL(dataUpdated(const QString& , DataBlob*)),
-                        this, SLOT(dataUpdated(const QString& , DataBlob*)));
+    connect(_client, SIGNAL( newStreamsAvailable() ),
+            this, SLOT( newStreamData() ) );
+    connect(_client, SIGNAL(newData(const Stream&)),
+            this, SLOT(dataUpdated(const Stream& )) );
+    newStreamData();
 }
 
 /**
@@ -185,6 +194,13 @@ void DataViewer::connectStreams()
 {
     // construct a request for all the streams required
     // TODO
+}
+
+void DataViewer::dataUpdated(const Stream& stream)
+{
+    const QString& name = stream.name();
+    if(  _activeStreams.contains(name) )
+        static_cast<DataBlobWidget*>(_streamTabs->widget(_activeStreams[name]))->updateData(stream.data().get());
 }
 
 void DataViewer::dataUpdated(const QString& stream, DataBlob* blob)

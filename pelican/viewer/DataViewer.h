@@ -20,6 +20,7 @@ namespace pelican {
     class DataBlob;
     class DataBlobWidget;
     class DataBlobWidgetFactory;
+    class Stream;
 
 /**
  * @class DataViewer
@@ -73,6 +74,8 @@ class DataViewer : public QWidget
 
     public slots:
         void dataUpdated(const QString& stream, DataBlob*);
+        void dataUpdated(const Stream&);
+        void newStreamData();
         void about();
 
     protected:
