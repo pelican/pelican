@@ -68,7 +68,7 @@ to your needs:
 @li The \em DirectStreamDataClient connects directly to the incomming
 data stream and so needs both an Adapter and a Chunker.
 
-These can be used directly with the adapters and chunkers specified in the XML
+These clients can be used directly by specifying adapters and chunkers in the XML
 configuration file. Alternatively you can inherit from these classes to set 
 your adapters and chunkers as appropriate using the classes API. This later
 method is recommended as it allows you to provide an "official" data interface 
@@ -89,12 +89,13 @@ app->setDataClient("DirectDataClientExample");
 
 
 @subsection dataClientAdapter Installing an Adapter into a DataClient
-@subsubsection dataClientAdapter_XML XML configuration
-@subsubsection dataClientAdapter_api Using the API
+@subsubsection dataClientAdapter_XML XML configuration to install an Adapter
+@subsubsection dataClientAdapter_API Using the API to install an Adapter
 
 @subsection dataClientChunkers Installing Chunkers into the DirectStreamDataClient
-@subsection connecting_dataClientDirect_XML XML configuration
-@subsection connecting_dataClientDirect Inheriting from the DirectStreamDataClient
+@subsubsection connecting_dataClientDirect_XML XML configuration options to install
+a Chunker 
+@subsubsection connecting_dataClientDirect_API Inheriting from the DirectStreamDataClient
 In the constructor of your DataClient call the \em addChunker()
 method to attach your chunker to the named stream.
 
@@ -119,4 +120,4 @@ object. As the names suggest the former is used to associate chunkers
 with data streams that are to be treated as stream data and the latter for 
 data that is to be treated as service data.
 
-*/
+*
