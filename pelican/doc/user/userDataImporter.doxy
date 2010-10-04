@@ -13,7 +13,7 @@ for importing data into Pelican:
 \li \link user_referenceAdapters Adapter reference\endlink
 \li \link user_referenceConfiguration Configuration reference\endlink
 
-Each of thes reference pages will provide an example of the classes you need
+Each of these reference pages will provide an example of the classes you need
 to implement, but before you delve into these it is important to understand
 a few data related concepts.
 
