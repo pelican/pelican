@@ -61,15 +61,39 @@ of the \em AbstractDataClient interface, which is the primary interface
 used in by the processing pipeline for accessing the data when it needs
 it.
 
-Normally, you should implement your own DataClient by inheriting from 
-one of Pelican's two different DataClients options:
+Pelican provides two different DataClient implementations that you can configure
+to your needs:
 @li The \em PelicanServerClient connects to a pelican server and so only
     requires an Adapter (the Chunker being in the Server itself).
 @li The \em DirectStreamDataClient connects directly to the incomming
 data stream and so needs both an Adapter and a Chunker.
 
-@subsection connecting_dataClientServer Installing an Adapter into a DataClient
+These can be used directly with the adapters and chunkers specified in the XML
+configuration file. Alternatively you can inherit from these classes to set 
+your adapters and chunkers as appropriate using the classes API. This later
+method is recommended as it allows you to provide an "official" data interface 
+for your application with customised configuration options and sensible default
+settings, allowing ease of reuse by pipeline developers.
 
+@subsection specifyDataClient Specifying the DataClient to use
+The PelicanApplication needs to know which data client will be used
+for importing data. You specify the class by name, by calling the
+\em setDataClient(const QString& dataClientName) method on the 
+\em PipelineApplication class.
+
+e.g. for the DirectDataClientExample below you would use
+@code
+PipelineApplication* app; // initialised application
+app->setDataClient("DirectDataClientExample");
+@endcode
+
+
+@subsection dataClientAdapter Installing an Adapter into a DataClient
+@subsubsection dataClientAdapter_XML XML configuration
+@subsubsection dataClientAdapter_api Using the API
+
+@subsection dataClientChunkers Installing Chunkers into the DirectStreamDataClient
+@subsection connecting_dataClientDirect_XML XML configuration
 @subsection connecting_dataClientDirect Inheriting from the DirectStreamDataClient
 In the constructor of your DataClient call the \em addChunker()
 method to attach your chunker to the named stream.
@@ -84,18 +108,6 @@ with the relevant XML chunk that corresponds to the chunker and has
 the \em name parameter that corresponds to the final string passed to 
 \em addChunker.  By passing parameters through this config, you can setup 
 your chunker appropriately.
-
-@subsection specifyDataClient Specifying the DataClient to use
-The PelicanApplication needs to know which data client will be used
-for importing data. You specify the class by name, by calling the
-\em setDataClient(const QString& dataClientName) method on the 
-\em PipelineApplication class.
-
-e.g. for the example above you would use
-@code
-PipelineApplication* app; // initialised application
-app->setDataClient("DirectDataClientExample");
-@endcode
 
 @section pelicanServer The Pelican Server
 The Pelican Server requires you to specify one or more chunkers
