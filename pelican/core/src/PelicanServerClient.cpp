@@ -18,7 +18,15 @@
 #include <QtCore/QByteArray>
 #include <QtCore/QDebug>
 
+#include <QtCore/QTextStream>
+#include <QtCore/QFile>
+#include <QtCore/QString>
+#include <QtCore/QIODevice>
+
 #include <vector>
+#include <iostream>
+using std::cout;
+using std::endl;
 
 #include "pelican/utility/memCheck.h"
 
@@ -34,6 +42,7 @@ PelicanServerClient::PelicanServerClient(const ConfigNode& configNode,
 
     setIP_Address(configNode.getOption("server", "host"));
     setPort(configNode.getOption("server", "port").toUInt());
+    _counter = 0;
 }
 
 PelicanServerClient::~PelicanServerClient()
@@ -117,7 +126,41 @@ QHash<QString, DataBlob*> PelicanServerClient::_response(QIODevice& device,
                     }
                 }
                 // get the stream data
-                if( req.isEmpty() ) {
+                if( req.isEmpty() )
+                {
+//                    ////////////////
+//                    typedef std::complex<short> i16c;
+//                    QString fileName = QString("pelicanServerClient-c%1.dat").arg(_counter);
+//                    QFile file(fileName);
+//                    if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+//                        return validData;
+//                    QTextStream out(&file);
+//
+//                    char* chunk = (char*)malloc(sd->size() * sizeof(char));
+//                    cout << "=========== " << device.bytesAvailable() << endl;
+//                    cout << "------------ " << device.read(chunk, sd->size()) << endl;
+//                    cout << "Pelican client size = " << sd->size() << endl;
+//                    unsigned nPackets = 512;
+//                    size_t headerSize = 16;
+//                    size_t packetSize = 31 * 16 * 2 * sizeof(i16c) + 16;
+//                    unsigned iStart = 1 * 16 * 2 + 0;
+//                    unsigned iEnd = iStart + 16 * 2;
+//                    for (unsigned p = 0; p < nPackets; ++p)
+//                    {
+//                        unsigned offset = (p * packetSize) + headerSize;
+//                        char* packetData = (char*)chunk + offset;
+//                        //std::cout << "p = " << p << "offset = " << offset << endl;
+//                        i16c* d = reinterpret_cast<i16c*>(packetData);
+//                        for (unsigned jj = iStart; jj < iEnd; jj+=2)
+//                        {
+//                            out << QString::number(jj) << " ";
+//                            out << QString::number(d[jj].real()) << " ";
+//                            out << QString::number(d[jj].imag()) << endl;
+//                        }
+//                    }
+//                    free (chunk);
+                    /////////////////
+
                     // no service data to fetch so we can stream it
                     // straight through the adapter
                     validData.unite(_adaptStream(device, sd, dataHash ));
@@ -218,6 +261,7 @@ QHash<QString, DataBlob*> PelicanServerClient::_sendRequest(const ServerRequest&
 
     boost::shared_ptr<ServerResponse> r = _protocol->receive(sock);
     validData =  _response(sock, r, dataHash);
+
 //     std::cout << "-------------------" << std::endl;
 //     foreach (QString key, validData.keys()) {
 //         std::cout << "Key: " << key.toStdString() << std::endl;

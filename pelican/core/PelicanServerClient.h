@@ -47,7 +47,8 @@ class PelicanServerClient : public AbstractDataClient
     private:
         AbstractClientProtocol* _protocol;
         QString _server;
-        unsigned int _port;
+        unsigned _port;
+        unsigned long _counter;
 
         friend class PelicanServerClientTest;
 };
@@ -56,4 +57,4 @@ PELICAN_DECLARE_CLIENT(PelicanServerClient)
 
 } // namespace pelican
 
-#endif // PELICANSERVERCLIENT_H 
+#endif // PELICANSERVERCLIENT_H

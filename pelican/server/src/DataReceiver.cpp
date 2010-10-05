@@ -60,7 +60,7 @@ void DataReceiver::run()
     }
 }
 
-void DataReceiver::_processIncomingData() 
+void DataReceiver::_processIncomingData()
 {
     _chunker->next(_device);
 }

@@ -20,7 +20,7 @@ class DataManager;
 
 /**
  * @class Session
- *  
+ *
  * @brief
  * Class to process a single server request.
  *
@@ -60,10 +60,11 @@ class Session : public QThread
         int _socketDescriptor;
         DataManager* _dataManager;
         AbstractProtocol* _protocol;
+        unsigned _counter;
 
-    friend class SessionTest; // unit test
+        friend class SessionTest; // unit test
 };
 
 } // namespace pelican
 
-#endif // SESSION_H 
+#endif // SESSION_H

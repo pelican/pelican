@@ -14,12 +14,12 @@ namespace pelican {
 
 /**
  * @class PelicanProtocol
- *  
+ *
  * @brief
  *   The primary protocol for communication between pipelines and
  *   the server
  * @details
- * 
+ *
  */
 
 class PelicanProtocol : public AbstractProtocol
@@ -36,7 +36,8 @@ class PelicanProtocol : public AbstractProtocol
         virtual void sendError(QIODevice& stream, const QString&);
 
     private:
+        unsigned long _counter;
 };
 
 } // namespace pelican
-#endif // PELICANPROTOCOL_H 
+#endif // PELICANPROTOCOL_H

@@ -17,6 +17,11 @@
 #include <QtCore/QString>
 #include <QtCore/QMapIterator>
 
+#include <QtCore/QTextStream>
+#include <QtCore/QFile>
+#include <QtCore/QString>
+#include <QtCore/QIODevice>
+
 #include <iostream>
 using std::cout;
 using std::endl;
@@ -30,6 +35,7 @@ namespace pelican {
 PelicanProtocol::PelicanProtocol()
     : AbstractProtocol()
 {
+    _counter = 0;
 }
 
 PelicanProtocol::~PelicanProtocol()
@@ -115,7 +121,7 @@ void PelicanProtocol::send(QIODevice& device, const DataSupportResponse& support
 }
 
 
-void PelicanProtocol::send(QIODevice& stream, const AbstractProtocol::StreamDataList& data)
+void PelicanProtocol::send(QIODevice& device, const AbstractProtocol::StreamDataList& data)
 {
     // Construct the stream data header.
     // First integer is the number of Stream Data sets for each Stream Data
@@ -141,17 +147,47 @@ void PelicanProtocol::send(QIODevice& stream, const AbstractProtocol::StreamData
             out << dat->name() << dat->id() << (quint64)(dat->size());
         }
     }
-    stream.write(array);
+    device.write(array);
 
     // Actual stream data.
     i.toFront();
     while (i.hasNext())
     {
         StreamData* sd = i.next();
-        stream.write( (const char*)sd->ptr(), sd->size() );
-//        FIXME BROKEN AROUND HERE?
-        //cout << "ptr = " << sd->ptr() << endl;
-//        cout << "size = " << sd->size() << endl;
+
+        ////////////////////
+        typedef std::complex<short> i16c;
+        QString fileName = QString("pelicanProtocol-c%1.dat").arg(_counter);
+        QFile file(fileName);
+        if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+            return;
+        QTextStream out(&file);
+
+        char* chunk = (char*)sd->ptr();
+        unsigned nPackets = 512;
+        size_t headerSize = 16;
+        size_t packetSize = 31 * 16 * 2 * sizeof(i16c) + 16;
+        unsigned iStart = 1 * 16 * 2 + 0;
+        unsigned iEnd = iStart + 16 * 2;
+        for (unsigned p = 0; p < nPackets; ++p)
+        {
+            unsigned offset = (p * packetSize) + headerSize;
+            char* packetData = (char*)chunk + offset;
+
+            i16c* d = reinterpret_cast<i16c*>(packetData);
+            for (unsigned jj = iStart; jj < iEnd; jj+=2)
+            {
+                out << QString::number(jj) << " ";
+                out << QString::number(d[jj].real()) << " ";
+                out << QString::number(d[jj].imag()) << endl;
+            }
+        }
+        _counter++;
+        //cout << "size = " << sd->size() << endl;
+        /////////////////
+
+        device.write((const char*)sd->ptr(), sd->size());
+        device.waitForBytesWritten(-1);
     }
 }
 

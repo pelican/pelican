@@ -435,7 +435,6 @@ void PelicanProtocolTest::test_sendChunk()
     in.setVersion(QDataStream::Qt_4_0);
     in >> (quint16&)type;
     CPPUNIT_ASSERT_EQUAL(ServerResponse::StreamData, type);
-
     boost::shared_ptr<StreamDataResponse> receiveResp(new StreamDataResponse);
     quint16 streams;
     in >> streams;
@@ -479,7 +478,6 @@ void PelicanProtocolTest::test_sendChunk()
     for (unsigned i = 0; i < nData; ++i) {
         CPPUNIT_ASSERT_DOUBLES_EQUAL(float(i), out[i], 1e-5f);
     }
-
 }
 
 

@@ -21,7 +21,7 @@ WritableData::~WritableData()
 
 void WritableData::write(const void* buf, size_t size, size_t offset)
 {
-    if (size + offset > _data->data()->size())
+    if (size + offset > _data->data()->size() || offset < 0)
         throw QString("WritableData::write(): Write overflow!");
 
     void* mem = (char*)(_data->data()->data()) + offset;
