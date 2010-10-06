@@ -2,10 +2,12 @@
 #include "pelican/utility/TestConfig.h"
 #include "pelican/utility/Config.h"
 #include "pelican/utility/ConfigNode.h"
-#include <QCoreApplication>
-#include <QTextStream>
-#include <QFile>
-#include <QDir>
+
+#include <QtCore/QCoreApplication>
+#include <QtCore/QTextStream>
+#include <QtCore/QFile>
+#include <QtCore/QDir>
+
 #include <iostream>
 
 #include "pelican/utility/memCheck.h"
@@ -339,7 +341,8 @@ void ConfigTest::test_preprocess()
         Config config;
         config.setFromString(pipeline, server, nodesets);
         //config.summary();
-    } catch (QString e) {
+    }
+    catch (QString e) {
         CPPUNIT_FAIL("Unexpected exception: " + e.toStdString());
     }
 }

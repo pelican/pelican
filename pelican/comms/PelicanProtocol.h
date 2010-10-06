@@ -36,7 +36,6 @@ class PelicanProtocol : public AbstractProtocol
         virtual void sendError(QIODevice& stream, const QString&);
 
     private:
-        unsigned long _counter;
 };
 
 } // namespace pelican

@@ -44,12 +44,12 @@ class Session : public QThread
         void run();
 
         /// Process a request to the server sending the appropriate response.
-        void processRequest(const ServerRequest&, QIODevice&, const unsigned timeout = 0 );
+        void processRequest(const ServerRequest&, QIODevice&, unsigned timeout = 0 );
 
     protected:
         /// Returns the first valid stream data with associated service data.
-        QList<LockedData> processStreamDataRequest(
-                const StreamDataRequest& req, const unsigned timeout = 0);
+        QList<LockedData> processStreamDataRequest(const StreamDataRequest& req,
+                unsigned timeout = 0);
 
         QList<LockedData> processServiceDataRequest(const ServiceDataRequest& req);
 
@@ -60,8 +60,6 @@ class Session : public QThread
         int _socketDescriptor;
         DataManager* _dataManager;
         AbstractProtocol* _protocol;
-        unsigned _counter;
-
         friend class SessionTest; // unit test
 };
 

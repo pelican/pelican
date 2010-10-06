@@ -17,11 +17,6 @@
 #include <QtCore/QString>
 #include <QtCore/QMapIterator>
 
-#include <QtCore/QTextStream>
-#include <QtCore/QFile>
-#include <QtCore/QString>
-#include <QtCore/QIODevice>
-
 #include <iostream>
 using std::cout;
 using std::endl;
@@ -33,9 +28,8 @@ namespace pelican {
 
 // class PelicanProtocol
 PelicanProtocol::PelicanProtocol()
-    : AbstractProtocol()
+: AbstractProtocol()
 {
-    _counter = 0;
 }
 
 PelicanProtocol::~PelicanProtocol()
@@ -44,12 +38,11 @@ PelicanProtocol::~PelicanProtocol()
 
 boost::shared_ptr<ServerRequest> PelicanProtocol::request(QTcpSocket& socket)
 {
-
     int timeout = 1000;
     ServerRequest::Request type = ServerRequest::Error;
     while (socket.bytesAvailable() < (int)sizeof(quint16)) {
         if ( !socket.waitForReadyRead(timeout) ) {
-            return boost::shared_ptr<ServerRequest>(new ServerRequest(type,  socket.errorString() ));
+            return boost::shared_ptr<ServerRequest>(new ServerRequest(type, socket.errorString()));
         }
     }
 
@@ -154,38 +147,6 @@ void PelicanProtocol::send(QIODevice& device, const AbstractProtocol::StreamData
     while (i.hasNext())
     {
         StreamData* sd = i.next();
-
-        ////////////////////
-        typedef std::complex<short> i16c;
-        QString fileName = QString("pelicanProtocol-c%1.dat").arg(_counter);
-        QFile file(fileName);
-        if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
-            return;
-        QTextStream out(&file);
-
-        char* chunk = (char*)sd->ptr();
-        unsigned nPackets = 512;
-        size_t headerSize = 16;
-        size_t packetSize = 31 * 16 * 2 * sizeof(i16c) + 16;
-        unsigned iStart = 1 * 16 * 2 + 0;
-        unsigned iEnd = iStart + 16 * 2;
-        for (unsigned p = 0; p < nPackets; ++p)
-        {
-            unsigned offset = (p * packetSize) + headerSize;
-            char* packetData = (char*)chunk + offset;
-
-            i16c* d = reinterpret_cast<i16c*>(packetData);
-            for (unsigned jj = iStart; jj < iEnd; jj+=2)
-            {
-                out << QString::number(jj) << " ";
-                out << QString::number(d[jj].real()) << " ";
-                out << QString::number(d[jj].imag()) << endl;
-            }
-        }
-        _counter++;
-        //cout << "size = " << sd->size() << endl;
-        /////////////////
-
         device.write((const char*)sd->ptr(), sd->size());
         device.waitForBytesWritten(-1);
     }

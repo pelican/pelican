@@ -48,8 +48,6 @@ class PelicanServerClient : public AbstractDataClient
         AbstractClientProtocol* _protocol;
         QString _server;
         unsigned _port;
-        unsigned long _counter;
-
         friend class PelicanServerClientTest;
 };
 

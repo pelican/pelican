@@ -15,11 +15,6 @@
 #include <QtCore/QHash>
 #include <QtCore/QTime>
 
-#include <QtCore/QTextStream>
-#include <QtCore/QFile>
-#include <QtCore/QString>
-#include <QtCore/QIODevice>
-
 #include <iostream>
 using std::cout;
 using std::endl;
@@ -38,7 +33,6 @@ Session::Session(int socketDescriptor, AbstractProtocol* proto, DataManager* dat
 {
     _protocol = proto;
     _socketDescriptor = socketDescriptor;
-    _counter = 0;
 }
 
 Session::~Session()
@@ -49,7 +43,6 @@ Session::~Session()
 
 /**
  * @details
- *
  */
 void Session::run()
 {
@@ -73,7 +66,7 @@ void Session::run()
  * This routine processes a general ServerRequest, calling the appropriate
  * working and then passes this on to the protocol to be returned to the client
  */
-void Session::processRequest(const ServerRequest& req, QIODevice& out, const unsigned timeout)
+void Session::processRequest(const ServerRequest& req, QIODevice& out, unsigned timeout)
 {
     try {
         switch(req.type()) {
@@ -92,37 +85,6 @@ void Session::processRequest(const ServerRequest& req, QIODevice& out, const uns
                             LockableStreamData* lockedData = static_cast<LockableStreamData*>(dataList[i].object());
                             data.append(static_cast<StreamData*>(lockedData->streamData()));
                         }
-                        ////////////////
-                        StreamData* ss = data.at(0);
-                        typedef std::complex<short> i16c;
-                        if (ss->name() == "LofarTimeStream1")
-                        {
-                            QString fileName = QString("session-c%1.dat").arg(_counter);
-                            QFile file(fileName);
-                            if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
-                                return;
-                            QTextStream out(&file);
-
-                            unsigned nPackets = 512;
-                            size_t headerSize = 16;
-                            size_t packetSize = 31 * 16 * 2 * sizeof(i16c) + 16;
-                            unsigned iStart = 1 * 16 * 2 + 0;
-                            unsigned iEnd = iStart + 16 * 2;
-                            for (unsigned p = 0; p < nPackets; ++p)
-                            {
-                                unsigned offset = (p * packetSize) + headerSize;
-                                char* packetData = (char*)ss->data() + offset;
-                                //std::cout << "p = " << p << "offset = " << offset << endl;
-                                i16c* d = reinterpret_cast<i16c*>(packetData);
-                                for (unsigned jj = iStart; jj < iEnd; jj+=2)
-                                {
-                                    out << QString::number(jj) << " ";
-                                    out << QString::number(d[jj].real()) << " ";
-                                    out << QString::number(d[jj].imag()) << endl;
-                                }
-                            }
-                        }
-                        ////////////////
                         _protocol->send( out, data );
 
                         // Mark as data as being served so it can be deactivated.
@@ -185,7 +147,7 @@ void Session::processRequest(const ServerRequest& req, QIODevice& out, const uns
  *         satisfied.
  */
 QList<LockedData> Session::processStreamDataRequest(const StreamDataRequest& req,
-                                                    const unsigned timeout)
+        const unsigned timeout)
 {
     // Return an empty list if there are no data requirements in the request.
     QList<LockedData> dataList;
@@ -212,6 +174,7 @@ QList<LockedData> Session::processStreamDataRequest(const StreamDataRequest& req
     }
     return dataList;
 }
+
 
 /**
  * @details

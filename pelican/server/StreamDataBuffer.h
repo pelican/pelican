@@ -88,8 +88,6 @@ class StreamDataBuffer : public AbstractDataBuffer
         QQueue<LockableStreamData*> _serveQueue; ///< Queue of blocks waiting to be served.
         QList<LockableStreamData*> _emptyQueue; ///< List of all available blocks.
         DataManager* _manager;
-
-        unsigned long _counter;
 };
 
 } // namespace pelican
