@@ -9,10 +9,12 @@
 
 #include "pelican/viewer/DataViewer.h"
 #include "pelican/viewer/DataBlobWidget.h"
-#include "pelican/output/DataBlobClient.h"
+#include "pelican/output/AbstractDataBlobClient.h"
 #include "pelican/output/Stream.h"
 #include "pelican/viewer/DataBlobWidgetFactory.h"
 #include "pelican/utility/ConfigNode.h"
+
+#include <iostream>
 
 namespace pelican {
 
@@ -164,7 +166,17 @@ void DataViewer::_updatedStreams( const QSet<QString>& streams )
     }
 }
 
-void DataViewer::setClient(DataBlobClient& client)
+QList<QString> DataViewer::streams() const
+{
+    QList<QString> list;
+    foreach( const QAction* action, _streamActionGroup->actions() )
+    {
+        list.append( action->text() );
+    }
+    return list;
+}
+
+void DataViewer::setClient(AbstractDataBlobClient& client)
 {
     _client = &client;
     connect(_client, SIGNAL( newStreamsAvailable() ),
@@ -200,7 +212,9 @@ void DataViewer::dataUpdated(const Stream& stream)
 {
     const QString& name = stream.name();
     if(  _activeStreams.contains(name) )
+    {
         static_cast<DataBlobWidget*>(_streamTabs->widget(_activeStreams[name]))->updateData(stream.data().get());
+    }
 }
 
 void DataViewer::dataUpdated(const QString& stream, DataBlob* blob)

@@ -1,8 +1,22 @@
-SUBPACKAGE(viewerTest viewer)
+SUBPACKAGE(viewerTest viewer outputTest)
 set(
    viewerTest_src
    src/viewerTest.cpp
+   src/DataViewerTest.cpp
 )
+
+set(
+   viewerUtilityTest_src
+   src/TestDataViewerWidget.cpp
+   )
+
 add_executable(viewerTest ${viewerTest_src} )
-target_link_libraries(viewerTest ${SUBPACKAGE_LIBRARIES} ${CPPUNIT_LIBRARIES} memoryTracer )
+SUBPACKAGE_LIBRARY(viewerTestUtils ${viewerUtilityTest_src})
+SUBPACKAGE_SET_EXTERNAL_LIBRARIES(
+    ${QT_QTCORE_LIBRARY}
+    )
+target_link_libraries(viewerTest 
+                      ${SUBPACKAGE_LIBRARIES} 
+                      ${CPPUNIT_LIBRARIES} 
+                      memoryTracerDummy )
 add_test(viewerTest viewerTest )

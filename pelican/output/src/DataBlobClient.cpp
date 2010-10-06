@@ -23,7 +23,7 @@ namespace pelican {
  *@details DataBlobClient 
  */
 DataBlobClient::DataBlobClient( const ConfigNode& configNode, QObject* parent )
-    : QObject(parent), _streamInfoSubscription(false)
+    : AbstractDataBlobClient(parent), _streamInfoSubscription(false)
 {
     _destructor = false;
     _protocol = new PelicanClientProtocol;

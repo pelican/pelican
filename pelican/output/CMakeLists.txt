@@ -4,10 +4,12 @@ set(output_moc_headers
     DataBlobClient.h
     ThreadedBlobServer.h
     TCPConnectionManager.h
+    AbstractDataBlobClient.h
 )
 
 set(output_src
     src/AbstractOutputStream.cpp
+    src/AbstractDataBlobClient.cpp
     src/DataBlobClient.cpp
     src/OutputStreamManager.cpp
     src/PelicanTCPBlobServer.cpp

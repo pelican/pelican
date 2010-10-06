@@ -16,7 +16,7 @@ class QMenu;
  */
 
 namespace pelican {
-    class DataBlobClient;
+    class AbstractDataBlobClient;
     class DataBlob;
     class DataBlobWidget;
     class DataBlobWidgetFactory;
@@ -63,7 +63,7 @@ class DataViewer : public QWidget
         void setConfig( const ConfigNode& config);
 
         // set internal state from the configuration file
-        void setClient( DataBlobClient& client );
+        void setClient( AbstractDataBlobClient& client );
 
         /// the default streams to listen to (on reset/init)
         //  true = default listen false = default inactive
@@ -71,6 +71,9 @@ class DataViewer : public QWidget
 
         // set internal state from the configuration file
         void setStreamViewer( const QString& stream, const QString& viewerType);
+
+        // returns a list of know streams
+        QList<QString> streams() const;
 
     public slots:
         void dataUpdated(const QString& stream, DataBlob*);
@@ -96,7 +99,7 @@ class DataViewer : public QWidget
         QMenu* _viewMenu;
         QActionGroup* _streamActionGroup;
 
-        DataBlobClient* _client;
+        AbstractDataBlobClient* _client;
 
         QMap<QString,int> _activeStreams; // currently activated streams and their tab id
         QMap<QString,bool> _defaultsEnabled; // the required state of a stream
