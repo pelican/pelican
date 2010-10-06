@@ -34,11 +34,16 @@ class AbstractDataBlobClient : public QObject
         /// returns the streams served by the blob server
         virtual QSet<QString> streams() = 0;
 
+    protected:
+        /// report verbose messages
+        void verbose(const QString&, int level = 1);
+
     signals:
         void newData(const Stream& stream);
         void newStreamsAvailable();
 
-    private:
+    protected:
+        int _verbose;
 };
 
 } // namespace pelican

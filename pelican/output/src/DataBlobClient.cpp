@@ -30,6 +30,9 @@ DataBlobClient::DataBlobClient( const ConfigNode& configNode, QObject* parent )
     _tcpSocket = new QTcpSocket;
     _blobFactory = new DataBlobFactory;
 
+
+    if( configNode.hasAttribute("verbose") )
+        _verbose = 1;
     setHost(configNode.getOption("connection", "host"));
     setPort(configNode.getOption("connection", "port").toUInt());
 
@@ -132,7 +135,7 @@ bool DataBlobClient::_sendRequest( const ServerRequest* req )
 void DataBlobClient::_reconnect()
 {
     if( ! _destructor ) {
-        std::cout << "DataBlobClient: Connection lost - reconnecting()" << std::endl;
+        verbose( "DataBlobClient: Connection lost - reconnecting()", 1); 
         subscribe( _subscriptions );
         if( _streamInfoSubscription )
             _requestStreamInfo();
@@ -162,6 +165,7 @@ void DataBlobClient::_response()
             break;
         case ServerResponse::DataSupport:   // We have received supported data info
             {
+                verbose("DataSupport information received");
                 DataSupportResponse* res = static_cast<DataSupportResponse*>(r.get());
                 _streams = res->streamData() + res->serviceData();
                 emit newStreamsAvailable();
@@ -170,6 +174,7 @@ void DataBlobClient::_response()
             break;
         case ServerResponse::Blob:   // We have received a blob
             {
+                verbose("DataBlob received");
                 DataBlobResponse* res = static_cast<DataBlobResponse*>(r.get());
                 while (_tcpSocket->bytesAvailable() < (qint64)res->dataSize())
                    _tcpSocket -> waitForReadyRead(-1);

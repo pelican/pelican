@@ -9,7 +9,7 @@ namespace pelican {
  * @details Constructs a AbstractDataBlobClient object.
  */
 AbstractDataBlobClient::AbstractDataBlobClient(QObject* parent)
-    : QObject(parent)
+    : QObject(parent), _verbose(0)
 {
 }
 
@@ -18,6 +18,14 @@ AbstractDataBlobClient::AbstractDataBlobClient(QObject* parent)
  */
 AbstractDataBlobClient::~AbstractDataBlobClient()
 {
+}
+
+void AbstractDataBlobClient::verbose(const QString& msg, int level)
+{
+    if( level > _verbose )
+    {
+        std::cout << "DataBlobClient: " << msg.toStdString() << std::endl;
+    }
 }
 
 } // namespace pelican
