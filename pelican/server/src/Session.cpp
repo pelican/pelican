@@ -16,6 +16,9 @@
 #include <QtCore/QTime>
 
 #include <iostream>
+using std::cout;
+using std::endl;
+#include <complex>
 
 #include "pelican/utility/memCheck.h"
 
@@ -40,7 +43,6 @@ Session::~Session()
 
 /**
  * @details
- *
  */
 void Session::run()
 {
@@ -58,12 +60,13 @@ void Session::run()
         socket.waitForDisconnected();
 }
 
+
 /**
  * @details
  * This routine processes a general ServerRequest, calling the appropriate
  * working and then passes this on to the protocol to be returned to the client
  */
-void Session::processRequest(const ServerRequest& req, QIODevice& out, const unsigned timeout)
+void Session::processRequest(const ServerRequest& req, QIODevice& out, unsigned timeout)
 {
     try {
         switch(req.type()) {
@@ -76,8 +79,9 @@ void Session::processRequest(const ServerRequest& req, QIODevice& out, const uns
                     QList<LockedData> dataList = processStreamDataRequest(static_cast<const StreamDataRequest&>(req), timeout );
 //                    cout << "Session::processRequest():  List size: " << dataList.size() << endl;
                     if( dataList.size() > 0 ) {
-                        AbstractProtocol::StreamData_t data;
-                        for( int i=0; i < dataList.size(); ++i ) {
+                        AbstractProtocol::StreamDataList data;
+                        for( int i=0; i < dataList.size(); ++i )
+                        {
                             LockableStreamData* lockedData = static_cast<LockableStreamData*>(dataList[i].object());
                             data.append(static_cast<StreamData*>(lockedData->streamData()));
                         }
@@ -96,7 +100,7 @@ void Session::processRequest(const ServerRequest& req, QIODevice& out, const uns
                 {
                     QList<LockedData> d = processServiceDataRequest(static_cast<const ServiceDataRequest&>(req) );
                     if( d.size() > 0 ) {
-                        AbstractProtocol::ServiceData_t data;
+                        AbstractProtocol::ServiceDataList data;
                         for( int i=0; i < d.size(); ++i ) {
                             LockableServiceData* lockedData = static_cast<LockableServiceData*>(d[i].object());
                             data.append(lockedData->data().get());
@@ -143,7 +147,7 @@ void Session::processRequest(const ServerRequest& req, QIODevice& out, const uns
  *         satisfied.
  */
 QList<LockedData> Session::processStreamDataRequest(const StreamDataRequest& req,
-                                                    const unsigned timeout)
+        const unsigned timeout)
 {
     // Return an empty list if there are no data requirements in the request.
     QList<LockedData> dataList;
@@ -170,6 +174,7 @@ QList<LockedData> Session::processStreamDataRequest(const StreamDataRequest& req
     }
     return dataList;
 }
+
 
 /**
  * @details

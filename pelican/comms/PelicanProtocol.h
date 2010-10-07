@@ -14,12 +14,12 @@ namespace pelican {
 
 /**
  * @class PelicanProtocol
- *  
+ *
  * @brief
  *   The primary protocol for communication between pipelines and
  *   the server
  * @details
- * 
+ *
  */
 
 class PelicanProtocol : public AbstractProtocol
@@ -28,8 +28,8 @@ class PelicanProtocol : public AbstractProtocol
         PelicanProtocol(  );
         ~PelicanProtocol();
         virtual boost::shared_ptr<ServerRequest> request(QTcpSocket& socket);
-        virtual void send(QIODevice& stream, const AbstractProtocol::StreamData_t& );
-        virtual void send(QIODevice& stream, const AbstractProtocol::ServiceData_t& );
+        virtual void send(QIODevice& stream, const AbstractProtocol::StreamDataList& );
+        virtual void send(QIODevice& stream, const AbstractProtocol::ServiceDataList& );
         virtual void send(QIODevice& device, const DataSupportResponse&);
         virtual void send(QIODevice& stream, const QString& );
         virtual void send(QIODevice& stream, const QString& name, const DataBlob& );
@@ -39,4 +39,4 @@ class PelicanProtocol : public AbstractProtocol
 };
 
 } // namespace pelican
-#endif // PELICANPROTOCOL_H 
+#endif // PELICANPROTOCOL_H

@@ -47,7 +47,7 @@ void TestProtocol::send( QIODevice& device, const QString& message)
     device.write(_last);
 }
 
-void TestProtocol::send( QIODevice& device, const AbstractProtocol::StreamData_t& d)
+void TestProtocol::send( QIODevice& device, const AbstractProtocol::StreamDataList& d)
 {
     std::cout << "TestProtocol::send(): List length: " << d.size() << std::endl;
     Q_ASSERT(d.size() > 0);
@@ -67,7 +67,7 @@ void TestProtocol::send( QIODevice& device, const AbstractProtocol::StreamData_t
     stream << _last.data();
 }
 
-void TestProtocol::send( QIODevice& device, const AbstractProtocol::ServiceData_t& )
+void TestProtocol::send( QIODevice& device, const AbstractProtocol::ServiceDataList& )
 {
     _last.clear();
     device.write(_last);

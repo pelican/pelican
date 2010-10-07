@@ -9,15 +9,19 @@
 #include "StreamDataResponse.h"
 #include "ServiceDataResponse.h"
 #include "StreamData.h"
+
 #include "pelican/comms/DataSupportRequest.h"
 #include "pelican/comms/DataSupportResponse.h"
 #include "pelican/data/DataRequirements.h"
 #include "pelican/utility/SocketTester.h"
 #include "pelican/data/test/TestDataBlob.h"
+#include "pelican/server/WritableData.h"
 
 #include <QtCore/QBuffer>
 
 #include <iostream>
+using std::endl;
+using std::cout;
 #include <cstdlib>
 
 #include "pelican/utility/memCheck.h"
@@ -51,7 +55,7 @@ void PelicanProtocolTest::test_sendServiceData()
         // Use Case
         // Empty Data
         PelicanProtocol proto;
-        AbstractProtocol::ServiceData_t data;
+        AbstractProtocol::ServiceDataList data;
         QByteArray block;
         QBuffer stream(&block);
         stream.open(QIODevice::WriteOnly);
@@ -69,7 +73,7 @@ void PelicanProtocolTest::test_sendServiceData()
         // Use Case
         // A Single Data Object
         PelicanProtocol proto;
-        AbstractProtocol::ServiceData_t data;
+        AbstractProtocol::ServiceDataList data;
         QByteArray block;
         QBuffer stream(&block);
         stream.open(QIODevice::WriteOnly);
@@ -100,7 +104,7 @@ void PelicanProtocolTest::test_sendServiceData()
         // Use Case
         // Multiple Data Objects
         PelicanProtocol proto;
-        AbstractProtocol::ServiceData_t data;
+        AbstractProtocol::ServiceDataList data;
         QByteArray block;
         QBuffer stream(&block);
         stream.open(QIODevice::WriteOnly);
@@ -141,6 +145,8 @@ void PelicanProtocolTest::test_sendServiceData()
     }
 }
 
+
+
 void PelicanProtocolTest::test_sendDataBlob()
 {
     try {
@@ -179,7 +185,7 @@ void PelicanProtocolTest::test_sendStreamData()
         // Use Case
         // Empty Data
         PelicanProtocol proto;
-        AbstractProtocol::StreamData_t data;
+        AbstractProtocol::StreamDataList data;
         QByteArray block;
         QBuffer stream(&block);
         stream.open(QIODevice::WriteOnly);
@@ -199,7 +205,7 @@ void PelicanProtocolTest::test_sendStreamData()
         StreamData streamData("d1", data1.data(), data1.size());
         CPPUNIT_ASSERT_EQUAL( (long)data1.size(), (long)streamData.size() );
         streamData.setId("testid");
-        AbstractProtocol::StreamData_t data;
+        AbstractProtocol::StreamDataList data;
         data.append(&streamData);
         QByteArray block;
         QBuffer stream(&block);
@@ -229,7 +235,7 @@ void PelicanProtocolTest::test_sendStreamData()
         d1->setId("d1id");
         sd.addAssociatedData(d1);
 
-        AbstractProtocol::StreamData_t data;
+        AbstractProtocol::StreamDataList data;
         data.append(&sd);
         QByteArray block;
         QBuffer stream(&block);
@@ -261,7 +267,7 @@ void PelicanProtocolTest::test_request()
     }
     {
         // Use Case:
-        // A DataSupportRequest 
+        // A DataSupportRequest
         DataSupportRequest req;
         PelicanProtocol proto;
         Socket_t& socket = _send(&req);
@@ -384,11 +390,106 @@ void PelicanProtocolTest::test_sendDataSupport()
     }
 }
 
+
+void PelicanProtocolTest::test_sendChunk()
+{
+    // Create some data.
+    unsigned nData = 8000;
+    std::vector<float> fData(nData);
+    for (unsigned i = 0; i < nData; ++i) {
+        fData[i] = float(i);
+    }
+
+    // Create a stream data object from the data.
+    QString streamName = "testStream";
+    QString streamId = "testId";
+    StreamData sData(streamName, reinterpret_cast<void*>(&fData[0]),
+            nData * sizeof(float));
+    sData.setId(streamId);
+    CPPUNIT_ASSERT_EQUAL(nData * sizeof(float), sData.size());
+    CPPUNIT_ASSERT(sData.isValid());
+
+    // Add the stream data to a stream data set.
+    AbstractProtocol::StreamDataList streamDataSet;
+    streamDataSet.append(&sData);
+
+    // Create a pelican protocol used to send data.
+    PelicanProtocol proto;
+
+    // Create a device to send to.
+    QByteArray buffer;
+    QBuffer device(&buffer);
+    device.open(QIODevice::WriteOnly);
+
+    // Send data to the device.
+    proto.send(device, streamDataSet);
+
+    // Open the device for reading.
+    device.close();
+    device.open(QIODevice::ReadOnly);
+
+    // Receive out of the device in the same was as
+    // PelicanClientProtocol::receive()
+    ServerResponse::Response type;
+    QDataStream in(&device);
+    in.setVersion(QDataStream::Qt_4_0);
+    in >> (quint16&)type;
+    CPPUNIT_ASSERT_EQUAL(ServerResponse::StreamData, type);
+    boost::shared_ptr<StreamDataResponse> receiveResp(new StreamDataResponse);
+    quint16 streams;
+    in >> streams;
+    CPPUNIT_ASSERT_EQUAL(quint16(1), streams);
+    QString name;
+    in >> name;
+    QString id;
+    in >> id;
+    quint64 size;
+    in >> size;
+    CPPUNIT_ASSERT_EQUAL(streamName.toStdString(), name.toStdString());
+    CPPUNIT_ASSERT_EQUAL(streamId.toStdString(), id.toStdString());
+    quint64 expectedSize = nData * sizeof(float);
+    CPPUNIT_ASSERT_EQUAL(expectedSize, size);
+
+    quint16 assocaites;
+    in >> assocaites;
+    CPPUNIT_ASSERT_EQUAL(quint16(0), assocaites);
+
+    StreamData * outStream = new StreamData(name, 0, (unsigned long)size);
+    receiveResp->setStreamData(outStream);
+    outStream->setId(id);
+
+    // Copy of content of PelicanServerClient::_response()
+    QHash<QString, DataBlob*> validData;
+    CPPUNIT_ASSERT_EQUAL(ServerResponse::StreamData, receiveResp->type());
+
+    StreamDataResponse* response = static_cast<StreamDataResponse*>(receiveResp.get());
+    StreamData * sd = response->streamData();
+    CPPUNIT_ASSERT(sd != 0);
+
+    // _adaptStream(device, sd, dataHash)
+    CPPUNIT_ASSERT_EQUAL(size_t(nData * sizeof(float)), sd->size());
+
+    // adapt and check.
+    std::vector<char> outDataTemp(int(nData * sizeof(float)));
+    device.read(&outDataTemp[0], nData * sizeof(float));
+    std::vector<float> outData(nData);
+    float* out = &outData[0];
+    out = reinterpret_cast<float*>(&outDataTemp[0]);
+    for (unsigned i = 0; i < nData; ++i) {
+        CPPUNIT_ASSERT_DOUBLES_EQUAL(float(i), out[i], 1e-5f);
+    }
+}
+
+
+
 PelicanProtocolTest::Socket_t& PelicanProtocolTest::_send(ServerRequest* req)
 {
     // create a Socket
     Socket_t& socket = _st->send( _protocol.serialise(*req) );
     return socket;
 }
+
+
+
 
 } // namespace pelican

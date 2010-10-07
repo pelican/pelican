@@ -8,6 +8,9 @@
 #include <QtCore/QMutexLocker>
 #include <stdlib.h>
 #include <iostream>
+using std::cout;
+using std::endl;
+#include <complex>
 
 #include "pelican/utility/memCheck.h"
 
@@ -181,7 +184,8 @@ void StreamDataBuffer::activateData(LockableStreamData* data)
     if (data->isValid()) {
         QMutexLocker locker(&_mutex);
         _serveQueue.enqueue(data);
-    } else {
+    }
+    else {
         QMutexLocker writeLocker(&_writeMutex);
         _emptyQueue.push_back(data);
     }

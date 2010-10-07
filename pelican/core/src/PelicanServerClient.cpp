@@ -19,6 +19,9 @@
 #include <QtCore/QDebug>
 
 #include <vector>
+#include <iostream>
+using std::cout;
+using std::endl;
 
 #include "pelican/utility/memCheck.h"
 
@@ -29,7 +32,6 @@ PelicanServerClient::PelicanServerClient(const ConfigNode& configNode,
         const DataTypes& types, const Config* config)
     : AbstractDataClient(configNode, types, config), _protocol(0)
 {
-
     _protocol = new PelicanClientProtocol;
 
     setIP_Address(configNode.getOption("server", "host"));
@@ -117,7 +119,8 @@ QHash<QString, DataBlob*> PelicanServerClient::_response(QIODevice& device,
                     }
                 }
                 // get the stream data
-                if( req.isEmpty() ) {
+                if( req.isEmpty() )
+                {
                     // no service data to fetch so we can stream it
                     // straight through the adapter
                     validData.unite(_adaptStream(device, sd, dataHash ));
@@ -218,6 +221,7 @@ QHash<QString, DataBlob*> PelicanServerClient::_sendRequest(const ServerRequest&
 
     boost::shared_ptr<ServerResponse> r = _protocol->receive(sock);
     validData =  _response(sock, r, dataHash);
+
 //     std::cout << "-------------------" << std::endl;
 //     foreach (QString key, validData.keys()) {
 //         std::cout << "Key: " << key.toStdString() << std::endl;
