@@ -33,11 +33,16 @@ class TestDataBlobClient : public AbstractDataBlobClient
         /// emits signals and send Data
         void send(const Stream&);
 
+        /// return the set of all streams that have been subscribed to
+        const QSet<QString>& subscriptions() const;
+
         // interface requirements
         virtual QSet<QString> streams();
+        virtual void subscribe( const QSet<QString>& streams );
 
     private:
         QSet<QString> _streams;
+        QSet<QString> _subs;
 };
 
 } // namespace pelican

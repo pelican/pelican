@@ -164,6 +164,7 @@ void DataViewer::_updatedStreams( const QSet<QString>& streams )
         }
 
     }
+    connectStreams();
 }
 
 QList<QString> DataViewer::streams() const
@@ -204,8 +205,7 @@ void DataViewer::about()
 
 void DataViewer::connectStreams()
 {
-    // construct a request for all the streams required
-    // TODO
+    _client->subscribe(QSet<QString>::fromList(_activeStreams.keys()));
 }
 
 void DataViewer::dataUpdated(const Stream& stream)

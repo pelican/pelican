@@ -90,13 +90,6 @@ bool DataBlobClient::_requestStreamInfo()
     return _sendRequest(&req);
 }
 
-void DataBlobClient::subscribe(const QString& stream)
-{
-    QSet<QString> set;
-    set.insert(stream);
-    subscribe(set);
-}
-
 void DataBlobClient::subscribe(const QSet<QString>& streams)
 {
 

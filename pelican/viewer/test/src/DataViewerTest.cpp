@@ -62,6 +62,7 @@ void DataViewerTest::test_client()
     DataViewer viewer(config, address);
     viewer.setClient(client);
     viewer.setStreamViewer(testStream, "TestDataViewerWidget");
+    CPPUNIT_ASSERT_EQUAL(0, client.subscriptions().size() );
     viewer.enableStream(testStream);
 
     Stream str( testStream );
@@ -71,6 +72,7 @@ void DataViewerTest::test_client()
     CPPUNIT_ASSERT_EQUAL( 1, viewer.streams().size() );
     CPPUNIT_ASSERT_EQUAL( testStream.toStdString() , 
                           viewer.streams()[0].toStdString() );
+    CPPUNIT_ASSERT_EQUAL(1, client.subscriptions().size() );
     CPPUNIT_ASSERT_EQUAL( 1, TestDataViewerWidget::updateCalled() );
 
 }

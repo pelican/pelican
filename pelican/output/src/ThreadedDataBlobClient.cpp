@@ -63,4 +63,9 @@ void ThreadedDataBlobClient::setPort(quint16 port)
     _thread->client()->setPort(port);
 }
 
+void ThreadedDataBlobClient::subscribe( const QSet<QString>& streams )
+{
+    _thread->client()->subscribe(streams);
+}
+
 } // namespace pelican

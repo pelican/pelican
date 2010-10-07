@@ -1,5 +1,6 @@
 #include "AbstractDataBlobClient.h"
 
+#include <QSet>
 #include <iostream>
 #include "pelican/utility/memCheck.h"
 
@@ -27,6 +28,13 @@ void AbstractDataBlobClient::verbose(const QString& msg, int level)
     {
         std::cout << "DataBlobClient: " << msg.toStdString() << std::endl;
     }
+}
+
+void AbstractDataBlobClient::subscribe(const QString& stream)
+{
+    QSet<QString> set;
+    set.insert(stream);
+    subscribe(set);
 }
 
 } // namespace pelican

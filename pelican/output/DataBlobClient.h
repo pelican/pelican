@@ -43,8 +43,8 @@ class DataBlobClient : public AbstractDataBlobClient
         virtual QSet<QString> streams();
 
         /// listen for the named streams
-        void subscribe( const QSet<QString>& streams );
-        void subscribe( const QString& stream );
+        using AbstractDataBlobClient::subscribe;
+        virtual void subscribe( const QSet<QString>& streams );
 
         /// set the host to listen to
         void setHost(const QString& host);

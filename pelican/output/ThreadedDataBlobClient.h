@@ -39,6 +39,7 @@ class ThreadedDataBlobClient : public AbstractDataBlobClient
 
         // base class interface requirements
         virtual QSet<QString> streams();
+        virtual void subscribe( const QSet<QString>& streams );
 
     protected slots:
         void emitNewStreamsAvailable();

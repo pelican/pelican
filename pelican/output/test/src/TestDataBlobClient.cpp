@@ -36,4 +36,14 @@ QSet<QString> TestDataBlobClient::streams()
     return _streams;
 }
 
+void TestDataBlobClient::subscribe( const QSet<QString>& streams )
+{
+    _subs.unite(streams);
+}
+
+const QSet<QString>& TestDataBlobClient::subscriptions() const
+{
+    return _subs;
+}
+
 } // namespace pelican

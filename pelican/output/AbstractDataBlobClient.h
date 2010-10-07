@@ -2,6 +2,7 @@
 #define ABSTRACTDATABLOBCLIENT_H
 
 #include <QObject>
+#include <QString>
 
 /**
  * @file AbstractDataBlobClient.h
@@ -33,6 +34,10 @@ class AbstractDataBlobClient : public QObject
 
         /// returns the streams served by the blob server
         virtual QSet<QString> streams() = 0;
+
+        /// listen for the named streams
+        virtual void subscribe( const QSet<QString>& streams ) = 0;
+        void subscribe( const QString& stream );
 
     protected:
         /// report verbose messages
