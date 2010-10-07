@@ -3,6 +3,7 @@
 
 
 #include "pelican/output/AbstractDataBlobClient.h"
+#include "pelican/data/DataRequirements.h"
 #include <QSet>
 #include <QString>
 #include <QHash>
@@ -86,6 +87,8 @@ class DataBlobClient : public AbstractDataBlobClient
         mutable bool  _streamInfo; // marker to test if stream response has been received
         mutable bool  _streamInfoSubscription;
         bool _destructor;
+        DataRequirements _currentSubscription;
+
 };
 
 } // namespace pelican

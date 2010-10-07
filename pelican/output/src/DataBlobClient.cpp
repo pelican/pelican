@@ -71,15 +71,15 @@ void DataBlobClient::setHost(const QString& ipaddress)
 QSet<QString> DataBlobClient::streams()
 {
     if( ! _streamInfoSubscription ) {
-            _streamInfoSubscription = true;
-            _streamInfo = false;
-            if ( _requestStreamInfo() )
-            {
-                while ( (! _streamInfo) && _tcpSocket->state() == QAbstractSocket::ConnectedState ) {
-                    sleep(1);
-                    QCoreApplication::processEvents(); 
-                }
+        _streamInfoSubscription = true;
+        _streamInfo = false;
+        if ( _requestStreamInfo() )
+        {
+            while ( (! _streamInfo) && _tcpSocket->state() == QAbstractSocket::ConnectedState ) {
+                sleep(1);
+                QCoreApplication::processEvents(); 
             }
+        }
     }
     return _streams;
 }
@@ -104,9 +104,12 @@ void DataBlobClient::subscribe(const QSet<QString>& streams)
                 _streamMap.insert(stream, new Stream(stream) );
             require.setStreamData(stream);
         }
-        req.addDataOption(require);
-        _sendRequest(&req);
-        _subscriptions.unite(streams);
+        if( require != _currentSubscription )
+        {
+            req.addDataOption(require);
+            _sendRequest(&req);
+            _subscriptions.unite(streams);
+        }
     }
 
 }
@@ -130,6 +133,7 @@ void DataBlobClient::_reconnect()
 {
     if( ! _destructor ) {
         verbose( "DataBlobClient: Connection lost - reconnecting()", 1); 
+        _currentSubscription.clear();
         subscribe( _subscriptions );
         if( _streamInfoSubscription )
             _requestStreamInfo();
