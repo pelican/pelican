@@ -1,6 +1,7 @@
 #include "AbstractOutputStream.h"
 
 
+#include <iostream>
 #include "pelican/utility/ConfigNode.h"
 #include "pelican/utility/memCheck.h"
 
