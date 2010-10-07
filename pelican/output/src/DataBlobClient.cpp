@@ -99,6 +99,7 @@ void DataBlobClient::subscribe(const QSet<QString>& streams)
         DataRequirements require;
         foreach( const QString& stream, streams )
         {
+            verbose(QString("Subscribing to stream : \"") + stream + " \"" );
             if( ! _streamMap.contains(stream) )
                 _streamMap.insert(stream, new Stream(stream) );
             require.setStreamData(stream);

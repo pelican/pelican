@@ -51,10 +51,18 @@ class DataViewer : public QWidget
         // returns the connected server port
         quint16 port() { return _port; };
 
-        // enable tracking of the specified stream
+        /// enable tracking of the specified stream
+        //  n.b. call connectStreams() to actually
+        //  connect to a stream after calling this
+        //  to mark it for connection
         void enableStream( const QString& );
-        // disable tracking of the specified stream
+ 
+        /// disable tracking of the specified stream
+        //  n.b. call connectStreams() to actually
+        //  disconnect from a stream after calling this
+        //  to mark it for deconnection
         void disableStream( const QString& );
+
         // flip the tracking status of the specifed stream
         // returns true if the new status is on false if off
         bool toggleStream( const QString& );
