@@ -26,12 +26,13 @@ namespace pelican {
 class TestOutputStreamer : public AbstractOutputStream
 {
     public:
-        TestOutputStreamer( const QString& id="TestOutputStreamer" );
+        TestOutputStreamer( const QString& id="TestOutputStreamer", const ConfigNode& config =  ConfigNode() );
         TestOutputStreamer( const ConfigNode& config );
         ~TestOutputStreamer();
         const QString& id() const { return _id; };
 
-        virtual void send(const QString& streamName, const DataBlob* dataBlob);
+    protected:
+        virtual void sendStream(const QString& streamName, const DataBlob* dataBlob);
 
     private:
         QString _id;

@@ -1,6 +1,7 @@
 #include "AbstractOutputStream.h"
 
 
+#include "pelican/utility/ConfigNode.h"
 #include "pelican/utility/memCheck.h"
 
 namespace pelican {
@@ -9,8 +10,11 @@ namespace pelican {
 /**
  *@details AbstractOutputStream 
  */
-AbstractOutputStream::AbstractOutputStream( const ConfigNode& )
+AbstractOutputStream::AbstractOutputStream( const ConfigNode& c )
+    : _verbose(0)
 {
+    if( c.hasAttribute("verbose") )
+        _verbose = c.getAttribute("verbose").toInt();
 }
 
 /**
@@ -18,6 +22,21 @@ AbstractOutputStream::AbstractOutputStream( const ConfigNode& )
  */
 AbstractOutputStream::~AbstractOutputStream()
 {
+}
+
+void AbstractOutputStream::send(const QString& streamName, const DataBlob* dataBlob)
+{
+    verbose( QString("sending stream \"") + streamName + "\"");
+    sendStream(streamName, dataBlob );
+}
+
+
+void AbstractOutputStream::verbose(const QString& msg, int level)
+{
+    if( level <= _verbose )
+    {
+        std::cout << "OutputStream: " << msg.toStdString() << std::endl;
+    }
 }
 
 } // namespace pelican

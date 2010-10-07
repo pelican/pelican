@@ -7,8 +7,9 @@ namespace pelican {
 /**
  *@details TestOutputStreamer 
  */
-TestOutputStreamer::TestOutputStreamer( const QString& id)
-    : AbstractOutputStream(_config), _id(id)
+TestOutputStreamer::TestOutputStreamer( const QString& id, 
+                                        const ConfigNode& config)
+    : AbstractOutputStream(config), _id(id), _config(config)
 {
 }
 
@@ -26,7 +27,7 @@ TestOutputStreamer::~TestOutputStreamer()
 {
 }
 
-void TestOutputStreamer::send(const QString& streamName, const DataBlob* dataBlob)
+void TestOutputStreamer::sendStream(const QString& streamName, const DataBlob* dataBlob)
 {
     _received[streamName] = dataBlob;
 }

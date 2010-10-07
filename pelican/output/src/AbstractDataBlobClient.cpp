@@ -24,7 +24,7 @@ AbstractDataBlobClient::~AbstractDataBlobClient()
 
 void AbstractDataBlobClient::verbose(const QString& msg, int level)
 {
-    if( level > _verbose )
+    if( level <= _verbose )
     {
         std::cout << "DataBlobClient: " << msg.toStdString() << std::endl;
     }

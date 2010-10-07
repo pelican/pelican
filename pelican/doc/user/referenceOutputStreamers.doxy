@@ -5,24 +5,28 @@
 
 You will need to send your processed data elsewhere, perhaps to a storage
 system, a monitoring and control system or a further processing pipeline.
-Pelicans Output Manager allows you to separate the details of the destination of the data
-from the specification of what has to be written out.
+Pelicans Output Manager allows you to separate the details of the destination of 
+the data from the specification of what has to be written out.
 
-There are a number of default OutputStreamers that may already meet your needs, however it may
-be that you have special requirements and need to write your own.
+There are a number of default OutputStreamers that may already meet your needs, 
+however it may be that you have special requirements and need to write your own.
 
 @section user_framework_outputStreamers_pelican Pelicans Default OutputStreamers
 
-@subsection user_framework_outputStreamers_pelican_blobserver The TCP Blob Server ( \b PelicanTCPBlobServer )
+@subsection user_framework_outputStreamers_pelican_blobserver The TCP Blob Server ( PelicanTCPBlobServer )
 This streamer sets up a TCP streaming server to supply any connecting client with
-a copy of the data as it becomes available. Use this to move data to another machine for
-storage, further processing, online monitoring, etc.
+a copy of the data as it becomes available (server push model). 
+Use this to move data to another machine or priocess for storage, further processing, 
+online monitoring, etc.
 
-You can use the \em DataBlobClient class to connect and read from this server in your client applications.
+You can use the \em DataBlobClient class to connect and read from this server 
+in your client applications.
 
 @section user_framework_outputStreamers_custom Custom OutputStreamers
-The \em AbstractOutputStreamer provides the base class for plug-ins into the OutputManager.
-Simply inherit from this and implement the virtual \em send() method to provide your required functionality.
+The \em AbstractOutputStreamer provides the base class for plug-ins into the 
+OutputManager.
+Simply inherit from this and implement the virtual \em sendStream() method to 
+provide the required functionality.
 
 It is important to register this object with the PELICAN_DECLARE macro.
 e.g.
