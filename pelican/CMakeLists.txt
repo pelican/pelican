@@ -102,7 +102,7 @@ DECLARE_PROJECT_LIBRARY(pelican
     comms core data emulator modules output server utility viewer)
 
 DECLARE_PROJECT_LIBRARY(pelican-testutils
-    dataTest coreTest serverTest)
+    viewerTest outputTest dataTest coreTest serverTest)
 
 # === Sub modules (recurse into sub-directories to build modules).
 include(modules.cmake)
