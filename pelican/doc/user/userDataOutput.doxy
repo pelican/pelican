@@ -33,6 +33,7 @@ an OutputStreamer is done serially with the pipeline processing, so it will slow
 If this is an issue it is better to export it via the PelicanTCPBlobServer 
 and process the streams elsewhere.
 
+@subsection user_dataOutput_example An Example
 We take the example pipeline from previous sections to illustrate how the data output system works.
 We will output the DataBlobExample object before and after processing to different streams, called "pre" and
 "post". We will then connect different modules to these streams to show how to redirect the data.
@@ -52,6 +53,7 @@ void PipelineExample::run(QHash<QString, DataBlob*>& data)
 @endcode
 
 @subsubsection user_dataOutput_xmlconfig Configuring the Output Manager
+
 So now we have two data streams which we can direct wherever is required. We will configure the output manager 
 to redirect these streams: we will redirect both streams to the PelicanTCPBlobServer for 
 export to other clients, the "post" stream we also direct to a comma seperated values file on the local machine
