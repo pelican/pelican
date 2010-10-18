@@ -30,9 +30,9 @@ void ModuleExample::run(const DataBlobExample* input1,
         output->resize(nPts);
 
     // Get pointers to the memory to use.
-    const float* in1 = input1->ptr();
-    const float* in2 = input2->ptr();
-    float* out = output->ptr();
+    const float* in1 = input1->data();
+    const float* in2 = input2->data();
+    float* out = output->data();
 
     // Perform the operation.
     if (optype == OpAdd) {
