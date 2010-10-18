@@ -4,6 +4,7 @@ set(examples_src
     DirectDataClientExample.cpp
     AdapterExample.cpp
     ChunkerExample.cpp
+    OutputStreamExample.cpp
     PipelineExample.cpp
     ModuleExample.cpp
 )

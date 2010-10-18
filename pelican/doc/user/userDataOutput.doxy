@@ -51,6 +51,7 @@ void PipelineExample::run(QHash<QString, DataBlob*>& data)
 }
 @endcode
 
+@subsubsection user_dataOutput_xmlconfig Configuring the Output Manager
 So now we have two data streams which we can direct wherever is required. We will configure the output manager 
 to redirect these streams: we will redirect both streams to the PelicanTCPBlobServer for 
 export to other clients, the "post" stream we also direct to a comma seperated values file on the local machine
