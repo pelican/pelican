@@ -85,6 +85,17 @@ void TCPConnectionManagerTest::test_dataSupportedRequest()
     DataSupportResponse* res = static_cast<DataSupportResponse*>(r.get());
     CPPUNIT_ASSERT_EQUAL( 1, res->streamData().size() );
     CPPUNIT_ASSERT( res->streamData().contains(stream1) );
+
+    // Use case:
+    // Existing stream type arrives
+    // Expect:
+    // not to receive a new DataRequest
+    _server->send(stream1,&blob);
+    sleep(1);
+    _app->processEvents();
+
+    r = _clientProtocol->receive(*client);
+    CPPUNIT_ASSERT( r->type() != ServerResponse::DataSupport );
 }
 
 void TCPConnectionManagerTest::test_send()
