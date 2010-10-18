@@ -47,7 +47,7 @@ void OutputStreamExample::sendStream(const QString& /*streamName*/, const DataBl
         return;
     const DataBlobExample* data = static_cast<const DataBlobExample*>(dataBlob);
     
-    // construct the comman seperated vlaue string
+    // construct the comman seperated value string
     QString csv;
     if( data->size() > 0 )
     {
