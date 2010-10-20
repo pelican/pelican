@@ -1,4 +1,4 @@
-SUBPACKAGE(viewer comms utility)
+SUBPACKAGE(viewer output comms utility)
 set( viewer_src
     src/DataBlobWidgetFactory.cpp
     src/DataBlobWidget.cpp

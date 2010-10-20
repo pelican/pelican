@@ -29,11 +29,11 @@ class DataBlobExample : public DataBlob
         // Constructs an example data blob.
         DataBlobExample() : DataBlob("DataBlobExample") {}
 
-        // Returns a const pointer to the start of the data.
-        const float* ptr() const {return (_data.size() > 0 ? &_data[0] : NULL);}
+        /// Returns a const pointer to the start of the data.
+        const float* data() const { return (_data.size() > 0 ? &_data[0] : 0); }
 
-        // Returns a pointer to the start of the data.
-        float* ptr() { return (_data.size() > 0 ? &_data[0] : NULL); }
+        /// Returns a pointer to the start of the data.
+        float* data() { return (_data.size() > 0 ? &_data[0] : 0); }
 
         // Resizes the data store provided by the data blob.
         void resize(unsigned length) { _data.resize(length); }

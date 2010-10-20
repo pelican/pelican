@@ -33,4 +33,6 @@ class DirectDataClientExample : public DirectStreamDataClient
     private:
 };
 
+PELICAN_DECLARE_CLIENT(DirectDataClientExample)
+
 #endif // DIRECTDATACLIENTEXAMPLE_H 

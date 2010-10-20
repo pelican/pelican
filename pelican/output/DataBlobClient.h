@@ -2,7 +2,8 @@
 #define DATABLOBCLIENT_H
 
 
-#include <QObject>
+#include "pelican/output/AbstractDataBlobClient.h"
+#include "pelican/data/DataRequirements.h"
 #include <QSet>
 #include <QString>
 #include <QHash>
@@ -30,20 +31,21 @@ namespace pelican {
  * <server host="hostname" port="1234">
  */
 
-class DataBlobClient : public QObject
+class DataBlobClient : public AbstractDataBlobClient
 {
+
     Q_OBJECT
 
     public:
         DataBlobClient( const ConfigNode&, QObject* parent = 0 );
         ~DataBlobClient();
 
-        /// returns the streams served by the blob server
-        QSet<QString> streams();
+        // base class interface requirements
+        virtual QSet<QString> streams();
 
         /// listen for the named streams
-        void subscribe( const QSet<QString>& streams );
-        void subscribe( const QString& stream );
+        using AbstractDataBlobClient::subscribe;
+        virtual void subscribe( const QSet<QString>& streams );
 
         /// set the host to listen to
         void setHost(const QString& host);
@@ -56,7 +58,7 @@ class DataBlobClient : public QObject
 
     protected slots:
         void _response();
-    
+
         /// attempt to reconnect to the server and restore subscriptions
         //in case of a sudden disconnect
         void _reconnect();
@@ -68,12 +70,11 @@ class DataBlobClient : public QObject
         /// return a data blob ready to be deserialised
         DataBlob* _blob(const QString& type, const QString& stream);
 
-    signals:
-        void newData(const Stream& stream);
-        void newStreamsAvailable();
-
     private:
         bool _requestStreamInfo();
+
+    protected:
+        QSet<QString> _streams;
 
     private:
         QHash<QString, Stream*> _streamMap;
@@ -82,11 +83,12 @@ class DataBlobClient : public QObject
         DataBlobFactory* _blobFactory;
         QString       _server;
         quint16       _port;
-        QSet<QString> _streams;
         QSet<QString> _subscriptions;
         mutable bool  _streamInfo; // marker to test if stream response has been received
         mutable bool  _streamInfoSubscription;
         bool _destructor;
+        DataRequirements _currentSubscription;
+
 };
 
 } // namespace pelican

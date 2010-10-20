@@ -16,10 +16,11 @@ class QMenu;
  */
 
 namespace pelican {
-    class DataBlobClient;
+    class AbstractDataBlobClient;
     class DataBlob;
     class DataBlobWidget;
     class DataBlobWidgetFactory;
+    class Stream;
 
 /**
  * @class DataViewer
@@ -50,16 +51,27 @@ class DataViewer : public QWidget
         // returns the connected server port
         quint16 port() { return _port; };
 
-        // enable tracking of the specified stream
+        /// enable tracking of the specified stream
+        //  n.b. call connectStreams() to actually
+        //  connect to a stream after calling this
+        //  to mark it for connection
         void enableStream( const QString& );
-        // disable tracking of the specified stream
+ 
+        /// disable tracking of the specified stream
+        //  n.b. call connectStreams() to actually
+        //  disconnect from a stream after calling this
+        //  to mark it for deconnection
         void disableStream( const QString& );
+
         // flip the tracking status of the specifed stream
         // returns true if the new status is on false if off
         bool toggleStream( const QString& );
 
         // set internal state from the configuration file
         void setConfig( const ConfigNode& config);
+
+        // set internal state from the configuration file
+        void setClient( AbstractDataBlobClient& client );
 
         /// the default streams to listen to (on reset/init)
         //  true = default listen false = default inactive
@@ -68,8 +80,13 @@ class DataViewer : public QWidget
         // set internal state from the configuration file
         void setStreamViewer( const QString& stream, const QString& viewerType);
 
+        // returns a list of know streams
+        QList<QString> streams() const;
+
     public slots:
         void dataUpdated(const QString& stream, DataBlob*);
+        void dataUpdated(const Stream&);
+        void newStreamData();
         void about();
 
     protected:
@@ -90,7 +107,7 @@ class DataViewer : public QWidget
         QMenu* _viewMenu;
         QActionGroup* _streamActionGroup;
 
-        DataBlobClient* _client;
+        AbstractDataBlobClient* _client;
 
         QMap<QString,int> _activeStreams; // currently activated streams and their tab id
         QMap<QString,bool> _defaultsEnabled; // the required state of a stream

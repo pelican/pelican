@@ -30,10 +30,21 @@ class AbstractOutputStream
         AbstractOutputStream( const ConfigNode& configNode );
         virtual ~AbstractOutputStream();
 
+        /// send the data
+        void send(const QString& streamName, const DataBlob* dataBlob);
+
+    protected:
         /// Will be called with data to be streamed
-        virtual void send(const QString& streamName, const DataBlob* dataBlob) = 0;
+        virtual void sendStream(const QString& streamName, const DataBlob* dataBlob) = 0;
+
+    protected:
+        /// report verbose messages
+        void verbose(const QString&, int level = 1);
 
     private:
+
+    protected:
+        int _verbose;
 };
 
 } // namespace pelican

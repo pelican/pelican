@@ -1,0 +1,44 @@
+#ifndef OUTPUTSTREAMEXAMPLE_H
+#define OUTPUTSTREAMEXAMPLE_H
+#include <QList>
+class QIODevice;
+
+
+#include "pelican/output/AbstractOutputStream.h"
+
+/**
+ * @file OutputStreamExample.h
+ */
+
+using namespace pelican;
+
+/**
+ * @class OutputStreamExample
+ * 
+ * @brief
+ *    Writes an DataBlobExample object to a CSV file
+ * @details
+ * 
+ */
+class OutputStreamExample : public AbstractOutputStream
+{
+    public:
+        /// OutputStreamExample constructor.
+        OutputStreamExample( const ConfigNode& configNode );
+
+        /// OutputStreamExample destructor.
+        ~OutputStreamExample();
+        
+        /// add a file for output to be saved
+        void addFile( const QString& filename );
+
+    protected:
+        void sendStream(const QString& streamName, const DataBlob* dataBlob);
+
+    private:
+        QList<QIODevice*> _devices;
+};
+
+PELICAN_DECLARE(AbstractOutputStream, OutputStreamExample)
+
+#endif // OUTPUTSTREAMEXAMPLE_H 

@@ -37,7 +37,7 @@ void AdapterExample::deserialise(QIODevice* in)
     in->read(&temp[0], _chunkSize);
 
     // Get the pointer to the data array in the data blob being filled.
-    float* data = blob->ptr();
+    float* data = blob->data();
 
     // Fill the data blob.
     for (unsigned i = 0; i < length; ++i) {

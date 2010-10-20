@@ -22,7 +22,7 @@ Stream::~Stream()
 {
 }
 
-boost::shared_ptr<DataBlob> Stream::data()
+boost::shared_ptr<DataBlob> Stream::data() const
 {
     return _data;
 }

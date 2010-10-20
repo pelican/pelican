@@ -5,8 +5,13 @@ SUBPACKAGE(outputTest output dataTest)
 # ==============================================================================
 set(outputTestUtils_src
     src/TestOutputStreamer.cpp
+    src/TestDataBlobClient.cpp
 )
+set( outputTestUtils_moc_headers
+     TestDataBlobClient.h
+   )
 
+QT4_WRAP_CPP(outputTestUtils_src ${outputTestUtils_moc_headers})
 SUBPACKAGE_LIBRARY(outputTestUtils ${outputTestUtils_src})
 SUBPACKAGE_SET_EXTERNAL_LIBRARIES(
     ${QT_QTCORE_LIBRARY}
@@ -21,6 +26,7 @@ set(outputTest_src
     src/PelicanTCPBlobServerTest.cpp
     src/OutputStreamManagerTest.cpp
     src/DataBlobClientTest.cpp
+    src/ThreadedDataBlobClientTest.cpp
 )
 add_executable(outputTestMT ${outputTest_src})
 target_link_libraries(outputTestMT

@@ -61,7 +61,7 @@ int PelicanTCPBlobServer::clientsForStream(const QString& stream) const
  * @details
  * Send datablob to connected clients
  */
-void PelicanTCPBlobServer::send(const QString& streamName, const DataBlob* incoming)
+void PelicanTCPBlobServer::sendStream(const QString& streamName, const DataBlob* incoming)
 {
     // Tell the threaded blob server to send data
     // This must be blocking, to avoid the DataBlob being recycled before

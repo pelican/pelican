@@ -32,7 +32,7 @@ class Stream
         const QString& type() const;
 
         /// return a shared ptr to the data
-        boost::shared_ptr<DataBlob> data();
+        boost::shared_ptr<DataBlob> data() const;
 
         /// set the data
         //  note that this transfers ownership of the data object

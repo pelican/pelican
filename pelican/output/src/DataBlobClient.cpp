@@ -23,13 +23,16 @@ namespace pelican {
  *@details DataBlobClient 
  */
 DataBlobClient::DataBlobClient( const ConfigNode& configNode, QObject* parent )
-    : QObject(parent), _streamInfoSubscription(false)
+    : AbstractDataBlobClient(parent), _streamInfoSubscription(false)
 {
     _destructor = false;
     _protocol = new PelicanClientProtocol;
     _tcpSocket = new QTcpSocket;
     _blobFactory = new DataBlobFactory;
 
+
+    if( configNode.hasAttribute("verbose") )
+        _verbose = 1;
     setHost(configNode.getOption("connection", "host"));
     setPort(configNode.getOption("connection", "port").toUInt());
 
@@ -68,15 +71,15 @@ void DataBlobClient::setHost(const QString& ipaddress)
 QSet<QString> DataBlobClient::streams()
 {
     if( ! _streamInfoSubscription ) {
-            _streamInfoSubscription = true;
-            _streamInfo = false;
-            if ( _requestStreamInfo() )
-            {
-                while ( (! _streamInfo) && _tcpSocket->state() == QAbstractSocket::ConnectedState ) {
-                    sleep(1);
-                    QCoreApplication::processEvents(); 
-                }
+        _streamInfoSubscription = true;
+        _streamInfo = false;
+        if ( _requestStreamInfo() )
+        {
+            while ( (! _streamInfo) && _tcpSocket->state() == QAbstractSocket::ConnectedState ) {
+                sleep(1);
+                QCoreApplication::processEvents(); 
             }
+        }
     }
     return _streams;
 }
@@ -85,13 +88,6 @@ bool DataBlobClient::_requestStreamInfo()
 {
     DataSupportRequest req;
     return _sendRequest(&req);
-}
-
-void DataBlobClient::subscribe(const QString& stream)
-{
-    QSet<QString> set;
-    set.insert(stream);
-    subscribe(set);
 }
 
 void DataBlobClient::subscribe(const QSet<QString>& streams)
@@ -103,13 +99,17 @@ void DataBlobClient::subscribe(const QSet<QString>& streams)
         DataRequirements require;
         foreach( const QString& stream, streams )
         {
+            verbose(QString("Subscribing to stream : \"") + stream + " \"" );
             if( ! _streamMap.contains(stream) )
                 _streamMap.insert(stream, new Stream(stream) );
             require.setStreamData(stream);
         }
-        req.addDataOption(require);
-        _sendRequest(&req);
-        _subscriptions.unite(streams);
+        if( require != _currentSubscription )
+        {
+            req.addDataOption(require);
+            _sendRequest(&req);
+            _subscriptions.unite(streams);
+        }
     }
 
 }
@@ -132,7 +132,8 @@ bool DataBlobClient::_sendRequest( const ServerRequest* req )
 void DataBlobClient::_reconnect()
 {
     if( ! _destructor ) {
-        std::cout << "DataBlobClient: Connection lost - reconnecting()" << std::endl;
+        verbose( "DataBlobClient: Connection lost - reconnecting()", 1); 
+        _currentSubscription.clear();
         subscribe( _subscriptions );
         if( _streamInfoSubscription )
             _requestStreamInfo();
@@ -162,6 +163,7 @@ void DataBlobClient::_response()
             break;
         case ServerResponse::DataSupport:   // We have received supported data info
             {
+                verbose("DataSupport information received");
                 DataSupportResponse* res = static_cast<DataSupportResponse*>(r.get());
                 _streams = res->streamData() + res->serviceData();
                 emit newStreamsAvailable();
@@ -170,6 +172,7 @@ void DataBlobClient::_response()
             break;
         case ServerResponse::Blob:   // We have received a blob
             {
+                verbose("DataBlob received");
                 DataBlobResponse* res = static_cast<DataBlobResponse*>(r.get());
                 while (_tcpSocket->bytesAvailable() < (qint64)res->dataSize())
                    _tcpSocket -> waitForReadyRead(-1);

@@ -49,11 +49,12 @@ class PelicanTCPBlobServer : public AbstractOutputStream
         // start listening for incomming connections
         void listen();
 
-    public:
-        virtual void send(const QString& streamName, const DataBlob* dataBlob);
 
         /// return the number of clients listening to a specified stream
         int clientsForStream(const QString& stream) const;
+
+    protected:
+        virtual void sendStream(const QString& streamName, const DataBlob* dataBlob);
 
     private:
         ThreadedBlobServer* _server;
