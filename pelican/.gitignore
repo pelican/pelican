@@ -10,4 +10,8 @@ gnu_debug/
 /gnu_debug
 .cproject
 .project
+../.cproject
+../.project
+./.cproject
+./.project
 .settings/org.eclipse.cdt.ui.prefs
