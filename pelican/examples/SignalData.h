@@ -1,8 +1,8 @@
-#ifndef DATABLOBEXAMPLE_H
-#define DATABLOBEXAMPLE_H
+#ifndef SIGNALDATA_H
+#define SIGNALDATA_H
 
 /**
- * @file DataBlobExample.h
+ * @file SignalData.h
  */
 
 #include "pelican/data/DataBlob.h"
@@ -11,23 +11,23 @@
 using namespace pelican;
 
 /**
- * @class DataBlobExample
+ * @class SignalData
  *
  * @brief
- * Data blob to hold an array of floating-point data.
+ * Data blob to hold an array of floating-point time-stream data.
  *
  * @details
- * This data blob holds an array of floating-point data.
+ * This data blob holds an array of floating-point time-stream data.
  */
 
 /*
- * This data blob holds an array of floating-point data.
+ * This data blob holds an array of floating-point time-stream data.
  */
-class DataBlobExample : public DataBlob
+class SignalData : public DataBlob
 {
     public:
-        // Constructs an example data blob.
-        DataBlobExample() : DataBlob("DataBlobExample") {}
+        // Constructs a signal data blob.
+        SignalData() : DataBlob("SignalData") {}
 
         // Returns a const pointer to the start of the data.
         const float* ptr() const {return (_data.size() > 0 ? &_data[0] : NULL);}
@@ -45,13 +45,6 @@ class DataBlobExample : public DataBlob
         std::vector<float> _data; // The actual data array.
 };
 
-PELICAN_DECLARE_DATABLOB(DataBlobExample)
+PELICAN_DECLARE_DATABLOB(SignalData)
 
-// Other example data blobs used by the example pipeline.
-typedef DataBlobExample DataBlobExample1;
-typedef DataBlobExample DataBlobExample2;
-
-PELICAN_DECLARE_DATABLOB(DataBlobExample1)
-PELICAN_DECLARE_DATABLOB(DataBlobExample2)
-
-#endif // DATABLOBEXAMPLE_H
+#endif // SIGNALDATA_H
