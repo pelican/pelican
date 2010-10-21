@@ -1,3 +1,5 @@
+namespace pelican {
+
 /**
 \page user_referenceModules Pipeline Modules
 
@@ -42,7 +44,7 @@ has a tag name the same as the module class name.
 Since the base class does not check for common options, there are currently no
 standard XML tags for modules. However, there are some convenience tags.
 
-Frequency channels can be specified in the XML configuration as 
+Frequency channels can be specified in the XML configuration as
 
 \verbatim <channels>1,5,182</channels> \endverbatim
 
@@ -57,7 +59,7 @@ standard vector.
 \code
 std::vector<unsigned> = configNode.getUnsignedList("channels");
 \endcode
- 
+
 \section user_referenceModules_example Example
 
 This example creates a module to perform a trivial operation on two
@@ -83,3 +85,4 @@ and the class implementation is:
 \include ModuleExample.cpp
 
 */
+}
