@@ -1,34 +1,39 @@
 #ifndef DATABLOBCLIENT_H
 #define DATABLOBCLIENT_H
 
-
-#include "pelican/output/AbstractDataBlobClient.h"
-#include "pelican/data/DataRequirements.h"
-#include <QSet>
-#include <QString>
-#include <QHash>
-class QTcpSocket;
-
 /**
  * @file DataBlobClient.h
  */
 
+#include "pelican/output/AbstractDataBlobClient.h"
+#include "pelican/data/DataRequirements.h"
+
+#include <QtCore/QSet>
+#include <QtCore/QString>
+#include <QtCore/QHash>
+
+class QTcpSocket;
+
 namespace pelican {
-    class AbstractClientProtocol;
-    class ConfigNode;
-    class DataBlobFactory;
-    class ServerRequest;
-    class DataBlob;
-    class Stream;
+class AbstractClientProtocol;
+class ConfigNode;
+class DataBlobFactory;
+class ServerRequest;
+class DataBlob;
+class Stream;
 
 /**
  * @class DataBlobClient
- *  
+ *
  * @brief
- *   A client for connecting to PelicanTCPBlobServer
+ * A client for connecting to PelicanTCPBlobServer
+ *
  * @details
- * @example configuration
+ *
+ * \par Example Config:
+ * \code
  * <server host="hostname" port="1234">
+ * \endcode
  */
 
 class DataBlobClient : public AbstractDataBlobClient
@@ -92,4 +97,4 @@ class DataBlobClient : public AbstractDataBlobClient
 };
 
 } // namespace pelican
-#endif // DATABLOBCLIENT_H 
+#endif // DATABLOBCLIENT_H
