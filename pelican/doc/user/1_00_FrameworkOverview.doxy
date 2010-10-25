@@ -42,4 +42,33 @@ All of the following functional units must be present in a pelican application:
 Each one has a base class from which to inherit and is the mechanism by which you extend pelican to your needs.
 More details can be found in the \link user_gettingStarted Getting Started Guide\endlink.
 
+
+\section user_frameworkOverview Framework Modes.
+
+TODO === TAKEN FROM OLD RUNNING PELICAN ===
+
+This section gives a brief overview of how to run an application written using
+the Pelican framework. For details on how to create a Pelican framework
+application please refer to the sections in this guide describing pipelines,
+chunkers, adapters, modules, and writing the application binary.
+
+As explained in the description of the structure of Pelican (# TODO ref
+structural overview), Pelican has two running modes:
+
+\li Server mode: Where a Pelican server binary recieves the input data streams
+    and pipeline binaries receive their data from the server by means of a
+    request.
+\li Direct input mode: Where pipeline binaries recieve data streams directly.
+
+TODO
+
+\section user_referenceRunning_overview Overview
+TODO.
+
+\section user_referenceRunning_example Example
+TODO
+
+
+
+
 */

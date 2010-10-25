@@ -32,6 +32,8 @@ the components of Pelican and how they can be they should be used.
 \section intro_framework The Pelican Framework
 
 TODO reword to work with next page...
+
+
 The Pelican framework provides a system to split one or more incoming data
 streams into well defined chunks. These chunks are then passed on to any number
 of parallel computational pipelines for processing. As a chunk is passed to a

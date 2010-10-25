@@ -965,7 +965,7 @@ GENERATE_TREEVIEW      = ALL
 # used to set the initial width (in pixels) of the frame in which the tree
 # is shown.
 
-TREEVIEW_WIDTH         = 250
+TREEVIEW_WIDTH         = 240
 
 # Use this tag to change the font size of Latex formulas included
 # as images in the HTML documentation. The default is 10. Note that
