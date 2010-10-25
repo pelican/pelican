@@ -2,7 +2,7 @@
 \page user_referenceEmulators Data Emulation
 
 \section user_referenceEmulators_introduction Introduction
- 
+
 Synthetic packets of data are often required when testing new data chunkers.
 These synthetic data packets can be generated conveniently using the classes
 provided in the data emulation framework.
@@ -16,7 +16,7 @@ generate the required data packets. The emulator itself will be destroyed
 with the EmulatorDriver object, so it must not be explicitly deleted.
 
 The primary function of the AbstractEmulator is to provide a pointer to a block
-of memory to use when sending data packets. 
+of memory to use when sending data packets.
 
 \section user_referenceEmulators_overview Overview
 
@@ -27,7 +27,7 @@ To create a new data emulator:
     inherit \c AbstractEmulator.
 \li In the derived class, ensure that a pointer to an open input device is
     returned from the \c createDevice() method. The \c AbstractUdpEmulator
-    already takes care of this, but this method must be implemented for 
+    already takes care of this, but this method must be implemented for
     \c AbstractEmulator derived classes. The base class takes ownership of
     the device, so it must not be deleted explicitly.
 \li In the derived class, implement the \c getPacketData() method.
@@ -62,7 +62,7 @@ of the configuration node.
 Classes derived from \c AbstractUdpEmulator must supply a configuration node
 containing at least the host address and port number. Use the
 \c connection tag with \c host and \c port attributes, as in the following
-example. 
+example.
 
 \section user_referenceEmulators_example Example
 

@@ -1,35 +1,42 @@
 /**
 
-\mainpage Pelican User Guide
+
+
+\mainpage Introduction
+
+The Pelican framework is an efficient, lightweight C++ library for quasi-real
+time data processing. The library provides a framework to separate data
+acquisition from data processing, allowing the scalability and flexibility to
+fit a number of scenarios.
+
+With its origin in radio astronomy, processing data as it arrives from a
+telescope, Pelican was originally an acronym for the <em>Pipeline for
+Extensible, Lightweight Imaging and CAlibratioN</em>. However, the framework
+is sufficiently generic to be useful to any application that requires the
+efficient processing of incoming data streams.
 
 
 
-\section general_intro Introduction
 
-The Pelican framework is an efficient, lightweight C++ library for processing
-data in quasi-real time. The library aims to separate data acquisition from data
-processing, allowing the scalability and flexibility to fit a number of scenarios.
 
-With its origin in radio astronomy, processing data as it arrives from a telescope,
-Pelican was originally an acronym for the <em>Pipeline for Extensible, Lightweight Imaging
-and CAlibratioN</em>. However, the framework is sufficiently generic to be
-useful in any application that needs to efficiently process incomming data streams.
-
-\subsection intro_framework The Pelican Framework
+\section intro_framework The Pelican Framework
 
 The Pelican framework provides a system to split one or more incoming data
-streams into well defined chunks. These chunks are then passed on to any number of
-parallel computational pipelines for processing. As a chunk is passed to a pipeline
-only when it is available to process the data, an efficient load balancing is achieved.
+streams into well defined chunks. These chunks are then passed on to any number
+of parallel computational pipelines for processing. As a chunk is passed to a
+pipeline only when it is available to process the data, an efficient load
+balancing is achieved.
 
-Pelican also provides facilities to export and view data streams as
-processing completes. For example, processed data from a series of pipelines could
-be easily streamed to another pelican server for aggregation and distribution to
+Pelican also provides facilities to export and view data streams as processing
+completes. For example, processed data from a series of pipelines could be
+easily streamed to another Pelican server for aggregation and distribution to
 other pipelines for further processing.
 
 
 
-\subsection intro_applications The Pelican API
+
+
+\section intro_applications The Pelican API
 
 Applications using Pelican are written by utilising or implementing a number of
 components which adhere to a well defined API and describe:
@@ -46,7 +53,9 @@ on initialisation.
 
 
 
-\subsection intro_running Running Pelican Applications
+
+
+\section intro_running Running Pelican Applications
 
 Pelican applications can be run in two different configurations, depending
 on the data processing requirements. Because of its modular desgin,
@@ -62,6 +71,5 @@ then more pipelines can be added as required.
 
 For more modest data processing needs, a single machine can be used by
 connecting a processing pipeline directly to the input data stream.
-
 
 */
