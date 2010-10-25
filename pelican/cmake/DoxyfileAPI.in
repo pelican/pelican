@@ -571,7 +571,7 @@ WARN_LOGFILE           = doxygenCode_warnings.txt
 
 INPUT                  = "@CMAKE_CURRENT_SOURCE_DIR@" \
                          "@CMAKE_CURRENT_BINARY_DIR@" \
-                          @CMAKE_CURRENT_SOURCE_DIR@/doc/CodeMain.doxy
+                          @CMAKE_CURRENT_SOURCE_DIR@/doc/API.doxy
 
 
 # This tag can be used to specify the character encoding of the source files

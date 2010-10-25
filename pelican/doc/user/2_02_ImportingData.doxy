@@ -2,9 +2,72 @@
 
 \page user_dataImporter Importing Data
 
+\section importData_Intro Introduction
+TODO explain what this section is...
+also intro the tutorial
+
+
+--------------------------------------------
+
+\section inportData_DataTypes Input Data Types
+TODO concepts
+\subsection importData_ServiceData ServiceData
+TODO
+
+\subsection importData_StreamData StreamData
+TODO
+
+--------------------------------------------
+
+
+\section importData_Chunkers Chunkers
+TODO Concept + tutorial chunker
+... SignalChunker ...
+
+--------------------------------------------------
+
+
+\section importData_Adapters Adapters
+TODO concept + tutorial adapter SignalDataAdapter
+
+\subsection importData_TcpStreams TCP streams
+TODO Reading the right number of bytes in the adapter when using TCP stream
+
+
+----------------------------------------------
+
+\section importData_Server Server
+TODO Intro - what its used for.
+
+\subsection importData_IntegratingChunkers Integrating Chunkers
+TODO howto...
+
+---------------------------
+
+\section importData_UsingDataClients Methods of using the data clients
+TODO Methods of using the direct stream and pelican server client....
+
+\subsection importData_PelicanServerClient Pelican Server Client
+\subsection importData_DirectStreamClient Direct Stream Client
+
+TODO Data Client Example (tutorial) - using pelican server.
+
+---------------------------------------
+
+\section inportData_Testing Testing Data Import
+TODO ref emulators
 
 
 
+
+
+
+
+
+
+
+
+============================================================================
 
 \section user_dataImporter_introduction Introduction
 
@@ -137,5 +200,8 @@ This is done via the \em addStreamChunker() and
 object. As the names suggest the former is used to associate chunkers
 with data streams that are to be treated as stream data and the latter for
 data that is to be treated as service data.
+
+
+
 
 */

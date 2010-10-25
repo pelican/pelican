@@ -1,7 +1,7 @@
 namespace pelican {
 
 /**
-\page user_dataProcessing Processing Data Using Pelican
+\page user_dataProcessing Processing Data
 
 \section user_dataProcessing_introduction Introduction
 
@@ -37,7 +37,7 @@ First, we describe the details of the required pipeline module.
 
 The code below shows the details of the SignalAmplifier pipeline module.
 It must inherit the AbstractModule Pelican class.
-Here's the C++ header file:
+Here's the C++ header %file:
 
 \include SignalAmplifier.h
 
@@ -52,7 +52,7 @@ and called by the pipeline when the module must process a chunk of data, and
 pointers to the data blobs to use for input and output are provided as
 function arguments.
 
-Here's the class implementation in the C++ source file:
+Here's the class implementation in the C++ source %file:
 
 \include SignalAmplifier.cpp
 
@@ -93,7 +93,7 @@ We now describe the SignalProcessingPipeline that is used to contain the
 SignalAmplifier pipeline module. Typically, pipelines will contain multiple
 modules, but in this example, we use only one. Pipelines must inherit the
 AbstractPipeline Pelican class, which defines the interface required.
-Here's the C++ header file:
+Here's the C++ header %file:
 
 \include SignalProcessingPipeline.h
 
@@ -105,7 +105,7 @@ SignalProcessingPipeline::init() is called by the Pelican framework on
 initialisation to set up the pipeline, and SignalProcessingPipeline::run() is
 called whenever there is data to be processed.
 
-Here's the class implementation in the C++ source file:
+Here's the class implementation in the C++ source %file:
 
 \include SignalProcessingPipeline.cpp
 

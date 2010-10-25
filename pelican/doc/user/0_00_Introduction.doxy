@@ -1,8 +1,9 @@
 /**
 
-
-
 \mainpage Introduction
+
+
+\section intro_overview Overview
 
 The Pelican framework is an efficient, lightweight C++ library for quasi-real
 time data processing. The library provides a framework to separate data
@@ -15,12 +16,13 @@ Extensible, Lightweight Imaging and CAlibratioN</em>. However, the framework
 is sufficiently generic to be useful to any application that requires the
 efficient processing of incoming data streams.
 
-
-
+\subsection intro_overviewGuide Structure of this Guide
+TODO
 
 
 \section intro_framework The Pelican Framework
 
+TODO reword to work with next page...
 The Pelican framework provides a system to split one or more incoming data
 streams into well defined chunks. These chunks are then passed on to any number
 of parallel computational pipelines for processing. As a chunk is passed to a
@@ -52,10 +54,9 @@ on initialisation.
 
 
 
+\section intro_running Pelican Use Cases
 
-
-
-\section intro_running Running Pelican Applications
+TODO make very sure this doesn't sound like pelican is a binary.
 
 Pelican applications can be run in two different configurations, depending
 on the data processing requirements. Because of its modular desgin,

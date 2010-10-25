@@ -1,5 +1,5 @@
 /**
-\page user_newProject Linking against the Pelican library
+\page user_newProject Linking against Pelican
 
 \section user_newProject_introduction Introduction
 Pelican is primarily a c++ library and can be incorporated into your build system

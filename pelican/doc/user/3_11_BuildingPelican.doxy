@@ -1,5 +1,5 @@
 /**
-\page user_referenceBuildSystem Build System
+\page user_referenceBuildingPelican Building Pelican
 
 Pelican uses a CMake build system and requires CMake 2.4 or higher.
 
