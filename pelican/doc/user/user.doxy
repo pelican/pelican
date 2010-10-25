@@ -2,16 +2,14 @@
 
 @page user_gettingStarted Getting Started
 
-As detailed in the structural overview, Pelican requires that you implement a 
-number of c++ classes that inherit from a number of abstract interfaces.
-This guide will step you through the various components using simple examples to
-illustrate the requirements.
+As detailed in the structural overview, Pelican requires that you implement a
+number of C++ classes that inherit from a number of abstract interfaces.
+This guide will step through the various components using a simple example
+problem to illustrate the requirements.
 
 @li @subpage user_newProject "Create a new project and link against Pelican."
 @li @subpage user_dataImporter "Connect to and interpret an incoming data stream."
-@li @subpage user_pipelineWriter "Create a pipeline to process data."
-@li @subpage user_moduleWriter "Create new pipeline modules."
+@li @subpage user_dataProcessing "Process data in a pipeline."
 @li @subpage user_dataOutput "Output data from the pipeline."
-@li @subpage user_sysadmin "Run and administer Pelican."
 
 */

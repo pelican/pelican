@@ -12,8 +12,12 @@ using namespace pelican;
 
 /**
  * @class ModuleExample
- *  
+ *
  * @brief
+ * A simple example to demonstrate how to write a pipeline module.
+ */
+
+/*
  * A simple example to demonstrate how to write a pipeline module.
  */
 class ModuleExample : public AbstractModule

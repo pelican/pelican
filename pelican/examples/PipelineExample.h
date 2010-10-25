@@ -8,6 +8,11 @@ using namespace pelican;
 
 class PipelineExample : public AbstractPipeline
 {
+    public:
+        PipelineExample() : AbstractPipeline() {}
+        virtual void init();
+        virtual void run(QHash<QString, DataBlob*>& remoteData);
+
     private:
         // Module pointers.
         ModuleExample* adder;
@@ -16,10 +21,6 @@ class PipelineExample : public AbstractPipeline
         // Local data blob pointers.
         DataBlobExample* outputData;
 
-    public:
-        PipelineExample() : AbstractPipeline() {}
-        virtual void init();
-        virtual void run(QHash<QString, DataBlob*>& remoteData);
 };
 
-#endif // PIPELINEEXAMPLE_H 
+#endif // PIPELINEEXAMPLE_H

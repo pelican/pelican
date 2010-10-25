@@ -19,26 +19,30 @@ using namespace pelican;
  * @details
  * This data blob holds an array of floating-point data.
  */
+
+/*
+ * This data blob holds an array of floating-point data.
+ */
 class DataBlobExample : public DataBlob
 {
-    private:
-        std::vector<float> _data;
-
     public:
-        /// Constructor.
+        // Constructs an example data blob.
         DataBlobExample() : DataBlob("DataBlobExample") {}
 
         /// Returns a const pointer to the start of the data.
-        const float* data() const {return (_data.size() > 0 ? &_data[0] : NULL);}
+        const float* data() const { return (_data.size() > 0 ? &_data[0] : 0); }
 
         /// Returns a pointer to the start of the data.
-        float* data() { return (_data.size() > 0 ? &_data[0] : NULL); }
+        float* data() { return (_data.size() > 0 ? &_data[0] : 0); }
 
-        /// Resizes the data blob.
+        // Resizes the data store provided by the data blob.
         void resize(unsigned length) { _data.resize(length); }
 
-        /// Returns the size of the data.
+        // Returns the size of the data.
         unsigned size() const { return _data.size(); }
+
+    private:
+        std::vector<float> _data; // The actual data array.
 };
 
 PELICAN_DECLARE_DATABLOB(DataBlobExample)
