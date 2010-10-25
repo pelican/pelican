@@ -1,23 +1,23 @@
 /**
 
-@page user_structuralOverview Structural Overview of Pelican
+@page user_structuralOverview The Pelican Framework
 
 @section user_structuralOverview_intro Introduction
 
 The Pelican framework is designed to allow the flexible deployment of hardware
 resources to cope with the data rates and data processing requirements of an
-incoming data stream. Pelican maintains three distinct layers with well defined 
+incoming data stream. Pelican maintains three distinct layers with well defined
 interfaces between them, namely:
- data aquisition, data processing, and data output. 
+ data aquisition, data processing, and data output.
 
-Within these layers the various functional elements, e.g. chunking of the data, 
+Within these layers the various functional elements, e.g. chunking of the data,
 are modularised, to allow easy reuse and redeployment.
 
 The diagram below provides an overview of the various components which make up
 the Pelican framework, and the two deployment options for Pelican applications.
 The left diagram shows the server-client configuration, where a Pelican data
 server collects the various input data streams and makes them available to
-one or more processing pipelines. 
+one or more processing pipelines.
 The diagram on the right shows a configuration
 where pipelines connect directly to data streams using a direct data client.
 
