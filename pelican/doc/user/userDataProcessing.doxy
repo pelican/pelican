@@ -1,3 +1,5 @@
+namespace pelican {
+
 /**
 \page user_dataProcessing Processing Data Using Pelican
 
@@ -13,10 +15,100 @@ for processing data using Pelican:
 
 \section user_dataProcessing_overview Overview
 
-This section will tell you how to build your own data processing pipeline and
-compile it into a working binary that you can launch on your data stream.
+This section will explain how to build a data processing pipeline and
+compile it into a working binary that can be launched on a data stream.
 
-We continue the example started in the previous section.
+We continue the example started in the previous section. Having acquired the
+signal data from the network, transforming it from UDP packets using the
+SignalChunker and converting it into a SignalData data-blob using the
+SignalDataAdapter, we are ready to do some real work with the data.
 
+Since this is not a tutorial on signal processing, we will construct a Pelican
+pipeline and a pipeline module to do a trivially simple operation on the
+signal data. A real-world module might do something useful like produce a
+spectrum from the time-series data; however, we will simply amplify the signal
+by multiplying all the sample values in the data-blob by a constant
+(but configurable) factor. The amplified data will be output from the module
+using another SignalData data-blob created in the pipeline itself.
+
+First, we describe the details of the required pipeline module.
+
+\subsection user_dataProcessing_module The Pipeline Module
+
+The code below shows the details of the SignalAmplifier pipeline module.
+It must inherit the AbstractModule Pelican class.
+Here's the C++ header file:
+
+\include SignalAmplifier.h
+
+The module must be declared so that the Pelican framework knows of its
+existence: use the PELICAN_DECLARE_MODULE preprocessor macro in the header
+file to do this, supplying the class name as the macro argument.
+Do not use quotes around the name.
+
+Apart from the constructor, there are no abstract methods that must be
+implemented on the module; however, by convention, a run() method is defined
+and called by the pipeline when the module must process a chunk of data, and
+pointers to the data blobs to use for input and output are provided as
+function arguments.
+
+Here's the class implementation in the C++ source file:
+
+\include SignalAmplifier.cpp
+
+Note that a reference to the XML configuration node for the module will be
+automatically supplied to the module's constructor: we then simply need to
+extract the relevant configuration settings using methods on the supplied
+ConfigNode object. The ConfigNode::getOption method returns a QString
+containing the text in the supplied tagname and attribute. To illustrate what
+is needed here, the module expects an XML snippet like this:
+
+\verbatim
+<SignalAmplifier>
+    <gain value="2.5"/>
+</SignalAmplifier>
+\endverbatim
+
+The contents of the string are then converted to a floating point value using
+the QString::toDouble() method. This initialisation step only happens once, at
+program launch, so there is no cost penalty involved here. The value of the
+gain attribute is stored in a private class variable for later use when the
+module is run.
+
+The SignalAmplifier::run() method will be called by the pipeline whenever
+there is data to process. It is called with pointers to the input and output
+data blobs as function arguments, and first checks that the output data blob
+has sufficient capacity to hold the amplified signal: if not, then it is
+resized.
+
+Pointers to the input and output memory blocks are obtained, and the for-loop
+iterates over the time samples in the signal, multiplying the input values by
+the configured gain.
+
+This completes our description of the SignalAmplifier module.
+
+\subsection user_dataProcessing_pipeline The Pipeline
+
+We now describe the SignalProcessingPipeline that is used to contain the
+SignalAmplifier pipeline module. Typically, pipelines will contain multiple
+modules, but in this example, we use only one. Pipelines must inherit the
+AbstractPipeline Pelican class, which defines the interface required.
+Here's the C++ header file:
+
+\include SignalProcessingPipeline.h
+
+Note that pipelines cannot be configured using XML parameters -- that
+functionality can only be in pipeline modules.
+
+There are two abstract methods that must be implemented here:
+SignalProcessingPipeline::init() is called by the Pelican framework on
+initialisation to set up the pipeline, and SignalProcessingPipeline::run() is
+called whenever there is data to be processed.
+
+Here's the class implementation in the C++ source file:
+
+\include SignalProcessingPipeline.cpp
 
 */
+
+}
