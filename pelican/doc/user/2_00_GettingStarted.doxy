@@ -1,6 +1,6 @@
 /**
 
-@page user_gettingStarted Getting Started (Tutorial)
+\page user_gettingStarted Getting Started (Tutorial)
 
 
 TODO describe how this section works wrt tutorial
@@ -11,10 +11,10 @@ requires that you implement a number of C++ classes that inherit from a number
 of abstract interfaces. This guide will step you through the various components
 using simple examples to illustrate the requirements.
 
-@li @subpage user_newProject "Linking against Pelican."
-@li @subpage user_dataImporter "Importing data."
-@li @subpage user_dataProcessing "Processing data."
-@li @subpage user_dataOutput "Data output."
-@li @subpage user_Testing "Testing."
+- \subpage user_linkingPelican "Linking against Pelican."
+- \subpage user_dataImporter "Importing data."
+- \subpage user_dataProcessing "Processing data."
+- \subpage user_dataOutput "Data output."
+- \subpage user_testing "Testing."
 
 */

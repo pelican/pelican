@@ -29,15 +29,17 @@ class AbstractProtocol;
  *    is passed through by the serveData() methods. The server uses the
  *    full Pelican Server infrastructure.
  *
- *    Example:
- *    // Server setup
+ *  \par Example:
+ *  \code
+ *    // Server setup.
  *    TestServer server;
  *    server.setServiceData( someServiceData );
  *
- *    // a mythical client interface
+ *    // A mythical client interface.
  *    MyClient client;
  *    client.setPort( server.port() );
  *    client.fetch(someStreamDataIdentifier)
+ *  \endcode
  */
 
 class TestServer : public QThread
@@ -73,7 +75,6 @@ class TestServer : public QThread
         DataManager* _dataManager;
         AbstractProtocol* _proto;
         PelicanPortServer* _portServer;
-
 };
 
 } // namespace pelican

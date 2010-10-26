@@ -17,12 +17,13 @@ is sufficiently generic to be useful to any application that requires the
 efficient processing of incoming data streams.
 
 \subsection intro_overviewGuide Structure of this Guide
+
 This user guide is divided into three main sections:
-\li A brief introduction the Pelican library framework.
-\li A \ref user_gettingStarted "getting started guide" explaining the various
+- \ref user_structuralOverview "A brief introduction" the Pelican library framework.
+- \ref user_gettingStarted "A getting started guide" explaining the various
 concepts used in Pelican, as well as providing a tutorial walkthrough of a
 basic application use case.
-\li \ref user_reference "Reference" documentation describing in more detail
+- \ref user_reference "Reference" documentation describing in more detail
 the components of Pelican and how they can be they should be used.
 
 \htmlonly <br><hr><br> \endhtmlonly
@@ -54,10 +55,10 @@ other pipelines for further processing.
 Applications using Pelican are written by utilising or implementing a number of
 components which adhere to a well defined \ref APIdoc "API" and describe:
 
-\li How input data streams should be split into parallelisable chunks.
-\li The structures and methods for de-serialising chunks of input data.
-\li The processing to be performed.
-\li The data products to deliver after processing.
+- How input data streams should be split into parallelisable chunks.
+- The structures and methods for de-serialising chunks of input data.
+- The processing to be performed.
+- The data products to deliver after processing.
 
 Pelican applications are not, in general, intended to be highly interactive.
 Instead, components can be configured using XML parameter files, which are read

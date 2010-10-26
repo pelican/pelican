@@ -14,10 +14,10 @@ class QIODevice;
 
 namespace pelican {
 
-/// Real floating point data type.
+/// Real floating point data type. \deprecated
 typedef double real_t;
 
-/// Complex floating point data type.
+/// Complex floating point data type. \deprecated
 typedef std::complex<real_t> complex_t;
 
 /**
@@ -39,6 +39,7 @@ typedef std::complex<real_t> complex_t;
 class DataBlob
 {
     private:
+        /// \deprecated DO NOT USE
         /// The timestamp of the data blob, stored as a modified Julian
         /// date (MJD). Note that MJD = JD - 2400000.5, and starts
         /// from midnight rather than midday.
@@ -57,13 +58,13 @@ class DataBlob
         /// Returns the type of DataBlob (should be the class name).
         const QString& type() const {return _type;}
 
-        /// Sets the time stamp using the current value of the system clock.
+        /// \deprecated Sets the time stamp using the current value of the system clock.
         void setTimeStamp();
 
-        /// Sets the time stamp to the given value.
+        /// \deprecated Sets the time stamp to the given value.
         void setTimeStamp(double timeStamp) {_modifiedJulianDate = timeStamp;}
 
-        /// Returns the MJD timestamp of the data blob.
+        /// \deprecated Returns the MJD timestamp of the data blob.
         double timeStamp() const { return _modifiedJulianDate; }
 
         /// Set the version ID of the DataBlob.

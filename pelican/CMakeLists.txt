@@ -119,6 +119,6 @@ endif(BUILD_SINGLE_LIB)
 include(UseDoxygen)
 set(PDFLATEX_COMPILER TRUE)
 add_doxygen_target(api DoxyfileAPI)
-add_doxygen_target(user DoxyfileUser)
 add_doxygen_target(developer DoxyfileDeveloper)
+add_doxygen_target(user DoxyfileUser)
 
