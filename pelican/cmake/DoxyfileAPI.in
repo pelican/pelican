@@ -301,7 +301,7 @@ SYMBOL_CACHE_SIZE      = 0
 # Private class members and static file members will be hidden unless
 # the EXTRACT_PRIVATE and EXTRACT_STATIC tags are set to YES
 
-EXTRACT_ALL            = NO
+EXTRACT_ALL            = YES
 
 # If the EXTRACT_PRIVATE tag is set to YES all private members of a class
 # will be included in the documentation.
@@ -382,13 +382,13 @@ CASE_SENSE_NAMES       = YES
 # will show members with their full class and namespace scopes in the
 # documentation. If set to YES the scope will be hidden.
 
-HIDE_SCOPE_NAMES       = NO
+HIDE_SCOPE_NAMES       = YES
 
 # If the SHOW_INCLUDE_FILES tag is set to YES (the default) then Doxygen
 # will put a list of the files that are included by a file in the documentation
 # of that file.
 
-SHOW_INCLUDE_FILES     = NO
+SHOW_INCLUDE_FILES     = YES
 
 # If the INLINE_INFO tag is set to YES (the default) then a tag [inline]
 # is inserted in the documentation for inline members.
@@ -474,7 +474,7 @@ SHOW_USED_FILES        = YES
 # then setting the SHOW_DIRECTORIES tag to YES will show the directory hierarchy
 # in the documentation. The default is NO.
 
-SHOW_DIRECTORIES       = NO
+SHOW_DIRECTORIES       = YES
 
 # Set the SHOW_FILES tag to NO to disable the generation of the Files page.
 # This will remove the Files entry from the Quick Index and from the
@@ -605,7 +605,6 @@ EXCLUDE                = _darcs \
                          @CMAKE_CURRENT_SOURCE_DIR@/doc
                          @CMAKE_CURRENT_SOURCE_DIR@/doc/UserMain.doxy
                          @CMAKE_CURRENT_SOURCE_DIR@/doc/DeveloperMain.doxy
-                         @CMAKE_CURRENT_SOURCE_DIR@/*/test
                          @CMAKE_CURRENT_SOURCE_DIR@/*/test/data
                          @CMAKE_CURRENT_SOURCE_DIR@/build
                          @CMAKE_CURRENT_SOURCE_DIR@/debug
@@ -623,10 +622,12 @@ EXCLUDE_SYMLINKS       = NO
 # against the file with absolute path, so to exclude all test directories
 # for example use the pattern */test/*
 
-EXCLUDE_PATTERNS       = */test/* \
+EXCLUDE_PATTERNS       = *Test.h \
+                         *Test.cpp \
                          */build/* \
                          */debug/* \
-                         */release/*
+                         */release/* \
+                         */examples/*
 
 # The EXCLUDE_SYMBOLS tag can be used to specify one or more symbol names
 # (namespaces, classes, functions, etc.) that should be excluded from the

@@ -1,9 +1,60 @@
+namespace pelican {
+
 /**
 
-@page user_Testing Testing
+@page user_testing Testing your Pelican Application
+
+In addition to the core framework, Pelican includes a utility library
+(\c pelican-testutils) consisting of a number of classes and functions
+which are designed to be used with testing code written using the Pelican.
+
+The test utility classes derive from the extensive unit testing central to the
+development of Pelican, and examples of there use can be found in the unit tests
+in the source code distribution of the library.
 
 
-TODO Unit testing and the test utility library.
+\section user_testing_testutils The Pelican test utility library
 
+The test utility library currently provides a number of classes listed below.
+
+- Utility
+    - TestConfig: Used handling XML \ref user_referenceConfiguration
+    "configuration" files used in testing.
+    - SocketTester (currently in \c pelican not \c pelican-testutils!)
+- %Data
+    - TestDataBlob: A simple \ref user_referenceDataBlobs "data blob" containg
+    a QByteArray.
+- Core
+    - TestPipeline: A simple \ref user_referencePipelines "pipeline" with no
+    data requirements.
+    - TestDataClient:
+    - TestServiceAdapter:
+    - TestStreamAdapter:
+- Server
+    - TestChunker
+    - TestUdpChunker
+    - TestProtocol
+    - TestServer
+    - PelicanTestClient
+    - ChunkerTester
+- Emulator
+    - RealUdpEmulator (currently in \c pelican not \c pelican-testutils!)
+- Output
+    - TestOutputStreamer:
+    - TestDataBlobClient
+- Viewer
+    - TestDataViewerWidget
+
+
+\section user_testing_cppunit Testing with CppUnit
+
+Unit tests used in the development of Pelican make use of the the CppUnit
+test framework (documentation can be found at
+<a href="http://cppunit.sourceforge.net/doc/lastest/index.html" target="_blank">
+http://cppunit.sourceforge.net/doc/lastest/index.html</a>) which provides
+a simple framework for developing and running tests either individually or as
+part of a test suite.
 
 */
+
+}
