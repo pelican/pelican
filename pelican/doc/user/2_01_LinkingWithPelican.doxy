@@ -1,37 +1,53 @@
 /**
 \page user_linkingPelican Linking against Pelican
 
-\section user_linkingPelican_intro Introduction
-
 Pelican is a C++ library and can be incorporated into your build system in the
 same way as you would incorporate any other C++ library. After obtaining a copy
 of Pelican (either from a binary distribution or building from source) you
-should be able to find two Pelican libraries (pelican and pelican-testutils)
-and a folder containing a complete set of header (.h) files.
+should be able to find two Pelican shared libraries (\em pelican and
+\em pelican-testutils) and a folder containing a set of header (.h) files
+which can be used to compile and link your project.
 
+Of the two library files, the \em pelican library contains the core framework,
+and the \em pelican-testutils library provides a number of convenience classes
+targed at writing unit tests for the various Pelican components.
 
-\em pelican, the core framework library provides all the functionality of
-pelican and is the one to link against when building your pelican application.
-e.g.
+\note Currently Pelican is targeted to run on Linux and while there are no
+known reasons which would prevent Pelican building on Windows or Mac OS
+these platforms should be considered currently untested and unsupported.
+
+\section user_linkingPelican_example Example
+
+In order to link a simple application which uses Pelican:
 @code
 g++ -o myApp myApp.cpp -I<path_to_pelican_include> -l myLib -l pelican
 @endcode
 
-The \em pelican-testutils library
-provides a number of convenience classes targeted at writing unit
-tests for the various modules that you are required to implement.
-Link against this and the \em pelican library when building your unit tests.
-e.g.
+Linking a simple application using with pelican and the test utility library:
 @code
-g++ -o myUnitTest myUnitTest.cpp -l pelican-testutils -l pelican
+g++ -o myUnitTest myUnitTest.cpp -l pelican -l pelican-testutils
 @endcode
 
-
-
-
 \section user_linkingPelican_cmake Pelican CMake module
-Pelican should provide a CMake (www.cmake.org) file to allow you to find pelican as installed
-on your system. Look in your systems application data directory to find this
-file (e.g. /usr/share/pelican, /usr/local/share/pelican ).
+
+If your project uses a CMake (<a href="http://www.cmake.org"  target="_blank">
+www.cmake.org</a>) build system. Pelican provides a find macro available from
+the cmake folder of the Pelican source tree, the Pelican cmake module folder of
+an installed version of Pelican or can be downloaded from
+<a href="https://wiki.oerc.ox.ac.uk/svn/pelican/cmake/FindPelican.cmake">
+https://wiki.oerc.ox.ac.uk/svn/pelican/cmake/FindPelican.cmake</a>.
+By placing this find macro in the cmake module path, it can be used like
+any other cmake macro and defines the following cmake variables.
+
+\li \em PELICAN_FOUND: Set to true if Pelican is found.
+\li \em PELICAN_CMAKE_MODULE_DIR: Location of Pelican specific cmake modules.
+\li \em PELICAN_INCLUDE_DIR: Location of Pelican header files.
+\li \em PELICAN_INCLUDES: Set of include directories needed by Pelican
+    (including dependencies).
+\li \em PELICAN_LIBRARY: The Pelican library.
+\li \em PELICAN_TESTUTILS_LIBRARY: The Pelican test utility library.
+\li \em PELICAN_LIBRARIES: The Set of libraries required for linking with
+    Pelican (includes dependencies).
+
 
 */
