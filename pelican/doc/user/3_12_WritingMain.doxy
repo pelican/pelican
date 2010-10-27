@@ -12,7 +12,7 @@ The pipeline binary contains the data client, the pipeline driver, and one or
 more pipelines. Like any other C++ program, execution begins in \c main().
 
 Since Pelican makes extensive use of the excellent cross-platform
-<a href="http://qt.nokia.com/">Qt Library</a> for its data structures, timers
+<a href="http://qt.nokia.com/" target="_blank">Qt Library</a> for its data structures, timers
 and network modules, a \c QCoreApplication object must be created before
 anything else. Almost all of the Pelican functionality is encapsulated by the
 \c PipelineApplication class. Both of these application objects require the
@@ -40,7 +40,7 @@ sets would need to be made for each pipeline.
 
 
 \section user_referenceMain_server Server Binary
-
+\todo
 
 */
 

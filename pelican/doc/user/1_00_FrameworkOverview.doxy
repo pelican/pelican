@@ -7,8 +7,8 @@
 The Pelican framework is designed to allow the flexible deployment of hardware
 resources to cope with the data rates and data processing requirements of an
 incoming data stream. Pelican maintains three distinct layers with well defined
-interfaces between them, namely:
- data aquisition, data processing, and data output.
+interfaces between them, namely: data aquisition, data processing, and
+data output.
 
 Within these layers the various functional elements, e.g. chunking of the data,
 are modularised, to allow easy reuse and redeployment.
@@ -21,54 +21,40 @@ one or more processing pipelines.
 The diagram on the right shows a configuration
 where pipelines connect directly to data streams using a direct data client.
 
-
 @anchor figPelicanFramework
 @image html images/pelicanOverviewDiagram.png "The Pelican Framework"
 @image latex images/pelicanOverviewDiagram.eps "The Pelican Framework" width=10cm
 
 
+
+
 \subsection user_structuralOverview_modules The Modules Required for a Pelican Application
+
 All of the following functional units must be present in a pelican application:
 
-\li <b>\link user_referenceChunkers Chunkers\endlink :</b> Describe how the input streams should be split.
-\li <b>\link user_referenceAdapters Adapters\endlink :</b> Specify how chunks of stream data should be de-serialised
-    into data objects (DataBlobs).
-\li <b>\link user_referenceDataBlobs DataBlobs\endlink :</b> Describe the data structures used for data processing.
-\li <b>\link user_referenceModules Processing Modules\endlink :</b> Define the computational units to be carried out.
-\li <b>\link user_referencePipelines Pipelines\endlink :</b> Describe the type and order or processing modules.
-\li <b>\link user_referenceOutputStreamers Output Streamers\endlink :</b> Define what to do with data products from pipeline
-    processing.
+- <b>\ref user_referenceChunkers "Chunkers":</b> Describe how the input streams
+     should be split.
+- <b>\ref user_referenceAdapters "Adapters":</b> Specify how chunks of stream
+     data should be de-serialised into data objects (DataBlobs).
+- <b>\ref user_referenceDataBlobs "DataBlobs":</b> Describe the data structures
+    used for data processing.
+- <b>\ref user_referenceModules "Processing Modules":</b> Define the computational
+    units to be carried out.
+- <b>\ref user_referencePipelines "Pipelines":</b> Describe the type and order or
+    processing modules.
+- <b>\ref user_referenceOutputStreamers "Output Streamers":</b> Define what to do
+    with data products from pipeline processing.
 
 Each one has a base class from which to inherit and is the mechanism by which you extend pelican to your needs.
 More details can be found in the \link user_gettingStarted Getting Started Guide\endlink.
 
 
-\section user_frameworkOverview Framework Modes.
 
-TODO === TAKEN FROM OLD RUNNING PELICAN ===
+\section user_frameworkOverview Framework Modes
 
-This section gives a brief overview of how to run an application written using
-the Pelican framework. For details on how to create a Pelican framework
-application please refer to the sections in this guide describing pipelines,
-chunkers, adapters, modules, and writing the application binary.
-
-As explained in the description of the structure of Pelican (# TODO ref
-structural overview), Pelican has two running modes:
-
-\li Server mode: Where a Pelican server binary recieves the input data streams
+- <b>Server mode</b>: Where a Pelican server binary receives the input data streams
     and pipeline binaries receive their data from the server by means of a
     request.
-\li Direct input mode: Where pipeline binaries recieve data streams directly.
-
-TODO
-
-\section user_referenceRunning_overview Overview
-TODO.
-
-\section user_referenceRunning_example Example
-TODO
-
-
-
+- <b>Direct input mode</b>: Where pipeline binaries receive data streams directly.
 
 */

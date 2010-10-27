@@ -29,11 +29,9 @@ the components of Pelican and how they can be they should be used.
 \htmlonly <br><hr><br> \endhtmlonly
 
 
-
 \section intro_framework The Pelican Framework
 
-TODO reword to work with next page...
-
+\todo Reword to work with next page (framework)...
 
 The Pelican framework provides a system to split one or more incoming data
 streams into well defined chunks. These chunks are then passed on to any number
@@ -68,7 +66,7 @@ on initialisation.
 
 \section intro_running Pelican Use Cases
 
-TODO make very sure this doesn't sound like pelican is a binary.
+\todo Make very sure this doesn't sound like pelican is a binary.
 
 Pelican applications can be run in two different configurations, depending
 on the data processing requirements. Because of its modular desgin,
