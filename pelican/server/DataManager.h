@@ -15,7 +15,7 @@
 
 namespace pelican {
 
-class Data;
+class DataChunk;
 class StreamData;
 
 /**

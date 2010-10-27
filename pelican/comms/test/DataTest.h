@@ -11,11 +11,12 @@ namespace pelican {
 
 /**
  * @class DataTest
- *  
+ *
  * @brief
- * 
+ * \todo rename this to DataChunkTest
+ *
  * @details
- * 
+ *
  */
 
 class DataTest : public CppUnit::TestFixture
@@ -42,4 +43,4 @@ class DataTest : public CppUnit::TestFixture
 };
 
 } // namespace pelican
-#endif // DATATEST_H 
+#endif // DATATEST_H

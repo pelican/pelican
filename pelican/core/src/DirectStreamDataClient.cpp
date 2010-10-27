@@ -127,7 +127,7 @@ QHash<QString, DataBlob*> DirectStreamDataClient::getData(QHash<QString, DataBlo
         StreamData* sd = lockedData->streamData();
         Q_ASSERT(sd != 0);
         // check for associate data
-        foreach (const boost::shared_ptr<Data>& d, sd->associateData()) {
+        foreach (const boost::shared_ptr<DataChunk>& d, sd->associateData()) {
             if (dataHash[d->name()]->version() == d->id())
             {
                 // data not changed

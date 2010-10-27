@@ -104,7 +104,7 @@ QHash<QString, DataBlob*> PelicanServerClient::_response(QIODevice& device,
                 // determine the associated service data
                 StreamData* sd = response->streamData();
                 Q_ASSERT( sd != 0 );
-                foreach (const boost::shared_ptr<Data>& d, sd->associateData()) {
+                foreach (const boost::shared_ptr<DataChunk>& d, sd->associateData()) {
                     // do we already have it?
                     if( dataHash[d->name()]->version() == d->id())
                     {
@@ -163,7 +163,7 @@ QHash<QString, DataBlob*> PelicanServerClient::_response(QIODevice& device,
             {
                 // Service data
                 ServiceDataResponse* res = static_cast<ServiceDataResponse*>(r.get());
-                foreach( const Data* d, res->data() ) {
+                foreach( const DataChunk* d, res->data() ) {
                     validData.unite(adaptService( device, d, dataHash ));
                     /*
                     QString type = d->name();

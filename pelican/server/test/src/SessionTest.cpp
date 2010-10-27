@@ -6,7 +6,7 @@
 #include "pelican/server/WritableData.h"
 #include "pelican/server/StreamDataBuffer.h"
 #include "pelican/data/DataRequirements.h"
-#include "pelican/comms/Data.h"
+#include "pelican/comms/DataChunk.h"
 #include "pelican/comms/StreamData.h"
 #include "pelican/comms/ServerRequest.h"
 #include "pelican/comms/ServiceDataRequest.h"

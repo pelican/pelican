@@ -1,5 +1,5 @@
 #include "pelican/comms/PelicanClientProtocol.h"
-#include "pelican/comms/Data.h"
+#include "pelican/comms/DataChunk.h"
 #include "pelican/comms/StreamData.h"
 #include "pelican/comms/ServerRequest.h"
 #include "pelican/comms/ServerResponse.h"
@@ -125,7 +125,7 @@ boost::shared_ptr<ServerResponse> PelicanClientProtocol::receive(QAbstractSocket
                     in >> associates;
                     for( unsigned int j=0; j < associates; ++j ) {
                         in >> name >> id >> size;
-                        sd->addAssociatedData( boost::shared_ptr<Data>(new Data(name, id, size)) );
+                        sd->addAssociatedData( boost::shared_ptr<DataChunk>(new DataChunk(name, id, size)) );
                     }
                 }
                 return s;
@@ -143,7 +143,7 @@ boost::shared_ptr<ServerResponse> PelicanClientProtocol::receive(QAbstractSocket
                     in >> name;
                     in >> version;
                     in >> size;
-                    s->addData(new Data(name,version,size));
+                    s->addData(new DataChunk(name,version,size));
                 }
                 return s;
             }

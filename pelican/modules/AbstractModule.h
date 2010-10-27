@@ -3,7 +3,6 @@
 
 #include "pelican/utility/ConfigNode.h"
 #include "pelican/utility/FactoryRegistrar.h"
-#include "pelican/utility/constants.h"
 #include "pelican/data/DataBlob.h"
 
 #include <QtCore/QString>

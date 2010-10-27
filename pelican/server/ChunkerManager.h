@@ -1,20 +1,21 @@
 #ifndef CHUNKERMANAGER_H
 #define CHUNKERMANAGER_H
 
-#include <QSet>
-#include <QMap>
-#include <QString>
-#include <QPair>
-#include <QVector>
+/**
+ * @file ChunkerManager.h
+ */
+
+#include <QtCore/QSet>
+#include <QtCore/QMap>
+#include <QtCore/QString>
+#include <QtCore/QPair>
+#include <QtCore/QVector>
 #include <boost/shared_ptr.hpp>
 
 #include "pelican/utility/FactoryConfig.h"
 #include "pelican/server/DataReceiver.h"
 #include "pelican/utility/Config.h"
 
-/**
- * @file ChunkerManager.h
- */
 
 namespace pelican {
 
@@ -28,17 +29,16 @@ class DataManager;
  * Manage and operate chunkers.
  *
  * @details
- * Anything coming through a stream data chunker
- * will be associated with the current version of service data
- * service data has no such association.
+ * Anything coming through a stream data chunker will be associated with the
+ * current version of service data service data has no such association.
  */
+
 class ChunkerManager
 {
     public:
-        /// Creates a chunker manager.
         /// @deprecated
-        ChunkerManager(const Config* config,
-                const QString& section = QString("server"));  /* deprecated */
+        /// Creates a chunker manager.
+        ChunkerManager(const Config* config, const QString& section = "server");
 
         /// Creates a chunker manager.
         ChunkerManager(const Config* config,  const Config::TreeAddress& base );
@@ -46,6 +46,7 @@ class ChunkerManager
         /// Destroys the chunker manager.
         ~ChunkerManager();
 
+    public:
         /// Initialise the passed data manager to support the contained chunkers.
         bool init(DataManager& dm);
 
@@ -62,7 +63,7 @@ class ChunkerManager
         bool isRunning() const;
 
     private:
-        /// Add an allocated chunker.
+        // Adds an allocated chunker to the manager.
         void _addChunker( AbstractChunker* chunker);
 
     private:
@@ -75,5 +76,4 @@ class ChunkerManager
 };
 
 } // namespace pelican
-
 #endif // CHUNKERMANAGER_H

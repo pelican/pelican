@@ -25,7 +25,7 @@ namespace pelican {
 class AbstractAdapter;
 class DataBlob;
 class StreamData;
-class Data;
+class DataChunk;
 
 /**
  * @class AbstractDataClient
@@ -78,7 +78,7 @@ class AbstractDataClient
 
         /// Adapts service data.
         QHash<QString, DataBlob*> adaptService(QIODevice& device,
-                const Data* d, QHash<QString, DataBlob*>& dataHash );
+                const DataChunk* d, QHash<QString, DataBlob*>& dataHash );
 
         /// Returns a pointer to the configuration node.
         const ConfigNode& configNode() const {return _configNode;}

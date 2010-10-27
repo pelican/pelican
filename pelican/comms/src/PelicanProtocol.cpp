@@ -1,4 +1,4 @@
-#include "pelican/comms/Data.h"
+#include "pelican/comms/DataChunk.h"
 #include "pelican/comms/PelicanProtocol.h"
 #include "pelican/comms/ServerRequest.h"
 #include "pelican/comms/ServerResponse.h"
@@ -130,7 +130,7 @@ void PelicanProtocol::send(QIODevice& stream, const AbstractProtocol::StreamData
         out << sd->name() << sd->id() << (quint64)(sd->size());
         // service data info
         out << (quint16) sd->associateData().size();
-        foreach(const boost::shared_ptr<Data>& dat, sd->associateData())
+        foreach(const boost::shared_ptr<DataChunk>& dat, sd->associateData())
         {
             out << dat->name() << dat->id() << (quint64)(dat->size());
         }
@@ -159,9 +159,9 @@ void PelicanProtocol::send(QIODevice& stream, const AbstractProtocol::ServiceDat
     out << (quint16)ServerResponse::ServiceData;
     out << (quint16)data.size();
 
-    QListIterator<Data*> i(data);
+    QListIterator<DataChunk*> i(data);
     while (i.hasNext()) {
-        Data* d = i.next();
+        DataChunk* d = i.next();
         out << d->name() << d->id() << (quint64)d->size();
     }
     stream.write(array);
@@ -170,7 +170,7 @@ void PelicanProtocol::send(QIODevice& stream, const AbstractProtocol::ServiceDat
     i.toFront();
     while (i.hasNext())
     {
-        Data* d = i.next();
+        DataChunk* d = i.next();
         stream.write( (const char*)d->ptr(), (quint64)d->size() );
     }
 }

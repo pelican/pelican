@@ -63,8 +63,8 @@ class TestServer : public QThread
         //  and will be removed once the data has been served
         void serveStreamData(const QList<StreamData>& );
         void serveStreamData(const StreamData& );
-        void serveServiceData(const QList<Data>& );
-        void serveServiceData(const Data&);
+        void serveServiceData(const QList<DataChunk>& );
+        void serveServiceData(const DataChunk&);
 
    protected:
         virtual void run();

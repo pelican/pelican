@@ -5,6 +5,8 @@
 
 namespace pelican {
 
+using test::TestDataBlob;
+
 /**
  * @details
  * Deserialises the data from the given QIODevice into a

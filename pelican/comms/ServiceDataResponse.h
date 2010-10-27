@@ -12,7 +12,7 @@
 
 namespace pelican {
 
-class Data;
+class DataChunk;
 
 /**
  * @class ServiceDataResponse
@@ -26,7 +26,7 @@ class Data;
 class ServiceDataResponse : public ServerResponse
 {
     private:
-         QList<Data*> _data;
+         QList<DataChunk*> _data;
 
     public:
         /// Creates the ServiceDataResponse object.
@@ -36,10 +36,10 @@ class ServiceDataResponse : public ServerResponse
         ~ServiceDataResponse();
 
         /// Add a Data object to the response list.
-        void addData(Data*);
+        void addData(DataChunk*);
 
         /// Return a list of valid data objects.
-        const QList<Data*>& data() const {return _data;}
+        const QList<DataChunk*>& data() const {return _data;}
 };
 
 } // namespace pelican

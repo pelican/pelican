@@ -1,24 +1,19 @@
 #ifndef DATABLOB_H
 #define DATABLOB_H
 
-#include <QtCore/QString>
-#include <QtCore/QSysInfo>
-#include <complex>
-#include "pelican/utility/FactoryRegistrar.h"
-
-class QIODevice;
-
 /**
  * @file DataBlob.h
  */
 
+#include "pelican/utility/FactoryRegistrar.h"
+
+#include <QtCore/QString>
+#include <QtCore/QSysInfo>
+#include <complex>
+
+class QIODevice;
+
 namespace pelican {
-
-/// Real floating point data type. \deprecated
-typedef double real_t;
-
-/// Complex floating point data type. \deprecated
-typedef std::complex<real_t> complex_t;
 
 /**
  * This macro is used to register the named data blob type.
@@ -33,20 +28,11 @@ typedef std::complex<real_t> complex_t;
  *
  * @details
  * This is the base class used for all Pelican data blobs required by
- * pipeline modules. It provides a timestamp using the Modified
- * Julian Date at the time of creation.
+ * pipeline modules.
  */
+
 class DataBlob
 {
-    private:
-        /// \deprecated DO NOT USE
-        /// The timestamp of the data blob, stored as a modified Julian
-        /// date (MJD). Note that MJD = JD - 2400000.5, and starts
-        /// from midnight rather than midday.
-        double _modifiedJulianDate;
-        QString _version;
-        QString _type;
-
     public:
         /// Data blob constructor.
         PELICAN_CONSTRUCT_TYPES_EMPTY
@@ -55,24 +41,17 @@ class DataBlob
         /// Data blob destructor.
         virtual ~DataBlob() {}
 
+    public:
         /// Returns the type of DataBlob (should be the class name).
         const QString& type() const {return _type;}
 
-        /// \deprecated Sets the time stamp using the current value of the system clock.
-        void setTimeStamp();
-
-        /// \deprecated Sets the time stamp to the given value.
-        void setTimeStamp(double timeStamp) {_modifiedJulianDate = timeStamp;}
-
-        /// \deprecated Returns the MJD timestamp of the data blob.
-        double timeStamp() const { return _modifiedJulianDate; }
-
         /// Set the version ID of the DataBlob.
-        void setVersion(const QString& v) {_version = v;}
+        void setVersion(const QString& v) { _version = v; }
 
         /// Returns the version of the DataBlob.
-        const QString& version() const {return _version;}
+        const QString& version() const { return _version; }
 
+    public:
         /// Serialise the DataBlob into the QIODevice.
         virtual void serialise(QIODevice&) const;
 
@@ -81,8 +60,11 @@ class DataBlob
 
         /// Deserialises the DataBlob from the QIODevice.
         virtual void deserialise(QIODevice&, QSysInfo::Endian endianness);
+
+    private:
+        QString _version;
+        QString _type;
 };
 
 } // namespace pelican
-
 #endif // DATABLOB_H

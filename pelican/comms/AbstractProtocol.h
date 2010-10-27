@@ -14,7 +14,7 @@ namespace pelican {
 
 class ServerRequest;
 class StreamData;
-class Data;
+class DataChunk;
 class DataBlob;
 class DataSupportResponse;
 
@@ -34,7 +34,7 @@ class AbstractProtocol
 {
     public:
        typedef QList<StreamData*> StreamData_t;
-       typedef QList<Data*> ServiceData_t;
+       typedef QList<DataChunk*> ServiceData_t;
 
     public:
         AbstractProtocol() {}
