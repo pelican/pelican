@@ -4,18 +4,7 @@
 #include "pelican/modules/AbstractModule.h"
 #include "pelican/examples/SignalData.h"
 
-/**
- * @file SignalAmplifier.h
- */
-
 using namespace pelican;
-
-/**
- * @class SignalAmplifier
- *
- * @brief
- * A simple example to demonstrate how to write a pipeline module.
- */
 
 /*
  * A simple example to demonstrate how to write a pipeline module.

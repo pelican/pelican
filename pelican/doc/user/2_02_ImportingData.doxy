@@ -1,3 +1,5 @@
+namespace pelican {
+
 /**
 
 \page user_dataImporter Importing Data
@@ -8,10 +10,18 @@ This section of the guide explains how to import data into Pelican
 pipelines for subsequent processing, and introduces a number of key concepts
 and components of the Pelican framework.
 
+The following sections of the reference documentation are relevant for
+importing data into Pelican:
+
+\li \link user_referenceChunkers Chunker reference\endlink
+\li \link user_referenceDataBlobs Data Blob reference\endlink
+\li \link user_referenceAdapters Adapter reference\endlink
+\li \link user_referenceConfiguration Configuration reference\endlink
+
 As well as being an introduction, this chapter includes a tutorial to
 illustrate how to connect to a UDP data stream containing a signal, how to
 build a very basic but fully-working Pelican pipeline to process the data, and
-finally how to output the processed data. The tutorial will step through of a
+finally how to output the processed data. The tutorial will step through a
 number of code examples and explain the steps required to implement each
 component.
 
@@ -38,7 +48,7 @@ associated with any available service data.
 \subsection importData_ServiceData Service Data
 
 This is relatively static data that is updated occasionally and
-supports the stream data (e.g. describing the incoming stream data format),
+supports the stream data (e.g. it may describe the incoming stream data format),
 or status information of instruments collecting the data.
 There is always a "current" version of any type of service data,
 and it is this version that is associated with any incoming stream data.
@@ -66,7 +76,23 @@ milliseconds.
 \subsection importData_Emulation Emulating Input Stream Data
 
 This data stream can be emulated using the classes provided in the data
-emulation framework.
+emulation framework. The EmulatorDriver class takes care of the common,
+low-level details. It creates a separate thread in which to run the data
+emulator, and is responsible for writing the data packets to the output device.
+On construction, the EmulatorDriver takes ownership of a pointer to an
+AbstractEmulator derived class, which is called repeatedly by the driver to
+generate the required data packets.
+
+The primary function of the data emulator is to provide a pointer to a block
+of memory to use when sending data packets. Since we are using a UDP stream,
+we can use the AbstractUdpEmulator as a base class for our SignalEmulator,
+the header file for which is shown below:
+
+\include SignalEmulator.h
+
+We have to implement the AbstractEmulator::getPacketData() method.
+
+\include SignalEmulator.cpp
 
 \section importData_Chunkers Chunkers
 
@@ -80,148 +106,51 @@ simply accumulate enough data to form a complete chunk. This may mean that
 large chunks will need to be assembled from many smaller data packets, if the
 chunker connects to a network socket. If the data needs to be rearranged for
 optimal processing, then this rearrangement should be performed by the
-\ref importData_Adapters "data adapter" (described in the next section).
+\ref importData_Adapters "data adapter" (described in a later section).
 
-
+\subsection importData_tutorialChunker Tutorial Chunker
 
 ... SignalChunker ...
 
-----------------------------------------------
+\section importData_Server The Pelican Server
 
-\section importData_Server Server
-TODO Intro - what its used for.
+\todo Introduce the server - what it is used for.
 
 \subsection importData_IntegratingChunkers Integrating Chunkers
-TODO howto...
+The Pelican Server requires you to specify one or more chunkers
+and associate these chunkers to one or more named data streams.
 
----------------------------
-
-\section importData_UsingDataClients Methods of using the data clients
-TODO Methods of using the direct stream and pelican server client....
-
-\subsection importData_PelicanServerClient Pelican Server Client
-\subsection importData_DirectStreamClient Direct Stream Client
-
-TODO Data Client Example (tutorial) - using pelican server.
-
---------------------------------------------------
+This is done via the PelicanServer::addStreamChunker() and
+PelicanServer::addServiceChunker() methods. As the names suggest, the former
+is used to associate chunkers with data streams that are to be treated as
+stream data, and the latter for data that is to be treated as service data.
 
 
-\section importData_Adapters Adapters
+\section importData_UsingDataClients Data Clients
 
-Adapters provide a mechanism to convert chunks of raw binary data into the data
-members of a Pelican data-blob (a specialised C++ container for holding data
-used by the Pelican pipeline; see \ref importData_DataBlobs "below").
-The most basic functionality of an adapter is to de-serialise chunks of data,
-although reordering and re-factoring of the data to a form that is convenient
-for subsequent pipeline processing may also be carried out.
-Pelican currently provides support for two categories of adapters,
-distinguished by the type of input data chunks they are expected to process:
-these are stream data adapters and service data adapters, which operate on the
-relevant \ref importData_DataTypes "data types".
+A data-client is an implementation of the AbstractDataClient interface,
+which is the primary interface used by the processing pipeline for accessing
+data when it needs it.
 
-Adapters can be configured, if required, using parameters specified in the XML
-configuration file. An adapter must inherit either the AbstractStreamAdapter
-or the AbstractServiceAdapter class interface, depending on its type.
-
-tutorial adapter SignalDataAdapter
-
-\subsection importData_DataBlobs Data-Blobs
-
-In Pelican, a data-blob is a well-structured representation of data that has
-been arranged for easy, optimal processing: the output from an adapter is a
-well-structured representation of the data held in a chunk, which is ready to
-be processed by a pipeline. Data-blobs may contain arrays, blocks of memory
-and/or other metadata, and should provide methods to interact with that data.
-One of their main functions is to act as an interface between pipeline modules.
-
-\subsection importData_TcpStreams TCP streams
-TODO Reading the right number of bytes in the adapter when using TCP stream
-
-
----------------------------------------
-
-\section inportData_Testing Testing Data Import
-TODO ref emulators
-
-
-
-
-
-
-
-
-
-
-
-============================================================================
-
-\section user_dataImporter_introduction Introduction
-
-This section describes how data can read into and prepared for use in Pelican.
-
-The following sections of the reference documentation are relevant for
-importing data into Pelican:
-
-\li \link user_referenceChunkers Chunker reference\endlink
-\li \link user_referenceDataBlobs Data Blob reference\endlink
-\li \link user_referenceAdapters Adapter reference\endlink
-\li \link user_referenceConfiguration Configuration reference\endlink
-
-In order to test data import the Pelican test utility library provides a
-\ref user_referenceEmulators "data emulation framework".
-
-
-Each of these reference pages will provide an example of the classes you need
-to implement, but before you delve into these it is important to understand
-a few data related concepts described below.
-
-
-
-
-
-\section user_dataImporter_overview Overview
-
-To import data into the application you need to tell Pelican some important
-details:
-\li The type of socket the stream is on
-\li The host and port of the stream
-\li How to chop the data into units for processing (Chunking the data)
-\li How to interpret the data stream (Adapting the data)
-
-To do this you will need to implement two C++ classes, one for chunking and
-one for data adaption. These classes slot into the Pelican framework to
-deliver data to the pipeline.
-
-
-
-@section dataClient The DataClient
-
-Now that you have implemented your Chunker, Adapter and DataBlob classes,
-you can now use them in a DataClient. A DataClient is an implementation
-of the \em AbstractDataClient interface, which is the primary interface
-used in by the processing pipeline for accessing the data when it needs
-it.
-
-Pelican provides two different DataClient implementations that you can configure
-to your needs:
-\li The \em PelicanServerClient connects to a Pelican server and so only
-    requires an Adapter (the Chunker being in the Server itself).
-\li The \em DirectStreamDataClient connects directly to the incoming
-data stream and so needs both an Adapter and a Chunker.
+Pelican provides two different data-client implementations that you can
+configure to your needs:
+\li The PelicanServerClient connects to a Pelican server and so only
+    requires an adapter (the chunker being in the server itself).
+\li The DirectStreamDataClient connects directly to the incoming
+data stream and so needs both an adapter and a chunker.
 
 These clients can be used directly by specifying adapters and chunkers in the XML
 configuration file. Alternatively you can inherit from these classes to set
-your adapters and chunkers as appropriate using the classes API. This later
+your adapters and chunkers as appropriate using the class API. This latter
 method is recommended as it allows you to provide an "official" data interface
 for your application with customised configuration options and sensible default
 settings, allowing ease of reuse by pipeline developers.
 
-\subsection specifyDataClient Specifying the DataClient to use
+\subsection specifyDataClient Specifying the Data Client
 The PelicanApplication needs to know which data client will be used
-for importing data. You specify the class by name, by calling the
-\em setDataClient(const QString& dataClientName) method on the
-\em PipelineApplication class.
+for importing data. You specify the class by calling the
+PipelineApplication::setDataClient() method, supplying the name of the data
+client's class as a string.
 
 e.g. for the DirectDataClientExample below you would use
 \code
@@ -235,8 +164,7 @@ app->setDataClient("DirectDataClientExample");
 \subsubsection dataClientAdapter_API Using the API to install an Adapter
 
 \subsection dataClientChunkers Installing Chunkers into the DirectStreamDataClient
-\subsubsection connecting_dataClientDirect_XML XML configuration options to install
-a Chunker
+\subsubsection connecting_dataClientDirect_XML XML configuration options to install a Chunker
 \subsubsection connecting_dataClientDirect_API Inheriting from the DirectStreamDataClient
 In the constructor of your DataClient call the \em addChunker()
 method to attach your chunker to the named stream.
@@ -252,14 +180,53 @@ the \em name parameter that corresponds to the final string passed to
 \em addChunker.  By passing parameters through this config, you can setup
 your chunker appropriately.
 
-\section pelicanServer The Pelican Server
-The Pelican Server requires you to specify one or more chunkers
-and associate these chunkers to named one or more named data streams.
 
-This is done via the \em addStreamChunker() and
-\em addServiceChunker() methods of the \em PelicanServer
-object. As the names suggest the former is used to associate chunkers
-with data streams that are to be treated as stream data and the latter for
-data that is to be treated as service data.
+
+\todo Methods of using the direct stream and Pelican server client....
+
+\subsection importData_PelicanServerClient Pelican Server Client
+
+\subsection importData_DirectStreamClient Direct Stream Client
+
+\todo Data Client Example (tutorial) - using pelican server.
+
+
+
+\section importData_Adapters Adapters
+
+Adapters are the final components of the data-import chain, and provide a
+mechanism to convert chunks of raw binary data into the data
+members of a Pelican data-blob (a specialised C++ container for holding data
+used by the Pelican pipeline; see \ref importData_DataBlobs "below").
+The most basic functionality of an adapter is to de-serialise chunks of data,
+although reordering and re-factoring of the data to a form that is convenient
+for subsequent pipeline processing may also be carried out.
+Pelican currently provides support for two categories of adapters,
+distinguished by the type of input data chunks they are expected to process:
+these are stream data adapters and service data adapters, which operate on the
+relevant \ref importData_DataTypes "data types".
+
+Adapters can be configured, if required, using parameters specified in the XML
+configuration file. An adapter must inherit either the AbstractStreamAdapter
+or the AbstractServiceAdapter class interface, depending on its type.
+
+\subsection importData_tutorialAdapter Tutorial Adapter
+
+... SignalDataAdapter ...
+
+\subsection importData_DataBlobs Data-Blobs
+
+In Pelican, a data-blob is a well-structured representation of data that has
+been arranged for easy, optimal processing: the output from an adapter is a
+well-structured representation of the data held in a chunk, which is ready to
+be processed by a pipeline. Data-blobs may contain arrays, blocks of memory
+and/or other metadata, and should provide methods to interact with that data.
+One of their main functions is to act as an interface between pipeline modules.
+
+\subsection importData_TcpStreams Note when reading from TCP streams
+
+\todo Reading the right number of bytes in the adapter when using TCP stream
 
 */
+
+}

@@ -1,24 +1,10 @@
 #ifndef SIGNALDATA_H
 #define SIGNALDATA_H
 
-/**
- * @file SignalData.h
- */
-
 #include "pelican/data/DataBlob.h"
 #include <vector>
 
 using namespace pelican;
-
-/**
- * @class SignalData
- *
- * @brief
- * Data blob to hold an array of floating-point time-stream data.
- *
- * @details
- * This data blob holds an array of floating-point time-stream data.
- */
 
 /*
  * This data blob holds an array of floating-point time-stream data.
