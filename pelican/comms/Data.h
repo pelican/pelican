@@ -5,10 +5,12 @@
  * @file Data.h
  */
 
-#include <cstring>
 #include <QtCore/QObject>
+
+#include <cstring>
 #include <typeinfo>
 #include <cstdlib>
+
 class QByteArray;
 
 namespace pelican {
@@ -29,7 +31,6 @@ namespace pelican {
 
 class Data
 {
-
     public:
         /// Constructs a new Data object.
         Data(const QString& name = "", void* data = 0, size_t size = 0)
@@ -41,7 +42,8 @@ class Data
 
         /// Constructs a new Data object from the given byte array.
         Data(const QString& name, const QString& id, QByteArray& ba)
-        : _name(name), _id(id) {
+        : _name(name), _id(id)
+        {
             _data = ba.data();
             _size = ba.size();
         }
@@ -50,48 +52,48 @@ class Data
         virtual ~Data() {}
 
         /// Returns the size of the stored data.
-        size_t size() const {return _size;}
+        size_t size() const { return _size; }
 
         /// Sets the size of the stored data.
-        void setSize(size_t s) {_size = s;}
+        void setSize(size_t s) { _size = s; }
 
         /// Returns a pointer to the beginning of the memory block.
-        void* ptr() {return _data;}
+        void* ptr() { return _data; }
 
         /// Returns a pointer to the beginning of the memory block.
-        const void* ptr() const {return _data;}
+        const void* ptr() const { return _data; }
 
         /// Returns a pointer to the beginning of the memory block.
-        void* data() {return _data;}
+        void* data() { return _data; }
 
         /// Returns a pointer to the beginning of the memory block.
-        const void* data() const {return _data;}
+        const void* data() const { return _data; }
 
         /// Returns the name of the data.
-        const QString& name() const {return _name;}
+        const QString& name() const { return _name; }
 
         /// Sets the name of the data.
-        void setName(const QString& name) {_name = name;}
+        void setName(const QString& name) { _name = name; }
 
         /// Returns the data ID.
-        QString id() const {return _id;}
+        QString id() const { return _id; }
 
         /// Sets the ID.
-        void setId(const QString& id) {_id = id;}
+        void setId(const QString& id) { _id = id; }
 
         /// Returns true if any data exists.
-        virtual bool isValid() const {return !( _data == 0 || _size == 0);}
+        virtual bool isValid() const
+        { return !( _data == 0 || _size == 0); }
 
         /// Returns true if the object contains identical meta-data.
-        bool operator==(const Data& d) const {
-            return bool(_name == d.name() && _size == d._size && _id == d._id);
-        }
+        bool operator==(const Data& d) const
+        { return bool(_name == d.name() && _size == d._size && _id == d._id); }
 
     private:
-        QString _name; ///< The name of the object.
-        QString _id;   ///< The ID of the object.
-        void* _data;   ///< Pointer to the data.
-        size_t _size;  ///< Size of the data in bytes.
+        QString _name; // The name of the object.
+        QString _id;   // The ID of the object.
+        void* _data;   // Pointer to the data.
+        size_t _size;  // Size of the data in bytes.
 
     private:
         Data(const Data&); // Disallow the copy constructor.
