@@ -2,7 +2,6 @@
 #include "pelican/core/AdapterRealData.h"
 #include "pelican/data/ArrayData.h"
 #include "pelican/utility/ConfigNode.h"
-#include "pelican/utility/constants.h"
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QString>
@@ -43,6 +42,7 @@ void AdapterRealDataTest::tearDown()
 void AdapterRealDataTest::test_deserialise_buffer()
 {
     // Create a buffer to deserialise.
+    typedef double real_t;
     std::vector<real_t> array(10, 0);
     size_t chunkSize = array.size() * sizeof(real_t);
     for (unsigned i = 0; i < array.size(); ++i) array[i] = i;
