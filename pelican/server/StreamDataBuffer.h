@@ -12,7 +12,7 @@
 namespace pelican {
 
 class LockableStreamData;
-class Data;
+class DataChunk;
 class DataManager;
 class LockedData;
 class WritableData;

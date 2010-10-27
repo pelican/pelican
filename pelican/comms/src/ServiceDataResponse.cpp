@@ -1,6 +1,6 @@
 #include "pelican/comms/ServiceDataResponse.h"
 
-#include "pelican/comms/Data.h"
+#include "pelican/comms/DataChunk.h"
 #include "pelican/utility/memCheck.h"
 
 namespace pelican {
@@ -22,7 +22,7 @@ ServiceDataResponse::ServiceDataResponse()
  */
 ServiceDataResponse::~ServiceDataResponse()
 {
-    foreach(Data* d, _data )
+    foreach(DataChunk* d, _data )
         delete d;
 }
 
@@ -32,7 +32,7 @@ ServiceDataResponse::~ServiceDataResponse()
  * This class takes ownership of the Data object and will delete it
  * on destruction.
  */
-void ServiceDataResponse::addData(Data* d)
+void ServiceDataResponse::addData(DataChunk* d)
 {
     _data.append(d);
 }

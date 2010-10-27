@@ -1,8 +1,8 @@
-#ifndef DATA_H
-#define DATA_H
+#ifndef DATA_CHUNK_H
+#define DATA_CHUNK_H
 
 /**
- * @file Data.h
+ * @file DataChunk.h
  */
 
 #include <QtCore/QObject>
@@ -16,7 +16,7 @@ class QByteArray;
 namespace pelican {
 
 /**
- * @class Data
+ * @class DataChunk
  *
  * @brief
  * Primary interface to access chunks of data in the server.
@@ -29,19 +29,19 @@ namespace pelican {
  * The stream data object inherits this class.
  */
 
-class Data
+class DataChunk
 {
     public:
         /// Constructs a new Data object.
-        Data(const QString& name = "", void* data = 0, size_t size = 0)
+        DataChunk(const QString& name = "", void* data = 0, size_t size = 0)
         : _name(name), _data(data), _size(size) {}
 
         /// Constructs an empty Data object.
-        Data(const QString& name, const QString& id, size_t size = 0)
+        DataChunk(const QString& name, const QString& id, size_t size = 0)
         : _name(name), _id(id), _data(0), _size(size) {}
 
         /// Constructs a new Data object from the given byte array.
-        Data(const QString& name, const QString& id, QByteArray& ba)
+        DataChunk(const QString& name, const QString& id, QByteArray& ba)
         : _name(name), _id(id)
         {
             _data = ba.data();
@@ -49,7 +49,7 @@ class Data
         }
 
         /// Destroys the Data object.
-        virtual ~Data() {}
+        virtual ~DataChunk() {}
 
         /// Returns the size of the stored data.
         size_t size() const { return _size; }
@@ -86,7 +86,7 @@ class Data
         { return !( _data == 0 || _size == 0); }
 
         /// Returns true if the object contains identical meta-data.
-        bool operator==(const Data& d) const
+        bool operator==(const DataChunk& d) const
         { return bool(_name == d.name() && _size == d._size && _id == d._id); }
 
     private:
@@ -96,9 +96,8 @@ class Data
         size_t _size;  // Size of the data in bytes.
 
     private:
-        Data(const Data&); // Disallow the copy constructor.
+        DataChunk(const DataChunk&); // Disallow the copy constructor.
 };
 
 } // namespace pelican
-
-#endif // DATA_H
+#endif // DATA_CHUNK_H

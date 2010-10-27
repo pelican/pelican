@@ -9,7 +9,7 @@
 #include "pelican/comms/ServerResponse.h"
 #include "pelican/comms/DataBlobResponse.h"
 #include "pelican/server/DataManager.h"
-#include "pelican/comms/Data.h"
+#include "pelican/comms/DataChunk.h"
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QString>
@@ -52,7 +52,7 @@ void PelicanTCPBlobServerTest::setUp()
  * Destroys objects and reset environment
  */
 void PelicanTCPBlobServerTest::tearDown()
-{ 
+{
     delete _app;
 }
 

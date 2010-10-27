@@ -1,7 +1,7 @@
 #include "pelican/server/LockableStreamData.h"
 #include "pelican/server/LockableServiceData.h"
 #include "pelican/server/LockedData.h"
-#include "pelican/comms/Data.h"
+#include "pelican/comms/DataChunk.h"
 #include "pelican/comms/StreamData.h"
 
 #include <iostream>
@@ -30,7 +30,7 @@ void LockableStreamData::addAssociatedData(const LockedData& data)
     _serviceDataTypes.insert(data.name());
     _serviceData.append(data);
     LockableServiceData* lockable = static_cast<LockableServiceData*>(data.object());
-    boost::shared_ptr<Data> dataPtr( lockable->data() );
+    boost::shared_ptr<DataChunk> dataPtr( lockable->data() );
     streamData()->addAssociatedData( dataPtr );
 }
 

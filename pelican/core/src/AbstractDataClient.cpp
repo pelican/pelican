@@ -3,7 +3,7 @@
 #include "pelican/core/AbstractServiceAdapter.h"
 #include "pelican/data/DataRequirements.h"
 #include "pelican/data/DataBlob.h"
-#include "pelican/comms/Data.h"
+#include "pelican/comms/DataChunk.h"
 #include "pelican/comms/StreamData.h"
 #include "pelican/utility/ConfigNode.h"
 
@@ -90,7 +90,7 @@ QHash<QString, DataBlob*> AbstractDataClient::adaptStream(QIODevice& device,
  * @return
  */
 QHash<QString, DataBlob*> AbstractDataClient::adaptService(QIODevice& device,
-        const Data* d, QHash<QString, DataBlob*>& dataHash )
+        const DataChunk* d, QHash<QString, DataBlob*>& dataHash )
 {
     QHash<QString, DataBlob*> validData;
     QString type = d->name();

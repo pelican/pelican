@@ -1,5 +1,5 @@
 #include "pelican/comms/StreamData.h"
-#include "pelican/comms/Data.h"
+#include "pelican/comms/DataChunk.h"
 #include <iostream>
 
 #include "pelican/utility/memCheck.h"
@@ -8,17 +8,17 @@ namespace pelican {
 
 // class StreamData
 StreamData::StreamData(const QString& name, void* data, size_t size)
-    : Data(name, data, size)
+    : DataChunk(name, data, size)
 {
 }
 
 StreamData::StreamData(const QString& name, QString& id, QByteArray& d )
-    : Data(name, id, d)
+    : DataChunk(name, id, d)
 {
 }
 
 StreamData::StreamData(const QString& name, QString& id, size_t size)
-    : Data(name, id, size)
+    : DataChunk(name, id, size)
 {
 }
 
@@ -36,7 +36,7 @@ const QSet<QString>& StreamData::associateDataTypes() const
     return _associateDataTypes;
 }
 
-void StreamData::addAssociatedData(boost::shared_ptr<Data> data)
+void StreamData::addAssociatedData(boost::shared_ptr<DataChunk> data)
 {
     Q_ASSERT( data.get() );
     _associateData.append(data);
@@ -45,9 +45,9 @@ void StreamData::addAssociatedData(boost::shared_ptr<Data> data)
 
 bool StreamData::isValid() const
 {
-    bool rv = Data::isValid();
+    bool rv = DataChunk::isValid();
     if( rv ) {
-        foreach(const boost::shared_ptr<Data>& d, _associateData) {
+        foreach(const boost::shared_ptr<DataChunk>& d, _associateData) {
             rv &= d->isValid();
         }
     }
@@ -58,7 +58,7 @@ bool StreamData::operator==(const StreamData& sd) const
 {
     if( _associateData.size() != sd._associateData.size() )
         return false;
-    bool rv = Data::operator==(sd);
+    bool rv = DataChunk::operator==(sd);
     for( int i = 0; i < _associateData.size(); ++i )
     {
         rv &= _associateData[i]->operator==(*(sd._associateData[i]));
