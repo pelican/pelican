@@ -14,4 +14,5 @@ gnu_debug/
 ../.project
 ./.cproject
 ./.project
-.settings/org.eclipse.cdt.ui.prefs
+.settings/org.eclipse.cdt.ui.prefs/build
+/build
