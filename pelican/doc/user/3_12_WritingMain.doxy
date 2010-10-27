@@ -1,3 +1,5 @@
+namespace pelican {
+
 /**
 \page user_referenceMain Writing main()
 
@@ -21,11 +23,11 @@ command line arguments to be passed to their constructors.
 For each pipeline that must be run, call the
 \c PipelineApplication::registerPipeline() method on the pipeline application
 object. The method requires a pointer to an \c AbstractPipeline object (the
-base class of all Pelican pipelines) as its argument. 
+base class of all Pelican pipelines) as its argument.
 
 \include examples/mainPipelineExample.cpp
 
-\subsection user_referenceMain_pipeline_multiple Multiple Pipelines 
+\subsection user_referenceMain_pipeline_multiple Multiple Pipelines
 
 It is possible to configure more than one pipeline to be operational in a
 single Pelican pipeline binary. The appropriate pipeline will be run,
@@ -41,3 +43,5 @@ sets would need to be made for each pipeline.
 
 
 */
+
+}

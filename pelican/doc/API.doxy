@@ -1,9 +1,13 @@
+
 /**
-
 \anchor APIdoc
-
-@mainpage Introduction
+\mainpage Introduction
 
 This document describes the Application Programming Interface (API) for Pelican.
 
+
+\ref namespace Pelican
+
+
 */
+

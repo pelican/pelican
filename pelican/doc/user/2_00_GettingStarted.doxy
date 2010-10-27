@@ -15,6 +15,5 @@ using simple examples to illustrate the requirements.
 - \subpage user_dataImporter "Importing data."
 - \subpage user_dataProcessing "Processing data."
 - \subpage user_dataOutput "Data output."
-- \subpage user_testing "Testing."
 
 */

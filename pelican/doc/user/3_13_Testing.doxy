@@ -2,16 +2,16 @@ namespace pelican {
 
 /**
 
-@page user_testing Testing your Pelican Application
+\page user_testing Testing Utilities
 
 In addition to the core framework, Pelican includes a utility library
 (\c pelican-testutils) consisting of a number of classes and functions
-which are designed to be used with testing code written using the Pelican.
+which are designed to be used in testing code written using Pelican.
 
 The test utility classes derive from the extensive unit testing central to the
 development of Pelican, and examples of there use can be found in the unit tests
-in the source code distribution of the library.
-
+in the source code distribution of the library as well as in relevant sections
+of the reference documentation.
 
 \section user_testing_testutils The Pelican test utility library
 

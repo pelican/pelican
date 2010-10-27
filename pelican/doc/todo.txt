@@ -3,6 +3,6 @@ API doc
 
 == How to link to list of classes from the main page?
 == Sort out organisation of code w.r.t. folders and namespaces.
-    == maybe put test utility code in the test namespace?
-    == namespace for different source areas?
+    == put test utility code in the test namespace?
 == Some way to separate test utility code from non test utility code?
+== Default build in release mode? (could be via a script instead)
