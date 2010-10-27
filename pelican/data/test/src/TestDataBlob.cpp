@@ -3,6 +3,7 @@
 #include <QtCore/QDataStream>
 
 namespace pelican {
+namespace test {
 
 void TestDataBlob::serialise(QIODevice& device) const
 {
@@ -18,4 +19,5 @@ void TestDataBlob::deserialise(QIODevice& device, QSysInfo::Endian)
     in >> _data;
 }
 
+} // namespace test
 } // namespace pelican

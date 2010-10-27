@@ -18,6 +18,7 @@
 #include <iostream>
 
 namespace pelican {
+namespace test {
 
 /**
  * @class TestConfig
@@ -119,5 +120,6 @@ class TestConfig : public Config
         char** _argv;
 };
 
+} // test
 } // pelican
 #endif // TEST_CONFIG_H_

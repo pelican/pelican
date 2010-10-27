@@ -24,6 +24,8 @@
 
 namespace pelican {
 
+using test::TestDataBlob;
+
 CPPUNIT_TEST_SUITE_REGISTRATION( PelicanProtocolTest );
 // class PelicanProtocolTest
 PelicanProtocolTest::PelicanProtocolTest()
@@ -261,7 +263,7 @@ void PelicanProtocolTest::test_request()
     }
     {
         // Use Case:
-        // A DataSupportRequest 
+        // A DataSupportRequest
         DataSupportRequest req;
         PelicanProtocol proto;
         Socket_t& socket = _send(&req);

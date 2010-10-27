@@ -5,9 +5,9 @@
 
 This document describes the Application Programming Interface (API) for Pelican.
 
+- \ref pelican::test
 
-\ref namespace Pelican
-
+- \ref pelican
 
 */
 

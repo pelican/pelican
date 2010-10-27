@@ -19,6 +19,8 @@
 
 namespace pelican {
 
+using test::TestDataBlob;
+
 CPPUNIT_TEST_SUITE_REGISTRATION( PelicanTCPBlobServerTest );
 
 /**
