@@ -1,21 +1,21 @@
 #ifndef DATA_H
 #define DATA_H
 
-#include <cstring>
-#include <QObject>
-#include <typeinfo>
-#include <cstdlib>
-class QByteArray;
-
 /**
  * @file Data.h
  */
+
+#include <cstring>
+#include <QtCore/QObject>
+#include <typeinfo>
+#include <cstdlib>
+class QByteArray;
 
 namespace pelican {
 
 /**
  * @class Data
- *  
+ *
  * @brief
  * Primary interface to access chunks of data in the server.
  *
@@ -26,13 +26,9 @@ namespace pelican {
  *
  * The stream data object inherits this class.
  */
+
 class Data
 {
-    private:
-        QString _name; ///< The name of the object.
-        QString _id;   ///< The ID of the object.
-        void* _data;   ///< Pointer to the data.
-        size_t _size;  ///< Size of the data in bytes.
 
     public:
         /// Constructs a new Data object.
@@ -92,9 +88,15 @@ class Data
         }
 
     private:
+        QString _name; ///< The name of the object.
+        QString _id;   ///< The ID of the object.
+        void* _data;   ///< Pointer to the data.
+        size_t _size;  ///< Size of the data in bytes.
+
+    private:
         Data(const Data&); // Disallow the copy constructor.
 };
 
 } // namespace pelican
 
-#endif // DATA_H 
+#endif // DATA_H
