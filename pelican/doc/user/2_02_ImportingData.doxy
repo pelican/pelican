@@ -85,14 +85,36 @@ generate the required data packets.
 
 The primary function of the data emulator is to provide a pointer to a block
 of memory to use when sending data packets. Since we are using a UDP stream,
-we can use the AbstractUdpEmulator as a base class for our SignalEmulator,
-the header file for which is shown below:
+we can use the AbstractUdpEmulator as a base class for our SignalEmulator.
+Here is the C++ header file containing the class declaration:
 
 \include SignalEmulator.h
 
-We have to implement the AbstractEmulator::getPacketData() method.
+We simply have to implement the AbstractEmulator::getPacketData() method,
+which in this case is responsible for writing the correct data into a single
+UDP packet. Here's the class implementation in the C++ source %file:
 
 \include SignalEmulator.cpp
+
+Note that a reference to the emulator's XML configuration node should be
+supplied to the constructor: we then simply need to extract relevant
+configuration settings using methods on the supplied ConfigNode object.
+The ConfigNode::getOption method returns a QString containing the text in the
+required tagname and attribute. To illustrate what is needed here, the emulator
+expects an XML snippet like this:
+
+\verbatim
+<SignalEmulator>
+    <packet samples="256" interval="2560" />
+    <connection host="127.0.0.1" port="2000" />
+</SignalEmulator>
+\endverbatim
+
+Each time SignalEmulator::getPacketData() is called, the contents of the packet
+must be updated ready for sending. The function simply updates the header
+and writes a sine wave into the data section.
+
+This concludes our description of the input data stream emulator.
 
 \section importData_Chunkers Chunkers
 
@@ -110,13 +132,58 @@ optimal processing, then this rearrangement should be performed by the
 
 \subsection importData_tutorialChunker Tutorial Chunker
 
-... SignalChunker ...
+To connect to our example UDP data stream, we must implement a chunker that
+inherits the AbstractChunker class interface. The C++ header file for our
+SignalChunker is shown below:
+
+\include SignalChunker.h
+
+The chunker must be declared so that the Pelican framework knows of its
+existence: use the PELICAN_DECLARE_CHUNKER preprocessor macro in the header
+file to do this, supplying the class name as the macro argument.
+Do not use quotes around the name.
+
+As well as the constructor, we must implement the AbstractChunker::newDevice()
+method, which creates a new input device (a UDP socket in this case),
+and the AbstractChunker::next() method, which is called whenever there is new
+data to read from the device.
+
+Here's the class implementation in the C++ source %file:
+
+\include SignalChunker.cpp
+
+Note that a reference to the XML configuration node for the chunker will be
+automatically supplied to the constructor: we then simply need to
+extract the relevant configuration settings using methods on the supplied
+ConfigNode object. The ConfigNode::getOption method returns a QString
+containing the text in the required tagname and attribute. To illustrate what
+is needed here, the chunker expects an XML snippet like this:
+
+\verbatim
+<SignalChunker>
+    <data type="SignalData" chunkSize="33792" />
+    <connection host="127.0.0.1" port="2000" />
+</SignalChunker>
+\endverbatim
+
+The data type, host name and port number are stored by the AbstractChunker
+base class, and so do not need to be read again.
+The contents of the string containing "chunkSize" are converted to an integer
+value using the QString::toInt() method. This initialisation step only happens
+once, at program launch, so there is no cost penalty involved here. The
+attributes are stored in private class variables for later use.
+
+Our SignalChunker::next() method must first call the inherited method
+AbstractChunker::getWritable(), which returns a block of memory of the required
+size. The chunker is passed a pointer to the I/O device (the socket), and the
+required number of UDP packets are accumulated into a chunk.
 
 \section importData_Server The Pelican Server
 
 \todo Introduce the server - what it is used for.
 
-\subsection importData_IntegratingChunkers Integrating Chunkers
+\subsection importData_ServerChunkers Specifying Chunkers
+
 The Pelican Server requires you to specify one or more chunkers
 and associate these chunkers to one or more named data streams.
 
