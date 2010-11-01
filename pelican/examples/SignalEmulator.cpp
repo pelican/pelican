@@ -1,5 +1,6 @@
 #include "pelican/examples/SignalEmulator.h"
 #include "pelican/utility/ConfigNode.h"
+#include <cmath>
 
 namespace pelican {
 
@@ -24,7 +25,7 @@ SignalEmulator::SignalEmulator(const ConfigNode& configNode)
 
     // Set constant parts of packet header data.
     char* ptr = _packet.data();
-    *reinterpret_cast<int*>(ptr + 0) = size; // Total packet size in bytes.
+    *reinterpret_cast<int*>(ptr + 0) = _packet.size(); // Total bytes in packet.
     *reinterpret_cast<int*>(ptr + 4) = 32; // Size of the header in bytes.
     *reinterpret_cast<int*>(ptr + 8) = _samples; // Samples in the packet.
     *reinterpret_cast<int*>(ptr + 12) = sizeof(float); // Bytes per sample.
@@ -44,7 +45,7 @@ void SignalEmulator::getPacketData(char*& ptr, unsigned long& size)
     *reinterpret_cast<long int*>(ptr + 16) = _counter;
 
     // Fill the packet data.
-    const char* data = ptr + 32; // Add offset for header.
+    char* data = ptr + 32; // Add offset for header.
     for (unsigned i = 0; i < _samples; ++i) {
         float value = sin(((_totalSamples + i) % _period) * _omega);
         reinterpret_cast<float*>(data)[i] = value;
