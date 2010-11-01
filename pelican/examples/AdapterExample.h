@@ -5,23 +5,19 @@
 
 using namespace pelican;
 
-/**
- * @class AdapterExample
- *
- * @brief
- *    An example of a Stream Adapter class
+/*
+ * An example of a Stream Adapter class
  */
 class AdapterExample : public AbstractStreamAdapter
 {
     public:
+        // Constructs the example adapter.
         AdapterExample(const ConfigNode& config);
 
-    protected:
-        /// Method to deserialise chunks of memory provided by the I/O device.
+        // Method to deserialise chunks of memory provided by the I/O device.
         void deserialise(QIODevice* in);
 
     private:
-        unsigned _nSamples;
         unsigned _nBitsPerSample;
 };
 
