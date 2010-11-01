@@ -1,4 +1,4 @@
-#include "AdapterExample.h"
+#include "pelican/examples/AdapterExample.h"
 #include "pelican/examples/DataBlobExample.h"
 
 // Construct the example adapter.
