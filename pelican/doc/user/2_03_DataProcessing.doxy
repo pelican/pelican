@@ -1,7 +1,7 @@
 namespace pelican {
 
 /**
-\page user_dataProcessing Processing Data
+\page user_dataProcessing Processing Data: Pipelines and Modules
 
 \section user_dataProcessing_introduction Introduction
 

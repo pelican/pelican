@@ -2,9 +2,7 @@
 
 \page user_gettingStarted Getting Started (Tutorial)
 
-
 \todo Describe how this section works wrt tutorial
-
 
 As described in the \ref user_structuralOverview "introduction", Pelican
 requires that you implement a number of C++ classes that inherit from a number
@@ -12,8 +10,9 @@ of abstract interfaces. This guide will step you through the various components
 using simple examples to illustrate the requirements.
 
 - \subpage user_linkingPelican "Linking against Pelican."
-- \subpage user_dataImporter "Importing data."
-- \subpage user_dataProcessing "Processing data."
-- \subpage user_dataOutput "Data output."
+- \subpage importData_1 "Importing Data I: Concepts, Data Emulators and Chunkers."
+- \subpage importData_2 "Importing Data II: The Server, Client and Data Adapters."
+- \subpage user_dataProcessing "Processing Data: Pipelines and Modules."
+- \subpage user_dataOutput "Data Output."
 
 */
