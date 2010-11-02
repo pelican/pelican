@@ -17,6 +17,7 @@ to build a working system.
 - \subpage importData_2 "Importing Data II: The Server, Client and Data Adapters."
 - \subpage user_dataProcessing "Processing Data: Pipelines and Modules."
 - \subpage user_dataOutput "Data Output."
+- \subpage conclusion "Tutorial Conclusion: Putting it all together."
 
 \latexonly
 \clearpage
