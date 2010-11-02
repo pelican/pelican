@@ -2,55 +2,44 @@
 #include "pelican/comms/PelicanProtocol.h"
 #include "pelican/utility/Config.h"
 
-#include "pelican/examples/ChunkerExample.h"
+#include "pelican/examples/SignalChunker.h"
 
 #include <QtCore/QCoreApplication>
 #include <iostream>
 
 using namespace pelican;
 
-/* Example Pelican server main()
- *
- * - Create a Pelican configuration (XML) object.
- * - This creates and starts a server.
- * - Attaches a chunker to process the incoming stream.
- * - Attaches a protocol for communication with a Pelican server client.
- * - Enters a QCoreApplication main event loop.
- *
- * note: Pelican objects throws a number of QString messages on various errors so
- * catching these in a main is generally good practice.
- */
-
 int main(int argc, char ** argv)
 {
-    // Create a QCoreApplication.
+    // 1. Create a QCoreApplication.
     QCoreApplication app(argc, argv);
 
-    // Create a Pelican configuration object (this assumes that a Pelican
+    // 2. Create a Pelican configuration object (this assumes that a Pelican
     // configuration XML file is supplied as the first command line argument)
     if (argc != 1) std::cerr << "Please Supply an XML config file" << std::endl;
     Config config(QString(argv[0]));
 
     try {
-        // Create a Pelican server.
+        // 3. Create a Pelican server.
         PelicanServer server(&config);
 
-        // Attach the chunker to server.
-        server.addStreamChunker("ChunkerExample");
+        // 4. Attach the chunker to server.
+        server.addStreamChunker("SignalChunker");
 
-        // Create a communication protocol object and attach it to the server
+        // 5. Create a communication protocol object and attach it to the server
         // on port 2000.
-        AbstractProtocol * protocol =  new PelicanProtocol;
+        AbstractProtocol *protocol =  new PelicanProtocol;
         server.addProtocol(protocol, 2000);
 
         // Start the server.
         server.start();
 
-        // When the server is ready enter the QCoreApplication event loop.
+        // 6. When the server is ready enter the QCoreApplication event loop.
         while (!server.isReady()) {}
         return app.exec();
     }
 
+    // 7. Catch any error messages from Pelican.
     catch (const QString& err)
     {
         std::cerr << "Error: " << err.toStdString() << endl;
