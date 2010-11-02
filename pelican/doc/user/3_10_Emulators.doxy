@@ -91,4 +91,8 @@ ConfigNode emulatorConfig(xmlString);
 EmulatorDriver emulator(new EmulatorExample(emulatorConfig));
 \endcode
 
+\latexonly
+\clearpage
+\endlatexonly
+
 */

@@ -50,4 +50,8 @@ any other cmake macro, and it will define the following cmake variables:
 \li \c PELICAN_LIBRARIES: The set of libraries required for linking with
     Pelican (includes dependencies).
 
+\latexonly
+\clearpage
+\endlatexonly
+
 */

@@ -33,7 +33,7 @@ To create a new data chunker:
     in the chunker's header file to register the chunker, supplying the name
     of the chunker class as the macro argument. Do not use quotes around
     the name.
-    
+
 \b Note: All pending data must be read from the device when next() is called,
 otherwise the method will not be called again when more data is available.
 
@@ -83,5 +83,9 @@ and the class implementation is:
 \section user_referenceChunkers_Testing Testing your Chunker
 The \em pelicanTest library provides the \em ChunkerTester convenience class for easy
 unit/integration testing of your Chunker. See the API documentation for more details.
+
+\latexonly
+\clearpage
+\endlatexonly
 
 */

@@ -56,6 +56,10 @@ http://cppunit.sourceforge.net/doc/lastest/index.html</a>) which provides
 a simple framework for developing and running tests either individually or as
 part of a test suite.
 
+\latexonly
+\clearpage
+\endlatexonly
+
 */
 
 }

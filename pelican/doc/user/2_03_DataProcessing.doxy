@@ -180,6 +180,10 @@ Data products can be output from the pipeline at any stage by calling the
 AbstractPipeline::dataOutput() method, and this is described more in the next
 section.
 
+\latexonly
+\clearpage
+\endlatexonly
+
 */
 
 }

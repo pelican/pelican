@@ -19,4 +19,8 @@ components, how to use them and how to create new ones.
 - \subpage user_referenceBuildingPelican
 - \subpage user_testing
 
+\latexonly
+\clearpage
+\endlatexonly
+
 */

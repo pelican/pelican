@@ -39,5 +39,8 @@ options that can be selected.
 - \c -DTIMER={true or false} (default: false): Enable additional debug timer.
 - \c -DBUILD_STATIC={off or on} (default off): Build static versions of libraries.
 
+\latexonly
+\clearpage
+\endlatexonly
 
 */

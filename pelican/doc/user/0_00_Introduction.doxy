@@ -79,4 +79,8 @@ then more pipelines can be added as required.
 For more modest data processing needs, a single machine can be used by
 connecting a processing pipeline directly to the input data stream.
 
+\latexonly
+\clearpage
+\endlatexonly
+
 */
