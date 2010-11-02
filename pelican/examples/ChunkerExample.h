@@ -1,11 +1,11 @@
 #ifndef CHUNKEREXAMPLE_H
 #define CHUNKEREXAMPLE_H
 
-#include "pelican/server/AbstractChunker.h"
-
 /**
  * @file ChunkerExample.h
  */
+
+#include "pelican/server/AbstractChunker.h"
 
 using namespace pelican;
 
