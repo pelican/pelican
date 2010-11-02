@@ -2,7 +2,7 @@
 #include "pelican/comms/PelicanProtocol.h"
 #include "pelican/utility/Config.h"
 
-#include "pelican/examples/ChunkerExample.h"
+#include "pelican/examples/SignalChunker.h"
 
 #include <QtCore/QCoreApplication>
 #include <iostream>
@@ -24,22 +24,22 @@ int main(int argc, char ** argv)
         PelicanServer server(&config);
 
         // 4. Attach the chunker to server.
-        server.addStreamChunker("ChunkerExample");
+        server.addStreamChunker("SignalChunker");
 
         // 5. Create a communication protocol object and attach it to the server
         // on port 2000.
-        AbstractProtocol * protocol =  new PelicanProtocol;
+        AbstractProtocol *protocol =  new PelicanProtocol;
         server.addProtocol(protocol, 2000);
 
-        // 6. Start the server.
+        // Start the server.
         server.start();
 
-        // 7. When the server is ready enter the QCoreApplication event loop.
+        // 6. When the server is ready enter the QCoreApplication event loop.
         while (!server.isReady()) {}
         return app.exec();
     }
 
-    // 8. Catch any error messages from Pelican.
+    // 7. Catch any error messages from Pelican.
     catch (const QString& err)
     {
         std::cerr << "Error: " << err.toStdString() << endl;

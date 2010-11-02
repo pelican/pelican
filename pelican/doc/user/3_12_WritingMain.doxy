@@ -56,7 +56,7 @@ sets would need to be made for each pipeline.
 \section user_referenceMain_server Server Binary
 
 Pelican server binaries are responsible for receiving, splitting and serving
-one or more incoming data streams. As such server binaries are constructed from
+one or more incoming data streams. As such, server binaries are constructed from
 a Pelican server (\c PelicanServer), one or more
 \ref user_referenceChunkers "Data Chunkers" and one or more protocols for
 handling communications between pipelines and the server (e.g. \c PelicanProtocol).
@@ -67,29 +67,39 @@ with the example code presented in the
 
 \include examples/mainServerExample.cpp
 
-\par Notes:
+\subsection user_referenceMain_server_eg Notes (refer to references in the code):
 <ol>
     <li> Pelican makes extensive use of the
          <a href="http://qt.nokia.com/" target="_blank">Qt Library</a> and as
          such requires a QtCoreApplication or QApplication for its main event
          loop.
-    <li> Create a Pelican \ref user_referenceConfiguration "configuration"
-         (XML) object. This can be done either by loading a configuration file
+    <li> Pelican \ref user_referenceConfiguration "configuration"
+         (XML) objects can be constructed by loading a configuration file
          or programmatically.
     <li> Create a Pelican Server, the main data server class used to spawn
          sessions which handle incoming data requests.
     <li> Attach chunkers to process the incoming stream(s) into discrete
-         partitions.
-    <li> Attach a protocol for communication with a Pelican server client.
-    <li> Start the server.
-    <li> Enter a QCoreApplication main event loop.
-    <li> As Pelican
+         partitions. Chunkers are specified by their class name and constructed
+         automatically by a factory.
+    <li> Attach a protocol for communication with a Pelican server client, the
+         PelicanProtocol is a basic low overhead protocol which can be usef for
+         this.
+    <li> It is necessary to wait for the server thread to have entered its event
+         loop before starting the application main event loop as the start
+         method on the server returns immediately.
+    <li> Pelican classes throw helpful QString messages on various errors so it
+         is often useful to catch these.
 </ol>
 
 
-
 \section user_referenceMain_directStream The direct stream client
-\todo some comment on this...
+
+As described in the
+\ref user_structuralOverview "introduction to the Pelican framework".
+Pelican can also be run in a direct input mode using the a data client derived
+from the \c DirectStreamDataClient which embeds chunkers directly into the data
+client framework. In this mode binaries are written in the same was as the
+pipeline binary example.
 
 \latexonly
 \clearpage
