@@ -1,12 +1,12 @@
 /**
 \page user_dataViewer The Data Viewer
 
-\section user_dataViewer_introduction Introduction 
+\section user_dataViewer_introduction Introduction
 
-Pelican provides a handy widget for connecting to and displaying a data stream emerging 
+Pelican provides a handy widget for connecting to and displaying a data stream emerging
 from the end of a pipeline via the PelicanTCPBlobServer.
 
-This widget allows you to connect to the various streams and launch appropriate 
+This widget allows you to connect to the various streams and launch appropriate
 plug-in widgets to display the data as it becomes available.
 
 \section user_dataViewer_DataBlobWidget Creating a DataBlobWidget
@@ -27,4 +27,9 @@ By default the stream name will be used as the type of the Widget to view that s
 \section user_dataViewer_Configuration Configuration Options
 Like many other Pelican objects DataViewer can be configured with XML segments. These
 are fully documented in the class documentation. See
+
+\latexonly
+\clearpage
+\endlatexonly
+
 */

@@ -11,17 +11,18 @@ using namespace pelican;
 class SignalDataAdapter : public AbstractStreamAdapter
 {
     public:
-        /// Constructor.
+        // Constructs the adapter.
         SignalDataAdapter(const ConfigNode& config);
 
-        /// Method to deserialise chunks of memory provided by the I/O device.
-        void deserialise(QIODevice* in);
+        // Method to deserialise chunks of memory provided by the I/O device.
+        void deserialise(QIODevice* device);
 
     private:
-        unsigned _nSamples;
+        static const unsigned _headerSize = 32;
+        unsigned _samplesPerPacket;
+        unsigned _packetSize;
 };
 
-// Register the adapter.
 PELICAN_DECLARE_ADAPTER(SignalDataAdapter)
 
 #endif // SIGNALDATAADAPTER_H

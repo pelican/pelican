@@ -91,7 +91,7 @@ your chunker appropriately.
 provide a mechanism to convert chunks of raw binary data into the data
 members of a Pelican data-blob (a specialised C++ container for holding data
 used by the Pelican pipeline; see \ref importData_DataBlobs "below").
-The most basic functionality of an adapter is to de-serialise chunks of data,
+The most basic function of an adapter is to de-serialise chunks of data,
 although re-ordering and re-factoring of the data to a form that is convenient
 for subsequent pipeline processing may also be carried out.
 Pelican currently provides support for two categories of adapters,
@@ -114,7 +114,7 @@ One of their main functions is to act as an interface between pipeline modules.
 
 \subsection importData_tutorialDataBlob Tutorial Data-Blob
 
-For the purpose of our tutorial, we need a data-blob that can hold the
+For the purpose of our tutorial, we need a type of DataBlob that can hold the
 required time-series data in a chunk. This is implemented in the SignalData
 data-blob, shown below, as a simple contiguous float array (a standard C++
 vector). Public methods allow this array to be resized, and should be used to
@@ -127,6 +127,8 @@ The data-blob must be declared so that the Pelican framework knows of its
 existence: use the PELICAN_DECLARE_DATABLOB macro in the header file to do this,
 supplying the class name as the macro argument. Do not use quotes around the
 name.
+
+This concludes our description of the required SignalData data-blob.
 
 \subsection importData_tutorialAdapter Tutorial Adapter
 
@@ -152,7 +154,7 @@ Here's the class implementation in the C++ source %file:
 
 \include SignalDataAdapter.cpp
 
-Note that a reference to the XML configuration node for the adapter will be
+A reference to the XML configuration node for the adapter will be
 automatically supplied to the constructor from the application's
 \ref user_referenceConfiguration "configuration file": we then simply need to
 extract the relevant configuration settings using methods on the supplied
@@ -162,9 +164,13 @@ is needed here, the adapter expects an XML snippet like this:
 
 \verbatim
 <SignalDataAdapter>
-
+    <packet samples="256" />
 </SignalDataAdapter>
 \endverbatim
+
+The contents of the string containing the number of samples per packet are
+converted to an integer value using the QString::toInt() method, and
+stored in a private class variable for later use.
 
 The AbstractAdapter is aware of the data blob that must be filled, so in our
 SignalDataAdapter::deserialise() routine, we must obtain a pointer to this
@@ -172,13 +178,22 @@ data blob by calling the AbstractAdapter::dataBlob() inherited method. The
 chunk size is also available, and can be retrieved using the
 AbstractAdapter::chunkSize() inherited method.
 
-\subsection importData_TcpStreams Note when reading from TCP streams
+The remainder of the deserialise routine simply loops over the UDP packets in
+the chunk, discarding the headers in each case, and reading the data sections
+into the correct parts of the SignalData data-blob.
 
-\todo Reading the right number of bytes in the adapter when using TCP stream
+\note It is important, especially when the input device is a TCP socket,
+to check that sufficient data is available before trying to read it. For this
+reason we have included a call to QIODevice::waitForReadyRead() if there is not
+enough data available on the device.
 
 This concludes our description of the required SignalDataAdapter. The following
 section shows how to process this data by creating a simple module and
 inserting it into a processing pipeline.
+
+\latexonly
+\clearpage
+\endlatexonly
 
 */
 

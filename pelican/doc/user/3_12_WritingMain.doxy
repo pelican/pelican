@@ -78,20 +78,22 @@ with the example code presented in the
          or programmatically.
     <li> Create a Pelican Server, the main data server class used to spawn
          sessions which handle incoming data requests.
-    <li> Attach chunkers to process the incoming stream(s).
+    <li> Attach chunkers to process the incoming stream(s) into discrete
+         partitions.
     <li> Attach a protocol for communication with a Pelican server client.
     <li> Start the server.
     <li> Enter a QCoreApplication main event loop.
+    <li> As Pelican
 </ol>
-
-
-
 
 
 
 \section user_referenceMain_directStream The direct stream client
 \todo some comment on this...
 
+\latexonly
+\clearpage
+\endlatexonly
 
 */
 

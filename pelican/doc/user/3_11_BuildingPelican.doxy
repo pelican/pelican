@@ -50,4 +50,8 @@ options that can be selected.
 - <b> \c -DBUILD_STATIC =</b> off(default) or on<br>
     Build static versions of libraries.
 
+\latexonly
+\clearpage
+\endlatexonly
+
 */

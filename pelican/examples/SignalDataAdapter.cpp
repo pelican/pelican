@@ -6,11 +6,14 @@ SignalDataAdapter::SignalDataAdapter(const ConfigNode& config)
     : AbstractStreamAdapter(config)
 {
     // Read the configuration using configuration node utility methods.
-    _nSamples = config.getOption("samples", "number").toUInt();
+    _samplesPerPacket = config.getOption("packet", "samples").toUInt();
+
+    // Set up the packet data.
+    _packetSize = _headerSize + _samplesPerPacket * sizeof(float);
 }
 
 // Called to de-serialise a chunk of data from the input device.
-void SignalDataAdapter::deserialise(QIODevice* in)
+void SignalDataAdapter::deserialise(QIODevice* device)
 {
     // A pointer to the data blob to fill should be obtained by calling the
     // dataBlob() inherited method. This returns a pointer to an
@@ -19,21 +22,26 @@ void SignalDataAdapter::deserialise(QIODevice* in)
 
     // Set the size of the data blob to fill.
     // The chunk size is obtained by calling the chunkSize() inherited method.
-    size_t nBytes = chunkSize();
-    unsigned length = nBytes;
-    blob->resize(length);
+    unsigned packets = chunkSize() / _packetSize;
+    blob->resize(packets * _samplesPerPacket);
 
-    // Create a temporary buffer for storing the chunk.
-    std::vector<char> byteArray(nBytes);
+    // Create a temporary buffer to read out the packet headers, and
+    // get the pointer to the data array in the data blob being filled.
+    char headerData[_headerSize];
+    char* data = (char*) blob->ptr();
 
-    // Read the chunk from the I/O device.
-    in->read(&byteArray[0], nBytes);
+    // Loop over the UDP packets in the chunk.
+    unsigned bytesRead = 0;
+    for (unsigned p = 0; p < packets; ++p)
+    {
+        // Ensure there is enough data to read from the device.
+        while (device->bytesAvailable() < _packetSize)
+            device->waitForReadyRead(-1);
 
-    // Get the pointer to the data array in the data blob being filled.
-    float* data = blob->data();
+        // Read the packet header from the input device and dump it.
+        device->read(headerData, _headerSize);
 
-    // Fill the data blob.
-    for (unsigned i = 0; i < length; ++i) {
-        data[i] = *reinterpret_cast<float*>(&byteArray[i * sizeof(float)]);
+        // Read the packet data from the input device into the data blob.
+        bytesRead += device->read(data + bytesRead, _packetSize - _headerSize);
     }
 }

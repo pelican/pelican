@@ -203,6 +203,10 @@ section shows how to use the chunker in the next part of the Pelican framework,
 and how to extract the bytes in the chunk to a form more suitable for
 processing.
 
+\latexonly
+\clearpage
+\endlatexonly
+
 */
 
 }

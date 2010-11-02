@@ -96,4 +96,8 @@ and the class implementation is:
 
 \include AdapterExample.cpp
 
+\latexonly
+\clearpage
+\endlatexonly
+
 */
