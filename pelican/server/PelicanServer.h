@@ -34,6 +34,9 @@ class PelicanPortServer;
  * Initialises the server according to configuration options etc
  * and listens on the specified socket. On an connection a Session
  * object is spawned in another thread
+ *
+ * \par Example of using the server:
+ * \include examples/mainServerExample.cpp
  */
 
 class PelicanServer : public QThread
