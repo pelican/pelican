@@ -26,8 +26,10 @@ int main(int argc, char ** argv)
     // Create a QCoreApplication.
     QCoreApplication app(argc, argv);
 
-    // Create a Pelican configuration object.
-    Config config;
+    // Create a Pelican configuration object (this assumes that a Pelican
+    // configuration XML file is supplied as the first command line argument)
+    if (argc != 1) std::cerr << "Please Supply an XML config file" << std::endl;
+    Config config(QString(argv[0]));
 
     try {
         // Create a Pelican server.
