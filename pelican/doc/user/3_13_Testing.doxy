@@ -1,4 +1,5 @@
 namespace pelican {
+namespace test {
 
 /**
 
@@ -17,19 +18,19 @@ of the reference documentation.
 
 The test utility library currently provides a number of classes listed below.
 
-- Utility
+- \ref t_utility "Utility"
     - TestConfig: Used handling XML \ref user_referenceConfiguration
     "configuration" files used in testing.
-    - SocketTester (currently in \c pelican not \c pelican-testutils!)
+    - SocketTester
 - %Data
-    - TestDataBlob: A simple \ref user_referenceDataBlobs "data blob" containg
+    - TestDataBlob: A simple \ref user_referenceDataBlobs "data blob" containing
     a QByteArray.
 - Core
     - TestPipeline: A simple \ref user_referencePipelines "pipeline" with no
     data requirements.
-    - TestDataClient:
-    - TestServiceAdapter:
-    - TestStreamAdapter:
+    - TestDataClient
+    - TestServiceAdapter
+    - TestStreamAdapter
 - Server
     - TestChunker
     - TestUdpChunker
@@ -38,7 +39,7 @@ The test utility library currently provides a number of classes listed below.
     - PelicanTestClient
     - ChunkerTester
 - Emulator
-    - RealUdpEmulator (currently in \c pelican not \c pelican-testutils!)
+    - RealUdpEmulator
 - Output
     - TestOutputStreamer:
     - TestDataBlobClient
@@ -57,4 +58,5 @@ part of a test suite.
 
 */
 
+}
 }

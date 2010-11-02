@@ -6,6 +6,8 @@
 using namespace pelican;
 
 /**
+ * @ingroup c_examples
+ *
  * @class AdapterExample
  *
  * @brief

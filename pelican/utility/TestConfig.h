@@ -21,6 +21,8 @@ namespace pelican {
 namespace test {
 
 /**
+ * @ingroup t_utility
+ *
  * @class TestConfig
  *
  * @brief

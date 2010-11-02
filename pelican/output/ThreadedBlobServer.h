@@ -1,29 +1,30 @@
 #ifndef THREADEDBLOBSERVER_H
 #define THREADEDBLOBSERVER_H
 
-
-#include <QThread>
-#include <QString>
-#include <QMap>
-#include <QMutex>
-#include <QWaitCondition>
-#include <boost/shared_ptr.hpp>
-
 /**
  * @file ThreadedBlobServer.h
  */
 
+#include <QtCore/QThread>
+#include <QtCore/QString>
+#include <QtCore/QMap>
+#include <QtCore/QMutex>
+#include <QtCore/QWaitCondition>
+#include <boost/shared_ptr.hpp>
+
 namespace pelican {
-    class DataBlob;
-    class TCPConnectionManager;
+class DataBlob;
+class TCPConnectionManager;
 
 /**
+ * @ingroup c_output
+ *
  * @class ThreadedBlobServer
- *  
+ *
  * @brief
  *   Runs a TCPConnection manager in a seperate thread
  * @details
- * 
+ *
  */
 
 class ThreadedBlobServer : public QThread
@@ -71,4 +72,4 @@ class ThreadedBlobServer : public QThread
 };
 
 } // namespace pelican
-#endif // THREADEDBLOBSERVER_H 
+#endif // THREADEDBLOBSERVER_H

@@ -23,6 +23,8 @@ class AbstractChunker;
 class DataManager;
 
 /**
+ * @ingroup c_server
+ *
  * @class ChunkerManager
  *
  * @brief

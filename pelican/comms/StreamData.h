@@ -16,6 +16,8 @@ namespace pelican {
 class LockedData;
 
 /**
+ * @ingroup c_comms
+ *
  * @class StreamData
  *
  * @brief

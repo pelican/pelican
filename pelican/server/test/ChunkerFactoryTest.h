@@ -1,15 +1,17 @@
 #ifndef CHUNKERFACTORYTEST_H
 #define CHUNKERFACTORYTEST_H
 
-#include <cppunit/extensions/HelperMacros.h>
-
 /**
  * @file ChunkerFactoryTest.h
  */
 
+#include <cppunit/extensions/HelperMacros.h>
+
 namespace pelican {
 
 /**
+ * @ingroup t_server
+ *
  * @class ChunkerFactoryTest
  *  
  * @brief

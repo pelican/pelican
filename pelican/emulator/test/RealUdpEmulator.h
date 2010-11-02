@@ -1,33 +1,40 @@
 #ifndef REALUDPEMULATOR_H
 #define REALUDPEMULATOR_H
 
-#include "pelican/emulator/AbstractUdpEmulator.h"
-#include <QtCore/QByteArray>
-
 /**
  * @file RealUdpEmulator.h
  */
+
+#include "pelican/emulator/AbstractUdpEmulator.h"
+#include <QtCore/QByteArray>
 
 namespace pelican {
 
 class ConfigNode;
 
+namespace test {
+
 /**
+ * @ingroup t_emulator
+ *
  * @class RealUdpEmulator
- *  
+ *
  * @brief A real-valued data packet emulator that uses a UDP socket.
- * 
+ *
  * @details
  * This emulator outputs simple packets of real-valued double-precision data
  * using a UDP socket.
  * It should be constructed with a configuration node that contains
  * the packet size in bytes, the interval between packets in microseconds,
  * and the initial data value.
- * 
+ *
  * The default values are:
  *
- * @verbatim <packet size="8192" interval="100000" initialValue="0" /> @endverbatim
+ * @verbatim
+ * <packet size="8192" interval="100000" initialValue="0" />
+ * @endverbatim
  */
+
 class RealUdpEmulator : public AbstractUdpEmulator
 {
     public:
@@ -44,13 +51,13 @@ class RealUdpEmulator : public AbstractUdpEmulator
         unsigned long interval() {return _interval;}
 
     private:
-        double _initialValue;      ///< The initial value of the packet data.
-        unsigned long _packetSize; ///< The size of the packet.
-        unsigned long _interval;   ///< The interval between packets in microseconds.
-        QByteArray _packet;        ///< The data packet.
-        unsigned long _counter;    ///< Packet counter.
+        double _initialValue;      // Initial value of the packet data.
+        unsigned long _packetSize; // Size of the packet.
+        unsigned long _interval;   // Interval between packets in microseconds.
+        QByteArray _packet;        // Packet data.
+        unsigned long _counter;    // Packet counter.
 };
 
+} // namespace test
 } // namespace pelican
-
-#endif // REALUDPEMULATOR_H 
+#endif // REALUDPEMULATOR_H

@@ -4,20 +4,16 @@ SUBPACKAGE(utility)
 set(utility_src
     src/ConfigNode.cpp
     src/Config.cpp
-    src/SocketTester.cpp
     src/ClientTestServer.cpp
     src/WatchedFile.cpp
 )
-
 set(utility_moc_headers
     WatchedFile.h
     ClientTestServer.h
-   )
+)
 
 QT4_WRAP_CPP(utility_src ${utility_moc_headers})
-
 SUBPACKAGE_LIBRARY(utility ${utility_src})
-
 SUBPACKAGE_SET_EXTERNAL_LIBRARIES(
     ${QT_QTCORE_LIBRARY}
     ${QT_QTXML_LIBRARY}

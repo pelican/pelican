@@ -1,8 +1,8 @@
 #ifndef ABSTRACTDATABLOBCLIENT_H
 #define ABSTRACTDATABLOBCLIENT_H
 
-#include <QObject>
-#include <QString>
+#include <QtCore/QObject>
+#include <QtCore/QString>
 
 /**
  * @file AbstractDataBlobClient.h
@@ -13,13 +13,15 @@ namespace pelican {
     class Stream;
 
 /**
+ * @ingroup c_output
+ *
  * @class AbstractDataBlobClient
- * 
+ *
  * @brief
- *   Base class for all clients of the 
+ *   Base class for all clients of the
  *   Pelican DataBlob server
  * @details
- * 
+ *
  */
 class AbstractDataBlobClient : public QObject
 {
@@ -53,4 +55,4 @@ class AbstractDataBlobClient : public QObject
 
 } // namespace pelican
 
-#endif // ABSTRACTDATABLOBCLIENT_H 
+#endif // ABSTRACTDATABLOBCLIENT_H

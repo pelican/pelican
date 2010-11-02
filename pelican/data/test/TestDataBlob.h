@@ -12,6 +12,8 @@ namespace pelican {
 namespace test {
 
 /**
+ * @ingroup t_data
+ *
  * @class TestDataBlob
  *
  * @brief

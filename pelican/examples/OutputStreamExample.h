@@ -1,6 +1,6 @@
 #ifndef OUTPUTSTREAMEXAMPLE_H
 #define OUTPUTSTREAMEXAMPLE_H
-#include <QList>
+#include <QtCore/QList>
 class QIODevice;
 
 
@@ -13,12 +13,14 @@ class QIODevice;
 using namespace pelican;
 
 /**
+ * @ingroup c_examples
+ *
  * @class OutputStreamExample
- * 
+ *
  * @brief
  *    Writes an DataBlobExample object to a CSV file
  * @details
- * 
+ *
  */
 class OutputStreamExample : public AbstractOutputStream
 {
@@ -28,7 +30,7 @@ class OutputStreamExample : public AbstractOutputStream
 
         /// OutputStreamExample destructor.
         ~OutputStreamExample();
-        
+
         /// add a file for output to be saved
         void addFile( const QString& filename );
 
@@ -41,4 +43,4 @@ class OutputStreamExample : public AbstractOutputStream
 
 PELICAN_DECLARE(AbstractOutputStream, OutputStreamExample)
 
-#endif // OUTPUTSTREAMEXAMPLE_H 
+#endif // OUTPUTSTREAMEXAMPLE_H

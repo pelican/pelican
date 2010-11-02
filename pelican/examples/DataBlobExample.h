@@ -11,6 +11,8 @@
 using namespace pelican;
 
 /**
+ * @ingroup c_examples
+ *
  * @class DataBlobExample
  *
  * @brief

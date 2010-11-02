@@ -10,10 +10,12 @@
 namespace pelican {
 
 /**
+ * @ingroup c_emulator
+ *
  * @class AbstractEmulator
- *  
+ *
  * @brief Interface for all emulators.
- * 
+ *
  * @details
  * This abstract class defines the interface for all data emulators.
  */
@@ -53,4 +55,4 @@ class AbstractEmulator
 
 } // namespace pelican
 
-#endif // ABSTRACTEMULATOR_H 
+#endif // ABSTRACTEMULATOR_H

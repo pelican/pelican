@@ -1,24 +1,26 @@
 #ifndef STREAMDATABUFFERTEST_H
 #define STREAMDATABUFFERTEST_H
 
-#include <cppunit/extensions/HelperMacros.h>
-class QCoreApplication;
-
 /**
  * @file StreamDataBufferTest.h
  */
+
+#include <cppunit/extensions/HelperMacros.h>
+class QCoreApplication;
 
 namespace pelican {
 
 class DataManager;
 
 /**
+ * @ingroup t_server
+ *
  * @class StreamDataBufferTest
- *  
+ *
  * @brief
- *   Unit test for StreamDataBuffer
+ * Unit test for StreamDataBuffer
+ *
  * @details
- * 
  */
 
 class StreamDataBufferTest : public CppUnit::TestFixture
@@ -38,7 +40,7 @@ class StreamDataBufferTest : public CppUnit::TestFixture
         void test_getNext();
         void test_getWritable();
         void test_getWritableStreams();
-        
+
     public:
         StreamDataBufferTest();
         ~StreamDataBufferTest();
@@ -49,4 +51,4 @@ class StreamDataBufferTest : public CppUnit::TestFixture
 };
 
 } // namespace pelican
-#endif // STREAMDATABUFFERTEST_H 
+#endif // STREAMDATABUFFERTEST_H

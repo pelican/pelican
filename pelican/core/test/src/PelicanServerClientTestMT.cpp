@@ -14,6 +14,9 @@
 namespace pelican {
 
 using test::TestDataBlob;
+using test::TestServiceAdapter;
+using test::TestStreamAdapter;
+using test::TestServer;
 
 CPPUNIT_TEST_SUITE_REGISTRATION( PelicanServerClientTestMT );
 /**

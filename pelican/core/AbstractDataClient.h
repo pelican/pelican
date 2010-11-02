@@ -1,19 +1,22 @@
 #ifndef ABSTRACTDATACLIENT_H
 #define ABSTRACTDATACLIENT_H
 
+/**
+ * @file AbstractDataClient.h
+ */
+
 #include "pelican/core/DataTypes.h"
 #include "pelican/utility/FactoryRegistrar.h"
 #include "pelican/utility/Config.h"
 #include "pelican/utility/ConfigNode.h"
-#include <QHash>
-#include <QList>
-#include <QSet>
-#include <QString>
+
+#include <QtCore/QHash>
+#include <QtCore/QList>
+#include <QtCore/QSet>
+#include <QtCore/QString>
+
 class QIODevice;
 
-/**
- * @file AbstractDataClient.h
- */
 
 namespace pelican {
 
@@ -28,6 +31,8 @@ class StreamData;
 class DataChunk;
 
 /**
+ * @ingroup c_core
+ *
  * @class AbstractDataClient
  *
  * @brief

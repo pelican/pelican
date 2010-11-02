@@ -1,20 +1,22 @@
 #ifndef MODULEFACTORYTEST_H
 #define MODULEFACTORYTEST_H
 
-#include <cppunit/extensions/HelperMacros.h>
-
 /**
  * @file ModuleFactoryTest.h
  */
 
+#include <cppunit/extensions/HelperMacros.h>
+
 namespace pelican {
 
 /**
+ * @ingroup t_core
+ *
  * @class ModuleFactoryTest
- *  
+ *
  * @brief
  * CppUnit tests for ModuleFactory class.
- * 
+ *
  * @details
  * Tries to create a number of modules.
  */
@@ -41,4 +43,4 @@ class ModuleFactoryTest : public CppUnit::TestFixture
 
 } // namespace pelican
 
-#endif // MODULEFACTORYTEST_H 
+#endif // MODULEFACTORYTEST_H

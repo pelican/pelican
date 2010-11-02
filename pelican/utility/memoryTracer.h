@@ -1,3 +1,8 @@
+
+/**
+ * @file memoryTracer.h
+ */
+
 #if !defined DEBUGNEW_H
 #define DEBUGNEW_H
 #pragma warning (disable:4786)
@@ -12,8 +17,9 @@
 
 #include "pelican/utility/memoryCheckInterface.h"
 
-
 /**
+ * @ingroup c_utility
+ *
  * @class Tracer
  *
  * @brief
@@ -26,31 +32,6 @@
 
 class Tracer
 {
-    private:
-        class Entry
-        {
-            public:
-            Entry(char const* file, int line) : _file(file), _line(line) {}
-            Entry() : _line (0) {}
-            char const* file() const {return _file;}
-            int line() const {return _line;}
-            private:
-            const char* _file;
-            int _line;
-        };
-
-        class Lock
-        {
-            public:
-                Lock(Tracer& tracer) : _tracer(tracer) {_tracer.lock();}
-                ~Lock() {_tracer.unlock();}
-            private:
-                Tracer& _tracer;
-        };
-
-        typedef std::map<void *, Entry>::iterator iterator;
-        friend class Lock;
-
     public:
         Tracer();
         ~Tracer();
@@ -62,12 +43,39 @@ class Tracer
         static bool ready;
 
     private:
-        void lock() {++_lockCount;}
-        void unlock() {--_lockCount;}
+        void lock() { ++_lockCount; }
+        void unlock() { --_lockCount; }
 
-    private:
+        class Entry
+        {
+            public:
+                Entry(char const* file, int line) : _file(file), _line(line) {}
+                Entry() : _line (0) {}
+                char const* file() const { return _file; }
+                int line() const { return _line; }
+
+            private:
+                const char* _file;
+                int _line;
+        };
+
+        class Lock
+        {
+            public:
+                Lock(Tracer& tracer) : _tracer(tracer) { _tracer.lock(); }
+                ~Lock() { _tracer.unlock(); }
+
+            private:
+                Tracer& _tracer;
+        };
+
+        typedef std::map<void*, Entry>::iterator iterator;
+
         std::map<void*, Entry> _map;
         int _lockCount;
+
+    private:
+        friend class Lock;
 };
 
 #endif

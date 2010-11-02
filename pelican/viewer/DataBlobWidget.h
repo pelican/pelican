@@ -1,25 +1,28 @@
 #ifndef DATABLOBWIDGET_H
 #define DATABLOBWIDGET_H
 
-#include <QtGui/QWidget>
-#include "pelican/utility/ConfigNode.h"
-#include "pelican/utility/FactoryConfig.h"
-
 /**
  * @file DataBlobWidget.h
  */
+
+#include "pelican/utility/ConfigNode.h"
+#include "pelican/utility/FactoryConfig.h"
+
+#include <QtGui/QWidget>
 
 namespace pelican {
 
 class DataBlob;
 
 /**
+ * @ingroup c_viewer
+ *
  * @class DataBlobWidget
  *
  * @brief
- *   Base class for DataBase Widget viewers
- * @details
+ * Base class for DataBase Widget viewers
  *
+ * @details
  */
 
 class DataBlobWidget : public QWidget
@@ -32,8 +35,6 @@ class DataBlobWidget : public QWidget
         DataBlobWidget( const ConfigNode& config, QWidget* parent=0 );
         virtual ~DataBlobWidget();
         virtual void updateData( DataBlob* data);
-
-    private:
 };
 
 PELICAN_DECLARE(DataBlobWidget, DataBlobWidget)

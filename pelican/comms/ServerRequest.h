@@ -1,16 +1,18 @@
 #ifndef SERVERREQUEST_H
 #define SERVERREQUEST_H
 
-#include <QStringList>
-#include <QString>
-
 /**
  * @file ServerRequest.h
  */
 
+#include <QtCore/QStringList>
+#include <QtCore/QString>
+
 namespace pelican {
 
 /**
+ * @ingroup c_comms
+ *
  * @class ServerRequest
  *
  * @brief
@@ -19,10 +21,13 @@ namespace pelican {
  * @details
  * Requests must have a type and ancillary data.
  */
+
 class ServerRequest
 {
     public:
-        typedef enum { Error, Acknowledge, StreamData, ServiceData, DataSupport } Request;
+        typedef enum {
+            Error, Acknowledge, StreamData, ServiceData, DataSupport
+        } Request;
 
     private:
         Request _type;
@@ -46,9 +51,8 @@ class ServerRequest
         const QString& message() const {return _error;}
 
         /// Tests whether this ServerRequest type is the same as another.
-        virtual bool operator==(const ServerRequest& req) const {
-            return _type == req._type;
-        }
+        virtual bool operator==(const ServerRequest& req) const
+        { return _type == req._type; }
 };
 
 } // namespace pelican

@@ -12,12 +12,13 @@ class QCoreApplication;
 namespace pelican {
 
 /**
+ * @ingroup t_core
+ *
  * @class AdapterRealDataTest
  *
  * @brief
  *
  * @details
- *
  */
 
 class AdapterRealDataTest : public CppUnit::TestFixture

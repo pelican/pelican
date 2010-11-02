@@ -8,6 +8,9 @@
 
 namespace pelican {
 
+using test::TestServiceAdapter;
+using test::TestStreamAdapter;
+
 CPPUNIT_TEST_SUITE_REGISTRATION( DataTypesTest );
 /**
  *@details DataTypesTest

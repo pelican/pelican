@@ -1,26 +1,28 @@
 #ifndef STREAMDATAREQUEST_H
 #define STREAMDATAREQUEST_H
 
-#include <QVector>
-#include "pelican/comms/ServerRequest.h"
-#include "pelican/data/DataRequirements.h"
-#include <iostream>
-
 /**
  * @file StreamDataRequest.h
  */
 
+#include <QtCore/QVector>
+#include "pelican/comms/ServerRequest.h"
+#include "pelican/data/DataRequirements.h"
+#include <iostream>
+
 namespace pelican {
 
 /**
+ * @ingroup c_comms
+ *
  * @class StreamDataRequest
  *
  * @brief
  * Specifications of a set of DataRequirements.
  *
  * @details
- *
  */
+
 class StreamDataRequest : public ServerRequest
 {
     private:
@@ -59,5 +61,4 @@ class StreamDataRequest : public ServerRequest
 typedef StreamDataRequest::DataRequirementsIterator DataRequirementsIterator;
 
 } // namespace pelican
-
 #endif // STREAMDATAREQUEST_H

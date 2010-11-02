@@ -8,7 +8,7 @@
 
 #include "pelican/utility/Config.h"
 #include "pelican/utility/ConfigNode.h"
-#include "pelican/utility/SocketTester.h"
+#include "pelican/utility/test/SocketTester.h"
 #include "pelican/comms/StreamData.h"
 #include "pelican/comms/DataChunk.h"
 #include "pelican/comms/StreamDataResponse.h"
@@ -26,8 +26,12 @@
 namespace pelican {
 
 using test::TestDataBlob;
+using test::SocketTester;
+using test::TestServiceAdapter;
+using test::TestStreamAdapter;
 
 CPPUNIT_TEST_SUITE_REGISTRATION( PelicanServerClientTest );
+
 /**
  *@details PelicanServerClientTest
  */

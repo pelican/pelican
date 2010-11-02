@@ -1,6 +1,10 @@
 #ifndef PELICANSERVER_H
 #define PELICANSERVER_H
 
+/**
+ * @file PelicanServer.h
+ */
+
 #include <QtNetwork/QTcpServer>
 #include <QtCore/QObject>
 #include <QtCore/QMap>
@@ -9,10 +13,6 @@
 #include <QtCore/QThread>
 #include <QtCore/QMutex>
 #include <QtCore/QMutexLocker>
-
-/**
- * @file PelicanServer.h
- */
 
 namespace pelican {
 
@@ -23,8 +23,10 @@ class Config;
 class PelicanPortServer;
 
 /**
+ * @ingroup c_server
+ *
  * @class PelicanServer
- *  
+ *
  * @brief
  * The main data server class to spawn out Sessions
  *
@@ -69,4 +71,4 @@ class PelicanServer : public QThread
 
 } // namespace pelican
 
-#endif // PELICANSERVER_H 
+#endif // PELICANSERVER_H

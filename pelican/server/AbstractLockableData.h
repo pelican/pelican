@@ -14,6 +14,8 @@ namespace pelican {
 class DataChunk;
 
 /**
+ * @ingroup c_server
+ *
  * @class AbstractLockableData
  *
  * @brief

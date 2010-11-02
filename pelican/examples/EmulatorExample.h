@@ -13,6 +13,8 @@ namespace pelican {
 class ConfigNode;
 
 /**
+ * @ingroup c_examples
+ *
  * @class EmulatorExample
  *
  * @brief A real-valued data packet emulator that uses a UDP socket.

@@ -11,14 +11,16 @@
 using namespace pelican;
 
 /**
+ * @ingroup c_examples
+ *
  * @class DirectDataClientExample
- * 
+ *
  * @brief
  *    An example of a class inheriting the DirecetDataClient
  *    and installing two instances of ChunkerExample, and
  *    assigning them to two differently named streams
  * @details
- * 
+ *
  */
 class DirectDataClientExample : public DirectStreamDataClient
 {
@@ -35,4 +37,4 @@ class DirectDataClientExample : public DirectStreamDataClient
 
 PELICAN_DECLARE_CLIENT(DirectDataClientExample)
 
-#endif // DIRECTDATACLIENTEXAMPLE_H 
+#endif // DIRECTDATACLIENTEXAMPLE_H

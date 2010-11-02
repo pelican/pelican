@@ -1,10 +1,15 @@
 #include "pelican/core/test/TestPipeline.h"
 #include "pelican/modules/EmptyModule.h"
+
 #include <iostream>
+using std::cout;
+using std::cerr;
+using std::endl;
 
 #include "pelican/utility/memCheck.h"
 
 namespace pelican {
+namespace test {
 
 /**
  * @details
@@ -66,7 +71,7 @@ void TestPipeline::reset()
 void TestPipeline::run(QHash<QString, DataBlob*>& dataHash)
 {
     // Print message.
-    std::cout << "Running TestPipeline, iteration " << _counter << std::endl;
+    cout << "Running TestPipeline, iteration " << _counter << endl;
 
     // Check the data is correct.
     if (_requiredDataRemote == dataHash)
@@ -77,4 +82,5 @@ void TestPipeline::run(QHash<QString, DataBlob*>& dataHash)
         stop(); // Stop the pipeline driver.
 }
 
+} // namespace test
 } // namespace pelican

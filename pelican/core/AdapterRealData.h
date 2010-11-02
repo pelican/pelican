@@ -1,17 +1,19 @@
 #ifndef ADAPTERREALDATA_H
 #define ADAPTERREALDATA_H
 
-#include "pelican/core/AbstractStreamAdapter.h"
-
 /**
  * @file AdapterRealData.h
  */
+
+#include "pelican/core/AbstractStreamAdapter.h"
 
 namespace pelican {
 
 class ConfigNode;
 
 /**
+ * @ingroup c_core
+ *
  * @class AdapterRealData
  *
  * @brief

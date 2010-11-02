@@ -40,7 +40,6 @@ set(coreTestMT_src
     src/PelicanServerClientTestMT.cpp
     src/DirectStreamDataClientTest.cpp
 )
-#message(STATUS "$$$$$$$$$$$$$$$$$$$ coreTestMT: sub libs: ${SUBPACKAGE_LIBRARIES}")
 
 add_executable(coreTestMT ${coreTestMT_src})
 target_link_libraries(coreTestMT
@@ -58,5 +57,3 @@ target_link_libraries(directClient
     ${SUBPACKAGE_LIBRARIES}
     memoryTracerDummy
 )
-
-

@@ -1,15 +1,17 @@
 #ifndef PIPELINEAPPLICATIONTEST_H
 #define PIPELINEAPPLICATIONTEST_H
 
-#include <cppunit/extensions/HelperMacros.h>
-
 /**
  * @file PipelineApplicationTest.h
  */
 
+#include <cppunit/extensions/HelperMacros.h>
+
 namespace pelican {
 
 /**
+ * @ingroup t_core
+ *
  * @class PipelineApplicationTest
  *
  * @brief

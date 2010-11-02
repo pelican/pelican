@@ -1,7 +1,7 @@
 #include "pelican/data/DataRequirements.h"
-#include <QHash>
-#include <QtGlobal>
-#include <QStringList>
+#include <QtCore/QHash>
+#include <QtCore/QtGlobal>
+#include <QtCore/QStringList>
 
 #include "pelican/utility/memCheck.h"
 
@@ -70,7 +70,7 @@ QSet<QString> DataRequirements::allData() const {
     // a double copy
     QSet<QString> temp = _serviceData;
     return temp + _streamData;
-#else 
+#else
     return _serviceData + _streamData;
 #endif
 }

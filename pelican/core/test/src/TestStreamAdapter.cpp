@@ -4,8 +4,7 @@
 #include "pelican/utility/memCheck.h"
 
 namespace pelican {
-
-using test::TestDataBlob;
+namespace test {
 
 /**
  * @details
@@ -21,4 +20,5 @@ void TestStreamAdapter::deserialise(QIODevice* in)
     in->read( blob->data().data(), (quint64)_chunkSize);
 }
 
+} // namespace test
 } // namespace pelican

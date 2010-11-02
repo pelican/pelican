@@ -1,28 +1,29 @@
-#ifndef DATATEST_H
-#define DATATEST_H
-
-#include <cppunit/extensions/HelperMacros.h>
+#ifndef DATA_CHUNK_TEST_H
+#define DATA_CHUNK_TEST_H
 
 /**
- * @file DataTest.h
+ * @file DataChunkTest.h
  */
+
+#include <cppunit/extensions/HelperMacros.h>
 
 namespace pelican {
 
 /**
- * @class DataTest
+ * @ingroup t_comms
+ *
+ * @class DataChunkTest
  *
  * @brief
- * \todo rename this to DataChunkTest
+ * Testing of the Data Chunk.
  *
  * @details
- *
  */
 
-class DataTest : public CppUnit::TestFixture
+class DataChunkTest : public CppUnit::TestFixture
 {
     public:
-        CPPUNIT_TEST_SUITE( DataTest );
+        CPPUNIT_TEST_SUITE( DataChunkTest );
         CPPUNIT_TEST( test_valid );
         CPPUNIT_TEST( test_pointer );
         CPPUNIT_TEST_SUITE_END();
@@ -36,11 +37,11 @@ class DataTest : public CppUnit::TestFixture
         void test_pointer();
 
     public:
-        DataTest(  );
-        ~DataTest();
+        DataChunkTest();
+        ~DataChunkTest();
 
     private:
 };
 
 } // namespace pelican
-#endif // DATATEST_H
+#endif // DATA_CHUNK_TEST_H

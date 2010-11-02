@@ -1,31 +1,32 @@
 #ifndef PELICANPROTOCOL_H
 #define PELICANPROTOCOL_H
 
-
-#include "AbstractProtocol.h"
-
 /**
  * @file PelicanProtocol.h
  */
 
+#include "AbstractProtocol.h"
+
+
 namespace pelican {
 
-    class DataBlob;
+class DataBlob;
 
 /**
+ * @ingroup c_comms
+ *
  * @class PelicanProtocol
- *  
+ *
  * @brief
- *   The primary protocol for communication between pipelines and
- *   the server
+ * The primary protocol for communication between pipelines and the server.
+ *
  * @details
- * 
  */
 
 class PelicanProtocol : public AbstractProtocol
 {
     public:
-        PelicanProtocol(  );
+        PelicanProtocol();
         ~PelicanProtocol();
         virtual boost::shared_ptr<ServerRequest> request(QTcpSocket& socket);
         virtual void send(QIODevice& stream, const AbstractProtocol::StreamData_t& );
@@ -34,9 +35,7 @@ class PelicanProtocol : public AbstractProtocol
         virtual void send(QIODevice& stream, const QString& );
         virtual void send(QIODevice& stream, const QString& name, const DataBlob& );
         virtual void sendError(QIODevice& stream, const QString&);
-
-    private:
 };
 
 } // namespace pelican
-#endif // PELICANPROTOCOL_H 
+#endif // PELICANPROTOCOL_H

@@ -1,20 +1,22 @@
-#ifndef ABSTRACTLOCKABLE_H
-#define ABSTRACTLOCKABLE_H
+#ifndef ABSTRACT_LOCKABLE_H
+#define ABSTRACT_LOCKABLE_H
+
+/**
+ * @file AbstractLockable.h
+ */
 
 #include <cstring>
 #include <QtCore/QObject>
 #include <QtCore/QMutex>
 #include <QtCore/QMutexLocker>
 
-/**
- * @file AbstractLockable.h
- */
-
 namespace pelican {
 
 /**
+ * @ingroup c_server
+ *
  * @class AbstractLockable
- *  
+ *
  * @brief
  * Wrapper for objects to lock/unlock with a LockedData.
  *
@@ -75,4 +77,4 @@ class AbstractLockable : public QObject
 
 } // namespace pelican
 
-#endif // ABSTRACTLOCKABLE_H 
+#endif // ABSTRACT_LOCKABLE_H

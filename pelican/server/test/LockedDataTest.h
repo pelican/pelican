@@ -1,21 +1,23 @@
 #ifndef LOCKEDDATATEST_H
 #define LOCKEDDATATEST_H
 
-#include <cppunit/extensions/HelperMacros.h>
-
 /**
  * @file LockedDataTest.h
  */
 
+#include <cppunit/extensions/HelperMacros.h>
+
 namespace pelican {
 
 /**
+ * @ingroup t_server
+ *
  * @class LockedDataTest
- *  
+ *
  * @brief
- *   Unit test for LockedData class
+ * Unit test for LockedData class
+ *
  * @details
- * 
  */
 
 class LockedDataTest : public CppUnit::TestFixture
@@ -45,4 +47,4 @@ class LockedDataTest : public CppUnit::TestFixture
 };
 
 } // namespace pelican
-#endif // LOCKEDDATATEST_H 
+#endif // LOCKEDDATATEST_H

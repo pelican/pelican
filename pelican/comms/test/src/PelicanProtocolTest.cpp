@@ -9,10 +9,11 @@
 #include "StreamDataResponse.h"
 #include "ServiceDataResponse.h"
 #include "StreamData.h"
+
 #include "pelican/comms/DataSupportRequest.h"
 #include "pelican/comms/DataSupportResponse.h"
 #include "pelican/data/DataRequirements.h"
-#include "pelican/utility/SocketTester.h"
+#include "pelican/utility/test/SocketTester.h"
 #include "pelican/data/test/TestDataBlob.h"
 
 #include <QtCore/QBuffer>
@@ -25,6 +26,7 @@
 namespace pelican {
 
 using test::TestDataBlob;
+using test::SocketTester;
 
 CPPUNIT_TEST_SUITE_REGISTRATION( PelicanProtocolTest );
 // class PelicanProtocolTest

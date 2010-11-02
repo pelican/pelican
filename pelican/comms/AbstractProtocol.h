@@ -1,14 +1,16 @@
 #ifndef ABSTRACTPROTOCOL_H
 #define ABSTRACTPROTOCOL_H
-#include <boost/shared_ptr.hpp>
-#include <QMap>
-class QString;
-class QIODevice;
-class QTcpSocket;
 
 /**
  * @file AbstractProtocol.h
  */
+
+#include <boost/shared_ptr.hpp>
+#include <QtCore/QMap>
+
+class QString;
+class QIODevice;
+class QTcpSocket;
 
 namespace pelican {
 
@@ -19,11 +21,13 @@ class DataBlob;
 class DataSupportResponse;
 
 /**
+ * @ingroup c_comms
+ *
  * @class AbstractProtocol
- *  
+ *
  * @brief
  * Base class for all server side protocol interpretations.
- * 
+ *
  * @details
  * The protocol interprets the requests of a particular client type into
  * the ServerRequest Objects.
@@ -65,4 +69,4 @@ class AbstractProtocol
 
 } // namespace pelican
 
-#endif // ABSTRACTPROTOCOL_H 
+#endif // ABSTRACTPROTOCOL_H

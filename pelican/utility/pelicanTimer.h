@@ -1,14 +1,15 @@
 #ifndef PELICANTIMER_H_
 #define PELICANTIMER_H_
 
-#include <QTime>
 #include <ctime>
 #include <cstdio>
 #include "sys/time.h"
 
-#include "pelican/utility/memoryTracer.h"
+#include <QtCore/QTime>
 
 /**
+ * @ingroup c_utility
+ *
  * @brief
  * Preprocessor macros used for timing.
  *
@@ -51,8 +52,8 @@
 #ifdef TIMER_ENABLE
     #define TIMER2_START {timeval _t1; gettimeofday(&_t1, NULL);
     #define TIMER2_STOP(...) timeval _t2; gettimeofday(&_t2, NULL); \
-		double _start = _t1.tv_sec + _t1.tv_usec * 1.0e-6; \
-		double _end = _t2.tv_sec + _t2.tv_usec * 1.0e-6; \
+        double _start = _t1.tv_sec + _t1.tv_usec * 1.0e-6; \
+        double _end = _t2.tv_sec + _t2.tv_usec * 1.0e-6; \
         fprintf(stdout, "\n"); \
         fprintf(stdout, __VA_ARGS__); \
         fprintf(stdout, ": %.3f sec.\n", _end - _start);};
@@ -61,4 +62,4 @@
     #define TIMER2_STOP(...) ;
 #endif
 
-#endif /* PELICANTIMER_H_ */
+#endif // PELICANTIMER_H_

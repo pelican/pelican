@@ -1,25 +1,30 @@
 #ifndef TESTPIPELINE_H
 #define TESTPIPELINE_H
 
-#include "pelican/core/AbstractPipeline.h"
-#include "pelican/data/DataRequirements.h"
-
 /**
  * @file TestPipeline.h
  */
 
+#include "pelican/core/AbstractPipeline.h"
+#include "pelican/data/DataRequirements.h"
+
 namespace pelican {
+namespace test {
+
 
 /**
+ * @ingroup t_core
+ *
  * @class TestPipeline
- *  
+ *
  * @brief
  * This class tests methods of AbstractPipeline by inheriting it.
- * 
+ *
  * @details
  * The TestPipeline class is used as the basis of unit testing the
  * AbstractPipeline class, of which this is a friend.
  */
+
 class TestPipeline : public AbstractPipeline
 {
     private:
@@ -43,7 +48,8 @@ class TestPipeline : public AbstractPipeline
         /// Initialises the pipeline.
         void init();
 
-        /// Reads counter used to check that the data passed is the same as the expected data.
+        /// Reads counter used to check that the data passed is the same as the
+        /// expected data.
         int matchedCounter() const {return _matchedCounter;}
 
         /// Reset counters.
@@ -53,6 +59,7 @@ class TestPipeline : public AbstractPipeline
         void run(QHash<QString, DataBlob*>& dataHash);
 };
 
+} // namespace test
 } // namespace pelican
 
-#endif // TESTPIPELINE_H 
+#endif // TESTPIPELINE_H

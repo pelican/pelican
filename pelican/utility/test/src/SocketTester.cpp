@@ -1,8 +1,9 @@
-#include "pelican/utility/SocketTester.h"
+#include "pelican/utility/test/SocketTester.h"
 
 #include "pelican/utility/memCheck.h"
 
 namespace pelican {
+namespace test {
 
 // class SocketTester
 SocketTester::SocketTester()
@@ -40,10 +41,11 @@ QTcpSocket& SocketTester::send(const QByteArray& block)
 void SocketTester::init()
 {
     if( ! _init ) {
-        _server.listen(QHostAddress::LocalHost,0);
+        _server.listen(QHostAddress::LocalHost, 0);
         _init = true;
     }
 }
 
+} // namespace test
 } // namespace pelican
 

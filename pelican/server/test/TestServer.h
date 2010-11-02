@@ -1,22 +1,26 @@
 #ifndef TESTSERVER_H
 #define TESTSERVER_H
 
+/**
+ * @file TestServer.h
+ */
+
 #include "pelican/server/DataManager.h"
 
 #include <QtCore/QList>
 #include <QtCore/QString>
 #include <QtCore/QThread>
 
-/**
- * @file TestServer.h
- */
-
 namespace pelican {
 
 class PelicanPortServer;
 class AbstractProtocol;
 
+namespace test {
+
 /**
+ * @ingroup t_server
+ *
  * @class TestServer
  *
  * @brief
@@ -50,15 +54,14 @@ class TestServer : public QThread
         TestServer( AbstractProtocol* proto = 0 , QObject* parent =0);
         ~TestServer();
 
-        /// return the port number the server is listening on
-        //  A free port is assigned automatically.
+        /// Return the port number the server is listening on.
+        /// A free port is assigned automatically.
         quint16 port() const;
 
-        /// returns true if the server is listening for incomming
-        //  requests
+        /// returns true if the server is listening for incoming requests
         bool isListening() const;
 
-        /// Set Data to be Served
+        /// Set Data to be Served.
         //  data will be served in the order provided
         //  and will be removed once the data has been served
         void serveStreamData(const QList<StreamData>& );
@@ -77,5 +80,6 @@ class TestServer : public QThread
         PelicanPortServer* _portServer;
 };
 
+} // namespace test
 } // namespace pelican
 #endif // TESTSERVER_H

@@ -3,7 +3,7 @@
 #include "pelican/server/test/TestChunker.h"
 #include "pelican/server/test/TestUdpChunker.h"
 #include "pelican/emulator/EmulatorDriver.h"
-#include "pelican/emulator/RealUdpEmulator.h"
+#include "pelican/emulator/test/RealUdpEmulator.h"
 #include "pelican/server/DataManager.h"
 #include "pelican/utility/pelicanTimer.h"
 #include "pelican/utility/Config.h"
@@ -15,7 +15,12 @@
 
 namespace pelican {
 
-CPPUNIT_TEST_SUITE_REGISTRATION( DataReceiverTest );
+using test::TestChunker;
+using test::TestUdpChunker;
+using test::RealUdpEmulator;
+
+CPPUNIT_TEST_SUITE_REGISTRATION(DataReceiverTest);
+
 // class DataReceiverTest
 DataReceiverTest::DataReceiverTest()
     : CppUnit::TestFixture()

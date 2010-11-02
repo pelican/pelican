@@ -1,13 +1,13 @@
 #ifndef FILEDATACLIENT_H
 #define FILEDATACLIENT_H
 
-#include "pelican/core/AbstractDataClient.h"
-#include <QHash>
-#include <QString>
-
 /**
  * @file FileDataClient.h
  */
+
+#include "pelican/core/AbstractDataClient.h"
+#include <QtCore/QHash>
+#include <QtCore/QString>
 
 namespace pelican {
 
@@ -16,20 +16,24 @@ class ConfigNode;
 class DataTypes;
 
 /**
+ * @ingroup c_core
+ *
  * @class FileDataClient
- *  
+ *
  * @brief
  * Data client used by the pipeline for accessing data directly from a data
  * file rather than using the data server.
- * 
+ *
  * @details
  * This data client fetches data directly from one or more data files and
  * makes it available to the pipelines via the pipeline driver.
   */
+
 class FileDataClient : public AbstractDataClient
 {
     private:
-        QHash<QString, QString> _fileNames; ///< Hash of filenames for each data type.
+        // Hash of filenames for each data type.
+        QHash<QString, QString> _fileNames;
 
     public:
         /// Data client constructor.

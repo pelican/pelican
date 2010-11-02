@@ -4,6 +4,7 @@
 #include "pelican/utility/memCheck.h"
 
 namespace pelican {
+namespace test {
 
 int TestDataViewerWidget::_count = 0;
 
@@ -28,4 +29,5 @@ void TestDataViewerWidget::updateData( DataBlob* )
     ++_count;
 }
 
+} // namespace test
 } // namespace pelican

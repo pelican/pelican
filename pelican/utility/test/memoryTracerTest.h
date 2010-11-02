@@ -1,15 +1,24 @@
 #ifndef MEMORYTRACERTEST_H
 #define MEMORYTRACERTEST_H
 
+/**
+ * @file memoryTracerTest.h
+ */
+
 #include <cppunit/extensions/HelperMacros.h>
 
-/** Class      : memoryTracerTest
-  *  
-  * Description:
-  *    Basic Testing of the Memory Tracer
-  */
-
 namespace pelican {
+
+/**
+ * @ingroup t_utility
+ *
+ * @class memoryTracerTest
+ *
+ * @brief
+ * Basic Testing of the Memory Tracer.
+ *
+ * @details
+ */
 
 class memoryTracerTest : public CppUnit::TestFixture
 {
@@ -35,4 +44,4 @@ class memoryTracerTest : public CppUnit::TestFixture
 };
 
 } // namespace pelican
-#endif // MEMORYTRACERTEST_H 
+#endif // MEMORYTRACERTEST_H

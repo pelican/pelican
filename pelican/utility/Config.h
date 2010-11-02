@@ -14,6 +14,8 @@
 namespace pelican {
 
 /**
+ * @ingroup c_utility
+ *
  * @class Config
  *
  * @brief

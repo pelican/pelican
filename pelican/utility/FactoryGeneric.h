@@ -1,19 +1,21 @@
 #ifndef FACTORYGENERIC_H
 #define FACTORYGENERIC_H
 
+/**
+ * @file FactoryGeneric.h
+ */
+
 #include "pelican/utility/FactoryRegistrar.h"
 #include "pelican/utility/FactoryBase.h"
 
 #include <boost/preprocessor/repetition/enum_trailing.hpp>
 #include <boost/preprocessor/repetition/enum_params.hpp>
 
-/**
- * @file FactoryGeneric.h
- */
-
 namespace pelican {
 
 /**
+ * @ingroup c_utility
+ *
  * @brief Blueprint for FactoryGeneric.
  *
  * @details

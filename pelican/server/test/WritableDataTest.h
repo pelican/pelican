@@ -1,21 +1,23 @@
 #ifndef WRITABLEDATATEST_H
 #define WRITABLEDATATEST_H
 
-#include <cppunit/extensions/HelperMacros.h>
-
 /**
  * @file WritableDataTest.h
  */
 
+#include <cppunit/extensions/HelperMacros.h>
+
 namespace pelican {
 
 /**
+ * @ingroup t_server
+ *
  * @class WritableDataTest
- *  
+ *
  * @brief
- *    unit test for WritableData class
+ * Unit test for WritableData class
+ *
  * @details
- * 
  */
 
 class WritableDataTest : public CppUnit::TestFixture
@@ -33,11 +35,9 @@ class WritableDataTest : public CppUnit::TestFixture
         void test_isValid();
 
     public:
-        WritableDataTest(  );
+        WritableDataTest();
         ~WritableDataTest();
-
-    private:
 };
 
 } // namespace pelican
-#endif // WRITABLEDATATEST_H 
+#endif // WRITABLEDATATEST_H

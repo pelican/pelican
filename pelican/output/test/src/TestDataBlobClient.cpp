@@ -1,10 +1,10 @@
 #include "TestDataBlobClient.h"
-
-
 #include "pelican/output/Stream.h"
+
 #include "pelican/utility/memCheck.h"
 
 namespace pelican {
+namespace test {
 
 
 /**
@@ -46,4 +46,5 @@ const QSet<QString>& TestDataBlobClient::subscriptions() const
     return _subs;
 }
 
+} // namespace test
 } // namespace pelican

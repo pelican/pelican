@@ -1,9 +1,10 @@
-#include "pelican/emulator/RealUdpEmulator.h"
+#include "pelican/emulator/test/RealUdpEmulator.h"
 #include "pelican/utility/ConfigNode.h"
 
 #include "pelican/utility/memCheck.h"
 
 namespace pelican {
+namespace test {
 
 /**
  * @details Constructs the RealUdpEmulator.
@@ -54,4 +55,5 @@ void RealUdpEmulator::getPacketData(char*& ptr, unsigned long& size)
     _counter++;
 }
 
+} // namespace test
 } // namespace pelican

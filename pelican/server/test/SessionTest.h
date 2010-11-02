@@ -1,32 +1,37 @@
 #ifndef SESSIONTEST_H
 #define SESSIONTEST_H
 
+/**
+ * @file SessionTest.h
+ */
+
+#include <cppunit/extensions/HelperMacros.h>
+
 #include <QtCore/QByteArray>
 #include <QtCore/QString>
 
 class QCoreApplication;
 class QBuffer;
 
-#include <cppunit/extensions/HelperMacros.h>
-
-/**
- * @file SessionTest.h
- */
-
 namespace pelican {
 
-class TestProtocol;
 class Session;
 class DataManager;
 class AbstractDataBuffer;
 
+namespace test {
+class TestProtocol;
+}
+
 /**
+ * @ingroup t_server
+ *
  * @class SessionTest
- *  
+ *
  * @brief
- *   Unit Test for the Session class
+ * Unit Test for the Session class
+ *
  * @details
- * 
  */
 
 class SessionTest : public CppUnit::TestFixture
@@ -67,9 +72,9 @@ class SessionTest : public CppUnit::TestFixture
         Session* _session;
         QByteArray* _block;
         QBuffer* _device;
-        TestProtocol* _proto;
+        test::TestProtocol* _proto;
         DataManager* _dataManager;
 };
 
 } // namespace pelican
-#endif // SESSIONTEST_H 
+#endif // SESSIONTEST_H

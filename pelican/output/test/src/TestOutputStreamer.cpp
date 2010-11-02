@@ -2,14 +2,14 @@
 #include "pelican/utility/memCheck.h"
 
 namespace pelican {
-
+namespace test {
 
 /**
- *@details TestOutputStreamer 
+ *@details
  */
-TestOutputStreamer::TestOutputStreamer( const QString& id, 
-                                        const ConfigNode& config)
-    : AbstractOutputStream(config), _id(id), _config(config)
+TestOutputStreamer::TestOutputStreamer(const QString& id,
+        const ConfigNode& config)
+: AbstractOutputStream(config), _id(id), _config(config)
 {
 }
 
@@ -20,6 +20,7 @@ TestOutputStreamer::TestOutputStreamer( const ConfigNode& config )
     if (config.type() != "TestOutputStreamer")
         throw QString("TestOutputStreamer: Wrong configuration node. Got \"%1\"").arg(config.type());
 }
+
 /**
  *@details
  */
@@ -32,4 +33,5 @@ void TestOutputStreamer::sendStream(const QString& streamName, const DataBlob* d
     _received[streamName] = dataBlob;
 }
 
+} // namespace test
 } // namespace pelican

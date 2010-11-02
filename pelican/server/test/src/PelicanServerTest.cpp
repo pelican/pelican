@@ -16,6 +16,9 @@
 
 namespace pelican {
 
+using test::TestProtocol;
+using test::PelicanTestClient;
+
 CPPUNIT_TEST_SUITE_REGISTRATION( PelicanServerTest );
 
 // class PelicanServerTest

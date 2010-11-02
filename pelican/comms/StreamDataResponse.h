@@ -1,24 +1,26 @@
 #ifndef STREAMDATARESPONSE_H
 #define STREAMDATARESPONSE_H
 
-#include "ServerResponse.h"
-#include "StreamData.h"
-
 /**
  * @file StreamDataResponse.h
  */
 
+#include "pelican/comms/ServerResponse.h"
+#include "pelican/comms/StreamData.h"
+
 namespace pelican {
 
 /**
+ * @ingroup c_comms
+ *
  * @class StreamDataResponse
  *
  * @brief
  * Class to represent a set of stream data returned from the server.
  *
  * @details
- *
  */
+
 class StreamDataResponse : public ServerResponse
 {
     private:
@@ -39,5 +41,4 @@ class StreamDataResponse : public ServerResponse
 };
 
 } // namespace pelican
-
 #endif // STREAMDATARESPONSE_H

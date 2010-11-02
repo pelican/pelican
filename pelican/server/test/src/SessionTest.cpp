@@ -26,6 +26,8 @@
 
 namespace pelican {
 
+using test::TestProtocol;
+
 CPPUNIT_TEST_SUITE_REGISTRATION( SessionTest );
 // class SessionTest
 SessionTest::SessionTest()
@@ -241,8 +243,8 @@ void SessionTest::test_streamData()
         QList<LockedData> dataList = _session->processStreamDataRequest(request);
         foreach(LockedData data, dataList) {
             CPPUNIT_ASSERT( data.isValid() );
-            CPPUNIT_ASSERT_EQUAL( 0 , (int)static_cast<LockableStreamData*>(data.object())->associateData().size() );
-            CPPUNIT_ASSERT_EQUAL( 0 , (int)(static_cast<LockableStreamData*>(data.object())->streamData()->associateData().size()) );
+            CPPUNIT_ASSERT_EQUAL(0, static_cast<LockableStreamData*>(data.object())->associateData().size());
+            CPPUNIT_ASSERT_EQUAL(0, static_cast<LockableStreamData*>(data.object())->streamData()->associateData().size());
         }
     }
 

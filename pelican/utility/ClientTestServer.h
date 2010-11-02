@@ -1,27 +1,29 @@
 #ifndef CLIENTTESTSERVER_H
 #define CLIENTTESTSERVER_H
 
-
-#include <QThread>
-#include <QString>
-#include <QByteArray>
-#include <QtNetwork/QTcpServer>
-
 /**
  * @file ClientTestServer.h
- */
+  */
+
+#include <QtCore/QThread>
+#include <QtCore/QString>
+#include <QtCore/QByteArray>
+#include <QtNetwork/QTcpServer>
+
 
 namespace pelican {
 
 /**
+ * @ingroup c_utility
+ *
  * @class ClientTestServer
- * 
+ *
  * @brief
  *    A server for unit testing client appliants.
- *    The test server will connect to an available port and record 
+ *    The test server will connect to an available port and record
  *    any data sent to it
  * @details
- * 
+ *
  */
 class ClientTestServer : public QThread
 {
@@ -65,4 +67,4 @@ class ClientTestServer : public QThread
 
 } // namespace pelican
 
-#endif // CLIENTTESTSERVER_H 
+#endif // CLIENTTESTSERVER_H

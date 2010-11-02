@@ -1,16 +1,18 @@
 #ifndef EMPTYMODULE_H
 #define EMPTYMODULE_H
 
-#include "pelican/modules/AbstractModule.h"
-#include "pelican/utility/ConfigNode.h"
-
 /**
  * @file EmptyModule.h
  */
 
+#include "pelican/modules/AbstractModule.h"
+#include "pelican/utility/ConfigNode.h"
+
 namespace pelican {
 
 /**
+ * @ingroup c_modules
+ *
  * @class EmptyModule
  *
  * @brief
@@ -19,6 +21,7 @@ namespace pelican {
  * @details
  * This is part of the module unit tests.
  */
+
 class EmptyModule : public AbstractModule
 {
     public:
@@ -27,11 +30,9 @@ class EmptyModule : public AbstractModule
 
         /// Module destructor.
         ~EmptyModule() {}
-
 };
 
 PELICAN_DECLARE_MODULE(EmptyModule)
 
 } // namespace pelican
-
 #endif // EMPTYMODULE_H

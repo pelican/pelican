@@ -1,10 +1,12 @@
+#include "pelican/emulator/test/RealUdpEmulator.h"
 #include "pelican/emulator/EmulatorDriver.h"
-#include "pelican/emulator/RealUdpEmulator.h"
+
 #include <iostream>
 #include <QtCore/QCoreApplication>
 #include <QtCore/QString>
 
 using namespace pelican;
+using test::RealUdpEmulator;
 
 int main(int argc, char** argv)
 {

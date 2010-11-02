@@ -1,22 +1,24 @@
 #ifndef PELICANSERVERCLIENTTEST_H
 #define PELICANSERVERCLIENTTEST_H
 
-#include <cppunit/extensions/HelperMacros.h>
-class QCoreApplication;
-
 /**
  * @file PelicanServerClientTest.h
  */
 
+#include <cppunit/extensions/HelperMacros.h>
+class QCoreApplication;
+
 namespace pelican {
 
 /**
+ * @ingroup t_core
+ *
  * @class PelicanServerClientTest
- *  
+ *
  * @brief
- *  unit test fo the PelicanServerClient class
+ * Unit test for the PelicanServerClient class.
+ *
  * @details
- * 
  */
 
 class PelicanServerClientTest : public CppUnit::TestFixture
@@ -44,4 +46,4 @@ class PelicanServerClientTest : public CppUnit::TestFixture
 };
 
 } // namespace pelican
-#endif // PELICANSERVERCLIENTTEST_H 
+#endif // PELICANSERVERCLIENTTEST_H

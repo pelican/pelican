@@ -1,13 +1,15 @@
 #ifndef CONFIGNODETEST_H
 #define CONFIGNODETEST_H
 
-#include <cppunit/extensions/HelperMacros.h>
-
 /**
  * @file ConfigNodeTest.h
  */
 
+#include <cppunit/extensions/HelperMacros.h>
+
 /**
+ * @ingroup t_utility
+ *
  * @class ConfigTest
  *
  * @brief

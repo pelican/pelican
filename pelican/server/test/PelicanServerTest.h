@@ -1,22 +1,23 @@
 #ifndef PELICANSERVERTEST_H
 #define PELICANSERVERTEST_H
 
-#include <cppunit/extensions/HelperMacros.h>
-class QCoreApplication;
-
 /**
  * @file PelicanServerTest.h
  */
 
+#include <cppunit/extensions/HelperMacros.h>
+class QCoreApplication;
+
 namespace pelican {
 
 /**
+ * @ingroup t_server
+ *
  * @class PelicanServerTest
  *
  * @brief
  *
  * @details
- *
  */
 
 class PelicanServerTest : public CppUnit::TestFixture

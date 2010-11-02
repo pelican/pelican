@@ -1,11 +1,11 @@
 #ifndef DIRECTSTREAMDATACLIENT_H
 #define DIRECTSTREAMDATACLIENT_H
 
-#include "pelican/core/AbstractDataClient.h"
-
 /**
  * @file DirectStreamDataClient.h
  */
+
+#include "pelican/core/AbstractDataClient.h"
 
 namespace pelican {
 
@@ -14,6 +14,8 @@ class DataManager;
 class Config;
 
 /**
+ * @ingroup c_core
+ *
  * @class DirectStreamDataClient
  *
  * @brief

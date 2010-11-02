@@ -14,6 +14,8 @@
 namespace pelican {
 
 using test::TestDataBlob;
+using test::TestDataBlobClient;
+using test::TestDataViewerWidget;
 
 CPPUNIT_TEST_SUITE_REGISTRATION( DataViewerTest );
 /**

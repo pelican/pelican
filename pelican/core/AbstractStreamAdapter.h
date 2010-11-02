@@ -1,14 +1,14 @@
 #ifndef ABSTRACTSTREAMADAPTER_H
 #define ABSTRACTSTREAMADAPTER_H
 
+/**
+ * @file AbstractStreamAdapter.h
+ */
+
 #include "pelican/core/AbstractAdapter.h"
 #include <QtCore/QHash>
 #include <QtCore/QString>
 #include <QtCore/QIODevice>
-
-/**
- * @file AbstractStreamAdapter.h
- */
 
 namespace pelican {
 
@@ -16,6 +16,8 @@ class ConfigNode;
 class DataBlob;
 
 /**
+ * @ingroup c_core
+ *
  * @class AbstractStreamAdapter
  *
  * @brief

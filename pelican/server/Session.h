@@ -19,8 +19,10 @@ class AbstractProtocol;
 class DataManager;
 
 /**
+ * @ingroup c_server
+ *
  * @class Session
- *  
+ *
  * @brief
  * Class to process a single server request.
  *
@@ -66,4 +68,4 @@ class Session : public QThread
 
 } // namespace pelican
 
-#endif // SESSION_H 
+#endif // SESSION_H

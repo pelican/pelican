@@ -16,6 +16,7 @@
 #include "pelican/utility/memCheck.h"
 
 namespace pelican {
+namespace test {
 
 
 /**
@@ -133,4 +134,5 @@ void TestServer::serveServiceData(const DataChunk& d )
     wd.write(d.ptr(), d.size());
 }
 
+} // namespace test
 } // namespace pelican

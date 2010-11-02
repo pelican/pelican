@@ -21,6 +21,8 @@ namespace pelican {
 #define PELICAN_DECLARE_DATABLOB(type) PELICAN_DECLARE(DataBlob, type)
 
 /**
+ * @ingroup c_data
+ *
  * @class DataBlob
  *
  * @brief

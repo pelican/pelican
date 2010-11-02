@@ -1,30 +1,28 @@
 #ifndef ABSTRACTMODULE_H
 #define ABSTRACTMODULE_H
 
+/**
+ * @file AbstractModule.h
+ */
+
 #include "pelican/utility/ConfigNode.h"
 #include "pelican/utility/FactoryRegistrar.h"
 #include "pelican/data/DataBlob.h"
 
 #include <QtCore/QString>
 #include <algorithm>
-#include <vector>
-
 #include <iostream>
-
+#include <vector>
 using std::vector;
-
-/**
- * @file AbstractModule.h
- */
 
 namespace pelican {
 
-/**
- * This macro is used to register the named module type.
- */
+/// This macro is used to register the named module type.
 #define PELICAN_DECLARE_MODULE(type) PELICAN_DECLARE(AbstractModule, type)
 
 /**
+ * @ingroup c_modules
+ *
  * @class AbstractModule
  *
  * @brief

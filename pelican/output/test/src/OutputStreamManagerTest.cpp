@@ -7,9 +7,11 @@
 
 namespace pelican {
 
+using test::TestOutputStreamer;
+
 CPPUNIT_TEST_SUITE_REGISTRATION( OutputStreamManagerTest );
 /**
- *@details OutputStreamManagerTest 
+ *@details OutputStreamManagerTest
  */
 OutputStreamManagerTest::OutputStreamManagerTest()
     : CppUnit::TestFixture()
@@ -86,7 +88,7 @@ void OutputStreamManagerTest::test_configuration()
         //     configuration contains a dataStreams, and a known Output Streamers defined
         // Expect:
         //     throw
-        QString xml = 
+        QString xml =
             "<output>"
             "   <streamers>"
             "     <TestOutputStreamer />"
@@ -111,7 +113,7 @@ void OutputStreamManagerTest::test_configuration()
         //     configuration contains an unknown output streamer type
         // Expect:
         //     throw
-        QString xml = 
+        QString xml =
             "<output>"
             "   <streamers>"
             "     <UnknownStreamer />"
@@ -128,7 +130,7 @@ void OutputStreamManagerTest::test_configuration()
         //     configuration contains no dataStreams, but output Streamers defined
         // Expect:
         //     throw
-        QString xml = 
+        QString xml =
             "<output>"
             "   <streamers>"
             "     <TestOutputStreamer />"
@@ -143,7 +145,7 @@ void OutputStreamManagerTest::test_configuration()
         //     and the same identifier
         // Expect:
         //     throw
-        QString xml = 
+        QString xml =
             "<output>"
             "   <streamers>"
             "     <TestOutputStreamer />"
@@ -162,7 +164,7 @@ void OutputStreamManagerTest::test_configuration()
         //     but with different identifiers and associated with different streams
         // Expect:
         //     correct associations
-        QString xml = 
+        QString xml =
             "<output>"
             "   <streamers>"
             "     <TestOutputStreamer name=\"s1\"/>"
@@ -183,7 +185,7 @@ void OutputStreamManagerTest::test_configuration()
         //     and associated with different streams
         // Expect:
         //     correct associations
-        QString xml = 
+        QString xml =
             "<output>"
             "   <streamers>"
             "     <TestOutputStreamer name=\"s1\"/>"
@@ -204,11 +206,11 @@ void OutputStreamManagerTest::test_configuration()
     }
     {
         // Use Case:
-	// Configuration contains an inactive output streamer
+    // Configuration contains an inactive output streamer
         // that is refered to as a listener
         // Expect:
         //      no associations to be made
-        QString xml = 
+        QString xml =
             "<output>"
             "   <streamers>"
             "     <TestOutputStreamer active=\"false\"/>"

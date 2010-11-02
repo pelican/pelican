@@ -16,6 +16,8 @@ class QByteArray;
 namespace pelican {
 
 /**
+ * @ingroup c_comms
+ *
  * @class DataChunk
  *
  * @brief

@@ -1,13 +1,13 @@
 #ifndef STREAMDATABUFFER_H
 #define STREAMDATABUFFER_H
 
-#include "pelican/server/AbstractDataBuffer.h"
-#include <QtCore/QQueue>
-#include <QtCore/QObject>
-
 /**
  * @file StreamDataBuffer.h
  */
+
+#include "pelican/server/AbstractDataBuffer.h"
+#include <QtCore/QQueue>
+#include <QtCore/QObject>
 
 namespace pelican {
 
@@ -18,6 +18,8 @@ class LockedData;
 class WritableData;
 
 /**
+ * @ingroup c_server
+ *
  * @class StreamDataBuffer
  *
  * @brief

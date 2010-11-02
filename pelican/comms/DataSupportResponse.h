@@ -1,30 +1,33 @@
 #ifndef DATASUPPORTRESPONSE_H
 #define DATASUPPORTRESPONSE_H
 
-
-#include <QSet>
-#include <QString>
-#include "ServerResponse.h"
-
 /**
  * @file DataSupportResponse.h
  */
 
+#include "ServerResponse.h"
+
+#include <QtCore/QSet>
+#include <QtCore/QString>
+
 namespace pelican {
 
 /**
+ * @ingroup c_comms
+ *
  * @class DataSupportResponse
- *  
+ *
  * @brief
- *   contains a list of supported streams
+ * Contains a list of supported streams.
+ *
  * @details
- * 
  */
 
 class DataSupportResponse : public ServerResponse
 {
     public:
-        DataSupportResponse( const QSet<QString>& streams, const QSet<QString>& serviceStreams = QSet<QString>()  );
+        DataSupportResponse(const QSet<QString>& streams,
+                const QSet<QString>& serviceStreams = QSet<QString>());
         ~DataSupportResponse();
         const QSet<QString>& streamData() const { return _streams; };
         const QSet<QString>& serviceData() const { return _services; };
@@ -35,4 +38,4 @@ class DataSupportResponse : public ServerResponse
 };
 
 } // namespace pelican
-#endif // DATASUPPORTRESPONSE_H 
+#endif // DATASUPPORTRESPONSE_H

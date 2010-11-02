@@ -10,8 +10,10 @@
 using namespace pelican;
 
 /**
+ * @ingroup c_examples
+ *
  * @class ChunkerExample
- *  
+ *
  * @brief
  * A simple example to demonstrate how to write a data chunker.
  */
@@ -30,4 +32,4 @@ class ChunkerExample : public AbstractChunker
 // Register the chunker.
 PELICAN_DECLARE_CHUNKER(ChunkerExample)
 
-#endif // CHUNKEREXAMPLE_H 
+#endif // CHUNKEREXAMPLE_H

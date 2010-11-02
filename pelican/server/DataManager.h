@@ -1,5 +1,9 @@
-#ifndef DATAMANAGER_H
-#define DATAMANAGER_H
+#ifndef DATA_MANAGER_H
+#define DATA_MANAGER_H
+
+/**
+ * @file DataManager.h
+ */
 
 #include <QtCore/QString>
 #include <QtCore/QHash>
@@ -9,16 +13,14 @@
 #include "pelican/data/DataRequirements.h"
 #include "pelican/utility/Config.h"
 
-/**
- * @file DataManager.h
- */
-
 namespace pelican {
 
 class DataChunk;
 class StreamData;
 
 /**
+ * @ingroup c_server
+ *
  * @class DataManager
  *
  * @brief
@@ -98,4 +100,4 @@ class DataManager
 
 } // namespace pelican
 
-#endif // DATAMANAGER_H
+#endif // DATA_MANAGER_H

@@ -1,14 +1,14 @@
 #ifndef ABSTRACTADAPTER_H
 #define ABSTRACTADAPTER_H
 
+/**
+ * @file AbstractAdapter.h
+ */
+
 #include "pelican/utility/ConfigNode.h"
 #include "pelican/utility/FactoryRegistrar.h"
 #include <QtCore/QIODevice>
 #include <iostream>
-
-/**
- * @file AbstractAdapter.h
- */
 
 namespace pelican {
 
@@ -21,6 +21,8 @@ class DataBlob;
 class ConfigNode;
 
 /**
+ * @ingroup c_core
+ *
  * @class AbstractAdapter
  *
  * @brief
