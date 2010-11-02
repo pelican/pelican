@@ -180,7 +180,7 @@ once, at program launch, so there is no cost penalty involved here. The
 attributes are stored in private class variables for later use.
 
 Our SignalChunker::next() method must first call the inherited method
-AbstractChunker::getWritable(). This calls routines in the DataManager and
+AbstractChunker::getDataStorage(). This calls routines in the DataManager and
 returns a pointer to a block of memory of the required size, wrapped inside a
 WritableData container. When the WritableData object goes out of scope at the
 end of the method, the chunk of data it references is automatically placed on
