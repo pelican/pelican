@@ -35,7 +35,6 @@ There can be any number of stream data and service data types, but each one
 must be handled separately (each will need its own
 \ref importData_Adapters "adapter" and \ref importData_Chunkers "chunker";
 these components are described in later sections).
-It is also possible to have multiple inputs of the same type.
 Each source of incoming data, either stream or service, must have its own
 unique identifier in the form of a string.
 
@@ -97,7 +96,7 @@ UDP packet. Here's the class implementation in the C++ source %file:
 \include SignalEmulator.cpp
 
 Note that a reference to the emulator's XML configuration node should be
-supplied to the constructor: we then simply need to extract relevant
+supplied to the constructor: we then just need to extract relevant
 configuration settings using methods on the supplied ConfigNode object.
 The ConfigNode::getOption method returns a QString containing the text in the
 required tagname and attribute. To illustrate what is needed here, the emulator
@@ -106,6 +105,7 @@ expects an XML snippet like this:
 \verbatim
 <SignalEmulator>
     <packet samples="256" interval="2560" />
+    <signal period="20" />
     <connection host="127.0.0.1" port="2000" />
 </SignalEmulator>
 \endverbatim
@@ -133,15 +133,20 @@ optimal processing, then this rearrangement should be performed by the
 \subsection importData_tutorialChunker Tutorial Chunker
 
 To connect to our example UDP data stream, we must implement a chunker that
-inherits the AbstractChunker class interface. The C++ header file for our
-SignalChunker is shown below:
+inherits the AbstractChunker class interface. For our purposes, let's suppose
+that our fictional processing pipeline (described in a later section) requires
+8192 time-samples to operate on. Each UDP packet from our emulator is 1056
+bytes long and will contain 256 time samples, so our chunker will need to
+accumulate 32 UDP packets, or 33792 bytes, to form a complete chunk of data.
+
+The C++ header file for our SignalChunker is shown below:
 
 \include SignalChunker.h
 
 The chunker must be declared so that the Pelican framework knows of its
-existence: use the PELICAN_DECLARE_CHUNKER preprocessor macro in the header
-file to do this, supplying the class name as the macro argument.
-Do not use quotes around the name.
+existence: use the PELICAN_DECLARE_CHUNKER macro in the header file to do this,
+supplying the class name as the macro argument. Do not use quotes around the
+name.
 
 As well as the constructor, we must implement the AbstractChunker::newDevice()
 method, which creates a new input device (a UDP socket in this case),
@@ -153,7 +158,8 @@ Here's the class implementation in the C++ source %file:
 \include SignalChunker.cpp
 
 Note that a reference to the XML configuration node for the chunker will be
-automatically supplied to the constructor: we then simply need to
+automatically supplied to the constructor from the application's
+\ref user_referenceConfiguration "configuration file": we then simply need to
 extract the relevant configuration settings using methods on the supplied
 ConfigNode object. The ConfigNode::getOption method returns a QString
 containing the text in the required tagname and attribute. To illustrate what
@@ -174,9 +180,28 @@ once, at program launch, so there is no cost penalty involved here. The
 attributes are stored in private class variables for later use.
 
 Our SignalChunker::next() method must first call the inherited method
-AbstractChunker::getWritable(), which returns a block of memory of the required
-size. The chunker is passed a pointer to the I/O device (the socket), and the
-required number of UDP packets are accumulated into a chunk.
+AbstractChunker::getWritable(). This calls routines in the DataManager and
+returns a pointer to a block of memory of the required size, wrapped inside a
+WritableData container. When the WritableData object goes out of scope at the
+end of the method, the chunk of data it references is automatically placed on
+a queue so that it can be processed by an available pipeline. The
+SignalChunker::next() method must therefore accumulate the required number of
+UDP packets into a chunk before exiting.
+
+After obtaining the block of writable data, we must check that the memory it
+holds is actually available for writing using WritableData::isValid(): if not
+(for example, because the buffer has run out of space), the UDP datagram must
+be discarded. Provided that the memory is valid, we obtain a pointer to it
+using WritableData::ptr(), and read the data from the socket using the methods
+on QUdpSocket or QIODevice: A pointer to the socket is passed to the function,
+so we can call QUdpSocket::readDatagram(). If there is not enough data to read
+from the socket, then we must call QIODevice::waitForReadyRead() to suspend the
+thread and wait for more data to arrive.
+
+This concludes our description of the required SignalChunker. The following
+section shows how to use the chunker in the next part of the Pelican framework,
+and how to extract the bytes in the chunk to a form more suitable for
+processing.
 
 */
 

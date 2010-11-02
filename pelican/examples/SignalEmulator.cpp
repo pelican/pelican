@@ -1,5 +1,6 @@
 #include "pelican/examples/SignalEmulator.h"
 #include "pelican/utility/ConfigNode.h"
+#include <cmath>
 
 namespace pelican {
 
@@ -15,17 +16,19 @@ SignalEmulator::SignalEmulator(const ConfigNode& configNode)
     _totalSamples = 0;
     _samples = configNode.getOption("packet", "samples", "256").toULong();
     _interval = configNode.getOption("packet", "interval",
-            QString::number(_samples * 10)).toULong();
+            QString::number(_samples * 10)).toULong(); // Interval in micro-sec.
+    _period = configNode.getOption("signal", "period", "20").toULong();
+    _omega = (2.0 * 3.14159265) / _period; // Angular frequency.
 
     // Set the packet size in bytes (+32 for header).
     _packet.resize(_samples * sizeof(float) + 32);
 
     // Set constant parts of packet header data.
     char* ptr = _packet.data();
-    *reinterpret_cast<int*>(ptr + 0) = size;
-    *reinterpret_cast<int*>(ptr + 4) = 32;
-    *reinterpret_cast<int*>(ptr + 8) = _samples;
-    *reinterpret_cast<int*>(ptr + 12) = sizeof(float);
+    *reinterpret_cast<int*>(ptr + 0) = _packet.size(); // Total bytes in packet.
+    *reinterpret_cast<int*>(ptr + 4) = 32; // Size of the header in bytes.
+    *reinterpret_cast<int*>(ptr + 8) = _samples; // Samples in the packet.
+    *reinterpret_cast<int*>(ptr + 12) = sizeof(float); // Bytes per sample.
 }
 
 /*
@@ -42,9 +45,11 @@ void SignalEmulator::getPacketData(char*& ptr, unsigned long& size)
     *reinterpret_cast<long int*>(ptr + 16) = _counter;
 
     // Fill the packet data.
-    const char* data = ptr + 32; // Add offset for header.
-    for (unsigned i = 0; i < _samples; ++i)
-        reinterpret_cast<float*>(data)[i] = _counter; // FIXME write a sine-wave.
+    char* data = ptr + 32; // Add offset for header.
+    for (unsigned i = 0; i < _samples; ++i) {
+        float value = sin(((_totalSamples + i) % _period) * _omega);
+        reinterpret_cast<float*>(data)[i] = value;
+    }
 
     // Increment counters for next time.
     _counter++;

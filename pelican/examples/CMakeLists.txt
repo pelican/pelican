@@ -9,6 +9,9 @@ set(examples_src
     OutputStreamExample.cpp
     PipelineExample.cpp
     SignalAmplifier.cpp
+    SignalChunker.cpp
+    SignalDataAdapter.cpp
+    SignalEmulator.cpp
     SignalProcessingPipeline.cpp
 )
 add_library(examples ${examples_src})

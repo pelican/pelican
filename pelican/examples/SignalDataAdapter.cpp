@@ -1,26 +1,26 @@
-#include "pelican/examples/AdapterExample.h"
-#include "pelican/examples/DataBlobExample.h"
+#include "pelican/examples/SignalDataAdapter.h"
+#include "pelican/examples/SignalData.h"
 
-// Construct the example adapter.
-AdapterExample::AdapterExample(const ConfigNode& config)
+// Construct the signal data adapter.
+SignalDataAdapter::SignalDataAdapter(const ConfigNode& config)
     : AbstractStreamAdapter(config)
 {
     // Read the configuration using configuration node utility methods.
-    _nBitsPerSample = config.getOption("samples", "bitsPerSample").toUInt();
+    _nSamples = config.getOption("samples", "number").toUInt();
 }
 
-// Called to de-serialise a chunk of data in the I/0 device.
-void AdapterExample::deserialise(QIODevice* in)
+// Called to de-serialise a chunk of data from the input device.
+void SignalDataAdapter::deserialise(QIODevice* in)
 {
     // A pointer to the data blob to fill should be obtained by calling the
     // dataBlob() inherited method. This returns a pointer to an
     // abstract DataBlob, which should be cast to the appropriate type.
-    DataBlobExample* blob = (DataBlobExample*) dataBlob();
+    SignalData* blob = (SignalData*) dataBlob();
 
     // Set the size of the data blob to fill.
     // The chunk size is obtained by calling the chunkSize() inherited method.
     size_t nBytes = chunkSize();
-    unsigned length = nBytes / _nBitsPerSample;
+    unsigned length = nBytes;
     blob->resize(length);
 
     // Create a temporary buffer for storing the chunk.

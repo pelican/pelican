@@ -24,8 +24,8 @@ This user guide is divided into three main sections:
 - \ref user_gettingStarted "A getting started guide" explaining the various
 concepts used in Pelican, as well as providing a tutorial walkthrough of a
 basic application use case.
-- \ref user_reference "Reference" documentation describing in more detail
-the components of Pelican and how they can be they should be used.
+- \ref user_reference "Reference" documentation describing the components of
+Pelican in more detail, and how they can be used.
 
 \htmlonly <br><hr><br> \endhtmlonly
 
@@ -46,9 +46,6 @@ easily streamed to another Pelican server for aggregation and distribution to
 other pipelines for further processing.
 
 
-
-
-
 \section intro_applications Using the Pelican API
 
 Applications using Pelican are written by utilising or implementing a number of
@@ -64,19 +61,17 @@ Instead, components can be configured using XML parameter files, which are read
 on initialisation.
 
 
-
 \section intro_running Pelican Use Cases
 
-\todo Make very sure this doesn't sound like pelican is a binary.
+Applications written to use the Pelican library can be run in two different
+configurations, depending on the data processing requirements.
+Because of the modular design of the library, it is easy to switch between
+the two as needs arise.
 
-Pelican applications can be run in two different configurations, depending
-on the data processing requirements. Because of its modular desgin,
-it is easy to switch between the two as needs arise.
-
-For very high throughput and heavy data processing the most appropriate way
-to configure pelican in its server-client mode which provides a highly scalable
-processing framework. Data is divided into chunks that are buffered by the
-Pelican server. Pelican pipelines run on other machines, where data clients
+For very high throughput and heavy data processing, the most appropriate way
+to use Pelican in its server-client mode, which provides a highly
+scalable processing framework. Data is divided into chunks that are buffered by
+the Pelican server. Pelican pipelines run on other machines, where data clients
 request chunks of data from the server as often as the pipelines become
 available. If the existing pipelines cannot keep up with the input data rate,
 then more pipelines can be added as required.
