@@ -12,7 +12,7 @@ using namespace pelican;
 class SignalAmplifier : public AbstractModule
 {
     public:
-        // Constructor.
+        // Constructs the module.
         SignalAmplifier(const ConfigNode& config);
 
         // Runs the module.
@@ -22,7 +22,6 @@ class SignalAmplifier : public AbstractModule
         float gain;
 };
 
-// Register the module.
 PELICAN_DECLARE_MODULE(SignalAmplifier)
 
 #endif // SIGNALAMPLIFIER_H

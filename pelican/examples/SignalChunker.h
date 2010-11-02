@@ -11,8 +11,13 @@ using namespace pelican;
 class SignalChunker : public AbstractChunker
 {
     public:
+        // Constructs the chunker.
         SignalChunker(const ConfigNode& config);
+
+        // Creates the input device (usually a socket).
         virtual QIODevice* newDevice();
+
+        // Obtains a chunk of data from the device when data is available.
         virtual void next(QIODevice*);
 
     private:
@@ -20,7 +25,6 @@ class SignalChunker : public AbstractChunker
         qint64 _bytesRead;
 };
 
-// Register the chunker.
 PELICAN_DECLARE_CHUNKER(SignalChunker)
 
 #endif // SIGNALCHUNKER_H

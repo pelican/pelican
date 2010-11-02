@@ -91,7 +91,7 @@ your chunker appropriately.
 provide a mechanism to convert chunks of raw binary data into the data
 members of a Pelican data-blob (a specialised C++ container for holding data
 used by the Pelican pipeline; see \ref importData_DataBlobs "below").
-The most basic functionality of an adapter is to de-serialise chunks of data,
+The most basic function of an adapter is to de-serialise chunks of data,
 although re-ordering and re-factoring of the data to a form that is convenient
 for subsequent pipeline processing may also be carried out.
 Pelican currently provides support for two categories of adapters,
@@ -114,7 +114,7 @@ One of their main functions is to act as an interface between pipeline modules.
 
 \subsection importData_tutorialDataBlob Tutorial Data-Blob
 
-For the purpose of our tutorial, we need a data-blob that can hold the
+For the purpose of our tutorial, we need a type of DataBlob that can hold the
 required time-series data in a chunk. This is implemented in the SignalData
 data-blob, shown below, as a simple contiguous float array (a standard C++
 vector). Public methods allow this array to be resized, and should be used to
@@ -127,6 +127,8 @@ The data-blob must be declared so that the Pelican framework knows of its
 existence: use the PELICAN_DECLARE_DATABLOB macro in the header file to do this,
 supplying the class name as the macro argument. Do not use quotes around the
 name.
+
+This concludes our description of the required SignalData data-blob.
 
 \subsection importData_tutorialAdapter Tutorial Adapter
 
@@ -162,7 +164,7 @@ is needed here, the adapter expects an XML snippet like this:
 
 \verbatim
 <SignalDataAdapter>
-
+    <packet samples="256" />
 </SignalDataAdapter>
 \endverbatim
 

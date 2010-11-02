@@ -20,12 +20,12 @@ these platforms should be considered currently untested and unsupported.
 
 In order to link a simple application which uses Pelican:
 @code
-g++ -o myApp myApp.cpp -I<path_to_pelican_include> -lpelican
+g++ -o myApp myApp.cpp -I/pelican/include/path -lpelican
 @endcode
 
 Linking a simple application using pelican and the test utility library:
 @code
-g++ -o myUnitTest myUnitTest.cpp -I<path_to_pelican_include> -lpelican -lpelican-testutils
+g++ -o myUnitTest myUnitTest.cpp -I/pelican/include/path -lpelican -lpelican-testutils
 @endcode
 
 \section user_linkingPelican_cmake Pelican CMake Module

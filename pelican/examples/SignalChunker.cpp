@@ -1,10 +1,9 @@
-#include "SignalChunker.h"
+#include "pelican/examples/SignalChunker.h"
 #include "pelican/utility/Config.h"
 #include <QtNetwork/QUdpSocket>
 
 // Construct the example chunker.
-SignalChunker::SignalChunker(const ConfigNode& config)
-    : AbstractChunker(config)
+SignalChunker::SignalChunker(const ConfigNode& config) : AbstractChunker(config)
 {
     // Set chunk size from the configuration.
     // The host, port and data type are set in the base class.
