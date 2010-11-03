@@ -28,7 +28,7 @@ a string as a second argument to assign data to a stream with an alternative
 name. This can be useful where there you are exporting multiple streams of the
 same data type.
 
-\section user_dataOuput_blobs Outputting Data Blobs
+\section user_dataOuput_blobs Data-Blob Output Requirements
 
 It is important to note that any DataBlob destined for output should
 reimplement the DataBlob::serialise() and DataBlob::deserialise() methods.
@@ -48,17 +48,18 @@ We use a QDataStream to be endian-neutral, so we don't actually need use the
 Endian type argument of the deserialise routine: this provides the endianness
 of the system that serialised the blob.
 
-\section user_dataOuput_outputStreamManager The OutputStreamManager
+\section user_dataOuput_outputStreamManager The Output Stream Manager
 
 The actual destination of the data is controlled by the OutputStreamManager
 object. This can be configured either through the configuration file, or you
 can manipulate the object directly.
 
-Pelican comes with one OutputStreamer module that allows you to stream data
-to another machine using TCP. However, this may be insufficient for your needs
-if you have a custom file format, or a specific database to fill.
-In these cases you will need to write your own OutputStreamer. Note that any
-processing done in an OutputStreamer is done serially with the pipeline
+Pelican comes with one output streamer module that allows you to stream data
+to another machine using TCP: this is the PelicanTCPBlobServer.
+However, this may be insufficient for your needs if you have a custom file
+format, or a specific database to fill.
+In these cases you will need to write your own output streamer. Note that any
+processing done in an output streamer is done serially with the pipeline
 processing, so it will slow down your pipeline. If this will be a problem, it
 is better to export it via the PelicanTCPBlobServer and process the streams
 elsewhere.
@@ -66,7 +67,7 @@ elsewhere.
 @subsection user_dataOutput_example  Tutorial Output
 
 We take the example pipeline from previous sections to illustrate how the data
-output system works. We will output the SignalData object before and
+output system works. We will output the SignalData data-blob before and
 after processing to different streams, called "pre" and "post". We will then
 connect different modules to these streams to show how to redirect the data.
 The first thing to do is to instruct the pipeline to output data at the
@@ -91,14 +92,14 @@ void SignalProcessingPipeline::run(QHash<QString, DataBlob*>& data)
 }
 @endcode
 
-@subsubsection user_dataOutput_xmlconfig Configuring the Output Manager
+@subsubsection user_dataOutput_xmlconfig Configuring the Output Stream Manager
 
 So now we have two data streams which we can direct wherever required using the
 output manager:
 
 \li The unprocessed data (the "pre" stream) will be directed to a
-    comma-separated value (CSV) file on the local machine using our own output
-    streamer.
+    comma-separated value (CSV) file on the local machine using our own custom
+    output streamer.
 \li Similarly, we direct the processed data stream ("post") to a different
     CSV file using another instance of our own output streamer.
 \li Finally, we will also direct both streams to the standard
@@ -106,8 +107,9 @@ output manager:
 
 The local CSV files will be written using our custom OutputStreamerExample
 object described in the
-\ref user_referenceOutputStreamers "Output streamer reference." Please see that
-page for example code that describes how to implement the output streamer.
+\ref user_referenceOutputStreamers "Output Streamer Reference." Please see that
+page for example code that describes how to implement the required output
+streamer.
 
 The \c output section of our configuration file will look like this:
 \verbatim
@@ -131,11 +133,11 @@ The \c output section of our configuration file will look like this:
 </output>
 \endverbatim
 
-The \c streamers section describes the configuration for each OutputStreamer.
-Its presence in the XML will cause the OutputManager to attempt to instantiate
-an object of that type (unless the \c active attribute is set to false).
-Where there are more than two objects of the same type, you must provide
-a \c name attribute to disambiguate them.
+The \c streamers section describes the configuration for each output streamer.
+Its presence in the XML will cause the OutputStreamManager to attempt to
+instantiate an object of that type (unless the \c active attribute is set to
+false). Where there are more than two objects of the same type, you must
+provide a \c name attribute to disambiguate them.
 
 The \c dataStreams section is used to map the streams to these objects.
 The \c listeners attribute is a comma separated list of the names of the
