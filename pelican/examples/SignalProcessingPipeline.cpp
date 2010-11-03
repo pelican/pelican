@@ -1,7 +1,7 @@
-#include "SignalProcessingPipeline.h"
+#include "pelican/examples/SignalProcessingPipeline.h"
 
-// Initialises the pipeline, creating any modules and data blobs required,
-// and requesting any remote data.
+// Initialises the pipeline, creating required modules and data blobs,
+// and requesting remote data.
 void SignalProcessingPipeline::init()
 {
     // Create the pipeline modules and any local data blobs.
@@ -12,15 +12,18 @@ void SignalProcessingPipeline::init()
     requestRemoteData("SignalData");
 }
 
-
 // Defines a single iteration of the pipeline.
 void SignalProcessingPipeline::run(QHash<QString, DataBlob*>& remoteData)
 {
     // Get pointers to the remote data blob(s) from the supplied hash.
     SignalData* inputData = (SignalData*) remoteData["SignalData"];
 
+    // Output the input data.
+    dataOutput(inputData, "pre");
+
     // Run each module as required.
     amplifier->run(inputData, outputData);
 
-    // TODO Output the data.
+    // Output the processed data.
+    dataOutput(outputData, "post");
 }

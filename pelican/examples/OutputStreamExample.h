@@ -3,7 +3,6 @@
 #include <QtCore/QList>
 class QIODevice;
 
-
 #include "pelican/output/AbstractOutputStream.h"
 
 /**
@@ -18,23 +17,25 @@ using namespace pelican;
  * @class OutputStreamExample
  *
  * @brief
- *    Writes an DataBlobExample object to a CSV file
+ * Writes a SignalData data blob to a CSV file.
+ *
  * @details
  *
  */
 class OutputStreamExample : public AbstractOutputStream
 {
     public:
-        /// OutputStreamExample constructor.
-        OutputStreamExample( const ConfigNode& configNode );
+        // OutputStreamExample constructor.
+        OutputStreamExample(const ConfigNode& configNode);
 
-        /// OutputStreamExample destructor.
+        // OutputStreamExample destructor.
         ~OutputStreamExample();
 
-        /// add a file for output to be saved
-        void addFile( const QString& filename );
+        // Add a file for output to be saved.
+        void addFile(const QString& filename);
 
     protected:
+        // Sends the data blob to the output stream.
         void sendStream(const QString& streamName, const DataBlob* dataBlob);
 
     private:

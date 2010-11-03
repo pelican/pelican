@@ -128,6 +128,9 @@ existence: use the PELICAN_DECLARE_DATABLOB macro in the header file to do this,
 supplying the class name as the macro argument. Do not use quotes around the
 name.
 
+The serialise and deserialise methods must be reimplemented for the data output
+stage, and are described in a later section.
+
 This concludes our description of the required SignalData data-blob.
 
 \subsection importData_tutorialAdapter Tutorial Adapter
