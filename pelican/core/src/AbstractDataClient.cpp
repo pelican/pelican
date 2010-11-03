@@ -17,20 +17,20 @@ namespace pelican {
 
 /**
  * @details
- * This creates a new abstract data client.
  * The abstract data client constructor takes a reference to the data
- * client configuration node (\p config).
+ * client configuration node (\p configNode).
  *
- * @param[in] config Reference to the data client configuration node.
+ * @param[in] configNode Reference to the data client configuration node.
+ * @param[in] types      \todo needs description
+ * @param[in] config     \todo needs description
  */
 AbstractDataClient::AbstractDataClient(const ConfigNode& configNode,
-        const DataTypes& types, const Config* config) :
-        _configNode(configNode), _dataReqs(types), _config(config)
+        const DataTypes& types, const Config* config)
+: _configNode(configNode), _dataReqs(types), _config(config)
 {
     // Quick sanity check.
     if (_dataReqs.dataRequirements().size() == 0)
-        throw QString("AbstractDataClient: "
-                "No data requirements specified");
+        throw QString("AbstractDataClient: No data requirements specified");
 
     // Construct the total set of requirements.
     foreach (const DataRequirements dr, dataRequirements()) {
@@ -57,15 +57,16 @@ void AbstractDataClient::log(const QString& msg)
 
 /**
  * @details
- * Adapts (deserialises) stream data into data blobs.
+ * Adapts (de-serialises) stream data into data blobs.
  *
  * @param device
  * @param sd
  * @param dataHash
+ *
  * @return
  */
-QHash<QString, DataBlob*> AbstractDataClient::adaptStream(QIODevice& device,
-        const StreamData* sd, QHash<QString, DataBlob*>& dataHash )
+AbstractDataClient::DataBlobHash AbstractDataClient::adaptStream(
+        QIODevice& device, const StreamData* sd, DataBlobHash& dataHash)
 {
     QHash<QString, DataBlob*> validData;
 
@@ -87,10 +88,11 @@ QHash<QString, DataBlob*> AbstractDataClient::adaptStream(QIODevice& device,
  * @param device
  * @param d
  * @param dataHash
+ *
  * @return
  */
-QHash<QString, DataBlob*> AbstractDataClient::adaptService(QIODevice& device,
-        const DataChunk* d, QHash<QString, DataBlob*>& dataHash )
+AbstractDataClient::DataBlobHash AbstractDataClient::adaptService(
+        QIODevice& device, const DataChunk* d, DataBlobHash& dataHash)
 {
     QHash<QString, DataBlob*> validData;
     QString type = d->name();

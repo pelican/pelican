@@ -21,20 +21,16 @@ class DataTypes;
  * @class FileDataClient
  *
  * @brief
- * Data client used by the pipeline for accessing data directly from a data
- * file rather than using the data server.
+ * Data client used by the pipeline for accessing data directly from files
+ * rather than using the data server.
  *
  * @details
  * This data client fetches data directly from one or more data files and
  * makes it available to the pipelines via the pipeline driver.
-  */
+ */
 
 class FileDataClient : public AbstractDataClient
 {
-    private:
-        // Hash of filenames for each data type.
-        QHash<QString, QString> _fileNames;
-
     public:
         /// Data client constructor.
         FileDataClient(const ConfigNode& configNode,
@@ -43,16 +39,20 @@ class FileDataClient : public AbstractDataClient
         /// Data client destructor
         ~FileDataClient();
 
+    public:
         /// Gets the requested data.
-        QHash<QString, DataBlob*> getData(QHash<QString, DataBlob*>&);
+        DataBlobHash getData(DataBlobHash&);
 
     private:
-        /// Gets the configuration options.
+        /// Reads the configuration options.
         void _getConfig();
+
+    private:
+        // Hash of filenames for each data type.
+        QHash<QString, QString> _fileNames;
 };
 
 PELICAN_DECLARE_CLIENT(FileDataClient)
 
 } // namespace pelican
-
 #endif // FILEDATACLIENT_H

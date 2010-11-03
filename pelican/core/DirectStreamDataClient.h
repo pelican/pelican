@@ -40,8 +40,8 @@ class DirectStreamDataClient : public AbstractDataClient
         /// Destroys the direct stream data client.
         virtual ~DirectStreamDataClient();
 
-        /// Obtains a hash of data blobs for the pipeline.
-        QHash<QString, DataBlob*> getData(QHash<QString, DataBlob*>& dataHash);
+        /// Obtains a hash of data blobs required by the pipeline.
+        DataBlobHash getData(DataBlobHash& dataHash);
 
         /// Sets the chunker for the given data type.
         void addChunker(const QString& dataType, const QString& chunkerType,
