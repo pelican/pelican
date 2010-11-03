@@ -1,3 +1,5 @@
+namespace pelican {
+
 /**
 \page user_referenceBuildingPelican Building the Pelican library
 
@@ -55,3 +57,5 @@ options that can be selected.
 \endlatexonly
 
 */
+
+}

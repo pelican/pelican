@@ -1,3 +1,5 @@
+namespace pelican {
+
 /**
 \page user_referenceChunkers Data Chunkers
 
@@ -89,3 +91,5 @@ unit/integration testing of your Chunker. See the API documentation for more det
 \endlatexonly
 
 */
+
+}

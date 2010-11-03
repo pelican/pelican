@@ -1,3 +1,5 @@
+namespace pelican {
+
 /**
 \page user_referenceDataBlobs Data Blobs
 
@@ -47,3 +49,5 @@ This example creates and declares a new data blob of floating-point data.
 \endlatexonly
 
 */
+
+}

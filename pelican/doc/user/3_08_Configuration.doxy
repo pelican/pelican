@@ -1,3 +1,5 @@
+namespace pelican {
+
 /**
 \page user_referenceConfiguration Configuration Files
 
@@ -288,3 +290,5 @@ There should be as many \c data tags as necessary, one for each data type.
 \endlatexonly
 
 */
+
+}

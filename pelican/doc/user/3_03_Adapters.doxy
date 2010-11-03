@@ -1,3 +1,5 @@
+namespace pelican {
+
 /**
 \page user_referenceAdapters Data Adapters
 
@@ -101,3 +103,5 @@ and the class implementation is:
 \endlatexonly
 
 */
+
+}

@@ -1,3 +1,5 @@
+namespace pelican {
+
 /**
 \page conclusion Tutorial Conclusion
 
@@ -21,3 +23,5 @@ to create applications that use the Pelican library.
 \endlatexonly
 
 */
+
+}

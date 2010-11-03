@@ -1,3 +1,5 @@
+namespace pelican {
+
 /**
 \page user_referencePipelines Pipelines
 
@@ -96,3 +98,5 @@ and the class implementation is:
 \endlatexonly
 
 */
+
+}

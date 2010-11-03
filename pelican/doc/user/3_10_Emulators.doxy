@@ -1,3 +1,5 @@
+namespace pelican {
+
 /**
 \page user_referenceEmulators Data Emulation
 
@@ -96,3 +98,5 @@ EmulatorDriver emulator(new EmulatorExample(emulatorConfig));
 \endlatexonly
 
 */
+
+}

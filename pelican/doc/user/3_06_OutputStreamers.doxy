@@ -1,3 +1,5 @@
+namespace pelican {
+
 /**
 @page user_referenceOutputStreamers Output Streamers
 
@@ -43,3 +45,5 @@ register it with the OutputStream factory.
 \endlatexonly
 
 */
+
+}
