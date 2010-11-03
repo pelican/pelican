@@ -28,8 +28,27 @@ a string as a second argument to assign data to a stream with an alternative
 name. This can be useful where there you are exporting multiple streams of the
 same data type.
 
-\note It is important to realise that any DataBlob destined for output should
+\section user_dataOuput_blobs Outputting Data Blobs
+
+It is important to note that any DataBlob destined for output should
 reimplement the DataBlob::serialise() and DataBlob::deserialise() methods.
+These methods can be implemented however you like. The serialise routine should
+write the complete contents of the data blob to the output device, and the
+deserialise routine should do the reverse, by reading the complete contents of
+the blob from the input device.
+
+\subsection user_dataOuput_tutorialBlobs Tutorial Data Blob Output
+
+The SignalData::serialise() and SignalData::deserialise() methods for our
+SignalData data-blob are shown in the C++ source file, below:
+
+\include SignalData.cpp
+
+We use a QDataStream to be endian-neutral, so we don't actually need use the
+Endian type argument of the deserialise routine: this provides the endianness
+of the system that serialised the blob.
+
+\section user_dataOuput_outputStreamManager The OutputStreamManager
 
 The actual destination of the data is controlled by the OutputStreamManager
 object. This can be configured either through the configuration file, or you

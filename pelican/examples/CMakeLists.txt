@@ -10,6 +10,7 @@ set(examples_src
     PipelineExample.cpp
     SignalAmplifier.cpp
     SignalChunker.cpp
+    SignalData.cpp
     SignalDataAdapter.cpp
     SignalEmulator.cpp
     SignalProcessingPipeline.cpp

@@ -1,67 +1,67 @@
 #include "OutputStreamExample.h"
 
-#include <QFile>
-#include <QIODevice>
-#include <QTextStream>
+#include <QtCore/QFile>
+#include <QtCore/QIODevice>
+#include <QtCore/QTextStream>
 #include <iostream>
 
-#include "DataBlobExample.h"
+#include "pelican/examples/SignalData.h"
 #include "pelican/utility/ConfigNode.h"
 
-
-OutputStreamExample::OutputStreamExample( const ConfigNode& configNode )
-    : AbstractOutputStream( configNode )
+// Constructs the output stream.
+OutputStreamExample::OutputStreamExample(const ConfigNode& configNode)
+    : AbstractOutputStream(configNode)
 {
+    // Get the filename from the configuration node, and open it for output.
     QString filename = configNode.getOption("file", "name");
-    // initialise file
-    if( filename != "" )
+    if (!filename.isEmpty())
         addFile(filename);
 }
 
+// Destroys the output stream, deleting all the devices it uses.
 OutputStreamExample::~OutputStreamExample()
 {
-    foreach( QIODevice* device, _devices )
-    {
+    foreach (QIODevice* device, _devices) {
         delete device;
     }
 }
 
-void OutputStreamExample::addFile( const QString& filename )
+// Adds a file to the output stream and opens it for writing.
+void OutputStreamExample::addFile(const QString& filename)
 {
-    verbose(QString("creating file ") + filename);
+    verbose(QString("Creating file %1").arg(filename));
     QFile* file = new QFile(filename);
-    if( ! file->open( QIODevice::WriteOnly ) )
-    {
-        _devices.append( file );
+    if (file->open(QIODevice::WriteOnly)) {
+        _devices.append(file);
     }
     else {
-        std::cerr << "unable to open file for writing: " << filename.toStdString() << std::endl;
+        std::cerr << "Cannot open file for writing: "
+                << filename.toStdString() << std::endl;
         delete file;
     }
 }
 
-void OutputStreamExample::sendStream(const QString& /*streamName*/, const DataBlob* dataBlob)
+// Sends the data blob to the output stream.
+void OutputStreamExample::sendStream(const QString& /*streamName*/,
+        const DataBlob* blob)
 {
-    // check its a datablob type we know what to do with
-    if( dataBlob->type() != "DataBlobExample" )
-        return;
-    const DataBlobExample* data = static_cast<const DataBlobExample*>(dataBlob);
-    
-    // construct the comman seperated value string
-    QString csv;
-    if( data->size() > 0 )
+    // Check it's a data blob type we know how to use.
+    if (blob->type() != "SignalData") return;
+
+    const float* data = ((const SignalData*)blob)->ptr();
+    unsigned size = ((const SignalData*)blob)->size();
+    if (data)
     {
-        csv = QString().setNum(data->data()[0]);
-        for(unsigned int i=1; i < data->size(); ++i )
-        {
-            csv += "," + QString().setNum( data->data()[i] );
+        // Construct the comma separated value string.
+        QString csv = QString::number(data[0]);
+        for (unsigned i = 1; i < size; ++i) {
+            csv += "," + QString::number(data[i]);
         }
-        // output the string to each file
-        foreach( QIODevice* device, _devices )
-        {
+
+        // Output the string to each file
+        foreach (QIODevice* device, _devices) {
             QTextStream out(device);
             out << csv << endl;
         }
     }
 }
-

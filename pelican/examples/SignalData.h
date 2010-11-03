@@ -27,6 +27,12 @@ class SignalData : public DataBlob
         // Returns the size of the data.
         unsigned size() const { return _data.size(); }
 
+        // Serialises the data blob.
+        void serialise(QIODevice& out) const;
+
+        // Deserialises the data blob.
+        void deserialise(QIODevice& in, QSysInfo::Endian);
+
     private:
         std::vector<float> _data; // The actual data array.
 };
