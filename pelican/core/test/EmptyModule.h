@@ -5,10 +5,11 @@
  * @file EmptyModule.h
  */
 
-#include "pelican/modules/AbstractModule.h"
+#include "pelican/core/AbstractModule.h"
 #include "pelican/utility/ConfigNode.h"
 
 namespace pelican {
+namespace test {
 
 /**
  * @ingroup c_modules
@@ -34,5 +35,7 @@ class EmptyModule : public AbstractModule
 
 PELICAN_DECLARE_MODULE(EmptyModule)
 
+} // namespace test
 } // namespace pelican
+
 #endif // EMPTYMODULE_H

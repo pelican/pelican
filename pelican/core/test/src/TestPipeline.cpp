@@ -1,5 +1,5 @@
 #include "pelican/core/test/TestPipeline.h"
-#include "pelican/modules/EmptyModule.h"
+#include "pelican/core/test/EmptyModule.h"
 
 #include <iostream>
 using std::cout;
