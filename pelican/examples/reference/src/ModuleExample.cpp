@@ -1,4 +1,5 @@
-#include "ModuleExample.h"
+#include "reference/ModuleExample.h"
+#include "reference/DataBlobExample.h"
 #include "pelican/utility/Config.h"
 
 // Construct the example module.

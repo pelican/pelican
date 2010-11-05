@@ -1,4 +1,4 @@
-#include "pelican/examples/SignalEmulator.h"
+#include "tutorial/SignalEmulator.h"
 #include "pelican/utility/ConfigNode.h"
 #include <cmath>
 

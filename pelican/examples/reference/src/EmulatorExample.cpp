@@ -1,7 +1,5 @@
-#include "pelican/examples/EmulatorExample.h"
+#include "reference/EmulatorExample.h"
 #include "pelican/utility/ConfigNode.h"
-
-#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 

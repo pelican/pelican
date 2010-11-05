@@ -1,10 +1,11 @@
 #ifndef SIGNALAMPLIFIER_H
 #define SIGNALAMPLIFIER_H
 
-#include "pelican/modules/AbstractModule.h"
-#include "pelican/examples/SignalData.h"
+#include "pelican/core/AbstractModule.h"
 
 using namespace pelican;
+
+class SignalData;
 
 /*
  * A simple example to demonstrate how to write a pipeline module.

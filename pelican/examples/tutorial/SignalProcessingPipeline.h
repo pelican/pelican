@@ -2,9 +2,11 @@
 #define SIGNALPROCESSINGPIPELINE_H
 
 #include "pelican/core/AbstractPipeline.h"
-#include "pelican/examples/SignalAmplifier.h"
 
 using namespace pelican;
+
+class SignalData;
+class SignalAmplifier;
 
 class SignalProcessingPipeline : public AbstractPipeline
 {

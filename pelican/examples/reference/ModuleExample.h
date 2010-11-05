@@ -1,14 +1,15 @@
 #ifndef MODULEEXAMPLE_H
 #define MODULEEXAMPLE_H
 
-#include "pelican/modules/AbstractModule.h"
-#include "pelican/examples/DataBlobExample.h"
+#include "pelican/core/AbstractModule.h"
 
 /**
  * @file ModuleExample.h
  */
 
 using namespace pelican;
+
+class DataBlobExample;
 
 /**
  * @ingroup c_examples

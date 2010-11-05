@@ -1,4 +1,6 @@
-#include "pelican/examples/SignalProcessingPipeline.h"
+#include "tutorial/SignalProcessingPipeline.h"
+#include "tutorial/SignalAmplifier.h"
+#include "tutorial/SignalData.h"
 
 // Initialises the pipeline, creating required modules and data blobs,
 // and requesting remote data.

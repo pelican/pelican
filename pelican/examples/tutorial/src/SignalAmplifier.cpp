@@ -1,4 +1,5 @@
-#include "SignalAmplifier.h"
+#include "tutorial/SignalAmplifier.h"
+#include "tutorial/SignalData.h"
 #include "pelican/utility/Config.h"
 
 // Construct the example module.

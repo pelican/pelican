@@ -2,9 +2,11 @@
 #define PIPELINEEXAMPLE_H
 
 #include "pelican/core/AbstractPipeline.h"
-#include "pelican/examples/ModuleExample.h"
 
 using namespace pelican;
+
+class ModuleExample;
+class DataBlobExample;
 
 class PipelineExample : public AbstractPipeline
 {

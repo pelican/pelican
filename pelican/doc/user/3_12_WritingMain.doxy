@@ -36,7 +36,7 @@ For each pipeline that must be run, call the
 object. The method requires a pointer to an \c AbstractPipeline object (the
 base class of all Pelican pipelines) as its argument.
 
-\include examples/mainPipelineExample.cpp
+\include mainPipeline.cpp
 
 
 \subsection user_referenceMain_pipeline_multiple Multiple Pipelines
@@ -65,7 +65,7 @@ The following code illustrates how to create a simple server binary for use
 with the example code presented in the
 \ref user_gettingStarted "getting started tutorial".
 
-\include examples/mainServerExample.cpp
+\include mainServer.cpp
 
 \subsection user_referenceMain_server_eg Notes (refer to references in the code):
 <ol>

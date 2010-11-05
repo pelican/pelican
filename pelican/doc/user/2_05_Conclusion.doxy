@@ -8,15 +8,15 @@ to create applications that use the Pelican library.
 
 \section conclusion_emulator The Emulator Binary
 
-... Emulator binary main() ...
+\include mainEmulator.cpp
 
 \section conclusion_server The Server Binary
 
-... Server binary main() ...
+\include mainServer.cpp
 
 \section conclusion_pipeline The Pipeline Binary
 
-... Pipeline binary main() ...
+\include mainPipeline.cpp
 
 \latexonly
 \clearpage

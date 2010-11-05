@@ -1,11 +1,11 @@
-#include "OutputStreamExample.h"
+#include "tutorial/OutputStreamExample.h"
 
 #include <QtCore/QFile>
 #include <QtCore/QIODevice>
 #include <QtCore/QTextStream>
 #include <iostream>
 
-#include "pelican/examples/SignalData.h"
+#include "tutorial/SignalData.h"
 #include "pelican/utility/ConfigNode.h"
 
 // Constructs the output stream.

@@ -1,5 +1,5 @@
-#include "pelican/examples/SignalDataAdapter.h"
-#include "pelican/examples/SignalData.h"
+#include "tutorial/SignalDataAdapter.h"
+#include "tutorial/SignalData.h"
 
 // Construct the signal data adapter.
 SignalDataAdapter::SignalDataAdapter(const ConfigNode& config)

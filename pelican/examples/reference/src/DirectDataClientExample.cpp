@@ -1,5 +1,5 @@
-#include "DirectDataClientExample.h"
-#include "ChunkerExample.h"
+#include "reference/DirectDataClientExample.h"
+#include "reference/ChunkerExample.h"
 
 
 using namespace pelican;

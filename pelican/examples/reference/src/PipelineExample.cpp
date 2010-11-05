@@ -1,4 +1,6 @@
-#include "PipelineExample.h"
+#include "reference/PipelineExample.h"
+#include "reference/ModuleExample.h"
+#include "reference/DataBlobExample.h"
 
 // Initialises the pipeline, creating any modules and data blobs required,
 // and requesting any remote data.

@@ -1,5 +1,5 @@
-#include "pelican/examples/AdapterExample.h"
-#include "pelican/examples/DataBlobExample.h"
+#include "reference/AdapterExample.h"
+#include "reference/DataBlobExample.h"
 
 // Construct the example adapter.
 AdapterExample::AdapterExample(const ConfigNode& config)

@@ -1,4 +1,4 @@
-#include "pelican/examples/SignalData.h"
+#include "tutorial/SignalData.h"
 #include <QtCore/QDataStream>
 
 // Serialises the data blob.

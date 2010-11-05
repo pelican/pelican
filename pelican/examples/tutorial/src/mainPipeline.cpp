@@ -1,5 +1,5 @@
 #include "pelican/core/PipelineApplication.h"
-#include "pelican/examples/SignalProcessingPipeline.h"
+#include "tutorial/SignalProcessingPipeline.h"
 #include <QtCore/QCoreApplication>
 
 int main(int argc, char* argv[])

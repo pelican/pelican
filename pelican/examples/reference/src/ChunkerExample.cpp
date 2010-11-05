@@ -1,9 +1,10 @@
-#include "pelican/examples/SignalChunker.h"
+#include "reference/ChunkerExample.h"
 #include "pelican/utility/Config.h"
 #include <QtNetwork/QUdpSocket>
 
 // Construct the example chunker.
-SignalChunker::SignalChunker(const ConfigNode& config) : AbstractChunker(config)
+ChunkerExample::ChunkerExample(const ConfigNode& config)
+    : AbstractChunker(config)
 {
     // Set chunk size from the configuration.
     // The host, port and data type are set in the base class.
@@ -11,7 +12,7 @@ SignalChunker::SignalChunker(const ConfigNode& config) : AbstractChunker(config)
 }
 
 // Creates a suitable device ready for reading.
-QIODevice* SignalChunker::newDevice()
+QIODevice* ChunkerExample::newDevice()
 {
     // Return an opened QUdpSocket.
     QUdpSocket* socket = new QUdpSocket;
@@ -23,7 +24,7 @@ QIODevice* SignalChunker::newDevice()
 }
 
 // Called whenever there is data available on the device.
-void SignalChunker::next(QIODevice* device)
+void ChunkerExample::next(QIODevice* device)
 {
     // Get a pointer to the UDP socket.
     QUdpSocket* udpSocket = static_cast<QUdpSocket*>(device);
@@ -38,7 +39,8 @@ void SignalChunker::next(QIODevice* device)
         // Read datagrams for chunk from the UDP socket.
         while (isActive() && _bytesRead < _chunkSize) {
             // Read the datagram, but avoid using pendingDatagramSize().
-            if (!udpSocket->hasPendingDatagrams()) {
+            bool ok = udpSocket->hasPendingDatagrams();
+            if (!ok) {
                 // MUST WAIT for the next datagram.
                 udpSocket->waitForReadyRead(100);
                 continue;
