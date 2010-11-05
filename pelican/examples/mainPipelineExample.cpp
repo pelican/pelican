@@ -1,5 +1,5 @@
 #include "pelican/core/PipelineApplication.h"
-#include "pelican/examples/PipelineExample.h"
+#include "pelican/examples/SignalProcessingPipeline.h"
 #include <QtCore/QCoreApplication>
 
 int main(int argc, char* argv[])
@@ -11,7 +11,7 @@ int main(int argc, char* argv[])
     PipelineApplication pApp(argc, argv);
 
     // Register the pipelines that can run.
-    pApp.registerPipeline(new PipelineExample);
+    pApp.registerPipeline(new SignalProcessingPipeline);
 
     // Set the data client.
     pApp.setDataClient("PelicanServerClient");
