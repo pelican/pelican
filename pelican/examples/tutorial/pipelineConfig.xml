@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pelican>
+
+<configuration version="1.0">
+    <pipeline>
+        <clients>
+            <PelicanServerClient>
+                <data type="SignalData" adapter="SignalDataAdapter" />
+            </PelicanServerClient>
+        </clients>
+
+        <adapters>
+            <SignalDataAdapter>
+                <packet samples="256" />
+            </SignalDataAdapter>
+        </adapters>
+
+        <modules>
+            <SignalAmplifier>
+                <gain value="2.5"/>
+            </SignalAmplifier>
+        </modules>
+
+        <output>
+            <streamers>
+                <PelicanTCPBlobServer active="true">
+                     <connection port="1234" />
+                <PelicanTCPBlobServer/>`
+                <OutputStreamerExample name="precsv" active="true">
+                     <file name="pre.csv" />
+                </OutputStreamerExample>
+                <OutputStreamerExample name="postcsv" active="true">
+                     <file name="post.csv" />
+                </OutputStreamerExample>
+            </streamers>
+            <dataStreams>
+                <stream name="all" listeners="PelicanTCPBlobServer" />
+                <stream name="post" listeners="postcsv" />
+                <stream name="pre" listeners="precsv" />
+            </dataStreams>
+        </output>
+    </pipeline>
+</configuration>
