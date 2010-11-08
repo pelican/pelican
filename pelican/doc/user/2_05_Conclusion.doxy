@@ -29,7 +29,7 @@ The server can be started with the following command, specifying the correct
 path to the server configuration file:
 
 \verbatim
-./signalServer --config=tutorial/data/serverConfig.xml
+./signalServer tutorial/data/serverConfig.xml
 \endverbatim
 
 \section conclusion_pipeline The Pipeline Binary
@@ -46,7 +46,7 @@ The pipeline can be started with the following command, specifying the correct
 path to the pipeline configuration file:
 
 \verbatim
-./signalPipeline --config=tutorial/data/pipelineConfig.xml
+./signalPipeline tutorial/data/pipelineConfig.xml
 \endverbatim
 
 \latexonly
