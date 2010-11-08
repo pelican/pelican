@@ -19,15 +19,12 @@ of the reference documentation.
 The test utility library currently provides a number of classes listed below.
 
 - \ref t_utility "Utility"
-    - TestConfig: Used handling XML \ref user_referenceConfiguration
-    "configuration" files used in testing.
+    - TestConfig
     - SocketTester
 - %Data
-    - TestDataBlob: A simple \ref user_referenceDataBlobs "data blob" containing
-    a QByteArray.
+    - TestDataBlob
 - Core
-    - TestPipeline: A simple \ref user_referencePipelines "pipeline" with no
-    data requirements.
+    - TestPipeline
     - TestDataClient
     - TestServiceAdapter
     - TestStreamAdapter

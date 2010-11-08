@@ -19,7 +19,7 @@ class DataRequirements;
  * @class PelicanClientProtocol
  *
  * @brief
- * Implementation of the pelican protocol client side.
+ * Implementation of the PelicanProtocol for the client side of communications.
  *
  * @details
  */
