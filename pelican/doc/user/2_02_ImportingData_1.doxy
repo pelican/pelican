@@ -56,7 +56,7 @@ and it is this version that is associated with any incoming stream data.
 \section importData_InputStream An Example Input Stream
 
 To begin our tutorial, let's suppose that we have a source of input stream
-data from a UDP socket on port 2000. The UDP packets are 1056 bytes long, and
+data from a UDP socket on port 2001. The UDP packets are 1056 bytes long, and
 each consists of a 32-byte header followed by 256 samples of 4-byte
 floating-point values from a digitised time series. For this example, the
 signal in the time series will be a simple sine wave.
@@ -106,7 +106,7 @@ expects an XML snippet like this:
 <SignalEmulator>
     <packet samples="256" interval="2560" />
     <signal period="20" />
-    <connection host="127.0.0.1" port="2000" />
+    <connection host="127.0.0.1" port="2001" />
 </SignalEmulator>
 \endverbatim
 
@@ -168,7 +168,7 @@ is needed here, the chunker expects an XML snippet like this:
 \verbatim
 <SignalChunker>
     <data type="SignalData" chunkSize="33792" />
-    <connection host="127.0.0.1" port="2000" />
+    <connection host="127.0.0.1" port="2001" />
 </SignalChunker>
 \endverbatim
 

@@ -12,7 +12,7 @@
         <chunkers>
             <SignalChunker>
                 <data type="SignalData" chunkSize="33792" />
-                <connection host="127.0.0.1" port="2000" />
+                <connection host="127.0.0.1" port="2001" />
             </SignalChunker>
         </chunkers>
     </server>

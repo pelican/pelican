@@ -5,6 +5,7 @@
     <pipeline>
         <clients>
             <PelicanServerClient>
+                <server host="127.0.0.1" port="2000" />
                 <data type="SignalData" adapter="SignalDataAdapter" />
             </PelicanServerClient>
         </clients>
@@ -25,13 +26,13 @@
             <streamers>
                 <PelicanTCPBlobServer active="true">
                      <connection port="1234" />
-                <PelicanTCPBlobServer/>`
-                <OutputStreamerExample name="precsv" active="true">
+                </PelicanTCPBlobServer>
+                <OutputStreamExample name="precsv" active="true">
                      <file name="pre.csv" />
-                </OutputStreamerExample>
-                <OutputStreamerExample name="postcsv" active="true">
+                </OutputStreamExample>
+                <OutputStreamExample name="postcsv" active="true">
                      <file name="post.csv" />
-                </OutputStreamerExample>
+                </OutputStreamExample>
             </streamers>
             <dataStreams>
                 <stream name="all" listeners="PelicanTCPBlobServer" />
