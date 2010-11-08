@@ -37,8 +37,6 @@ base class, rather than explicitly though the interface of the
 
 \section user_referenceAdapters_overview Overview
 
-\todo Change title to something like 'Implementation steps'.
-
 To create a new adapter :
 
 \li Inherit from either the \c AbstractStreamAdapter, or the
@@ -66,9 +64,8 @@ To create a new adapter :
 
 \section user_referenceAdapters_configuration Configuration
 
-\todo ref to configuration section
-
-All adapters must be supplied with a configuration node in their constructors.
+All adapters must be supplied with a
+\ref user_referenceConfiguration "configuration" node in their constructors.
 The configuration node resides in the adapters section of the configuration XML
 file, and has a tag name the same as the adapter class name.
 
@@ -79,8 +76,8 @@ to de-serialise the chunk.
 \section user_referenceAdapters_example Example
 
 The following example shows a stream adapter to convert chunks of data
-containing sections of a stream of real floating point values into the example
-data blob (## TODO: example data blob).
+containing sections of a stream of real floating point values into the
+\ref user_referenceDataBlobs_example "example data blob".
 
 The XML configuration node is:
 

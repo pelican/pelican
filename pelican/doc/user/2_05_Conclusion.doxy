@@ -1,7 +1,7 @@
 namespace pelican {
 
 /**
-\page conclusion Tutorial Conclusion
+\page user_conclusion Tutorial Conclusion
 
 In this section we conclude the tutorial and put all the examples together
 to create applications that use the Pelican library.

@@ -37,7 +37,7 @@ class FileDataClient : public AbstractDataClient
                 const DataTypes& types, const Config* config);
 
         /// Data client destructor
-        ~FileDataClient();
+        virtual ~FileDataClient();
 
     public:
         /// Gets the requested data.

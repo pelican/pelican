@@ -36,7 +36,7 @@ class PelicanServerClient : public AbstractDataClient
         PelicanServerClient(const ConfigNode& configNode,
                 const DataTypes& types, const Config* config);
 
-        ~PelicanServerClient();
+        virtual ~PelicanServerClient();
 
     public:
         /// Retrieve and adapt data required by the pipelines.

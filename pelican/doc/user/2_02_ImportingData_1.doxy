@@ -14,6 +14,7 @@ The following sections of the reference documentation are relevant for
 importing data into Pelican:
 
 \li \link user_referenceChunkers Chunker reference\endlink
+\li \link user_dataClients Data Client reference\endlink
 \li \link user_referenceDataBlobs Data Blob reference\endlink
 \li \link user_referenceAdapters Adapter reference\endlink
 \li \link user_referenceConfiguration Configuration reference\endlink
@@ -56,17 +57,22 @@ and it is this version that is associated with any incoming stream data.
 \section importData_InputStream An Example Input Stream
 
 To begin our tutorial, let's suppose that we have a source of input stream
-data from a UDP socket on port 2000. The UDP packets are 1056 bytes long, and
-each consists of a 32-byte header followed by 256 samples of 4-byte
+data from a UDP socket on port 2000. The UDP packets, in this example, are 1056
+bytes long and consist of a 32-byte header followed by 256 samples of 4-byte
 floating-point values from a digitised time series. For this example, the
 signal in the time series will be a simple sine wave.
 
 The header contains the following fields:
-- Header + 0: A four-byte integer containing the total size of the UDP packet, in bytes (1056).
-- Header + 4: A four-byte integer containing the size of the header, in bytes (32).
-- Header + 8: A four-byte integer containing the number of samples in the packet (256).
-- Header + 12: A four-byte integer containing the size of a single sample, in bytes (4).
-- Header + 16: An eight-byte integer containing a monotonically-increasing packet sequence number.
+- Header + 0: A four-byte integer containing the total size of the UDP packet,
+  in bytes (1056).
+- Header + 4: A four-byte integer containing the size of the header, in bytes
+  (32).
+- Header + 8: A four-byte integer containing the number of samples in the packet
+  (256).
+- Header + 12: A four-byte integer containing the size of a single sample, in
+  bytes (4).
+- Header + 16: An eight-byte integer containing a monotonically-increasing
+  packet sequence number.
 
 The remainder of the header data is reserved. Each sample represents 10
 microseconds of data, so each UDP packet will arrive roughly every 2.56
@@ -99,8 +105,8 @@ Note that a reference to the emulator's XML configuration node should be
 supplied to the constructor: we then just need to extract relevant
 configuration settings using methods on the supplied ConfigNode object.
 The ConfigNode::getOption method returns a QString containing the text in the
-required tagname and attribute. To illustrate what is needed here, the emulator
-expects an XML snippet like this:
+specified tag name, attribute pair. To illustrate what is needed here, the
+emulator expects an XML snippet like this:
 
 \verbatim
 <SignalEmulator>
@@ -111,10 +117,12 @@ expects an XML snippet like this:
 \endverbatim
 
 Each time SignalEmulator::getPacketData() is called, the contents of the packet
-must be updated ready for sending. The function simply updates the header
-and writes a sine wave into the data section.
+must be updated ready for sending. The function simply updates the header and
+writes a sine wave into the data section.
 
 This concludes our description of the input data stream emulator.
+
+
 
 \section importData_Chunkers Chunkers
 
@@ -162,8 +170,8 @@ automatically supplied to the constructor from the application's
 \ref user_referenceConfiguration "configuration file": we then simply need to
 extract the relevant configuration settings using methods on the supplied
 ConfigNode object. The ConfigNode::getOption method returns a QString
-containing the text in the required tagname and attribute. To illustrate what
-is needed here, the chunker expects an XML snippet like this:
+containing the text in the required tag name and attribute function arguments.
+To llustrate what is needed here, the chunker expects an XML snippet like this:
 
 \verbatim
 <SignalChunker>

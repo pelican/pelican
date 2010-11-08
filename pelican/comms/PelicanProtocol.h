@@ -7,7 +7,6 @@
 
 #include "AbstractProtocol.h"
 
-
 namespace pelican {
 
 class DataBlob;
@@ -28,12 +27,28 @@ class PelicanProtocol : public AbstractProtocol
     public:
         PelicanProtocol();
         ~PelicanProtocol();
+
+    public:
+        /// Construct a server request object from reading the specified socket
         virtual boost::shared_ptr<ServerRequest> request(QTcpSocket& socket);
-        virtual void send(QIODevice& stream, const AbstractProtocol::StreamData_t& );
-        virtual void send(QIODevice& stream, const AbstractProtocol::ServiceData_t& );
+
+        /// Sends a list of supported stream and service data.
         virtual void send(QIODevice& device, const DataSupportResponse&);
-        virtual void send(QIODevice& stream, const QString& );
-        virtual void send(QIODevice& stream, const QString& name, const DataBlob& );
+
+        /// Send one or more stream data chunks with header information
+        /// containing a description of associated service data.
+        virtual void send(QIODevice& stream, const AbstractProtocol::StreamData_t&);
+
+        /// Send a serialised data blob.
+        virtual void send(QIODevice& stream, const QString& name, const DataBlob&);
+
+        /// Send one or more service data chunks.
+        virtual void send(QIODevice& stream, const AbstractProtocol::ServiceData_t&);
+
+        /// Send a message string.
+        virtual void send(QIODevice& stream, const QString&);
+
+        /// Send a error.
         virtual void sendError(QIODevice& stream, const QString&);
 };
 

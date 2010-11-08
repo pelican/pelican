@@ -4,16 +4,47 @@ namespace pelican {
 
 \page importData_2 Importing Data II: The Server, Client and Data Adapters
 
+
+\section importData_Intro2 Introduction
+
+Chunkers, described in the previous section, can be used in Pelican in two main
+\ref user_structuralOverview "framework configurations", distinguished by
+whether data is received by a server communicating with one or more data clients
+or directly by a data client. These framework configurations are designed to
+make maximum use of the same underlying modules for handling the input data
+stream but can be configured differently to provide optimisation in different
+use cases.
+
+The following sections introduce each of these different framework modes and
+then describe the final step in the data acquisition, namely adapting
+or de-serialising chunks of data.
+
+For the purposes of the tutorial, please refer to the
+\ref user_conclusion "final section" of the
+\ref user_gettingStarted "getting started guide" for how to construct and
+configure simple binaries making use of the Pelican framework.
+
+
+
 \section importData_Server The Pelican Server
 
-\todo Introduce the server - what it is used for.
+The Pelican Server provides a framework for managing one or more data streams
+which are split, buffered and served on request. Data arrives in the server
+though chunkers and is put in a number of buffers which store it until
+a request is made by a data client attached to processing pipelines. The server
+handles requests for data by spawning a thread which will wait until it can
+satisfy the data requirements for at least one pipeline before proceeding to
+send data for processing. On sending data, locks are applied so that more than
+multiple requests can be handled concurrently, each being provided with unique
+data . In this way the server provides a scalable solution to split incoming
+data streams to a number of parallel processing pipelines.
 
-\subsection importData_ServerChunkers Specifying Chunkers
+\subsection importData_ServerChunkers Attaching chunkers to the server
 
-The Pelican Server requires you to specify one or more chunkers
-and associate these chunkers to one or more named data streams.
+The Pelican Server requires you to specify one or more chunkers and associate
+these chunkers to their named data streams.
 
-This is done via the PelicanServer::addStreamChunker() and
+This is done with the PelicanServer::addStreamChunker() method and
 PelicanServer::addServiceChunker() methods. As the names suggest, the former
 is used to associate chunkers with data streams that are to be treated as
 stream data, and the latter for data that is to be treated as service data.
@@ -25,63 +56,80 @@ A data-client is an implementation of the AbstractDataClient interface,
 which is the primary interface used by the processing pipeline for accessing
 data when it needs it.
 
-Pelican provides two different data-client implementations that you can
+Pelican provides three different data-client implementations that you can
 configure to your needs:
-\li The PelicanServerClient connects to a Pelican server and so only
-    requires an adapter (the chunker being in the server itself).
-\li The DirectStreamDataClient connects directly to the incoming
-data stream and so needs both an adapter and a chunker.
 
-These clients can be used directly by specifying adapters and chunkers in the XML
-configuration file. Alternatively you can inherit from these classes to set
-your adapters and chunkers as appropriate using the class API. This latter
-method is recommended as it allows you to provide an "official" data interface
-for your application with customised configuration options and sensible default
-settings, allowing ease of reuse by pipeline developers.
+- The PelicanServerClient connects to a Pelican server and so only
+  requires an adapter (the chunker being in the server itself).
+- The DirectStreamDataClient connects directly to the incoming data stream and
+  so needs both an adapter and a chunker.
+- The FileDataClient provides data directly from one or more files though an
+  adapter interface. This data client can be extremely useful for testing.
+
+These data clients, described in more detail in the
+\ref user_dataClients "reference documentation".
+
 
 \subsection specifyDataClient Specifying the Data Client
+
 The PelicanApplication needs to know which data client will be used
 for importing data. You specify the class by calling the
 PipelineApplication::setDataClient() method, supplying the name of the data
 client's class as a string.
 
-e.g. for the DirectDataClientExample below you would use
+e.g. for the DirectDataClientExample below you would use:
 \code
-PipelineApplication* app; // initialised application
-app->setDataClient("DirectDataClientExample");
+    PipelineApplication* app; // initialised application
+    app->setDataClient("DirectDataClientExample");
 \endcode
 
 
-\subsection dataClientAdapter Installing an Adapter into a DataClient
-\subsubsection dataClientAdapter_XML XML configuration to install an Adapter
-\subsubsection dataClientAdapter_API Using the API to install an Adapter
-
 \subsection dataClientChunkers Installing Chunkers into the DirectStreamDataClient
-\subsubsection connecting_dataClientDirect_XML XML configuration options to install a Chunker
-\subsubsection connecting_dataClientDirect_API Inheriting from the DirectStreamDataClient
-In the constructor of your DataClient call the \em addChunker()
-method to attach your chunker to the named stream.
 
-e.g.
+Chunkers are attached to the direct stream client by creating a derived
+class which inherits DirectStreamDataClient, and using the
+DirectStreamDataClient::addChunker to specify the data type, the chunker type,
+and chunker name as arguments.
+
+For example if we want to attach two chunkers of the same type to two
+differently named data streams:
+
 \include DirectDataClientExample.h
 \include DirectDataClientExample.cpp
 
-In this example demonstrates how to attach two chunkers of the
-same type to two differently named streams. The chunkers will be initialised
-with the relevant XML chunk that corresponds to the chunker and has
-the \em name parameter that corresponds to the final string passed to
-\em addChunker.  By passing parameters through this config, you can setup
-your chunker appropriately.
+The chunkers will be initialised with the relevant XML node derived from the
+chunker class name and name string specified as the second and third arguments
+of the \em addChunker method.
+
+Currently there is no way of attaching chunkers via the XML configuration however
+this is likely to be available in the next release.
+
+\subsection dataClientAdapter Installing an Adapter into a DataClient
+
+Adapters, described below, are attached to the data client via the XML
+configuration common to all data clients which describe the mapping of the
+various data types handled by the client and their associated adapters. This
+mapping is specified by a \em data tag with two attributes; a \em type attribute
+holding the name of the data chunk / stream to be adapted, and an \em adapter
+attribute giving the class name of the adapter to be attached. Construction and
+ataching adapters is then handled automatically by the Pelican framework
+(DataClientFactory).
+
+For example:
+
+\verbatim
+    <MyDataClient>
+        <data type="MyData" adapter="AdapterForMyData"/>
+        <data type="MyOtherData" adapter="AdapterForMyOtherData"/>
+    </MyDataClient>
+\endverbatim
+
+Currently there is no easy way to assign adapters programmatically although
+this feature is likely to be available in the next release.
 
 
 
-\todo Methods of using the direct stream and Pelican server client....
 
-\subsection importData_PelicanServerClient Pelican Server Client
-
-\subsection importData_DirectStreamClient Direct Stream Client
-
-\todo Data Client Example (tutorial) - using pelican server.
 
 
 
