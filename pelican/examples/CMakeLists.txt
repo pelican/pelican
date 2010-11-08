@@ -45,3 +45,7 @@ add_executable(signalEmulator
 target_link_libraries(signalEmulator
     examples ${SUBPACKAGE_LIBRARIES}
 )
+
+# Copy the XML configuration files needed for the tutorial.
+include(CopyFiles)
+copy_files(${CMAKE_CURRENT_SOURCE_DIR}/tutorial/data/*.xml . exampleXML)

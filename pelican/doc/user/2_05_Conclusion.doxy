@@ -10,13 +10,44 @@ to create applications that use the Pelican library.
 
 \include mainEmulator.cpp
 
+\subsection conclusion_pipelineRunning Running the Emulator
+
+The emulator can be started simply by running the <code> ./signalEmulator
+</code> binary.
+
 \section conclusion_server The Server Binary
 
 \include mainServer.cpp
 
+\subsection conclusion_serverXml Server XML
+
+\verbinclude serverConfig.xml
+
+\subsection conclusion_serverRunning Running the Server
+
+The server can be started with the following command, specifying the correct
+path to the server configuration file:
+
+\verbatim
+./signalServer --config=tutorial/data/serverConfig.xml
+\endverbatim
+
 \section conclusion_pipeline The Pipeline Binary
 
 \include mainPipeline.cpp
+
+\subsection conclusion_pipelineXml Pipeline XML
+
+\verbinclude pipelineConfig.xml
+
+\subsection conclusion_pipelineRunning Running the Pipeline
+
+The pipeline can be started with the following command, specifying the correct
+path to the pipeline configuration file:
+
+\verbatim
+./signalPipeline --config=tutorial/data/pipelineConfig.xml
+\endverbatim
 
 \latexonly
 \clearpage

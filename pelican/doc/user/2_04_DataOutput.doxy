@@ -115,15 +115,15 @@ The \c output section of our configuration file will look like this:
 \verbatim
 <output>
     <streamers>
-        <PelicanTCPBlobServer active="true" >
+        <PelicanTCPBlobServer active="true">
              <connection port="1234" />
-        <PelicanTCPBlobServer/>`
-        <OutputStreamerExample name="precsv" active="true">
+        </PelicanTCPBlobServer>
+        <OutputStreamExample name="precsv" active="true">
              <file name="pre.csv" />
-        </OutputStreamerExample>
-        <OutputStreamerExample name="postcsv" active="true">
+        </OutputStreamExample>
+        <OutputStreamExample name="postcsv" active="true">
              <file name="post.csv" />
-        </OutputStreamerExample>
+        </OutputStreamExample>
     </streamers>
     <dataStreams>
         <stream name="all" listeners="PelicanTCPBlobServer" />
