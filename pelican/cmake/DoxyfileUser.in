@@ -632,6 +632,7 @@ EXAMPLE_PATH           = "@CMAKE_CURRENT_SOURCE_DIR@/examples" \
                          "@CMAKE_CURRENT_SOURCE_DIR@/examples/reference" \
                          "@CMAKE_CURRENT_SOURCE_DIR@/examples/reference/src" \
                          "@CMAKE_CURRENT_SOURCE_DIR@/examples/tutorial" \
+                         "@CMAKE_CURRENT_SOURCE_DIR@/examples/tutorial/data" \
                          "@CMAKE_CURRENT_SOURCE_DIR@/examples/tutorial/src"
 
 # If the value of the EXAMPLE_PATH tag contains directories, you can use the
