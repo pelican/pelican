@@ -49,6 +49,18 @@ path to the pipeline configuration file:
 ./signalPipeline tutorial/data/pipelineConfig.xml
 \endverbatim
 
+\section conclusion_pipeline Data Output
+
+The following figure shows example output from the signal processing pipeline
+constructed for our tutorial. It was created by plotting the contents of the
+CSV files using gnuplot with this script:
+
+\verbinclude plotScript.gnu
+
+\image html images/pelican-output.png "Pelican Output"
+\image latex images/pelican-output.eps "Pelican Output" width=10cm
+
+
 \latexonly
 \clearpage
 \endlatexonly
