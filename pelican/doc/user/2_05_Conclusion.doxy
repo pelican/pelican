@@ -49,7 +49,7 @@ path to the pipeline configuration file:
 ./signalPipeline tutorial/data/pipelineConfig.xml
 \endverbatim
 
-\section conclusion_pipeline Data Output
+\section conclusion_pipelineDataOutput Data Output
 
 The following figure shows example output from the signal processing pipeline
 constructed for our tutorial. It was created by plotting the contents of the
