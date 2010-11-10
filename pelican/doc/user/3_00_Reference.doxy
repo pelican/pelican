@@ -12,7 +12,6 @@ components, how to use them and how to create new ones.
 - \subpage user_referenceModules
 - \subpage user_referencePipelines
 - \subpage user_referenceOutputStreamers
-- \subpage user_dataViewer
 - \subpage user_referenceConfiguration
 - \subpage user_referenceEmulators
 - \subpage user_referenceMain
