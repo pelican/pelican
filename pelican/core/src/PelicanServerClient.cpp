@@ -123,7 +123,7 @@ AbstractDataClient::DataBlobHash PelicanServerClient::_sendRequest(
     sock.flush();
 
     // Receive the response from the server and process it.
-    sock.waitForReadyRead();
+    sock.waitForReadyRead(-1); // Need to supply -1 so this doesn't time out.
     boost::shared_ptr<ServerResponse> r = _protocol->receive(sock);
     DataBlobHash validData;
     validData = _response(sock, r, dataHash);
