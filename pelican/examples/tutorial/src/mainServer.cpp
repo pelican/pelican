@@ -16,7 +16,10 @@ int main(int argc, char ** argv)
 
     // 2. Create a Pelican configuration object (this assumes that a Pelican
     // configuration XML file is supplied as the first command line argument)
-    if (argc != 2) std::cerr << "Please supply an XML config file" << std::endl;
+    if (argc != 2) {
+        std::cerr << "Please supply an XML config file." << std::endl;
+        return 0;
+    }
     QString configFile(argv[1]);
     Config config(configFile);
 
@@ -44,5 +47,6 @@ int main(int argc, char ** argv)
     catch (const QString& err)
     {
         std::cerr << "Error: " << err.toStdString() << std::endl;
+        return 1;
     }
 }
