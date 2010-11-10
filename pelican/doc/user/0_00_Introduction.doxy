@@ -32,13 +32,11 @@ Pelican in more detail, and how they can be used.
 
 \section intro_framework The Pelican Framework
 
-\todo Reword to work with next page (framework)...
-
 The Pelican framework provides a system to split one or more incoming data
 streams into well defined chunks. These chunks are then passed on to any number
 of parallel computational pipelines for processing. As a chunk is passed to a
 pipeline only when it is available to process the data, an efficient load
-balancing is achieved.
+balancing can be achieved.
 
 Pelican also provides facilities to export and view data streams as processing
 completes. For example, processed data from a series of pipelines could be
