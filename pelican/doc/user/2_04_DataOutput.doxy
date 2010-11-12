@@ -149,12 +149,14 @@ to the listed listeners.
 
 By piping the streams to the PelicanTCPBlobServer, we have the ability to
 connect from elsewhere to read any of the data streams we are interested in.
-Pelican provides a client to attach to this server that can subscribe to any
-number of streams, reconstructing the DataBlob objects as they are passed over
-the TCP stream.
+Pelican provides a client (the DataBlobClient object) to connect to this server
+and subscribe to any number of streams, reconstructing the DataBlob
+objects as they are passed over the TCP stream. Use of the DataBlobClient is
+outside the scope of this tutorial, but it is described in the Pelican API
+reference.
 
-\todo Finish this section please! (Reading from the PelicanTCPBlobServer)
-Need to describe how to use the data blob client.
+The final section of the tutorial shows how all the components are linked
+together to build a working Pelican system.
 
 \latexonly
 \clearpage

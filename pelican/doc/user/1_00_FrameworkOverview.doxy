@@ -7,11 +7,11 @@
 The Pelican framework is designed to allow the flexible deployment of hardware
 resources to cope with the data rates and data processing requirements of an
 incoming data stream. Pelican maintains three distinct layers with well defined
-interfaces between them, namely: data aquisition, data processing, and
+interfaces between them, namely data acquisition, data processing, and
 data output.
 
-Within these layers the various functional elements, e.g. chunking of the data,
-are modularised, to allow easy reuse and redeployment.
+Within these layers the various functional elements (e.g. chunking of the data)
+are modularised, to allow easy reuse and re-deployment.
 
 The diagram below provides an overview of the various components which make up
 the Pelican framework, and the two deployment options for Pelican applications.
@@ -30,7 +30,7 @@ where pipelines connect directly to data streams using a direct data client.
 
 \subsection user_structuralOverview_modules The Modules Required for a Pelican Application
 
-All of the following functional units must be present in a pelican application:
+All of the following functional units must be present in a Pelican application:
 
 - <b>\ref user_referenceChunkers "Chunkers":</b> Describe how the input streams
      should be split.
@@ -40,22 +40,22 @@ All of the following functional units must be present in a pelican application:
     used for data processing.
 - <b>\ref user_referenceModules "Processing Modules":</b> Define the computational
     units to be carried out.
-- <b>\ref user_referencePipelines "Pipelines":</b> Describe the type and order or
+- <b>\ref user_referencePipelines "Pipelines":</b> Describe the type and order of
     processing modules.
 - <b>\ref user_referenceOutputStreamers "Output Streamers":</b> Define what to do
     with data products from pipeline processing.
 
-Each one has a base class from which to inherit and is the mechanism by which you extend pelican to your needs.
+Each one has a base class from which to inherit, and is the mechanism by which you extend Pelican to your needs.
 More details can be found in the \link user_gettingStarted Getting Started Guide\endlink.
 
 
 
 \section user_frameworkOverview Framework Modes
 
-- <b>Server mode</b>: Where a Pelican server binary receives the input data streams
+- <b>Server mode</b>: A Pelican server binary receives the input data streams,
     and pipeline binaries receive their data from the server by means of a
     request.
-- <b>Direct input mode</b>: Where pipeline binaries receive data streams directly.
+- <b>Direct input mode</b>: Pipeline binaries receive data streams directly.
 
 \latexonly
 \clearpage
