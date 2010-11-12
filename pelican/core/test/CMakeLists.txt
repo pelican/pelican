@@ -1,6 +1,6 @@
 # Build Pelican core testing library module.
 # ==============================================================================
-SUBPACKAGE(coreTest core data utility serverTest emulator dataTest)
+SUBPACKAGE(coreTest core data utility serverTest emulator dataTest utilityTest)
 set(coreTestLibrary_src
     src/TestPipeline.cpp
     src/TestDataClient.cpp

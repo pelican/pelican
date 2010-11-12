@@ -1,6 +1,6 @@
 # Build Pelican comms tests.
 # ==============================================================================
-SUBPACKAGE(commsTest comms dataTest)
+SUBPACKAGE(commsTest comms dataTest utilityTest)
 set(commsTest_src
     src/commsTest.cpp
     src/DataChunkTest.cpp

@@ -27,7 +27,9 @@ add_executable(signalPipeline
     tutorial/src/mainPipeline.cpp
 )
 target_link_libraries(signalPipeline
-    examples ${SUBPACKAGE_LIBRARIES}
+    ${SUBPACKAGE_LIBRARIES}
+    examples
+    memoryTracer
 )
 
 # Create the server binary.
@@ -35,7 +37,9 @@ add_executable(signalServer
     tutorial/src/mainServer.cpp
 )
 target_link_libraries(signalServer
-    examples ${SUBPACKAGE_LIBRARIES}
+    ${SUBPACKAGE_LIBRARIES}
+    examples
+    memoryTracer
 )
 
 # Create the emulator binary.
@@ -43,7 +47,9 @@ add_executable(signalEmulator
     tutorial/src/mainEmulator.cpp
 )
 target_link_libraries(signalEmulator
-    examples ${SUBPACKAGE_LIBRARIES}
+    ${SUBPACKAGE_LIBRARIES}
+    examples
+    memoryTracer
 )
 
 # Copy the XML configuration files needed for the tutorial.
