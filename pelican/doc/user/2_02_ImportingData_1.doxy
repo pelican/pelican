@@ -171,7 +171,7 @@ automatically supplied to the constructor from the application's
 extract the relevant configuration settings using methods on the supplied
 ConfigNode object. The ConfigNode::getOption method returns a QString
 containing the text in the required tag name and attribute function arguments.
-To llustrate what is needed here, the chunker expects an XML snippet like this:
+To illustrate what is needed here, the chunker expects an XML snippet like this:
 
 \verbatim
 <SignalChunker>

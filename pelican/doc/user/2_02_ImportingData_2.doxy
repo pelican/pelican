@@ -221,7 +221,11 @@ is needed here, the adapter expects an XML snippet like this:
 
 The contents of the string containing the number of samples per packet are
 converted to an integer value using the QString::toInt() method, and
-stored in a private class variable for later use.
+stored in a private class variable for later use. Note that we did not strictly
+need to supply the number of samples per packet in this example, since the
+relevant information is contained in the header section of the UDP packet data;
+however, this serves to illustrate the steps that may be required to configure
+a more complicated adapter.
 
 The AbstractAdapter is aware of the data blob that must be filled, so in our
 SignalDataAdapter::deserialise() routine, we must obtain a pointer to this
