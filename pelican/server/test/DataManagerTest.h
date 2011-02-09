@@ -1,21 +1,23 @@
 #ifndef DATAMANAGERTEST_H
 #define DATAMANAGERTEST_H
 
-#include <cppunit/extensions/HelperMacros.h>
-
 /**
  * @file DataManagerTest.h
  */
 
+#include <cppunit/extensions/HelperMacros.h>
+
 namespace pelican {
 
 /**
+ * @ingroup t_server
+ *
  * @class DataManagerTest
- *  
+ *
  * @brief
- *   Unit test for the DataManager class
+ * Unit test for the DataManager class
+ *
  * @details
- * 
  */
 
 class DataManagerTest : public CppUnit::TestFixture
@@ -40,4 +42,4 @@ class DataManagerTest : public CppUnit::TestFixture
 };
 
 } // namespace pelican
-#endif // DATAMANAGERTEST_H 
+#endif // DATAMANAGERTEST_H

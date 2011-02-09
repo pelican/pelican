@@ -7,6 +7,7 @@
 #include "pelican/utility/memCheck.h"
 
 namespace pelican {
+namespace test {
 
 
 // class PelicanTestClient
@@ -95,4 +96,5 @@ QString PelicanTestClient::processStreamData() const
     return QString("");
 }
 
+} // namespace test
 } // namespace pelican

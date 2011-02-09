@@ -17,7 +17,11 @@ class LockedData;
 class ChunkerManager;
 class Config;
 
+namespace test {
+
 /**
+ * @ingroup t_server
+ *
  * @class ChunkerTester
  *
  * @brief
@@ -53,5 +57,6 @@ class ChunkerTester
         Config           _config;
 };
 
+} // namespace test
 } // namespace pelican
 #endif // CHUNKERTESTER_H

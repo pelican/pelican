@@ -3,14 +3,11 @@
 #include "pelican/server/DataManager.h"
 #include "pelican/server/AbstractChunker.h"
 
-// NOTE: Include default chunkers here to ensure they are available in the
-// factory.
-#include "pelican/server/FileChunker.h"
-
 #include <QtCore/QVector>
-#include <QtCore/QDebug>
-
 #include <boost/shared_ptr.hpp>
+
+// Include default chunkers here to ensure they are available in the factory.
+#include "pelican/server/FileChunker.h"
 
 #include <iostream>
 using std::cout;
@@ -27,6 +24,7 @@ namespace pelican {
  */
 ChunkerManager::ChunkerManager(const Config* config, const QString& section)
 {
+    // Create the chunker factory.
     _factory = new FactoryConfig<AbstractChunker>(config, section, "chunkers");
 }
 
@@ -35,8 +33,10 @@ ChunkerManager::ChunkerManager(const Config* config, const QString& section)
  * @details
  * Constructs the ChunkerManager, creating the chucker factory.
  */
-ChunkerManager::ChunkerManager(const Config* config,  const Config::TreeAddress& base )
+ChunkerManager::ChunkerManager(const Config* config,
+        const Config::TreeAddress& base)
 {
+    // Create the chunker factory.
     Config::TreeAddress chunkerBase = base;
     chunkerBase << Config::NodeId("chunkers","");
 
@@ -76,23 +76,31 @@ bool ChunkerManager::init(DataManager& dataManager)
         dataManager.getServiceBuffer(type);
     }
 
+    //QList<QPair<QString,quint16> > inputPorts = _chunkerPortMap.keys();
+
+    // Set up data-stream inputs.
+    //for (int i = 0; i < inputPorts.size(); ++i) {
+    //    AbstractChunker* chunker = _chunkerPortMap[inputPorts[i]];
+    //    chunker->setDataManager(&dataManager);
+    //    DataReceiver* receiver = new DataReceiver(chunker);
+    //    _dataReceivers.append(receiver);
+    //    receiver->start();
+    //}
     try {
-        foreach (AbstractChunker* chunker, _chunkers) {
+        foreach (AbstractChunker* chunker, _chunkers ) {
             chunker->setDataManager(&dataManager);
             DataReceiver* receiver = new DataReceiver(chunker);
             _dataReceivers.append(receiver);
             receiver->start();
         }
     }
-    catch (const QString& msg)
+    catch( const QString& msg )
     {
         cerr << "Error Initiating Chunkers: " << msg.toStdString() << endl;
         return false;
     }
-
     return true;
 }
-
 
 bool ChunkerManager::isRunning() const
 {
@@ -105,7 +113,6 @@ bool ChunkerManager::isRunning() const
     }
     return rv;
 }
-
 
 /**
  * @details

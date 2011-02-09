@@ -1,0 +1,25 @@
+/**
+
+\page user_reference Pelican Reference
+
+This section provides a detailed reference guide for specific Pelican
+components, how to use them and how to create new ones.
+
+- \subpage user_referenceChunkers
+- \subpage user_dataClients
+- \subpage user_referenceAdapters
+- \subpage user_referenceDataBlobs
+- \subpage user_referenceModules
+- \subpage user_referencePipelines
+- \subpage user_referenceOutputStreamers
+- \subpage user_referenceConfiguration
+- \subpage user_referenceEmulators
+- \subpage user_referenceMain
+- \subpage user_referenceBuildingPelican
+- \subpage user_testing
+
+\latexonly
+\clearpage
+\endlatexonly
+
+*/

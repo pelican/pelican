@@ -1,40 +1,45 @@
 #ifndef DATAVIEWER_H
 #define DATAVIEWER_H
 
+/**
+ * @file DataViewer.h
+ */
+
+#include "pelican/utility/Config.h"
+
 #include <QtGui/QWidget>
 #include <QtCore/QMap>
 #include <QtCore/QString>
 #include <QtCore/QSet>
-#include "pelican/utility/Config.h"
 
 class QActionGroup;
 class QTabWidget;
 class QMenu;
 
-/**
- * @file DataViewer.h
- */
-
 namespace pelican {
-    class AbstractDataBlobClient;
-    class DataBlob;
-    class DataBlobWidget;
-    class DataBlobWidgetFactory;
-    class Stream;
+class AbstractDataBlobClient;
+class DataBlob;
+class DataBlobWidget;
+class DataBlobWidgetFactory;
+class Stream;
 
 /**
+ * @ingroup c_viewer
+ *
  * @class DataViewer
  *
  * @brief
- *     Widget for Viewing Data Streams
+ * Widget for Viewing Data Streams
+ *
  * @details
- *     This widget provides a GUI to connect to and listen to incomming data streams
- *     Generally, you should create a suitable Widget for viewing a specific DataBlob 
- *     type. Use the setStreamViewer() method to associate this type with an incoming stream.
+ * This widget provides a GUI to connect to and listen to incomming data streams
+ * Generally, you should create a suitable Widget for viewing a specific DataBlob
+ * type. Use the setStreamViewer() method to associate this type with an incoming stream.
  *
- *     Configuration e.g.
- *
- *     <connection host="myTCPBlobServer" port="1234" />
+ * \par Configuration example:
+ * \code
+ * <connection host="myTCPBlobServer" port="1234" />
+ * \endcode
  */
 
 class DataViewer : public QWidget
@@ -56,7 +61,7 @@ class DataViewer : public QWidget
         //  connect to a stream after calling this
         //  to mark it for connection
         void enableStream( const QString& );
- 
+
         /// disable tracking of the specified stream
         //  n.b. call connectStreams() to actually
         //  disconnect from a stream after calling this

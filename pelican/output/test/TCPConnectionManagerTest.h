@@ -1,26 +1,28 @@
 #ifndef TCPCONNECTIONMANAGERTEST_H
 #define TCPCONNECTIONMANAGERTEST_H
 
-#include <cppunit/extensions/HelperMacros.h>
-class QTcpSocket;
-class QCoreApplication;
-
 /**
  * @file TCPConnectionManagerTest.h
  */
 
+#include <cppunit/extensions/HelperMacros.h>
+class QTcpSocket;
+class QCoreApplication;
+
 namespace pelican {
-    class ServerRequest;
-    class TCPConnectionManager;
-    class PelicanClientProtocol;
+class ServerRequest;
+class TCPConnectionManager;
+class PelicanClientProtocol;
 
 /**
+ * @ingroup t_output
+ *
  * @class TCPConnectionManagerTest
- *  
+ *
  * @brief
- *    Unit test for the TCPConnectionManager
+ * Unit test for the TCPConnectionManager
+ *
  * @details
- * 
  */
 
 class TCPConnectionManagerTest : public CppUnit::TestFixture
@@ -56,4 +58,4 @@ class TCPConnectionManagerTest : public CppUnit::TestFixture
 };
 
 } // namespace pelican
-#endif // TCPCONNECTIONMANAGERTEST_H 
+#endif // TCPCONNECTIONMANAGERTEST_H

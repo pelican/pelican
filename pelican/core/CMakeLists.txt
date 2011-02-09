@@ -1,4 +1,4 @@
-SUBPACKAGE(core modules server output comms data)
+SUBPACKAGE(core server output comms data)
 
 set(core_src
     src/AbstractDataClient.cpp

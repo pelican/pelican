@@ -1,0 +1,61 @@
+namespace pelican {
+
+/**
+\page user_referenceBuildingPelican Building the Pelican library
+
+Pelican uses a CMake (<a href="http://www.cmake.org" target="_blank">
+www.cmake.org</a>) build system and requires CMake 2.4 or higher.
+
+In order to build the Pelican library (example commands are given for Linux
+systems):
+
+<ol>
+    <li> Create a folder for the build. \code mkdir build \endcode
+    <li> Move into the build folder. \code cd build \endcode
+    <li> Run CMake and point at the top level CMakeLists.txt file.
+         \code cmake ../path/to/CMakeLists.txt [BUILD OPTIONS (see below)] \endcode
+    <li> Run make to build the code. \code make \endcode
+    <li> [optional] Install Pelican (may need root permission depending on
+        the specified install location). \code make install \endcode
+</ol>
+
+In order to check if the Pelican build was successful run <tt> Make test </tt>
+from the top level build directory to launch the set of unit tests.
+
+\section user_referenceBuildingPelican_options Build Options
+
+When running cmake to construct the makefiles there are a number of build
+options that can be selected.
+
+
+- <b> \c -DCMAKE_BUILD_TYPE =</b> release or debug(default)<br>
+    Build in release or debug mode (changes compiler flags).
+
+- <b> \c -DCMAKE_INSTALL_PREFIX =</b> path<br>
+    Root directory used to install files when <tt>make install</tt>.
+
+- <b> \c -DLIBRARY_INSTALL_DIR =</b> path (default=lib)<br>
+    Library install location appended to the install prefix.
+
+- <b> \c -DINCLUDE_INSTALL_DIR =</b> path (default include/pelican)<br>
+    Header file install location appended to the install prefix.
+
+- <b> \c -DCMAKE_CXX_COMPILER =</b> complier (default: c++)<br>
+    Sets the C++ compiler.
+
+- <b> \c -DCMAKE_C_COMPILER =</b> compiler (default: gcc)<br>
+    Sets the C compiler.
+
+- <b> \c -DTIMER =</b> true or false(default)<br>
+    Enable additional debug timer.
+
+- <b> \c -DBUILD_STATIC =</b> off(default) or on<br>
+    Build static versions of libraries.
+
+\latexonly
+\clearpage
+\endlatexonly
+
+*/
+
+}

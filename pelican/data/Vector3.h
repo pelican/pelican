@@ -8,6 +8,8 @@
 namespace pelican {
 
 /**
+ * @ingroup c_data
+ *
  * @class Vector3
  *
  * @brief

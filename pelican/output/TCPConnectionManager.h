@@ -1,6 +1,10 @@
 #ifndef TCPCONNECTIONMANAGER_H
 #define TCPCONNECTIONMANAGER_H
 
+/**
+ * @file TCPConnectionManager.h
+ */
+
 #include <QtNetwork/QTcpServer>
 #include <QtCore/QObject>
 #include <QtCore/QString>
@@ -11,16 +15,14 @@
 
 #include "pelican/utility/ConfigNode.h"
 
-/**
- * @file TCPConnectionManager.h
- */
-
 namespace pelican {
 
-    class AbstractProtocol;
-    class DataBlob;
+class AbstractProtocol;
+class DataBlob;
 
 /**
+ * @ingroup c_output
+ *
  * @class TCPConnectionManager
  *
  * @brief
@@ -39,9 +41,9 @@ class TCPConnectionManager : public QObject
         qint16 serverPort() const;
         int clientsForStream(const QString&) const;
         // stop listening for new connections, but preserve state
-        void stop(); 
+        void stop();
         // start listening for new connections, after a stop()
-        void listen(); 
+        void listen();
 
     protected:
         virtual void run();

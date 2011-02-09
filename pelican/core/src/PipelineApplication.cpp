@@ -1,5 +1,5 @@
-#include <QCoreApplication>
-#include <QString>
+#include <QtCore/QCoreApplication>
+#include <QtCore/QString>
 #include "pelican/modules/AbstractModule.h"
 #include "pelican/core/PipelineApplication.h"
 #include "pelican/core/PipelineDriver.h"
@@ -185,9 +185,15 @@ void PipelineApplication::_createConfig(int argc, char** argv)
         ("config,c", opts::value<std::string>(), "Set configuration file.")
     ;
 
+    // A string without a selection flag in the first argument position is
+    // assumed to be a config file.
+    opts::positional_options_description p;
+    p.add("config", -1);
+
     // Parse the command line arguments.
     opts::variables_map varMap;
-    opts::store(opts::parse_command_line(argc, argv, desc), varMap);
+    opts::store(opts::command_line_parser(argc, argv).options(desc)
+            .positional(p).run(), varMap);
     opts::notify(varMap);
 
     // Check for help message.

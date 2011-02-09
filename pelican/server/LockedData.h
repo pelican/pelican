@@ -11,8 +11,10 @@
 namespace pelican {
 
 /**
+ * @ingroup c_server
+ *
  * @class LockedData
- *  
+ *
  * @brief
  * A container that automatically locks and unlocks any
  * AbstractLockable object added to it.
@@ -51,4 +53,4 @@ class LockedData
 
 } // namespace pelican
 
-#endif // LOCKEDDATA_H 
+#endif // LOCKEDDATA_H

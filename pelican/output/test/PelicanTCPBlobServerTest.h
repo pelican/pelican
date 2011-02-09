@@ -1,23 +1,25 @@
-#ifndef LOFARCHUNKERTEST_H
-#define LOFARCHUNKERTEST_H
-
-#include <cppunit/extensions/HelperMacros.h>
-#include "pelican/utility/Config.h"
-class QCoreApplication;
+#ifndef PELICAN_TCP_BLOB_SERVER_TEST_H_
+#define PELICAN_TCP_BLOB_SERVER_TEST_H_
 
 /**
  * @file PelicanTCPBlobServerTest.h
  */
 
+#include <cppunit/extensions/HelperMacros.h>
+#include "pelican/utility/Config.h"
+class QCoreApplication;
+
 namespace pelican {
 
 /**
+ * @ingroup t_output
+ *
  * @class PelicanTCPBlobServerTest
  *
  * @brief
- *   Unit test for the PelicanTCPBlobServer class
- * @details
+ * Unit test for the PelicanTCPBlobServer class
  *
+ * @details
  */
 
 class PelicanTCPBlobServerTest : public CppUnit::TestFixture
@@ -45,4 +47,4 @@ class PelicanTCPBlobServerTest : public CppUnit::TestFixture
 };
 
 } // namespace pelican
-#endif 
+#endif // PELICAN_TCP_BLOB_SERVER_TEST_H_

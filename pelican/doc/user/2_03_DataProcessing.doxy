@@ -1,0 +1,189 @@
+namespace pelican {
+
+/**
+\page user_dataProcessing Processing Data: Pipelines and Modules
+
+\section user_dataProcessing_introduction Introduction
+
+The following sections of the reference documentation are relevant
+for processing data using Pelican:
+
+\li \link user_referencePipelines Pipeline reference\endlink
+\li \link user_referenceModules Module reference\endlink
+\li \link user_referenceDataBlobs Data Blob reference\endlink
+\li \link user_referenceMain Writing main()\endlink
+
+\section user_dataProcessing_overview Overview
+
+This section will explain how to build a data processing pipeline and
+compile it into a working binary that can be launched on a data stream.
+
+We continue the example started in the previous section. Having acquired the
+signal data from the network, transforming it from UDP packets using the
+SignalChunker and converting it into a SignalData data-blob using the
+SignalDataAdapter, we are ready to do some real work with the data.
+
+First, we describe the details of the required pipeline module.
+
+\section user_dataProcessing_module Pipeline Modules
+
+Modules are the components of the Pelican framework that perform intensive
+computational operations on the data flowing through them. Normally, several
+modules would be run in serial to build up a processing pipeline. A module may
+contain anything: it can be as simple or as complex as needed to perform the
+task required of it, and use (for example) multiple threads, OpenMP, CUDA or
+OpenCL (if available) to help improve performance.
+
+Data blobs (Pelican data structures) are used to pass data between pipeline
+modules. Depending on requirements, new types of data blob may need to be
+implemented to work with a new module.
+
+Pipeline modules can be configured using parameters specified in the XML
+configuration file. To create a new module, inherit the AbstractModule class
+interface.
+
+\subsection user_dataProcessing_tutorialModule Tutorial Module
+
+Since this is not a tutorial on signal processing, we will construct a Pelican
+pipeline and a pipeline module to do a trivially simple operation on the
+signal data. A real-world module might do something useful like produce a
+spectrum from the time-series data; however, we will simply amplify the signal
+by multiplying all the sample values in the data-blob by a constant
+(but configurable) factor. The amplified data will be output from the module
+using another SignalData data-blob created in the pipeline itself.
+
+The code below shows the details of the SignalAmplifier pipeline module, which
+is a type of AbstractModule.
+Here's the C++ header %file:
+
+\include SignalAmplifier.h
+
+The module must be declared so that the Pelican framework knows of its
+existence: use the PELICAN_DECLARE_MODULE preprocessor macro in the header
+file to do this, supplying the class name as the macro argument.
+Do not use quotes around the name.
+
+Apart from the constructor, there are no abstract methods that must be
+implemented on the module; however, by convention, a run() method is defined
+and called by the pipeline when the module must process a chunk of data, and
+pointers to the data blobs to use for input and output are provided as
+function arguments.
+
+Here's the class implementation in the C++ source %file:
+
+\include SignalAmplifier.cpp
+
+Note that a reference to the XML configuration node for the module will be
+automatically supplied to the module's constructor: we then simply need to
+extract the relevant configuration settings using methods on the supplied
+ConfigNode object. The ConfigNode::getOption method returns a QString
+containing the text in the supplied tagname and attribute. To illustrate what
+is needed here, the module expects an XML snippet like this:
+
+\verbatim
+<SignalAmplifier>
+    <gain value="2.5"/>
+</SignalAmplifier>
+\endverbatim
+
+The contents of the string are then converted to a floating point value using
+the QString::toDouble() method. This initialisation step only happens once, at
+program launch, so there is no cost penalty involved here. The value of the
+gain attribute is stored in a private class variable for later use when the
+module is run.
+
+The SignalAmplifier::run() method will be called by the pipeline whenever
+there is data to process. It is called with pointers to the input and output
+data blobs as function arguments, and first checks that the output data blob
+has sufficient capacity to hold the amplified signal: if not, then it is
+resized.
+
+Pointers to the input and output memory blocks are obtained, and the for-loop
+iterates over the time samples in the signal, multiplying the input values by
+the configured gain.
+
+This completes our description of the SignalAmplifier module.
+
+\section user_dataProcessing_pipeline The Pipeline
+
+Pelican pipelines act as containers for the data processing framework.
+A pipeline is simply a C++ class that defines the operations performed on a
+single chunk of stream data, and is run repeatedly by the Pelican framework
+whenever there is a new chunk of data available to be processed. The data
+processing itself actually happens within
+\ref user_dataProcessing_module "pipeline modules".
+
+Pipelines work by pulling data to process whenever they become available.
+Since a chunk is passed to a pipeline only when it can process the data,
+multiple concurrent pipelines that use the Pelican server will be load-balanced
+automatically, even if they run on different types of hardware.
+
+Since it acts only as a container, a pipeline cannot be configured at run-time
+using the XML configuration file. Instead, pipelines must be written and
+compiled as C++ objects, which are defined by inheriting the AbstractPipeline
+class interface. Pipelines initialise themselves by creating the modules and
+data blobs that they require, and by requesting the input data types from the
+data client. A pipeline defines the order in which its modules are run, and is
+responsible for supplying them with the correct data. If necessary, the
+pipeline must also specify the data to send to the
+\ref user_dataOutput "output streamer".
+
+\subsection user_dataProcessing_tutorialPipeline Tutorial Pipeline
+
+We now describe the SignalProcessingPipeline that is used to contain the
+SignalAmplifier pipeline module. Typically, pipelines will contain multiple
+modules, but in this example, we use only one. Pipelines must inherit the
+AbstractPipeline Pelican class, which defines the interface required.
+Here's the C++ header %file:
+
+\include SignalProcessingPipeline.h
+
+Note that pipelines cannot be configured using XML parameters -- that
+functionality can only be in pipeline modules.
+
+There are two abstract methods that must be implemented here:
+SignalProcessingPipeline::init() is called by the Pelican framework on
+initialisation to set up the pipeline, and SignalProcessingPipeline::run() is
+called whenever there is data to be processed.
+
+Here's the class implementation in the C++ source %file:
+
+\include SignalProcessingPipeline.cpp
+
+The SignalProcessingPipeline::init() method must do three things:
+<ul>
+  <li> Create the required pipeline modules by calling the inherited
+AbstractPipeline::createModule() method, supplying the class name of the
+module as a string.
+  </li>
+  <li> Create any required data blobs that are local to the pipeline (e.g. for
+output data) by calling the inherited AbstractPipeline::createBlob() method,
+supplying the class name of the data blob as a string.
+  </li>
+  <li> Request the input data to be supplied to the pipeline by calling the
+inherited AbstractPipeline::requestRemoteData() method as many times as
+necessary, supplying the data-blob class name(s) as a string.
+  </li>
+</ul>
+
+Finally, the SignalProcessingPipeline::run() method defines the order in which
+modules are run by the pipeline. The function is passed a hash containing
+pointers to the requested data-blobs, and these pointers should be extracted by
+looking them up by name in the hash using the square-bracket [] dereference
+operator.
+
+Pointers to the pipeline modules are stored as class variables, so the modules
+can be launched and be passed pointers to the appropriate data blobs for
+processing.
+
+Data products can be output from the pipeline at any stage by calling the
+AbstractPipeline::dataOutput() method, and this is described more in the next
+section.
+
+\latexonly
+\clearpage
+\endlatexonly
+
+*/
+
+}

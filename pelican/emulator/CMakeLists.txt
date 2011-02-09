@@ -2,7 +2,6 @@ SUBPACKAGE(emulator utility)
 
 set(emulator_src
     src/AbstractUdpEmulator.cpp
-    src/RealUdpEmulator.cpp
     src/EmulatorDriver.cpp
 )
 
@@ -23,6 +22,6 @@ SUBPACKAGE_SET_EXTERNAL_LIBRARIES(
     ${QT_QTNETWORK_LIBRARY}
 )
 
-# Recurse into test subdirectory. 
+# Recurse into test subdirectory.
 add_subdirectory(test)
 

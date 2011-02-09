@@ -1,24 +1,26 @@
 #ifndef FILECHUNKERTEST_H
 #define FILECHUNKERTEST_H
 
-#include <cppunit/extensions/HelperMacros.h>
-#include <QString>
-class QCoreApplication;
-class QTemporaryFile;
-
 /**
  * @file FileChunkerTest.h
  */
 
+#include <cppunit/extensions/HelperMacros.h>
+#include <QtCore/QString>
+class QCoreApplication;
+class QTemporaryFile;
+
 namespace pelican {
 
 /**
+ * @ingroup t_server
+ *
  * @class FileChunkerTest
- * 
+ *
  * @brief
  *    unit test for the fileChunker
  * @details
- * 
+ *
  */
 class FileChunkerTest : public CppUnit::TestFixture
 {
@@ -51,9 +53,9 @@ class FileChunkerTest : public CppUnit::TestFixture
         QTemporaryFile* _temp;
         QString _testFile;
         QString _msg;
-        
+
 };
 
 } // namespace pelican
 
-#endif // FILECHUNKERTEST_H 
+#endif // FILECHUNKERTEST_H

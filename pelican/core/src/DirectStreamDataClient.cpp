@@ -24,7 +24,7 @@ class ConfigNode;
  */
 DirectStreamDataClient::DirectStreamDataClient(const ConfigNode& configNode,
         const DataTypes& types, const Config* config)
-    : AbstractDataClient(configNode, types, config)
+: AbstractDataClient(configNode, types, config)
 {
     // Initialise members.
     _started = false;
@@ -104,7 +104,8 @@ void DirectStreamDataClient::addStreamChunker(const QString& chunkerType,
  * Gets the data from the data stream(s), chunks it into the buffer and
  * adapts it into data blobs ready for use by the pipeline.
  */
-QHash<QString, DataBlob*> DirectStreamDataClient::getData(QHash<QString, DataBlob*>& dataHash)
+AbstractDataClient::DataBlobHash DirectStreamDataClient::getData(
+        DataBlobHash& dataHash)
 {
     // Initialise and perform sanity checks.
     if (!_started) {
@@ -113,7 +114,7 @@ QHash<QString, DataBlob*> DirectStreamDataClient::getData(QHash<QString, DataBlo
     }
 
     // Keep polling the data manager until we can match a suitable request.
-    QHash<QString, DataBlob*> validData;
+    DataBlobHash validData;
     QList<LockedData> dataList; // Will contain the list of valid StreamDataObjects
     while (dataList.size() == 0) {
         // Must cycle the event loop for unlocked signals to be processed.
@@ -129,22 +130,22 @@ QHash<QString, DataBlob*> DirectStreamDataClient::getData(QHash<QString, DataBlo
         LockableStreamData* lockedData = static_cast<LockableStreamData*>(dataList[i].object());
         StreamData* sd = lockedData->streamData();
         Q_ASSERT(sd != 0);
-        // check for associate data
-        foreach (const boost::shared_ptr<Data>& d, sd->associateData()) {
+        // Check for associate data
+        foreach (const boost::shared_ptr<DataChunk>& d, sd->associateData()) {
             if (dataHash[d->name()]->version() == d->id())
             {
-                // data not changed
+                // Data not changed
                 validData[d->name()] = dataHash[ d->name()];
             }
             else {
-                // send the associate data through the adapter
+                // Send the associate data through the adapter
                 QByteArray tmp = QByteArray::fromRawData((char*)d->ptr(), d->size());
                 QBuffer device(&tmp);
                 device.open(QIODevice::ReadOnly);
                 validData.unite(adaptService( device, d.get(), dataHash ));
             }
         }
-        // send the data for adaption
+        // Send the data for adaption
         QByteArray tmp = QByteArray::fromRawData((char*)sd->ptr(), sd->size());
         QBuffer device(&tmp);
         device.open(QIODevice::ReadOnly);

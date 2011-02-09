@@ -1,7 +1,7 @@
 #ifndef THREADEDDATABLOBCLIENT_H
 #define THREADEDDATABLOBCLIENT_H
 
-#include <QThread>
+#include <QtCore/QThread>
 #include "AbstractDataBlobClient.h"
 #include "pelican/utility/ConfigNode.h"
 
@@ -13,12 +13,14 @@ namespace pelican {
     class ThreadedClientImpl;
 
 /**
+ * @ingroup c_output
+ *
  * @class ThreadedDataBlobClient
- * 
+ *
  * @brief
  *    A DataBlobClient that operates in its own thread
  * @details
- * 
+ *
  */
 class ThreadedDataBlobClient : public AbstractDataBlobClient
 {
@@ -52,4 +54,4 @@ class ThreadedDataBlobClient : public AbstractDataBlobClient
 
 } // namespace pelican
 
-#endif // THREADEDDATABLOBCLIENT_H 
+#endif // THREADEDDATABLOBCLIENT_H

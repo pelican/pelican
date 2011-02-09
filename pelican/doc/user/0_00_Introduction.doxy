@@ -1,0 +1,84 @@
+/**
+
+\anchor UserDoc
+\mainpage Introduction
+
+
+\section intro_overview Overview
+
+Pelican is an efficient, lightweight C++ library for quasi-real time data
+processing. The library provides a framework to separate the acquisition
+and processing of data, allowing the scalability and flexibility to fit a
+number of scenarios.
+
+With its origin in radio astronomy, processing data as it arrives from a
+telescope, Pelican was originally an acronym for the <em>Pipeline for
+Extensible, Lightweight Imaging and CAlibratioN</em>. However, the framework
+is sufficiently generic to be useful to any application that requires the
+efficient processing of incoming data streams.
+
+\subsection intro_overviewGuide Structure of this Guide
+
+This user guide is divided into three main sections:
+- \ref user_structuralOverview "A brief introduction" the Pelican library framework.
+- \ref user_gettingStarted "A getting started guide" explaining the various
+concepts used in Pelican, as well as providing a tutorial walkthrough of a
+basic application use case.
+- \ref user_reference "Reference" documentation describing the components of
+Pelican in more detail, and how they can be used.
+
+\htmlonly <br><hr><br> \endhtmlonly
+
+
+\section intro_framework The Pelican Framework
+
+The Pelican framework provides a system to split one or more incoming data
+streams into well defined chunks. These chunks are then passed on to any number
+of parallel computational pipelines for processing. As a chunk is passed to a
+pipeline only when it is available to process the data, an efficient load
+balancing can be achieved.
+
+Pelican also provides facilities to export and view data streams as processing
+completes. For example, processed data from a series of pipelines could be
+easily streamed to another Pelican server for aggregation and distribution to
+other pipelines for further processing.
+
+
+\section intro_applications Using the Pelican API
+
+Applications using Pelican are written by utilising or implementing a number of
+components which adhere to a well defined \ref APIdoc "API" and describe:
+
+- How input data streams should be split into parallelisable chunks.
+- The structures and methods for de-serialising chunks of input data.
+- The processing to be performed.
+- The data products to deliver after processing.
+
+Pelican applications are not, in general, intended to be highly interactive.
+Instead, components can be configured using XML parameter files, which are read
+on initialisation.
+
+
+\section intro_running Pelican Use Cases
+
+Applications written to use the Pelican library can be run in two different
+configurations, depending on the data processing requirements.
+Because of the modular design of the library, it is easy to switch between
+the two as needs arise.
+
+For very high throughput and heavy data processing, the most appropriate way
+to use Pelican in its server-client mode, which provides a highly
+scalable processing framework. Data is divided into chunks that are buffered by
+the Pelican server. Pelican pipelines run on other machines, where data clients
+request chunks of data from the server as often as the pipelines become
+available. If the existing pipelines cannot keep up with the input data rate,
+then more pipelines can be added as required.
+
+For more modest data processing needs, a single machine can be used by
+connecting a processing pipeline directly to the input data stream.
+
+\latexonly
+\clearpage
+\endlatexonly
+
+*/

@@ -16,6 +16,8 @@
 namespace pelican {
 
 /**
+ * @ingroup c_utility
+ *
  * @class ConfigNode
  *
  * @brief

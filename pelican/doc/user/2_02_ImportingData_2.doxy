@@ -1,0 +1,255 @@
+namespace pelican {
+
+/**
+
+\page importData_2 Importing Data II: The Server, Client and Data Adapters
+
+
+\section importData_Intro2 Introduction
+
+Chunkers, described in the previous section, can be used in Pelican in two main
+\ref user_structuralOverview "framework configurations", distinguished by
+whether data is received by a server communicating with one or more data clients
+or directly by a data client. These framework configurations are designed to
+make maximum use of the same underlying modules for handling the input data
+stream but can be configured differently to provide optimisation in different
+use cases.
+
+The following sections introduce each of these different framework modes and
+then describe the final step in the data acquisition, namely adapting
+or de-serialising chunks of data.
+
+For the purposes of the tutorial, please refer to the
+\ref user_conclusion "final section" of the
+\ref user_gettingStarted "getting started guide" for how to construct and
+configure simple binaries making use of the Pelican framework.
+
+
+
+\section importData_Server The Pelican Server
+
+The Pelican Server provides a framework for managing one or more data streams
+which are split, buffered and served on request. Data arrives in the server
+though chunkers and is put in a number of buffers which store it until
+a request is made by a data client attached to processing pipelines. The server
+handles requests for data by spawning a thread which will wait until it can
+satisfy the data requirements for at least one pipeline before proceeding to
+send data for processing. On sending data, locks are applied so that more than
+multiple requests can be handled concurrently, each being provided with unique
+data . In this way the server provides a scalable solution to split incoming
+data streams to a number of parallel processing pipelines.
+
+\subsection importData_ServerChunkers Attaching chunkers to the server
+
+The Pelican Server requires you to specify one or more chunkers and associate
+these chunkers to their named data streams.
+
+This is done with the PelicanServer::addStreamChunker() method and
+PelicanServer::addServiceChunker() methods. As the names suggest, the former
+is used to associate chunkers with data streams that are to be treated as
+stream data, and the latter for data that is to be treated as service data.
+
+
+\section importData_UsingDataClients Data Clients
+
+A data-client is an implementation of the AbstractDataClient interface,
+which is the primary interface used by the processing pipeline for accessing
+data when it needs it.
+
+Pelican provides three different data-client implementations that you can
+configure to your needs:
+
+- The PelicanServerClient connects to a Pelican server and so only
+  requires an adapter (the chunker being in the server itself).
+- The DirectStreamDataClient connects directly to the incoming data stream and
+  so needs both an adapter and a chunker.
+- The FileDataClient provides data directly from one or more files though an
+  adapter interface. This data client can be extremely useful for testing.
+
+These data clients, described in more detail in the
+\ref user_dataClients "reference documentation".
+
+
+\subsection specifyDataClient Specifying the Data Client
+
+The PelicanApplication needs to know which data client will be used
+for importing data. You specify the class by calling the
+PipelineApplication::setDataClient() method, supplying the name of the data
+client's class as a string.
+
+e.g. for the DirectDataClientExample below you would use:
+\code
+    PipelineApplication* app; // initialised application
+    app->setDataClient("DirectDataClientExample");
+\endcode
+
+
+\subsection dataClientChunkers Installing Chunkers into the DirectStreamDataClient
+
+Chunkers are attached to the direct stream client by creating a derived
+class which inherits DirectStreamDataClient, and using the
+DirectStreamDataClient::addChunker to specify the data type, the chunker type,
+and chunker name as arguments.
+
+For example if we want to attach two chunkers of the same type to two
+differently named data streams:
+
+\include DirectDataClientExample.h
+\include DirectDataClientExample.cpp
+
+The chunkers will be initialised with the relevant XML node derived from the
+chunker class name and name string specified as the second and third arguments
+of the \em addChunker method.
+
+Currently there is no way of attaching chunkers via the XML configuration however
+this is likely to be available in the next release.
+
+\subsection dataClientAdapter Installing an Adapter into a DataClient
+
+Adapters, described below, are attached to the data client via the XML
+configuration common to all data clients which describe the mapping of the
+various data types handled by the client and their associated adapters. This
+mapping is specified by a \em data tag with two attributes; a \em type attribute
+holding the name of the data chunk / stream to be adapted, and an \em adapter
+attribute giving the class name of the adapter to be attached. Construction and
+ataching adapters is then handled automatically by the Pelican framework
+(DataClientFactory).
+
+For example:
+
+\verbatim
+    <MyDataClient>
+        <data type="MyData" adapter="AdapterForMyData"/>
+        <data type="MyOtherData" adapter="AdapterForMyOtherData"/>
+    </MyDataClient>
+\endverbatim
+
+Currently there is no easy way to assign adapters programmatically although
+this feature is likely to be available in the next release.
+
+
+
+
+
+
+
+\section importData_Adapters Adapters
+
+<em>Adapters</em> are the final components of the data-import chain, and
+provide a mechanism to convert chunks of raw binary data into the data
+members of a Pelican data-blob (a specialised C++ container for holding data
+used by the Pelican pipeline; see \ref importData_DataBlobs "below").
+The most basic function of an adapter is to de-serialise chunks of data,
+although re-ordering and re-factoring of the data to a form that is convenient
+for subsequent pipeline processing may also be carried out.
+Pelican currently provides support for two categories of adapters,
+distinguished by the type of input data chunks they are expected to process:
+these are stream data adapters and service data adapters, which operate on the
+relevant \ref importData_DataTypes "data types".
+
+Adapters can be configured, if required, using parameters specified in the XML
+configuration file. An adapter must inherit either the AbstractStreamAdapter
+or the AbstractServiceAdapter class interface, depending on its type.
+
+\subsection importData_DataBlobs Data-Blobs
+
+A Pelican <em>data-blob</em> is a well-structured representation of data that
+has been arranged for easy, optimal processing: the output from an adapter is a
+well-structured representation of the data held in a chunk, which is ready to
+be processed by a pipeline. Data-blobs may contain arrays, blocks of memory
+and/or other metadata, and should provide methods to interact with that data.
+One of their main functions is to act as an interface between pipeline modules.
+
+\subsection importData_tutorialDataBlob Tutorial Data-Blob
+
+For the purpose of our tutorial, we need a type of DataBlob that can hold the
+required time-series data in a chunk. This is implemented in the SignalData
+data-blob, shown below, as a simple contiguous float array (a standard C++
+vector). Public methods allow this array to be resized, and should be used to
+obtain a pointer to the start of the data so that elements can be accessed
+efficiently.
+
+\include SignalData.h
+
+The data-blob must be declared so that the Pelican framework knows of its
+existence: use the PELICAN_DECLARE_DATABLOB macro in the header file to do this,
+supplying the class name as the macro argument. Do not use quotes around the
+name.
+
+The serialise and deserialise methods must be reimplemented for the data output
+stage, and are described in a later section.
+
+This concludes our description of the required SignalData data-blob.
+
+\subsection importData_tutorialAdapter Tutorial Adapter
+
+As a type of AbstractStreamAdapter, our SignalDataAdapter must convert the
+data held in a chunk into a SignalData data-blob. The adapter must process the
+chunk, removing all headers from the UDP packets it contains, and reinterpret
+the contents of the data section as 32-bit floating-point numbers.
+
+The C++ header file for our SignalDataAdapter is shown below:
+
+\include SignalDataAdapter.h
+
+The adapter must be declared so that the Pelican framework knows of its
+existence: use the PELICAN_DECLARE_ADAPTER macro in the header file to do this,
+supplying the class name as the macro argument. Do not use quotes around the
+name.
+
+As well as the constructor, we must implement the AbstractAdapter::deserialise()
+method, which must deserialise the contents of the chunk into the required
+data blob.
+
+Here's the class implementation in the C++ source %file:
+
+\include SignalDataAdapter.cpp
+
+A reference to the XML configuration node for the adapter will be
+automatically supplied to the constructor from the application's
+\ref user_referenceConfiguration "configuration file": we then simply need to
+extract the relevant configuration settings using methods on the supplied
+ConfigNode object. The ConfigNode::getOption method returns a QString
+containing the text in the required tagname and attribute. To illustrate what
+is needed here, the adapter expects an XML snippet like this:
+
+\verbatim
+<SignalDataAdapter>
+    <packet samples="256" />
+</SignalDataAdapter>
+\endverbatim
+
+The contents of the string containing the number of samples per packet are
+converted to an integer value using the QString::toInt() method, and
+stored in a private class variable for later use. Note that we did not strictly
+need to supply the number of samples per packet in this example, since the
+relevant information is contained in the header section of the UDP packet data;
+however, this serves to illustrate the steps that may be required to configure
+a more complicated adapter.
+
+The AbstractAdapter is aware of the data blob that must be filled, so in our
+SignalDataAdapter::deserialise() routine, we must obtain a pointer to this
+data blob by calling the AbstractAdapter::dataBlob() inherited method. The
+chunk size is also available, and can be retrieved using the
+AbstractAdapter::chunkSize() inherited method.
+
+The remainder of the deserialise routine simply loops over the UDP packets in
+the chunk, discarding the headers in each case, and reading the data sections
+into the correct parts of the SignalData data-blob.
+
+\note It is important, especially when the input device is a TCP socket,
+to check that sufficient data is available before trying to read it. For this
+reason we have included a call to QIODevice::waitForReadyRead() if there is not
+enough data available on the device.
+
+This concludes our description of the required SignalDataAdapter. The following
+section shows how to process this data by creating a simple module and
+inserting it into a processing pipeline.
+
+\latexonly
+\clearpage
+\endlatexonly
+
+*/
+
+}

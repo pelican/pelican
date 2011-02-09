@@ -6,7 +6,7 @@
 #include "pelican/server/WritableData.h"
 #include "pelican/server/StreamDataBuffer.h"
 #include "pelican/data/DataRequirements.h"
-#include "pelican/comms/Data.h"
+#include "pelican/comms/DataChunk.h"
 #include "pelican/comms/StreamData.h"
 #include "pelican/comms/ServerRequest.h"
 #include "pelican/comms/ServiceDataRequest.h"
@@ -25,6 +25,8 @@
 #include "pelican/utility/memCheck.h"
 
 namespace pelican {
+
+using test::TestProtocol;
 
 CPPUNIT_TEST_SUITE_REGISTRATION( SessionTest );
 // class SessionTest
@@ -241,8 +243,8 @@ void SessionTest::test_streamData()
         QList<LockedData> dataList = _session->processStreamDataRequest(request);
         foreach(LockedData data, dataList) {
             CPPUNIT_ASSERT( data.isValid() );
-            CPPUNIT_ASSERT_EQUAL( 0 , (int)static_cast<LockableStreamData*>(data.object())->associateData().size() );
-            CPPUNIT_ASSERT_EQUAL( 0 , (int)(static_cast<LockableStreamData*>(data.object())->streamData()->associateData().size()) );
+            CPPUNIT_ASSERT_EQUAL(0, static_cast<LockableStreamData*>(data.object())->associateData().size());
+            CPPUNIT_ASSERT_EQUAL(0, static_cast<LockableStreamData*>(data.object())->streamData()->associateData().size());
         }
     }
 

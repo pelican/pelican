@@ -1,26 +1,31 @@
 #ifndef PELICANPROTOCOLTEST_H
 #define PELICANPROTOCOLTEST_H
 
+/**
+ * @file PelicanProtocolTest.h
+ */
+
 #include <cppunit/extensions/HelperMacros.h>
 
 #include "pelican/comms/PelicanClientProtocol.h"
 
 class QTcpSocket;
 
-/**
- * @file PelicanProtocolTest.h
- */
-
 namespace pelican {
 
+namespace test {
 class SocketTester;
+}
 class ServerRequest;
 
 /**
+ * @ingroup t_comms
+ *
  * @class PelicanProtocolTest
  *
  * @brief
- *  Unit test for testing the Pelican server protocol
+ * Unit test for testing the Pelican server protocol.
+ *
  * @details
  *
  */
@@ -56,7 +61,7 @@ class PelicanProtocolTest : public CppUnit::TestFixture
     public:
         PelicanProtocolTest();
         ~PelicanProtocolTest();
-        SocketTester* _st;
+        test::SocketTester* _st;
         PelicanClientProtocol _protocol;
 };
 

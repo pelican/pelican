@@ -1,19 +1,22 @@
 #ifndef FACTORYBASE_H
 #define FACTORYBASE_H
 
-#include <QString>
-#include <vector>
-#include <map>
-#include "pelican/utility/Config.h"
-#include "pelican/utility/ConfigNode.h"
-
 /**
  * @file FactoryBase.h
  */
 
+#include "pelican/utility/Config.h"
+#include "pelican/utility/ConfigNode.h"
+
+#include <QtCore/QString>
+#include <vector>
+#include <map>
+
 namespace pelican {
 
 /**
+ * @ingroup c_utility
+ *
  * @brief Factory base object.
  *
  * @details

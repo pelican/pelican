@@ -4,6 +4,7 @@
 #include "TestDataViewerWidget.h"
 
 #include "pelican/output/DataBlobClient.h"
+#include "pelican/output/PelicanTCPBlobServer.h"
 #include "pelican/output/Stream.h"
 #include "pelican/data/test/TestDataBlob.h"
 #include "pelican/utility/Config.h"
@@ -12,6 +13,10 @@
 #include "pelican/output/test/TestDataBlobClient.h"
 
 namespace pelican {
+
+using test::TestDataBlob;
+using test::TestDataBlobClient;
+using test::TestDataViewerWidget;
 
 CPPUNIT_TEST_SUITE_REGISTRATION( DataViewerTest );
 /**
@@ -70,11 +75,43 @@ void DataViewerTest::test_client()
     client.send( str );
     _app->processEvents();
     CPPUNIT_ASSERT_EQUAL( 1, viewer.streams().size() );
-    CPPUNIT_ASSERT_EQUAL( testStream.toStdString() , 
+    CPPUNIT_ASSERT_EQUAL( testStream.toStdString() ,
                           viewer.streams()[0].toStdString() );
     CPPUNIT_ASSERT_EQUAL(1, client.subscriptions().size() );
     CPPUNIT_ASSERT_EQUAL( 1, TestDataViewerWidget::updateCalled() );
 
+}
+
+void DataViewerTest::test_integrationWithDataClient()
+{
+    // Use Case:
+    // full integration test with a rela DataBlobClient
+    // Setup a test server
+    QString xml = "<PelicanTCPBlobServer>"
+        "   <connection port=\"0\"/>"  // 0 = find unused system port
+        "</PelicanTCPBlobServer>";
+    ConfigNode config(xml);
+    PelicanTCPBlobServer server(config);
+    sleep(1);
+
+    DataBlobClient* client = _client( &server );
+//    DataViewer viewer(config, address);
+//    viewer.setClient(client);
+    TestDataBlob blob;
+    blob.setData("integration test");
+    server.send("testData", &blob);
+    delete client;
+}
+
+DataBlobClient* DataViewerTest::_client( PelicanTCPBlobServer* server )
+{
+    QString conf = QString("<connection host=\"127.0.0.1\" />");
+    ConfigNode config(conf);
+    DataBlobClient* client = new DataBlobClient(config);
+    client->setPort(server->serverPort());
+    client->setHost("127.0.0.1");
+    //connect( client, SIGNAL( newStreamsAvailable() ), this, SLOT( _newStreamsAvailable() ));
+    return client;
 }
 
 } // namespace pelican

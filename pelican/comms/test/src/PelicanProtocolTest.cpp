@@ -13,7 +13,7 @@
 #include "pelican/comms/DataSupportRequest.h"
 #include "pelican/comms/DataSupportResponse.h"
 #include "pelican/data/DataRequirements.h"
-#include "pelican/utility/SocketTester.h"
+#include "pelican/utility/test/SocketTester.h"
 #include "pelican/data/test/TestDataBlob.h"
 #include "pelican/server/WritableData.h"
 
@@ -27,6 +27,9 @@ using std::cout;
 #include "pelican/utility/memCheck.h"
 
 namespace pelican {
+
+using test::TestDataBlob;
+using test::SocketTester;
 
 CPPUNIT_TEST_SUITE_REGISTRATION( PelicanProtocolTest );
 // class PelicanProtocolTest
@@ -79,7 +82,7 @@ void PelicanProtocolTest::test_sendServiceData()
         stream.open(QIODevice::WriteOnly);
 
         QByteArray data1("data1");
-        Data d1("d1",data1.data(),data1.size());
+        DataChunk d1("d1",data1.data(),data1.size());
         CPPUNIT_ASSERT_EQUAL( (long)data1.size(), (long)d1.size());
         d1.setId("d1id");
         data.append(&d1);
@@ -110,12 +113,12 @@ void PelicanProtocolTest::test_sendServiceData()
         stream.open(QIODevice::WriteOnly);
 
         QByteArray data1("data1");
-        Data d1("d1",data1.data(),data1.size());
+        DataChunk d1("d1",data1.data(),data1.size());
         d1.setId("d1id");
         data.append(&d1);
 
         QByteArray data2("data2");
-        Data d2("d2",data2.data(),data2.size());
+        DataChunk d2("d2",data2.data(),data2.size());
         d1.setId("d2id");
         data.append(&d2);
         proto.send(stream, data);
@@ -231,7 +234,7 @@ void PelicanProtocolTest::test_sendStreamData()
         StreamData sd("d1",data1.data(),data1.size());
         sd.setId("streamdataid");
         QByteArray data2("data2");
-        boost::shared_ptr<Data> d1(new Data("d1",data2.data(),data2.size()) );
+        boost::shared_ptr<DataChunk> d1(new DataChunk("d1",data2.data(),data2.size()) );
         d1->setId("d1id");
         sd.addAssociatedData(d1);
 

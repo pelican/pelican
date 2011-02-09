@@ -1,8 +1,9 @@
 #ifndef FACTORYREGISTRAR_H
 #define FACTORYREGISTRAR_H
 
-#include <QString>
-#include <map>
+/**
+ * @file FactoryRegistrar.h
+ */
 
 #include <boost/mpl/list.hpp>
 #include <boost/mpl/size.hpp>
@@ -12,11 +13,8 @@
 #include <boost/preprocessor/repetition/enum.hpp>
 #include <boost/preprocessor/repetition/enum_params.hpp>
 
-#include <iostream>
-
-/**
- * @file FactoryRegistrar.h
- */
+#include <QtCore/QString>
+#include <map>
 
 #ifndef MAX_FACTORIES
 /**
@@ -38,6 +36,8 @@ typename boost::mpl::at_c<typename B::FactoryCtorList, n>::type P##n
 namespace pelican {
 
 /**
+ * @ingroup c_utility
+ *
  * @brief Blueprint for base class of registration objects.
  *
  * @details

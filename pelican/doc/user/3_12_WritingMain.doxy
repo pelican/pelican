@@ -1,0 +1,110 @@
+namespace pelican {
+
+/**
+
+\page user_referenceMain Building Pelican Binaries
+
+\section user_referenecMain_intro Introduction
+
+This section of the documentation describes how to write binaries making use of
+the Pelican framework. Pelican naturally splits into two distinct categories of
+binaries; those handling and serving input data streams
+(called \ref user_referenceMain_server "server binaries"), and those responsible
+for de-serialising data and executing processing pipelines
+(called \ref user_referenceMain_pipeline "pipeline binaries"). The following
+sections describe how write simple binaries for these two categories.
+
+
+
+
+\section user_referenceMain_pipeline Pipeline Binaries
+
+The pipeline binary contains the data client, the pipeline driver, and one or
+more pipelines. Like any other C++ program, execution begins in \c main().
+
+Since Pelican makes extensive use of the excellent cross-platform
+<a href="http://qt.nokia.com/" target="_blank">Qt Library</a> for its data
+structures, timers and network modules, a \c QCoreApplication object must be
+created before anything else. Almost all of the Pelican functionality is
+encapsulated by the \c PipelineApplication class. Both of these application
+objects require the command line arguments to be passed to their constructors.
+
+\subsection user_referenceMain_pipeline_single Single Pipeline
+
+For each pipeline that must be run, call the
+\c PipelineApplication::registerPipeline() method on the pipeline application
+object. The method requires a pointer to an \c AbstractPipeline object (the
+base class of all Pelican pipelines) as its argument.
+
+\include mainPipeline.cpp
+
+
+\subsection user_referenceMain_pipeline_multiple Multiple Pipelines
+
+It is possible to configure more than one pipeline to be operational in a
+single Pelican pipeline binary. The appropriate pipeline will be run,
+depending on the data that is available.
+
+Multiple pipelines that require the same remote data sets are, however, \em
+not supported for efficiency reasons, as copies of potentially very large data
+sets would need to be made for each pipeline.
+
+
+
+
+
+\section user_referenceMain_server Server Binary
+
+Pelican server binaries are responsible for receiving, splitting and serving
+one or more incoming data streams. As such, server binaries are constructed from
+a Pelican server (\c PelicanServer), one or more
+\ref user_referenceChunkers "Data Chunkers" and one or more protocols for
+handling communications between pipelines and the server (e.g. \c PelicanProtocol).
+
+The following code illustrates how to create a simple server binary for use
+with the example code presented in the
+\ref user_gettingStarted "getting started tutorial".
+
+\include mainServer.cpp
+
+\subsection user_referenceMain_server_eg Notes (refer to references in the code):
+<ol>
+    <li> Pelican makes extensive use of the
+         <a href="http://qt.nokia.com/" target="_blank">Qt Library</a> and as
+         such requires a QtCoreApplication or QApplication for its main event
+         loop.
+    <li> Pelican \ref user_referenceConfiguration "configuration"
+         (XML) objects can be constructed by loading a configuration file
+         or programmatically.
+    <li> Create a Pelican Server, the main data server class used to spawn
+         sessions which handle incoming data requests.
+    <li> Attach chunkers to process the incoming stream(s) into discrete
+         partitions. Chunkers are specified by their class name and constructed
+         automatically by a factory.
+    <li> Attach a protocol for communication with a Pelican server client, the
+         PelicanProtocol is a basic low overhead protocol which can be usef for
+         this.
+    <li> It is necessary to wait for the server thread to have entered its event
+         loop before starting the application main event loop as the start
+         method on the server returns immediately.
+    <li> Pelican classes throw helpful QString messages on various errors so it
+         is often useful to catch these.
+</ol>
+
+
+\section user_referenceMain_directStream The direct stream client
+
+As described in the
+\ref user_structuralOverview "introduction to the Pelican framework".
+Pelican can also be run in a direct input mode using the a data client derived
+from the \c DirectStreamDataClient which embeds chunkers directly into the data
+client framework. In this mode binaries are written in the same was as the
+pipeline binary example.
+
+\latexonly
+\clearpage
+\endlatexonly
+
+*/
+
+}

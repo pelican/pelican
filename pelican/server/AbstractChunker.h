@@ -21,6 +21,8 @@ namespace pelican {
 class ConfigNode;
 
 /**
+ * @ingroup c_server
+ *
  * @class AbstractChunker
  *
  * @brief

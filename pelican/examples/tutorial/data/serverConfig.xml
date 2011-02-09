@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pelican>
+
+<configuration version="1.0">
+    <server>
+        <buffers>
+            <SignalData>
+                <buffer maxSize="50000000" maxChunkSize="50000000" />
+            </SignalData>
+        </buffers>
+
+        <chunkers>
+            <SignalChunker>
+                <data type="SignalData" chunkSize="33792" />
+                <connection host="127.0.0.1" port="2001" />
+            </SignalChunker>
+        </chunkers>
+    </server>
+</configuration>

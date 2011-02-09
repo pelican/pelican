@@ -59,9 +59,9 @@ macro(add_doxygen_target name doxyfile_name)
                     DEFAULT_MSG DOXYFILE_IN_${name})
     endif()
 
-    if(DOXYGEN_FOUND AND DOXYFILE_IN_${name})
-        set(DOXYFILE_OUTPUT_DIR)
-        add_custom_target(doc_${name} ${DOXYGEN_EXECUTABLE}
+if(DOXYGEN_FOUND AND DOXYFILE_IN_${name})
+    set(DOXYFILE_OUTPUT_DIR)
+    add_custom_target(${name}_doc ${DOXYGEN_EXECUTABLE}
                      ${CMAKE_CURRENT_BINARY_DIR}/${doxyfile_name})
         usedoxygen_set_default(DOXYFILE_OUTPUT_DIR
                      ${CMAKE_CURRENT_BINARY_DIR}/doc/${name})
@@ -109,7 +109,7 @@ macro(add_doxygen_target name doxyfile_name)
             add_custom_target(doc)
         endif()
 
-        add_dependencies(doc doc_${name})
+        add_dependencies(doc ${name}_doc)
     endif()
 
 endmacro()

@@ -49,6 +49,7 @@ set(${PROJECT_NAME}_PATCH_LEVEL 0)
 # === CMake setup.
 list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_SOURCE_DIR}/cmake)
 include(cmake/packagemacrosNew.cmake)
+include(cmake/tags.cmake)
 
 enable_testing()
 
@@ -102,7 +103,7 @@ DECLARE_PROJECT_LIBRARY(pelican
     comms core data emulator modules output server utility viewer)
 
 DECLARE_PROJECT_LIBRARY(pelican-testutils
-    viewerTest outputTest dataTest coreTest serverTest)
+    utilityTest viewerTest outputTest dataTest coreTest serverTest emulatorTest)
 
 # === Sub modules (recurse into sub-directories to build modules).
 include(modules.cmake)
@@ -118,7 +119,7 @@ endif(BUILD_SINGLE_LIB)
 # === Doxygen documentation targets.
 include(UseDoxygen)
 set(PDFLATEX_COMPILER TRUE)
-add_doxygen_target(code DoxyfileCode)
-add_doxygen_target(user DoxyfileUser)
+add_doxygen_target(api DoxyfileAPI)
 add_doxygen_target(developer DoxyfileDeveloper)
+add_doxygen_target(user DoxyfileUser)
 

@@ -32,21 +32,23 @@ FileDataClient::~FileDataClient()
 {
 }
 
+
 /**
  * @details
  * Read data blobs from a file data source and fill the hash that points to
  * available data.
  */
-QHash<QString, DataBlob*> FileDataClient::getData(QHash<QString, DataBlob*>& dataHash)
+AbstractDataClient::DataBlobHash FileDataClient::getData(DataBlobHash& dataHash)
 {
     // Create the local data hash to return.
-    QHash<QString, DataBlob*> validHash;
+    DataBlobHash validHash;
 
     // Loop over each pipeline's set of data requirements.
     foreach (DataRequirements req, dataRequirements()) {
 
         // Loop over service data requirements.
-        foreach (QString type, req.serviceData()) {
+        foreach (QString type, req.serviceData())
+        {
             QString filename = _fileNames.value(type);
             if (!filename.isEmpty()) {
                 QFile file(filename);
@@ -62,7 +64,8 @@ QHash<QString, DataBlob*> FileDataClient::getData(QHash<QString, DataBlob*>& dat
         }
 
         // Loop over stream data requirements.
-        foreach (QString type, req.streamData()) {
+        foreach (QString type, req.streamData())
+        {
             QString filename = _fileNames.value(type);
             if (!filename.isEmpty()) {
                 QFile file(filename);

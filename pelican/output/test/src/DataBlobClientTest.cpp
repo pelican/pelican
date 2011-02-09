@@ -1,17 +1,21 @@
-#include "DataBlobClientTest.h"
-#include "DataBlobClient.h"
-#include <QSet>
-#include <QString>
-#include <QtTest/QSignalSpy>
-#include <QtDebug>
+#include "pelican/output/test/DataBlobClientTest.h"
+#include "pelican/output/DataBlobClient.h"
 
-#include "pelican/data/test/TestDataBlob.h"
 #include "pelican/output/PelicanTCPBlobServer.h"
 #include "pelican/output/Stream.h"
+#include "pelican/data/test/TestDataBlob.h"
 #include "pelican/utility/ConfigNode.h"
+
+#include <QtCore/QSet>
+#include <QtCore/QString>
+#include <QtCore/QtDebug>
+#include <QtTest/QSignalSpy>
+
 #include "pelican/utility/memCheck.h"
 
 namespace pelican {
+
+using test::TestDataBlob;
 
 CPPUNIT_TEST_SUITE_REGISTRATION( DataBlobClientTest );
 /**
@@ -73,14 +77,14 @@ void DataBlobClientTest::test_streamInfo()
         PelicanTCPBlobServer* server = _server();
         // Use Case:
         // streams() called on server with no known streams
-        // Expect: 
+        // Expect:
         // empty list
         DataBlobClient* client = _client(server);
         CPPUNIT_ASSERT( client->streams() == QSet<QString>() );
         sleep(1);
         _app->processEvents(); // give server chance to process subsciption request
 
-        // Use Case: 
+        // Use Case:
         // server updates streams
         // expect:
         // updatedStreams signal to be emitted and streams() to return the
@@ -89,7 +93,7 @@ void DataBlobClientTest::test_streamInfo()
         server->send( stream1, &blob);
         _app->processEvents(); // server side events
         sleep(1);
-        _app->processEvents(); // process 
+        _app->processEvents(); // process
         QSet<QString> streams = client->streams();
         CPPUNIT_ASSERT_EQUAL( 1, spy.count() );
         CPPUNIT_ASSERT_EQUAL( 1, streams.size() );
@@ -101,7 +105,7 @@ void DataBlobClientTest::test_streamInfo()
     {
         // Use Case:
         // streams() called on server with streams
-        // Expect: 
+        // Expect:
         // correct data to be returned by streams, no signal need be emitted
         PelicanTCPBlobServer* server = _server();
         server->send(stream1,&blob); // ensure there is a stream on the server
@@ -114,7 +118,7 @@ void DataBlobClientTest::test_streamInfo()
         delete server;
     }
     }
-    catch( const QString msg ) 
+    catch( const QString msg )
     {
         CPPUNIT_FAIL(msg.toStdString());
     }
@@ -243,7 +247,7 @@ DataBlobClient* DataBlobClientTest::_client( PelicanTCPBlobServer* server, const
 PelicanTCPBlobServer* DataBlobClientTest::_server(quint16 port)
 {
     QString xml = QString(  "<PelicanTCPBlobServer>"
-                            "   <connection port=\"%1\"/>"  
+                            "   <connection port=\"%1\"/>"
                             "</PelicanTCPBlobServer>" ).arg((unsigned int)port);
     ConfigNode config(xml);
     return new PelicanTCPBlobServer(config);

@@ -1,24 +1,26 @@
 #ifndef WATCHEDFILE_H
 #define WATCHEDFILE_H
 
-
-#include <QFile>
-#include <QFileSystemWatcher>
-
 /**
  * @file WatchedFile.h
  */
 
+#include <QtCore/QFile>
+#include <QtCore/QFileSystemWatcher>
+
 namespace pelican {
 
 /**
+ * @ingroup c_utility
+ *
  * @class WatchedFile
- * 
+ *
  * @brief
- *    A QFile that emits the readyRead() signal whenever it is updated
+ * A QFile that emits the readyRead() signal whenever it is updated
+ *
  * @details
- * 
  */
+
 class WatchedFile : public QFile
 {
     Q_OBJECT
@@ -45,5 +47,4 @@ class WatchedFile : public QFile
 };
 
 } // namespace pelican
-
-#endif // WATCHEDFILE_H 
+#endif // WATCHEDFILE_H

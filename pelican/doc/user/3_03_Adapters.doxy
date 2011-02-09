@@ -1,0 +1,104 @@
+namespace pelican {
+
+/**
+\page user_referenceAdapters Data Adapters
+
+\section user_referenceAdapters_introduction Introduction
+
+Adapters provide a mechanism to convert chunks of raw binary data into the data
+members of a Pelican data blob (a specialised C++ container class for
+holding data used by the Pelican pipeline).
+
+The most basic functionality of an adapter is to de-serialise chunks
+of data, although reordering and re-factoring of the data to a form that is
+convenient for subsequent pipeline processing may also be carried out.
+
+Pelican currently provides support for two categories of adapters,
+distinguished by the type of input data chunks they are expected to process.
+These are stream adapters and service adapters (<i>## TODO: ref. description
+of stream and service data...</i>):
+
+\li <b>Stream Adapters:</b> De-serialise data chunks classed as stream data.
+    Stream adapters allow the de-serialisation method to be modified
+    by service data registered to be associated to the stream data.
+\li <b>Service Adapters:</b> De-serialise data chunks classed as service data.
+    The adaption of data chunks classed as service data is not expected to
+    change during a run of Pelican.
+
+Adapters plug into Pelican data clients, and the de-serialise method
+is called for each iteration of the pipeline that requires data of the type
+they adapt. In addition to calling the adapter \c deserialise() method,
+the \c config() method of the adapter base class is called to set the pointer
+to the data blob which the adapter is to fill, the chunk size to be adapted,
+and pointers to any associated service data (in the case of stream adapters).
+This data is available to the \c deserialise() method through members of the
+base class, rather than explicitly though the interface of the
+\c deserialise() method.
+
+\section user_referenceAdapters_overview Overview
+
+To create a new adapter :
+
+\li Inherit from either the \c AbstractStreamAdapter, or the
+    \c AbstractServiceAdapter class.
+\li In the derived class, implement the \c deserialise() method. This method
+    is passed a pointer to an open \c QIODevice containing the serial chunk
+    to be adapted. De-serialised data should be placed in the data blob pointer,
+    \c _data, which is a protected member of the \c AbstractAdapter base class and
+    set automatically by the data client on request for remote data in a
+    pipeline to which adapter is providing de-serialised data blobs.
+    \li The size of the chunk of data in the QIODevice (in bytes) as well as (in
+        the case of stream adapters) associated service data blobs are available to
+        the adapter by though data members of the base class, set by the data client
+        _chunkSize and _serviceData.
+\li Adapters must register their existence with the adapter factory.
+    Use the \c PELICAN_DECLARE_ADAPTER() macro under the class definition
+    in the adapter's header file to register the adapter, supplying the name
+    of the adapter class as the macro argument. Do not use quotes around the
+    name.
+\li The data object being populated by the adapter must be a Pelican data blob
+    (i.e. a class that inherits from \c DataBlob).
+    There are a number of data blob types that are currently provided by the
+    Pelican framework, so you may not need to create your own if these are
+    suitable.
+
+\section user_referenceAdapters_configuration Configuration
+
+All adapters must be supplied with a
+\ref user_referenceConfiguration "configuration" node in their constructors.
+The configuration node resides in the adapters section of the configuration XML
+file, and has a tag name the same as the adapter class name.
+
+The configuration within the node is then left up to the details of the
+specific adapter, but will need to contain all the information needed
+to de-serialise the chunk.
+
+\section user_referenceAdapters_example Example
+
+The following example shows a stream adapter to convert chunks of data
+containing sections of a stream of real floating point values into the
+\ref user_referenceDataBlobs_example "example data blob".
+
+The XML configuration node is:
+
+\verbatim
+<AdapterExample>
+    <samples number="512" bitsPerSample="8"/>
+</AdapterExample>
+\endverbatim
+
+The class definition is:
+
+\include AdapterExample.h
+
+and the class implementation is:
+
+\include AdapterExample.cpp
+
+\latexonly
+\clearpage
+\endlatexonly
+
+*/
+
+}

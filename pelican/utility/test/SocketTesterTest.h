@@ -1,22 +1,24 @@
 #ifndef SOCKETTESTERTEST_H
 #define SOCKETTESTERTEST_H
 
-class QCoreApplication;
-#include <cppunit/extensions/HelperMacros.h>
-
 /**
  * @file SocketTesterTest.h
  */
 
+class QCoreApplication;
+#include <cppunit/extensions/HelperMacros.h>
+
 namespace pelican {
 
 /**
+ * @ingroup t_utility
+ *
  * @class SocketTesterTest
- *  
+ *
  * @brief
- *  Unit tets for the socket tester
+ * Unit test for the socket tester
+ *
  * @details
- * 
  */
 
 class SocketTesterTest : public CppUnit::TestFixture
@@ -42,4 +44,4 @@ class SocketTesterTest : public CppUnit::TestFixture
 };
 
 } // namespace pelican
-#endif // SOCKETTESTERTEST_H 
+#endif // SOCKETTESTERTEST_H

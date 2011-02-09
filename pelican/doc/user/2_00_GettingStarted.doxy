@@ -1,0 +1,26 @@
+/**
+
+\page user_gettingStarted Getting Started (Tutorial)
+
+This chapter is intended to introduce new users to the various components of
+the Pelican framework. As described in the
+\ref user_structuralOverview "introduction", Pelican
+requires that you implement a number of C++ classes that inherit from a number
+of abstract interfaces. As well as explaining the relevant concepts, this
+chapter also describes how Pelican can be used to process a simple example
+data stream of UDP packets. This description takes the form of an embedded
+tutorial that illustrates how to implement the required components, and
+to build a working system.
+
+- \subpage user_linkingPelican "Linking against Pelican."
+- \subpage importData_1 "Importing Data I: Concepts, Data Emulators and Chunkers."
+- \subpage importData_2 "Importing Data II: The Server, Client and Data Adapters."
+- \subpage user_dataProcessing "Processing Data: Pipelines and Modules."
+- \subpage user_dataOutput "Data Output."
+- \subpage user_conclusion "Tutorial Conclusion: Putting it all together."
+
+\latexonly
+\clearpage
+\endlatexonly
+
+*/

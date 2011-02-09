@@ -7,9 +7,9 @@ set(outputTestUtils_src
     src/TestOutputStreamer.cpp
     src/TestDataBlobClient.cpp
 )
-set( outputTestUtils_moc_headers
-     TestDataBlobClient.h
-   )
+set(outputTestUtils_moc_headers
+    TestDataBlobClient.h
+)
 
 QT4_WRAP_CPP(outputTestUtils_src ${outputTestUtils_moc_headers})
 SUBPACKAGE_LIBRARY(outputTestUtils ${outputTestUtils_src})

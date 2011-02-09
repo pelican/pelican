@@ -1,14 +1,17 @@
 #ifndef SERVERRESPONSE_H
 #define SERVERRESPONSE_H
-#include <QString>
 
 /**
  * @file ServerResponse.h
  */
 
+#include <QtCore/QString>
+
 namespace pelican {
 
 /**
+ * @ingroup c_comms
+ *
  * @class ServerResponse
  *
  * @brief
@@ -19,7 +22,9 @@ namespace pelican {
 class ServerResponse
 {
     public:
-        typedef enum { Error, Acknowledge, StreamData, ServiceData, Blob, DataSupport } Response;
+        typedef enum {
+            Error, Acknowledge, StreamData, ServiceData, Blob, DataSupport
+        } Response;
 
     private:
         Response _type;

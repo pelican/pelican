@@ -1,0 +1,102 @@
+namespace pelican {
+
+/**
+\page user_referenceEmulators Data Emulation
+
+\section user_referenceEmulators_introduction Introduction
+
+Synthetic packets of data are often required when testing new data chunkers.
+These synthetic data packets can be generated conveniently using the classes
+provided in the data emulation framework.
+
+The EmulatorDriver class takes care of the common, low-level details.
+It creates a separate thread in which to run the data emulator, and is
+responsible for writing the data packets to the output device.
+On construction, the EmulatorDriver takes ownership of a pointer to an
+AbstractEmulator derived class, which is called repeatedly by the driver to
+generate the required data packets. The emulator itself will be destroyed
+with the EmulatorDriver object, so it must not be explicitly deleted.
+
+The primary function of the AbstractEmulator is to provide a pointer to a block
+of memory to use when sending data packets.
+
+\section user_referenceEmulators_overview Overview
+
+To create a new data emulator:
+
+\li Create a derived class of a suitable abstract emulator. If a UDP packet
+    emulator is required, then inherit \c AbstractUdpEmulator; if not, then
+    inherit \c AbstractEmulator.
+\li In the derived class, ensure that a pointer to an open input device is
+    returned from the \c createDevice() method. The \c AbstractUdpEmulator
+    already takes care of this, but this method must be implemented for
+    \c AbstractEmulator derived classes. The base class takes ownership of
+    the device, so it must not be deleted explicitly.
+\li In the derived class, implement the \c getPacketData() method.
+    The method must update the input parameters to set a pointer to a block
+    of memory to use for the packet, and the packet size in bytes.
+    This method fills the packet with emulated data.
+
+There are a number of other options that may be set via virtual methods in the
+derived class:
+
+\li To make the data emulator start sending data automatically on
+    construction of the driver, reimplement the \c autostart() method to
+    return \c true or \c false (default true).
+    If false, then call start() on the EmulatorDriver to start the emulator.
+\li To set the duration between calls to getPacketData(), implement the
+    \c interval() method to return the interval in microseconds between
+    packets (default 100000).
+\li To set the number of packets sent by the emulator, reimplement the
+    \c nPackets() method and return the number of packets required. If the
+    number of packets is negative, then the emulator will run forever
+    (default -1).
+\li To make the emulator wait before sending packets, reimplement the
+    \c startDelay() method to return the number of seconds to wait initially
+    (default 0).
+
+\section user_referenceEmulators_configuration Configuration
+
+The emulator can take a configuration node in its constructor if required.
+The method \c ConfigNode::setFromString() can be used to set the XML contents
+of the configuration node.
+
+Classes derived from \c AbstractUdpEmulator must supply a configuration node
+containing at least the host address and port number. Use the
+\c connection tag with \c host and \c port attributes, as in the following
+example.
+
+\section user_referenceEmulators_example Example
+
+In the following, a new emulator is defined to send packets of real-valued UDP
+data down a socket. The XML contents of its configuration node are:
+
+\verbatim
+<EmulatorExample>
+    <connection host="127.0.0.1" port="2002"/>
+    <packet size="512" interval="1000" initialValue="0.1"/>
+</EmulatorExample>
+\endverbatim
+
+The class definition is:
+
+\include EmulatorExample.h
+
+and the class implementation is:
+
+\include EmulatorExample.cpp
+
+To use the emulator, invoke the emulator driver as follows:
+
+\code
+ConfigNode emulatorConfig(xmlString);
+EmulatorDriver emulator(new EmulatorExample(emulatorConfig));
+\endcode
+
+\latexonly
+\clearpage
+\endlatexonly
+
+*/
+
+}

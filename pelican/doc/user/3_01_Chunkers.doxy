@@ -1,0 +1,95 @@
+namespace pelican {
+
+/**
+\page user_referenceChunkers Data Chunkers
+
+\section user_referenceChunkers_introduction Introduction
+
+The function of the chunker is to take an incoming data stream and turn it
+into suitable size chunks that can be fed into the data adapter.
+
+\note Each chunk should contain all the data required for a single
+iteration of the pipeline. This may mean that chunks will need to be assembled
+from many smaller network packets, if the chunker connects to a UDP stream.
+
+\section user_referenceChunkers_overview Overview
+
+To create a new data chunker:
+
+\li All chunkers must inherit the \c AbstractChunker class interface.
+\li In the derived class, implement the \c newDevice() method.
+    This method must create and return an open \c QIODevice ready for
+    input (for example, a \c QUdpSocket).
+    The base class will take ownership of the device, so it must not be
+    deleted explicitly.
+\li In the derived class, implement the \c next() method.
+    This method will be called automatically whenever data is available
+    on the device created in \c newDevice(). You must check and read off the
+    number of bytes available from the device, and store them in a local
+    buffer before returning.
+    When enough data has arrived to make a chunk, call \c getDataStorage()
+    to return a \c WritableData object. Finally, use WritableData::write()
+    to save the chunk of data into the data manager.
+\li Chunkers must register their existence with the chunker factory.
+    Use the \c PELICAN_DECLARE_CHUNKER() macro under the class definition
+    in the chunker's header file to register the chunker, supplying the name
+    of the chunker class as the macro argument. Do not use quotes around
+    the name.
+
+\note All pending data must be read from the device when next() is called,
+otherwise the method will not be called again when more data is available.
+
+\section user_referenceChunkers_configuration Configuration
+
+All chunkers must be supplied with a configuration node in their constructors.
+The configuration node resides in the \c chunkers section of the XML file, and
+has a tag name the same as the chunker class name.
+
+The base class sets the hostname and port from the \c connection tag, which
+must have \c host and \c port attributes. The base class also sets up the
+data type that the chunker provides, so that the data manager returns a
+block of memory from the correct buffer. Use the \c data tag with the
+\c type attribute, as in the following example.
+
+\section user_referenceChunkers_builtin Built In Chunkers
+\subsection user_referenceChunkers_builtin_FileChunker FileChunker
+This chunker will monitor a file on the local file system. Every time the
+file is updated it will transfer the entire contents of the file into
+a new data chunk ready for serving.
+
+example configuration:
+@code
+<FileChunker file="/path/to/myfile" />
+@endcode
+
+\section user_referenceChunkers_example Example
+
+In the following, a new chunker is created to read data from a UDP socket.
+The XML contents of its configuration node are:
+
+\verbatim
+<ChunkerExample>
+    <connection host="127.0.0.1" port="2001"/>
+    <data type="VisibilityData" chunkSize="8192"/>
+</ChunkerExample>
+\endverbatim
+
+The class definition is:
+
+\include ChunkerExample.h
+
+and the class implementation is:
+
+\include ChunkerExample.cpp
+
+\section user_referenceChunkers_Testing Testing your Chunker
+The \em pelicanTest library provides the \em ChunkerTester convenience class for easy
+unit/integration testing of your Chunker. See the API documentation for more details.
+
+\latexonly
+\clearpage
+\endlatexonly
+
+*/
+
+}

@@ -1,9 +1,9 @@
 #include "TestDataClient.h"
 
-
 #include "pelican/utility/memCheck.h"
 
 namespace pelican {
+namespace test {
 
 
 /**
@@ -37,4 +37,5 @@ QHash<QString, DataBlob*> TestDataClient::getData(QHash<QString, DataBlob*>&)
     return hash;
 }
 
+} // namespace test
 } // namespace pelican

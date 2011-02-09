@@ -1,23 +1,26 @@
 #ifndef TESTDATAVIEWERWIDGET_H
 #define TESTDATAVIEWERWIDGET_H
 
-
-#include "pelican/viewer/DataBlobWidget.h"
-
 /**
  * @file TestDataViewerWidget.h
  */
 
+#include "pelican/viewer/DataBlobWidget.h"
+
 namespace pelican {
+namespace test {
 
 /**
+ * @ingroup t_viewer
+ *
  * @class TestDataViewerWidget
- * 
+ *
  * @brief
- *   iA dummuy widget used for Unit testing
+ * A dummy widget used for Unit testing
+ *
  * @details
- * 
  */
+
 class TestDataViewerWidget : public DataBlobWidget
 {
     public:
@@ -27,7 +30,7 @@ class TestDataViewerWidget : public DataBlobWidget
         /// TestDataViewerWidget destructor.
         ~TestDataViewerWidget();
 
-        /// returns the number of time update has been called
+        /// Returns the number of times update has been called.
         //  (on all TestDataViewerWidget)
         //  since the last TestDataViewer object was created
         //  this counter is reset every new().
@@ -41,6 +44,6 @@ class TestDataViewerWidget : public DataBlobWidget
 
 PELICAN_DECLARE(DataBlobWidget, TestDataViewerWidget )
 
+} // namespace test
 } // namespace pelican
-
-#endif // TESTDATAVIEWERWIDGET_H 
+#endif // TESTDATAVIEWERWIDGET_H

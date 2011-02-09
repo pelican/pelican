@@ -1,9 +1,9 @@
 #ifndef OUTPUTSTREAMMANAGER_H
 #define OUTPUTSTREAMMANAGER_H
 
-#include <QString>
-#include <QMap>
-#include <QList>
+/**
+ * @file OutputStreamManager.h
+ */
 
 #include "pelican/output/AbstractOutputStream.h"
 #include "pelican/utility/FactoryConfig.h"
@@ -14,21 +14,23 @@
 // to ensure the factory is aware of them
 #include "pelican/output/PelicanTCPBlobServer.h"
 
-/**
- * @file OutputStreamManager.h
- */
+#include <QtCore/QString>
+#include <QtCore/QMap>
+#include <QtCore/QList>
 
 namespace pelican {
 
 class DataBlob;
 
 /**
+ * @ingroup c_output
+ *
  * @class OutputStreamManager
- *  
+ *
  * @brief
  *   Manages the output of data from the pipeline
  * @details
- *   Data output streams are managed by this object and, any data sent will be routed through to 
+ *   Data output streams are managed by this object and, any data sent will be routed through to
  *   the correct output channel. Any streamer added to this object will become owned by this object.
  *
  *   Configuration xml format:
@@ -64,7 +66,7 @@ class OutputStreamManager
         /// associate an output streamer to a specific data stream
         void connectToStream( AbstractOutputStream* streamer, const QString& stream);
 
-        /// show the number of 
+        /// show the number of
         QList<AbstractOutputStream*> connected(const QString& stream) const;
 
     private:
@@ -74,4 +76,4 @@ class OutputStreamManager
 };
 
 } // namespace pelican
-#endif // OUTPUTSTREAMMANAGER_H 
+#endif // OUTPUTSTREAMMANAGER_H

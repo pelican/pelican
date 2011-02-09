@@ -2,11 +2,13 @@
 #include "pelican/comms/StreamData.h"
 #include "pelican/comms/ServerRequest.h"
 #include "pelican/comms/StreamDataRequest.h"
+
 #include <iostream>
 
 #include "pelican/utility/memCheck.h"
 
 namespace pelican {
+namespace test {
 
 // class TestProtocol
 TestProtocol::TestProtocol(const QString& id, ServerRequest::Request request)
@@ -47,7 +49,7 @@ void TestProtocol::send( QIODevice& device, const QString& message)
     device.write(_last);
 }
 
-void TestProtocol::send( QIODevice& device, const AbstractProtocol::StreamDataList& d)
+void TestProtocol::send(QIODevice& device, const AbstractProtocol::StreamData_t& d)
 {
     std::cout << "TestProtocol::send(): List length: " << d.size() << std::endl;
     Q_ASSERT(d.size() > 0);
@@ -67,7 +69,7 @@ void TestProtocol::send( QIODevice& device, const AbstractProtocol::StreamDataLi
     stream << _last.data();
 }
 
-void TestProtocol::send( QIODevice& device, const AbstractProtocol::ServiceDataList& )
+void TestProtocol::send(QIODevice& device, const AbstractProtocol::ServiceData_t&)
 {
     _last.clear();
     device.write(_last);
@@ -81,4 +83,5 @@ void TestProtocol::sendError( QIODevice& device, const QString& msg)
     device.write(_last);
 }
 
+} // namespace test
 } // namespace pelican

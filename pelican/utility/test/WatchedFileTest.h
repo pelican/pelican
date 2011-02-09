@@ -1,26 +1,29 @@
 #ifndef WATCHEDFILETEST_H
 #define WATCHEDFILETEST_H
 
+/**
+ * @file WatchedFileTest.h
+ */
+
 #include <cppunit/extensions/HelperMacros.h>
 #include <QtCore/QByteArray>
 
 class QCoreApplication;
 class QTemporaryFile;
 
-/**
- * @file WatchedFileTest.h
- */
-
 namespace pelican {
 
 /**
+ * @ingroup t_utility
+ *
  * @class WatchedFileTest
- * 
+ *
  * @brief
- *   unit test for the WatchedFile class
+ * Unit test for the WatchedFile class
+ *
  * @details
- * 
  */
+
 class WatchedFileTest : public CppUnit::TestFixture
 {
     public:
@@ -54,5 +57,4 @@ class WatchedFileTest : public CppUnit::TestFixture
 };
 
 } // namespace pelican
-
-#endif // WATCHEDFILETEST_H 
+#endif // WATCHEDFILETEST_H

@@ -1,65 +1,81 @@
-/*
- * Adapted from:
- * "C++ in Action"
- * http://www.relisoft.com/book/tech/9new.html
+
+/**
+ * @file memoryTracer.h
  */
+
 #if !defined DEBUGNEW_H
 #define DEBUGNEW_H
 #pragma warning (disable:4786)
+
 #include <QtCore/QMutex>
 
 #include <cstdlib>
 #include <string>
 #include <new>
+#include <map>
 #include <boost/pool/detail/singleton.hpp>
+
 #include "pelican/utility/memoryCheckInterface.h"
 
-#include <map>
+/**
+ * @ingroup c_utility
+ *
+ * @class Tracer
+ *
+ * @brief
+ * Memory leak tracing
+ *
+ * @details
+ * Adapted from:
+ * "C++ in Action", http://www.relisoft.com/book/tech/9new.html
+ */
 
 class Tracer
 {
-private:
-    class Entry
-    {
-        public:
-            Entry(char const* file, int line) : _file(file), _line(line) {}
-            Entry() : _line (0) {}
-            char const* file() const {return _file;}
-            int line() const {return _line;}
-        private:
-            const char* _file;
-            int _line;
-    };
+    public:
+        Tracer();
+        ~Tracer();
+        void add(void* p, char const* file, int line);
+        void remove(void* p);
+        void dump();
+        bool entry(void* p) const;
 
-    class Lock
-    {
-        public:
-            Lock(Tracer& tracer) : _tracer(tracer) {_tracer.lock();}
-            ~Lock() {_tracer.unlock();}
-        private:
-            Tracer& _tracer;
-    };
+        static bool ready;
 
-    typedef std::map<void *, Entry>::iterator iterator;
-    friend class Lock;
+    private:
+        void lock() { ++_lockCount; }
+        void unlock() { --_lockCount; }
 
-public:
-    Tracer();
-    ~Tracer();
-    void add(void* p, char const* file, int line);
-    void remove(void* p);
-    void dump();
-    bool entry(void* p) const;
+        class Entry
+        {
+            public:
+                Entry(char const* file, int line) : _file(file), _line(line) {}
+                Entry() : _line (0) {}
+                char const* file() const { return _file; }
+                int line() const { return _line; }
 
-    static bool ready;
+            private:
+                const char* _file;
+                int _line;
+        };
 
-private:
-    void lock() {++_lockCount;}
-    void unlock() {--_lockCount;}
+        class Lock
+        {
+            public:
+                Lock(Tracer& tracer) : _tracer(tracer) { _tracer.lock(); }
+                ~Lock() { _tracer.unlock(); }
 
-private:
-    std::map<void*, Entry> _map;
-    int _lockCount;
+            private:
+                Tracer& _tracer;
+        };
+
+        typedef std::map<void*, Entry>::iterator iterator;
+
+        std::map<void*, Entry> _map;
+        int _lockCount;
+
+    private:
+        friend class Lock;
 };
 
 #endif

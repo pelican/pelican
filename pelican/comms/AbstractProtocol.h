@@ -1,24 +1,28 @@
 #ifndef ABSTRACTPROTOCOL_H
 #define ABSTRACTPROTOCOL_H
-#include <boost/shared_ptr.hpp>
-#include <QtCore/QMap>
-class QString;
-class QIODevice;
-class QTcpSocket;
 
 /**
  * @file AbstractProtocol.h
  */
 
+#include <boost/shared_ptr.hpp>
+#include <QtCore/QMap>
+
+class QString;
+class QIODevice;
+class QTcpSocket;
+
 namespace pelican {
 
 class ServerRequest;
 class StreamData;
-class Data;
+class DataChunk;
 class DataBlob;
 class DataSupportResponse;
 
 /**
+ * @ingroup c_comms
+ *
  * @class AbstractProtocol
  *
  * @brief
@@ -33,8 +37,8 @@ class DataSupportResponse;
 class AbstractProtocol
 {
     public:
-       typedef QList<StreamData*> StreamDataList;
-       typedef QList<Data*> ServiceDataList;
+       typedef QList<StreamData*> StreamData_t;
+       typedef QList<DataChunk*> ServiceData_t;
 
     public:
         AbstractProtocol() {}
@@ -44,10 +48,10 @@ class AbstractProtocol
         virtual boost::shared_ptr<ServerRequest> request(QTcpSocket& socket) = 0;
 
         /// Write stream data to an I/O device.
-        virtual void send(QIODevice& device, const StreamDataList&) = 0;
+        virtual void send(QIODevice& device, const StreamData_t&) = 0;
 
         /// Write service data to an I/O device.
-        virtual void send(QIODevice& device, const ServiceDataList&) = 0;
+        virtual void send(QIODevice& device, const ServiceData_t&) = 0;
 
         /// Write out a DataBlob object to an I/O Device, as a stream of "name"
         virtual void send(QIODevice& device, const QString& name, const DataBlob& ) = 0;

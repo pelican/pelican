@@ -1,24 +1,26 @@
 #ifndef DATAREQUIREMENTSTEST_H
 #define DATAREQUIREMENTSTEST_H
 
-#include <cppunit/extensions/HelperMacros.h>
-
 /**
  * @file DataRequirementsTest.h
  */
 
+#include <cppunit/extensions/HelperMacros.h>
+
+namespace pelican {
+
 /**
+ * @ingroup t_data
+ *
  * @class DataRequirementsTest
- *  
+ *
  * @brief
  * Unit testing class for the data requirements object.
- * 
+ *
  * @details
  * Performs unit tests on the DataRequirements object
  * using the CppUnit framework.
  */
-
-namespace pelican {
 
 class DataRequirementsTest : public CppUnit::TestFixture
 {
@@ -52,4 +54,4 @@ class DataRequirementsTest : public CppUnit::TestFixture
 };
 
 } // namespace pelican
-#endif // DATAREQUIREMENTSTEST_H 
+#endif // DATAREQUIREMENTSTEST_H

@@ -1,0 +1,57 @@
+/**
+\page user_linkingPelican Linking against Pelican
+
+Pelican is a C++ library and can be incorporated into your build system in the
+same way as you would incorporate any other C++ library. After obtaining a copy
+of Pelican (either from a binary distribution or building from source), you
+should be able to find two Pelican shared libraries (\c pelican and
+\c pelican-testutils) and a folder containing a set of header (.h) files
+which can be used to compile and link your project.
+
+Of the two library files, the \c pelican library contains the core framework,
+and the \c pelican-testutils library provides a number of convenience classes
+that are useful when writing unit tests for the various Pelican components.
+
+\note Currently Pelican is targeted to run on Linux. While there are no
+known reasons that would prevent Pelican building on Windows or Mac OS systems,
+these platforms should be considered currently untested and unsupported.
+
+\section user_linkingPelican_example Example
+
+In order to link a simple application which uses Pelican:
+@code
+g++ -o myApp myApp.cpp -I/pelican/include/path -lpelican
+@endcode
+
+Linking a simple application using pelican and the test utility library:
+@code
+g++ -o myUnitTest myUnitTest.cpp -I/pelican/include/path -lpelican -lpelican-testutils
+@endcode
+
+\section user_linkingPelican_cmake Pelican CMake Module
+
+If your project uses a CMake (<a href="http://www.cmake.org" target="_blank">
+www.cmake.org</a>) build system, you can use the FindPelican cmake macro.
+This macro is available from the cmake folder of the Pelican source tree,
+the Pelican cmake module folder of an installed version of Pelican, or it can
+be downloaded from
+<a href="https://wiki.oerc.ox.ac.uk/svn/pelican/cmake/FindPelican.cmake">
+https://wiki.oerc.ox.ac.uk/svn/pelican/cmake/FindPelican.cmake</a>.
+By placing this macro in the cmake module path, it can be used like
+any other cmake macro, and it will define the following cmake variables:
+
+\li \c PELICAN_FOUND: Set to true if Pelican is found.
+\li \c PELICAN_CMAKE_MODULE_DIR: Location of Pelican specific cmake modules.
+\li \c PELICAN_INCLUDE_DIR: Location of Pelican header files.
+\li \c PELICAN_INCLUDES: Set of include directories needed by Pelican
+    (including dependencies).
+\li \c PELICAN_LIBRARY: The Pelican library.
+\li \c PELICAN_TESTUTILS_LIBRARY: The Pelican test utility library.
+\li \c PELICAN_LIBRARIES: The set of libraries required for linking with
+    Pelican (includes dependencies).
+
+\latexonly
+\clearpage
+\endlatexonly
+
+*/

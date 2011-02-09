@@ -10,11 +10,13 @@
 
 namespace pelican {
 
-class Data;
+class DataChunk;
 
 /**
+ * @ingroup c_server
+ *
  * @class LockableServiceData
- *  
+ *
  * @brief
  * Primary interface to access chunks of data in the server.
  *

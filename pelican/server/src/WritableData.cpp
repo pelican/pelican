@@ -1,5 +1,5 @@
 #include <string>
-#include "pelican/comms/Data.h"
+#include "pelican/comms/DataChunk.h"
 #include "pelican/server/WritableData.h"
 #include "pelican/server/AbstractLockableData.h"
 

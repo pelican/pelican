@@ -1,11 +1,11 @@
 #ifndef ABSTRACTSERVICEADAPTER_H
 #define ABSTRACTSERVICEADAPTER_H
 
-#include "pelican/core/AbstractAdapter.h"
-
 /**
  * @file AbstractServiceAdapter.h
  */
+
+#include "pelican/core/AbstractAdapter.h"
 
 namespace pelican {
 
@@ -13,6 +13,8 @@ class ConfigNode;
 class DataBlob;
 
 /**
+ * @ingroup c_core
+ *
  * @class AbstractServiceAdapter
  *
  * @brief

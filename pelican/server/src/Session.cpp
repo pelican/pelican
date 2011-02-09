@@ -16,9 +16,6 @@
 #include <QtCore/QTime>
 
 #include <iostream>
-using std::cout;
-using std::endl;
-#include <complex>
 
 #include "pelican/utility/memCheck.h"
 
@@ -27,13 +24,23 @@ using std::endl;
 
 namespace pelican {
 
-// class Session
-Session::Session(int socketDescriptor, AbstractProtocol* proto, DataManager* data, QObject* parent)
-    : QThread(parent), _dataManager(data)
+/**
+ * @details
+ *
+ * @param socketDescriptor
+ * @param proto
+ * @param data
+ * @param parent
+ * @return
+ */
+Session::Session(int socketDescriptor, AbstractProtocol* proto,
+        DataManager* data, QObject* parent)
+: QThread(parent), _dataManager(data)
 {
     _protocol = proto;
     _socketDescriptor = socketDescriptor;
 }
+
 
 Session::~Session()
 {
@@ -53,7 +60,6 @@ void Session::run()
     }
 
     boost::shared_ptr<ServerRequest> req = _protocol->request(socket);
-
     processRequest(*req, socket);
     socket.disconnectFromHost();
     if (socket.state() != QAbstractSocket::UnconnectedState)
@@ -63,63 +69,68 @@ void Session::run()
 
 /**
  * @details
- * This routine processes a general ServerRequest, calling the appropriate
- * working and then passes this on to the protocol to be returned to the client
+ * Processes a general ServerRequest, calling the appropriate working and then
+ * passes this on to the protocol to be returned to the client.
  */
-void Session::processRequest(const ServerRequest& req, QIODevice& out, unsigned timeout)
+void Session::processRequest(const ServerRequest& req, QIODevice& out,
+        const unsigned timeout)
 {
     try {
-        switch(req.type()) {
+        switch(req.type())
+        {
             case ServerRequest::Acknowledge:
+            {
                 _protocol->send(out,"ACK");
                 cout << "Session::processRequest(): Sent acknowledgement" << endl;
                 break;
-            case ServerRequest::StreamData:
-                {
-                    QList<LockedData> dataList = processStreamDataRequest(static_cast<const StreamDataRequest&>(req), timeout );
-//                    cout << "Session::processRequest():  List size: " << dataList.size() << endl;
-                    if( dataList.size() > 0 ) {
-                        AbstractProtocol::StreamDataList data;
-                        for( int i=0; i < dataList.size(); ++i )
-                        {
-                            LockableStreamData* lockedData = static_cast<LockableStreamData*>(dataList[i].object());
-                            data.append(static_cast<StreamData*>(lockedData->streamData()));
-                        }
-                        _protocol->send( out, data );
+            }
 
-                        // Mark as data as being served so it can be deactivated.
-                        foreach (LockedData d, dataList) {
-                            static_cast<LockableStreamData*>(d.object())->served() = true;
-                        }
-//                         cout << "Session::processRequest(): Sent stream data" << endl;
+            case ServerRequest::StreamData:
+            {
+                QList<LockedData> dataList = processStreamDataRequest(static_cast<const StreamDataRequest&>(req), timeout);
+                if (dataList.size() > 0) {
+                    AbstractProtocol::StreamData_t data;
+                    for (int i=0; i < dataList.size(); ++i) {
+                        LockableStreamData* lockedData =
+                                static_cast<LockableStreamData*>(dataList[i].object());
+                        data.append(static_cast<StreamData*>(lockedData->streamData()));
                     }
-//                     cout << "Session::processRequest(): Finished stream data request" << endl;
+                    _protocol->send(out, data);
+
+                    // Mark as data as being served so it can be de-activated.
+                    foreach (LockedData d, dataList) {
+                        static_cast<LockableStreamData*>(d.object())->served() = true;
+                    }
                 }
                 break;
+            }
+
             case ServerRequest::ServiceData:
-                {
-                    QList<LockedData> d = processServiceDataRequest(static_cast<const ServiceDataRequest&>(req) );
-                    if( d.size() > 0 ) {
-                        AbstractProtocol::ServiceDataList data;
-                        for( int i=0; i < d.size(); ++i ) {
-                            LockableServiceData* lockedData = static_cast<LockableServiceData*>(d[i].object());
-                            data.append(lockedData->data().get());
-                        }
-                        _protocol->send( out, data );
-//                         cout << "Session::processRequest(): Sent service data" << endl;
+            {
+                QList<LockedData> d =
+                        processServiceDataRequest(static_cast<const ServiceDataRequest&>(req));
+                if (d.size() > 0) {
+                    AbstractProtocol::ServiceData_t data;
+                    for (int i=0; i < d.size(); ++i)
+                    {
+                        LockableServiceData* lockedData =
+                                static_cast<LockableServiceData*>(d[i].object());
+                        data.append(lockedData->data().get());
                     }
+                    _protocol->send(out, data);
                 }
                 break;
+            }
             default:
-                _protocol->sendError( out, req.message());
+                _protocol->sendError(out, req.message());
         }
     }
-    catch( const QString& e )
+    catch (const QString& e)
     {
-        _protocol->sendError( out, e );
-//         cout << "Sent error: " << e.toStdString() << endl;
+        _protocol->sendError(out, e);
     }
 }
+
 
 /**
  * @details
@@ -160,14 +171,16 @@ QList<LockedData> Session::processStreamDataRequest(const StreamDataRequest& req
     time.start();
 
     // Iterate until the data requirements can be satisfied.
-    while (dataList.size() == 0) { // keep spinning until we either get data or time out
+    // keep spinning until we either get data or time out.
+    while (dataList.size() == 0)
+    {
         if ((unsigned int)time.elapsed() > timeout && timeout > 0) {
             throw QString("Session::processStreamDataRequest():"
             " Request timed out after %1 ms.").arg(time.elapsed());
         }
         DataRequirementsIterator it = req.begin();
         while(it != req.end() && dataList.size() == 0) {
-            dataList = _dataManager->getDataRequirements( *it );
+            dataList = _dataManager->getDataRequirements(*it);
             ++it;
         }
         usleep(1);
@@ -182,7 +195,7 @@ QList<LockedData> Session::processStreamDataRequest(const StreamDataRequest& req
  * The data will be returned as a locked container to ensure access
  * by other threads will be blocked.
  */
-QList<LockedData> Session::processServiceDataRequest(const ServiceDataRequest& req )
+QList<LockedData> Session::processServiceDataRequest(const ServiceDataRequest& req)
 {
     QList<LockedData> data;
     foreach (QString type, req.types()) {

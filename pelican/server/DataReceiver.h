@@ -18,6 +18,8 @@ namespace pelican {
 class DataManager;
 
 /**
+ * @ingroup c_server
+ *
  * @class DataReceiver
  *
  * @brief

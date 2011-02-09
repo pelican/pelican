@@ -2,17 +2,16 @@
 #include "pelican/utility/TestConfig.h"
 #include "pelican/utility/Config.h"
 #include "pelican/utility/ConfigNode.h"
-
 #include <QtCore/QCoreApplication>
 #include <QtCore/QTextStream>
 #include <QtCore/QFile>
 #include <QtCore/QDir>
-
 #include <iostream>
 
 #include "pelican/utility/memCheck.h"
 
 namespace pelican {
+using test::TestConfig;
 
 CPPUNIT_TEST_SUITE_REGISTRATION( ConfigTest );
 // class ConfigTest

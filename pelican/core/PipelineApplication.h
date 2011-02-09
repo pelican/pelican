@@ -1,6 +1,10 @@
 #ifndef PIPELINEAPPLICATION_H
 #define PIPELINEAPPLICATION_H
 
+/**
+ * @file PipelineApplication.h
+ */
+
 #include "pelican/core/AbstractAdapter.h"
 #include "pelican/data/DataBlob.h"
 #include "pelican/modules/AbstractModule.h"
@@ -8,11 +12,6 @@
 #include "pelican/utility/FactoryGeneric.h"
 
 #include <QtCore/QString>
-
-
-/**
- * @file PipelineApplication.h
- */
 
 namespace pelican {
 
@@ -23,11 +22,13 @@ class DataClientFactory;
 class OutputStreamManager;
 
 /**
+ * @ingroup c_core
+ *
  * @class PipelineApplication
- *  
+ *
  * @brief
  * This sets up and configures the pipeline driver.
- * 
+ *
  * @details
  * The PipelineApplication is the user-facing class which reads the
  * command-line arguments and creates the objects, including:
@@ -69,15 +70,12 @@ class OutputStreamManager;
  *     return 0;
  * }
  * \endcode
- *
  */
+
 class PipelineApplication
 {
-        friend class PipelineApplicationTest;
-
     private:
-        /// The pipeline driver object.
-        PipelineDriver* _driver;
+        friend class PipelineApplicationTest;
 
     public:
         /// Constructor.
@@ -118,10 +116,13 @@ class PipelineApplication
         void _createConfig(int argc, char** argv);
 
     private:
-        /// base nodes to define configuration file
+        // The pipeline driver object.
+        PipelineDriver* _driver;
+
+        // Base nodes to define configuration file.
         Config::TreeAddress _osmanagerBase;
 };
 
 } // namespace pelican
 
-#endif // PIPELINEAPPLICATION_H 
+#endif // PIPELINEAPPLICATION_H

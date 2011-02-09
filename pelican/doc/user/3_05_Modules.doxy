@@ -1,0 +1,93 @@
+namespace pelican {
+
+/**
+\page user_referenceModules Pipeline Modules
+
+\section user_referenceModules_introduction Introduction
+
+Modules are the components of Pelican pipelines that perform intensive
+computational operations on the data flowing through them. Normally,
+several modules would be run (one after another) to build up a processing
+pipeline. A module may contain anything: it can be as simple or as complex
+as needed to perform the task required of it, and use (for example)
+multiple threads, OpenMP, CUDA or OpenCL (if available) to help speed up
+computation.
+
+DataBlobs (Pelican data structures) are used to pass data between pipeline
+modules. Depending on your needs, you may have to design and implement a new
+type of data blob to work with a new module.
+
+\section user_referenceModules_overview Overview
+
+To create a new pipeline module:
+
+\li Inherit the \c AbstractModule class.
+\li There are no abstract methods on the module to perform computation, so
+    you have considerable freedom to define the interfaces required.
+    By convention, a \c run() method should be called with one or more input
+    and output data blobs as function arguments.
+\li Modules must register their existence with the module factory.
+    Use the PELICAN_DECLARE_MODULE() macro in the under the class definition
+    in the module's header file to register the module, supplying the name
+    of the module class as the macro argument. Do not use quotes around
+    the name.
+
+\section user_referenceModules_configuration Configuration
+
+The \c AbstractModule interface ensures that modules are passed a
+configuration node of the XML document when constructed, so that any initial
+parameters can be set up as required.
+
+The configuration node resides in the \c modules section of the XML file, and
+has a tag name the same as the module class name.
+
+Since the base class does not check for common options, there are currently no
+standard XML tags for modules. However, there are some convenience tags.
+
+Frequency channels can be specified in the XML configuration as
+
+\verbatim <channels>1,5,182</channels> \endverbatim
+
+or, for many contiguous channels,
+
+\verbatim <channels start="0" end="511"/> \endverbatim
+
+To obtain this channel list, there is a convenience method
+ConfigNode::getUnsignedList(), which returns the list of channel indices in a
+standard vector.
+
+\code
+std::vector<unsigned> = configNode.getUnsignedList("channels");
+\endcode
+
+\section user_referenceModules_example Example
+
+This example creates a module to perform a trivial operation on two
+floating-point vectors. As input, it takes two example data blobs,
+and fills an output data blob according to the given configuration.
+The configuration specifies whether the input vectors should be added
+or multiplied together.
+
+The XML contents of its configuration node are:
+
+\verbatim
+<ModuleExample>
+    <operation type="add"/>
+</ModuleExample>
+\endverbatim
+
+The class definition is:
+
+\include ModuleExample.h
+
+and the class implementation is:
+
+\include ModuleExample.cpp
+
+\latexonly
+\clearpage
+\endlatexonly
+
+*/
+
+}

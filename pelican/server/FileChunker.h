@@ -11,8 +11,10 @@
 namespace pelican {
 
 /**
+ * @ingroup c_server
+ *
  * @class FileChunker
- * 
+ *
  * @brief
  *   Chunker wrapper around a file
  * @details
@@ -37,4 +39,4 @@ class FileChunker : public AbstractChunker
 
 } // namespace pelican
 
-#endif // FILECHUNKER_H 
+#endif // FILECHUNKER_H

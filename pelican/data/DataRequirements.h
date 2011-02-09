@@ -1,27 +1,30 @@
-#ifndef DATAREQUIREMENTS_H
-#define DATAREQUIREMENTS_H
-
-#include <QSet>
-#include <QString>
+#ifndef DATA_REQUIREMENTS_H
+#define DATA_REQUIREMENTS_H
 
 /**
  * @file DataRequirements.h
  */
+
+#include <QtCore/QSet>
+#include <QtCore/QString>
 
 namespace pelican {
 
 class DataBlob;
 
 /**
+ * @ingroup c_data
+ *
  * @class DataRequirements
- *  
+ *
  * @brief
  * Specifies the types of data required by the pipeline modules
  * to operate a pipeline.
- * 
+ *
  * @details
  * Streaming data and service data specifications.
  */
+
 class DataRequirements
 {
     public:
@@ -31,6 +34,7 @@ class DataRequirements
         /// Destroys the data requirements object.
         ~DataRequirements();
 
+    public:
         /// Returns a set containing all required data types.
         QSet<QString> allData() const;
 
@@ -104,5 +108,4 @@ bool operator==(const DataRequirements&, const QHash<QString, DataBlob*>&);
 uint qHash(const DataRequirements& key);
 
 } // namespace pelican
-
-#endif // DATAREQUIREMENTS_H 
+#endif // DATA_REQUIREMENTS_H

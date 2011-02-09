@@ -1,0 +1,53 @@
+namespace pelican {
+
+/**
+\page user_referenceDataBlobs Data Blobs
+
+\section user_referenceDataBlobs_introduction Introduction
+
+DataBlobs are simply C++ structures that hold data for use by Pelican
+pipeline modules. They may contain arrays, blocks of memory and/or other data,
+and should provide methods to interact with that data. Their main function is
+to act as an interface between pipeline modules. Within a module, data is
+handled internally by whatever means necessary to carry out efficient
+computation, but modules should present a consistent interface and
+encapsulate their data requirements and outputs using a small number of
+data blobs.
+
+DataBlobs cannot be pre-configured; i.e. they take no XML configuration data
+from the configuration file. Methods on the blob itself should be used to
+change its contents as required.
+
+\section user_referenceDataBlobs_overview Overview
+
+To create a new type of DataBlob:
+
+\li Inherit the DataBlob base class.
+\li There are no abstract methods that define the data storage, so you have
+    considerable freedom in choosing the internal structure of the blob to
+    suit the needs of the module(s) that will use it. Declare the required
+    data structures in the blob's \c private section, and implement any
+    \c public methods that will be used to interact with the data.
+\li If the blob needs to be sent to an output device, reimplement the
+    \c serialise() method to send the contents of the blob to the device.
+\li If the blob needs to be filled from an input device, reimplement the
+    \c deserialise() method to read the contents of the blob from the device.
+\li Data blobs must register their existence with the blob factory.
+    Use the \c PELICAN_DECLARE_DATABLOB() macro under the class definition
+    in the data blob's header file to register it, supplying the name
+    of the data blob class as the macro argument. Do not use quotes around
+    the name.
+
+\section user_referenceDataBlobs_example Example
+
+This example creates and declares a new data blob of floating-point data.
+
+\include DataBlobExample.h
+
+\latexonly
+\clearpage
+\endlatexonly
+
+*/
+
+}

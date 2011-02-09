@@ -15,8 +15,10 @@ class StreamData;
 class LockedData;
 
 /**
+ * @ingroup c_server
+ *
  * @class LockableStreamData
- *  
+ *
  * @brief
  * Contains pointers to chunked LockableStream and a manifest of
  * associated data.
@@ -47,7 +49,7 @@ class LockableStreamData : public AbstractLockableData
 
         /// Returns true if the object has been served.
         bool& served() { return _served; };
-        
+
         /// Test validity of data only taking into account the named associates.
         bool isValid(const QSet<QString>&) const;
 
@@ -73,4 +75,4 @@ class LockableStreamData : public AbstractLockableData
 
 } // namespace pelican
 
-#endif // LOCKABLESTREAMDATA_H 
+#endif // LOCKABLESTREAMDATA_H

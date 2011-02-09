@@ -1,18 +1,23 @@
 #ifndef ABSTRACTPIPELINE_H
 #define ABSTRACTPIPELINE_H
 
-#include "pelican/data/DataRequirements.h"
-#include "pelican/modules/AbstractModule.h"
-#include "pelican/utility/FactoryConfig.h"
-#include "pelican/utility/FactoryGeneric.h"
-#include <QtCore/QString>
-#include <QtCore/QList>
-
 /**
  * @file AbstractPipeline.h
  */
 
+#include "pelican/data/DataRequirements.h"
+#include "pelican/modules/AbstractModule.h"
+#include "pelican/utility/FactoryConfig.h"
+#include "pelican/utility/FactoryGeneric.h"
+
+#include <QtCore/QString>
+#include <QtCore/QList>
+
 namespace pelican {
+
+namespace test {
+class TestPipeline;
+}
 
 class AbstractModule;
 class DataBlob;
@@ -20,15 +25,17 @@ class PipelineDriver;
 class OutputStreamManager;
 
 /**
+ * @ingroup c_core
+ *
  * @class AbstractPipeline
- *  
+ *
  * @brief
  * Base class for all Pelican pipeline objects.
- * 
+ *
  * @details
  * This is the base class for all Pelican pipelines, which act as containers
  * for pipeline modules.
- * 
+ *
  * Inherit from this class and implement the init() and run() virtual methods
  * to create a new pipeline. Set the name of the pipeline using setName(), and
  * call createModule() from init() to create the pipeline modules.
@@ -85,45 +92,14 @@ class OutputStreamManager;
  */
 class AbstractPipeline
 {
-    private:
-        friend class TestPipeline;
-
-    private:
-        /// The data required by the pipeline.
-        DataRequirements _requiredDataRemote;
-
-        /// Pointer to the PipelineApplication blob factory (private, not protected).
-        FactoryGeneric<DataBlob>* _blobFactory;
-
-        /// Pointer to the PipelineApplication module factory (private, not protected).
-        FactoryConfig<AbstractModule>* _moduleFactory;
-
-        /// Pointer to the pipeline driver.
-        PipelineDriver* _pipelineDriver;
-
-        /// List of pointers to modules in this pipeline.
-        QList<AbstractModule*> _modules;
-
-        /// Pointer to the output stream manager
-        OutputStreamManager* _osmanager;
-
-    protected:
-        /// Create a data blob using the data blob factory.
-        DataBlob* createBlob(const QString& type);
-
-        /// Create a pipeline module using the module factory.
-        AbstractModule* createModule(const QString& type,
-                const QString& name = QString());
-
-        /// Stops the pipeline driver.
-        void stop();
-
     public:
         /// Constructs a new abstract pipeline.
         AbstractPipeline();
 
         /// Destroys the abstract pipeline.
         virtual ~AbstractPipeline();
+
+    public:
 
         /// Initialises the pipeline by creating the required modules
         /// (pure virtual).
@@ -139,7 +115,7 @@ class AbstractPipeline
         const DataRequirements& requiredDataRemote() const;
 
         /// Primary interface for pipelines to emit data from the pipeline
-        void dataOutput( DataBlob*, const QString& stream = "" ) const;
+        void dataOutput(DataBlob*, const QString& stream = "") const;
 
         /// Defines a single iteration of the pipeline (pure virtual).
         /// This method defines what happens when the pipeline is run once,
@@ -162,8 +138,41 @@ class AbstractPipeline
 
         /// Sets the output stream manager
         void setOutputStreamManager(OutputStreamManager* osmanager);
+
+    protected:
+        /// Create a data blob using the data blob factory.
+        DataBlob* createBlob(const QString& type);
+
+        /// Create a pipeline module using the module factory.
+        AbstractModule* createModule(const QString& type,
+                const QString& name = QString());
+
+        /// Stops the pipeline driver.
+        void stop();
+
+    private:
+        /// The data required by the pipeline.
+        DataRequirements _requiredDataRemote;
+
+        /// Pointer to the PipelineApplication blob factory.
+        FactoryGeneric<DataBlob>* _blobFactory;
+
+        /// Pointer to the PipelineApplication module factory.
+        FactoryConfig<AbstractModule>* _moduleFactory;
+
+        /// Pointer to the pipeline driver.
+        PipelineDriver* _pipelineDriver;
+
+        /// List of pointers to modules in this pipeline.
+        QList<AbstractModule*> _modules;
+
+        /// Pointer to the output stream manager.
+        OutputStreamManager* _osmanager;
+
+    private:
+        /// \todo fix me (horrible use of friend class)!
+        friend class test::TestPipeline;
 };
 
 } // namespace pelican
-
-#endif // ABSTRACTPIPELINE_H 
+#endif // ABSTRACTPIPELINE_H

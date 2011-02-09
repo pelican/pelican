@@ -8,9 +8,9 @@
 
 #include "pelican/utility/Config.h"
 #include "pelican/utility/ConfigNode.h"
-#include "pelican/utility/SocketTester.h"
+#include "pelican/utility/test/SocketTester.h"
 #include "pelican/comms/StreamData.h"
-#include "pelican/comms/Data.h"
+#include "pelican/comms/DataChunk.h"
 #include "pelican/comms/StreamDataResponse.h"
 #include "pelican/comms/ServiceDataResponse.h"
 #include "pelican/server/test/TestServer.h"
@@ -25,9 +25,15 @@
 
 namespace pelican {
 
+using test::TestDataBlob;
+using test::SocketTester;
+using test::TestServiceAdapter;
+using test::TestStreamAdapter;
+
 CPPUNIT_TEST_SUITE_REGISTRATION( PelicanServerClientTest );
+
 /**
- *@details PelicanServerClientTest 
+ *@details PelicanServerClientTest
  */
 PelicanServerClientTest::PelicanServerClientTest()
     : CppUnit::TestFixture()
@@ -98,7 +104,7 @@ void PelicanServerClientTest::test_getData()
     {
         // Use Case:
         //    Data Requirements do not match DataBlobs
-        // Expect: 
+        // Expect:
         //     throw with a suitable message
 
         // setup the test
@@ -164,7 +170,7 @@ void PelicanServerClientTest::test_response()
         // Use Case
         // ServiceData response - single service data
         boost::shared_ptr<ServerResponse> res( new ServiceDataResponse );
-        static_cast<ServiceDataResponse*>(res.get())->addData( new Data(service1,serviceVersion1, data2.size()) );
+        static_cast<ServiceDataResponse*>(res.get())->addData( new DataChunk(service1,serviceVersion1, data2.size()) );
 
         // set up the memory for receiving data
         TestDataBlob db;
@@ -193,8 +199,8 @@ void PelicanServerClientTest::test_response()
         // Use Case
         // ServiceData response - multiple service data
         boost::shared_ptr<ServerResponse> res( new ServiceDataResponse );
-        static_cast<ServiceDataResponse*>(res.get())->addData( new Data(service1,version1, data1.size()) );
-        static_cast<ServiceDataResponse*>(res.get())->addData( new Data(service2,serviceVersion1, data2.size()) );
+        static_cast<ServiceDataResponse*>(res.get())->addData( new DataChunk(service1,version1, data1.size()) );
+        static_cast<ServiceDataResponse*>(res.get())->addData( new DataChunk(service2,serviceVersion1, data2.size()) );
 
         // set up the memory for receiving data
         TestDataBlob db;
@@ -223,7 +229,7 @@ void PelicanServerClientTest::test_response()
         CPPUNIT_ASSERT_EQUAL( std::string( data1.data() ) , std::string( static_cast<TestDataBlob*>(vhash[service1])->data() ) );
         CPPUNIT_ASSERT_EQUAL( std::string( data2.data() ) , std::string( static_cast<TestDataBlob*>(vhash[service2])->data() ) );
     }
-  
+
 //    {
 //        // Use Case
 //        // receive a StreamData response with associated service data (single stream, single service data)
@@ -265,7 +271,7 @@ void PelicanServerClientTest::test_response()
 //        CPPUNIT_ASSERT_EQUAL( std::string( data1.data() ) , std::string( static_cast<TestDataBlob*>( vhash[stream1])->data() ) );
 //        CPPUNIT_ASSERT_EQUAL( std::string( data2.data() ) , std::string( static_cast<TestDataBlob*>( vhash[service1])->data() ) );
 //    }
- 
+
 }
 
 } // namespace pelican

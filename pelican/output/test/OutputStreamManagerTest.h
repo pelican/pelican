@@ -1,23 +1,25 @@
 #ifndef OUTPUTSTREAMMANAGERTEST_H
 #define OUTPUTSTREAMMANAGERTEST_H
 
-#include <cppunit/extensions/HelperMacros.h>
-#include "pelican/utility/Config.h"
-
 /**
  * @file OutputStreamManagerTest.h
  */
 
+#include <cppunit/extensions/HelperMacros.h>
+#include "pelican/utility/Config.h"
+
 namespace pelican {
-    class OutputStreamManager;
+class OutputStreamManager;
 
 /**
+ * @ingroup t_output
+ *
  * @class OutputStreamManagerTest
- *  
+ *
  * @brief
- *   Unit test for the OutputStreamManager
+ * Unit test for the OutputStreamManager
+ *
  * @details
- * 
  */
 
 class OutputStreamManagerTest : public CppUnit::TestFixture
@@ -50,4 +52,4 @@ class OutputStreamManagerTest : public CppUnit::TestFixture
 };
 
 } // namespace pelican
-#endif // OUTPUTSTREAMMANAGERTEST_H 
+#endif // OUTPUTSTREAMMANAGERTEST_H

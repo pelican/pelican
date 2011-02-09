@@ -19,6 +19,8 @@ class AbstractProtocol;
 class DataManager;
 
 /**
+ * @ingroup c_server
+ *
  * @class Session
  *
  * @brief

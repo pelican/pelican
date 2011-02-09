@@ -1,23 +1,25 @@
 #ifndef THREADEDCLIENTIMPL_H
 #define THREADEDCLIENTIMPL_H
 
-#include <QThread>
-#include "pelican/utility/ConfigNode.h"
-
 /**
  * @file ThreadedClientImpl.h
  */
+
+#include "pelican/utility/ConfigNode.h"
+#include <QtCore/QThread>
 
 namespace pelican {
     class DataBlobClient;
 
 /**
+ * @ingroup c_output
+ *
  * @class ThreadedClientImpl
- * 
+ *
  * @brief
  *    Implentation details for the ThreadeDataBlobClient class
  * @details
- * 
+ *
  */
 class ThreadedClientImpl : public QThread
 {
@@ -29,7 +31,7 @@ class ThreadedClientImpl : public QThread
 
         /// ThreadedClientImpl destructor.
         ~ThreadedClientImpl();
-        
+
         // return the lient
         DataBlobClient* client() { return _client; };
 
@@ -43,4 +45,4 @@ class ThreadedClientImpl : public QThread
 
 } // namespace pelican
 
-#endif // THREADEDCLIENTIMPL_H 
+#endif // THREADEDCLIENTIMPL_H

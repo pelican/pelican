@@ -8,12 +8,16 @@
 #include "pelican/core/test/TestDataClient.h"
 #include "pelican/data/DataRequirements.h"
 
-#include <QCoreApplication>
+#include <QtCore/QCoreApplication>
+
 #include <iostream>
 
 #include "pelican/utility/memCheck.h"
 
 namespace pelican {
+
+using test::TestPipeline;
+using test::TestDataClient;
 
 CPPUNIT_TEST_SUITE_REGISTRATION( PipelineDriverTest );
 

@@ -1,22 +1,24 @@
 #ifndef DATABLOBRESPONSE_H
 #define DATABLOBRESPONSE_H
 
-#include "ServerResponse.h"
-
 /**
  * @file DataBlobResponse.h
  */
 
+#include "ServerResponse.h"
+
 namespace pelican {
 
 /**
+ * @ingroup c_comms
+ *
  * @class DataBlobResponse
- *  
+ *
  * @brief
  * A response from the server that contains a DataBlob
  *
  * @details
- * 
+ *
  */
 class DataBlobResponse : public ServerResponse
 {
@@ -38,4 +40,4 @@ class DataBlobResponse : public ServerResponse
 
 } // namespace pelican
 
-#endif // DATABLOBRESPONSE_H 
+#endif // DATABLOBRESPONSE_H

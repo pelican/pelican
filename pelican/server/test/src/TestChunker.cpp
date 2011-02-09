@@ -8,6 +8,7 @@
 #include "pelican/utility/memCheck.h"
 
 namespace pelican {
+namespace test {
 
 /**
  * @details
@@ -131,4 +132,5 @@ void TestChunker::run()
     }
 }
 
+} // namespace test
 } // namespace pelican

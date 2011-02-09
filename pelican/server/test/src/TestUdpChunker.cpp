@@ -2,12 +2,12 @@
 #include "pelican/utility/Config.h"
 
 #include <QtNetwork/QUdpSocket>
-//#include <sys/socket.h>
 #include <iostream>
 
 #include "pelican/utility/memCheck.h"
 
 namespace pelican {
+namespace test {
 
 /**
  * @details
@@ -81,4 +81,5 @@ void TestUdpChunker::next(QIODevice* device)
     }
 }
 
+} // namespace test
 } // namespace pelican

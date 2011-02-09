@@ -1,17 +1,17 @@
 #ifndef PIPELINEDRIVER_H
 #define PIPELINEDRIVER_H
 
+/**
+ * @file PipelineDriver.h
+ */
+
 #include "pelican/data/DataBlob.h"
 #include "pelican/data/DataRequirements.h"
 #include "pelican/modules/AbstractModule.h"
 #include "pelican/utility/FactoryConfig.h"
 #include "pelican/utility/FactoryGeneric.h"
-#include <QMultiHash>
-#include <QList>
-
-/**
- * @file PipelineDriver.h
- */
+#include <QtCore/QMultiHash>
+#include <QtCore/QList>
 
 namespace pelican {
 
@@ -22,6 +22,8 @@ class DataClientFactory;
 class OutputStreamManager;
 
 /**
+ * @ingroup c_core
+ *
  * @class PipelineDriver
  *
  * @brief Pipeline driver class.
@@ -103,5 +105,4 @@ class PipelineDriver
 };
 
 } // namespace pelican
-
 #endif // PIPELINEDRIVER_H

@@ -16,15 +16,17 @@ namespace pelican {
 class AbstractEmulator;
 
 /**
+ * @ingroup c_emulator
+ *
  * @class EmulatorDriver
- *  
+ *
  * @brief Drives the data emulator using its own thread.
- * 
+ *
  * @details
  * This class is constructed with a pointer to the data emulator to use.
  * The emulator driver takes ownership of the emulator, and will delete
  * it on destruction.
- * 
+ *
  * The thread created by this class repeatedly calls getPacketData() on the
  * emulator, and then sleeps for the specified interval.
  */
@@ -51,4 +53,4 @@ class EmulatorDriver : public QThread
 
 } // namespace pelican
 
-#endif // EMULATORDRIVER_H 
+#endif // EMULATORDRIVER_H

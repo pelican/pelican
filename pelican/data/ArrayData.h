@@ -11,6 +11,8 @@
 namespace pelican {
 
 /**
+ * @ingroup c_data
+ *
  * @class ArrayData
  *
  * @brief
@@ -28,13 +30,13 @@ class ArrayData : public DataBlob
     public:
         /// Constructor.
         ArrayData(const QString& type) : DataBlob(type) {}
-        
+
         /// Destructor.
         virtual ~ArrayData() {}
 
         /// Returns a pointer to the start of the data.
         T* ptr() { return (_data.size() > 0 ? &_data[0] : NULL); }
-        
+
         /// Returns a pointer to the start of the data. (const. overload)
         const T* ptr() const { return (_data.size() > 0 ? &_data[0] : NULL); }
 
@@ -61,7 +63,7 @@ class FloatData : public ArrayData<float>
     public:
         /// Constructor.
         FloatData() : ArrayData<float> ("FloatData") {}
-        
+
         /// Destructor.
         ~FloatData() {}
 };
@@ -82,7 +84,7 @@ class DoubleData : public ArrayData<double>
     public:
         /// Constructor.
         DoubleData() : ArrayData<double> ("DoubleData") {}
-        
+
         /// Destructor.
         ~DoubleData() {}
 };

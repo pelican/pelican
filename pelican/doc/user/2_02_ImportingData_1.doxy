@@ -1,0 +1,220 @@
+namespace pelican {
+
+/**
+
+\page importData_1 Importing Data I: Concepts, Data Emulators and Chunkers
+
+\section importData_Intro Introduction
+
+This section of the guide explains how to import data into Pelican
+pipelines for subsequent processing, and introduces a number of key concepts
+and components of the Pelican framework.
+
+The following sections of the reference documentation are relevant for
+importing data into Pelican:
+
+\li \link user_referenceChunkers Chunker reference\endlink
+\li \link user_dataClients Data Client reference\endlink
+\li \link user_referenceDataBlobs Data Blob reference\endlink
+\li \link user_referenceAdapters Adapter reference\endlink
+\li \link user_referenceConfiguration Configuration reference\endlink
+
+As well as being an introduction, this chapter includes a tutorial to
+illustrate how to connect to a UDP data stream containing a signal, how to
+build a very basic but fully-working Pelican pipeline to process the data, and
+finally how to output the processed data. The tutorial will step through a
+number of code examples and explain the steps required to implement each
+component.
+
+First, we introduce some general terminology used in the Pelican framework.
+
+\section importData_DataTypes Input Data Types
+
+Pelican distinguishes between two classes of data, namely <em>%Stream Data</em>
+and <em>Service Data</em> (described below).
+There can be any number of stream data and service data types, but each one
+must be handled separately (each will need its own
+\ref importData_Adapters "adapter" and \ref importData_Chunkers "chunker";
+these components are described in later sections).
+Each source of incoming data, either stream or service, must have its own
+unique identifier in the form of a string.
+
+\subsection importData_StreamData Stream Data
+
+This is an incoming data stream that is expected to be a fairly continuous
+series of similarly structured data. As it arrives it is automatically
+associated with any available service data.
+
+\subsection importData_ServiceData Service Data
+
+This is relatively static data that is updated occasionally and
+supports the stream data (e.g. it may describe the incoming stream data format),
+or status information of instruments collecting the data.
+There is always a "current" version of any type of service data,
+and it is this version that is associated with any incoming stream data.
+
+
+\section importData_InputStream An Example Input Stream
+
+To begin our tutorial, let's suppose that we have a source of input stream
+data from a UDP socket on port 2001. The UDP packets, in this example, are 1056
+bytes long and consist of a 32-byte header followed by 256 samples of 4-byte
+floating-point values from a digitised time series. For this example, the
+signal in the time series will be a simple sine wave.
+
+The header contains the following fields:
+- Header + 0: A four-byte integer containing the total size of the UDP packet,
+  in bytes (1056).
+- Header + 4: A four-byte integer containing the size of the header, in bytes
+  (32).
+- Header + 8: A four-byte integer containing the number of samples in the packet
+  (256).
+- Header + 12: A four-byte integer containing the size of a single sample, in
+  bytes (4).
+- Header + 16: An eight-byte integer containing a monotonically-increasing
+  packet sequence number.
+
+The remainder of the header data is reserved. Each sample represents 10
+microseconds of data, so each UDP packet will arrive roughly every 2.56
+milliseconds.
+
+\subsection importData_Emulation Emulating Input Stream Data
+
+This data stream can be emulated using the classes provided in the data
+emulation framework. The EmulatorDriver class takes care of the common,
+low-level details. It creates a separate thread in which to run the data
+emulator, and is responsible for writing the data packets to the output device.
+On construction, the EmulatorDriver takes ownership of a pointer to an
+AbstractEmulator derived class, which is called repeatedly by the driver to
+generate the required data packets.
+
+The primary function of the data emulator is to provide a pointer to a block
+of memory to use when sending data packets. Since we are using a UDP stream,
+we can use the AbstractUdpEmulator as a base class for our SignalEmulator.
+Here is the C++ header file containing the class declaration:
+
+\include SignalEmulator.h
+
+We simply have to implement the AbstractEmulator::getPacketData() method,
+which in this case is responsible for writing the correct data into a single
+UDP packet. Here's the class implementation in the C++ source %file:
+
+\include SignalEmulator.cpp
+
+Note that a reference to the emulator's XML configuration node should be
+supplied to the constructor: we then just need to extract relevant
+configuration settings using methods on the supplied ConfigNode object.
+The ConfigNode::getOption method returns a QString containing the text in the
+specified tag name, attribute pair. To illustrate what is needed here, the
+emulator expects an XML snippet like this:
+
+\verbatim
+<SignalEmulator>
+    <packet samples="256" interval="2560" />
+    <signal period="20" />
+    <connection host="127.0.0.1" port="2001" />
+</SignalEmulator>
+\endverbatim
+
+Each time SignalEmulator::getPacketData() is called, the contents of the packet
+must be updated ready for sending. The function simply updates the header and
+writes a sine wave into the data section.
+
+This concludes our description of the input data stream emulator.
+
+
+
+\section importData_Chunkers Chunkers
+
+A <em>chunker</em> is the first component of a functioning processing system.
+Its purpose is to connect to a source of input data (for example, a network
+socket, or a local file) and turn it into suitable size chunks. Each chunk of
+data will be processed by one iteration of a single Pelican pipeline. Since the
+input data rate may be high, a chunker should not, in general, attempt to
+process, re-order or otherwise interpret the input data stream, but should
+simply accumulate enough data to form a complete chunk. This may mean that
+large chunks will need to be assembled from many smaller data packets, if the
+chunker connects to a network socket. If the data needs to be rearranged for
+optimal processing, then this rearrangement should be performed by the
+\ref importData_Adapters "data adapter" (described in a later section).
+
+\subsection importData_tutorialChunker Tutorial Chunker
+
+To connect to our example UDP data stream, we must implement a chunker that
+inherits the AbstractChunker class interface. For our purposes, let's suppose
+that our fictional processing pipeline (described in a later section) requires
+8192 time-samples to operate on. Each UDP packet from our emulator is 1056
+bytes long and will contain 256 time samples, so our chunker will need to
+accumulate 32 UDP packets, or 33792 bytes, to form a complete chunk of data.
+
+The C++ header file for our SignalChunker is shown below:
+
+\include SignalChunker.h
+
+The chunker must be declared so that the Pelican framework knows of its
+existence: use the PELICAN_DECLARE_CHUNKER macro in the header file to do this,
+supplying the class name as the macro argument. Do not use quotes around the
+name.
+
+As well as the constructor, we must implement the AbstractChunker::newDevice()
+method, which creates a new input device (a UDP socket in this case),
+and the AbstractChunker::next() method, which is called whenever there is new
+data to read from the device.
+
+Here's the class implementation in the C++ source %file:
+
+\include SignalChunker.cpp
+
+Note that a reference to the XML configuration node for the chunker will be
+automatically supplied to the constructor from the application's
+\ref user_referenceConfiguration "configuration file": we then simply need to
+extract the relevant configuration settings using methods on the supplied
+ConfigNode object. The ConfigNode::getOption method returns a QString
+containing the text in the required tag name and attribute function arguments.
+To illustrate what is needed here, the chunker expects an XML snippet like this:
+
+\verbatim
+<SignalChunker>
+    <data type="SignalData" chunkSize="33792" />
+    <connection host="127.0.0.1" port="2001" />
+</SignalChunker>
+\endverbatim
+
+The data type, host name and port number are stored by the AbstractChunker
+base class, and so do not need to be read again.
+The contents of the string containing "chunkSize" are converted to an integer
+value using the QString::toInt() method. This initialisation step only happens
+once, at program launch, so there is no cost penalty involved here. The
+attributes are stored in private class variables for later use.
+
+Our SignalChunker::next() method must first call the inherited method
+AbstractChunker::getDataStorage(). This calls routines in the DataManager and
+returns a pointer to a block of memory of the required size, wrapped inside a
+WritableData container. When the WritableData object goes out of scope at the
+end of the method, the chunk of data it references is automatically placed on
+a queue so that it can be processed by an available pipeline. The
+SignalChunker::next() method must therefore accumulate the required number of
+UDP packets into a chunk before exiting.
+
+After obtaining the block of writable data, we must check that the memory it
+holds is actually available for writing using WritableData::isValid(): if not
+(for example, because the buffer has run out of space), the UDP datagram must
+be discarded. Provided that the memory is valid, we obtain a pointer to it
+using WritableData::ptr(), and read the data from the socket using the methods
+on QUdpSocket or QIODevice: A pointer to the socket is passed to the function,
+so we can call QUdpSocket::readDatagram(). If there is not enough data to read
+from the socket, then we must call QIODevice::waitForReadyRead() to suspend the
+thread and wait for more data to arrive.
+
+This concludes our description of the required SignalChunker. The following
+section shows how to use the chunker in the next part of the Pelican framework,
+and how to extract the bytes in the chunk to a form more suitable for
+processing.
+
+\latexonly
+\clearpage
+\endlatexonly
+
+*/
+
+}

@@ -1,33 +1,32 @@
 #ifndef SERVICEDATARESPONSE_H
 #define SERVICEDATARESPONSE_H
 
-#include <QList>
-#include <QMap>
-#include <QString>
-#include "ServerResponse.h"
-
 /**
  * @file ServiceDataResponse.h
  */
 
+#include "ServerResponse.h"
+#include <QtCore/QList>
+#include <QtCore/QMap>
+#include <QtCore/QString>
+
 namespace pelican {
 
-class Data;
+class DataChunk;
 
 /**
+ * @ingroup c_comms
+ *
  * @class ServiceDataResponse
- *  
+ *
  * @brief
  * Contains the response from the server containing a Service Data Set.
  *
  * @details
- * 
  */
+
 class ServiceDataResponse : public ServerResponse
 {
-    private:
-         QList<Data*> _data;
-
     public:
         /// Creates the ServiceDataResponse object.
         ServiceDataResponse();
@@ -35,13 +34,16 @@ class ServiceDataResponse : public ServerResponse
         /// Destroys the ServiceDataResponse object.
         ~ServiceDataResponse();
 
+    public:
         /// Add a Data object to the response list.
-        void addData(Data*);
+        void addData(DataChunk*);
 
         /// Return a list of valid data objects.
-        const QList<Data*>& data() const {return _data;}
+        const QList<DataChunk*>& data() const {return _data;}
+
+    private:
+         QList<DataChunk*> _data;
 };
 
 } // namespace pelican
-
-#endif // SERVICEDATARESPONSE_H 
+#endif // SERVICEDATARESPONSE_H

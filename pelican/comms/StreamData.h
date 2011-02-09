@@ -1,22 +1,23 @@
 #ifndef STREAMDATA_H
 #define STREAMDATA_H
 
-#include "pelican/comms/Data.h"
+/**
+ * @file StreamData.h
+ */
+
+#include "pelican/comms/DataChunk.h"
 
 #include <QtCore/QSet>
 #include <QtCore/QString>
 #include <boost/shared_ptr.hpp>
-
-
-/**
- * @file StreamData.h
- */
 
 namespace pelican {
 
 class LockedData;
 
 /**
+ * @ingroup c_comms
+ *
  * @class StreamData
  *
  * @brief
@@ -26,10 +27,10 @@ class LockedData;
  *     also contains linking information to the service data
  */
 
-class StreamData : public Data
+class StreamData : public DataChunk
 {
     public:
-        typedef QList<boost::shared_ptr<Data> > DataList_t;
+        typedef QList<boost::shared_ptr<DataChunk> > DataList_t;
 
     public:
         StreamData(const QString& name, void* = 0, size_t  = 0);
@@ -37,7 +38,7 @@ class StreamData : public Data
         StreamData(const QString& name, QString& id, QByteArray& d);
         virtual ~StreamData();
 
-        void addAssociatedData(boost::shared_ptr<Data>);
+        void addAssociatedData(boost::shared_ptr<DataChunk>);
         const DataList_t& associateData() const;
         const QSet<QString>& associateDataTypes() const;
         virtual bool isValid() const;

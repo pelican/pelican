@@ -6,12 +6,12 @@
 
 #include <iostream>
 using std::cerr;
-using std::cout;
 using std::endl;
 
 #include "pelican/utility/memCheck.h"
 
 namespace pelican {
+namespace test {
 
 /**
  * @details Constructs a ChunkerTester object.
@@ -27,24 +27,24 @@ ChunkerTester::ChunkerTester(const QString& chunkerType,
     Config::TreeAddress dataAddress, chunkerBase;
     chunkerBase << Config::NodeId("root", "");
     dataAddress << Config::NodeId("root", "") << Config::NodeId("data", "");
-    QString xml =
-            "<root>"
-            "   <data>"
-            "       <" + _stream + ">"
-            "           <buffer maxSize=\"" + QString::number(bufferSize) + "\"/>"
-            "       </" + _stream + ">"
-            "   </data>"
-            ""
-            "   <chunkers>"
-                    + XML_Config +
-            "   </chunkers>"
-            "</root>";
-
+    QString xml = ""
+            "<root>\n"
+                "<data>\n"
+                "<" + _stream + ">\n"
+                "<buffer maxSize=\"" + QString().setNum(bufferSize) + "\"/>\n"
+                "</" + _stream + ">\n"
+                "</data>\n"
+            "<chunkers>\n"
+                + XML_Config + "\n"
+            "</chunkers>\n"
+            "</root>\n";
     _config.setXML(xml);
 
-    // Setup the chunker manager and add the stream chunker.
     _chunkManager = new ChunkerManager(&_config, chunkerBase);
     _chunkManager->addStreamChunker(chunkerType);
+
+    // setup the data manager
+    _dataManager = new DataManager(&_config , dataAddress);
 
     // Setup the data manager.
     _dataManager = new DataManager(&_config , dataAddress);
@@ -57,9 +57,10 @@ ChunkerTester::ChunkerTester(const QString& chunkerType,
         }
         while(! _chunkManager->isRunning());
     }
-    catch( const QString& msg)
+    catch(const QString& msg)
     {
-        cerr << "ChunkerTester:throw during construction: " << msg.toStdString() << endl;
+        cerr << "ChunkerTester:throw during construction: "
+             << msg.toStdString() << endl;
         throw msg;
     }
 }
@@ -101,4 +102,5 @@ int ChunkerTester::writeRequestCount() const
     return _dataManager->getStreamBuffer(_stream)->numberOfActiveChunks();
 }
 
+} // namespace test
 } // namespace pelican

@@ -1,6 +1,10 @@
 #ifndef FACTORYCONFIG_H
 #define FACTORYCONFIG_H
 
+/**
+ * @file FactoryConfig.h
+ */
+
 #include "pelican/utility/FactoryRegistrar.h"
 #include "pelican/utility/FactoryBase.h"
 
@@ -9,15 +13,12 @@
 #include <boost/preprocessor/arithmetic/inc.hpp>
 #include <boost/preprocessor/arithmetic/dec.hpp>
 
-#include <iostream>
-
-/**
- * @file FactoryConfig.h
- */
 
 namespace pelican {
 
 /**
+ * @ingroup c_utility
+ *
  * @brief Blueprint for FactoryConfig.
  *
  * @details

@@ -1,0 +1,88 @@
+namespace pelican {
+
+/**
+\page user_dataClients Data Clients
+
+\section user_referenceDataClients_introduction Introduction
+
+Data clients retrieve and de-serialise (by use of adapters) binary data chunks
+for use with processing pipelines. Data clients are written by inheriting
+\c AbstractDataClient and implementing the \c AbstractDataClient::getData()
+method which much handle the data requirements of registered pipelines.
+The data client should therefore retrieve one or more binary data chunks,
+passing these to adapters for conversion to C++ container classes
+(called \ref user_referenceDataBlobs "data blobs"), and construct a set of
+adapted data suitable for running pipelines.
+
+
+\section user_referenceDataClients_overview Overview
+
+To create a new data client:
+
+\li Inherit the \c AbstractDataClient interface class.
+\li In the derived data client class, implement the \c getData() method.
+    This method must retrieve a hash of data blobs suitable for running one of
+    the registered pipelines. Data is typically retrieved as binary chunks of
+    data and then de-serialised by
+    \ref user_referenceAdapters "Pelican data adapters".
+
+
+\section user_referenceDataClients_configuration Configuration
+
+Data clients are supplied with a configuration node in their constructors.
+The configuration node resides in the \c clients section of the XML configuration
+file, and has a tag name which matches the class name of the data client.
+
+Data clients all share some common configuration which is handled automatically
+by the data client factory. This takes the form of a set of tags which describe
+the mapping between the various data types handled by the client and their
+associated adapters.
+
+For example:
+
+\verbatim
+    <data type="VisibilityData" adapter="AdapterVisibilities"/>
+    <data type="AntennaPositions" adapter="AdapterAntennasPositions"/>
+\endverbatim
+
+
+
+\section user_referenceDataClients Specialised data clients
+
+A number of specialised data clients, described in the following sections,
+are provided in the Pelican framework. These cover a number of common use cases
+and can either be used directly in your application or serve a starting point
+for a more specialised data client.
+
+
+\subsection user_referenceDataClientsServer The PelicanServerClient class
+
+The \c PelicanServerClient is an implementation of a data client for
+interfacing with the Pelican Server. Communication is made by TCP and makes use
+of the \c PelicanClientProtocol for communication with the server.
+
+
+\subsection user_referenceDataClientsFile The FileDataClient class
+
+The \c FileDataClient provides a specialist data client for accessing data
+directly from files rather than using the Pelican server. The list of files is
+specified in the XML configuration node for the client in the form of a list
+of tags called \c data with attributes \c type and \c file indicating the data
+type name (used to determine if the data categorised as service or stream data),
+and the file name respectively.
+
+
+\subsection user_referenceDataClientsDirectStream The DirectStreamDataClient class
+
+The \c DirectStreamDataClient is a specialised data client that connects
+directly to one or more data streams without the need for a Pelican server, as
+described in the \ref user_structuralOverview "framework introduction". This
+client therefore provides a specialist mode of operation where handling of the
+input data streams is carried out in the same binary as processing pipelines.
+While this may impose limits on scalability, it has advantages where a
+high input data rate is handled continuously by a single pipeline.
+
+
+*/
+
+}
