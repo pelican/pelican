@@ -2,6 +2,7 @@
 #define DATAVIEWERTEST_H
 
 class QApplication;
+#include <QString>
 #include <cppunit/extensions/HelperMacros.h>
 
 /**
@@ -9,6 +10,8 @@ class QApplication;
  */
 
 namespace pelican {
+    class DataBlobClient;
+    class PelicanTCPBlobServer;
 
 /**
  * @class DataViewerTest
@@ -23,6 +26,7 @@ class DataViewerTest : public CppUnit::TestFixture
     public:
         CPPUNIT_TEST_SUITE( DataViewerTest );
         CPPUNIT_TEST( test_client );
+        CPPUNIT_TEST( test_integrationWithDataClient);
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -31,6 +35,7 @@ class DataViewerTest : public CppUnit::TestFixture
 
         // Test Methods
         void test_client();
+        void test_integrationWithDataClient();
 
     public:
         /// DataViewerTest constructor.
@@ -40,6 +45,7 @@ class DataViewerTest : public CppUnit::TestFixture
         ~DataViewerTest();
 
     private:
+        DataBlobClient* _client( PelicanTCPBlobServer* server );
         QApplication* _app;
 };
 
