@@ -58,7 +58,7 @@ void PelicanProtocolTest::test_sendServiceData()
         // Use Case
         // Empty Data
         PelicanProtocol proto;
-        AbstractProtocol::ServiceDataList data;
+        AbstractProtocol::ServiceData_t data;
         QByteArray block;
         QBuffer stream(&block);
         stream.open(QIODevice::WriteOnly);
@@ -76,7 +76,7 @@ void PelicanProtocolTest::test_sendServiceData()
         // Use Case
         // A Single Data Object
         PelicanProtocol proto;
-        AbstractProtocol::ServiceDataList data;
+        AbstractProtocol::ServiceData_t data;
         QByteArray block;
         QBuffer stream(&block);
         stream.open(QIODevice::WriteOnly);
@@ -107,7 +107,7 @@ void PelicanProtocolTest::test_sendServiceData()
         // Use Case
         // Multiple Data Objects
         PelicanProtocol proto;
-        AbstractProtocol::ServiceDataList data;
+        AbstractProtocol::ServiceData_t data;
         QByteArray block;
         QBuffer stream(&block);
         stream.open(QIODevice::WriteOnly);
@@ -188,7 +188,7 @@ void PelicanProtocolTest::test_sendStreamData()
         // Use Case
         // Empty Data
         PelicanProtocol proto;
-        AbstractProtocol::StreamDataList data;
+        AbstractProtocol::StreamData_t data;
         QByteArray block;
         QBuffer stream(&block);
         stream.open(QIODevice::WriteOnly);
@@ -208,7 +208,7 @@ void PelicanProtocolTest::test_sendStreamData()
         StreamData streamData("d1", data1.data(), data1.size());
         CPPUNIT_ASSERT_EQUAL( (long)data1.size(), (long)streamData.size() );
         streamData.setId("testid");
-        AbstractProtocol::StreamDataList data;
+        AbstractProtocol::StreamData_t data;
         data.append(&streamData);
         QByteArray block;
         QBuffer stream(&block);
@@ -238,7 +238,7 @@ void PelicanProtocolTest::test_sendStreamData()
         d1->setId("d1id");
         sd.addAssociatedData(d1);
 
-        AbstractProtocol::StreamDataList data;
+        AbstractProtocol::StreamData_t data;
         data.append(&sd);
         QByteArray block;
         QBuffer stream(&block);
@@ -413,7 +413,7 @@ void PelicanProtocolTest::test_sendChunk()
     CPPUNIT_ASSERT(sData.isValid());
 
     // Add the stream data to a stream data set.
-    AbstractProtocol::StreamDataList streamDataSet;
+    AbstractProtocol::StreamData_t streamDataSet;
     streamDataSet.append(&sData);
 
     // Create a pelican protocol used to send data.
