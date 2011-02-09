@@ -49,6 +49,7 @@ set(${PROJECT_NAME}_PATCH_LEVEL 0)
 # === CMake setup.
 list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_SOURCE_DIR}/cmake)
 include(cmake/packagemacrosNew.cmake)
+include(cmake/tags.cmake)
 
 enable_testing()
 
