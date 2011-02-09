@@ -1,7 +1,9 @@
+namespace pelican {
+
 /**
 \page user_dataOutput Data Output
 
-\section user_dataOutput_introduction Introduction 
+\section user_dataOutput_introduction Introduction
 
 The following sections of the reference documentation are relevant
 for exporting data from Pelican:
@@ -9,92 +11,157 @@ for exporting data from Pelican:
 \li \link user_referenceDataBlobs Data Blob reference\endlink
 \li \link user_referenceOutputStreamers Output streamer reference\endlink
 
-\section user_dataOuput Sending Data to an output stream from your pipeline
 
-For simple cases, you just call the \em dataOutput() method :
+\section user_dataOuput Data Output from a Pipeline
+
+In simple cases, you just call the AbstractPipeline::dataOutput() method, and
+supply a pointer to the data blob that must be sent:
+
 @code
 MyBlob* data;
 dataOutput(data);
 @endcode
 
-This will push data onto an output stream named after the data's type ("MyBlob" in this case)
-. The \em dataOutput() method can take a QString as a second argument to assign the data 
-to an alternatively named stream. This can be useful where there you are exporting multiple streams
-of the same data type.
+This will push data onto an output stream named after the data type
+("MyBlob" in this case). The AbstractPipeline::dataOutput() method can take
+a string as a second argument to assign data to a stream with an alternative
+name. This can be useful where there you are exporting multiple streams of the
+same data type.
 
-It is important to realise that any DataBlob destined for output should implement the \em serialise() and \em deserialise() methods.
-The actual destination of the data is controlled by the OutputStreamManager object. This can be configured
-either through the configuration file, or you can manipulate the object directly. 
+\section user_dataOuput_blobs Data-Blob Output Requirements
 
-Pelican comes with a one OutputStreamer module that allows you to stream data over TCP to another machine.
-But maybe this is insufficient for your needs. perhaps you have a custom file format, or a specific database
-to fill. In this case you will need to write your own OutputStreamers. Note that any processing done in
-an OutputStreamer is done serially with the pipeline processing, so it will slow down your pipeline. 
-If this is an issue it is better to export it via the PelicanTCPBlobServer 
-and process the streams elsewhere.
+It is important to note that any DataBlob destined for output should
+reimplement the DataBlob::serialise() and DataBlob::deserialise() methods.
+These methods can be implemented however you like. The serialise routine should
+write the complete contents of the data blob to the output device, and the
+deserialise routine should do the reverse, by reading the complete contents of
+the blob from the input device.
 
-@subsection user_dataOutput_example An Example
-We take the example pipeline from previous sections to illustrate how the data output system works.
-We will output the DataBlobExample object before and after processing to different streams, called "pre" and
-"post". We will then connect different modules to these streams to show how to redirect the data.
-The first thing to do is to instruct the pipeline to output data at the required points.
+\subsection user_dataOuput_tutorialBlobs Tutorial Data Blob Output
+
+The SignalData::serialise() and SignalData::deserialise() methods for our
+SignalData data-blob are shown in the C++ source file, below:
+
+\include SignalData.cpp
+
+We use a QDataStream to be endian-neutral, so we don't actually need use the
+Endian type argument of the deserialise routine: this provides the endianness
+of the system that serialised the blob.
+
+\section user_dataOuput_outputStreamManager The Output Stream Manager
+
+The actual destination of the data is controlled by the OutputStreamManager
+object. This can be configured either through the configuration file, or you
+can manipulate the object directly.
+
+Pelican comes with one output streamer module that allows you to stream data
+to another machine using TCP: this is the PelicanTCPBlobServer.
+However, this may be insufficient for your needs if you have a custom file
+format, or a specific database to fill.
+In these cases you will need to write your own output streamer. Note that any
+processing done in an output streamer is done serially with the pipeline
+processing, so it will slow down your pipeline. If this will be a problem, it
+is better to export it via the PelicanTCPBlobServer and process the streams
+elsewhere.
+
+@subsection user_dataOutput_example  Tutorial Output
+
+We take the example pipeline from previous sections to illustrate how the data
+output system works. We will output the SignalData data-blob before and
+after processing to different streams, called "pre" and "post". We will then
+connect different modules to these streams to show how to redirect the data.
+The first thing to do is to instruct the pipeline to output data at the
+required points by calling AbstractPipeline::dataOutput(), as shown.
+Note that we must specify unique stream names, since both outputs use a
+data-blob of type SignalData.
 
 @code
-void PipelineExample::run(QHash<QString, DataBlob*>& data)
+void SignalProcessingPipeline::run(QHash<QString, DataBlob*>& data)
 {
-    dataOutput( data["DataBlobExample1"), "pre" );
-    // process this data
-    .
-    .
-    .
-    // output the processed data
-    dataOutput( data["DataBlobExample1"), "post" );
+    // Get pointers to the remote data blob(s) from the supplied hash.
+    SignalData* inputData = (SignalData*) remoteData["SignalData"];
+
+    // Output the input data.
+    dataOutput(inputData, "pre");
+
+    // Run each module as required.
+    // ...
+
+    // Output the processed data.
+    dataOutput(outputData, "post");
 }
 @endcode
 
-@subsubsection user_dataOutput_xmlconfig Configuring the Output Manager
+@subsubsection user_dataOutput_xmlconfig Configuring the Output Stream Manager
 
-So now we have two data streams which we can direct wherever is required. We will configure the output manager 
-to redirect these streams: we will redirect both streams to the PelicanTCPBlobServer for 
-export to other clients, the "post" stream we also direct to a comma seperated values file on the local machine
-using the OutputStreamerExample object described in the \link user_referenceOutputStreamers Output streamer reference.\endlink
-Similarly we direct the "pre" stream to a different comma seperated value 
-using another instance of the OutputStreamerExample.
+So now we have two data streams which we can direct wherever required using the
+output manager:
 
-The \em <output> section of our configuration file will look like this
-@code
+\li The unprocessed data (the "pre" stream) will be directed to a
+    comma-separated value (CSV) file on the local machine using our own custom
+    output streamer.
+\li Similarly, we direct the processed data stream ("post") to a different
+    CSV file using another instance of our own output streamer.
+\li Finally, we will also direct both streams to the standard
+    PelicanTCPBlobServer for export to other clients.
+
+The local CSV files will be written using our custom OutputStreamerExample
+object described in the
+\ref user_referenceOutputStreamers "Output Streamer Reference." Please see that
+page for example code that describes how to implement the required output
+streamer.
+
+The \c output section of our configuration file will look like this:
+\verbatim
 <output>
     <streamers>
-        <PelicanTCPBlobServer active="true" >
+        <PelicanTCPBlobServer active="true">
              <connection port="1234" />
-        <PelicanTCPBlobServer/>`
-        <OutputStreamerExample name="precsv" active="true">
+        </PelicanTCPBlobServer>
+        <OutputStreamExample name="precsv" active="true">
              <file name="pre.csv" />
-        </OutputStreamerExample>
-        <OutputStreamerExample name="postcsv" active="true">
+        </OutputStreamExample>
+        <OutputStreamExample name="postcsv" active="true">
              <file name="post.csv" />
-        </OutputStreamerExample>
+        </OutputStreamExample>
     </streamers>
     <dataStreams>
-       <Stream name="all" listeners="PelicanTCPBlobServer" />
-       <Stream name="post" listeners="postcsv" />
-       <Stream name="pre" listeners="precsv" />
+        <stream name="all" listeners="PelicanTCPBlobServer" />
+        <stream name="post" listeners="postcsv" />
+        <stream name="pre" listeners="precsv" />
     </dataStreams>
 </output>
-@endcode
+\endverbatim
 
-The \em <streamers> section describes the configuration for each OutputStreamer. Its presence in the XML will cause the OutputManager
-to attempt to instantiate an object of that type (unless the \em active attribute is set to false). Where there are more than two objects
-of the same type, you must provide a \em name attribute to disambiguate them.
+The \c streamers section describes the configuration for each output streamer.
+Its presence in the XML will cause the OutputStreamManager to attempt to
+instantiate an object of that type (unless the \c active attribute is set to
+false). Where there are more than two objects of the same type, you must
+provide a \c name attribute to disambiguate them.
 
-The \em <dataStreams> section is used to map the streams to these objects. 
-The \em listeners attribute is a comma seperated list of the names of the streamers that should be associated with the named stream.
-Note the special stream name "all" which will cause all streams to be piped to the listeners.
+The \c dataStreams section is used to map the streams to these objects.
+The \c listeners attribute is a comma separated list of the names of the
+streamers that should be associated with the named stream.
+Note the special stream name "all" which will cause all streams to be piped
+to the listed listeners.
 
 \section dataOutput_client Reading from the PelicanTCPBlobServer
 
-By piping the streams to the PelicanTCPBlobServer we have the ability to connect from elsewhere to read any of the data streams
-we are interested in. Pelican provides a client to attach to this server that can subscribe to any number of streams, reconstructing 
-the DataBlob objects as they are passed over the TCP stream.
+By piping the streams to the PelicanTCPBlobServer, we have the ability to
+connect from elsewhere to read any of the data streams we are interested in.
+Pelican provides a client (the DataBlobClient object) to connect to this server
+and subscribe to any number of streams, reconstructing the DataBlob
+objects as they are passed over the TCP stream. Use of the DataBlobClient is
+outside the scope of this tutorial, but it is described in the Pelican API
+reference.
+
+The final section of the tutorial shows how all the components are linked
+together to build a working Pelican system.
+
+\latexonly
+\clearpage
+\endlatexonly
 
 */
+
+}

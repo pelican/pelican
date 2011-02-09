@@ -1,21 +1,23 @@
 #ifndef STREAMDATATEST_H
 #define STREAMDATATEST_H
 
-#include <cppunit/extensions/HelperMacros.h>
-
 /**
  * @file StreamDataTest.h
  */
 
+#include <cppunit/extensions/HelperMacros.h>
+
 namespace pelican {
 
 /**
+ * @ingroup t_comms
+ *
  * @class StreamDataTest
- *  
+ *
  * @brief
- * 
+ *
  * @details
- * 
+ *
  */
 
 class StreamDataTest : public CppUnit::TestFixture
@@ -40,4 +42,4 @@ class StreamDataTest : public CppUnit::TestFixture
 };
 
 } // namespace pelican
-#endif // STREAMDATATEST_H 
+#endif // STREAMDATATEST_H

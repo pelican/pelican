@@ -1,0 +1,97 @@
+namespace pelican {
+
+/**
+\page user_conclusion Tutorial Conclusion
+
+In this section we conclude the tutorial and put all the examples together
+to create applications that use the Pelican library.
+
+\section conclusion_emulator The Emulator Binary
+
+First, we need a program to output UDP packets to act as an emulator, and
+provide our test pipeline with some data to process. The following code is a
+short program to perform this function:
+
+\include mainEmulator.cpp
+
+\subsection conclusion_emulatorRunning Running the Emulator
+
+The emulator can be started simply by running the <code> ./signalEmulator
+</code> binary.
+
+\section conclusion_server The Server Binary
+
+Next, we need to compile a Pelican server to host our chunker, and to buffer
+the data until a pipeline is ready to process it. The following code is
+all that is needed to set up our server:
+
+\include mainServer.cpp
+
+\subsection conclusion_serverXml Server XML
+
+Components within the server need to be configured, so the following XML file
+must be supplied to the server binary:
+
+\verbinclude serverConfig.xml
+
+\subsection conclusion_serverRunning Running the Server
+
+The server can be started with the following command, specifying the correct
+path to the server configuration file:
+
+\verbatim
+./signalServer tutorial/data/serverConfig.xml
+\endverbatim
+
+\section conclusion_pipeline The Pipeline Binary
+
+Finally, we need to compile a Pelican pipeline to process our data.
+The following code is all that is needed to set up the pipeline:
+
+\include mainPipeline.cpp
+
+\subsection conclusion_pipelineXml Pipeline XML
+
+We must configure the pipeline module, the data client, the data adapter and
+the output streams, so the following XML file must be provided for the
+pipeline binary:
+
+\verbinclude pipelineConfig.xml
+
+\subsection conclusion_pipelineRunning Running the Pipeline
+
+The pipeline can be started with the following command, specifying the correct
+path to the pipeline configuration file:
+
+\verbatim
+./signalPipeline tutorial/data/pipelineConfig.xml
+\endverbatim
+
+\section conclusion_pipelineDataOutput Data Output
+
+The following figure shows example output from the signal processing pipeline
+constructed for our tutorial:
+
+\image html images/pelican-output.png "Pelican Output"
+\image latex images/pelican-output.eps "Pelican Output" width=10cm
+
+The graph was created by plotting the contents of the CSV files using
+gnuplot with the following script:
+
+\verbinclude plotScript.gnu
+
+The script simply plots the contents of the first row of the input data files,
+truncating the x-axis to 100 values. Since our input sine wave had a period of
+20 samples, this plot only shows five complete periods. Other rows of the input
+data can be selected by changing the last '0' of the 'plot every' command
+
+As expected, the input (pre-processed) data is a sine-wave of amplitude 1.0,
+and the signal in the output (post-processed) data is 2.5 times larger.
+
+\latexonly
+\clearpage
+\endlatexonly
+
+*/
+
+}

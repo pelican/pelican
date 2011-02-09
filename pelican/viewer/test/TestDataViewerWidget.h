@@ -8,8 +8,11 @@
 #include "pelican/viewer/DataBlobWidget.h"
 
 namespace pelican {
+namespace test {
 
 /**
+ * @ingroup t_viewer
+ *
  * @class TestDataViewerWidget
  *
  * @brief
@@ -41,6 +44,6 @@ class TestDataViewerWidget : public DataBlobWidget
 
 PELICAN_DECLARE(DataBlobWidget, TestDataViewerWidget )
 
+} // namespace test
 } // namespace pelican
-
 #endif // TESTDATAVIEWERWIDGET_H

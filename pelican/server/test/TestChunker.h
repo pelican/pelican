@@ -1,6 +1,10 @@
 #ifndef TESTCHUNKER_H
 #define TESTCHUNKER_H
 
+/**
+ * @file TestChunker.h
+ */
+
 #include "pelican/server/AbstractChunker.h"
 #include "pelican/utility/Config.h"
 
@@ -11,15 +15,14 @@
 
 class QTimer;
 
-/**
- * @file TestChunker.h
- */
-
 namespace pelican {
-
 class DataManager;
+namespace test {
+
 
 /**
+ * @ingroup t_server
+ *
  * @class TestChunker
  *
  * @brief
@@ -63,6 +66,6 @@ class TestChunker : public QThread, public AbstractChunker
 
 PELICAN_DECLARE_CHUNKER(TestChunker)
 
+} // namespace test
 } // namespace pelican
-
 #endif // TESTCHUNKER_H

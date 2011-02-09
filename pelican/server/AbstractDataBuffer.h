@@ -14,15 +14,17 @@ namespace pelican {
 class WritableData;
 
 /**
+ * @ingroup c_server
+ *
  * @class AbstractDataBuffer
- *  
+ *
  * @brief
  * Interface class for generic data buffers.
- * 
+ *
  * @details
  * This class provides an abstract interface for accessing chunks of data
  * held in data buffers, and defines the getWritable() method for this purpose.
- * 
+ *
  * The class is inherited by StreamDataBuffer and ServiceDataBuffer.
  */
 class AbstractDataBuffer : public QObject

@@ -5,7 +5,6 @@
 
 namespace pelican {
 
-
 /**
  * @details Constructs a DataBlobFactory object.
  */

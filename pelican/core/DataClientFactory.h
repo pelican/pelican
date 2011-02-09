@@ -1,14 +1,15 @@
 #ifndef DATACLIENTFACTORY_H
 #define DATACLIENTFACTORY_H
 
-#include <QList>
-#include <QString>
-#include "pelican/core/AbstractDataClient.h"
-#include "pelican/utility/FactoryConfig.h"
-
 /**
  * @file DataClientFactory.h
  */
+
+#include "pelican/core/AbstractDataClient.h"
+#include "pelican/utility/FactoryConfig.h"
+
+#include <QtCore/QList>
+#include <QtCore/QString>
 
 namespace pelican {
 
@@ -17,14 +18,16 @@ class DataTypes;
 class DataRequirements;
 
 /**
+ * @ingroup c_core
+ *
  * @class DataClientFactory
- *  
+ *
  * @brief
  * Construct data clients.
  *
  * @details
- * 
  */
+
 class DataClientFactory : public FactoryConfig<AbstractDataClient>
 {
     private:
@@ -37,17 +40,17 @@ class DataClientFactory : public FactoryConfig<AbstractDataClient>
         : FactoryConfig<AbstractDataClient>(config, section, group),
           _adapterFactory(aFactory) {}
 
-        /// Create a configured object with the given name and type from a list of data requirements.
+        /// Create a configured object with the given name and type from a list
+        /// of data requirements.
         AbstractDataClient* create(const QString& type,
-                const QList<DataRequirements>& requirements, const QString& name="");
+                const QList<DataRequirements>& requirements,
+                const QString& name="");
 
     private:
         /// Disable inherited method.
-        AbstractDataClient* create(const QString&, const QString& = "") {
-            return 0;
-        }
+        AbstractDataClient* create(const QString&, const QString& = "")
+        { return 0; }
 };
 
 } // namespace pelican
-
-#endif // DATACLIENTFACTORY_H 
+#endif // DATACLIENTFACTORY_H

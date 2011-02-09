@@ -1,3 +1,5 @@
+namespace pelican {
+
 /**
 \page user_referencePipelines Pipelines
 
@@ -21,7 +23,7 @@ To create a new pipeline:
 \li Inherit from the \c AbstractPipeline class, which defines the pipeline
     interface.
 \li In the derived class, implement the \c init() method to perform one-off
-    initialisation, such as creating pipeline modules, and to request the 
+    initialisation, such as creating pipeline modules, and to request the
     remote data required to run the pipeline.
 \li In the derived class, implement the \c run() method to define the
     operations carried out for each iteration of the pipeline.
@@ -91,4 +93,10 @@ and the class implementation is:
 
 \include PipelineExample.cpp
 
+\latexonly
+\clearpage
+\endlatexonly
+
 */
+
+}

@@ -14,6 +14,10 @@
 
 namespace pelican {
 
+using test::TestDataBlob;
+using test::TestDataBlobClient;
+using test::TestDataViewerWidget;
+
 CPPUNIT_TEST_SUITE_REGISTRATION( DataViewerTest );
 /**
  * @details Constructs a DataViewerTest object.
@@ -71,7 +75,7 @@ void DataViewerTest::test_client()
     client.send( str );
     _app->processEvents();
     CPPUNIT_ASSERT_EQUAL( 1, viewer.streams().size() );
-    CPPUNIT_ASSERT_EQUAL( testStream.toStdString() , 
+    CPPUNIT_ASSERT_EQUAL( testStream.toStdString() ,
                           viewer.streams()[0].toStdString() );
     CPPUNIT_ASSERT_EQUAL(1, client.subscriptions().size() );
     CPPUNIT_ASSERT_EQUAL( 1, TestDataViewerWidget::updateCalled() );

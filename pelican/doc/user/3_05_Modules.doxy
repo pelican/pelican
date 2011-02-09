@@ -84,5 +84,10 @@ and the class implementation is:
 
 \include ModuleExample.cpp
 
+\latexonly
+\clearpage
+\endlatexonly
+
 */
+
 }

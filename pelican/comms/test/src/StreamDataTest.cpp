@@ -1,7 +1,7 @@
 #include "pelican/comms/test/StreamDataTest.h"
 
 #include "pelican/comms/StreamData.h"
-#include "pelican/comms/Data.h"
+#include "pelican/comms/DataChunk.h"
 
 #include "pelican/utility/memCheck.h"
 
@@ -46,12 +46,12 @@ void StreamDataTest::test_isValid()
         // Use Case:
         // Stream Data is valid, but associate Data is not
         // expect invalid
-        Data d;
+        DataChunk d;
         {
             StreamData sd("",(void*)1000,10);
             CPPUNIT_ASSERT( ! d.isValid() );
             CPPUNIT_ASSERT( sd.isValid() );
-            boost::shared_ptr<Data> ld( new Data("test", &d) );
+            boost::shared_ptr<DataChunk> ld( new DataChunk("test", &d) );
             sd.addAssociatedData( ld );
             CPPUNIT_ASSERT( ! sd.isValid() );
         }

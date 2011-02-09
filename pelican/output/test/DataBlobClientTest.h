@@ -1,24 +1,27 @@
 #ifndef DATABLOBCLIENTTEST_H
 #define DATABLOBCLIENTTEST_H
 
-#include <cppunit/extensions/HelperMacros.h>
-#include <QString>
-#include <QCoreApplication>
-
 /**
  * @file DataBlobClientTest.h
  */
+
+#include <cppunit/extensions/HelperMacros.h>
+#include <QtCore/QString>
+#include <QtCore/QCoreApplication>
 
 namespace pelican {
 class DataBlobClient;
 class PelicanTCPBlobServer;
 
 /**
+ * @ingroup t_output
+ *
  * @class DataBlobClientTest
- * 
+ *
  * @brief
- *   unit test for the DataBlobClient
+ * Unit test for the DataBlobClient.
  */
+
 class DataBlobClientTest : public CppUnit::TestFixture
 {
     public:
@@ -50,5 +53,4 @@ class DataBlobClientTest : public CppUnit::TestFixture
 };
 
 } // namespace pelican
-
-#endif // DATABLOBCLIENTTEST_H 
+#endif // DATABLOBCLIENTTEST_H

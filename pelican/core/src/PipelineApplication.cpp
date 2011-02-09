@@ -1,5 +1,5 @@
-#include <QCoreApplication>
-#include <QString>
+#include <QtCore/QCoreApplication>
+#include <QtCore/QString>
 #include "pelican/modules/AbstractModule.h"
 #include "pelican/core/PipelineApplication.h"
 #include "pelican/core/PipelineDriver.h"
@@ -79,7 +79,7 @@ DataClientFactory* PipelineApplication::clientFactory()
  */
 OutputStreamManager* PipelineApplication::outputStreamManager()
 {
-    Config::TreeAddress address; 
+    Config::TreeAddress address;
    address <<  Config::NodeId("configuration", "");
    address <<  Config::NodeId("pipeline", "");
    address <<  Config::NodeId("output", "");
@@ -185,9 +185,15 @@ void PipelineApplication::_createConfig(int argc, char** argv)
         ("config,c", opts::value<std::string>(), "Set configuration file.")
     ;
 
+    // A string without a selection flag in the first argument position is
+    // assumed to be a config file.
+    opts::positional_options_description p;
+    p.add("config", -1);
+
     // Parse the command line arguments.
     opts::variables_map varMap;
-    opts::store(opts::parse_command_line(argc, argv, desc), varMap);
+    opts::store(opts::command_line_parser(argc, argv).options(desc)
+            .positional(p).run(), varMap);
     opts::notify(varMap);
 
     // Check for help message.
@@ -200,6 +206,11 @@ void PipelineApplication::_createConfig(int argc, char** argv)
     std::string configFilename = "";
     if (varMap.count("config"))
         configFilename = varMap["config"].as<std::string>();
+
+    // Check if no configuration file is supplied.
+    if (configFilename.empty()) {
+        std::cout << "WARNING: No configuration file supplied." << std::endl;
+    }
 
     // Construct the static configuration object.
     if (!config(configFilename))

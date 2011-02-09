@@ -15,6 +15,8 @@ class DataBlob;
 class ThreadedBlobServer;
 
 /**
+ * @ingroup c_output
+ *
  * @class PelicanTCPBlobServer
  *
  * @brief

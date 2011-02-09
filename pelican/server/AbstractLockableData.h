@@ -7,27 +7,29 @@
 
 #include <boost/shared_ptr.hpp>
 #include "pelican/server/AbstractLockable.h"
-#include "pelican/comms/Data.h"
+#include "pelican/comms/DataChunk.h"
 
 namespace pelican {
 
-class Data;
+class DataChunk;
 
 /**
+ * @ingroup c_server
+ *
  * @class AbstractLockableData
  *
  * @brief
  * Interface for data classes that can be locked.
  *
  * @details
- * TODO Detailed description for AbstractLockableData.
+ * \todo Detailed description for AbstractLockableData.
  */
 class AbstractLockableData : public AbstractLockable
 {
     Q_OBJECT
 
     protected:
-        boost::shared_ptr<Data> _data;
+        boost::shared_ptr<DataChunk> _data;
 
     private:
         quint64 _maxSize;
@@ -47,7 +49,7 @@ class AbstractLockableData : public AbstractLockable
         void setId(const QString& id) {_data->setId(id);}
 
         /// Return the underlying data object.
-        boost::shared_ptr<Data> data() const {return _data;}
+        boost::shared_ptr<DataChunk> data() const {return _data;}
 
         /// Return the maximum size.
         quint64 maxSize() {return _maxSize;}

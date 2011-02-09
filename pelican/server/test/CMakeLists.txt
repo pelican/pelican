@@ -1,8 +1,7 @@
 
 # Build Pelican server testing library module.
 # ==============================================================================
-SUBPACKAGE(serverTest server emulator data comms utility)
-#message(STATUS "+++++++++++++++++ serverTestMT: sub libs: ${SUBPACKAGE_LIBRARIES}\n")
+SUBPACKAGE(serverTest server emulator data comms utility emulatorTest)
 set(serverTestlib_src
     src/TestChunker.cpp
     src/TestUdpChunker.cpp
@@ -36,7 +35,6 @@ set(serverTest_src
     src/WritableDataTest.cpp
 )
 add_executable(serverTest ${serverTest_src})
-#message(STATUS "+++++++++++++++++ serverTest: sub libs: ${SUBPACKAGE_LIBRARIES}\n")
 target_link_libraries(serverTest
     ${SUBPACKAGE_LIBRARIES}
     ${CPPUNIT_LIBRARIES}
@@ -54,7 +52,6 @@ set(serverTestMT_src
     src/FileChunkerTest.cpp
 )
 add_executable(serverTestMT ${serverTestMT_src})
-#message(STATUS "+++++++++++++++++ serverTestMT: sub libs: ${SUBPACKAGE_LIBRARIES}\n")
 target_link_libraries(serverTestMT
     ${SUBPACKAGE_LIBRARIES}
     ${CPPUNIT_LIBRARIES}

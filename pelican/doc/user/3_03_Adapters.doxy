@@ -1,3 +1,5 @@
+namespace pelican {
+
 /**
 \page user_referenceAdapters Data Adapters
 
@@ -17,7 +19,7 @@ These are stream adapters and service adapters (<i>## TODO: ref. description
 of stream and service data...</i>):
 
 \li <b>Stream Adapters:</b> De-serialise data chunks classed as stream data.
-    Stream adapters allow the de-serialisation method to be modified 
+    Stream adapters allow the de-serialisation method to be modified
     by service data registered to be associated to the stream data.
 \li <b>Service Adapters:</b> De-serialise data chunks classed as service data.
     The adaption of data chunks classed as service data is not expected to
@@ -34,8 +36,6 @@ base class, rather than explicitly though the interface of the
 \c deserialise() method.
 
 \section user_referenceAdapters_overview Overview
-
-(## TODO change title to something like 'Implementation steps'.)
 
 To create a new adapter :
 
@@ -58,15 +58,14 @@ To create a new adapter :
     name.
 \li The data object being populated by the adapter must be a Pelican data blob
     (i.e. a class that inherits from \c DataBlob).
-    There are a number of data blob types that are currently provided by the 
+    There are a number of data blob types that are currently provided by the
     Pelican framework, so you may not need to create your own if these are
     suitable.
 
 \section user_referenceAdapters_configuration Configuration
 
-(## TODO: ref to configuration section)
-
-All adapters must be supplied with a configuration node in their constructors.
+All adapters must be supplied with a
+\ref user_referenceConfiguration "configuration" node in their constructors.
 The configuration node resides in the adapters section of the configuration XML
 file, and has a tag name the same as the adapter class name.
 
@@ -77,8 +76,8 @@ to de-serialise the chunk.
 \section user_referenceAdapters_example Example
 
 The following example shows a stream adapter to convert chunks of data
-containing sections of a stream of real floating point values into the example
-data blob (## TODO: example data blob).
+containing sections of a stream of real floating point values into the
+\ref user_referenceDataBlobs_example "example data blob".
 
 The XML configuration node is:
 
@@ -96,4 +95,10 @@ and the class implementation is:
 
 \include AdapterExample.cpp
 
+\latexonly
+\clearpage
+\endlatexonly
+
 */
+
+}

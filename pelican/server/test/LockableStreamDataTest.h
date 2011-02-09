@@ -1,21 +1,22 @@
 #ifndef LOCKABLESTREAMDATATEST_H
 #define LOCKABLESTREAMDATATEST_H
 
-#include <cppunit/extensions/HelperMacros.h>
-
 /**
  * @file LockableStreamDataTest.h
  */
 
+#include <cppunit/extensions/HelperMacros.h>
+
 namespace pelican {
 
 /**
+ * @ingroup t_server
+ *
  * @class LockableStreamDataTest
- *  
+ *
  * @brief
- * 
+ *
  * @details
- * 
  */
 
 class LockableStreamDataTest : public CppUnit::TestFixture
@@ -40,4 +41,4 @@ class LockableStreamDataTest : public CppUnit::TestFixture
 };
 
 } // namespace pelican
-#endif // LOCKABLESTREAMDATATEST_H 
+#endif // LOCKABLESTREAMDATATEST_H

@@ -1,27 +1,30 @@
 #ifndef TESTUDPCHUNKER_H
 #define TESTUDPCHUNKER_H
 
+/**
+ * @file TestUdpChunker.h
+ */
+
 #include "pelican/server/AbstractChunker.h"
 
 #include <QtCore/QString>
 #include <QtCore/QObject>
 #include <QtCore/QByteArray>
 
-/**
- * @file TestUdpChunker.h
- */
-
 namespace pelican {
+namespace test {
 
 /**
+ * @ingroup t_server
+ *
  * @class TestUdpChunker
  *
  * @brief
  * Implementation of an AbstractChunker to work with the telescope emulator.
  *
  * @details
- *
  */
+
 class TestUdpChunker : public AbstractChunker
 {
     public:
@@ -45,6 +48,6 @@ class TestUdpChunker : public AbstractChunker
 // Register the chunker.
 PELICAN_DECLARE_CHUNKER(TestUdpChunker)
 
+} // namespace test
 } // namespace pelican
-
 #endif // TESTUDPCHUNKER_H

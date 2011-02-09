@@ -1,4 +1,4 @@
-#include "pelican/comms/Data.h"
+#include "pelican/comms/DataChunk.h"
 #include "pelican/comms/PelicanProtocol.h"
 #include "pelican/comms/ServerRequest.h"
 #include "pelican/comms/ServerResponse.h"
@@ -22,27 +22,39 @@
 namespace pelican {
 
 
-// class PelicanProtocol
 PelicanProtocol::PelicanProtocol()
     : AbstractProtocol()
 {
 }
 
+
 PelicanProtocol::~PelicanProtocol()
 {
 }
 
+
+
+/**
+ * @details
+ * Creates a server request object based on the request received from the
+ * PelicanServerClient using the PelicanClientProtocol
+ */
 boost::shared_ptr<ServerRequest> PelicanProtocol::request(QTcpSocket& socket)
 {
-
     int timeout = 1000;
     ServerRequest::Request type = ServerRequest::Error;
-    while (socket.bytesAvailable() < (int)sizeof(quint16)) {
-        if ( !socket.waitForReadyRead(timeout) ) {
-            return boost::shared_ptr<ServerRequest>(new ServerRequest(type,  socket.errorString() ));
+
+    // If there are not enough bytes in the socket to hold the request type
+    // return a error (bad) request.
+    while (socket.bytesAvailable() < (int)sizeof(quint16))
+    {
+        if ( !socket.waitForReadyRead(timeout)) {
+            return boost::shared_ptr<ServerRequest>(new ServerRequest(type,
+                    socket.errorString()));
         }
     }
 
+    // Read the request type and return an appropriate server request object.
     QDataStream in(&socket);
     in.setVersion(QDataStream::Qt_4_0);
     in >> (quint16&)type;
@@ -50,54 +62,65 @@ boost::shared_ptr<ServerRequest> PelicanProtocol::request(QTcpSocket& socket)
     switch(type)
     {
         case ServerRequest::Acknowledge:
-            return boost::shared_ptr<AcknowledgementRequest>( new AcknowledgementRequest() );
+        {
+            return boost::shared_ptr<AcknowledgementRequest>(
+                    new AcknowledgementRequest());
             break;
+        }
+
         case ServerRequest::ServiceData:
+        {
+            boost::shared_ptr<ServiceDataRequest> s(new ServiceDataRequest);
+            quint16 num; /// \todo really good variable name!?
+            in >> (quint16&)num;
+            for(int i=0; i < num; ++i)
             {
-                boost::shared_ptr<ServiceDataRequest> s(new ServiceDataRequest);
-                quint16 num;
-                in >> (quint16&)num;
-                for(int i=0; i < num; ++i )
-                {
-                    QString dtype;
-                    QString version;
-                    in >> dtype >> version;
-                    s->request(dtype,version);
-                }
-                return s;
+                QString dtype;
+                QString version;
+                in >> dtype >> version;
+                s->request(dtype,version);
             }
+            return s;
             break;
+        }
+
         case ServerRequest::StreamData:
+        {
+            boost::shared_ptr<StreamDataRequest> s(new StreamDataRequest);
+            quint16 num;
+            in >> num; /// \todo really good variable name!?
+            for(int i = 0; i < num; ++i )
             {
-                boost::shared_ptr<StreamDataRequest> s(new StreamDataRequest);
-                quint16 num;
-                in >> num;
-                for(int i=0; i < num; ++i )
-                {
-                    QSet<QString> serviceData;
-                    QSet<QString> streamData;
-                    in >> serviceData;
-                    in >> streamData;
-                    DataRequirements dr;
-                    dr.addServiceData(serviceData);
-                    dr.addStreamData(streamData);
-                    s->addDataOption(dr);
-                }
-                return s;
+                QSet<QString> serviceData;
+                QSet<QString> streamData;
+                in >> serviceData;
+                in >> streamData;
+                DataRequirements dr;
+                dr.addServiceData(serviceData);
+                dr.addStreamData(streamData);
+                s->addDataOption(dr);
             }
+            return s;
             break;
+        }
+
         case ServerRequest::DataSupport:
-            {
-                boost::shared_ptr<DataSupportRequest> s(new DataSupportRequest);
-                return s;
-            }
+        {
+            boost::shared_ptr<DataSupportRequest> s(new DataSupportRequest);
+            return s;
             break;
+        }
+
         default:
             break;
     }
     return boost::shared_ptr<ServerRequest>(new ServerRequest(ServerRequest::Error, "PelicanProtocol: Unknown type passed"));
 }
 
+
+/**
+ * @details
+ */
 void PelicanProtocol::send(QIODevice& device, const DataSupportResponse& supported)
 {
     QByteArray array;
@@ -107,44 +130,61 @@ void PelicanProtocol::send(QIODevice& device, const DataSupportResponse& support
     out << supported.streamData();
     out << supported.serviceData();
     device.write(array);
-
 }
 
-void PelicanProtocol::send(QIODevice& stream, const AbstractProtocol::StreamData_t& data )
+
+/**
+ * @details
+ */
+void PelicanProtocol::send(QIODevice& stream, const AbstractProtocol::StreamData_t& data)
 {
-    // construct the stream data header
-    // first integer is the number of Stream Data sets
-    // for each Stream Data set there is a name tag, version tag, and size integer
-    // following integer is the number of Service Data sets associated with the stream data
-    // for each Service Data set there is a name tag and version tag
-    // finally the binary data for the Stream itself is sent
+    // Write the stream data header consisting of:
+    //
+    // - Response type (Stream data in this case!)
+    // - The Number of streams (data.size())
+    //
+    // For each stream data object in the stream data set.
+    // - The stream data name, version id and size.
+    // - The number of service data sets associated with the stream.
+    // - For each service data its name, version id and size.
+
+    // General header for the stream data set.
     QByteArray array;
     QDataStream out(&array, QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_4_0);
     out << (quint16)ServerResponse::StreamData;
     out << (quint16)data.size();
     QListIterator<StreamData*> i(data);
-    // stream header info
-    while (i.hasNext()) {
+
+    // Header per stream data object.
+    while (i.hasNext())
+    {
         StreamData* sd = i.next();
         out << sd->name() << sd->id() << (quint64)(sd->size());
+
         // service data info
         out << (quint16) sd->associateData().size();
-        foreach(const boost::shared_ptr<Data>& dat, sd->associateData())
+        foreach(const boost::shared_ptr<DataChunk>& dat, sd->associateData())
         {
             out << dat->name() << dat->id() << (quint64)(dat->size());
         }
     }
+
     stream.write(array);
-    // actual stream data
+
+    // Write the actual stream data.
     i.toFront();
     while (i.hasNext())
     {
         StreamData* sd = i.next();
-        stream.write( (const char*)sd->ptr(), sd->size() );
+        stream.write((const char*)sd->ptr(), sd->size());
     }
 }
 
+
+/**
+ * @details
+ */
 void PelicanProtocol::send(QIODevice& stream, const AbstractProtocol::ServiceData_t& data )
 {
     // construct the service data header
@@ -154,30 +194,33 @@ void PelicanProtocol::send(QIODevice& stream, const AbstractProtocol::ServiceDat
     QByteArray array;
     QDataStream out(&array, QIODevice::WriteOnly);
 
-    // header data
+    // Write (send) the header.
     out.setVersion(QDataStream::Qt_4_0);
     out << (quint16)ServerResponse::ServiceData;
     out << (quint16)data.size();
 
-    QListIterator<Data*> i(data);
+    QListIterator<DataChunk*> i(data);
     while (i.hasNext()) {
-        Data* d = i.next();
+        DataChunk* d = i.next();
         out << d->name() << d->id() << (quint64)d->size();
     }
     stream.write(array);
 
-    // binary data
+    // Write (send) binary data.
     i.toFront();
     while (i.hasNext())
     {
-        Data* d = i.next();
+        DataChunk* d = i.next();
         stream.write( (const char*)d->ptr(), (quint64)d->size() );
     }
 }
 
+
+/**
+ * @details
+ */
 void PelicanProtocol::send(QIODevice& device, const QString& name, const DataBlob& data)
 {
-//    std::cout << "PelicanProtocol::send(): " << name.toStdString() << std::endl;
     QByteArray array;
     QDataStream out(&array, QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_4_0);
@@ -190,7 +233,11 @@ void PelicanProtocol::send(QIODevice& device, const QString& name, const DataBlo
     data.serialise(device);
 }
 
-void PelicanProtocol::send(QIODevice& device, const QString& msg )
+
+/**
+ * @details
+ */
+void PelicanProtocol::send(QIODevice& device, const QString& msg)
 {
     QByteArray array;
     QDataStream out(&array, QIODevice::WriteOnly);
@@ -202,6 +249,10 @@ void PelicanProtocol::send(QIODevice& device, const QString& msg )
     device.write(array);
 }
 
+
+/**
+ * @Details
+ */
 void PelicanProtocol::sendError(QIODevice& stream, const QString& msg)
 {
     QByteArray array;

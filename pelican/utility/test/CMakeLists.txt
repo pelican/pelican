@@ -1,5 +1,15 @@
-# Set dependencies for Pelican utility tests.
+# Build the Pelican utility testing library module
+# ==============================================================================
 SUBPACKAGE(utilityTest utility)
+set(utilityTestLib_src
+    src/SocketTester.cpp
+)
+SUBPACKAGE_LIBRARY(utilityTestUtils ${utilityTestLib_src})
+SUBPACKAGE_SET_EXTERNAL_LIBRARIES(
+    ${QT_QTCORE_LIBRARY}
+    ${QT_QTNETWORK_LIBRARY}
+)
+
 
 # Build Pelcain utility tests.
 # Note: The memory tracer utility is only availaible for linking in debug mode.
@@ -13,8 +23,7 @@ set(utilityTest_src
 set(utilityTest_mt_src
     src/utilityTest.cpp
     src/WatchedFileTest.cpp
-    )
-#message(STATUS ">>>>>>>>>>>>>> utilityTest libs : ${SUBPACKAGE_LIBRARIES}")
+)
 
 add_executable(utilityTestMT ${utilityTest_mt_src} )
 if(CMAKE_BUILD_TYPE MATCHES DEBUG|[Dd]ebug)

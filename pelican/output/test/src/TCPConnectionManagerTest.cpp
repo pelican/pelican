@@ -16,9 +16,11 @@
 
 namespace pelican {
 
+using test::TestDataBlob;
+
 CPPUNIT_TEST_SUITE_REGISTRATION( TCPConnectionManagerTest );
 /**
- *@details TCPConnectionManagerTest 
+ *@details TCPConnectionManagerTest
  */
 TCPConnectionManagerTest::TCPConnectionManagerTest()
     : CppUnit::TestFixture()

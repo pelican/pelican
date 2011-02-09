@@ -1,3 +1,5 @@
+namespace pelican {
+
 /**
 \page user_referenceChunkers Data Chunkers
 
@@ -6,7 +8,7 @@
 The function of the chunker is to take an incoming data stream and turn it
 into suitable size chunks that can be fed into the data adapter.
 
-\b Note: Each chunk should contain all the data required for a single
+\note Each chunk should contain all the data required for a single
 iteration of the pipeline. This may mean that chunks will need to be assembled
 from many smaller network packets, if the chunker connects to a UDP stream.
 
@@ -33,8 +35,8 @@ To create a new data chunker:
     in the chunker's header file to register the chunker, supplying the name
     of the chunker class as the macro argument. Do not use quotes around
     the name.
-    
-\b Note: All pending data must be read from the device when next() is called,
+
+\note All pending data must be read from the device when next() is called,
 otherwise the method will not be called again when more data is available.
 
 \section user_referenceChunkers_configuration Configuration
@@ -84,4 +86,10 @@ and the class implementation is:
 The \em pelicanTest library provides the \em ChunkerTester convenience class for easy
 unit/integration testing of your Chunker. See the API documentation for more details.
 
+\latexonly
+\clearpage
+\endlatexonly
+
 */
+
+}

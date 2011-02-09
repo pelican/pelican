@@ -1,3 +1,5 @@
+namespace pelican {
+
 /**
 @page user_referenceOutputStreamers Output Streamers
 
@@ -5,24 +7,24 @@
 
 You will need to send your processed data elsewhere, perhaps to a storage
 system, a monitoring and control system or a further processing pipeline.
-Pelicans Output Manager allows you to separate the details of the destination of 
+Pelicans Output Manager allows you to separate the details of the destination of
 the data from the specification of what has to be written out.
 
 The OutputManager uses a plug-in mechanism to convert DataBlobs into the formats required.
-These plug-ins are called OutputStreamers and must implement the \em AbstractOutputStream 
+These plug-ins are called OutputStreamers and must implement the \em AbstractOutputStream
 interface.
 
 @subsection user_framework_outputStreamers_pelican_blobserver The TCP Blob Server ( PelicanTCPBlobServer )
 Pelican provides a single output streamer - the PelicanTCPBlobServer.
 This streamer sets up a TCP/IP streaming server to supply any connecting client with
-a copy of the data as it becomes available (server push model). 
-You can use this, in connection with the \em DataBlobClient class, to move data to another machine 
+a copy of the data as it becomes available (server push model).
+You can use this, in connection with the \em DataBlobClient class, to move data to another machine
 or process for storage, further processing, online monitoring, etc.
 
 @section user_reference_outputStreamers_custom Custom OutputStreamers
-As already mentioned, the \em AbstractOutputStreamer provides the base class for plug-ins into the 
+As already mentioned, the \em AbstractOutputStreamer provides the base class for plug-ins into the
 OutputManager.
-To provide new output functionality, you simply inherit from this and implement the 
+To provide new output functionality, you simply inherit from this and implement the
 virtual \em sendStream() method.
 
 We provide an example that takes the \em DataBlobExample object and converts it to an entry
@@ -32,10 +34,16 @@ in a comma seperated value(csv) file.
 @include OutputStreamExample.cpp
 
 @subsection @user_reference_usingOutputStreamers Using The OutputStreamExample streamer
-To use your new class, you must set up your OutputManager correctly. 
+To use your new class, you must set up your OutputManager correctly.
 See the \link user_dataOutput_xmlconfig Data Output section of the "Getting Started Guide" \endlink
-for an example. 
+for an example.
 Make sure that you #include the header for this class somewhere in order to
 register it with the OutputStream factory.
 
+\latexonly
+\clearpage
+\endlatexonly
+
 */
+
+}

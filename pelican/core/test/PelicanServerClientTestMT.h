@@ -1,22 +1,24 @@
 #ifndef PELICANSERVERCLIENTTESTMT_H
 #define PELICANSERVERCLIENTTESTMT_H
 
-#include <cppunit/extensions/HelperMacros.h>
-class QCoreApplication;
-
 /**
  * @file PelicanServerClientTestMT.h
  */
 
+#include <cppunit/extensions/HelperMacros.h>
+class QCoreApplication;
+
 namespace pelican {
 
 /**
+ * @ingroup t_core
+ *
  * @class PelicanServerClientTestMT
- *  
+ *
  * @brief
  *   Multi Threaded integration tests for the PelicanServer Client
  * @details
- * 
+ *
  */
 
 class PelicanServerClientTestMT : public CppUnit::TestFixture
@@ -42,4 +44,4 @@ class PelicanServerClientTestMT : public CppUnit::TestFixture
 };
 
 } // namespace pelican
-#endif // PELICANSERVERCLIENTTESTMT_H 
+#endif // PELICANSERVERCLIENTTESTMT_H

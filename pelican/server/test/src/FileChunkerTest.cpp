@@ -10,7 +10,10 @@
 
 namespace pelican {
 
+using test::ChunkerTester;
+
 CPPUNIT_TEST_SUITE_REGISTRATION( FileChunkerTest );
+
 /**
  * @details Constructs a FileChunkerTest object.
  */
@@ -75,7 +78,7 @@ void FileChunkerTest::test_update()
     // Expect:
     //   A memory request to be made, and filled with the new content
     ChunkerTester tester("FileChunker", 100*_msg.size(), QString("<FileChunker file=\"") + _testFile + "\"/>");
-    sleep(1); 
+    sleep(1);
 
     QSignalSpy spy( tester.chunker()->getDevice(), SIGNAL( readyRead() ) );
     //CPPUNIT_ASSERT_EQUAL( 1, tester.writeRequestCount() );

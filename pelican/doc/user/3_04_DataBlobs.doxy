@@ -1,3 +1,5 @@
+namespace pelican {
+
 /**
 \page user_referenceDataBlobs Data Blobs
 
@@ -14,7 +16,7 @@ data blobs.
 
 DataBlobs cannot be pre-configured; i.e. they take no XML configuration data
 from the configuration file. Methods on the blob itself should be used to
-change its contents as required. 
+change its contents as required.
 
 \section user_referenceDataBlobs_overview Overview
 
@@ -27,7 +29,7 @@ To create a new type of DataBlob:
     data structures in the blob's \c private section, and implement any
     \c public methods that will be used to interact with the data.
 \li If the blob needs to be sent to an output device, reimplement the
-    \c serialise() method to send the contents of the blob to the device. 
+    \c serialise() method to send the contents of the blob to the device.
 \li If the blob needs to be filled from an input device, reimplement the
     \c deserialise() method to read the contents of the blob from the device.
 \li Data blobs must register their existence with the blob factory.
@@ -42,4 +44,10 @@ This example creates and declares a new data blob of floating-point data.
 
 \include DataBlobExample.h
 
+\latexonly
+\clearpage
+\endlatexonly
+
 */
+
+}

@@ -91,7 +91,7 @@ int main(int argc, char** argv)
     QTime timer;
     timer.start();
     int counter = 0;
-    real_t initValue = 0, value = 0;
+    double initValue = 0, value = 0;
     for (counter = 0; counter < iterations; counter++) {
         // Get the data.
 //        QHash<QString, DataBlob*> validData = client->getData(dataHash);

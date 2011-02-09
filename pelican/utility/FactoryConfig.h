@@ -1,6 +1,10 @@
 #ifndef FACTORYCONFIG_H
 #define FACTORYCONFIG_H
 
+/**
+ * @file FactoryConfig.h
+ */
+
 #include "pelican/utility/FactoryRegistrar.h"
 #include "pelican/utility/FactoryBase.h"
 
@@ -9,13 +13,12 @@
 #include <boost/preprocessor/arithmetic/inc.hpp>
 #include <boost/preprocessor/arithmetic/dec.hpp>
 
-/**
- * @file FactoryConfig.h
- */
 
 namespace pelican {
 
 /**
+ * @ingroup c_utility
+ *
  * @brief Blueprint for FactoryConfig.
  *
  * @details
@@ -82,7 +85,7 @@ public: \
 \
     /* Creates and configures a concrete object with a registered ID */ \
     B* create(const QString& id BOOST_PP_ENUM_TRAILING(BOOST_PP_DEC(n),PARAM1,~) , \
-    		const QString& name="") { \
+            const QString& name="") { \
         RegBase<B, n>::check(id); \
         return add(RegBase<B, n>::types()[id]->create(FactoryBase<B>::conf(id, name) \
             BOOST_PP_ENUM_TRAILING_PARAMS(BOOST_PP_DEC(n), P) ), id); \

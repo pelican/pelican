@@ -2,7 +2,7 @@
 #include "PelicanServerClient.h"
 #include "pelican/server/test/TestServer.h"
 #include "pelican/comms/StreamData.h"
-#include "pelican/comms/Data.h"
+#include "pelican/comms/DataChunk.h"
 #include "pelican/core/test/TestServiceAdapter.h"
 #include "pelican/core/test/TestStreamAdapter.h"
 #include "pelican/data/test/TestDataBlob.h"
@@ -13,9 +13,14 @@
 
 namespace pelican {
 
+using test::TestDataBlob;
+using test::TestServiceAdapter;
+using test::TestStreamAdapter;
+using test::TestServer;
+
 CPPUNIT_TEST_SUITE_REGISTRATION( PelicanServerClientTestMT );
 /**
- *@details PelicanServerClientTestMT 
+ *@details PelicanServerClientTestMT
  */
 PelicanServerClientTestMT::PelicanServerClientTestMT()
     : CppUnit::TestFixture()
@@ -74,7 +79,7 @@ void PelicanServerClientTestMT::test_getData()
         // request for Service Data only
         // Expect :
         // throw
-        Data sd(service1, version1, data1 );
+        DataChunk sd(service1, version1, data1 );
         CPPUNIT_ASSERT_EQUAL( (long)data1.size(), (long)sd.size() );
 
         // setup the test
@@ -124,7 +129,7 @@ void PelicanServerClientTestMT::test_getData()
         // with existing service data
         // Expect:
         // return the required data stream
-        Data servd(service1, version2, data2 );
+        DataChunk servd(service1, version2, data2 );
         server.serveServiceData(servd);
         StreamData sd(stream1, version1, data1 );
         CPPUNIT_ASSERT_EQUAL( (long)data1.size(), (long)sd.size() );

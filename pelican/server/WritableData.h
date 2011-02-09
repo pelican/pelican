@@ -1,15 +1,17 @@
 #ifndef WRITABLEDATA_H
 #define WRITABLEDATA_H
 
-#include "pelican/server/AbstractLockableData.h"
-
 /**
  * @file WritableData.h
  */
 
+#include "pelican/server/AbstractLockableData.h"
+
 namespace pelican {
 
 /**
+ * @ingroup c_server
+ *
  * @class WritableData
  *
  * @brief

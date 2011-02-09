@@ -1,23 +1,24 @@
 #ifndef ADAPTERREALDATATEST_H
 #define ADAPTERREALDATATEST_H
 
-#include <cppunit/extensions/HelperMacros.h>
-
-class QCoreApplication;
-
 /**
  * @file AdapterRealDataTest.h
  */
 
+#include <cppunit/extensions/HelperMacros.h>
+
+class QCoreApplication;
+
 namespace pelican {
 
 /**
+ * @ingroup t_core
+ *
  * @class AdapterRealDataTest
  *
  * @brief
  *
  * @details
- *
  */
 
 class AdapterRealDataTest : public CppUnit::TestFixture

@@ -17,6 +17,8 @@ class LockableServiceData;
 class LockedData;
 
 /**
+ * @ingroup c_server
+ *
  * @class ServiceDataBuffer
  *
  * @brief

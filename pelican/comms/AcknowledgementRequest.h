@@ -1,22 +1,24 @@
 #ifndef ACKNOWLEDGEMENTREQUEST_H
 #define ACKNOWLEDGEMENTREQUEST_H
 
-#include "ServerRequest.h"
-
 /**
  * @file AcknowledgementRequest.h
  */
 
+#include "ServerRequest.h"
+
 namespace pelican {
 
 /**
+ * @ingroup c_comms
+ *
  * @class AcknowledgementRequest
- *  
+ *
  * @brief
  * Request for an acknowledgement from the server.
  *
  * @details
- * 
+ *
  */
 class AcknowledgementRequest : public ServerRequest
 {
@@ -30,4 +32,4 @@ class AcknowledgementRequest : public ServerRequest
 
 } // namespace pelican
 
-#endif // ACKNOWLEDGEMENTREQUEST_H 
+#endif // ACKNOWLEDGEMENTREQUEST_H

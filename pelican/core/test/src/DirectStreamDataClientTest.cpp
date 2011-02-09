@@ -10,7 +10,7 @@
 
 #include "pelican/data/DataRequirements.h"
 #include "pelican/emulator/EmulatorDriver.h"
-#include "pelican/emulator/RealUdpEmulator.h"
+#include "pelican/emulator/test/RealUdpEmulator.h"
 #include "pelican/utility/Config.h"
 #include "pelican/utility/FactoryConfig.h"
 #include "pelican/utility/FactoryGeneric.h"
@@ -22,6 +22,8 @@
 #include "pelican/utility/memCheck.h"
 
 namespace pelican {
+
+using test::RealUdpEmulator;
 
 CPPUNIT_TEST_SUITE_REGISTRATION( DirectStreamDataClientTest );
 

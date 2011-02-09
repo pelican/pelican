@@ -1,14 +1,16 @@
+namespace pelican {
+
 /**
 \page user_referenceConfiguration Configuration Files
 
 \section user_referenceConfiguration_introduction Introduction
 
-The configuration file allows control over all aspects of the 
+The configuration file allows control over all aspects of the
 runtime binary. As well as things such as server IP addresses and port
 information, the configuration file is also used to set parameters for
 individual modules in the pipeline.
 
-There are currently no default locations for pelican to search for configuration 
+There are currently no default locations for pelican to search for configuration
 files. You must specify the configuration file on the command line with the
 \c --config option. Note that this may change in future revisions.
 
@@ -28,7 +30,7 @@ The most basic valid configuration file is:
 </configuration>
 \endverbatim
 
-Inside the \c configuration tag there can be up to three sections, delimited 
+Inside the \c configuration tag there can be up to three sections, delimited
 by their own tags:
 
 \li \c pipeline
@@ -49,7 +51,7 @@ Under \e pipeline, any of the following can be present in any order:
 \li \c clients (configuration for data clients)
 \li \c chunkers (configuration for data chunkers, if using a direct stream client)
 \li \c adapters (configuration for data adapters)
-\li \c modules (configuration for pipeline modules) 
+\li \c modules (configuration for pipeline modules)
 
 Under \e server, any of the following can be present in any order:
 
@@ -57,13 +59,13 @@ Under \e server, any of the following can be present in any order:
 \li \c buffers (configuration for data buffers)
 
 Within these sub-sections, the tag names must match the names of the objects
-(i.e. the class names). Multiple different objects of the same type that need 
+(i.e. the class names). Multiple different objects of the same type that need
 different configurations can be distinguished by using the \c name attribute
 in the class tag.
 
 \subsection user_referenceConfiguration_structureExample Example
 
-This is an example configuration file that contains both \e pipeline and 
+This is an example configuration file that contains both \e pipeline and
 \e server sections. There are two chunkers of the same type that must connect
 to different UDP ports, so the \c name attribute is used to disambiguate them.
 
@@ -78,7 +80,7 @@ to different UDP ports, so the \c name attribute is used to disambiguate them.
             <data type="VisibilityData" adapter="AdapterStationVisibilities"/>
        </PelicanServerClient>
     </clients>
-    
+
     <adapters>
         <AdapterStationVisibilities>
             <antennas number="2"/>
@@ -95,7 +97,7 @@ to different UDP ports, so the \c name attribute is used to disambiguate them.
            <buffer maxSize="10000" maxChunkSize="10000"/>
        </VisibilityData>
     </buffers>
-    
+
     <chunkers>
        <TestUdpChunker name="1">
            <connection host="127.0.0.1" port="2002"/>
@@ -188,7 +190,7 @@ The preprocessor will transform this into the following XML:
 \subsection user_referenceConfiguration_import_file Importing Files
 
 It is possible to import all the child nodes under the root node of a
-document in another file. 
+document in another file.
 
 To do this, use the <tt>import file="[file name]"</tt> tag.
 If not an absolute path, the file name must be relative to the current working
@@ -201,7 +203,7 @@ but is reserved for future use.
 
 \section user_referenceConfiguration_configNode Obtaining Configuration Data
 
-Objects that are configurable (which are currently pipeline modules, adapters, 
+Objects that are configurable (which are currently pipeline modules, adapters,
 chunkers and data clients) can obtain their settings using convenience methods
 on the ConfigNode object passed to them in their constructors.
 
@@ -233,7 +235,7 @@ frequencies and/or channel indices when working with radio telescope data.
 This channel information often has to be supplied to many different
 processing modules.
 
-Frequency channels are specified in the XML configuration as 
+Frequency channels are specified in the XML configuration as
 
 \verbatim <channels>1,5,182</channels> \endverbatim
 
@@ -260,12 +262,12 @@ This XML tag should be provided for all chunkers that use network sockets.
 \verbatim <connection host="127.0.0.1" port="2001"/> \endverbatim
 
 All chunkers must also declare the data type that they provide using the
-<tt>data type="[type]"</tt> tag, for example: 
+<tt>data type="[type]"</tt> tag, for example:
 
 \verbatim <data type="VisibilityData"/> \endverbatim
 
 The data type string is the name of the data blob that will be eventually
-filled by the adapter. 
+filled by the adapter.
 
 \section user_referenceConfiguration_dataClient Common Data Client Options
 
@@ -283,4 +285,10 @@ the client knows which adapter to use for each data type.
 
 There should be as many \c data tags as necessary, one for each data type.
 
+\latexonly
+\clearpage
+\endlatexonly
+
 */
+
+}

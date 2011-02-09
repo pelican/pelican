@@ -628,7 +628,12 @@ EXCLUDE_SYMBOLS        =
 # directories that contain example code fragments that are included (see
 # the \include command).
 
-EXAMPLE_PATH           = "@CMAKE_CURRENT_SOURCE_DIR@/examples"
+EXAMPLE_PATH           = "@CMAKE_CURRENT_SOURCE_DIR@/examples" \
+                         "@CMAKE_CURRENT_SOURCE_DIR@/examples/reference" \
+                         "@CMAKE_CURRENT_SOURCE_DIR@/examples/reference/src" \
+                         "@CMAKE_CURRENT_SOURCE_DIR@/examples/tutorial" \
+                         "@CMAKE_CURRENT_SOURCE_DIR@/examples/tutorial/data" \
+                         "@CMAKE_CURRENT_SOURCE_DIR@/examples/tutorial/src"
 
 # If the value of the EXAMPLE_PATH tag contains directories, you can use the
 # EXAMPLE_PATTERNS tag to specify one or more wildcard pattern (like *.cpp
@@ -648,7 +653,7 @@ EXAMPLE_RECURSIVE      = NO
 # directories that contain image that are included in the documentation (see
 # the \image command).
 
-IMAGE_PATH             = "@CMAKE_CURRENT_SOURCE_DIR@/doc/user/images"
+IMAGE_PATH             = "@CMAKE_CURRENT_SOURCE_DIR@/doc/user/images" \
                          "@CMAKE_CURRENT_SOURCE_DIR@/doc/images"
 
 # The INPUT_FILTER tag can be used to specify a program that doxygen should

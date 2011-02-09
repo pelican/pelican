@@ -1,23 +1,26 @@
 #ifndef STREAM_H
 #define STREAM_H
-#include <boost/shared_ptr.hpp>
-#include <QString>
-
 
 /**
  * @file Stream.h
  */
 
+#include <boost/shared_ptr.hpp>
+#include <QtCore/QString>
+
 namespace pelican {
-    class DataBlob;
+
+class DataBlob;
 
 /**
+ * @ingroup c_output
+ *
  * @class Stream
- * 
+ *
  * @brief
  *   Contains info about a stream
  * @details
- * 
+ *
  */
 class Stream
 {
@@ -50,4 +53,4 @@ class Stream
 
 } // namespace pelican
 
-#endif // STREAM_H 
+#endif // STREAM_H

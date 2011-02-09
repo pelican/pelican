@@ -1,13 +1,15 @@
 #ifndef CONFIGTEST_H
 #define CONFIGTEST_H
 
-#include <cppunit/extensions/HelperMacros.h>
-
 /**
  * @file ConfigTest.h
  */
 
+#include <cppunit/extensions/HelperMacros.h>
+
 /**
+ * @ingroup t_utility
+ *
  * @class ConfigTest
  *
  * @brief
@@ -15,7 +17,7 @@
  *
  * @details
  *
- * @note Created as a QCoreApplication for Qt garbage collection.
+ * \note Created as a QCoreApplication for Qt garbage collection.
  */
 
 class QCoreApplication;

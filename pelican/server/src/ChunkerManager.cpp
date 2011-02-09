@@ -1,24 +1,25 @@
-#include <QtCore/QVector>
-#include <boost/shared_ptr.hpp>
 #include "pelican/server/ChunkerManager.h"
 #include "pelican/server/DataReceiver.h"
 #include "pelican/server/DataManager.h"
 #include "pelican/server/AbstractChunker.h"
 
-#include "pelican/utility/memCheck.h"
+#include <QtCore/QVector>
+#include <boost/shared_ptr.hpp>
 
-// include default chunkers
-// here to ensure they are available in the factory
+// Include default chunkers here to ensure they are available in the factory.
 #include "pelican/server/FileChunker.h"
+
 #include <iostream>
 using std::cout;
+using std::cerr;
 using std::endl;
+
+#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 
 /**
  * @details
- * Constructs the ChunkerManager.
  */
 ChunkerManager::ChunkerManager(const Config* config, const QString& section)
 {
@@ -26,7 +27,9 @@ ChunkerManager::ChunkerManager(const Config* config, const QString& section)
     _factory = new FactoryConfig<AbstractChunker>(config, section, "chunkers");
 }
 
-ChunkerManager::ChunkerManager(const Config* config,  const Config::TreeAddress& base )
+
+ChunkerManager::ChunkerManager(const Config* config,
+        const Config::TreeAddress& base)
 {
     // Create the chunker factory.
     Config::TreeAddress chunkerBase = base;
@@ -34,6 +37,8 @@ ChunkerManager::ChunkerManager(const Config* config,  const Config::TreeAddress&
 
     _factory = new FactoryConfig<AbstractChunker>(config, chunkerBase);
 }
+
+
 /**
  * @details
  * Destroys the ChunkerManager and the chunker factory it contains.
@@ -85,7 +90,7 @@ bool ChunkerManager::init(DataManager& dataManager)
     }
     catch( const QString& msg )
     {
-        std::cout << "Error Initiiating Chunkers: " << msg.toStdString() << std::endl;
+        cerr << "Error Initiating Chunkers: " << msg.toStdString() << endl;
         return false;
     }
     return true;
@@ -118,12 +123,10 @@ void ChunkerManager::addStreamChunker(QString type, QString name)
     if( chunker->type() == "" )
         chunker->setType(type);
 
-    // FIXME remove debug printing.
-//    cout << "type = " << type.toStdString() << endl;
-//    cout << "chunker->type = " << chunker->type().toStdString() << endl;
-
     _addChunker(chunker);
-    _streamDataTypes.insert(chunker->type()); // TODO chunker->type() need to be some sort of list?
+
+    // TODO chunker->type() need to be some sort of list?
+    _streamDataTypes.insert(chunker->type());
 }
 
 /**
@@ -140,7 +143,9 @@ void ChunkerManager::addServiceChunker(QString type, QString name)
     if( chunker->type() == "" )
         chunker->setType(type);
     _addChunker(chunker);
-    _serviceDataTypes.insert(chunker->type()); // TODO chunker->type() need to be some sort of list?
+
+    // TODO chunker->type() need to be some sort of list?
+    _serviceDataTypes.insert(chunker->type());
 }
 
 /**

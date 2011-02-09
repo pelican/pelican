@@ -1,15 +1,17 @@
 #ifndef ADAPTERFACTORYTEST_H
 #define ADAPTERFACTORYTEST_H
 
-#include <cppunit/extensions/HelperMacros.h>
-
 /**
  * @file AdapterFactoryTest.h
  */
 
+#include <cppunit/extensions/HelperMacros.h>
+
 namespace pelican {
 
 /**
+ * @ingroup t_core
+ *
  * @class AdatperFactoryTest
  *
  * @brief

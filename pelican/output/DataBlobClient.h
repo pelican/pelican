@@ -23,6 +23,8 @@ class DataBlob;
 class Stream;
 
 /**
+ * @ingroup c_output
+ *
  * @class DataBlobClient
  *
  * @brief

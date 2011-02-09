@@ -1,15 +1,16 @@
 #ifndef PIPELINEDRIVERTEST_H
 #define PIPELINEDRIVERTEST_H
 
+/**
+ * @file PipelineDriverTest.h
+ */
+
 #include "pelican/data/DataBlob.h"
 #include "pelican/modules/AbstractModule.h"
 #include "pelican/utility/FactoryConfig.h"
 #include "pelican/utility/FactoryGeneric.h"
-#include <cppunit/extensions/HelperMacros.h>
 
-/**
- * @file PipelineDriverTest.h
- */
+#include <cppunit/extensions/HelperMacros.h>
 
 class QCoreApplication;
 
@@ -20,6 +21,8 @@ class DataClientFactory;
 class OutputStreamManager;
 
 /**
+ * @ingroup t_core
+ *
  * @class PipelineDriverTest
  *
  * @brief

@@ -1,26 +1,26 @@
 #ifndef DATARECEIVERTEST_H
 #define DATARECEIVERTEST_H
 
-#include <QString>
-#include <cppunit/extensions/HelperMacros.h>
-
 /**
  * @file DataReceiverTest.h
  */
 
+#include <QtCore/QString>
+#include <cppunit/extensions/HelperMacros.h>
+
 namespace pelican {
 
-class TestChunker;
-class DataManager;
-
 /**
+ * @ingroup t_server
+ *
  * @class DataReceiverTest
  *
  * @brief
- *   Unit test for the DataReceiver Class
- * @details
+ * Unit test for the DataReceiver Class
  *
+ * @details
  */
+
 class DataReceiverTest : public CppUnit::TestFixture
 {
     public:
@@ -40,10 +40,7 @@ class DataReceiverTest : public CppUnit::TestFixture
     public:
         DataReceiverTest(  );
         ~DataReceiverTest();
-
-    private:
 };
 
 } // namespace pelican
-
 #endif // DATARECEIVERTEST_H

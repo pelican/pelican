@@ -1,5 +1,5 @@
 #include "pelican/utility/test/SocketTesterTest.h"
-#include "pelican/utility/SocketTester.h"
+#include "pelican/utility/test/SocketTester.h"
 
 #include <QtCore/QByteArray>
 #include <QtCore/QCoreApplication>
@@ -8,8 +8,10 @@
 
 namespace pelican {
 
+using test::SocketTester;
+
 CPPUNIT_TEST_SUITE_REGISTRATION( SocketTesterTest );
-// class SocketTesterTest 
+// class SocketTesterTest
 SocketTesterTest::SocketTesterTest()
     : CppUnit::TestFixture()
 {
@@ -40,7 +42,6 @@ void SocketTesterTest::test_method()
     sock.waitForReadyRead(2000);
     CPPUNIT_ASSERT_EQUAL( b.size(), (int)sock.bytesAvailable() );
     CPPUNIT_ASSERT( sock.readAll() == b );
-
 }
 
 } // namespace pelican

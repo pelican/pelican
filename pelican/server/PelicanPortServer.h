@@ -13,14 +13,16 @@ class AbstractProtocol;
 class DataManager;
 
 /**
+ * @ingroup c_server
+ *
  * @class PelicanPortServer
- *  
+ *
  * @brief
  *    Class that listens on a specific port
  * @details
  *    Internal class used by PelicanServer
  *    Each port is associated with a single protocol
- * 
+ *
  */
 class Session;
 
@@ -43,4 +45,4 @@ class PelicanPortServer : public QTcpServer
 };
 
 } // namespace pelican
-#endif // PELICANPORTSERVER_H 
+#endif // PELICANPORTSERVER_H

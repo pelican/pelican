@@ -1,25 +1,28 @@
 #ifndef TESTDATACLIENT_H
 #define TESTDATACLIENT_H
 
-
-#include "AbstractDataClient.h"
-#include "pelican/core/DataTypes.h"
-
 /**
  * @file TestDataClient.h
  */
 
+#include "pelican/core/AbstractDataClient.h"
+#include "pelican/core/DataTypes.h"
+
+
 namespace pelican {
+namespace test {
 
 /**
+ * @ingroup t_core
+ *
  * @class TestDataClient
- *  
+ *
  * @brief
  * A test data client for use with the pipeline driver test.
- * 
+ *
  * @details
- * 
  */
+
 class TestDataClient : public AbstractDataClient
 {
     public:
@@ -31,10 +34,9 @@ class TestDataClient : public AbstractDataClient
 
         /// Implements the getData() method.
         QHash<QString, DataBlob*> getData(QHash<QString, DataBlob*>&);
-
-    private:
 };
 
+} // namepace test
 } // namespace pelican
 
-#endif // TESTDATACLIENT_H 
+#endif // TESTDATACLIENT_H

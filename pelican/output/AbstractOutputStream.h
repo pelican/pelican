@@ -1,8 +1,8 @@
 #ifndef ABSTRACTOUTPUTSTREAM_H
 #define ABSTRACTOUTPUTSTREAM_H
 
-#include <QString>
 #include "pelican/utility/FactoryRegistrar.h"
+#include <QtCore/QString>
 
 /**
  * @file AbstractOutputStream.h
@@ -13,8 +13,10 @@ namespace pelican {
     class DataBlob;
 
 /**
+ * @ingroup c_output
+ *
  * @class AbstractOutputStream
- *  
+ *
  * @brief
  *    Base class for all data output modules
  * @details
@@ -48,4 +50,4 @@ class AbstractOutputStream
 };
 
 } // namespace pelican
-#endif // ABSTRACTOUTPUTSTREAM_H 
+#endif // ABSTRACTOUTPUTSTREAM_H

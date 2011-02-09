@@ -16,13 +16,15 @@ class ServerResponse;
 class DataBlob;
 
 /**
+ * @ingroup c_comms
+ *
  * @class AbstractClientProtocol
- *  
+ *
  * @brief
  * Base class for all protocols on the client side.
  *
  * @details
- * 
+ *
  */
 class AbstractClientProtocol
 {
@@ -44,4 +46,4 @@ class AbstractClientProtocol
 
 } // namespace pelican
 
-#endif // ABSTRACTCLIENTPROTOCOL_H 
+#endif // ABSTRACTCLIENTPROTOCOL_H

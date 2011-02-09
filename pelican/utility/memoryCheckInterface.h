@@ -1,3 +1,8 @@
+
+/**
+ * @file memoryCheckInterface.h
+ */
+
 #ifndef NDEBUG
 
 #include <new>

@@ -1,26 +1,30 @@
 #ifndef DATABLOBFACTORY_H
 #define DATABLOBFACTORY_H
 
-#include <QString>
-#include "pelican/utility/FactoryGeneric.h"
-#include "pelican/data/DataBlob.h"
-
 /**
  * @file DataBlobFactory.h
  */
 
+#include "pelican/utility/FactoryGeneric.h"
+#include "pelican/data/DataBlob.h"
+
+#include <QtCore/QString>
+
 namespace pelican {
-    class Config;
-    class DataBlob;
+class Config;
+class DataBlob;
 
 /**
+ * @ingroup c_data
+ *
  * @class DataBlobFactory
- * 
+ *
  * @brief
- *    Create DataBlobs on request
+ * Create DataBlobs on request
+ *
  * @details
- * 
  */
+
 class DataBlobFactory : public FactoryGeneric<DataBlob>
 {
     public:
@@ -29,10 +33,8 @@ class DataBlobFactory : public FactoryGeneric<DataBlob>
 
         /// DataBlobFactory destructor.
         ~DataBlobFactory();
-
-    private:
 };
 
 } // namespace pelican
 
-#endif // DATABLOBFACTORY_H 
+#endif // DATABLOBFACTORY_H

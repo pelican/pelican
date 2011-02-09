@@ -2,33 +2,76 @@
 @page developer_codeConventions Pelican Coding Conventions
 
 @section developer_codeConventions_indent Indentation
-@li indentation is @em 4 blank spaces. Please set your editor to use this instead of @em tab
 
-@section developer_codeConventions_files Filename conventions
-@li Each class, even private classes, will have its own file.
+Each level of indentation is 4 blank spaces. Please set your editor to
+use this instead of the tab character.
+
+@section developer_codeConventions_files Filename Conventions
+
+@li Each class will have its own file.
 @li The name of the file must match that of the class.
 @li C++ class implementation files must end in .cpp
 @li C++ header files must end in .h
-    template C++ header files must end in .hpp
 
-@section developer_codeConventions_naming Variable and Class Naming Convetions
+@section developer_codeConventions_naming Variable and Class Naming Conventions
 
-@li In general CamelCase @link http://en.wikipedia.org/wiki/CamelCase @endlink is used throughout to represent compund words.
-@li Class names should always start with a capital letter e.g. MyClass
-@li Variable names and class members shall always start with a lower case letter e.g. myVariable
+@li In general,
+    <a href="http://en.wikipedia.org/wiki/CamelCase" target="_blank">CamelCase</a>
+    is used throughout to represent compound words.
+@li Class names should always start with a capital letter (e.g. MyClass).
+@li Variable names and class members should always start with a lower case
+    letter (e.g. myVariable, myMethod()).
 @li Private members should generally start with an underscore (_).
 @li Hyphens (-) cannot be used in variable names.
-@li Underscores shall be used in cases where a compound word contains a capitalised acronym. Where the 
-    camel-case rules would require a capitalisation next to the the acronym, use an underscore to separate them.
-    e.g. UDP_Chunker
-    Alternatively, camel-case the acronym, e.g. UdpChunker.
-@li Unit tests classes will be the name of the class being tested with the word @b Test appended.
-    e.g. MyClass -> MyClassTest
+@li Underscores can be used in cases where a compound word contains a
+    capitalised acronym. Where the camel-case rules would require a
+    capitalisation next to the the acronym, use an underscore to separate them
+    (e.g. UDP_Chunker).
+    Alternatively, camel-case the acronym (e.g. UdpChunker).
+@li Unit tests classes will be the name of the class being tested with the
+    word @b Test appended (e.g. MyClass -> MyClassTest).
 
 @section developer_codeConventions_doc Documentation Conventions
-Documentation is produced with doxygen.
+
+Documentation is produced with Doxygen.
+
+In C++ header files, each class member should have a brief, one line
+description above the method's declaration. A Doxygen-style
+triple-forward-slash should be used to start the comment line.
+
+For example:
+
+\verbatim
+class MyClass {
+    public:
+        /// A brief, one line description of the method.
+        void myMethod(int input, int& output);
+};
+\endverbatim
+
+In C++ source files, each class method should have a detailed description using
+a multi-line Doxygen comment. The description should begin with the \em details
+Doxygen tag, as follows:
+
+\verbatim
+/**
+ * @details
+ * This is a detailed description of what the routine does.
+ * Multiple lines can be used in this description.
+ *
+ * @param[in]   input   A description of the input parameter.
+ * @param[out]  output  A description of the output parameter.
+ */
+void MyClass::myMethod(int input, int& output)
+{
+    // Some code here.
+}
+\endverbatim
 
 @section developer_codeConventions_namespace Namespaces
-All pelican core classes must be inside the @em pelican namespace
+
+All Pelican core classes must be inside the \em pelican namespace.
+Classes that will be included in the \c pelican-testutils library
+should be inside the \em pelican::test namespace.
 
 */

@@ -1,21 +1,23 @@
 #ifndef DATATYPESTEST_H
 #define DATATYPESTEST_H
 
-#include <cppunit/extensions/HelperMacros.h>
-
 /**
  * @file DataTypesTest.h
  */
 
+#include <cppunit/extensions/HelperMacros.h>
+
 namespace pelican {
 
 /**
+ * @ingroup t_core
+ *
  * @class DataTypesTest
- *  
+ *
  * @brief
  *   Unit test for DataTypes class
  * @details
- * 
+ *
  */
 
 class DataTypesTest : public CppUnit::TestFixture
@@ -40,4 +42,4 @@ class DataTypesTest : public CppUnit::TestFixture
 };
 
 } // namespace pelican
-#endif // DATATYPESTEST_H 
+#endif // DATATYPESTEST_H

@@ -1,11 +1,11 @@
 #ifndef DIRECTSTREAMDATACLIENTTEST_H
 #define DIRECTSTREAMDATACLIENTTEST_H
 
-#include <cppunit/extensions/HelperMacros.h>
-
 /**
  * @file DirectStreamDataClientTest.h
  */
+
+#include <cppunit/extensions/HelperMacros.h>
 
 class QCoreApplication;
 
@@ -16,12 +16,14 @@ class ConfigNode;
 class DoubleData;
 
 /**
+ * @ingroup t_core
+ *
  * @class DirectStreamDataClientTest
- *  
+ *
  * @brief
- * 
+ *
  * @details
- * 
+ *
  */
 
 class DirectStreamDataClientTest : public CppUnit::TestFixture
@@ -58,4 +60,4 @@ class DirectStreamDataClientTest : public CppUnit::TestFixture
 
 } // namespace pelican
 
-#endif // DIRECTSTREAMDATACLIENTTEST_H 
+#endif // DIRECTSTREAMDATACLIENTTEST_H
