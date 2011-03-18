@@ -5,7 +5,6 @@
  * @file ServerRequest.h
  */
 
-#include <QtCore/QStringList>
 #include <QtCore/QString>
 
 namespace pelican {

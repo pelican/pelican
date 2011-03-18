@@ -10,8 +10,8 @@
 #include "pelican/utility/FactoryRegistrar.h"
 
 #include <QtNetwork/QUdpSocket>
+#include <QtCore/QList>
 #include <QtCore/QString>
-#include <QtCore/QStringList>
 
 namespace pelican {
 
@@ -40,8 +40,8 @@ class AbstractChunker
         quint16 _port;      ///< Port for incoming connections.
         QIODevice* _device; ///< QIODevice for receiving the incoming data.
 
-        DataManager* _dataManager; ///< Data manager used by the chunker to access writable data.
-        QStringList _chunkTypes;   ///< Data chunk data types written to by the chunker.
+        DataManager* _dataManager;  ///< Data manager used to access writable data objects.
+        QList<QString> _chunkTypes; ///< List of the chunk data types written.
 
         bool _active;
 
@@ -52,7 +52,7 @@ class AbstractChunker
 
         /// Constructs a new AbstractChunker (used in testing).
         AbstractChunker() : _host(""), _port(0), _device(0), _dataManager(0),
-        _chunkTypes(QStringList::QStringList()), _active(true)
+        _active(true)
         {}
 
         /// Destroys the AbstractChunker.
@@ -89,13 +89,13 @@ class AbstractChunker
         quint16 port() { return _port; }
 
         /// Sets the type name to be associated with this data.
-        void setChunkTypes(const QStringList& types) { _chunkTypes = types; }
+        void setChunkTypes(const QList<QString> & types) { _chunkTypes = types; }
 
         /// Adds a chunk type to the types written to by the chucker.
         void addChunkType(const QString& type) { _chunkTypes.append(type); }
 
         /// Return the type name to be associated with this data.
-        const QStringList& chunkTypes() const { return _chunkTypes; }
+        const QList<QString> & chunkTypes() const { return _chunkTypes; }
 
         /// Returns the type name associated with the data.
         /// NOTE: This will be depricated. DO NOT USE!.

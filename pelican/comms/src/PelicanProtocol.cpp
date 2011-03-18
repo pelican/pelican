@@ -13,7 +13,6 @@
 
 #include <QtNetwork/QTcpSocket>
 #include <QtCore/QByteArray>
-#include <QtCore/QStringList>
 #include <QtCore/QString>
 #include <QtCore/QMapIterator>
 
@@ -182,7 +181,7 @@ void PelicanProtocol::send(QIODevice& stream, const AbstractProtocol::StreamData
     {
         StreamData* sd = i.next();
         stream.write((const char*)sd->ptr(), sd->size());
-		stream.waitForBytesWritten(-1);
+        stream.waitForBytesWritten(-1);
     }
 }
 

@@ -2,7 +2,6 @@
 
 #include <QtCore/QTextStream>
 #include <QtCore/QFile>
-#include <QtCore/QStringList>
 #include <QtXml/QDomDocumentType>
 
 #include <iostream>
