@@ -16,7 +16,7 @@ AdapterTester::AdapterTester(const QString& type, const QString& config)
    : _device(0)
 {
     // Setup the XML configuration.
-    Config::TreeAddress dataAddress, adapterBase;
+    Config::TreeAddress adapterBase;
     adapterBase << Config::NodeId("adapters", "");
     QString xml = 
             "<adapters><" + type + ">" 
