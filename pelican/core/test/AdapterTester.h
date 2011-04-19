@@ -46,7 +46,7 @@ class AdapterTester
         /// execute
         //  run deserialise() passing the set data stream 
         //  with the number of specified bytes
-        virtual void execute(DataBlob* blob, std::size_t bytes);
+        virtual void execute(DataBlob* blob);
 
     private:
         FactoryConfig<AbstractAdapter>* _adapterFactory;
@@ -54,6 +54,7 @@ class AdapterTester
         QIODevice* _device;
         QHash<QString, DataBlob*> _service;
         AbstractAdapter* _object;
+        int _bytes;
 };
 
 } // namespace pelican

@@ -43,6 +43,7 @@ void AdapterTester::setDataFile(const QString& filename)
      if( ! _device->open( QIODevice::ReadOnly) ) {
         throw( QString("cannot open file" + filename + " for reading") );
      }
+     _bytes = _device->size();
 }
 
 void AdapterTester::setServiceData(QHash<QString, DataBlob*>& serviceData)
@@ -50,14 +51,14 @@ void AdapterTester::setServiceData(QHash<QString, DataBlob*>& serviceData)
     _service = serviceData;
 }
 
-void AdapterTester::execute(DataBlob* blob, std::size_t bytes)
+void AdapterTester::execute(DataBlob* blob )
 {
      switch( _object->type() ) {
          case AbstractAdapter::Stream:
-             ((AbstractStreamAdapter*)(_object))->config(blob, bytes, _service);
+             ((AbstractStreamAdapter*)(_object))->config(blob, _bytes, _service);
              break;
          case AbstractAdapter::Service:
-             ((AbstractServiceAdapter*)_object)->config(blob, bytes);
+             ((AbstractServiceAdapter*)_object)->config(blob, _bytes);
              break;
          default:
              throw( QString("unknown adapter type :%1").arg( _object->type()) ) ;
