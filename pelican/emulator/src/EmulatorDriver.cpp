@@ -60,6 +60,7 @@ void EmulatorDriver::run()
         unsigned long size = 0;
         _emulator->getPacketData(ptr, size);
         if (ptr == 0 || size == 0) noData = true;
+        _dataCount += size;
 
         // Write to the device.
         _device->write(ptr, size);
