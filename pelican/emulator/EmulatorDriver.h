@@ -41,6 +41,9 @@ class EmulatorDriver : public QThread
         /// Destructor.
         ~EmulatorDriver();
 
+        // return the emulator object
+        AbstractEmulator* emulator() const {return _emulator; };
+
     protected:
         /// Runs the thread owned by the emulator driver.
         void run();
