@@ -69,7 +69,7 @@ void EmulatorDriver::run()
         // Sleep.
         unsigned long interval = _emulator->interval();
         if (interval != 0) usleep(interval);
-        packetCounter++;
+        ++packetCounter;
     }
 
     // Warn if no data returned.
