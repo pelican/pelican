@@ -16,6 +16,7 @@ EmulatorDriver::EmulatorDriver(AbstractEmulator* emulator) : QThread()
 {
     _abort = false;
     _emulator = emulator;
+    _dataCount = 0;
 
     // Start the thread if required.
     if (_emulator->autoStart())
@@ -51,6 +52,7 @@ void EmulatorDriver::run()
     bool noData = false;
     bool continuous = _emulator->nPackets() < 0;
     long int packetCounter = 0;
+    _dataCount = 0;
 
     // Enter loop.
     while (!_abort && !noData &&
