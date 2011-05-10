@@ -176,7 +176,7 @@ void PipelineApplication::_createConfig(int argc, char** argv)
 {
     // Check that argc and argv are nonzero
     if (argc == 0 || argv == NULL)
-        throw QString("No command line.");
+        throw QString("PipelineApplication: no config file or other options specified.");
 
     // Declare the supported options.
     opts::options_description desc("Allowed options");
