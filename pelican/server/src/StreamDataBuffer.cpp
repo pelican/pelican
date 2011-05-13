@@ -7,10 +7,6 @@
 
 #include <QtCore/QMutexLocker>
 #include <stdlib.h>
-#include <iostream>
-using std::cout;
-using std::endl;
-#include <complex>
 
 #include "pelican/utility/memCheck.h"
 
@@ -31,6 +27,9 @@ StreamDataBuffer::StreamDataBuffer(const QString& type,
 {
     _max = max;
     _maxChunkSize = maxChunkSize;
+    if( _maxChunkSize == 0 ) {
+        _maxChunkSize = max;
+    }
     _space = _max; // Buffer initially empty so space = max size.
     _manager = 0;
 }
@@ -182,10 +181,12 @@ void StreamDataBuffer::deactivateData(LockableStreamData* data)
 void StreamDataBuffer::activateData(LockableStreamData* data)
 {
     if (data->isValid()) {
+        verbose("activating data", 2);
         QMutexLocker locker(&_mutex);
         _serveQueue.enqueue(data);
     }
     else {
+        verbose("not activating data - invalid", 2);
         QMutexLocker writeLocker(&_writeMutex);
         _emptyQueue.push_back(data);
     }
