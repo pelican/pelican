@@ -51,6 +51,9 @@ class DataManager
         DataManager(const Config* config, const QString section = QString("server"));
         DataManager(const Config* config, const Config::TreeAddress& base );
 
+        /// set verbosity level (0 = off)
+        void setVerbosity(int level) { _verboseLevel = level; };
+
         /// DataManager destructor.
         virtual ~DataManager();
 
@@ -93,9 +96,15 @@ class DataManager
         /// Add a stream data type to be managed.
         void setStreamDataBuffer(const QString& name, StreamDataBuffer* buffer);
 
+    protected:
+        void verbose( const QString& msg, int verboseLevel = 1 );
+
     public:
         const Config* _config;
         Config::TreeAddress _bufferConfigBaseAddress;
+
+    private:
+        int _verboseLevel;
 };
 
 } // namespace pelican

@@ -19,7 +19,7 @@ namespace pelican {
  * DataManager constructor.
  */
 DataManager::DataManager(const Config* config, const QString section)
-    : _config(config)
+    : _config(config), _verboseLevel(0)
 {
     _bufferConfigBaseAddress << Config::NodeId(section,"");
     _bufferConfigBaseAddress << Config::NodeId("buffers","");
@@ -49,12 +49,20 @@ DataManager::~DataManager()
 }
 
 
+void DataManager::verbose( const QString& msg, int verboseLevel )
+{
+    if( verboseLevel <= _verboseLevel )
+        std::cout << "DataManager: "
+                  << msg.toStdString() 
+                  << std::endl;
+}
 /**
  * @details
  *
  */
 WritableData DataManager::getWritableData(const QString& type, size_t size)
 {
+    verbose("data block of type \"" + type + "\" requested", 2 );
     if ( _streams.contains(type) ) {
         return _streams[type]->getWritable(size);
     }
@@ -112,7 +120,9 @@ ServiceDataBuffer* DataManager::getServiceBuffer(const QString& type)
  */
 void DataManager::setStreamDataBuffer(const QString& name, StreamDataBuffer* buffer)
 {
+    verbose("Adding StreamBuffer \"" + name + "\"");
     _specs.setStreamData(name);
+    buffer->setVerbosity(_verboseLevel);
     buffer->setDataManager(this);
     _streams[name]=buffer;
 }
@@ -125,6 +135,8 @@ void DataManager::setStreamDataBuffer(const QString& name, StreamDataBuffer* buf
  */
 void DataManager::setServiceDataBuffer(const QString& name, ServiceDataBuffer* buffer )
 {
+    verbose("Adding ServiceBuffer \"" + name + "\"");
+    buffer->setVerbosity(_verboseLevel);
     _specs.setServiceData(name);
     _service[name]=buffer;
 }
@@ -172,6 +184,7 @@ LockedData DataManager::getNext(const QString& type)
 {
     LockedData lockedData(type, 0);
 
+    verbose("getNext(" + type + ") called", 2 );
     _streams[type]->getNext(lockedData);
     return lockedData;
 }
@@ -187,9 +200,12 @@ LockedData DataManager::getNext(const QString& type)
 QList<LockedData> DataManager::getDataRequirements(const DataRequirements& req)
 {
     QList<LockedData> dataList;
-    if( ! req.isCompatible( dataSpec() ) )
-        throw QString("Session::processStreamDataRequest(): "
+    if( ! req.isCompatible( dataSpec() ) ) {
+        QString msg("Session::processStreamDataRequest(): "
                 "data requested not supported by server");
+        verbose(msg);
+        throw msg;
+    }
     foreach (const QString stream, req.streamData() )
     {
         LockedData data = getNext(stream, req.serviceData());
