@@ -35,6 +35,8 @@ class PelicanPortServer : public QTcpServer
         PelicanPortServer(AbstractProtocol* proto, DataManager* data, QObject* parent=0 );
         ~PelicanPortServer();
 
+        void setVerbosity(int level) { _verboseLevel=level; };
+
     protected:
         /// Reimplemented from QTcpServer.
         void incomingConnection(int socketDescriptor);
@@ -42,6 +44,7 @@ class PelicanPortServer : public QTcpServer
     private:
         AbstractProtocol* _proto;
         DataManager* _data;
+        int _verboseLevel;
 };
 
 } // namespace pelican

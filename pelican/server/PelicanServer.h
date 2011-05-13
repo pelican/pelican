@@ -60,6 +60,9 @@ class PelicanServer : public QThread
         /// Returns true if the server is ready.
         bool isReady() {QMutexLocker locker(&_mutex); return _ready;}
 
+        /// set the verbosity of the server
+        void setVerbosity(int level);
+
     protected:
         /// Code to be executed in the thread, via start().
         void run();
@@ -70,6 +73,7 @@ class PelicanServer : public QThread
         ChunkerManager* _chunkerManager;
         bool _ready;
         const Config* _config;
+        int _verboseLevel;
 };
 
 } // namespace pelican
