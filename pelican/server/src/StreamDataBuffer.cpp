@@ -126,7 +126,22 @@ LockableStreamData* StreamDataBuffer::_getWritable(size_t size)
         }
     }
 
-    // No free containers and no space left, so we return an invalid pointer.
+    // No free containers and no space left, so remove the oldest waiting data
+    // that fits the size requirements
+    {
+        // lock down the server queue in this context
+        QMutexLocker locker(&_mutex);
+        for (int i = 0; i < _serveQueue.size(); ++i) {
+            LockableStreamData* d = _serveQueue[i];
+            if( d->maxSize() >= size ) {
+                _serveQueue.removeAt(i);
+                d->reset();
+                return d;
+            }
+        }
+    }
+
+    // All else fails so we return an invalid pointer.
     return 0;
 }
 
