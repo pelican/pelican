@@ -282,6 +282,10 @@ Use a \c data tag with the attributes \c type and \c adapter so that
 the client knows which adapter to use for each data type.
 
 \verbatim <data type="VisibilityData" adapter="MyAdapter"/> \endverbatim
+When you have multiple adapters of the same type you can use the \c name
+variable to specify a specific adapter configuration.
+
+\verbatim <data type="VisibilityData" adapter="MyAdapter" name="configuration1"/> \endverbatim
 
 There should be as many \c data tags as necessary, one for each data type.
 

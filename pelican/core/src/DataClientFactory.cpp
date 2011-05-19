@@ -40,7 +40,8 @@ AbstractDataClient* DataClientFactory::create(const QString& type,
                 throw QString("DataClientFactory: Unable to find adapter for "
                         "data type '%1'.").arg(dataType);
             AbstractAdapter* adapter =
-                    _adapterFactory->create(adapterNames.value(dataType), "");
+                    _adapterFactory->create(adapterNames.value(dataType), 
+                                conf(type, name).getNamedOption("data","name","") );
             dataTypes.setAdapter(dataType, adapter);
         }
     }
