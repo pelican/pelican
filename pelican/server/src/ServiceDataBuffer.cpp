@@ -26,6 +26,9 @@ ServiceDataBuffer::ServiceDataBuffer(const QString& type,
 {
     _max = max;
     _maxChunkSize = maxChunkSize;
+    if( _maxChunkSize == 0 ) {
+        _maxChunkSize = max;
+    }
     _space = _max; // Buffer initially empty so space = max size.
     _newData = 0;
     _id = 0;

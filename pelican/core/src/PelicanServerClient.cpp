@@ -118,7 +118,8 @@ AbstractDataClient::DataBlobHash PelicanServerClient::_sendRequest(
     sock.connectToHost(_server, _port , QIODevice::ReadWrite);
     if(! sock.waitForConnected(-1))
     {
-        throw(QString("PelicanServerClient: unable to connect to host ") + _server);
+        throw(QString("PelicanServerClient: unable to connect to host ") + _server 
+            + QString(" port %1").arg( _port) + " : " + sock.errorString() );
     }
 
     // Write the request to the open TCP socket with the PelicanClientProtocol.

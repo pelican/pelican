@@ -6,6 +6,7 @@ set(coreTestLibrary_src
     src/TestDataClient.cpp
     src/TestServiceAdapter.cpp
     src/TestStreamAdapter.cpp
+    src/AdapterTester.cpp
 )
 SUBPACKAGE_LIBRARY(coreTestUtils ${coreTestLibrary_src})
 SUBPACKAGE_SET_EXTERNAL_LIBRARIES(

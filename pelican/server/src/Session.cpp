@@ -11,6 +11,7 @@
 #include "pelican/comms/ServiceDataRequest.h"
 
 #include <QtNetwork/QTcpSocket>
+#include <QtNetwork/QHostAddress>
 #include <QtCore/QString>
 #include <QtCore/QHash>
 #include <QtCore/QTime>
@@ -35,7 +36,7 @@ namespace pelican {
  */
 Session::Session(int socketDescriptor, AbstractProtocol* proto,
         DataManager* data, QObject* parent)
-: QThread(parent), _dataManager(data)
+: QThread(parent), _dataManager(data), _verboseLevel(0)
 {
     _protocol = proto;
     _socketDescriptor = socketDescriptor;
@@ -47,6 +48,18 @@ Session::~Session()
     wait();
 }
 
+void Session::setVerbosity(int level)
+{
+     _verboseLevel = level;
+}
+
+void Session::verbose( const QString& msg, int verboseLevel )
+{
+    if( verboseLevel <= _verboseLevel )
+        std::cout << _clientInfo
+                  << msg.toStdString() 
+                  << std::endl;
+}
 
 /**
  * @details
@@ -58,6 +71,7 @@ void Session::run()
         emit error(socket.error());
         return;
     }
+    _clientInfo = "Session: " + socket.peerAddress().toString().toStdString() + ": ";
 
     boost::shared_ptr<ServerRequest> req = _protocol->request(socket);
     processRequest(*req, socket);
@@ -81,7 +95,7 @@ void Session::processRequest(const ServerRequest& req, QIODevice& out,
             case ServerRequest::Acknowledge:
             {
                 _protocol->send(out,"ACK");
-                cout << "Session::processRequest(): Sent acknowledgement" << endl;
+                verbose("Sent acknowledgement");
                 break;
             }
 
@@ -107,6 +121,7 @@ void Session::processRequest(const ServerRequest& req, QIODevice& out,
 
             case ServerRequest::ServiceData:
             {
+                verbose("ServiceData request received");
                 QList<LockedData> d =
                         processServiceDataRequest(static_cast<const ServiceDataRequest&>(req));
                 if (d.size() > 0) {
@@ -121,12 +136,14 @@ void Session::processRequest(const ServerRequest& req, QIODevice& out,
                 }
                 break;
             }
-            default:
+            default: 
+                verbose("protocol error: " + req.message());
                 _protocol->sendError(out, req.message());
         }
     }
     catch (const QString& e)
     {
+        verbose("caught error: " + e );
         _protocol->sendError(out, e);
     }
 }
@@ -163,6 +180,7 @@ QList<LockedData> Session::processStreamDataRequest(const StreamDataRequest& req
     // Return an empty list if there are no data requirements in the request.
     QList<LockedData> dataList;
     if (req.isEmpty()) {
+        verbose("StreamData request is empty");
         return dataList;
     }
 
@@ -170,6 +188,7 @@ QList<LockedData> Session::processStreamDataRequest(const StreamDataRequest& req
     QTime time;
     time.start();
 
+    verbose("processing StreamData request");
     // Iterate until the data requirements can be satisfied.
     // keep spinning until we either get data or time out.
     while (dataList.size() == 0)
@@ -185,6 +204,7 @@ QList<LockedData> Session::processStreamDataRequest(const StreamDataRequest& req
         }
         usleep(1);
     }
+    verbose("finished processing StreamData request");
     return dataList;
 }
 

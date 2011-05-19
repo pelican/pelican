@@ -7,10 +7,6 @@
 
 #include <QtCore/QMutexLocker>
 #include <stdlib.h>
-#include <iostream>
-using std::cout;
-using std::endl;
-#include <complex>
 
 #include "pelican/utility/memCheck.h"
 
@@ -31,6 +27,9 @@ StreamDataBuffer::StreamDataBuffer(const QString& type,
 {
     _max = max;
     _maxChunkSize = maxChunkSize;
+    if( _maxChunkSize == 0 ) {
+        _maxChunkSize = max;
+    }
     _space = _max; // Buffer initially empty so space = max size.
     _manager = 0;
 }
@@ -127,7 +126,22 @@ LockableStreamData* StreamDataBuffer::_getWritable(size_t size)
         }
     }
 
-    // No free containers and no space left, so we return an invalid pointer.
+    // No free containers and no space left, so remove the oldest waiting data
+    // that fits the size requirements
+    {
+        // lock down the server queue in this context
+        QMutexLocker locker(&_mutex);
+        for (int i = 0; i < _serveQueue.size(); ++i) {
+            LockableStreamData* d = _serveQueue[i];
+            if( d->maxSize() >= size ) {
+                _serveQueue.removeAt(i);
+                d->reset();
+                return d;
+            }
+        }
+    }
+
+    // All else fails so we return an invalid pointer.
     return 0;
 }
 
@@ -182,10 +196,12 @@ void StreamDataBuffer::deactivateData(LockableStreamData* data)
 void StreamDataBuffer::activateData(LockableStreamData* data)
 {
     if (data->isValid()) {
+        verbose("activating data", 2);
         QMutexLocker locker(&_mutex);
         _serveQueue.enqueue(data);
     }
     else {
+        verbose("not activating data - invalid", 2);
         QMutexLocker writeLocker(&_writeMutex);
         _emptyQueue.push_back(data);
     }

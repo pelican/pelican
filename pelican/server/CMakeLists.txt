@@ -17,6 +17,7 @@ set(server_moc_headers
 
 set(server_src
     src/AbstractChunker.cpp
+    src/AbstractDataBuffer.cpp
     src/AbstractLockable.cpp
     src/ChunkerManager.cpp
     src/LockableServiceData.cpp

@@ -34,7 +34,7 @@ class AbstractDataBuffer : public QObject
     public:
         /// Constructs a new abstract data buffer object.
         AbstractDataBuffer(const QString& type, QObject* parent = 0) :
-            QObject(parent), _type(type) {}
+            QObject(parent), _type(type), _verboseLevel(0) {}
 
         /// Destroys the data buffer object.
         virtual ~AbstractDataBuffer() {}
@@ -42,10 +42,15 @@ class AbstractDataBuffer : public QObject
         /// Returns a WritableData object of the specified size from the buffer.
         virtual WritableData getWritable(size_t size) = 0;
 
+        /// set verbose levels
+        void setVerbosity(int level) { _verboseLevel = level; }
+        void verbose(const QString& msg, int level = 1);
+
     protected:
         QMutex _mutex;
         QMutex _writeMutex;
         QString _type;
+        int _verboseLevel;
 };
 
 } // namespace pelican

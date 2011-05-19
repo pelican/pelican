@@ -130,11 +130,23 @@ void PipelineDriver::start()
 
     // Enter main program loop.
     _run = true;
+    QString lastError;
     while (_run) {
         // Get the data from the client.
         QHash<QString, DataBlob*> validData;
-        if (_dataClient)
-            validData = _dataClient->getData(_dataHash);
+        try {
+            if (_dataClient)
+                validData = _dataClient->getData(_dataHash);
+        }
+        catch(QString& e)
+        {
+            // log the error and keep going
+            if( e != lastError )
+                std::cerr << e.toStdString() << std::endl;
+            lastError = e;
+            continue;
+        }
+        lastError = "";
 
         // Run all the pipelines compatible with this data hash.
         bool ranPipeline = false;

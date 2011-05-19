@@ -41,6 +41,12 @@ class EmulatorDriver : public QThread
         /// Destructor.
         ~EmulatorDriver();
 
+        // return the emulator object
+        AbstractEmulator* emulator() const { return _emulator; };
+
+        // return the number of bytes that have been sent
+        unsigned long dataCount() const { return _dataCount; };
+
     protected:
         /// Runs the thread owned by the emulator driver.
         void run();
@@ -49,6 +55,7 @@ class EmulatorDriver : public QThread
         bool _abort;
         QIODevice* _device;
         AbstractEmulator* _emulator;
+        unsigned long _dataCount;
 };
 
 } // namespace pelican
