@@ -123,7 +123,7 @@ AbstractDataClient::DataBlobHash DirectStreamDataClient::getData(
             dataList = _dataManager->getDataRequirements(dataRequirements().at(i));
             if (dataList.size() != 0) break;
         }
-        usleep(1); // avoid locking-up threads
+        //usleep(1); // avoid locking-up threads
     }
 
     // Transform the data into DataBlobs.
