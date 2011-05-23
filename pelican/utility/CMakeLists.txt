@@ -5,6 +5,7 @@ set(utility_src
     src/ConfigNode.cpp
     src/Config.cpp
     src/ClientTestServer.cpp
+    src/PelicanTimeRecorder.cpp
     src/WatchedFile.cpp
 )
 set(utility_moc_headers
