@@ -14,7 +14,7 @@ PelicanTimeRecorder* PelicanTimeRecorder::_globalTimer = 0;
  * @details Constructs a PelicanTimeRecorder object.
  */
 PelicanTimeRecorder::PelicanTimeRecorder( int reportInterval )
-    : _reportInterval(0)
+    : _reportInterval(reportInterval)
 {
     _count = 0;
 }

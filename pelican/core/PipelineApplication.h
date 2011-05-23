@@ -111,6 +111,10 @@ class PipelineApplication
         /// Starts the pipeline driver.
         void start();
 
+        /// returns true if start has been called
+        //  and the execution loop is ooperating
+        bool isRunning() const;
+
     private:
         /// Creates the configuration object based on the command line arguments.
         void _createConfig(int argc, char** argv);

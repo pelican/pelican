@@ -99,6 +99,9 @@ class PipelineDriver
         /// Stops the data flow through the pipelines.
         void stop();
 
+        /// return true if the driver main loop is running
+        bool isRunning() const { return _run; }
+
     private:
         /// Checks that the data requirements of all pipelines are compatible.
         void _checkDataRequirements();

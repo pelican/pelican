@@ -167,6 +167,12 @@ void PipelineApplication::start()
 
 }
 
+bool PipelineApplication::isRunning() const
+{
+    if( _driver ) return _driver->isRunning();
+    return false;
+}
+
 /**
  * @details
  * This method is called by the constructor and parses the command line
