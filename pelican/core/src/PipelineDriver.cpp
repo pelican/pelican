@@ -159,8 +159,14 @@ void PipelineDriver::start()
         }
 
         // Check if no pipelines were run.
-        if (!ranPipeline)
-            throw QString("PipelineDriver::start(): No pipelines run.");
+        if (!ranPipeline) {
+            QString msg;
+            foreach( const QString& d, validData.keys() ) {
+                msg += " " + d;
+            }
+            throw QString("PipelineDriver::start(): received data incompatible with the pipelines:"
+                                + msg );
+        }
     }
 }
 
