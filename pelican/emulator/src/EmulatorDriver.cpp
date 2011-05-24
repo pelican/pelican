@@ -43,35 +43,42 @@ EmulatorDriver::~EmulatorDriver()
  */
 void EmulatorDriver::run()
 {
-    // Create the device.
-    _device = _emulator->createDevice();
-    _emulator->setDevice(_device); // The base class deletes the device.
-    sleep(_emulator->startDelay());
-
-    // Set up loop conditions.
     bool noData = false;
-    bool continuous = _emulator->nPackets() < 0;
-    long int packetCounter = 0;
-    _dataCount = 0;
+    try {
+        // Create the device.
+        _device = _emulator->createDevice();
+        _emulator->setDevice(_device); // The base class deletes the device.
+        sleep(_emulator->startDelay());
 
-    // Enter loop.
-    while (!_abort && !noData &&
-            (packetCounter < _emulator->nPackets() || continuous)) {
-        // Get the data.
-        char* ptr = 0;
-        unsigned long size = 0;
-        _emulator->getPacketData(ptr, size);
-        if (ptr == 0 || size == 0) noData = true;
-        _dataCount += size;
+        // Set up loop conditions.
+        bool continuous = _emulator->nPackets() < 0;
+        long int packetCounter = 0;
+        _dataCount = 0;
 
-        // Write to the device.
-        _device->write(ptr, size);
-        _device->waitForBytesWritten(100);
+        // Enter loop.
+        while (!_abort && !noData &&
+                (packetCounter < _emulator->nPackets() || continuous)) {
+            // Get the data.
+            char* ptr = 0;
+            unsigned long size = 0;
+            _emulator->getPacketData(ptr, size);
+            if (ptr == 0 || size == 0) noData = true;
+            _dataCount += size;
 
-        // Sleep.
-        unsigned long interval = _emulator->interval();
-        if (interval != 0) usleep(interval);
-        ++packetCounter;
+            // Write to the device.
+            _device->write(ptr, size);
+            _device->waitForBytesWritten(100);
+
+            // Sleep.
+            unsigned long interval = _emulator->interval();
+            if (interval != 0) usleep(interval);
+            ++packetCounter;
+        }
+    }
+    catch( QString& e )
+    {
+        std::cerr << "EmulaterDriver: Caught error " << e.toStdString() << std::endl;
+        exit(1);
     }
 
     // Warn if no data returned.
