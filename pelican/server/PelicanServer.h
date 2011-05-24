@@ -66,6 +66,7 @@ class PelicanServer : public QThread
     protected:
         /// Code to be executed in the thread, via start().
         void run();
+        void verbose(const QString& msg, int level=1);
 
     private:
         QMap<quint16,AbstractProtocol*> _protocolPortMap;

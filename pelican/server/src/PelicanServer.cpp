@@ -81,6 +81,12 @@ void PelicanServer::addStreamChunker(QString type, QString name)
     _chunkerManager->addStreamChunker(type, name);
 }
 
+void PelicanServer::verbose(const QString& msg, int level)
+{
+     if( level < _verboseLevel )
+        std::cout << msg.toStdString() << std::endl;
+}
+
 /**
  * @details
  * Adds a service chunker of the given \p type and \p name.
@@ -102,31 +108,38 @@ void PelicanServer::addServiceChunker(QString type, QString name)
  */
 void PelicanServer::run()
 {
-    QVector<boost::shared_ptr<PelicanPortServer> > servers;
+    try {
+        QVector<boost::shared_ptr<PelicanPortServer> > servers;
 
-    // Set up the data manager.
-    DataManager dataManager(_config);
-    dataManager.setVerbosity(_verboseLevel);
-    _chunkerManager->init(dataManager);
+        // Set up the data manager.
+        DataManager dataManager(_config);
+        dataManager.setVerbosity(_verboseLevel);
+        _chunkerManager->init(dataManager);
 
-    // Set up listening servers.
-    QList<quint16> ports = _protocolPortMap.keys();
-    for (int i = 0; i < ports.size(); ++i) {
-        boost::shared_ptr<PelicanPortServer> server(
-            new PelicanPortServer(_protocolPortMap[ports[i]], &dataManager) );
-        server->setVerbosity(_verboseLevel);
-        servers.append(server);
-        if ( !server->listen(QHostAddress::Any, ports[i]) )
-            throw QString("Cannot run PelicanServer on port %1").arg(ports[i]);
+        // Set up listening servers.
+        QList<quint16> ports = _protocolPortMap.keys();
+        for (int i = 0; i < ports.size(); ++i) {
+            boost::shared_ptr<PelicanPortServer> server(
+                    new PelicanPortServer(_protocolPortMap[ports[i]], &dataManager) );
+            server->setVerbosity(_verboseLevel);
+            servers.append(server);
+            if ( !server->listen(QHostAddress::Any, ports[i]) )
+                throw QString("Cannot run PelicanServer on port %1").arg(ports[i]);
+        }
+
+        // Set ready flag.
+        _mutex.lock();
+        _ready = true;
+        _mutex.unlock();
+
+        // Enter the server's event loop.
+        exec();
     }
-
-    // Set ready flag.
-    _mutex.lock();
-    _ready = true;
-    _mutex.unlock();
-
-    // Enter the server's event loop.
-    exec();
+    catch( QString& e ) {
+        std::cerr << "PelicanServer caught an error: " << e.toStdString() << std::endl;
+        verbose(QString("Shutting down server thread: ") + e);
+        exit(1);
+    }
 }
 
 void PelicanServer::setVerbosity(int level) {
