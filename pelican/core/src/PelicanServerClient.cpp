@@ -171,8 +171,9 @@ PelicanServerClient::_response(QIODevice& device, shared_ptr<ServerResponse> r,
     {
         case ServerResponse::Error:
         {
-            std::cerr << "PelicanServerClient: Server Error: "
-                      << r->message().toStdString() << std::endl;
+            QString msg = "PelicanServerClient: Server Error: " + r->message();
+            std::cerr << msg.toStdString() << std::endl;
+            throw( msg );
             break;
         }
 
