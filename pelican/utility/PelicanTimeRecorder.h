@@ -6,6 +6,7 @@
 #include <QtCore/QMutex>
 #include <QtCore/QString>
 #include <vector>
+#include <map>
 
 /**
  * @file PelicanTimeRecorder.h
@@ -49,13 +50,13 @@ class PelicanTimeRecorder
         void report() const;
 
     private:
+        typedef QMap<QString,std::vector<unsigned int> > T_Map;
         mutable QMutex _mutex;
         static PelicanTimeRecorder* _globalTimer;
         int _reportInterval;
         int _count;
         QTime _timer;
-        int _last;
-        QMap<QString,std::vector<int> > _ticks;
+        T_Map _ticks;
 };
 
 extern PelicanTimeRecorder* __globalTimeRecorder;

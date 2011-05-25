@@ -19,6 +19,7 @@ set(utilityTest_src
     src/SocketTesterTest.cpp
     src/ConfigTest.cpp
     src/ConfigNodeTest.cpp
+    src/PelicanTimeRecorderTest.cpp
 )
 set(utilityTest_mt_src
     src/utilityTest.cpp

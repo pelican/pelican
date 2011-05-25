@@ -41,28 +41,31 @@ void PelicanTimeRecorder::start()
 {
     QMutexLocker loc(&_mutex);
     _count = 0;
-    _last = _timer.elapsed();
+    _ticks.clear();
+    _timer.start();
 }
 
 void PelicanTimeRecorder::tick(const QString& id)
 {
-    int ms = _timer.elapsed() - _last;
-    _ticks[id].push_back( ms );
-    if( ++_count%_reportInterval == 0)  report();
-    _last = _timer.elapsed();
+    _ticks[id].push_back( _timer.elapsed() );
+    if( _reportInterval && (++_count)%_reportInterval == 0)  report();
+    _timer.restart();
 }
 
 void PelicanTimeRecorder::report() const
 {
     foreach(const QString& tag, _ticks.keys() ) {
-        int max = *(std::max_element(_ticks[tag].begin(), _ticks[tag].end() ));
-        int min = *(std::min_element(_ticks[tag].begin(), _ticks[tag].end() ));
-        std::cout << tag.toStdString()
-                  << ": mean=" << std::accumulate( _ticks[tag].begin(), _ticks[tag].end(), 0 )
-                                             / _ticks[tag].size();
-        std::cout << ": max=" << max << ": min=" << min
-                  << " (ms) " << _ticks[tag].size() 
-                  << " measurements" << std::endl;
+        if( _ticks[tag].size() > 0 ) {
+            std::vector<unsigned int> temp = _ticks[tag];
+            int max = *(std::max_element(temp.begin(), temp.end() ));
+            int min = *(std::min_element(temp.begin(), temp.end() ));
+            std::cout << tag.toStdString()
+                << ": mean=" << std::accumulate( temp.begin(), temp.end(), 0 )
+                / _ticks[tag].size();
+            std::cout << ": max=" << max << ": min=" << min
+                << " (ms) " << _ticks[tag].size() 
+                << " measurements" << std::endl;
+        }
     }
 }
 
