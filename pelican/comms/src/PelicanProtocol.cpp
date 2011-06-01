@@ -12,6 +12,7 @@
 #include "pelican/data/DataBlob.h"
 
 #include <QtNetwork/QTcpSocket>
+#include <QtCore/QDataStream>
 #include <QtCore/QByteArray>
 #include <QtCore/QString>
 #include <QtCore/QMapIterator>
