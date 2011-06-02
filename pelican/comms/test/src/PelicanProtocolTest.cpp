@@ -18,6 +18,7 @@
 #include "pelican/server/WritableData.h"
 
 #include <QtCore/QBuffer>
+#include <QtCore/QDataStream>
 
 #include <iostream>
 using std::endl;

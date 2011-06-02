@@ -1,3 +1,4 @@
+#include <QtCore?QDataStream>
 #include "TestProtocol.h"
 #include "pelican/comms/StreamData.h"
 #include "pelican/comms/ServerRequest.h"
