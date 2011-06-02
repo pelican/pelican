@@ -165,7 +165,12 @@ void DataBlobClient::_response()
             {
                 verbose("DataSupport information received");
                 DataSupportResponse* res = static_cast<DataSupportResponse*>(r.get());
+#ifdef BROKEN_QT_SET_HEADER
+                _streams = res->streamData();
+                _streams.unite(res->serviceData());
+#else
                 _streams = res->streamData() + res->serviceData();
+#endif
                 emit newStreamsAvailable();
                 _streamInfo = true;
             }
