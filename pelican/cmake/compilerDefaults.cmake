@@ -78,6 +78,7 @@ endif(CMAKE_COMPILER_IS_GNUCXX)
 
 if(APPLE)
     add_definitions(-DDARWIN)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -undefined dynamic_lookup")
 endif(APPLE)
 
 
