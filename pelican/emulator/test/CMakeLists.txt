@@ -2,7 +2,7 @@
 # ==============================================================================
 SUBPACKAGE(emulatorTest emulator utility)
 set(emulatorTestLib_src
-    src/RealUdpEmulator.cpp
+    src/RealUdpEmulator_lib.cpp
 )
 SUBPACKAGE_LIBRARY(emulatorTestUtils ${emulatorTestLib_src})
 SUBPACKAGE_SET_EXTERNAL_LIBRARIES(
@@ -29,7 +29,7 @@ add_test(emulatorTest emulatorTest)
 # Build emulator binary to send UDP packets containing real, floating point
 # values (used for bandwith testing).
 # ==============================================================================
-add_executable(realUdpEmulator src/realUdpEmulator.cpp)
+add_executable(realUdpEmulator src/RealUdpEmulator_exec.cpp)
 target_link_libraries(realUdpEmulator
     ${SUBPACKAGE_LIBRARIES}
     ${CPPUNIT_LIBRARIES}
