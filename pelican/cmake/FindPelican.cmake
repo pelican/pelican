@@ -46,10 +46,10 @@ include(FindPackageHandleStandardArgs)
 # Find the top level Pelican include directory.
 find_path(PELICAN_INCLUDE_DIR pelican
     PATHS
+    ${PELICAN_INSTALL_DIR}/include
+    $ENV{PELICAN_INSTALL_DIR}/include
     /usr/include
     /usr/local/include
-    $ENV{PELICAN_INSTALL_DIR}/include
-    ${PELICAN_INSTALL_DIR}/include
 )
 set(PELICAN_INCLUDES ${PELICAN_INCLUDE_DIR})
 
@@ -58,10 +58,10 @@ set(PELICAN_INCLUDES ${PELICAN_INCLUDE_DIR})
 find_library(PELICAN_LIBRARY pelican
     NAMES pelican
     PATHS
+    ${PELICAN_INSTALL_DIR}/lib
+    $ENV{PELICAN_INSTALL_DIR}/lib
     /usr/lib
     /usr/local/lib
-    $ENV{PELICAN_INSTALL_DIR}/lib
-    ${PELICAN_INSTALL_DIR}/lib
 )
 set(PELICAN_LIBRARIES ${PELICAN_LIBRARY})
 
@@ -71,10 +71,10 @@ find_library(PELICAN_TESTUTILS_LIBRARY pelican-testutils
     NAMES
     pelican-testutils
     PATHS
+    ${PELICAN_INSTALL_DIR}/lib
+    $ENV{PELICAN_INSTALL_DIR}/lib
     /usr/lib
     /usr/local/lib
-    $ENV{PELICAN_INSTALL_DIR}/lib
-    ${PELICAN_INSTALL_DIR}/lib
 )
 list(APPEND PELICAN_LIBRARIES ${PELICAN_TESTUTILS_LIBRARY})
 
@@ -82,6 +82,8 @@ list(APPEND PELICAN_LIBRARIES ${PELICAN_TESTUTILS_LIBRARY})
 # Find Pelican cmake modules.
 find_path(PELICAN_CMAKE_MODULE_DIR FindPelicanInstall.cmake
     PATHS
+    ${PELICAN_INSTALL_DIR}/share/pelican/cmake
+    $ENV{PELICAN_INSTALL_DIR}/share/pelican/cmake
     /usr/
     /usr/share
     /usr/share/pelican
@@ -90,8 +92,6 @@ find_path(PELICAN_CMAKE_MODULE_DIR FindPelicanInstall.cmake
     /usr/local/share
     /usr/local/share/pelican
     /usr/local/share/pelican/cmake
-    $ENV{PELICAN_INSTALL_DIR}/share/pelican/cmake
-    ${PELICAN_INSTALL_DIR}/share/pelican/cmake
     PATH_SUFFIXES
     share
     cmake
