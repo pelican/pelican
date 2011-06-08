@@ -16,7 +16,7 @@ namespace test {
  * Default TestPipeline constructor.
  */
 TestPipeline::TestPipeline(int iterations)
-    : AbstractPipeline()
+    : AbstractPipeline(),  _deactivateStop(false)
 {
     reset();
     _iterations = iterations;
@@ -29,7 +29,7 @@ TestPipeline::TestPipeline(int iterations)
  * @param[in] requirements The data requirements of the pipeline.
  */
 TestPipeline::TestPipeline(const DataRequirements& requirements, int iterations)
-    : AbstractPipeline()
+    : AbstractPipeline(), _deactivateStop(false)
 {
     reset();
     _requiredDataRemote = requirements;
@@ -65,13 +65,26 @@ void TestPipeline::reset()
 
 /**
  * @details
+ * call deactivate rather than stop
+ */
+void TestPipeline::setDeactivation(bool d)
+{
+    _deactivateStop = d;
+}
+
+bool TestPipeline::deactivation() const {
+    return _deactivateStop;
+}
+
+/**
+ * @details
  * Pipeline run method (overridden virtual).
  * Defines a single iteration of the pipeline.
  */
 void TestPipeline::run(QHash<QString, DataBlob*>& dataHash)
 {
     // Print message.
-    cout << "Running TestPipeline, iteration " << _counter << endl;
+    //cout << "Running TestPipeline, iteration " << _counter << endl;
 
     // Check the data is correct.
     if (_requiredDataRemote == dataHash)
@@ -79,7 +92,14 @@ void TestPipeline::run(QHash<QString, DataBlob*>& dataHash)
 
     // Increment counter and test for completion.
     if (++_counter >= _iterations)
-        stop(); // Stop the pipeline driver.
+    {
+        if( _deactivateStop ) {
+            deactivate();
+        }
+        else {
+            stop(); // Stop the pipeline driver.
+        }
+    }
 }
 
 } // namespace test

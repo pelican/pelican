@@ -31,6 +31,7 @@ class TestPipeline : public AbstractPipeline
         int _iterations;
         int _counter;
         int _matchedCounter;
+        bool _deactivateStop;
 
     public:
         /// Default constructor.
@@ -52,8 +53,12 @@ class TestPipeline : public AbstractPipeline
         /// expected data.
         int matchedCounter() const {return _matchedCounter;}
 
+        /// return the deactivation setting
+        bool deactivation() const;
+
         /// Reset counters.
         void reset();
+        void setDeactivation(bool v=true);
 
         /// Runs the pipeline.
         void run(QHash<QString, DataBlob*>& dataHash);

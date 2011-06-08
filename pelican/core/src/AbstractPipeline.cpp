@@ -120,6 +120,20 @@ void AbstractPipeline::setModuleFactory(FactoryConfig<AbstractModule>* factory)
 
 /**
  * @details
+ * This function is provided for the pipeline to disable itself
+ * and so not be called by the pipeline driver
+ */
+
+void AbstractPipeline::deactivate()
+{
+    if (_pipelineDriver == NULL)
+        throw QString("AbstractPipeline::disable(): No pipeline driver.");
+
+    _pipelineDriver->deactivatePipeline(this);
+}
+
+/**
+ * @details
  * Sends data to the output streams managed by the OutputStreamManger
  *
  * @param[in] DataBlob to be sent.

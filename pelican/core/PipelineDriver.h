@@ -5,6 +5,7 @@
  * @file PipelineDriver.h
  */
 
+#include "PipelineSwitcher.h"
 #include "pelican/data/DataBlob.h"
 #include "pelican/data/DataRequirements.h"
 #include "pelican/modules/AbstractModule.h"
@@ -12,6 +13,7 @@
 #include "pelican/utility/FactoryGeneric.h"
 #include <QtCore/QMultiHash>
 #include <QtCore/QList>
+#include <QtCore/QVector>
 
 namespace pelican {
 
@@ -20,6 +22,7 @@ class AbstractDataClient;
 class AbstractAdapter;
 class DataClientFactory;
 class OutputStreamManager;
+class PipelineSwitcher;
 
 /**
  * @ingroup c_core
@@ -59,8 +62,13 @@ class PipelineDriver
         /// List of all requirements objects from each pipeline.
         QList<DataRequirements> _allDataReq;
 
-        /// List of registered pipelines owned by the driver.
+        /// List of registered and active pipelines owned by the driver.
         QList<AbstractPipeline*> _registeredPipelines;
+
+        /// Pipeline switching objects
+        QList<PipelineSwitcher> _switchers;
+        QHash<AbstractPipeline*, PipelineSwitcher*> _switcherMap;
+        QVector<AbstractPipeline*> _deactivateQueue;
 
         /// Flag to run the pipeline driver.
         bool _run;
@@ -88,7 +96,12 @@ class PipelineDriver
         ~PipelineDriver();
 
         /// Registers the pipeline with the driver.
+        //  and activates it to be run at start()
         void registerPipeline(AbstractPipeline *pipeline);
+
+        /// A a switchable block of pipelines, The next will be activated each
+        //  time the current pipeline is deactivated
+        void addPipelineSwitcher(const PipelineSwitcher& switcher);
 
         /// Sets the data client.
         void setDataClient(QString name);
@@ -102,9 +115,21 @@ class PipelineDriver
         /// return true if the driver main loop is running
         bool isRunning() const { return _run; }
 
+        // queue a registered pipeline for deactivation
+        void deactivatePipeline(AbstractPipeline*);
+
     private:
+        /// deactivate a registered pipeline
+        void _deactivatePipeline(AbstractPipeline*);
+
         /// Checks that the data requirements of all pipelines are compatible.
         void _checkDataRequirements();
+
+        /// register a pipeline
+        void _registerPipeline(AbstractPipeline*);
+
+        /// activates a pipeline, ensuring datablobs are available.
+        void _activatePipeline(AbstractPipeline*);
 };
 
 } // namespace pelican

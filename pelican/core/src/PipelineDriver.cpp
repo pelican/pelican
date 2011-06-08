@@ -7,6 +7,7 @@
 #include "pelican/data/DataBlob.h"
 #include "pelican/utility/Config.h"
 #include "pelican/utility/ConfigNode.h"
+#include "pelican/core/PipelineSwitcher.h"
 
 #include <QString>
 #include <QtGlobal>
@@ -64,6 +65,12 @@ PipelineDriver::~PipelineDriver()
  */
 void PipelineDriver::registerPipeline(AbstractPipeline *pipeline)
 {
+    _registerPipeline(pipeline);
+    _activatePipeline(pipeline);
+}
+
+void PipelineDriver::_registerPipeline(AbstractPipeline *pipeline)
+{
     // Check the pipeline exists.
     if (!pipeline)
         throw QString("PipelineDriver::registerPipeline(): Null pipeline.");
@@ -80,6 +87,65 @@ void PipelineDriver::registerPipeline(AbstractPipeline *pipeline)
 
     // Store the remote data requirements.
     _allDataReq.append(pipeline->requiredDataRemote());
+}
+
+void PipelineDriver::_activatePipeline(AbstractPipeline *pipeline)
+{
+     if( pipeline ) {
+        foreach ( const QString type, pipeline->requiredDataRemote().allData() ) {
+            if ( ! _dataHash.contains(type) )
+                _dataHash.insert(type, _blobFactory->create(type));
+        }
+        _pipelines.insert(pipeline->requiredDataRemote(), pipeline);
+     }
+}
+
+
+void PipelineDriver::deactivatePipeline(AbstractPipeline *pipeline)
+{
+    if( pipeline ) {
+        // queue the pipeline to be deactivated when it is safe to do so
+        _deactivateQueue.append(pipeline);
+    }
+}
+
+void PipelineDriver::_deactivatePipeline(AbstractPipeline *pipeline)
+{
+    if( pipeline ) {
+        _pipelines.remove(pipeline->requiredDataRemote(),pipeline);
+         // if the pipeline is in a switcher then get the next one
+         if( _switcherMap.contains(pipeline) ) {
+             AbstractPipeline* next = _switcherMap[pipeline]->next();
+             // mark the next pipeline against the switcher
+             if( next != pipeline ) {
+                 _switcherMap[next] = _switcherMap[pipeline]; 
+                 _switcherMap.remove(pipeline);
+             }
+             // now activate the new pipeline
+             _activatePipeline(next);
+         }
+     }
+}
+
+void PipelineDriver::addPipelineSwitcher(const PipelineSwitcher& switcher)
+{
+    _switchers.push_back(switcher);
+     PipelineSwitcher* sw = &_switchers.last(); // pointer to local switcher copy
+
+     AbstractPipeline* next = sw->next();
+     DataRequirements reqs = next->requiredDataRemote();
+
+     // register all the pipelines in the switcher
+     foreach( AbstractPipeline* pipe, switcher.pipelines() ) {
+        if( pipe->requiredDataRemote() != reqs )
+                throw( QString("PipelineDriver: Pipelines with different Data requirements in"
+                               " the same switcher is not supported") );
+        _registerPipeline(pipe);
+     }
+
+     // activate the first
+     _switcherMap[next] = sw;
+     _activatePipeline(next);
 }
 
 /**
@@ -109,20 +175,20 @@ void PipelineDriver::start()
         throw QString("PipelineDriver::start(): No pipelines registered.");
 
     // Store the remote data requirements for each pipeline.
-    foreach (AbstractPipeline* pipeline, _registeredPipelines) {
-        _pipelines.insert(pipeline->requiredDataRemote(), pipeline);
-    }
+    //foreach (AbstractPipeline* pipeline, _registeredPipelines) {
+    //    _pipelines.insert(pipeline->requiredDataRemote(), pipeline);
+    //}
 
     // Create data blobs for all pipelines.
-    foreach ( DataRequirements req, _allDataReq ) {
-        foreach ( QString type, req.allData() ) {
-            if ( ! _dataHash.contains(type) )
-                _dataHash.insert(type, _blobFactory->create(type));
-        }
-    }
+    //foreach ( DataRequirements req, _allDataReq ) {
+    //    foreach ( QString type, req.allData() ) {
+    //        if ( ! _dataHash.contains(type) )
+    //            _dataHash.insert(type, _blobFactory->create(type));
+    //    }
+    //}
 
     // Create the data client.
-    if (!_dataClientName.isEmpty())
+    if (!_dataClientName.isEmpty() && _dataClient == NULL )
         _dataClient = _clientFactory->create(_dataClientName, _allDataReq);
 
     // Check the data requirements.
@@ -156,6 +222,12 @@ void PipelineDriver::start()
                 ranPipeline = true;
                 pipe.value()->run(_dataHash);
             }
+        }
+
+        //deactivate any pipelines
+        while( _deactivateQueue.size() > 0 ) {
+             _deactivatePipeline(_deactivateQueue[0]);
+             _deactivateQueue.pop_front();
         }
 
         // Check if no pipelines were run.

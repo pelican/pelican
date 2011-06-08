@@ -7,6 +7,7 @@
 #include "pelican/core/test/TestPipeline.h"
 #include "pelican/core/test/TestDataClient.h"
 #include "pelican/data/DataRequirements.h"
+#include "pelican/data/test/TestDataBlob.h"
 
 #include <QtCore/QCoreApplication>
 
@@ -99,9 +100,88 @@ void PipelineDriverTest::test_registerPipeline()
 {
     CPPUNIT_ASSERT_NO_THROW(_pipelineDriver->registerPipeline(new TestPipeline));
 
+    // try a pipeline with an unknown datablob type
     DataRequirements req;
     req.setStreamData("requiredData");
-    CPPUNIT_ASSERT_NO_THROW(_pipelineDriver->registerPipeline(new TestPipeline(req)));
+    CPPUNIT_ASSERT_THROW(_pipelineDriver->registerPipeline(new TestPipeline(req)), QString);
+
+    // try a pipeline with an known datablob type
+    DataRequirements req2;
+    req2.setStreamData("TestDataBlob");
+    CPPUNIT_ASSERT_NO_THROW(_pipelineDriver->registerPipeline(new TestPipeline(req2)));
+}
+
+void PipelineDriverTest::test_registerSwitcher()
+{
+    {
+        // Use Case:
+        // An empty switcher
+        // expect: throw a QString
+        PipelineSwitcher sw;
+        CPPUNIT_ASSERT_THROW(_pipelineDriver->addPipelineSwitcher(sw), QString);
+    }
+    {
+        // Use Case:
+        // A switcher with two pipelines requiring no data
+        // then kill the first pipeline
+        // expect : start processing first pipeline, and switch to the second
+        int num = 10;
+        PipelineSwitcher sw;
+        TestPipeline* p1 = new TestPipeline(num); 
+        p1->setDeactivation(true);
+        CPPUNIT_ASSERT(p1->deactivation());
+        TestPipeline* p2 = new TestPipeline(num); 
+        sw.addPipeline(p1);
+        CPPUNIT_ASSERT(p1->deactivation());
+        CPPUNIT_ASSERT(!p2->deactivation());
+        sw.addPipeline(p2);
+        _pipelineDriver->addPipelineSwitcher(sw);
+        CPPUNIT_ASSERT_EQUAL(0, p1->count());
+        CPPUNIT_ASSERT(p1->deactivation());
+        CPPUNIT_ASSERT_EQUAL(false, p2->deactivation());
+        CPPUNIT_ASSERT_EQUAL(0, p2->count());
+        _pipelineDriver->start();
+        CPPUNIT_ASSERT_EQUAL(num, p1->count());
+        CPPUNIT_ASSERT_EQUAL(num, p2->count());
+    }
+}
+
+void PipelineDriverTest::test_registerSwitcherData()
+{
+    try {
+    DataRequirements req;
+    req.setStreamData("TestDataBlob");
+
+    // Create the data client.
+    ConfigNode config;
+    DataTypes types;
+    types.addData(req);
+    TestDataClient client(config, types);
+    _pipelineDriver->_dataClient = &client;
+
+    {
+        // Use Case:
+        // A switcher with two pipelines requiring the same data
+        // then kill the first pipeline
+        // expect : start processing first pipeline, and switch to the second
+        int num = 10;
+        PipelineSwitcher sw;
+        TestPipeline* p1 = new TestPipeline(req, num); 
+        p1->setDeactivation(true);
+        TestPipeline* p2 = new TestPipeline(req, num); 
+        sw.addPipeline(p1);
+        sw.addPipeline(p2);
+        _pipelineDriver->addPipelineSwitcher(sw);
+        CPPUNIT_ASSERT(p1->deactivation());
+        CPPUNIT_ASSERT(!p2->deactivation());
+        _pipelineDriver->start();
+        CPPUNIT_ASSERT_EQUAL(num, p1->count());
+        CPPUNIT_ASSERT_EQUAL(num, p2->count());
+    }
+    }
+    catch( QString e ) {
+        CPPUNIT_FAIL("Caught QString(\"" + e.toStdString() + "\")");
+    }
 }
 
 /**
@@ -136,7 +216,7 @@ void PipelineDriverTest::test_start_noPipelinesRegistered()
 void PipelineDriverTest::test_start_noPipelinesRun()
 {
     DataRequirements req;
-    req.setStreamData("requiredData");
+    req.setStreamData("TestDataBlob");
     _pipelineDriver->registerPipeline(new TestPipeline(req));
 
     // No data client set, so no data will be returned.
@@ -316,10 +396,13 @@ void PipelineDriverTest::test_start_multiPipelineRunOne()
         CPPUNIT_ASSERT_EQUAL(pipeline1->count(), pipeline1->matchedCounter());
         CPPUNIT_ASSERT_EQUAL(0, pipeline2->count());
         CPPUNIT_ASSERT_EQUAL(pipeline2->count(), pipeline2->matchedCounter());
+
+
     }
     catch (QString e) {
         CPPUNIT_FAIL("Unexpected exception: " + e.toStdString());
     }
 }
+
 
 } // namespace pelican

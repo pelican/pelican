@@ -139,6 +139,9 @@ class AbstractPipeline
         /// Sets the output stream manager
         void setOutputStreamManager(OutputStreamManager* osmanager);
 
+        /// disable this pipeline from being called by the pipeline Driver
+        void deactivate();
+
     protected:
         /// Create a data blob using the data blob factory.
         DataBlob* createBlob(const QString& type);
@@ -146,6 +149,7 @@ class AbstractPipeline
         /// Create a pipeline module using the module factory.
         AbstractModule* createModule(const QString& type,
                 const QString& name = QString());
+
 
         /// Stops the pipeline driver.
         void stop();
