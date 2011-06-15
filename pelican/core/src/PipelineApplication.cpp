@@ -140,6 +140,11 @@ void PipelineApplication::registerPipeline(AbstractPipeline *pipeline)
     _driver->registerPipeline(pipeline);
 }
 
+void PipelineApplication::addPipelineSwitcher(const PipelineSwitcher& switcher)
+{
+    _driver->addPipelineSwitcher(switcher);
+}
+
 /**
  * @details
  * Sets (and creates) the given data client based on the named argument.

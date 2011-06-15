@@ -20,6 +20,7 @@ class Config;
 class PipelineDriver;
 class DataClientFactory;
 class OutputStreamManager;
+class PipelineSwitcher;
 
 /**
  * @ingroup c_core
@@ -104,6 +105,9 @@ class PipelineApplication
 
         /// Register a pipeline with the pipeline driver.
         void registerPipeline(AbstractPipeline *pipeline);
+
+        /// add a PipelineSwitcher to the driver
+        void addPipelineSwitcher(const PipelineSwitcher& switcher);
 
         /// Sets the data client.
         void setDataClient(const QString& name);
