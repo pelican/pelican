@@ -13,6 +13,7 @@
 // include the basic types available for all pelican users
 // to ensure the factory is aware of them
 #include "pelican/output/PelicanTCPBlobServer.h"
+#include "pelican/output/DataBlobFile.h"
 
 #include <QtCore/QString>
 #include <QtCore/QMap>
