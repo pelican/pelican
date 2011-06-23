@@ -20,6 +20,11 @@ using namespace pelican;
  * Writes a SignalData data blob to a CSV file.
  *
  * @details
+ * Specify one or more files in the configuration XML with
+ * <OutputStreamExample>
+ *     <file name="file1.csv">
+ *     <file name="duplicatefile.csv">
+ * </OutputStreamExample>
  *
  */
 class OutputStreamExample : public AbstractOutputStream

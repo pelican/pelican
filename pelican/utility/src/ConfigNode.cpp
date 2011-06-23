@@ -201,10 +201,10 @@ QHash<QString, QString> ConfigNode::getOptionHash(const QString& tagName,
       PositionAdapter
    @endverbatim
  */
-QStringList ConfigNode::getOptionList(const QString& tagName,
+QList<QString> ConfigNode::getOptionList(const QString& tagName,
         const QString& attr) const
 {
-    QStringList optionList;
+    QList<QString> optionList;
     QDomNodeList list = _config.elementsByTagName(tagName);
     for (int i = 0; i < list.size(); ++i) {
         QDomElement element = list.at(i).toElement();

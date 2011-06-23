@@ -13,9 +13,10 @@ OutputStreamExample::OutputStreamExample(const ConfigNode& configNode)
     : AbstractOutputStream(configNode)
 {
     // Get the filename from the configuration node, and open it for output.
-    QString filename = configNode.getOption("file", "name");
-    if (!filename.isEmpty())
+    QList<QString> fileNames = configNode.getOptionList( "file", "name");
+    foreach( const QString& filename, fileNames ) {
         addFile(filename);
+    }
 }
 
 // Destroys the output stream, deleting all the devices it uses.

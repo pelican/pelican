@@ -8,7 +8,6 @@
 #include <QtXml/QDomElement>
 #include <QtCore/QString>
 #include <QtCore/QHash>
-#include <QtCore/QStringList>
 #include <QtCore/QList>
 
 #include <vector>
@@ -89,7 +88,7 @@ class ConfigNode
                 const QString& attr1, const QString& attr2) const;
 
         /// Returns a list of attributes.
-        QStringList getOptionList(const QString& tagName,
+        QList<QString> getOptionList(const QString& tagName,
                 const QString& attr) const;
 
         /// Returns the QDomElement that this class wraps.
