@@ -14,8 +14,16 @@ The OutputManager uses a plug-in mechanism to convert DataBlobs into the formats
 These plug-ins are called OutputStreamers and must implement the \em AbstractOutputStream
 interface.
 
+@subsection user_framework_outputStreamers_datablobfile The Pelican DataBlobFile format
+The DataBlobFile streamer writes any DataBlob that supports the serialise() and 
+deserialise() methods to a binary format file. Classes are provided to read this
+file format and convert it back into DataBlobs (e.g. the \em DataBlobFileReader ).
+Two basic file formats are recognised: homogeneous, and heterogeneous.
+The \em homogeneous file format stores DataBlobs of a single type, whereas the
+heterogeneous format allows the storage of more than one DataBlob type in the 
+same file at a cost of extra storage space.
+
 @subsection user_framework_outputStreamers_pelican_blobserver The TCP Blob Server ( PelicanTCPBlobServer )
-Pelican provides a single output streamer - the PelicanTCPBlobServer.
 This streamer sets up a TCP/IP streaming server to supply any connecting client with
 a copy of the data as it becomes available (server push model).
 You can use this, in connection with the \em DataBlobClient class, to move data to another machine

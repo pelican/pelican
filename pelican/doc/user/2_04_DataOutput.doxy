@@ -32,10 +32,11 @@ same data type.
 
 It is important to note that any DataBlob destined for output should
 reimplement the DataBlob::serialise() and DataBlob::deserialise() methods.
-These methods can be implemented however you like. The serialise routine should
-write the complete contents of the data blob to the output device, and the
-deserialise routine should do the reverse, by reading the complete contents of
-the blob from the input device.
+The serialise routine should write the complete contents of the data blob to 
+the output device provided in the arument. The deserialise method should do the reverse,
+reading the complete contents of the blob from the input device. Note that the byte
+order of the machine that the serialise() method was called is also provided
+to help you interpret binary streams if necessary.
 
 \subsection user_dataOuput_tutorialBlobs Tutorial Data Blob Output
 
@@ -54,15 +55,28 @@ The actual destination of the data is controlled by the OutputStreamManager
 object. This can be configured either through the configuration file, or you
 can manipulate the object directly.
 
-Pelican comes with one output streamer module that allows you to stream data
-to another machine using TCP: this is the PelicanTCPBlobServer.
+Pelican comes with two output streamer modules by defualt
+(described in more detail in teh reference manual).
+Both assume that
+you have implemented the serialise() and deserialise methods.
 However, this may be insufficient for your needs if you have a custom file
 format, or a specific database to fill.
-In these cases you will need to write your own output streamer. Note that any
-processing done in an output streamer is done serially with the pipeline
-processing, so it will slow down your pipeline. If this will be a problem, it
-is better to export it via the PelicanTCPBlobServer and process the streams
-elsewhere.
+In these cases you will need to write your own output streamer, which we will
+give an example of after discussing those provided by Pelican. 
+
+@subsection user_dataOutput_DataBlobFile The DataBlobFile
+This will store a binary format file on the local machine.
+There is a \em DataBlobFileReader available for reading
+this format and extracting its contents as DataBlobs for further processing 
+as required.
+
+@subsection user_dataOutput_TCPBlobServer The PelicanTCPBlobServer
+The PelicanTCPBlobServer allows you to stream data to one or more other machines
+using a network TCP connection.
+As any processing done in an output streamer is done serially within the pipeline
+processing, and so any latencies, e.g disk writes, will slow down your processing.
+If this will be a problem, it is better to export the data via the 
+PelicanTCPBlobServer and process the streams elsewhere.
 
 @subsection user_dataOutput_example  Tutorial Output
 
@@ -102,6 +116,8 @@ output manager:
     output streamer.
 \li Similarly, we direct the processed data stream ("post") to a different
     CSV file using another instance of our own output streamer.
+\li We also save a binary format file of the "post" data stream using
+    the default DataBlobFile
 \li Finally, we will also direct both streams to the standard
     PelicanTCPBlobServer for export to other clients.
 
@@ -118,6 +134,9 @@ The \c output section of our configuration file will look like this:
         <PelicanTCPBlobServer active="true">
              <connection port="1234" />
         </PelicanTCPBlobServer>
+        <DataBlobFile>
+            <file name="datablob.dblob" type="heterogeneous">
+        </DataBlobFile>
         <OutputStreamExample name="precsv" active="true">
              <file name="pre.csv" />
         </OutputStreamExample>
@@ -127,6 +146,7 @@ The \c output section of our configuration file will look like this:
     </streamers>
     <dataStreams>
         <stream name="all" listeners="PelicanTCPBlobServer" />
+        <stream name="post" listeners="DataBlobFile" />
         <stream name="post" listeners="postcsv" />
         <stream name="pre" listeners="precsv" />
     </dataStreams>
