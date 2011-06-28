@@ -56,7 +56,7 @@ object. This can be configured either through the configuration file, or you
 can manipulate the object directly.
 
 Pelican comes with two output streamer modules by defualt
-(described in more detail in teh reference manual).
+(described in more detail in the reference manual).
 Both assume that
 you have implemented the serialise() and deserialise methods.
 However, this may be insufficient for your needs if you have a custom file
