@@ -13,7 +13,9 @@ set(output_src
     src/AbstractOutputStream.cpp
     src/AbstractDataBlobClient.cpp
     src/DataBlobClient.cpp
+    src/DataBlobFileType.cpp
     src/DataBlobFile.cpp
+    src/DataBlobFileReader.cpp
     src/ThreadedDataBlobClient.cpp
     src/ThreadedClientImpl.cpp
     src/OutputStreamManager.cpp

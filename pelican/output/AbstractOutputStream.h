@@ -31,6 +31,7 @@ class AbstractOutputStream
 
         AbstractOutputStream( const ConfigNode& configNode );
         virtual ~AbstractOutputStream();
+        void setVerbose(int level) { _verbose = level; };
 
         /// send the data
         void send(const QString& streamName, const DataBlob* dataBlob);

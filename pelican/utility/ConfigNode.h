@@ -92,7 +92,7 @@ class ConfigNode
                 const QString& attr) const;
 
         /// Returns the QDomElement that this class wraps.
-        const QDomElement getDomElement() const {return _config;}
+        const QDomElement& getDomElement() const {return _config;}
 
         /// Returns the list of unsigned integers, if any.
         std::vector<unsigned> getUnsignedList(const QString& tagName) const;

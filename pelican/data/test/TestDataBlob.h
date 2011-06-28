@@ -28,7 +28,7 @@ class TestDataBlob : public DataBlob
 {
     public:
         /// Constructs a TestDataBlob.
-        TestDataBlob() : DataBlob("TestDataBlob") {}
+        TestDataBlob( const QString type = "TestDataBlob" ) : DataBlob(type) {}
 
         /// Destroys the TestDataBlob.
         ~TestDataBlob() {}

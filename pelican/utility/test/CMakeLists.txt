@@ -3,6 +3,7 @@
 SUBPACKAGE(utilityTest utility)
 set(utilityTestLib_src
     src/SocketTester.cpp
+    src/TestFile.cpp
 )
 SUBPACKAGE_LIBRARY(utilityTestUtils ${utilityTestLib_src})
 SUBPACKAGE_SET_EXTERNAL_LIBRARIES(
