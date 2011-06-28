@@ -22,11 +22,11 @@ SUBPACKAGE_SET_EXTERNAL_LIBRARIES(
 # ==============================================================================
 set(outputTest_src
     src/outputTest.cpp
-#    src/TCPConnectionManagerTest.cpp
-#    src/PelicanTCPBlobServerTest.cpp
-#    src/OutputStreamManagerTest.cpp
-#    src/DataBlobClientTest.cpp
-#    src/ThreadedDataBlobClientTest.cpp
+    src/TCPConnectionManagerTest.cpp
+    src/PelicanTCPBlobServerTest.cpp
+    src/OutputStreamManagerTest.cpp
+    src/DataBlobClientTest.cpp
+    src/ThreadedDataBlobClientTest.cpp
     src/DataBlobFileTest.cpp
 )
 add_executable(outputTestMT ${outputTest_src})
