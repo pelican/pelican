@@ -30,6 +30,9 @@ FileDataClient::FileDataClient(const ConfigNode& configNode,
  */
 FileDataClient::~FileDataClient()
 {
+     foreach(QFile* file, _openFiles) {
+        delete file;
+     }
 }
 
 
@@ -49,40 +52,69 @@ AbstractDataClient::DataBlobHash FileDataClient::getData(DataBlobHash& dataHash)
         // Loop over service data requirements.
         foreach (QString type, req.serviceData())
         {
+            if( ! _openFiles.contains(type) || _openFiles[type]->atEnd() ) {
+                if( ! _openFile(type) ) continue;
+            }
+
+            /* ------- 
             QString filename = _fileNames.value(type);
             if (!filename.isEmpty()) {
                 QFile file(filename);
                 if (!file.open(QIODevice::ReadOnly))
                     throw QString("FileDataClient::getData(): "
                             "Cannot open file %1").arg(filename);
-                AbstractServiceAdapter* adapter = serviceAdapter(type);
-                Q_ASSERT( adapter != 0 );
-                adapter->config(dataHash[type], file.size());
-                adapter->deserialise(&file);
-                validHash.insert(type, dataHash.value(type));
-            }
+             */
+            QFile* file = _openFiles[type];
+            AbstractServiceAdapter* adapter = serviceAdapter(type);
+            Q_ASSERT( adapter != 0 );
+            adapter->config(dataHash[type], file->size());
+            adapter->deserialise(file);
+            validHash.insert(type, dataHash.value(type));
         }
 
         // Loop over stream data requirements.
         foreach (QString type, req.streamData())
         {
+            if( ! _openFiles.contains(type) || _openFiles[type]->atEnd() ) {
+                if( ! _openFile(type) ) continue;
+            }
+            /* ------- 
             QString filename = _fileNames.value(type);
             if (!filename.isEmpty()) {
                 QFile file(filename);
                 if (!file.open(QIODevice::ReadOnly))
                     throw QString("FileDataClient::getData(): "
                             "Cannot open file %1").arg(filename);
-                AbstractStreamAdapter* adapter = streamAdapter(type);
-                Q_ASSERT( adapter != 0 );
-                QHash<QString, DataBlob*> serviceHash;
-                adapter->config(dataHash[type], file.size(), serviceHash);
-                adapter->deserialise(&file);
-                validHash.insert(type, dataHash.value(type));
-            }
+             */
+            QFile* file = _openFiles[type];
+            AbstractStreamAdapter* adapter = streamAdapter(type);
+            Q_ASSERT( adapter != 0 );
+            QHash<QString, DataBlob*> serviceHash;
+            adapter->config(dataHash[type], file->size(), serviceHash);
+            adapter->deserialise(file);
+            validHash.insert(type, dataHash.value(type));
         }
     }
 
     return validHash;
+}
+
+bool FileDataClient::_openFile( const QString& type )
+{
+    QString filename = _fileNames.value(type);
+    if (!filename.isEmpty()) {
+        QFile* file = new QFile(filename);
+        if (!file->open(QIODevice::ReadOnly)) {
+            delete file;
+            throw QString("FileDataClient::getData(): "
+                    "Cannot open file %1").arg(filename);
+        }
+        if( _openFiles.contains(type) )
+            delete _openFiles[type];
+        _openFiles[type] = file;
+        return true;
+    }
+    return false;
 }
 
 /**

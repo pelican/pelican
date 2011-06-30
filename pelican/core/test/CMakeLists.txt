@@ -18,6 +18,7 @@ SUBPACKAGE_SET_EXTERNAL_LIBRARIES(
 # ==============================================================================
 set(coreTest_src
     src/coreTest.cpp
+    src/FileDataClientTest.cpp
     src/AdapterRealDataTest.cpp
     src/DataTypesTest.cpp
     src/ModuleFactoryTest.cpp

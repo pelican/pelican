@@ -8,6 +8,7 @@
 #include "pelican/core/AbstractDataClient.h"
 #include <QtCore/QHash>
 #include <QtCore/QString>
+class QFile;
 
 namespace pelican {
 
@@ -46,10 +47,12 @@ class FileDataClient : public AbstractDataClient
     private:
         /// Reads the configuration options.
         void _getConfig();
+        bool _openFile(const QString& type);
 
     private:
         // Hash of filenames for each data type.
         QHash<QString, QString> _fileNames;
+        QHash<QString, QFile*> _openFiles;
 };
 
 PELICAN_DECLARE_CLIENT(FileDataClient)
