@@ -48,10 +48,11 @@ AbstractDataClient::DataBlobHash FileDataClient::getData(DataBlobHash& dataHash)
 
     // Loop over each pipeline's set of data requirements.
     foreach (DataRequirements req, dataRequirements()) {
-
         // Loop over service data requirements.
         foreach (QString type, req.serviceData())
         {
+            if( ! dataHash.contains(type) )
+                throw( QString("FileDataClient: getData() called without DataBlob %1").arg(type) );
             if( ! _openFiles.contains(type) || _openFiles[type]->atEnd() ) {
                 if( ! _openFile(type) ) continue;
             }
@@ -75,6 +76,8 @@ AbstractDataClient::DataBlobHash FileDataClient::getData(DataBlobHash& dataHash)
         // Loop over stream data requirements.
         foreach (QString type, req.streamData())
         {
+            if( ! dataHash.contains(type) )
+                throw( QString("FileDataClient: getData() called without DataBlob %1").arg(type) );
             if( ! _openFiles.contains(type) || _openFiles[type]->atEnd() ) {
                 if( ! _openFile(type) ) continue;
             }
@@ -104,6 +107,7 @@ bool FileDataClient::_openFile( const QString& type )
     QString filename = _fileNames.value(type);
     if (!filename.isEmpty()) {
         QFile* file = new QFile(filename);
+        log(QString("Opening file %1").arg(filename));
         if (!file->open(QIODevice::ReadOnly)) {
             delete file;
             throw QString("FileDataClient::getData(): "
@@ -111,7 +115,7 @@ bool FileDataClient::_openFile( const QString& type )
         }
         if( _openFiles.contains(type) )
             delete _openFiles[type];
-        _openFiles[type] = file;
+        _openFiles.insert(type, file);
         return true;
     }
     return false;

@@ -22,6 +22,7 @@ class FileDataClientTest : public CppUnit::TestFixture
     public:
         CPPUNIT_TEST_SUITE( FileDataClientTest );
         CPPUNIT_TEST( test_method );
+        CPPUNIT_TEST( test_factory );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -30,6 +31,7 @@ class FileDataClientTest : public CppUnit::TestFixture
 
         // Test Methods
         void test_method();
+        void test_factory();
 
     public:
         /// FileDataClientTest constructor.
