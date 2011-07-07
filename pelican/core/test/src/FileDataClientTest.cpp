@@ -48,7 +48,9 @@ void FileDataClientTest::test_factory()
     Config::TreeAddress address;
     address << Config::NodeId("adapters", "");
     ConfigNode configNode = config.get(address);
-    {
+    }
+    catch( QString& e ) {
+        CPPUNIT_FAIL(e.toStdString());
     }
 
 }
