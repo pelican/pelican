@@ -62,7 +62,7 @@ class OutputStreamManager
         ~OutputStreamManager();
 
         /// send data to all relevant outputs on the specified stream
-        void send( DataBlob* data, const QString& stream );
+        void send( const DataBlob* data, const QString& stream );
 
         /// associate an output streamer to a specific data stream
         void connectToStream( AbstractOutputStream* streamer, const QString& stream);

@@ -109,7 +109,7 @@ void OutputStreamManager::connectToStream(AbstractOutputStream* streamer, const 
     _streamers[stream].append(streamer);
 }
 
-void OutputStreamManager::send( DataBlob* data, const QString& stream )
+void OutputStreamManager::send( const DataBlob* data, const QString& stream )
 {
     if( _streamers.contains(stream) ) {
         foreach( AbstractOutputStream* out, _streamers[stream]) {

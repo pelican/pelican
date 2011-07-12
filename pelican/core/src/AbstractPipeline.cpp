@@ -139,7 +139,7 @@ void AbstractPipeline::deactivate()
  * @param[in] DataBlob to be sent.
  * @param[in] name of the output stream (defaults to DataBlob->type()).
  */
-void AbstractPipeline::dataOutput( DataBlob* data, const QString& stream ) const
+void AbstractPipeline::dataOutput( const DataBlob* data, const QString& stream ) const
 {
      _osmanager->send(data, stream);
 }

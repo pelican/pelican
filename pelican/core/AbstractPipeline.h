@@ -115,7 +115,7 @@ class AbstractPipeline
         const DataRequirements& requiredDataRemote() const;
 
         /// Primary interface for pipelines to emit data from the pipeline
-        void dataOutput(DataBlob*, const QString& stream = "") const;
+        void dataOutput(const DataBlob*, const QString& stream = "") const;
 
         /// Defines a single iteration of the pipeline (pure virtual).
         /// This method defines what happens when the pipeline is run once,
