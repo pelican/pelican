@@ -49,7 +49,7 @@ add_executable(signalEmulator
 target_link_libraries(signalEmulator
     ${SUBPACKAGE_LIBRARIES}
     examples
-    memoryTracer
+    memoryTracerDummy
 )
 
 # Copy the XML configuration files needed for the tutorial.
