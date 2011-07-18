@@ -29,7 +29,7 @@ add_executable(signalPipeline
 target_link_libraries(signalPipeline
     ${SUBPACKAGE_LIBRARIES}
     examples
-    memoryTracer
+    memoryTracerDummy
 )
 
 # Create the server binary.
@@ -39,7 +39,7 @@ add_executable(signalServer
 target_link_libraries(signalServer
     ${SUBPACKAGE_LIBRARIES}
     examples
-    memoryTracer
+    memoryTracerDummy
 )
 
 # Create the emulator binary.
