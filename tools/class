@@ -102,6 +102,9 @@ while ( $ARGV[0] =~/^-(.+)/ )
             $constructHeadSig="QDialog* parent=0";
         }
         else {
+            # find from template lib
+            #my $template=$tools->template("class/".$template);
+            # unknown template
             print "Unknown template specified \"$template\"\n";
             exit 1;
         }
@@ -120,6 +123,7 @@ if ( $#ARGV != 0 ) {
     exit 1;
 }
 # -- read in data from the namespace file
+#namespaces=$tools->namespaces();
 if( -f $namespaceFile ) {
     my $fh=FileHandle->new("<".$namespaceFile);
     while( <$fh> ) {

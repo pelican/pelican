@@ -1,0 +1,98 @@
+#!/usr/bin/perl
+#
+# generate a directory structure suitable for a new pelican based project
+# using cmake
+#
+use FindBin;
+use lib "$FindBin::Bin";
+use BuildTools::BuildTools;
+use File::DirectoryContent;
+use File::Basename;
+use File::Copy;
+use FileHandle;
+use BuildTools::Environment;
+use Cwd;
+use strict;
+
+sub usage 
+{
+    print "Usage:",$0," <project_name>","\n";
+    print "Description:\n";
+    print "  Create a project suitable for a pelican based project using the cmake build system.\n";
+}
+
+# -- commmand line processing
+while ( $ARGV[0] =~/^-(.+)/ )
+{
+    shift @ARGV;
+    my $opt=$1;
+    if( $opt=="h" ) {
+        usage;
+        exit 0;
+    }
+}
+
+if( $#ARGV < 0 ) { usage(); exit 1; }
+my $tools=new BuildTools::BuildTools($FindBin::RealBin);
+
+# --- project vars
+my @dirs;
+my $project_name = $ARGV[0];
+my $project_dir = cwd()."/".$project_name;
+push @dirs, $project_dir;
+my $tools_dir = $project_dir."/tools";
+push @dirs, $tools_dir;
+my $src_dir = $project_dir."/src";
+push @dirs, $src_dir;
+my $cmake_dir = $src_dir."/cmake";
+push @dirs, $cmake_dir;
+
+# --- generate project structure
+foreach my $dir ( @dirs ) {
+    if( -f $dir ) { 
+        die("try to create dir $dir, but a file of the same name alreay exists");
+    }
+    if( ! -d $dir ) {
+        mkdir $dir,0775 or die "unable to create directory $dir";
+    }
+}
+
+# --- generate the tools directory contents
+# generation tools
+use File::DirectoryContent;
+my $toolDir=File::DirectoryContent->new($FindBin::RealBin);
+$toolDir->replicate($tools_dir);
+my $tools_subpackage=$tools_dir."/newpackage";
+
+# namespace file
+my $namespace_file = $tools_dir."/namespaces";
+my $fh=FileHandle->new(">".$namespace_file) or die("unable to oopen file $namespace_file");
+foreach my $ns ( $tools->namespaces() ) {
+    print $fh $ns,"\n";
+}
+print $fh "$project_name\n";
+$fh->close();
+
+
+# --- generate the cmake directory contents
+my $local_src=dirname($FindBin::RealBin)."/src";
+my $local_cmake=$local_src."/cmake";
+my @cmakeFiles=qw(packageMacrosNew.cmake FindPelican.cmake FindCppUnit.cmake tags.cmake);
+foreach my $cmake ( @cmakeFiles ) {
+    copy($local_cmake."/".$cmake,$cmake_dir."/".$cmake);
+}
+
+# --- generate the main cmake build file
+(my $PROJECT_NAME=$project_name)=~tr/a-z/A-Z/;
+my $env=new BuildTools::Environment({ project_name=>$project_name, PROJECT_NAME=>$PROJECT_NAME});
+my $cmakeTemplate=$tools->template("CMakeLists.txt");
+my $cmakefile=$src_dir."/CMakeLists.txt";
+$cmakeTemplate->generateFile($cmakefile,$env);
+
+# --- make standard subpackages
+chdir $src_dir;
+my @packages=qw( adapters chunkers modules pipelines apps );
+foreach my $pack ( @packages ) {
+    ( system($tools_subpackage." ".$pack) == 0 )  or die "unable to execute $tools_subpackage $pack $!";
+}
+exit 0;
