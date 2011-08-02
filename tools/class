@@ -7,6 +7,8 @@
 # -----------------------------------------------
 # copyright Chirs Williams 2003-2009
 # -----------------------------------------------
+use FindBin;
+use lib "$FindBin::RealBin";
 use FileHandle;
 use Cwd;
 use File::Basename;
@@ -33,7 +35,8 @@ sub usage {
 }
 
 # parse options
-my $namespace="pelican";
+my @namespaces; #=qw(pelican);
+my $namespaceFile=$FindBin::RealBin."/namespaces";
 my $baseclass="";
 my $headtext="";
 my $cpptext="";
@@ -99,6 +102,9 @@ while ( $ARGV[0] =~/^-(.+)/ )
             $constructHeadSig="QDialog* parent=0";
         }
         else {
+            # find from template lib
+            #my $template=$tools->template("class/".$template);
+            # unknown template
             print "Unknown template specified \"$template\"\n";
             exit 1;
         }
@@ -115,6 +121,17 @@ if ( $#ARGV != 0 ) {
     print "Expecting different number of arguments. Got : ( @ARGV )\n";
     usage();
     exit 1;
+}
+# -- read in data from the namespace file
+#namespaces=$tools->namespaces();
+if( -f $namespaceFile ) {
+    my $fh=FileHandle->new("<".$namespaceFile);
+    while( <$fh> ) {
+        next, if( $_=~/^\s*#/ );
+        next, if( $_=~/^\s*$/ );
+        chomp;
+        push @namespaces, $_;
+    }
 }
 my $verbose = 0;
 my $i=" " x $indents;
@@ -162,23 +179,26 @@ if ( ! -f $src_file ) {
     my $fh=FileHandle->new(">".$src_file);
     print $fh "#include \"", $short_header_file, "\"\n\n";
     print $fh $cppincludes, "\n";
-    print $fh "#include \"pelican/utility/memCheck.h\"\n\n";
-    print $fh "namespace $namespace {\n\n", if ( defined $namespace );
-    print $fh $cppincludesNamespace, "\n", if ( defined $namespace );
+    foreach my $namespace ( @namespaces ) {
+        print $fh "namespace $namespace {\n\n", if ( defined $namespace );
+    }
+    print $fh $cppincludesNamespace, "\n", if ( $#namespaces > 0 );
     print $fh "/**\n";
-    print $fh " * \@details Constructs a $classname object.\n";
+    print $fh " *\@details $classname \n";
     print $fh " */\n";
     print $fh $classname,"::", $classname, "($constructSig)\n",
               (( $baseclass ne "")?"    : ".$baseclass."()\n":"" ),
               "{\n",
               "}\n\n",
               "/**\n",
-              " * \@details Destroys the $classname object.\n",
+              " *\@details\n",
               " */\n",
               $classname, "::~", $classname, "()\n{\n",
               "}\n\n",
               $cpptext;
-    print $fh "} // namespace $namespace\n", if ( defined $namespace );
+    foreach my $namespace (reverse @namespaces) {
+        print $fh "} // namespace $namespace\n", if ( defined $namespace );
+    }
 }
 # ------ write out the header file
 if ( ! -f $header_file ) {
@@ -203,27 +223,29 @@ if ( ! -f $header_file ) {
     print $fh "/**\n",
               " * \@file $short_header_file\n",
               " */\n\n";
-    print $fh "namespace $namespace {\n\n", if ( defined $namespace );
+    foreach my $namespace ( @namespaces ) {
+        print $fh "namespace $namespace {\n\n", if ( defined $namespace );
+    }
     print $fh "/**\n",
               " * \@class $classname\n",
-              " * \n",
+              " *  \n",
               " * \@brief\n",
               " * \n",
               " * \@details\n",
               " * \n",
-              " */\n";
+              " */\n\n";
     print $fh "class $classname", (($baseclass eq "")?"":" : public $baseclass");
     print $fh  "\n{\n",
                $headtext,
                $i,"public:\n",
-               $i x 2, "/// $classname constructor.\n",
-               $i x 2, $classname, "($constructHeadSig);\n\n",
-               $i x 2, "/// $classname destructor.\n",
+               $i x 2, $classname, "( $constructHeadSig );\n",
                $i x 2,"~",$classname, "();\n",
                "\n",
                $i,"private:\n",
               "};\n\n";
-    print $fh "} // namespace $namespace\n\n", if ( defined $namespace );
+    foreach my $namespace ( reverse @namespaces ) {
+        print $fh "} // namespace $namespace\n", if ( defined $namespace );
+    }
     print $fh "#endif // $defname \n";
 }
 if ( ! $verbose ) {

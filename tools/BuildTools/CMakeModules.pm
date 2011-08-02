@@ -14,7 +14,7 @@
 # update()     : update the file
 #
 
-package CMakeModules;
+package BuildTools::CMakeModules;
 use strict;
 use FileHandle;
 use DirHandle;

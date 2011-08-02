@@ -8,7 +8,7 @@ use lib "$FindBin::Bin";
 use strict;
 use FileHandle;
 use DirHandle;
-use CMakeModules;
+use BuildTools::CMakeModules;
 use Cwd;
 
 sub usage {
@@ -97,5 +97,5 @@ END
 
 # add the new module to the list
 my $modfile="modules.cmake";
-my $modules=CMakeModules->new($modfile);
+my $modules=BuildTools::CMakeModules->new($modfile);
 $modules->update();
