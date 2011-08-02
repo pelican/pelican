@@ -80,7 +80,7 @@ WritableData StreamDataBuffer::getWritable(size_t size)
 
     // Prepare the object for use by adding Service Data info.
     if (lockableStreamData) {
-        lockableStreamData->reset();
+        lockableStreamData->reset( size );
         if (!_manager)
             throw QString("StreamDataBuffer::getWritable(): No data manager.");
         _manager->associateServiceData(lockableStreamData);
@@ -135,7 +135,6 @@ LockableStreamData* StreamDataBuffer::_getWritable(size_t size)
             LockableStreamData* d = _serveQueue[i];
             if( d->maxSize() >= size ) {
                 _serveQueue.removeAt(i);
-                d->reset();
                 return d;
             }
         }
@@ -182,7 +181,7 @@ void StreamDataBuffer::deactivateData(LockableStreamData* data)
         _serveQueue.prepend(data);
         return;
     }
-    data->reset();
+    data->reset(0);
 
     QMutexLocker writeLocker(&_writeMutex);
     _emptyQueue.push_back(data);

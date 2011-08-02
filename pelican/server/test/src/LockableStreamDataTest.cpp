@@ -55,13 +55,13 @@ void LockableStreamDataTest::test_addAssociates()
     CPPUNIT_ASSERT_EQUAL( true, d.isValid() );
 
     // Use Case:
-    // reset() should empty the associatedData
+    // reset(0) should empty the associatedData
     // of both lockedData and its underlying StreamData
-    // object
-    d.reset();
+    // object, object should not be valid
+    d.reset(0);
     CPPUNIT_ASSERT_EQUAL( 0, (int)d.associateData().size() );
     CPPUNIT_ASSERT_EQUAL( 0, (int)d.streamData()->associateData().size() );
-    CPPUNIT_ASSERT_EQUAL( true, d.isValid() );
+    CPPUNIT_ASSERT_EQUAL( false, d.isValid() );
 }
 
 

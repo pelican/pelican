@@ -43,7 +43,7 @@ void FileDataClientTest::test_factory()
     config.setFromString(
             "<adapters>"
             "   <file name=\"testfile.xml\"/>"
-            "</adapters"
+            "</adapters>"
             );
     Config::TreeAddress address;
     address << Config::NodeId("adapters", "");

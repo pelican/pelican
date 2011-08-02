@@ -19,6 +19,7 @@ TestProtocol::TestProtocol(const QString& id, ServerRequest::Request request)
 
 TestProtocol::~TestProtocol()
 {
+    _clearLast();
 }
 
 QByteArray& TestProtocol::lastBlock()
@@ -57,12 +58,17 @@ void TestProtocol::send(QIODevice& device, const AbstractProtocol::StreamData_t&
     _last.clear();
     char* data = static_cast<char*>(d[0]->ptr());
     size_t size = d[0]->size() / sizeof(double);
+    std::cout << "TestProtocol::send(): data length: " << d[0]->size() << "\n";
     for (unsigned i = 0; i < size; i++) {
         std::cout << reinterpret_cast<double*>(data)[i];
     }
     std::cout << std::endl;
     _last.append(data);
-    _lastStreamData = d;
+    // make a copy of the DataChunk info
+    _clearLast();
+    foreach(DataChunk* chunk, d ) {
+        _lastStreamData.append(new StreamData(chunk->name(), chunk->data(), chunk->size() ));
+    }
     QDataStream stream(&device);
     stream.setVersion(QDataStream::Qt_4_0);
     stream << (quint16)_request;
@@ -82,6 +88,14 @@ void TestProtocol::sendError( QIODevice& device, const QString& msg)
     _last.append(error);
     _last.append(msg);
     device.write(_last);
+}
+
+void TestProtocol::_clearLast()
+{
+    foreach(DataChunk* chunk, _lastStreamData ) {
+        delete chunk;
+    }
+    _lastStreamData.clear();
 }
 
 } // namespace test

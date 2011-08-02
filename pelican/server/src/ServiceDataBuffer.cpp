@@ -92,6 +92,7 @@ WritableData ServiceDataBuffer::getWritable(size_t size)
                 // expired data queue.
                 _data.remove(lockableData->id());
                 _expiredData.removeAt(i);
+                lockableData->setSize(size);
                 return lockableData;
             }
         }

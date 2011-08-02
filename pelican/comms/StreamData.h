@@ -43,7 +43,7 @@ class StreamData : public DataChunk
         const QSet<QString>& associateDataTypes() const;
         virtual bool isValid() const;
         bool operator==(const StreamData& sd) const;
-        void reset();
+        void reset( size_t );
 
     private:
         StreamData(const StreamData&);

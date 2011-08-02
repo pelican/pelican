@@ -57,11 +57,11 @@ class LockableStreamData : public AbstractLockableData
         void addAssociatedData(const LockedData&);
 
         /// Returns the datasets associated with this LockableStreamData chunk.
-        const DataList_t& associateData() const {return _serviceData;}
-        const QSet<QString>& associateDataTypes() const {return _serviceDataTypes;}
+        const DataList_t& associateData() const { return _serviceData;}
+        const QSet<QString>& associateDataTypes() const { return _serviceDataTypes;}
 
-        /// Reset the object's data.
-        void reset();
+        /// Reset the object's data and mark it of a suitable size
+        void reset( size_t size );
 
     private:
         /// Disable copy constructor.

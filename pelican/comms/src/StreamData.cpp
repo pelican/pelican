@@ -13,7 +13,7 @@ StreamData::StreamData(const QString& name, void* data, size_t size)
 }
 
 StreamData::StreamData(const QString& name, QString& id, QByteArray& d )
-    : DataChunk(name, id, d)
+    : DataChunk(name, id, d) 
 {
 }
 
@@ -67,9 +67,10 @@ bool StreamData::operator==(const StreamData& sd) const
 }
 
 
-void StreamData::reset()
+void StreamData::reset( size_t size )
 {
     _associateData.clear();
+    setSize(size);
 }
 
 } // namespace pelican

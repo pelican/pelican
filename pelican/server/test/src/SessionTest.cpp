@@ -48,6 +48,7 @@ void SessionTest::setUp()
     _proto = new TestProtocol(id);
     Config config;
     _dataManager = new DataManager(&config);
+//    _dataManager->setVerbosity(2);
     _session = new Session(0, _proto, _dataManager);
     _block = new QByteArray;
     _device = new QBuffer(_block);

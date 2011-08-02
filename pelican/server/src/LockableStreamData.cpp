@@ -62,11 +62,11 @@ bool LockableStreamData::isValid(const QSet<QString>& associates) const
     return rv;
 }
 
-void LockableStreamData::reset()
+void LockableStreamData::reset( size_t size )
 {
     _serviceData.clear();
     _serviceDataTypes.clear();
-    streamData()->reset();
+    streamData()->reset( size );
 }
 
 StreamData* LockableStreamData::streamData() const {

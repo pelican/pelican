@@ -37,6 +37,9 @@ class LockableServiceData : public AbstractLockableData
 
         /// Return the size of the stored data.
         size_t size() const {return _data->size();}
+       
+        /// set the size of data (must be less than the maxSize)
+        void setSize(size_t s ) { _data->setSize(s); }
 
         /// Returns a pointer to the beginning of the memory block.
         void* memoryLocation() {return _data->ptr();}

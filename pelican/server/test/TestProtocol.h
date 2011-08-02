@@ -49,6 +49,9 @@ class TestProtocol : public AbstractProtocol
         QByteArray _last;
         QString _id;
         ServerRequest::Request _request;
+
+    protected:
+        void _clearLast();
 };
 
 } // namespace test
