@@ -1,20 +1,19 @@
 #ifndef DATAVIEWERTEST_H
 #define DATAVIEWERTEST_H
 
-class QApplication;
-#include <QString>
-#include <cppunit/extensions/HelperMacros.h>
-
 /**
  * @file DataViewerTest.h
  */
 
-class QApplication;
 #include <cppunit/extensions/HelperMacros.h>
+#include <QtCore/QString>
+
+class QApplication;
 
 namespace pelican {
-    class DataBlobClient;
-    class PelicanTCPBlobServer;
+
+class DataBlobClient;
+class PelicanTCPBlobServer;
 
 /**
  * @ingroup t_viewer
@@ -48,13 +47,13 @@ class DataViewerTest : public CppUnit::TestFixture
         DataViewerTest();
 
         /// DataViewerTest destructor.
-        ~DataViewerTest();
+        virtual ~DataViewerTest();
 
     private:
         DataBlobClient* _client( PelicanTCPBlobServer* server );
-        QApplication* _app;
 };
 
-} // namespace pelican
+CPPUNIT_TEST_SUITE_REGISTRATION( DataViewerTest );
 
+} // namespace pelican
 #endif // DATAVIEWERTEST_H

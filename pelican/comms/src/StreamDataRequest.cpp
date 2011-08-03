@@ -1,7 +1,6 @@
 #include "pelican/comms/StreamDataRequest.h"
 
 #include "pelican/data/DataRequirements.h"
-#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 

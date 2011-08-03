@@ -1,7 +1,5 @@
 #include "pelican/server/AbstractLockable.h"
 
-#include "pelican/utility/memCheck.h"
-
 namespace pelican {
 
 /**

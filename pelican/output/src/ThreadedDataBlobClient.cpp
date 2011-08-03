@@ -1,12 +1,10 @@
 #include "ThreadedDataBlobClient.h"
-#include <QSet>
+#include <QtCore/QSet>
 
 #include "pelican/output/ThreadedClientImpl.h"
 #include "pelican/output/DataBlobClient.h"
-#include "pelican/utility/memCheck.h"
 
 namespace pelican {
-
 
 /**
  * @details Constructs a ThreadedDataBlobClient object.
@@ -16,7 +14,7 @@ ThreadedDataBlobClient::ThreadedDataBlobClient(const ConfigNode& c)
 {
     _thread = new ThreadedClientImpl(c);
     _thread->start();
-    while( ! _thread->client() ) { sleep(1); } // wait until the client exists 
+    while( ! _thread->client() ) { sleep(1); } // wait until the client exists
     connect( _thread->client(), SIGNAL(newData(const Stream&)),
                         this, SLOT( emitNewData(const Stream&) ), Qt::DirectConnection );
     connect( _thread->client(), SIGNAL(newStreamsAvailable()),

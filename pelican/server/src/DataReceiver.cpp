@@ -1,14 +1,9 @@
 #include "pelican/server/DataReceiver.h"
 #include "pelican/utility/pelicanTimer.h"
-#include <QIODevice>
-#include <QTimer>
-#include <QFile>
+#include <QtCore/QIODevice>
+#include <QtCore/QTimer>
+#include <QtCore/QFile>
 #include <iostream>
-//#include <sys/types.h>
-//#include <sys/syscall.h>
-//#include <unistd.h>
-
-#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 

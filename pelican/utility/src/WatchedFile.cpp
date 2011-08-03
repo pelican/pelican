@@ -1,7 +1,5 @@
 #include "pelican/utility/WatchedFile.h"
-#include <QtGlobal>
-
-#include "pelican/utility/memCheck.h"
+#include <QtCore/QtGlobal>
 
 namespace pelican {
 

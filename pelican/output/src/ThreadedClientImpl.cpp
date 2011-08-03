@@ -2,7 +2,6 @@
 
 
 #include "pelican/output/DataBlobClient.h"
-#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 

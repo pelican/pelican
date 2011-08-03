@@ -1,8 +1,6 @@
 #include "OutputStreamManagerTest.h"
 #include "OutputStreamManager.h"
 
-
-#include "pelican/utility/memCheck.h"
 #include "pelican/output/test/TestOutputStreamer.h"
 
 namespace pelican {

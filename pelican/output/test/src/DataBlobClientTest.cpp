@@ -11,8 +11,6 @@
 #include <QtCore/QtDebug>
 #include <QtTest/QSignalSpy>
 
-#include "pelican/utility/memCheck.h"
-
 namespace pelican {
 
 using test::TestDataBlob;

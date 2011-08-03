@@ -2,7 +2,6 @@
 
 
 #include "pelican/data/DataBlob.h"
-#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 
@@ -27,8 +26,8 @@ boost::shared_ptr<DataBlob> Stream::data() const
     return _data;
 }
 
-const QString& Stream::type() const { 
-    return _type; 
+const QString& Stream::type() const {
+    return _type;
 }
 
 void Stream::setData(DataBlob* blob)

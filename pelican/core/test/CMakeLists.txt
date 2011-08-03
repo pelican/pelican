@@ -30,7 +30,6 @@ add_executable(coreTest ${coreTest_src})
 target_link_libraries(coreTest
     ${SUBPACKAGE_LIBRARIES}
     ${CPPUNIT_LIBRARIES}
-    memoryTracer
 )
 add_test(coreTest coreTest)
 
@@ -47,7 +46,6 @@ add_executable(coreTestMT ${coreTestMT_src})
 target_link_libraries(coreTestMT
     ${SUBPACKAGE_LIBRARIES}
     ${CPPUNIT_LIBRARIES}
-    memoryTracerDummy
 )
 add_test(coreTestMT coreTestMT)
 
@@ -57,5 +55,4 @@ add_test(coreTestMT coreTestMT)
 add_executable(directClient src/directClientMain.cpp)
 target_link_libraries(directClient
     ${SUBPACKAGE_LIBRARIES}
-    memoryTracerDummy
 )

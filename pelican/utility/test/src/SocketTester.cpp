@@ -1,7 +1,5 @@
 #include "pelican/utility/test/SocketTester.h"
 
-#include "pelican/utility/memCheck.h"
-
 namespace pelican {
 namespace test {
 

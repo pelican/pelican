@@ -13,8 +13,6 @@
 #include <QtCore/QBuffer>
 #include <QtCore/QCoreApplication>
 
-#include "pelican/utility/memCheck.h"
-
 namespace pelican {
 
 class ConfigNode;

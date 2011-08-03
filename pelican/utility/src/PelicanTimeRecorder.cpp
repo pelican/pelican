@@ -3,8 +3,7 @@
 #include <iostream>
 #include <algorithm>
 #include <numeric>
-#include <QMutexLocker>
-#include "pelican/utility/memCheck.h"
+#include <QtCore/QMutexLocker>
 
 namespace pelican {
 
@@ -63,7 +62,7 @@ void PelicanTimeRecorder::report() const
                 << ": mean=" << std::accumulate( temp.begin(), temp.end(), 0 )
                 / _ticks[tag].size();
             std::cout << ": max=" << max << ": min=" << min
-                << " (ms) " << _ticks[tag].size() 
+                << " (ms) " << _ticks[tag].size()
                 << " measurements" << std::endl;
         }
     }

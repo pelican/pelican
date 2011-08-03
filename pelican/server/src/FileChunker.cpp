@@ -1,9 +1,6 @@
 #include "pelican/server/FileChunker.h"
 #include "pelican/utility/WatchedFile.h"
 
-
-#include "pelican/utility/memCheck.h"
-
 namespace pelican {
 
 

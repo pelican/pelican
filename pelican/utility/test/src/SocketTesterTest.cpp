@@ -4,8 +4,6 @@
 #include <QtCore/QByteArray>
 #include <QtCore/QCoreApplication>
 
-#include "pelican/utility/memCheck.h"
-
 namespace pelican {
 
 using test::SocketTester;

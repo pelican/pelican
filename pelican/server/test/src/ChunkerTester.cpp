@@ -8,8 +8,6 @@
 using std::cerr;
 using std::endl;
 
-#include "pelican/utility/memCheck.h"
-
 namespace pelican {
 namespace test {
 

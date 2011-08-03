@@ -1,8 +1,7 @@
 #include "AbstractDataBlobClient.h"
 
-#include <QSet>
+#include <QtCore/QSet>
 #include <iostream>
-#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 

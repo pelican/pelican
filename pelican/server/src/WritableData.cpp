@@ -3,8 +3,6 @@
 #include "pelican/server/WritableData.h"
 #include "pelican/server/AbstractLockableData.h"
 
-#include "pelican/utility/memCheck.h"
-
 namespace pelican {
 
 // class WritableData

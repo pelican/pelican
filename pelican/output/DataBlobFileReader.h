@@ -1,6 +1,6 @@
 #ifndef DATABLOBFILEREADER_H
 #define DATABLOBFILEREADER_H
-#include <QString>
+#include <QtCore/QString>
 
 /**
  * @file DataBlobFileReader.h
@@ -12,7 +12,7 @@ class DataBlob;
 
 /**
  * @class DataBlobFileReader
- * 
+ *
  * @brief
  *    Read a file in the DataBlobFile format
  * @details
@@ -48,4 +48,4 @@ class DataBlobFileReader
 
 } // namespace pelican
 
-#endif // DATABLOBFILEREADER_H 
+#endif // DATABLOBFILEREADER_H

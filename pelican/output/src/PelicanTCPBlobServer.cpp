@@ -2,7 +2,6 @@
 #include "PelicanTCPBlobServer.h"
 #include "ThreadedBlobServer.h"
 #include "pelican/utility/ConfigNode.h"
-#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 

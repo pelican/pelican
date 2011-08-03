@@ -12,6 +12,15 @@ if(NOT CMAKE_BUILD_TYPE MATCHES "^RELEASE|DEBUG|[Rr]elease|[Dd]ebug$")
     message(FATAL_ERROR "## Unknown build type. Select 'debug' or 'release'")
 endif(NOT CMAKE_BUILD_TYPE MATCHES "^RELEASE|DEBUG|[Rr]elease|[Dd]ebug$")
 
+message("*****************************************************************")
+if (CMAKE_BUILD_TYPE MATCHES RELEASE|[Rr]elease)
+    message("** NOTE: Building in release mode!")
+else ()
+    message("** NOTE: Building in debug mode!")
+endif()
+message("*****************************************************************")
+
+
 # For now if in release mode build a single library libpelican.so.
 # TODO make this an option.
 if(CMAKE_BUILD_TYPE MATCHES RELEASE|[Rr]elease)

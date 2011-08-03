@@ -11,8 +11,6 @@
 #include <string>
 #include <iostream>
 
-#include "pelican/utility/memCheck.h"
-
 namespace pelican {
 
 namespace opts = boost::program_options;

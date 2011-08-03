@@ -1,9 +1,6 @@
 #include "PelicanTimeRecorderTest.h"
 #include "PelicanTimeRecorder.h"
 
-
-#include "pelican/utility/memCheck.h"
-
 namespace pelican {
 
 CPPUNIT_TEST_SUITE_REGISTRATION( PelicanTimeRecorderTest );

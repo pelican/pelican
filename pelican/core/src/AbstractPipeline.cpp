@@ -4,7 +4,6 @@
 #include "pelican/core/PipelineApplication.h"
 #include "pelican/core/PipelineDriver.h"
 #include "pelican/output/OutputStreamManager.h"
-#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 

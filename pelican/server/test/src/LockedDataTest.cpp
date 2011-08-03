@@ -4,12 +4,10 @@
 #include "pelican/server/LockableStreamData.h"
 
 
-#include "pelican/utility/memCheck.h"
-
 namespace pelican {
 
 CPPUNIT_TEST_SUITE_REGISTRATION( LockedDataTest );
-// class LockedDataTest 
+// class LockedDataTest
 LockedDataTest::LockedDataTest()
     : CppUnit::TestFixture()
 {

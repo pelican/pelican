@@ -1,5 +1,4 @@
 #include "pelican/comms/DataBlobResponse.h"
-#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 

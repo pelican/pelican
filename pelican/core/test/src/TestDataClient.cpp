@@ -1,7 +1,5 @@
 #include "TestDataClient.h"
 
-#include "pelican/utility/memCheck.h"
-
 namespace pelican {
 namespace test {
 

@@ -6,8 +6,6 @@
 
 #include <iostream>
 
-#include "pelican/utility/memCheck.h"
-
 using std::cout;
 using std::cerr;
 using std::endl;

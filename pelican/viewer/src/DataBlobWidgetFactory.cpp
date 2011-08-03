@@ -1,5 +1,4 @@
 #include "DataBlobWidgetFactory.h"
-#include "pelican/utility/memCheck.h"
 #include "pelican/utility/Config.h"
 #include "pelican/utility/ConfigNode.h"
 

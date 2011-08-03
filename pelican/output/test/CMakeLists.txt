@@ -34,7 +34,6 @@ target_link_libraries(outputTestMT
     outputTestUtils
     ${SUBPACKAGE_LIBRARIES}
     ${CPPUNIT_LIBRARIES}
-    memoryTracerDummy
 )
 add_test(outputTestMT outputTestMT)
 

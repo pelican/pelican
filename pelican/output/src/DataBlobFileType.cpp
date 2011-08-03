@@ -3,7 +3,6 @@
 #include <QtCore/QString>
 #include <QtCore/QDataStream>
 
-#include "pelican/utility/memCheck.h"
 #include "pelican/data/DataBlob.h"
 
 namespace pelican {
@@ -71,7 +70,7 @@ void DataBlobFileType::_readType()
      }
 }
 
-DataBlobFileType* DataBlobFileType::openExistingFile(const QString& filename, 
+DataBlobFileType* DataBlobFileType::openExistingFile(const QString& filename,
                                                      const QIODevice::OpenModeFlag mode)
 {
     DataBlobFileType* fileType = 0;
@@ -83,14 +82,14 @@ DataBlobFileType* DataBlobFileType::openExistingFile(const QString& filename,
         in >> magic;
         if( magic != DATABLOBFILE_MAGIC ) {
             delete file;
-            throw(QString("DataBlobFile: \"") + filename 
+            throw(QString("DataBlobFile: \"") + filename
                   + "\" is not a DataBlobFileFormat file (magic=" + magic + ")");
         }
         int version;
         in >> version;
         if( version != DATABLOBFILE_VERSION ) {
             delete file;
-            throw(QString("DataBlobFile: \"") + filename 
+            throw(QString("DataBlobFile: \"") + filename
                   + QString("\" file format is version %1. Incompatible with version %2")
                     .arg(version).arg(DATABLOBFILE_VERSION) );
         }
@@ -99,7 +98,7 @@ DataBlobFileType* DataBlobFileType::openExistingFile(const QString& filename,
         in >> endian;
         if( endian != QSysInfo::BigEndian && endian != QSysInfo::LittleEndian ) {
             delete file;
-            throw(QString("DataBlobFile: \"") + filename 
+            throw(QString("DataBlobFile: \"") + filename
                   + QString("\" Corrupted file - expecting an endian indicator (got %1)").arg(endian) );
         }
         int type;

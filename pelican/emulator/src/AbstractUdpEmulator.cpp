@@ -3,8 +3,6 @@
 
 #include <QtNetwork/QUdpSocket>
 
-#include "pelican/utility/memCheck.h"
-
 namespace pelican {
 
 /**

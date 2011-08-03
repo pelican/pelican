@@ -15,8 +15,6 @@
 #include <QtCore/QString>
 #include <QtNetwork/QTcpSocket>
 
-#include "pelican/utility/memCheck.h"
-
 namespace pelican {
 
 using test::TestDataBlob;

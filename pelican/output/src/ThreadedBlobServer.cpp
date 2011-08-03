@@ -3,15 +3,13 @@
 
 #include <QtCore/QTimer>
 
-#include "pelican/utility/memCheck.h"
-
 #include <iostream>
 
 namespace pelican {
 
 
 /**
- *@details ThreadedBlobServer 
+ *@details ThreadedBlobServer
  */
 ThreadedBlobServer::ThreadedBlobServer( quint16 port, QObject* parent )
     : QThread( parent ), _port(port)
@@ -80,7 +78,7 @@ void ThreadedBlobServer::blockingSend(const QString& streamName, const DataBlob*
 /**
  * @details
  * This slot is called by the TCP Connection manager whenever it has finished sending data
- * It should be run in the TCPManager's thread, and is used to wake up any thread that has called 
+ * It should be run in the TCPManager's thread, and is used to wake up any thread that has called
  * blockingSend()
  */
 void ThreadedBlobServer::sent(const DataBlob* blob)

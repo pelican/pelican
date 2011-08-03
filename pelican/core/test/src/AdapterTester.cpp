@@ -1,4 +1,4 @@
-#include <QFile>
+#include <QtCore/QFile>
 
 #include "AdapterTester.h"
 #include "pelican/core/AbstractStreamAdapter.h"
@@ -18,8 +18,8 @@ AdapterTester::AdapterTester(const QString& type, const QString& config)
     // Setup the XML configuration.
     Config::TreeAddress adapterBase;
     adapterBase << Config::NodeId("adapters", "");
-    QString xml = 
-            "<adapters><" + type + ">" 
+    QString xml =
+            "<adapters><" + type + ">"
           + config + "\n</" + type + ">\n</adapters>";
     _config.setXML(xml);
     _adapterFactory = new FactoryConfig<AbstractAdapter>(&_config, adapterBase );
@@ -37,7 +37,7 @@ AdapterTester::~AdapterTester()
 
 void AdapterTester::setDataFile(const QString& filename)
 {
-     if( _device ) 
+     if( _device )
         delete _device;
      _device = new QFile(filename);
      if( ! _device->open( QIODevice::ReadOnly) ) {

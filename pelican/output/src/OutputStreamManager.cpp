@@ -1,15 +1,14 @@
 #include <iostream>
-#include <QtDebug>
-#include <QStringList>
+#include <QtCore/QtDebug>
+#include <QtCore/QStringList>
 #include "OutputStreamManager.h"
-#include "pelican/utility/memCheck.h"
 #include "pelican/utility/Config.h"
 #include "pelican/utility/ConfigNode.h"
 
 namespace pelican {
 
 /**
- *@details OutputStreamManager 
+ *@details OutputStreamManager
  */
 OutputStreamManager::OutputStreamManager( const Config* config , const Config::TreeAddress& base )
     : _factory(0)
@@ -36,9 +35,9 @@ OutputStreamManager::OutputStreamManager( const Config* config , const Config::T
                 QString id = n.tagName();
                 if( n.hasAttribute("name") )
                     id = n.attribute("name");
-                if(localStreamers.contains(id)) 
+                if(localStreamers.contains(id))
                     throw(QString("OutputStreamManager configuration error: Multiple OutputStreamers with the same \"name\" defined \"%1\% on line : %2").arg(id).arg(n.lineNumber()) );
-                if( !n.hasAttribute("active") ||  n.attribute("active").toLower() == QString("true") ) { 
+                if( !n.hasAttribute("active") ||  n.attribute("active").toLower() == QString("true") ) {
                     AbstractOutputStream* streamer = _factory -> create(n.tagName(), n.attribute("name"));
                     if( ! streamer )
                         throw(QString("OutputStreamManager configuration error: Unknown OuputStreamer type \"%1\%").arg(n.tagName()) );
@@ -69,7 +68,7 @@ OutputStreamManager::OutputStreamManager( const Config* config , const Config::T
             }
         }
         // sanity check to ensure we have some streams defined for active streamers
-        if( streamCount == 0 && localStreamers.size() > 0 ) 
+        if( streamCount == 0 && localStreamers.size() > 0 )
             throw(QString("OutputStreamManager configuration error: No <streams> defined (inside <dataStreams> tags), but active OutputStreamers are defined"));
     }
 }
@@ -85,7 +84,7 @@ OutputStreamManager::~OutputStreamManager()
 /**
  * @details
  * registers a specific output stream to listen to a data specifc stream
- * The special stream "all" is reserved. Any streamer connected to "all" will 
+ * The special stream "all" is reserved. Any streamer connected to "all" will
  * be associated with every stream.
  */
 void OutputStreamManager::connectToStream(AbstractOutputStream* streamer, const QString& stream)

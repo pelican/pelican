@@ -1,8 +1,6 @@
 #include "DataSupportRequest.h"
 
 
-#include "pelican/utility/memCheck.h"
-
 namespace pelican {
 
 

@@ -7,8 +7,6 @@
 #include <QtCore/QMutexLocker>
 #include <stdlib.h>
 
-#include "pelican/utility/memCheck.h"
-
 namespace pelican {
 
 /**

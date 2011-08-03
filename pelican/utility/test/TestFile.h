@@ -1,8 +1,8 @@
 #ifndef TESTFILE_H
 #define TESTFILE_H
-#include <QString>
-#include <QMutex>
-#include <QList>
+#include <QtCore/QString>
+#include <QtCore/QMutex>
+#include <QtCore/QList>
 
 
 /**
@@ -14,12 +14,12 @@ namespace test {
 
 /**
  * @class TestFile
- * 
+ *
  * @brief
  *    Generates a unique filename for testing purposes
  *    Will also clean up the file on exit
  * @details
- * 
+ *
  */
 class TestFile
 {
@@ -43,4 +43,4 @@ class TestFile
 } // namespace test
 } // namespace pelican
 
-#endif // TESTFILE_H 
+#endif // TESTFILE_H

@@ -3,8 +3,6 @@
 #include "pelican/utility/Config.h"
 #include "pelican/server/test/TestUdpChunker.h"
 
-#include "pelican/utility/memCheck.h"
-
 namespace pelican {
 
 CPPUNIT_TEST_SUITE_REGISTRATION( ChunkerFactoryTest );

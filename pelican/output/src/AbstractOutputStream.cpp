@@ -3,13 +3,12 @@
 
 #include <iostream>
 #include "pelican/utility/ConfigNode.h"
-#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 
 
 /**
- *@details AbstractOutputStream 
+ *@details AbstractOutputStream
  */
 AbstractOutputStream::AbstractOutputStream( const ConfigNode& c )
     : _verbose(0)

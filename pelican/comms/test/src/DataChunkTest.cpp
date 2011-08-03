@@ -1,8 +1,6 @@
 #include "pelican/comms/test/DataChunkTest.h"
 #include "pelican/comms/DataChunk.h"
 
-#include "pelican/utility/memCheck.h"
-
 namespace pelican {
 
 CPPUNIT_TEST_SUITE_REGISTRATION( DataChunkTest );

@@ -1,12 +1,9 @@
 #include "TestFile.h"
-#include <QFile>
-#include <QDir>
-#include <QMutexLocker>
-#include <QCoreApplication>
+#include <QtCore/QFile>
+#include <QtCore/QDir>
+#include <QtCore/QMutexLocker>
+#include <QtCore/QCoreApplication>
 #include <iostream>
-
-
-#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 namespace test {
@@ -47,8 +44,8 @@ QString TestFile::filename()
     if( _filename == "" ) {
         QMutexLocker lock( &_mutex );
         do {
-             _filename = QDir::tempPath() + "/TestFile_" 
-                                + QString().setNum(QCoreApplication::applicationPid()) + "_" 
+             _filename = QDir::tempPath() + "/TestFile_"
+                                + QString().setNum(QCoreApplication::applicationPid()) + "_"
                                 + QString().setNum(++_id) + ".tmp";
         }
         while( QFile::exists(_filename) && _reserved.contains(_filename) );
@@ -57,5 +54,5 @@ QString TestFile::filename()
     return _filename;
 }
 
-} // namespace test 
+} // namespace test
 } // namespace pelican

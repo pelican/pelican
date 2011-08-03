@@ -10,8 +10,6 @@
 #include <iostream>
 #include <iomanip>
 
-#include "pelican/utility/memCheck.h"
-
 namespace pelican {
 
 CPPUNIT_TEST_SUITE_REGISTRATION( AdapterRealDataTest );

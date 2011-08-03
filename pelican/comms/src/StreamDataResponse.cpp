@@ -1,7 +1,5 @@
 #include "pelican/comms/StreamDataResponse.h"
 
-#include "pelican/utility/memCheck.h"
-
 namespace pelican {
 
 /**

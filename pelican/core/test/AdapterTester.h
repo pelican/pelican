@@ -1,8 +1,8 @@
 #ifndef ADAPTERTESTER_H
 #define ADAPTERTESTER_H
 
-#include <QString>
-#include <QHash>
+#include <QtCore/QString>
+#include <QtCore/QHash>
 #include "pelican/utility/FactoryConfig.h"
 #include "pelican/utility/Config.h"
 #include "pelican/core/AbstractAdapter.h"
@@ -20,11 +20,11 @@ namespace test {
 
 /**
  * @class AdapterTester
- * 
+ *
  * @brief
  *     Helper for writing Unit tests for Adapters
  * @details
- * 
+ *
  */
 class AdapterTester
 {
@@ -44,7 +44,7 @@ class AdapterTester
         void setServiceData(QHash<QString, DataBlob*>& serviceData);
 
         /// execute
-        //  run deserialise() passing the set data stream 
+        //  run deserialise() passing the set data stream
         //  with the number of specified bytes
         virtual void execute(DataBlob* blob);
 
@@ -60,4 +60,4 @@ class AdapterTester
 } // namespace pelican
 } // namespace pelican
 
-#endif // ADAPTERTESTER_H 
+#endif // ADAPTERTESTER_H

@@ -4,8 +4,6 @@
 #include "pelican/utility/Config.h"
 #include <iostream>
 
-#include "pelican/utility/memCheck.h"
-
 namespace pelican {
 
 CPPUNIT_TEST_SUITE_REGISTRATION( ModuleFactoryTest );

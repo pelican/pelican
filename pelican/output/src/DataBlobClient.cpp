@@ -1,6 +1,6 @@
 #include "DataBlobClient.h"
 #include <QtNetwork/QTcpSocket>
-#include <QCoreApplication>
+#include <QtCore/QCoreApplication>
 
 #include "pelican/output/Stream.h"
 #include "pelican/data/DataBlob.h"
@@ -15,12 +15,11 @@
 #include "pelican/comms/DataSupportResponse.h"
 
 #include <iostream>
-#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 
 /**
- *@details DataBlobClient 
+ *@details DataBlobClient
  */
 DataBlobClient::DataBlobClient( const ConfigNode& configNode, QObject* parent )
     : AbstractDataBlobClient(parent), _streamInfoSubscription(false)
@@ -77,7 +76,7 @@ QSet<QString> DataBlobClient::streams()
         {
             while ( (! _streamInfo) && _tcpSocket->state() == QAbstractSocket::ConnectedState ) {
                 sleep(1);
-                QCoreApplication::processEvents(); 
+                QCoreApplication::processEvents();
             }
         }
     }
@@ -132,7 +131,7 @@ bool DataBlobClient::_sendRequest( const ServerRequest* req )
 void DataBlobClient::_reconnect()
 {
     if( ! _destructor ) {
-        verbose( "DataBlobClient: Connection lost - reconnecting()", 1); 
+        verbose( "DataBlobClient: Connection lost - reconnecting()", 1);
         _currentSubscription.clear();
         subscribe( _subscriptions );
         if( _streamInfoSubscription )

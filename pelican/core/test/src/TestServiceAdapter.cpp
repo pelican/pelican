@@ -1,8 +1,6 @@
 #include "TestServiceAdapter.h"
 #include "pelican/data/test/TestDataBlob.h"
 
-#include "pelican/utility/memCheck.h"
-
 namespace pelican {
 namespace test {
 

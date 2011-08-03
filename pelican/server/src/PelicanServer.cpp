@@ -17,8 +17,6 @@
 
 #include <iostream>
 
-#include "pelican/utility/memCheck.h"
-
 namespace pelican {
 
 /**

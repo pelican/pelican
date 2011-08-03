@@ -8,8 +8,6 @@
 #include <QtCore/QDir>
 #include <iostream>
 
-#include "pelican/utility/memCheck.h"
-
 namespace pelican {
 using test::TestConfig;
 

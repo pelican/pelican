@@ -1,8 +1,7 @@
 #include "DataBlobFileReader.h"
 #include "DataBlobFileType.h"
-#include <QFile>
+#include <QtCore/QFile>
 
-#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 

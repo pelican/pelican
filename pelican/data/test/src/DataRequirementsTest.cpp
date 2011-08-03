@@ -1,8 +1,7 @@
 #include "pelican/data/test/DataRequirementsTest.h"
 #include "pelican/data/DataRequirements.h"
-#include "pelican/utility/memCheck.h"
-#include <QSet>
-#include <QStringList>
+#include <QtCore/QSet>
+#include <QtCore/QStringList>
 
 namespace pelican {
 

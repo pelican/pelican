@@ -6,7 +6,6 @@
 #include "pelican/data/DataRequirements.h"
 #include "pelican/data/DataBlob.h"
 #include "pelican/core/DataTypes.h"
-#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 

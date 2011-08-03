@@ -12,8 +12,6 @@
 #include <QtCore/QThread>
 #include <iostream>
 
-#include "pelican/utility/memCheck.h"
-
 namespace pelican {
 
 using test::TestProtocol;

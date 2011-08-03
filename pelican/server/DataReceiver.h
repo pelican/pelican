@@ -3,9 +3,9 @@
 
 #include "pelican/server/AbstractChunker.h"
 
-#include <QThread>
-#include <QMutex>
-#include <QString>
+#include <QtCore/QThread>
+#include <QtCore/QMutex>
+#include <QtCore/QString>
 
 class QIODevice;
 

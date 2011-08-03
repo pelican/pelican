@@ -12,8 +12,6 @@
 #include <QtCore/QMutexLocker>
 #include <QtNetwork/QTcpSocket>
 
-#include "pelican/utility/memCheck.h"
-
 namespace pelican {
 
 /**
@@ -21,7 +19,7 @@ namespace pelican {
  * TCPConnectionManager constructor
  */
 TCPConnectionManager::TCPConnectionManager(quint16 port, QObject *parent)
-                     : QObject(parent), _port(port), 
+                     : QObject(parent), _port(port),
                       _dataSupportStream("__streamInfo__")
 {
     _protocol = new PelicanProtocol; // TODO - make configurable
@@ -90,7 +88,7 @@ bool TCPConnectionManager::_processIncomming(QTcpSocket *client)
                 DataSupportResponse res( types() );
                 _protocol->send(*client,res);
                 // add the client to the stream update channel
-                if( ! _clients[_dataSupportStream].contains(client) ) 
+                if( ! _clients[_dataSupportStream].contains(client) )
                 {
                     //std::cout << "TCPConnectionManager: Adding new client for streamInfo\n";
                     _clients[_dataSupportStream].push_back(client);
@@ -114,7 +112,7 @@ bool TCPConnectionManager::_processIncomming(QTcpSocket *client)
                         // Check if clients map already has the key, if so add client to list
                         std::cout << "TCPConnectionManager: Adding new client for stream: "
                                 << streamData.toStdString()  << std::endl;
-                        if( ! _clients[streamData].contains(client) ) 
+                        if( ! _clients[streamData].contains(client) )
                             _clients[streamData].push_back(client);
                     }
                     ++it;
@@ -136,7 +134,7 @@ bool TCPConnectionManager::_processIncomming(QTcpSocket *client)
  * @details
  * Send dataSupport Information to connected clients
  */
-void TCPConnectionManager::_sendNewDataTypes() 
+void TCPConnectionManager::_sendNewDataTypes()
 {
     DataSupportResponse res( types() );
 
@@ -261,7 +259,7 @@ void TCPConnectionManager::run()
 
 }
 
-void TCPConnectionManager::stop() 
+void TCPConnectionManager::stop()
 {
     _tcpServer->close();
 }

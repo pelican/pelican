@@ -3,8 +3,6 @@
 #include "pelican/utility/ConfigNode.h"
 #include <QtCore/QIODevice>
 
-#include "pelican/utility/memCheck.h"
-
 namespace pelican {
 
 /**

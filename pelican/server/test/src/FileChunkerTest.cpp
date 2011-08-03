@@ -6,7 +6,6 @@
 #include "FileChunker.h"
 #include "pelican/server/LockedData.h"
 #include "pelican/server/test/ChunkerTester.h"
-#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 

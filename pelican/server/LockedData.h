@@ -1,7 +1,7 @@
 #ifndef LOCKEDDATA_H
 #define LOCKEDDATA_H
 
-#include <QString>
+#include <QtCore/QString>
 #include "AbstractLockable.h"
 
 /**

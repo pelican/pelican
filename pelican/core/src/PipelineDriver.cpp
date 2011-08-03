@@ -9,12 +9,10 @@
 #include "pelican/utility/ConfigNode.h"
 #include "pelican/core/PipelineSwitcher.h"
 
-#include <QString>
-#include <QtGlobal>
-#include <QtDebug>
+#include <QtCore/QString>
+#include <QtCore/QtGlobal>
+#include <QtCore/QtDebug>
 #include <iostream>
-
-#include "pelican/utility/memCheck.h"
 
 
 namespace pelican {
@@ -118,7 +116,7 @@ void PipelineDriver::_deactivatePipeline(AbstractPipeline *pipeline)
              AbstractPipeline* next = _switcherMap[pipeline]->next();
              // mark the next pipeline against the switcher
              if( next != pipeline ) {
-                 _switcherMap[next] = _switcherMap[pipeline]; 
+                 _switcherMap[next] = _switcherMap[pipeline];
                  _switcherMap.remove(pipeline);
              }
              // now activate the new pipeline

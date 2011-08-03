@@ -11,10 +11,7 @@ SUBPACKAGE_SET_EXTERNAL_LIBRARIES(
     ${QT_QTNETWORK_LIBRARY}
 )
 
-
 # Build Pelcain utility tests.
-# Note: The memory tracer utility is only availaible for linking in debug mode.
-# ==============================================================================
 set(utilityTest_src
     src/utilityTest.cpp
     src/SocketTesterTest.cpp
@@ -28,30 +25,18 @@ set(utilityTest_mt_src
 )
 
 add_executable(utilityTestMT ${utilityTest_mt_src} )
-if(CMAKE_BUILD_TYPE MATCHES DEBUG|[Dd]ebug)
-    list(APPEND utilityTest_src src/memoryTracerTest.cpp)
-    add_executable(utilityTest ${utilityTest_src} )
-    target_link_libraries(utilityTest
-        ${SUBPACKAGE_LIBRARIES}
-        ${CPPUNIT_LIBRARIES}
-        memoryTracer
-    )
-    target_link_libraries(utilityTestMT
-        ${SUBPACKAGE_LIBRARIES}
-        ${CPPUNIT_LIBRARIES}
-        memoryTracerDummy
-    )
-else(CMAKE_BUILD_TYPE MATCHES DEBUG|[Dd]ebug)
-    add_executable(utilityTest ${utilityTest_src} )
-    target_link_libraries(utilityTest
-        ${SUBPACKAGE_LIBRARIES}
-        ${CPPUNIT_LIBRARIES}
-    )
-    target_link_libraries(utilityTestMT
-        ${SUBPACKAGE_LIBRARIES}
-        ${CPPUNIT_LIBRARIES}
-        )
-endif(CMAKE_BUILD_TYPE MATCHES DEBUG|[Dd]ebug)
+target_link_libraries(utilityTestMT
+    ${SUBPACKAGE_LIBRARIES}
+    ${CPPUNIT_LIBRARIES}
+)
+
+
+add_executable(utilityTest ${utilityTest_src} )
+target_link_libraries(utilityTest
+    ${SUBPACKAGE_LIBRARIES}
+    ${CPPUNIT_LIBRARIES}
+)
+
 add_test(utilityTest utilityTest)
 add_test(utilityTestMT utilityTestMT)
 

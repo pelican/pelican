@@ -2,8 +2,14 @@
 #include <cppunit/extensions/TestFactoryRegistry.h>
 #include <cppunit/ui/text/TestRunner.h>
 
+#include <QtGui/QApplication>
+
 int main(int /*argc*/, char** /*argv*/)
 {
+    int argc = 1;
+    char *argv[] = {(char*)"pelican"};
+    QApplication* _app = new QApplication(argc, argv);
+
     // Get the top level suite from the registry
     CppUnit::Test *suite = CppUnit::TestFactoryRegistry::getRegistry().makeTest();
 
@@ -20,5 +26,6 @@ int main(int /*argc*/, char** /*argv*/)
 
     // Return error code 1 if the one of test failed.
 
+    delete _app;
     return wasSucessful ? 0 : 1;
 }

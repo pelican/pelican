@@ -3,7 +3,6 @@
 
 
 #include "pelican/output/PelicanTCPBlobServer.h"
-#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 
@@ -39,7 +38,7 @@ void ThreadedDataBlobClientTest::test_subscribe()
 {
 }
 
-ThreadedDataBlobClient* ThreadedDataBlobClientTest::_client( PelicanTCPBlobServer* server, 
+ThreadedDataBlobClient* ThreadedDataBlobClientTest::_client( PelicanTCPBlobServer* server,
                                                              const QString& xml )
 {
     QString conf = xml;

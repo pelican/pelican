@@ -4,8 +4,6 @@
 #include "pelican/core/test/TestStreamAdapter.h"
 #include "pelican/data/DataRequirements.h"
 
-#include "pelican/utility/memCheck.h"
-
 namespace pelican {
 
 using test::TestServiceAdapter;

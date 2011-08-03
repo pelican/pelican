@@ -1,8 +1,5 @@
 #include "PipelineSwitcher.h"
-#include <QString>
-
-
-#include "pelican/utility/memCheck.h"
+#include <QtCore/QString>
 
 namespace pelican {
 
@@ -32,7 +29,7 @@ AbstractPipeline* PipelineSwitcher::next()
      int size = _pipelines.size();
      if( size == 0 )
          throw(QString("PipelineSwitcher: No pipelines defined"));
-     if( _cycle ) 
+     if( _cycle )
          return _pipelines[++_current%size];
      if( ++_current < size )
         return _pipelines[_current];

@@ -2,7 +2,7 @@
 #include <cppunit/XmlOutputter.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 #include <cppunit/ui/text/TestRunner.h>
-#include <QCoreApplication>
+#include <QtCore/QCoreApplication>
 
 int main(int argc, char** argv)
 {

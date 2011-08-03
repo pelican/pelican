@@ -29,7 +29,6 @@ add_executable(signalPipeline
 target_link_libraries(signalPipeline
     ${SUBPACKAGE_LIBRARIES}
     examples
-    memoryTracer
 )
 
 # Create the server binary.
@@ -39,7 +38,6 @@ add_executable(signalServer
 target_link_libraries(signalServer
     ${SUBPACKAGE_LIBRARIES}
     examples
-    memoryTracer
 )
 
 # Create the emulator binary.
@@ -49,7 +47,6 @@ add_executable(signalEmulator
 target_link_libraries(signalEmulator
     ${SUBPACKAGE_LIBRARIES}
     examples
-    memoryTracer
 )
 
 # Copy the XML configuration files needed for the tutorial.

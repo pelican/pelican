@@ -3,8 +3,6 @@
 #include <QtCore/QtGlobal>
 #include <QtCore/QStringList>
 
-#include "pelican/utility/memCheck.h"
-
 namespace pelican {
 
 /**

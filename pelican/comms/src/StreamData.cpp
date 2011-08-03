@@ -2,8 +2,6 @@
 #include "pelican/comms/DataChunk.h"
 #include <iostream>
 
-#include "pelican/utility/memCheck.h"
-
 namespace pelican {
 
 // class StreamData

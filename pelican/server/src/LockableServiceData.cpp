@@ -1,6 +1,5 @@
 #include "pelican/server/LockableServiceData.h"
 #include "pelican/comms/DataChunk.h"
-#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 

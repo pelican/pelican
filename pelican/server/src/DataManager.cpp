@@ -9,8 +9,6 @@
 #include <iostream>
 #include <QtCore/QMutexLocker>
 
-#include "pelican/utility/memCheck.h"
-
 namespace pelican {
 
 
@@ -53,7 +51,7 @@ void DataManager::verbose( const QString& msg, int verboseLevel )
 {
     if( verboseLevel <= _verboseLevel )
         std::cout << "DataManager: "
-                  << msg.toStdString() 
+                  << msg.toStdString()
                   << std::endl;
 }
 /**

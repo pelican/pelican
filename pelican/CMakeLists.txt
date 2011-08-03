@@ -81,7 +81,6 @@ install(DIRECTORY cmake DESTINATION ${MODULES_INSTALL_DIR}
 
 # === Compiler defaults.
 include(compilerDefaults)
-add_definitions(-DUSE_MEMORY_TRACKER) # needed for release mode too?
 
 # === Setup project dependencies.
 include(dependencies)

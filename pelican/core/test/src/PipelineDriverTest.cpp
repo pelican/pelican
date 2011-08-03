@@ -13,8 +13,6 @@
 
 #include <iostream>
 
-#include "pelican/utility/memCheck.h"
-
 namespace pelican {
 
 using test::TestPipeline;
@@ -127,10 +125,10 @@ void PipelineDriverTest::test_registerSwitcher()
         // expect : start processing first pipeline, and switch to the second
         int num = 10;
         PipelineSwitcher sw;
-        TestPipeline* p1 = new TestPipeline(num); 
+        TestPipeline* p1 = new TestPipeline(num);
         p1->setDeactivation(true);
         CPPUNIT_ASSERT(p1->deactivation());
-        TestPipeline* p2 = new TestPipeline(num); 
+        TestPipeline* p2 = new TestPipeline(num);
         sw.addPipeline(p1);
         CPPUNIT_ASSERT(p1->deactivation());
         CPPUNIT_ASSERT(!p2->deactivation());
@@ -166,9 +164,9 @@ void PipelineDriverTest::test_registerSwitcherData()
         // expect : start processing first pipeline, and switch to the second
         int num = 10;
         PipelineSwitcher sw;
-        TestPipeline* p1 = new TestPipeline(req, num); 
+        TestPipeline* p1 = new TestPipeline(req, num);
         p1->setDeactivation(true);
-        TestPipeline* p2 = new TestPipeline(req, num); 
+        TestPipeline* p2 = new TestPipeline(req, num);
         sw.addPipeline(p1);
         sw.addPipeline(p2);
         _pipelineDriver->addPipelineSwitcher(sw);

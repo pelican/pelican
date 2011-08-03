@@ -1,8 +1,8 @@
 #ifndef DATABLOBFILETYPE_H
 #define DATABLOBFILETYPE_H
-#include <QString>
-#include <QIODevice>
-#include <QSysInfo>
+#include <QtCore/QString>
+#include <QtCore/QIODevice>
+#include <QtCore/QSysInfo>
 class QFile;
 
 // type and version identifier for file header
@@ -17,11 +17,11 @@ class DataBlob;
 
 /**
  * @class DataBlobFileType
- * 
+ *
  * @brief
  *    Common data types for the DataBlobFile and DataBlobFileReader
  * @details
- * 
+ *
  */
 class DataBlobFileType
 {
@@ -68,4 +68,4 @@ class DataBlobFileHomogeneous: public DataBlobFileType {
 
 } // namespace pelican
 
-#endif // DATABLOBFILETYPE_H 
+#endif // DATABLOBFILETYPE_H

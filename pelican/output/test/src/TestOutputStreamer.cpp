@@ -1,5 +1,4 @@
 #include "TestOutputStreamer.h"
-#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 namespace test {

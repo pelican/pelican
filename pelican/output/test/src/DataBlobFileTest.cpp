@@ -1,4 +1,4 @@
-#include <QFile>
+#include <QtCore/QFile>
 #include "DataBlobFileTest.h"
 #include "pelican/utility/ConfigNode.h"
 #include "pelican/data/test/TestDataBlob.h"
@@ -6,8 +6,6 @@
 #include "DataBlobFile.h"
 #include "DataBlobFileReader.h"
 
-
-#include "pelican/utility/memCheck.h"
 
 namespace pelican {
 
@@ -62,11 +60,11 @@ void DataBlobFileTest::test_homogeneous()
         CPPUNIT_ASSERT( QFile::exists(filename) );
         DataBlobFileReader r;
         r.open(filename);
-        CPPUNIT_ASSERT_EQUAL( blob1.type().toStdString(), 
+        CPPUNIT_ASSERT_EQUAL( blob1.type().toStdString(),
                                r.nextBlob().toStdString() );
         test::TestDataBlob ref1;
         r.readData( &ref1 );
-        CPPUNIT_ASSERT_EQUAL( blob1.type().toStdString(), 
+        CPPUNIT_ASSERT_EQUAL( blob1.type().toStdString(),
                                r.nextBlob().toStdString() );
         test::TestDataBlob ref2;
         r.readData( &ref2 );
@@ -92,7 +90,7 @@ void DataBlobFileTest::test_homogeneous()
         CPPUNIT_ASSERT( QFile::exists(filename) );
         DataBlobFileReader r;
         r.open(filename);
-        CPPUNIT_ASSERT_EQUAL( blob1.type().toStdString(), 
+        CPPUNIT_ASSERT_EQUAL( blob1.type().toStdString(),
                                r.nextBlob().toStdString() );
         test::TestDataBlob ref1;
         r.readData( &ref1 );
@@ -131,15 +129,15 @@ void DataBlobFileTest::test_heterogeneous()
         CPPUNIT_ASSERT( QFile::exists(filename) );
         DataBlobFileReader r;
         r.open(filename);
-        CPPUNIT_ASSERT_EQUAL( blob1.type().toStdString(), 
+        CPPUNIT_ASSERT_EQUAL( blob1.type().toStdString(),
                                r.nextBlob().toStdString() );
         test::TestDataBlob ref1;
         r.readData( &ref1 );
-        CPPUNIT_ASSERT_EQUAL( blob2.type().toStdString(), 
+        CPPUNIT_ASSERT_EQUAL( blob2.type().toStdString(),
                                r.nextBlob().toStdString() );
         test::TestDataBlob ref2("TestDataType2");
         r.readData( &ref2 );
-        CPPUNIT_ASSERT_EQUAL( blob3.type().toStdString(), 
+        CPPUNIT_ASSERT_EQUAL( blob3.type().toStdString(),
                                r.nextBlob().toStdString() );
         test::TestDataBlob ref3("TestDataType3");
         r.readData( &ref3 );

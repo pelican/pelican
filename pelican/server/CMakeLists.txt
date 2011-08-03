@@ -55,7 +55,6 @@ set(serverExe_src src/main.cpp)
 add_executable(pelicanServer ${serverExe_src})
 target_link_libraries(pelicanServer
     ${SUBPACKAGE_LIBRARIES}
-    memoryTracerDummy
 )
 
 

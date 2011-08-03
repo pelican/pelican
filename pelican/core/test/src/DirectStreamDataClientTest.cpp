@@ -19,8 +19,6 @@
 #include <QtCore/QList>
 #include <iostream>
 
-#include "pelican/utility/memCheck.h"
-
 namespace pelican {
 
 using test::RealUdpEmulator;

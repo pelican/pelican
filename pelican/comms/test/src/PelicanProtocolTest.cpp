@@ -25,8 +25,6 @@ using std::endl;
 using std::cout;
 #include <cstdlib>
 
-#include "pelican/utility/memCheck.h"
-
 namespace pelican {
 
 using test::TestDataBlob;

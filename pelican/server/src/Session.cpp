@@ -18,8 +18,6 @@
 
 #include <iostream>
 
-#include "pelican/utility/memCheck.h"
-
 using std::cout;
 using std::endl;
 
@@ -57,7 +55,7 @@ void Session::verbose( const QString& msg, int verboseLevel )
 {
     if( verboseLevel <= _verboseLevel )
         std::cout << _clientInfo
-                  << msg.toStdString() 
+                  << msg.toStdString()
                   << std::endl;
 }
 
@@ -136,7 +134,7 @@ void Session::processRequest(const ServerRequest& req, QIODevice& out,
                 }
                 break;
             }
-            default: 
+            default:
                 verbose("protocol error: " + req.message());
                 _protocol->sendError(out, req.message());
         }

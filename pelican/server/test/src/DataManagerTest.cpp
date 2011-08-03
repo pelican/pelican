@@ -3,8 +3,6 @@
 #include "pelican/server/WritableData.h"
 #include "pelican/utility/Config.h"
 
-#include "pelican/utility/memCheck.h"
-
 namespace pelican {
 
 CPPUNIT_TEST_SUITE_REGISTRATION( DataManagerTest );

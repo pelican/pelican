@@ -8,8 +8,6 @@
 #include <QtCore/QSet>
 #include <QtCore/QtGlobal>
 
-#include "pelican/utility/memCheck.h"
-
 namespace pelican {
 
 /**

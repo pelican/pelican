@@ -1,6 +1,6 @@
 #ifndef PIPELINESWITCHER_H
 #define PIPELINESWITCHER_H
-#include <QList>
+#include <QtCore/QList>
 
 
 /**
@@ -12,15 +12,15 @@ class AbstractPipeline;
 
 /**
  * @class PipelineSwitcher
- * 
+ *
  * @brief
  *     Provides a way of switching between alternative pipelines
  * @details
  *     This is a container class of suitable pipelines that should
- *     be cycled through. The pipelines will be iterated through in the 
- *     order added. Each new pipeline will be installed whenever the 
+ *     be cycled through. The pipelines will be iterated through in the
+ *     order added. Each new pipeline will be installed whenever the
  *     previous one is disabled
- * 
+ *
  */
 class PipelineSwitcher
 {
@@ -48,4 +48,4 @@ class PipelineSwitcher
 
 } // namespace pelican
 
-#endif // PIPELINESWITCHER_H 
+#endif // PIPELINESWITCHER_H
