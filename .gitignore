@@ -2,3 +2,6 @@
 doc/html/
 # build directory
 build/
+# Eclipse settings directory
+.settings/
+
