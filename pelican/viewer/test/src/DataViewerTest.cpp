@@ -77,7 +77,7 @@ void DataViewerTest::test_client()
         Stream str( testStream );
         str.setData(blob);
         client.send( str );
-//        _app->processEvents(); // FIXME Why was this required?
+        QCoreApplication::processEvents();
 
         CPPUNIT_ASSERT_EQUAL( 1, viewer.streams().size() );
         CPPUNIT_ASSERT_EQUAL( testStream.toStdString() ,
