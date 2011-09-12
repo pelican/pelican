@@ -1,3 +1,7 @@
+#
+# pelican/examples/CMakeLists.txt
+#
+
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 SUBPACKAGE(examples core server emulator)
 

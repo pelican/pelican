@@ -1,3 +1,8 @@
+#
+# pelican/output/CMakeLists.txt
+#
+
+include_directories(${QT_INCLUDE_DIR})
 SUBPACKAGE(output comms data server)
 
 set(output_moc_headers

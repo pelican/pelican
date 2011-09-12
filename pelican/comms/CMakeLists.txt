@@ -1,5 +1,9 @@
-set(comms_DEPS data utility)
+#
+# pelican/comms/CMakeLists.txt
+#
 
+include_directories(${QT_INCLUDE_DIR})
+set(comms_DEPS data utility)
 SUBPACKAGE(comms ${comms_DEPS})
 
 set(comms_src

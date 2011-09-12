@@ -4,23 +4,48 @@
 # Required dependencies:
 #   Qt4
 #   Boost (program options)
-#   CppUnit
 #
-# Sets the following variables:
-#   PROJECT_LIBARRIES: Needed for linking with the libpelican.a
+# Optional dependencies:
+#   CppUnit
 #
 
 # === Find Dependencies.
 find_package(Boost COMPONENTS program_options REQUIRED)
 find_package(Qt4 COMPONENTS QtCore QtNetwork QtXml REQUIRED)
-find_package(CppUnit REQUIRED)
+find_package(CppUnit)
 
-# Global include directories set for all sub-packages
-include_directories(
-    #${CMAKE_CURRENT_SOURCE_DIR}
-    ${QT_INCLUDE_DIR}
-    ${QT_QTCORE_INCLUDE_DIR}
-)
+if (NOT CPPUNIT_FOUND)
+    message("===================================================================")
+    message("= WARNING: CppUnit library not found, unit tests will not be build!")
+    message("===================================================================")
+endif (NOT CPPUNIT_FOUND)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -75,8 +100,6 @@ message("
 ")
 _PELICAN()
 endmacro(_PELICAN_PIC)
-
-
 
 macro(_PELICAN)
 message(""

@@ -1,3 +1,8 @@
+#
+# pelican/emulator/CMakeLists.txt
+#
+
+include_directories(${QT_INCLUDE_DIR})
 SUBPACKAGE(emulator utility)
 
 set(emulator_src

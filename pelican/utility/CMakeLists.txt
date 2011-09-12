@@ -1,3 +1,8 @@
+#
+# pelican/utility/CMakeLists.txt
+#
+
+include_directories(${QT_INCLUDE_DIR})
 SUBPACKAGE(utility)
 
 # Thread safe library.

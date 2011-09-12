@@ -1,4 +1,9 @@
+#
+# pelican/output/test/CMakeLists.txt
+#
+
 # Set dependencies for Pelican output tests.
+include_directories(${QT_INCLUDE_DIR})
 SUBPACKAGE(outputTest output dataTest utilityTest)
 
 # Build Pelican output test library.
@@ -18,22 +23,26 @@ SUBPACKAGE_SET_EXTERNAL_LIBRARIES(
     ${QT_QTXML_LIBRARY}
 )
 
-# Build Pelican output tests.
-# ==============================================================================
-set(outputTest_src
-    src/outputTest.cpp
-    src/TCPConnectionManagerTest.cpp
-    src/PelicanTCPBlobServerTest.cpp
-    src/OutputStreamManagerTest.cpp
-    src/DataBlobClientTest.cpp
-    src/ThreadedDataBlobClientTest.cpp
-    src/DataBlobFileTest.cpp
-)
-add_executable(outputTestMT ${outputTest_src})
-target_link_libraries(outputTestMT
-    outputTestUtils
-    ${SUBPACKAGE_LIBRARIES}
-    ${CPPUNIT_LIBRARIES}
-)
-add_test(outputTestMT outputTestMT)
 
+
+if (CPPUNIT_FOUND)
+    include_directories(${CPPUNIT_INCLUDE_DIR})
+    # Build Pelican output tests.
+    # ==============================================================================
+    set(outputTest_src
+        src/outputTest.cpp
+        src/TCPConnectionManagerTest.cpp
+        src/PelicanTCPBlobServerTest.cpp
+        src/OutputStreamManagerTest.cpp
+        src/DataBlobClientTest.cpp
+        src/ThreadedDataBlobClientTest.cpp
+        src/DataBlobFileTest.cpp
+    )
+    add_executable(outputTestMT ${outputTest_src})
+    target_link_libraries(outputTestMT
+        outputTestUtils
+        ${SUBPACKAGE_LIBRARIES}
+        ${CPPUNIT_LIBRARIES}
+    )
+    add_test(outputTestMT outputTestMT)
+endif (CPPUNIT_FOUND)

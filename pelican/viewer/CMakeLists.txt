@@ -1,3 +1,8 @@
+#
+# pelican/viewer/CMakeLists.txt
+#
+
+include_directories(${QT_INCLUDE_DIR})
 SUBPACKAGE(viewer output comms utility)
 set(viewer_src
     src/DataBlobWidgetFactory.cpp

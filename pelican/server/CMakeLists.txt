@@ -1,3 +1,8 @@
+#
+# pelican/server/CMakeLists.txt
+#
+
+include_directories(${QT_INCLUDE_DIR})
 SUBPACKAGE(server comms utility)
 
 # files requiring MOC pre-processing (i.e. QObjects)
