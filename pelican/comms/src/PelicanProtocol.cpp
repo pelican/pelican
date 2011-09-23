@@ -83,7 +83,6 @@ boost::shared_ptr<ServerRequest> PelicanProtocol::request(QTcpSocket& socket)
                 s->request(dtype,version);
             }
             return s;
-            break;
         }
 
         case ServerRequest::StreamData:
@@ -103,14 +102,12 @@ boost::shared_ptr<ServerRequest> PelicanProtocol::request(QTcpSocket& socket)
                 s->addDataOption(dr);
             }
             return s;
-            break;
         }
 
         case ServerRequest::DataSupport:
         {
             boost::shared_ptr<DataSupportRequest> s(new DataSupportRequest);
             return s;
-            break;
         }
 
         default:
