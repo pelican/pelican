@@ -246,5 +246,27 @@ void DataManager::associateServiceData(LockableStreamData* data)
     }
 }
 
+void DataManager::deactivateStream(const QString& stream)
+{
+    // if it is streaming data we simply wait untill 
+    // the buffer is empty
+    if( _streams.contains(stream) ) {
+        _deactivate[_streams[stream]] = stream; 
+    }
+}
+
+void DataManager::emptiedBuffer(StreamDataBuffer* buffer) 
+{
+    if( _deactivate.contains(buffer) ) {
+        // remove from the data specifications
+        QString name=_deactivate[buffer];
+        _specs.removeStreamData(name);
+        // remove the buffer
+        _streams.remove(name);
+        _deactivate.remove(buffer);
+        delete buffer;
+    }
+}
+
 
 } // namespace pelican

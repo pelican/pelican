@@ -40,6 +40,7 @@ class DataRequirements
 
         /// Adds the required service data type.
         void addServiceData(const QString& type);
+        
 
         /// Adds the required service data set.
         void addServiceData(const QSet<QString>& list);
@@ -49,6 +50,9 @@ class DataRequirements
 
         /// Adds the required stream data set.
         void addStreamData(const QSet<QString>& list);
+
+        /// remove the specified stream data
+        void removeStreamData(const QString& type);
 
         /// Clears the data requirements object.
         void clear();

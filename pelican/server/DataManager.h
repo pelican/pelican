@@ -44,6 +44,7 @@ class DataManager
     private:
         QHash<QString, StreamDataBuffer*> _streams;
         QHash<QString, ServiceDataBuffer*> _service;
+        QHash<StreamDataBuffer*, QString> _deactivate;
         DataRequirements _specs;
 
     public:
@@ -95,6 +96,13 @@ class DataManager
 
         /// Add a stream data type to be managed.
         void setStreamDataBuffer(const QString& name, StreamDataBuffer* buffer);
+
+        /// register the specified data stream for deactivation
+        void deactivateStream(const QString& name);
+
+        /// indicate that a stream buffer is empty
+        //  to be called by the streambuffer only
+        void emptiedBuffer(StreamDataBuffer* buffer);
 
     protected:
         void verbose( const QString& msg, int verboseLevel = 1 );

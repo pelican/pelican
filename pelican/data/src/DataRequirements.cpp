@@ -52,6 +52,12 @@ void DataRequirements::addStreamData(const QString& string)
     _streamData.insert(string);
 }
 
+void DataRequirements::removeStreamData(const QString& type)
+{
+    _hash = 0; // Mark for rehashing.
+    _streamData.remove(type);
+}
+
 /**
  * @details
  * Adds the given set to the service data requirements.
