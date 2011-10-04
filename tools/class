@@ -25,6 +25,7 @@ sub usage {
           "                 Templates available:\n",
           "                   cppunit\n",
           "                   QWidget\n",
+          "                   QObject\n",
           "                   QDialog\n",
           "  -i baseclass\t\n",
           "\n";
@@ -84,6 +85,14 @@ while ( $ARGV[0] =~/^-(.+)/ )
                        'void ${classname}::test_method()'."\n".
                        "{\n}\n\n";
             next;
+        }
+        elsif ( $template eq "QObject" )
+        {
+            $headtext = '${i}Q_OBJECT'."\n\n";
+            $includes = "#include <QObject>\n";
+            $baseclass="QObject";
+            $constructSig="QObject* parent";
+            $constructHeadSig="QObject* parent=0";
         }
         elsif ( $template eq "QWidget" )
         {
