@@ -8,6 +8,8 @@
 namespace pelican {
 using namespace test;
 
+CPPUNIT_TEST_SUITE_REGISTRATION( DataBlobBufferTest );
+
 /**
  *@details DataBlobBufferTest 
  */
@@ -39,7 +41,7 @@ void DataBlobBufferTest::test_nextMethod()
        // next to return a different buffer for each call
        // until it reaches n, then recycle them in the same order
        for(int hmax=1; hmax<3; ++hmax ) {
-           QVector<TestDataBlob* > blobs(hmax); // keep a track of blob order
+           QVector<TestDataBlob* > blobs; // keep a track of blob order
            DataBlobBuffer buffer;
            // set up the blob buffer
            for(int history=0; history<hmax; ++history ) {
@@ -51,9 +53,8 @@ void DataBlobBufferTest::test_nextMethod()
            for(int cycles=0; cycles<2; ++cycles ) {
                for(int history=0; history<hmax; ++history ) {
                    TestDataBlob* b = static_cast<TestDataBlob*>(buffer.next());
-                   QString msg = QString("cycle %1, blob expected=%2").arg(cycles).arg(history);
+                   QString msg = QString("history size=%1 cycle %2, blobnumber=%3, blob expected=%4, got blob %5").arg(hmax).arg(cycles).arg(history).arg((long)blobs[history]).arg((long)b);
                    CPPUNIT_ASSERT_MESSAGE(  msg.toStdString(), b == blobs[history] );
-                   std::cout << msg.toStdString() << std::endl;
                }
            }
         }

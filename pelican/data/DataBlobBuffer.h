@@ -1,7 +1,7 @@
 #ifndef DATABLOBBUFFER_H
 #define DATABLOBBUFFER_H
 
-#include <QtCore/QList>
+#include <QtCore/QVector>
 
 
 /**
@@ -16,8 +16,8 @@ namespace pelican {
  * @brief
  *    A circular buffer of DataBlobs
  * @details
- *   DataBlobs are either active or inactive
- *   inactive blobs can be removed
+ *    At least one DataBlob must be provided otherwise this
+ *    is undefined
  */
 
 class ConfigNode;
@@ -32,8 +32,9 @@ class DataBlobBuffer
         DataBlob* next();
 
     private:
-        QList<DataBlob*> _data;
+        QVector<DataBlob*> _data;
         unsigned int _index;
+        unsigned int _size;
 };
 
 } // namespace pelican

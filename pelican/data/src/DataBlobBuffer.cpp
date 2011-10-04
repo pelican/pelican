@@ -1,5 +1,6 @@
 #include "DataBlobBuffer.h"
 #include "pelican/data/DataBlob.h"
+#include <iostream>
 
 namespace pelican {
 
@@ -7,7 +8,7 @@ namespace pelican {
  *@details DataBlobBuffer 
  */
 DataBlobBuffer::DataBlobBuffer()
-        : _index(0)
+        : _index(-1)
 {
 }
 
@@ -24,10 +25,11 @@ DataBlobBuffer::~DataBlobBuffer()
 void DataBlobBuffer::addDataBlob(DataBlob* blob)
 {
      _data.append(blob);
+     _size = _data.size();
 }
 
 DataBlob* DataBlobBuffer::next() {
-    return _data[++_index%_data.size()];
+    return _data[++_index%_size];
 }
 
 } // namespace pelican
