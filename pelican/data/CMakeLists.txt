@@ -6,6 +6,7 @@ include_directories(${QT_INCLUDE_DIR})
 SUBPACKAGE(data utility)
 set(data_src
     src/DataBlob.cpp
+    src/DataBlobBuffer.cpp
     src/DataRequirements.cpp
     src/DataBlobFactory.cpp
 )
