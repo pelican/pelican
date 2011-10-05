@@ -47,14 +47,10 @@ PelicanServerClientTest::~PelicanServerClientTest()
 
 void PelicanServerClientTest::setUp()
 {
-     int argc = 1;
-     char *argv[] = {(char*)"pelican"};
-     _coreApp = new QCoreApplication(argc, argv);
 }
 
 void PelicanServerClientTest::tearDown()
 {
-    delete _coreApp;
 }
 
 void PelicanServerClientTest::test_getData()

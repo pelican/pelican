@@ -49,12 +49,12 @@ PipelineDriverTest::~PipelineDriverTest()
 void PipelineDriverTest::setUp()
 {
     // Create the QCoreApplication.
-    int argc = 1;
-    char *argv[] = {(char*)"pelican"};
-    _coreApp = new QCoreApplication(argc, argv);
+    //int argc = 1;
+    //char *argv[] = {(char*)"pelican"};
+    //_coreApp = new QCoreApplication(argc, argv);
 
     // Create the factories.
-    _dataBlobFactory = new FactoryGeneric<DataBlob>;
+    _dataBlobFactory = new FactoryGeneric<DataBlob>(false);
     Config config;
 
     _moduleFactory = new FactoryConfig<AbstractModule>(0, "", "");
@@ -84,7 +84,7 @@ void PipelineDriverTest::tearDown()
     delete _osmanager;
 
     // Delete the QCoreApplication.
-    delete _coreApp;
+    //delete _coreApp;
 }
 
 /**
@@ -401,6 +401,43 @@ void PipelineDriverTest::test_start_multiPipelineRunOne()
         CPPUNIT_FAIL("Unexpected exception: " + e.toStdString());
     }
 }
+/**
+ * @details
+ * Test that data is stored in the correct buffers
+ */
+void PipelineDriverTest::test_start_pipelineWithHistory()
+{
+    try {
+        { // Use Case:
+          // One data stream with history
+          // Expect:
+          // Ability to access all data up to the history limit
+            int num = 10;
+            DataRequirements pipelineReq;
+            QString type1 = "FloatData";
+            pipelineReq.addStreamData(type1);
+            TestPipeline *pipeline1 = new TestPipeline(pipelineReq, num);
+            _pipelineDriver->registerPipeline(pipeline1);
+            CPPUNIT_ASSERT_EQUAL(0, pipeline1->count());
 
+            // Create the data client.
+            ConfigNode config;
+            DataTypes types;
+            DataRequirements clientTypes;
+            clientTypes.addStreamData(type1); // Add one type of required data.
+            types.addData(clientTypes);
+            TestDataClient client(config, types);
+            _pipelineDriver->_dataClient = &client;
+
+            // Start the pipeline driver.
+            _pipelineDriver->start();
+            CPPUNIT_ASSERT_EQUAL(num, pipeline1->count());
+            CPPUNIT_ASSERT_EQUAL(pipeline1->count(), pipeline1->matchedCounter());
+        }
+    }
+    catch (QString e) {
+        CPPUNIT_FAIL("Unexpected exception: " + e.toStdString());
+    }
+}
 
 } // namespace pelican

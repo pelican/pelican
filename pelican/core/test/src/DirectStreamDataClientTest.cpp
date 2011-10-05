@@ -31,7 +31,6 @@ CPPUNIT_TEST_SUITE_REGISTRATION( DirectStreamDataClientTest );
 DirectStreamDataClientTest::DirectStreamDataClientTest()
     : CppUnit::TestFixture()
 {
-    _app = NULL;
 }
 
 /**
@@ -47,12 +46,6 @@ DirectStreamDataClientTest::~DirectStreamDataClientTest()
  */
 void DirectStreamDataClientTest::setUp()
 {
-    if (QCoreApplication::instance() == NULL) {
-        int argc = 1;
-        char *argv[] = {(char*)"pelican"};
-        _app = new QCoreApplication(argc, argv);
-    }
-
     QString pipelineXml = ""
             "<buffers>"
             "   <DoubleData>"
@@ -105,7 +98,6 @@ void DirectStreamDataClientTest::setUp()
 void DirectStreamDataClientTest::tearDown()
 {
     delete _config;
-    delete _app;
     delete _emulatorConfig1;
     delete _emulatorConfig2;
 }
@@ -124,7 +116,7 @@ void DirectStreamDataClientTest::test_singleChunker()
         DataClientFactory clientFactory(_config, "pipeline", "clients", &adapterFactory);
 
         // Create the data blob factory.
-        FactoryGeneric<DataBlob> blobFactory;
+        FactoryGeneric<DataBlob> blobFactory(true);
 
         // Create a list of data requirements.
         QString dataType = "DoubleData";
@@ -178,7 +170,7 @@ void DirectStreamDataClientTest::test_twoChunkersMultipleStarts()
                     "clients", &adapterFactory);
 
             // Create the data blob factory.
-            FactoryGeneric<DataBlob> blobFactory;
+            FactoryGeneric<DataBlob> blobFactory(true);
 
             // Create a list of data requirements.
             QString dataType = "DoubleData";
@@ -234,7 +226,7 @@ void DirectStreamDataClientTest::test_twoChunkersSingleStart()
                 "clients", &adapterFactory);
 
         // Create the data blob factory.
-        FactoryGeneric<DataBlob> blobFactory;
+        FactoryGeneric<DataBlob> blobFactory(true);
 
         // Create a list of data requirements.
         QString dataType = "DoubleData";

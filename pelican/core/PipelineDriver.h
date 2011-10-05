@@ -10,6 +10,7 @@
 #include "pelican/data/DataRequirements.h"
 #include "pelican/modules/AbstractModule.h"
 #include "pelican/utility/FactoryConfig.h"
+#include "pelican/utility/TypeCounter.h"
 #include "pelican/utility/FactoryGeneric.h"
 #include <QtCore/QMultiHash>
 #include <QtCore/QList>
@@ -23,6 +24,7 @@ class AbstractAdapter;
 class DataClientFactory;
 class OutputStreamManager;
 class PipelineSwitcher;
+class DataBlobBuffer;
 
 /**
  * @ingroup c_core
@@ -62,8 +64,14 @@ class PipelineDriver
         /// List of all requirements objects from each pipeline.
         QList<DataRequirements> _allDataReq;
 
+        /// Circular Buffers for retaining DataBlob history
+        QHash<QString,DataBlobBuffer*> _dataBuffers;
+
         /// List of registered and active pipelines owned by the driver.
         QList<AbstractPipeline*> _registeredPipelines;
+
+        /// size of history buffers
+        QHash<QString, TypeCounter<unsigned int> > _history;
 
         /// Pipeline switching objects
         QList<PipelineSwitcher> _switchers;
@@ -130,6 +138,9 @@ class PipelineDriver
 
         /// activates a pipeline, ensuring datablobs are available.
         void _activatePipeline(AbstractPipeline*);
+
+        /// adjust internals to a new history size
+        void _updateHistoryBuffers();
 };
 
 } // namespace pelican

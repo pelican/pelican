@@ -21,7 +21,7 @@ AbstractChunker::AbstractChunker(const ConfigNode& config)
 
     _chunkTypes = config.getOptionList("data", "type");
     _host = config.getOption("connection", "host", "");
-    _port = config.getOption("connection", "port", "0").toUInt();
+    _port = (quint16)config.getOption("connection", "port", "0").toUInt();
 
     _active = true;
 }

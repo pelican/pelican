@@ -112,7 +112,7 @@ Config* PipelineApplication::config(std::string configFilename)
  */
 FactoryGeneric<DataBlob>* PipelineApplication::dataBlobFactory()
 {
-    static FactoryGeneric<DataBlob> factory;
+    static FactoryGeneric<DataBlob> factory(false);
     return &factory;
 }
 

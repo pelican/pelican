@@ -69,7 +69,7 @@ int main(int argc, char** argv)
     DataClientFactory clientFactory(&config, "pipeline", "clients", &adapterFactory);
 
     // Create the data blob factory.
-    FactoryGeneric<DataBlob> blobFactory;
+    //FactoryGeneric<DataBlob> blobFactory;
 
     // Create a list of data requirements.
     QString dataType = "DoubleData";
@@ -84,8 +84,8 @@ int main(int argc, char** argv)
     client->addStreamChunker("TestUdpChunker", "a");
 
     // Set up the data hash.
-    QHash<QString, DataBlob*> dataHash;
-    dataHash.insert(dataType, blobFactory.create(dataType));
+    //QHash<QString, DataBlob*> dataHash;
+    //dataHash.insert(dataType, blobFactory.create(dataType));
 
     // Initialise loop counter.
     QTime timer;

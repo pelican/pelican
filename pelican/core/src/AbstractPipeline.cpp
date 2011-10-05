@@ -79,9 +79,20 @@ AbstractModule* AbstractPipeline::createModule(const QString& type,
  * @details
  * Requests remote data from the data client.
  */
-void AbstractPipeline::requestRemoteData(QString type)
+void AbstractPipeline::requestRemoteData(const QString& type, 
+                                         unsigned int history)
 {
     _requiredDataRemote.addStreamData(type);
+    _history[type]=history;
+}
+
+unsigned int AbstractPipeline::historySize(const QString& type) const {
+    if( _requiredDataRemote.contains(type) ) {
+        if( _history.contains(type) )
+            return _history[type];
+        return 1; // defaults to one (no history required)
+    }
+    return 0; // unknown stream
 }
 
 /**

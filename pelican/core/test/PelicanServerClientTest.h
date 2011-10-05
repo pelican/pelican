@@ -6,7 +6,6 @@
  */
 
 #include <cppunit/extensions/HelperMacros.h>
-class QCoreApplication;
 
 namespace pelican {
 
@@ -41,8 +40,6 @@ class PelicanServerClientTest : public CppUnit::TestFixture
         PelicanServerClientTest(  );
         ~PelicanServerClientTest();
 
-    private:
-        QCoreApplication* _coreApp;
 };
 
 } // namespace pelican

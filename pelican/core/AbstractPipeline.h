@@ -109,7 +109,13 @@ class AbstractPipeline
 
         /// Requests remote data from the client.
         /// This method requests a type of remote data from the client.
-        void requestRemoteData(QString type);
+        void requestRemoteData(const QString& type,
+                               unsigned int history = 1);
+
+        /// History size, returns the number of DataBlobs from the
+        /// specified stream to keep in memory (for access by the history()
+        /// method
+        unsigned int historySize(const QString& type) const;
 
         /// Return the remote data requirements for the pipeline.
         const DataRequirements& requiredDataRemote() const;
@@ -172,6 +178,9 @@ class AbstractPipeline
 
         /// Pointer to the output stream manager.
         OutputStreamManager* _osmanager;
+
+        /// Buffer Sizes required for each stream
+        QHash<QString,unsigned int> _history;
 
     private:
         /// \todo fix me (horrible use of friend class)!

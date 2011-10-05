@@ -5,6 +5,7 @@
 #include "pelican/core/FileDataClient.h"
 #include "pelican/core/AbstractPipeline.h"
 #include "pelican/data/DataBlob.h"
+#include "pelican/data/DataBlobBuffer.h"
 #include "pelican/utility/Config.h"
 #include "pelican/utility/ConfigNode.h"
 #include "pelican/core/PipelineSwitcher.h"
@@ -50,6 +51,10 @@ PipelineDriver::~PipelineDriver()
         delete pipeline;
     }
     _registeredPipelines.clear();
+    foreach(DataBlobBuffer* buffer, _dataBuffers ) {
+        delete buffer;
+    }
+    _dataBuffers.clear();
 }
 
 /**
@@ -90,9 +95,25 @@ void PipelineDriver::_registerPipeline(AbstractPipeline *pipeline)
 void PipelineDriver::_activatePipeline(AbstractPipeline *pipeline)
 {
      if( pipeline ) {
-        foreach ( const QString type, pipeline->requiredDataRemote().allData() ) {
-            if ( ! _dataHash.contains(type) )
-                _dataHash.insert(type, _blobFactory->create(type));
+        foreach ( const QString& type, pipeline->requiredDataRemote().allData() ) {
+            // add history requirements
+            _history[type].add( pipeline->historySize(type) );
+            // create a history buffer for each type
+            if( ! _dataBuffers.contains(type) ) {
+                // ensure buffer exists
+                _dataBuffers.insert(type, new DataBlobBuffer );
+                _dataHash.insert(type,NULL);
+            }
+            unsigned int max=_history[type].max();
+            if( max > (unsigned int)_dataBuffers[type]->size() ) { // scale up to required size
+                for(unsigned int i=_dataBuffers[type]->size(); i<max; ++i ) {
+                    _dataBuffers[type]->addDataBlob(_blobFactory->create(type));
+                }
+            }
+            else if( max < (unsigned int)_dataBuffers[type]->size() ) {
+                // shrink the history buffer
+                _dataBuffers[type]->shrink(max);
+            }
         }
         _pipelines.insert(pipeline->requiredDataRemote(), pipeline);
      }
@@ -111,6 +132,18 @@ void PipelineDriver::_deactivatePipeline(AbstractPipeline *pipeline)
 {
     if( pipeline ) {
         _pipelines.remove(pipeline->requiredDataRemote(),pipeline);
+         // adjust history buffers
+         foreach ( const QString& type, pipeline->requiredDataRemote().allData() ) {
+              if( _history.contains(type) ) {
+                 _history[type].remove( pipeline->historySize(type) );
+                if( _history[type].isEmpty() || _history[type].max() == 0 ) {
+                    // remove the buffer completely when no longer needed
+                    delete _dataBuffers[type];
+                    _dataBuffers.remove(type);
+                    _dataHash.remove(type);
+                }
+            }
+         }
          // if the pipeline is in a switcher then get the next one
          if( _switcherMap.contains(pipeline) ) {
              AbstractPipeline* next = _switcherMap[pipeline]->next();
@@ -172,19 +205,6 @@ void PipelineDriver::start()
     if (_registeredPipelines.isEmpty())
         throw QString("PipelineDriver::start(): No pipelines registered.");
 
-    // Store the remote data requirements for each pipeline.
-    //foreach (AbstractPipeline* pipeline, _registeredPipelines) {
-    //    _pipelines.insert(pipeline->requiredDataRemote(), pipeline);
-    //}
-
-    // Create data blobs for all pipelines.
-    //foreach ( DataRequirements req, _allDataReq ) {
-    //    foreach ( QString type, req.allData() ) {
-    //        if ( ! _dataHash.contains(type) )
-    //            _dataHash.insert(type, _blobFactory->create(type));
-    //    }
-    //}
-
     // Create the data client.
     if (!_dataClientName.isEmpty() && _dataClient == NULL )
         _dataClient = _clientFactory->create(_dataClientName, _allDataReq);
@@ -198,6 +218,9 @@ void PipelineDriver::start()
     while (_run) {
         // Get the data from the client.
         QHash<QString, DataBlob*> validData;
+        foreach( const QString& type, _dataHash.keys() ) {
+            _dataHash[type]=_dataBuffers[type]->next();
+        }
         try {
             if (_dataClient)
                 validData = _dataClient->getData(_dataHash);

@@ -52,7 +52,6 @@ class DirectStreamDataClientTest : public CppUnit::TestFixture
         void _printData(DoubleData* data);
 
     private:
-        QCoreApplication* _app;
         Config* _config;
         ConfigNode* _emulatorConfig1;
         ConfigNode* _emulatorConfig2;
