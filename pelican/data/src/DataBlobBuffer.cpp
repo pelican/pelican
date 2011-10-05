@@ -29,7 +29,19 @@ void DataBlobBuffer::addDataBlob(DataBlob* blob)
 }
 
 DataBlob* DataBlobBuffer::next() {
-    return _data[++_index%_size];
+    _index=++_index%_size;
+    return _data[_index];
+}
+
+void DataBlobBuffer::shrink(int newSize) {
+    // remove oldest/unused data first
+    while( _data.size() > newSize ) {
+        unsigned int index=_index+1%_size;
+        delete _data[index]; 
+        _data.removeAt(index);
+        if( index < _index && _index != (unsigned int)-1 ) { --_index; }
+    }
+    _size=_data.size();
 }
 
 } // namespace pelican

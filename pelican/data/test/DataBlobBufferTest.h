@@ -1,6 +1,7 @@
 #ifndef DATABLOBBUFFERTEST_H
 #define DATABLOBBUFFERTEST_H
 
+#include <QtCore/QVector>
 #include <cppunit/extensions/HelperMacros.h>
 
 /**
@@ -8,6 +9,7 @@
  */
 
 namespace pelican {
+namespace test { class TestDataBlob; }
 
 /**
  * @class DataBlobBufferTest
@@ -23,6 +25,7 @@ class DataBlobBufferTest : public CppUnit::TestFixture
     public:
         CPPUNIT_TEST_SUITE( DataBlobBufferTest );
         CPPUNIT_TEST( test_nextMethod );
+        CPPUNIT_TEST( test_shrink );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -31,12 +34,15 @@ class DataBlobBufferTest : public CppUnit::TestFixture
 
         // Test Methods
         void test_nextMethod();
+        void test_shrink();
 
     public:
         DataBlobBufferTest(  );
         ~DataBlobBufferTest();
 
     private:
+        // debugging helper - print out the datablob pointers
+        void dump(const QVector<test::TestDataBlob* >& blobs);
 };
 
 } // namespace pelican

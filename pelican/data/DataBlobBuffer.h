@@ -1,7 +1,7 @@
 #ifndef DATABLOBBUFFER_H
 #define DATABLOBBUFFER_H
 
-#include <QtCore/QVector>
+#include <QtCore/QList>
 
 
 /**
@@ -28,11 +28,21 @@ class DataBlobBuffer
     public:
         DataBlobBuffer();
         ~DataBlobBuffer();
+
+        /// add a new DataBlob for use in the buffer
         void addDataBlob(DataBlob*);
+
+        /// get the next DataBlob from the buffer
         DataBlob* next();
 
+        /// reduce the size of the buffer to the specified size
+        void shrink(int newSize);
+
+        /// return the size (number of DataBlobs) held in the Buffer
+        unsigned int size() { return _size; }
+
     private:
-        QVector<DataBlob*> _data;
+        QList<DataBlob*> _data;
         unsigned int _index;
         unsigned int _size;
 };
