@@ -38,9 +38,11 @@ class DataRequirements
         /// Returns a set containing all required data types.
         QSet<QString> allData() const;
 
+        /// Return true if thew specified stream is available
+        bool contains(const QString& stream) const;
+
         /// Adds the required service data type.
         void addServiceData(const QString& type);
-        
 
         /// Adds the required service data set.
         void addServiceData(const QSet<QString>& list);
