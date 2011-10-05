@@ -2,6 +2,7 @@
 #include "pelican/emulator/AbstractEmulator.h"
 
 #include <QtCore/QIODevice>
+#include <QtCore/QCoreApplication>
 #include <iostream>
 
 namespace pelican {
@@ -18,7 +19,7 @@ EmulatorDriver::EmulatorDriver(AbstractEmulator* emulator) : QThread()
 
     // Start the thread if required.
     if (_emulator->autoStart())
-        start();
+        start(QThread::LowPriority);
 }
 
 /**
@@ -71,6 +72,7 @@ void EmulatorDriver::run()
             unsigned long interval = _emulator->interval();
             if (interval != 0) usleep(interval);
             ++packetCounter;
+            yieldCurrentThread();
         }
     }
     catch( QString& e )
