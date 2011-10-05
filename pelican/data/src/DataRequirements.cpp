@@ -79,6 +79,10 @@ QSet<QString> DataRequirements::allData() const {
 #endif
 }
 
+bool DataRequirements::contains(const QString& stream) const {
+     return _streamData.contains(stream) || _serviceData.contains(stream);
+}
+
 /**
  * @details
  * Clears all the current requirements.
