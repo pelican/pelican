@@ -191,7 +191,7 @@ if ( ! -f $src_file ) {
     foreach my $namespace ( @namespaces ) {
         print $fh "namespace $namespace {\n\n", if ( defined $namespace );
     }
-    print $fh $cppincludesNamespace, "\n", if ( $#namespaces > 0 );
+    print $fh $cppincludesNamespace, "\n", if ( $#namespaces >= 0 );
     print $fh "/**\n";
     print $fh " *\@details $classname \n";
     print $fh " */\n";
