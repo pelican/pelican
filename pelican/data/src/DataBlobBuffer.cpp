@@ -8,7 +8,7 @@ namespace pelican {
  *@details DataBlobBuffer 
  */
 DataBlobBuffer::DataBlobBuffer()
-        : _index(-1)
+        : _index(-1), _size(0)
 {
 }
 
