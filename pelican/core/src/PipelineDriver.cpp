@@ -222,10 +222,11 @@ void PipelineDriver::start()
             _dataHash[type]=_dataBuffers[type]->next();
         }
         try {
-            if (_dataClient)
+            if (_dataClient) {
                 validData = _dataClient->getData(_dataHash);
+            }
         }
-        catch(QString& e)
+        catch(const QString& e)
         {
             // log the error and keep going
             if( e != lastError )
@@ -241,11 +242,11 @@ void PipelineDriver::start()
         for (pipe = _pipelines.begin(); pipe != _pipelines.end(); ++pipe) {
             if (pipe.key().isCompatible(validData)) {
                 ranPipeline = true;
-                pipe.value()->run(_dataHash);
+                pipe.value()->exec(_dataHash);
             }
         }
 
-        //deactivate any pipelines
+        // deactivate any pipelines
         while( _deactivateQueue.size() > 0 ) {
              _deactivatePipeline(_deactivateQueue[0]);
              _deactivateQueue.pop_front();

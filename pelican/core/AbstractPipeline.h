@@ -123,6 +123,12 @@ class AbstractPipeline
         /// Primary interface for pipelines to emit data from the pipeline
         void dataOutput(const DataBlob*, const QString& stream = "") const;
 
+        /// exec the pipeline
+        //  the function called by the pipeline driver
+        //  will do some internal housekeeping before calling
+        //  the virtual run() method
+        void exec(QHash<QString, DataBlob*>& data);
+
         /// Defines a single iteration of the pipeline (pure virtual).
         /// This method defines what happens when the pipeline is run once,
         /// and should be implemented in a subclass. It is called each
@@ -147,6 +153,9 @@ class AbstractPipeline
 
         /// disable this pipeline from being called by the pipeline Driver
         void deactivate();
+
+        /// return the history for the specifed data stream
+        const QList<DataBlob*>& streamHistory(const QString& stream) const;
 
     protected:
         /// Create a data blob using the data blob factory.
@@ -181,6 +190,11 @@ class AbstractPipeline
 
         /// Buffer Sizes required for each stream
         QHash<QString,unsigned int> _history;
+
+        /// Historical Record of blobs passed down
+        //  in reverse order (latest at the front)
+        QHash<QString, QList<DataBlob*>* > _streamHistory;
+
 
     private:
         /// \todo fix me (horrible use of friend class)!

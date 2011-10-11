@@ -56,6 +56,9 @@ class TestPipeline : public AbstractPipeline
         /// return the deactivation setting
         bool deactivation() const;
 
+        /// set the hisrory size for the specified stream
+        void setHistory( const QString& stream, int size);
+
         /// Reset counters.
         void reset();
         void setDeactivation(bool v=true);

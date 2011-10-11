@@ -30,7 +30,9 @@ TestPipeline::TestPipeline(const DataRequirements& requirements, int iterations)
     : AbstractPipeline(), _deactivateStop(false)
 {
     reset();
-    _requiredDataRemote = requirements;
+    foreach ( const QString& type, requirements.allData() ) {
+        requestRemoteData(type);
+    }
     _iterations = iterations;
 }
 
@@ -98,6 +100,11 @@ void TestPipeline::run(QHash<QString, DataBlob*>& dataHash)
             stop(); // Stop the pipeline driver.
         }
     }
+}
+
+void TestPipeline::setHistory( const QString& stream, int size)
+{
+     _history[stream]=size;
 }
 
 } // namespace test

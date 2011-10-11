@@ -395,6 +395,8 @@ void PipelineDriverTest::test_start_multiPipelineRunOne()
         CPPUNIT_ASSERT_EQUAL(0, pipeline2->count());
         CPPUNIT_ASSERT_EQUAL(pipeline2->count(), pipeline2->matchedCounter());
 
+        // ensure history size is just one
+        CPPUNIT_ASSERT_EQUAL(1, pipeline1->streamHistory(type1).size() );
 
     }
     catch (QString e) {
@@ -413,10 +415,12 @@ void PipelineDriverTest::test_start_pipelineWithHistory()
           // Expect:
           // Ability to access all data up to the history limit
             int num = 10;
+            int history=5;
             DataRequirements pipelineReq;
             QString type1 = "FloatData";
             pipelineReq.addStreamData(type1);
             TestPipeline *pipeline1 = new TestPipeline(pipelineReq, num);
+            pipeline1->setHistory(type1, history);
             _pipelineDriver->registerPipeline(pipeline1);
             CPPUNIT_ASSERT_EQUAL(0, pipeline1->count());
 
@@ -433,9 +437,14 @@ void PipelineDriverTest::test_start_pipelineWithHistory()
             _pipelineDriver->start();
             CPPUNIT_ASSERT_EQUAL(num, pipeline1->count());
             CPPUNIT_ASSERT_EQUAL(pipeline1->count(), pipeline1->matchedCounter());
+
+            // check the history
+            const QList<DataBlob* > h = pipeline1->streamHistory(type1);
+            CPPUNIT_ASSERT_EQUAL( history, h.size() );
+            CPPUNIT_ASSERT( h[0] != h[1]  ); // ensure different blobs
         }
     }
-    catch (QString e) {
+    catch(const QString& e) {
         CPPUNIT_FAIL("Unexpected exception: " + e.toStdString());
     }
 }

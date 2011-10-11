@@ -26,6 +26,10 @@ AbstractPipeline::AbstractPipeline()
  */
 AbstractPipeline::~AbstractPipeline()
 {
+    QHash<QString, QList<DataBlob*>* >::iterator it;
+    for (it = _streamHistory.begin(); it != _streamHistory.end(); ++it) {
+        delete it.value();
+    }
 }
 
 /**
@@ -75,6 +79,26 @@ AbstractModule* AbstractPipeline::createModule(const QString& type,
     return module;
 }
 
+const QList<DataBlob*>& AbstractPipeline::streamHistory(const QString& stream) const
+{
+      return *(_streamHistory[stream]);
+}
+
+void AbstractPipeline::exec( QHash<QString,DataBlob*>& data )
+{
+      // update the history information
+      // ensure latest is at the front of the list
+      foreach( const QString& stream, _streamHistory.keys() ) {
+          if( data.contains(stream) ) {
+              QList<DataBlob*>& h = *(_streamHistory[stream]);
+              DataBlob* blob=data[stream];
+              h.removeOne(blob); 
+              h.push_front(blob);
+          }
+      }
+      run(data);
+}
+
 /**
  * @details
  * Requests remote data from the data client.
@@ -84,6 +108,9 @@ void AbstractPipeline::requestRemoteData(const QString& type,
 {
     _requiredDataRemote.addStreamData(type);
     _history[type]=history;
+    if( ! _streamHistory.contains(type) ) {
+        _streamHistory[type]=new QList<DataBlob*>;
+    }
 }
 
 unsigned int AbstractPipeline::historySize(const QString& type) const {
