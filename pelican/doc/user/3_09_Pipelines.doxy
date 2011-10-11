@@ -33,10 +33,14 @@ To create a new pipeline:
 \subsection user_referencePipelines_overview_init The init() method
 
 Here you must specify the types of data required using the
-\c requestRemoteData() protected method. It takes a single argument, which is
-a string containing the type-name (the class name) of the required data blob.
+\c requestRemoteData() protected method. It takes at least one argument, which 
+is a string containing the type-name (the class name) of the required data blob.
 The method should be called as many times as required to fulfil all remote
-data requirements.
+data requirements. An optional second argument allows you to specify the number
+of DataBlobs of this type to store in a history buffer. Using a history
+buffer allows your pipeline to refer to previous DataBlobs 
+( via the \streamHistory() method) without incuring the performance 
+penalty of an unnessasary data copy.
 
 One-off initialisation, such as creating pipeline modules, should also be
 performed here. Use the \c createModule() protected method with the module
