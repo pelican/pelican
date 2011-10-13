@@ -23,6 +23,7 @@ class AbstractModule;
 class DataBlob;
 class PipelineDriver;
 class OutputStreamManager;
+class DataBlobBuffer;
 
 /**
  * @ingroup c_core
@@ -160,6 +161,10 @@ class AbstractPipeline
     protected:
         /// Create a data blob using the data blob factory.
         DataBlob* createBlob(const QString& type);
+
+        /// Create a data blob using the data blob factory in Contiguous Memory
+        //  Ownership of the DataBlobBuffer is the responsibility of the caller
+        DataBlobBuffer* createBlobs(const QString& type, unsigned int number);
 
         /// Create a pipeline module using the module factory.
         AbstractModule* createModule(const QString& type,

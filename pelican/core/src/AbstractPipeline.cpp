@@ -3,6 +3,7 @@
 #include "pelican/core/AbstractPipeline.h"
 #include "pelican/core/PipelineApplication.h"
 #include "pelican/core/PipelineDriver.h"
+#include "pelican/data/DataBlobBuffer.h"
 #include "pelican/output/OutputStreamManager.h"
 
 namespace pelican {
@@ -51,6 +52,21 @@ DataBlob* AbstractPipeline::createBlob(const QString& type)
 
     DataBlob* blob = _blobFactory->create(type);
     return blob;
+}
+
+/**
+ * @details
+ * Creates a container of DataBlobs
+ * The Blobs are owded by the DataBlobBuffer
+*/
+DataBlobBuffer* AbstractPipeline::createBlobs(const QString& type, unsigned int number)
+{
+    // create a contiguous memory buffer
+    DataBlobBuffer* buffer = new DataBlobBuffer;
+    for( unsigned int i=0; i<number; ++i) {
+        buffer->addDataBlob( _blobFactory->create(type) );
+    }
+    return buffer;
 }
 
 /**
