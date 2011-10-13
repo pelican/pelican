@@ -26,6 +26,7 @@ if (CPPUNIT_FOUND)
         src/SocketTesterTest.cpp
         src/ConfigTest.cpp
         src/ConfigNodeTest.cpp
+        src/ContiguousMemoryTest.cpp
         src/PelicanTimeRecorderTest.cpp
     )
     set(utilityTest_mt_src
