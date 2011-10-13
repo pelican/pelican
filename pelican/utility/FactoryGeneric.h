@@ -71,6 +71,13 @@ public: \
                 BOOST_PP_ENUM_PARAMS(n, P)), id); \
     } \
 \
+    /* Creates a concrete object with a registered ID inside pre-allocated memory */ \
+    B* construct(B* memory, const QString& id BOOST_PP_ENUM_TRAILING(n, PARAM, ~)) { \
+        RegBase<B, n>::check(id); \
+        return RegBase<B, n>::types()[id]->construct( memory BOOST_PP_COMMA_IF(n) \
+                BOOST_PP_ENUM_PARAMS(n, P)); \
+    } \
+\
     /* Checks if the ID has been registered */ \
     bool exists(const QString& id) {return RegBase<B, n>::exists(id);} \
 };

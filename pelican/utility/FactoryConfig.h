@@ -91,6 +91,14 @@ public: \
             BOOST_PP_ENUM_TRAILING_PARAMS(BOOST_PP_DEC(n), P) ), id); \
     } \
 \
+    /* configures an concrete object with a registered ID, inside pre-allocated memory */ \
+    B* construct(B* memory, const QString& id BOOST_PP_ENUM_TRAILING(BOOST_PP_DEC(n),PARAM1,~) , \
+            const QString& name="") { \
+        RegBase<B, n>::check(id); \
+        return add(RegBase<B, n>::types()[id]->construct(memory, FactoryBase<B>::conf(id, name) \
+            BOOST_PP_ENUM_TRAILING_PARAMS(BOOST_PP_DEC(n), P) ), id); \
+    } \
+\
     /* Checks if the ID has been registered */ \
     bool exists(const QString& id) {return RegBase<B, n>::exists(id);} \
 };

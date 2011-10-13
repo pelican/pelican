@@ -11,6 +11,7 @@
 #include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/repetition/repeat.hpp>
 #include <boost/preprocessor/repetition/enum.hpp>
+#include <boost/preprocessor/repetition/enum_trailing.hpp>
 #include <boost/preprocessor/repetition/enum_params.hpp>
 
 #include <QtCore/QString>
@@ -79,6 +80,9 @@ template<class B> struct RegBase<B, n> { \
     /* Interface to create the object */ \
     virtual B* create(BOOST_PP_ENUM(n, PARAM, ~)) const = 0; \
 \
+    /* Interface to construct an object in pre-allocated memory */ \
+    virtual B* construct(B* memory BOOST_PP_ENUM_TRAILING(n, PARAM, ~)) const = 0; \
+\
     /* Declares an object with the given ID */ \
     static void declare(const QString& id, RegBase<B, n>* reg) { \
         types().insert(typename TypeMap::value_type(id, reg)); \
@@ -115,6 +119,10 @@ struct FactoryRegistrar<B, T, n> : public RegBase<B, n> \
     /* Creates a concrete object and returns its base class pointer */ \
     B* create(BOOST_PP_ENUM(n, PARAM, ~)) const { \
         return new T(BOOST_PP_ENUM_PARAMS(n, P)); \
+    } \
+    /* Constructs a concrete object inside a pre-allocated memory location */ \
+    B* construct(B* memory BOOST_PP_ENUM_TRAILING(n, PARAM, ~)) const { \
+        return new (memory) T(BOOST_PP_ENUM_PARAMS(n, P)); \
     } \
 };
 BOOST_PP_REPEAT(MAX_FACTORIES, FACTORYREGISTRAR, ~)
