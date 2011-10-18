@@ -28,6 +28,7 @@ if (CPPUNIT_FOUND)
         src/ConfigNodeTest.cpp
         src/ContiguousMemoryTest.cpp
         src/CircularBufferIteratorTest.cpp
+        src/LockingCircularBufferTest.cpp
         src/PelicanTimeRecorderTest.cpp
     )
     set(utilityTest_mt_src
