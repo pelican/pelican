@@ -39,9 +39,11 @@ void CircularBufferIteratorTest::test_circular()
        pelican::CircularBufferIterator<int> it(&buf);
        CPPUNIT_ASSERT_EQUAL(1, it.next());
        CPPUNIT_ASSERT_EQUAL(1, *it);
+       CPPUNIT_ASSERT_EQUAL(2, it.peekNext());
        CPPUNIT_ASSERT_EQUAL(2, it.next());
        CPPUNIT_ASSERT_EQUAL(2, *it);
        CPPUNIT_ASSERT_EQUAL(3, it.next());
+       CPPUNIT_ASSERT_EQUAL(1, it.peekNext());
        CPPUNIT_ASSERT_EQUAL(1, it.next());
        CPPUNIT_ASSERT_EQUAL(2, it.next());
        CPPUNIT_ASSERT_EQUAL(2, *it);

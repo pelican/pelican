@@ -32,7 +32,7 @@ class CircularBufferIterator
         void reset( QList<T>* buffer ) {
              _data = buffer;
              _size = _data->size();
-             _index = -1;
+             _index = _size - 1; // put index on last element
         }
         ~CircularBufferIterator() {};
 
@@ -51,6 +51,11 @@ class CircularBufferIterator
             _index=++_index%_size;
             return (*_data)[_index];
         };
+
+        /// return the next item from the buffer, without moving the index
+        const T& peekNext() {
+            return (*_data)[(_index+1)%_size];
+        }
 
         /// return the value currently pointed to
         //  undefined before next() has been called
