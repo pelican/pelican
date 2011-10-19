@@ -61,7 +61,7 @@ void TestPipeline::init()
 void TestPipeline::reset()
 {
     if( ! _blobFactory ) {
-        _blobFactory = new FactoryGeneric<DataBlob>(false);
+        _blobFactory = new FactoryGeneric<DataBlob>(true);
         setBlobFactory(_blobFactory);
     }
     _counter = 0;
