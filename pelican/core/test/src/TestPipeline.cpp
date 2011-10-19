@@ -14,7 +14,7 @@ namespace test {
  * Default TestPipeline constructor.
  */
 TestPipeline::TestPipeline(int iterations)
-    : AbstractPipeline(),  _deactivateStop(false)
+    : AbstractPipeline(),  _deactivateStop(false), _blobFactory(0)
 {
     reset();
     _iterations = iterations;
@@ -27,7 +27,7 @@ TestPipeline::TestPipeline(int iterations)
  * @param[in] requirements The data requirements of the pipeline.
  */
 TestPipeline::TestPipeline(const DataRequirements& requirements, int iterations)
-    : AbstractPipeline(), _deactivateStop(false)
+    : AbstractPipeline(), _deactivateStop(false), _blobFactory(0)
 {
     reset();
     foreach ( const QString& type, requirements.allData() ) {
@@ -42,6 +42,7 @@ TestPipeline::TestPipeline(const DataRequirements& requirements, int iterations)
  */
 TestPipeline::~TestPipeline()
 {
+    delete _blobFactory;
 }
 
 /**
@@ -59,6 +60,10 @@ void TestPipeline::init()
  */
 void TestPipeline::reset()
 {
+    if( ! _blobFactory ) {
+        _blobFactory = new FactoryGeneric<DataBlob>(false);
+        setBlobFactory(_blobFactory);
+    }
     _counter = 0;
     _matchedCounter = 0;
 }

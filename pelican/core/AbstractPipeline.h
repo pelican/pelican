@@ -164,7 +164,14 @@ class AbstractPipeline
 
         /// Create a data blob using the data blob factory in Contiguous Memory
         //  Ownership of the DataBlobBuffer is the responsibility of the caller
-        DataBlobBuffer* createBlobs(const QString& type, unsigned int number);
+        template<class T>
+        QList<T*> createBlobs(const QString& type, unsigned int number) {
+           QList<T*> buffer;
+           for( unsigned int i=0; i<number; ++i) {
+               buffer.append( (T*)_blobFactory->create(type) );
+           }
+           return buffer;
+        }
 
         /// Create a pipeline module using the module factory.
         AbstractModule* createModule(const QString& type,
@@ -204,6 +211,7 @@ class AbstractPipeline
     private:
         /// \todo fix me (horrible use of friend class)!
         friend class test::TestPipeline;
+        friend class AbstractPipelineTest;
 };
 
 } // namespace pelican

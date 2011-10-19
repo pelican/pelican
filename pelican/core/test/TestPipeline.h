@@ -32,6 +32,7 @@ class TestPipeline : public AbstractPipeline
         int _counter;
         int _matchedCounter;
         bool _deactivateStop;
+        FactoryGeneric<DataBlob>* _blobFactory;
 
     public:
         /// Default constructor.

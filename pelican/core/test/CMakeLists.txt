@@ -37,6 +37,7 @@ if (CPPUNIT_FOUND)
         src/PipelineApplicationTest.cpp
         src/PipelineDriverTest.cpp
         src/PelicanServerClientTest.cpp
+        src/AbstractPipelineTest.cpp
     )
     add_executable(coreTest ${coreTest_src})
     target_link_libraries(coreTest ${SUBPACKAGE_LIBRARIES} ${CPPUNIT_LIBRARIES})

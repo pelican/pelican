@@ -56,21 +56,6 @@ DataBlob* AbstractPipeline::createBlob(const QString& type)
 
 /**
  * @details
- * Creates a container of DataBlobs
- * The Blobs are owded by the DataBlobBuffer
-*/
-DataBlobBuffer* AbstractPipeline::createBlobs(const QString& type, unsigned int number)
-{
-    // create a contiguous memory buffer
-    DataBlobBuffer* buffer = new DataBlobBuffer;
-    for( unsigned int i=0; i<number; ++i) {
-        buffer->addDataBlob( _blobFactory->create(type) );
-    }
-    return buffer;
-}
-
-/**
- * @details
  * Creates a new module using the pipeline application's module factory.
  *
  * This function should be called from the init() method to create the modules
