@@ -43,7 +43,7 @@ macro(SUBPACKAGE name)
 
     # Create the install target for header files of the sub-package.
     #file(GLOB public_headers RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "*.h")
-    file(GLOB public_headers RELATIVE "${PROJECT_SOURCE_DIR}" "*.h")
+    file(GLOB public_headers RELATIVE "${PROJECT_SOURCE_DIR}" "*.h" "*.hpp")
     foreach(header_file ${public_headers})
         get_filename_component(fileDir ${header_file} PATH)
         get_filename_component(fileName ${header_file} NAME)
