@@ -58,8 +58,10 @@ boost::shared_ptr<ServerRequest> PelicanProtocol::request(QTcpSocket& socket)
 
     // Read the request type and return an appropriate server request object.
     QDataStream in(&socket);
+    quint16 tmp;
     in.setVersion(QDataStream::Qt_4_0);
-    in >> (quint16&)type;
+    in >> tmp;
+    type=(ServerRequest::Request)tmp;
 
     switch(type)
     {
