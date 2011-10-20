@@ -435,7 +435,9 @@ void PelicanProtocolTest::test_sendChunk()
     ServerResponse::Response type;
     QDataStream in(&device);
     in.setVersion(QDataStream::Qt_4_0);
-    in >> (quint16&)type;
+    quint16 tmp;
+    in >> (quint16&)tmp;
+    type=(ServerResponse::Response)tmp;
     CPPUNIT_ASSERT_EQUAL(ServerResponse::StreamData, type);
     boost::shared_ptr<StreamDataResponse> receiveResp(new StreamDataResponse);
     quint16 streams;

@@ -84,8 +84,10 @@ boost::shared_ptr<ServerResponse> PelicanClientProtocol::receive(QAbstractSocket
     }
 
     QDataStream in(&socket);
+    quint16 tmpType;
     in.setVersion(QDataStream::Qt_4_0);
-    in >> (quint16&)type;
+    in >> (quint16&)tmpType;
+    type = (ServerResponse::Response)tmpType;
 
     switch(type)
     {
