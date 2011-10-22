@@ -1,7 +1,13 @@
 # doxygen output directory
-doc/html/
+doc/html
+
 # build directory
-build/
+build
+release*
+debug*
+
 # Eclipse settings directory
-.settings/
+.settings
+.cproject
+.project
 
