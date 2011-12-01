@@ -30,7 +30,6 @@ void WatchedFile::_init()
     }
 }
 
-
 /**
  * @details Destroys the WatchedFile object.
  */

@@ -34,6 +34,7 @@ if (CPPUNIT_FOUND)
     set(utilityTest_mt_src
         src/utilityTest.cpp
         src/WatchedFileTest.cpp
+        src/WatchedDirTest.cpp
     )
 
     add_executable(utilityTestMT ${utilityTest_mt_src} )

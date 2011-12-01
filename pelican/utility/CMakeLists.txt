@@ -12,9 +12,11 @@ set(utility_src
     src/ClientTestServer.cpp
     src/PelicanTimeRecorder.cpp
     src/WatchedFile.cpp
+    src/WatchedDir.cpp
 )
 set(utility_moc_headers
     WatchedFile.h
+    WatchedDir.h
     ClientTestServer.h
 )
 
