@@ -37,7 +37,7 @@ class AbstractUdpEmulator : public AbstractEmulator
         AbstractUdpEmulator(const ConfigNode& configNode);
 
         /// Destroys the abstract UDP data emulator
-        ~AbstractUdpEmulator() {}
+        virtual ~AbstractUdpEmulator() {}
 
         /// Creates an open UDP socket.
         QIODevice* createDevice();
