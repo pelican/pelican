@@ -37,6 +37,7 @@ set(server_src
     src/ServiceDataBuffer.cpp
     src/WritableData.cpp
     src/FileChunker.cpp
+    src/DirectoryWatchChunker.cpp
 )
 
 # MOC Compile headers.
