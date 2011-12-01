@@ -16,10 +16,10 @@ DirectoryWatchChunker::DirectoryWatchChunker( const ConfigNode& config )
         throw( QString("DirectoryWatchChunker: empty config passed in constructor") );
     }
     if( ! config.hasAttribute("dir") )
-        throw( QString("FileChunker: no \"dir\" attribute specified" ));
+        throw( QString("DirectoryWatchChunker: no \"dir\" attribute specified" ));
     _dirName = config.getAttribute("dir");
     if( _dirName == "" )
-        throw( QString("FileChunker: no dirname specified" ));
+        throw( QString("DirectoryWatchChunker: no dirname specified" ));
 }
 
 /**
