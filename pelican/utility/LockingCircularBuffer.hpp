@@ -47,6 +47,9 @@ class LockingCircularBuffer
              return *_lock;
         }
 
+        /// return the value pointed to by the current lock
+        T& current() const { return *(*_current); }
+
     private:
         CircularBufferIterator<T>* _lock;
         CircularBufferIterator<T>* _current;
