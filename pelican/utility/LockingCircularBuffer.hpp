@@ -50,6 +50,9 @@ class LockingCircularBuffer
         /// return the value pointed to by the current lock
         T& current() const { return *(*_current); }
 
+        /// returns a pointer to the underlying data buffer
+        QList<T>* rawBuffer() { return _current->buffer(); }
+
     private:
         CircularBufferIterator<T>* _lock;
         CircularBufferIterator<T>* _current;

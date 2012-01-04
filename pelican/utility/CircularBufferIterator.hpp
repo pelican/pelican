@@ -36,6 +36,9 @@ class CircularBufferIterator
         }
         ~CircularBufferIterator() {};
 
+        /// return the buffer
+        QList<T>* buffer() { return _data; }
+
         /// reset the index to point to the position in the
         /// buffer containing the provided value
         /// If this value does not exist, the index will reset
