@@ -19,8 +19,9 @@ namespace pelican {
  * @details
  * This abstract class defines the interface for all data emulators.
  */
-class AbstractEmulator
+class AbstractEmulator : public QObject
 {
+    Q_OBJECT
     public:
         /// Constructor.
         AbstractEmulator() : _device(0) {}
@@ -48,6 +49,10 @@ class AbstractEmulator
 
         /// Returns the start delay interval in seconds.
         virtual int startDelay() {return 0;}
+
+    public slots:
+        /// Emit when finished
+        virtual void emulationFinished() {}
 
     private:
         QIODevice* _device; ///< The output device to use.

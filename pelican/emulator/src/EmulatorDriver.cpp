@@ -17,6 +17,8 @@ EmulatorDriver::EmulatorDriver(AbstractEmulator* emulator) : QThread()
     _emulator = emulator;
     _dataCount = 0;
 
+    QObject::connect(this, SIGNAL(finished()), _emulator, SLOT(emulationFinished()));
+
     // Start the thread if required.
     if (_emulator->autoStart())
         start(QThread::LowPriority);
@@ -84,6 +86,8 @@ void EmulatorDriver::run()
     // Warn if no data returned.
     if (noData)
         std::cerr << "EmulatorDriver: No data to send." << std::endl;
+    else
+        emit finished();
 }
 
 } // namespace pelican
