@@ -2,6 +2,9 @@
 #define LOCKINGCIRCULARBUFFER_H
 #include "CircularBufferIterator.hpp"
 #include <QtCore/QList>
+#include <QtCore/QWaitCondition>
+#include <QtCore/QMutex>
+#include <QtCore/QMutexLocker>
 
 
 /**
@@ -27,7 +30,7 @@ class LockingCircularBuffer
 {
     public:
         LockingCircularBuffer( QList<T>* dataBuffer ) {
-             _lock = new CircularBufferIterator<T>(dataBuffer);
+             _lock = 0;
              _current = new CircularBufferIterator<T>(dataBuffer);
         }
         ~LockingCircularBuffer() { delete _lock; delete _current; };
@@ -35,15 +38,23 @@ class LockingCircularBuffer
         /// return the next free item, this will BLOCK until there are free
         //  elements.
         T next() {
+             QMutexLocker lock(&_mutex);
              const T& next = _current->peekNext();
-             while( *(*_lock) == next ) {}
+             while( _lock && *(*_lock) == next ) {
+                _waitCondition.wait(&_mutex);
+             }
              return _current->next();
         };
 
         /// move the lock pointer to the next position
         //  and return a CircularBufferIterator starting at the lock position
         const CircularBufferIterator<T>& shiftLock() {
+             QMutexLocker lock(&_mutex);
+             if( ! _lock ) { 
+                 _lock = new CircularBufferIterator<T>(_current->buffer());
+             }
              _lock->next();
+             _waitCondition.wakeOne();
              return *_lock;
         }
 
@@ -54,6 +65,8 @@ class LockingCircularBuffer
         QList<T>* rawBuffer() { return _current->buffer(); }
 
     private:
+        QWaitCondition _waitCondition;
+        QMutex _mutex;
         CircularBufferIterator<T>* _lock;
         CircularBufferIterator<T>* _current;
 };
