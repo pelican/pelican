@@ -10,6 +10,7 @@
 #include "pelican/modules/AbstractModule.h"
 #include "pelican/utility/FactoryConfig.h"
 #include "pelican/utility/FactoryGeneric.h"
+#include "pelican/utility/ConfigNode.h"
 
 #include <QtCore/QString>
 
@@ -124,6 +125,9 @@ class PipelineApplication
         void _createConfig(int argc, char** argv);
 
     private:
+        // The pipeline configuration base address
+        Config::TreeAddress _pipelineAddress;
+
         // The pipeline driver object.
         PipelineDriver* _driver;
 

@@ -56,6 +56,7 @@ void PipelineDriverTest::setUp()
     // Create the factories.
     _dataBlobFactory = new FactoryGeneric<DataBlob>(false);
     Config config;
+    Config::TreeAddress address;
 
     _moduleFactory = new FactoryConfig<AbstractModule>(0, "", "");
 
@@ -64,8 +65,8 @@ void PipelineDriverTest::setUp()
     _osmanager = new OutputStreamManager(0,Config::TreeAddress());
 
     // Create the pipeline driver.
-    _pipelineDriver = new PipelineDriver(_dataBlobFactory, _moduleFactory,
-            _clientFactory, _osmanager);
+    _pipelineDriver = new PipelineDriver( _dataBlobFactory, _moduleFactory,
+                                          _clientFactory, _osmanager, &config, address);
 }
 
 /**

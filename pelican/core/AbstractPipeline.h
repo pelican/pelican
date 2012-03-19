@@ -106,6 +106,8 @@ class AbstractPipeline
         /// (pure virtual).
         /// This method creates the required modules when the pipeline is
         /// initialised, and should be implemented in a subclass.
+        /// Note that Configuration Information is available through the getConfig()
+        /// method.
         virtual void init() = 0;
 
         /// Requests remote data from the client.
@@ -159,6 +161,9 @@ class AbstractPipeline
         const QList<DataBlob*>& streamHistory(const QString& stream) const;
 
     protected:
+        /// get the specified Configuration Node from the pipeline configuration
+        ConfigNode config( const QString& tag, const QString& name = "" );
+
         /// Create a data blob using the data blob factory.
         DataBlob* createBlob(const QString& type);
 

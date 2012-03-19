@@ -25,6 +25,7 @@ class DataClientFactory;
 class OutputStreamManager;
 class PipelineSwitcher;
 class DataBlobBuffer;
+class Config;
 
 /**
  * @ingroup c_core
@@ -44,6 +45,12 @@ class PipelineDriver
         friend class PipelineDriverTest;
 
     private:
+        OutputStreamManager* _osmanager;
+
+        /// Configuration root node.
+        const Config* _config;
+        Config::TreeAddress _base; 
+
         /// Pointer to the data client.
         AbstractDataClient* _dataClient;
 
@@ -53,7 +60,6 @@ class PipelineDriver
         /// Pointer to the module factory.
         FactoryConfig<AbstractModule>* _moduleFactory;
 
-        OutputStreamManager* _osmanager;
 
         /// Pointer to the module factory.
         DataClientFactory* _clientFactory;
@@ -98,7 +104,9 @@ class PipelineDriver
         PipelineDriver(FactoryGeneric<DataBlob>* blobFactory,
                 FactoryConfig<AbstractModule>* moduleFactory,
                 DataClientFactory* clientFactory,
-                OutputStreamManager* outputManager);
+                OutputStreamManager* outputManager, 
+                const Config* config,
+                const Config::TreeAddress& pipelineConfig );
 
         /// Destroys the pipeline driver.
         ~PipelineDriver();
@@ -125,6 +133,9 @@ class PipelineDriver
 
         // queue a registered pipeline for deactivation
         void deactivatePipeline(AbstractPipeline*);
+
+        // return the named configuration node, relative to the base adress
+        ConfigNode config( const QString& pipeline, const QString& name="") const;
 
     private:
         /// deactivate a registered pipeline

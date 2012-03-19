@@ -35,9 +35,15 @@ PipelineApplication::PipelineApplication(int argc, char** argv)
     if (!config())
         throw QString("Configuration object does not exist.");
 
+    // setup pipeline configuration node address
+    _pipelineAddress <<  Config::NodeId("configuration", "");
+    _pipelineAddress <<  Config::NodeId("pipeline", "");
+
+    Config::TreeAddress pipelineConfig( _pipelineAddress );
+    pipelineConfig << Config::NodeId("pipelineConfig","");
     // Construct the pipeline driver.
     _driver = new PipelineDriver( dataBlobFactory(), moduleFactory(),
-            clientFactory(), outputStreamManager() );
+            clientFactory(), outputStreamManager(), config(), pipelineConfig );
 }
 
 /**
@@ -78,11 +84,10 @@ DataClientFactory* PipelineApplication::clientFactory()
 OutputStreamManager* PipelineApplication::outputStreamManager()
 {
     Config::TreeAddress address;
-   address <<  Config::NodeId("configuration", "");
-   address <<  Config::NodeId("pipeline", "");
-   address <<  Config::NodeId("output", "");
+    address <<  Config::NodeId("configuration", "");
+    address <<  Config::NodeId("pipeline", "");
+    address <<  Config::NodeId("output", "");
     static OutputStreamManager osmanager( config(), address );
-            //Config::TreeAddress() <<  Config::NodeId("output", "") );
     return &osmanager;
 }
 
