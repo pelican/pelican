@@ -186,6 +186,9 @@ class AbstractPipeline
         /// Stops the pipeline driver.
         void stop();
 
+        /// copy pipeline configuration details to the provided pipeline
+        void copyConfig( AbstractPipeline* pipeline ) const;
+
     private:
         /// The data required by the pipeline.
         DataRequirements _requiredDataRemote;

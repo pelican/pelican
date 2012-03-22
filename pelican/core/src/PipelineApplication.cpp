@@ -62,8 +62,8 @@ void PipelineApplication::init()
     _moduleFactory = new FactoryConfig<AbstractModule>(config(), "pipeline", "modules");
 
     // Construct the pipeline driver.
-    _driver = new PipelineDriver( dataBlobFactory(), moduleFactory(),
-            clientFactory(), outputStreamManager(), config(), pipelineConfig );
+    _driver = new PipelineDriver( dataBlobFactory(), _moduleFactory,
+            _clientFactory, outputStreamManager(), &_config, pipelineConfig );
 }
 
 /**

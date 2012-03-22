@@ -37,6 +37,7 @@ PipelineDriver::PipelineDriver(FactoryGeneric<DataBlob>* blobFactory,
     _blobFactory = blobFactory;
     _moduleFactory = moduleFactory;
     _clientFactory = clientFactory;
+    Q_ASSERT(_config != 0 );
     Q_ASSERT(_blobFactory != 0 );
     Q_ASSERT(_moduleFactory != 0 );
     Q_ASSERT(_clientFactory != 0 );
