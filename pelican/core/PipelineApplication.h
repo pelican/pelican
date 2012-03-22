@@ -82,27 +82,28 @@ class PipelineApplication
     public:
         /// Constructor.
         PipelineApplication(int argc, char** argv);
+        PipelineApplication(const Config& config );
 
         /// Destructor.
         ~PipelineApplication();
 
         /// Return a pointer to the adapter factory.
-        static FactoryConfig<AbstractAdapter>* adapterFactory();
+        FactoryConfig<AbstractAdapter>* adapterFactory();
 
         /// Return a pointer to the client factory.
-        static DataClientFactory* clientFactory();
+        DataClientFactory* clientFactory();
 
         /// Return a pointer to the output stream manager
         OutputStreamManager* outputStreamManager();
 
         /// Return a pointer to the application configuration object.
-        static Config* config(std::string configFilename = "");
+        inline Config* config() { return &_config; };
 
         /// Return a pointer to the data blob factory.
         static FactoryGeneric<DataBlob>* dataBlobFactory();
 
         /// Return a pointer to the module factory.
-        static FactoryConfig<AbstractModule>* moduleFactory();
+        FactoryConfig<AbstractModule>* moduleFactory() const;
 
         /// Register a pipeline with the pipeline driver.
         void registerPipeline(AbstractPipeline *pipeline);
@@ -116,15 +117,25 @@ class PipelineApplication
         /// Starts the pipeline driver.
         void start();
 
+        /// Stops the pipeline driver.
+        void stop();
+
         /// returns true if start has been called
         //  and the execution loop is ooperating
         bool isRunning() const;
 
     private:
+        /// initialise the object
+        //  assumes _config is set
+        void init();
+
         /// Creates the configuration object based on the command line arguments.
         void _createConfig(int argc, char** argv);
 
     private:
+        // The configuration Object
+        Config _config;
+
         // The pipeline configuration base address
         Config::TreeAddress _pipelineAddress;
 
@@ -133,6 +144,10 @@ class PipelineApplication
 
         // Base nodes to define configuration file.
         Config::TreeAddress _osmanagerBase;
+
+        FactoryConfig<AbstractAdapter>* _adapterFactory;
+        DataClientFactory* _clientFactory;
+        FactoryConfig<AbstractModule>* _moduleFactory;
 };
 
 } // namespace pelican

@@ -26,14 +26,26 @@ namespace opts = boost::program_options;
  */
 PipelineApplication::PipelineApplication(int argc, char** argv)
 {
+    // Set configuration using command line arguments
+    _createConfig(argc, argv);
+    init();
+}
+
+PipelineApplication::PipelineApplication(const Config& config )
+{
+    _config = config;
+    init();
+}
+
+void PipelineApplication::init() 
+{
+     _adapterFactory = 0;
+     _clientFactory = 0;
+     _moduleFactory = 0;
+
     // Check for QCoreApplication
     if (QCoreApplication::instance() == NULL)
         throw QString("Create a QCoreApplication before the PipelineApplication.");
-
-    // Set configuration using command line arguments
-    _createConfig(argc, argv);
-    if (!config())
-        throw QString("Configuration object does not exist.");
 
     // setup pipeline configuration node address
     _pipelineAddress <<  Config::NodeId("configuration", "");
@@ -41,6 +53,14 @@ PipelineApplication::PipelineApplication(int argc, char** argv)
 
     Config::TreeAddress pipelineConfig( _pipelineAddress );
     pipelineConfig << Config::NodeId("pipelineConfig","");
+
+    // initialise the factories
+    _adapterFactory = new FactoryConfig<AbstractAdapter>(config(),
+                "pipeline", "adapters");
+    _clientFactory = new DataClientFactory(config(), "pipeline", "clients",
+            adapterFactory() );
+    _moduleFactory = new FactoryConfig<AbstractModule>(config(), "pipeline", "modules");
+
     // Construct the pipeline driver.
     _driver = new PipelineDriver( dataBlobFactory(), moduleFactory(),
             clientFactory(), outputStreamManager(), config(), pipelineConfig );
@@ -53,6 +73,9 @@ PipelineApplication::PipelineApplication(int argc, char** argv)
 PipelineApplication::~PipelineApplication()
 {
     delete _driver;
+    delete _adapterFactory;
+    delete _clientFactory;
+    delete _moduleFactory;
 }
 
 /**
@@ -61,9 +84,7 @@ PipelineApplication::~PipelineApplication()
  */
 FactoryConfig<AbstractAdapter>* PipelineApplication::adapterFactory()
 {
-    static FactoryConfig<AbstractAdapter> factory(config(),
-            "pipeline", "adapters");
-    return &factory;
+    return _adapterFactory;
 }
 
 /**
@@ -72,9 +93,7 @@ FactoryConfig<AbstractAdapter>* PipelineApplication::adapterFactory()
  */
 DataClientFactory* PipelineApplication::clientFactory()
 {
-    static DataClientFactory factory(config(), "pipeline", "clients",
-            adapterFactory() );
-    return &factory;
+    return _clientFactory;
 }
 
 /**
@@ -93,26 +112,6 @@ OutputStreamManager* PipelineApplication::outputStreamManager()
 
 /**
  * @details
- * Returns a pointer to the application's configuration object.
- *
- * @param configFilename The filename to use when constructing the object.
- * @return
- */
-Config* PipelineApplication::config(std::string configFilename)
-{
-    try {
-        // The static object is initialised only once.
-        static Config config(QString::fromStdString(configFilename));
-        return &config;
-    }
-    catch (QString error) {
-        std::cerr << error.toStdString() << std::endl;
-        return 0;
-    }
-}
-
-/**
- * @details
  * Returns a pointer to the application's data blob factory.
  */
 FactoryGeneric<DataBlob>* PipelineApplication::dataBlobFactory()
@@ -125,10 +124,9 @@ FactoryGeneric<DataBlob>* PipelineApplication::dataBlobFactory()
  * @details
  * Returns a pointer to the application's module factory.
  */
-FactoryConfig<AbstractModule>* PipelineApplication::moduleFactory()
+FactoryConfig<AbstractModule>* PipelineApplication::moduleFactory() const
 {
-    static FactoryConfig<AbstractModule> factory(config(), "pipeline", "modules");
-    return &factory;
+    return _moduleFactory;
 }
 
 /**
@@ -168,6 +166,17 @@ void PipelineApplication::start()
 {
     try {
         _driver->start();
+    }
+    catch (QString err) {
+        std::cout << "ERROR: " << err.toStdString() << std::endl;
+    }
+
+}
+
+void PipelineApplication::stop()
+{
+    try {
+        _driver->stop();
     }
     catch (QString err) {
         std::cout << "ERROR: " << err.toStdString() << std::endl;
@@ -226,9 +235,15 @@ void PipelineApplication::_createConfig(int argc, char** argv)
         std::cout << "WARNING: No configuration file supplied." << std::endl;
     }
 
-    // Construct the static configuration object.
-    if (!config(configFilename))
-        throw QString("PipelineApplication: Cannot create configuration.");
+    // Construct the configuration object.
+    try {
+        // The static object is initialised only once.
+        _config = Config(QString::fromStdString(configFilename));
+        
+    }
+    catch (QString error) {
+        std::cerr << error.toStdString() << std::endl;
+    }
 }
 
 } // namespace pelican
