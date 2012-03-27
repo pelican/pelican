@@ -9,7 +9,9 @@
 #include <QtXml/QDomDocument>
 #include <QtCore/QString>
 #include <QtCore/QHash>
+#include <QtCore/QList>
 #include <QtCore/QPair>
+#include <QtCore/QFile>
 
 namespace pelican {
 
@@ -47,7 +49,7 @@ class Config
 
         /// Returns the configuration node at the specified address.
         ConfigNode get(const TreeAddress &address) const {
-            return ConfigNode(_get(address, _document));
+            return ConfigNode(_get(address, _document), this );
         }
 
         /// returns true if a node at the specified address exists
@@ -63,6 +65,13 @@ class Config
         /// Imports a file.
         void importFile(QDomDocument& document,
                 QDomNode& parent, const QString& name);
+
+        /// Search the configuratipn path for the specified
+        //  file.
+        QString searchFile( const QString& filename ) const;
+
+        /// set the search paths for imported configuration files
+        void setSearchPaths( const QList<QString>& );
 
         /// Imports a nodeset.
         void importNodeset(QDomDocument& document,
@@ -80,7 +89,7 @@ class Config
 
         /// Creates and returns a configuration option at the specified address.
         ConfigNode set(const TreeAddress &address) {
-            return ConfigNode(_set(address));
+            return ConfigNode(_set(address), this );
         }
 
         /// Sets a configuration option attribute at the specified address.
@@ -124,6 +133,7 @@ class Config
         QDomElement _set(const TreeAddress &address);
 
     private:
+        QList<QString> _searchPaths; // prefix for the Qt resource search
         QString _fileName;
         QDomDocument _document;
 };

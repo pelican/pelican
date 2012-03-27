@@ -36,6 +36,7 @@ class ConfigTest : public CppUnit::TestFixture
         CPPUNIT_TEST( test_configFileRead );
         CPPUNIT_TEST( test_configFromString );
         CPPUNIT_TEST( test_testConfig );
+        CPPUNIT_TEST( test_searchFile );
         CPPUNIT_TEST( test_preprocess );
         CPPUNIT_TEST_SUITE_END();
 
@@ -60,6 +61,8 @@ class ConfigTest : public CppUnit::TestFixture
         void test_configFromString();
         /// Test using the TestConfig class.
         void test_testConfig();
+        /// Test filename searching
+        void test_searchFile();
         /// Test preprocessing the document.
         void test_preprocess();
 

@@ -344,4 +344,66 @@ void ConfigTest::test_preprocess()
     }
 }
 
+void ConfigTest::test_searchFile() 
+{
+     QString testDir = QCoreApplication::applicationDirPath();
+     QString existing_full = QCoreApplication::applicationFilePath();
+     QString existing_relative = QFileInfo( existing_full ).fileName();
+     CPPUNIT_ASSERT_EQUAL( existing_full.toStdString(), 
+                          (testDir + QDir::separator() + existing_relative).toStdString() ); // sanity check
+     QString non_existing = "IDoNotExist.zero";
+     QList<QString> paths;
+     paths << testDir;
+     {
+     // Use case: no search path set, and full path given
+     //           to an existing file
+     // Expect:
+     //           return the full path to the file
+     Config config;
+     QList<QString> paths;
+     config.setSearchPaths( paths );
+     CPPUNIT_ASSERT_EQUAL( existing_full.toStdString(), config.searchFile( existing_full ).toStdString() );
+     }
+     {
+     // Use case: search path set, and full path given
+     //           to an existing file
+     // Expect:
+     //           return the full path to the file
+     Config config;
+     config.setSearchPaths( paths );
+     CPPUNIT_ASSERT_EQUAL( existing_full.toStdString(), config.searchFile( existing_full ).toStdString() );
+     }
+     {
+     // Use case: no search path set, relative path given
+     //           to an existing file
+     // Expect:
+     //           throw
+     Config config;
+     QList<QString> paths;
+     config.setSearchPaths( paths );
+     CPPUNIT_ASSERT_THROW( config.searchFile( existing_relative ).toStdString(), QString );
+     }
+     {
+     // Use case: no search path set, relative path given
+     //           to a non existing file
+     // Expect:
+     //           throw
+     Config config;
+     QList<QString> paths;
+     config.setSearchPaths( paths );
+     CPPUNIT_ASSERT_THROW( config.searchFile( non_existing ).toStdString(), QString );
+     }
+     {
+     // Use case: search path set, relative path given
+     //           to an existing file
+     // Expect:
+     //           return the full path to the file
+     Config config;
+     config.setSearchPaths( paths );
+     config.searchFile( existing_relative );
+     CPPUNIT_ASSERT_EQUAL( existing_full.toStdString(), 
+                           config.searchFile( existing_relative ).toStdString() );
+     }
+}
+
 } // namespace pelican

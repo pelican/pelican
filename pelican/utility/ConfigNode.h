@@ -13,6 +13,7 @@
 #include <vector>
 
 namespace pelican {
+class Config;
 
 /**
  * @ingroup c_utility
@@ -30,13 +31,14 @@ class ConfigNode
 {
     private:
         QDomElement _config;
+        const Config* _configObject;
 
     public:
         /// Constructs an empty configuration node.
-        ConfigNode() {}
+        ConfigNode() : _configObject(0) {}
 
         /// Constructs the configuration node from the specified QDomElement.
-        ConfigNode(const QDomElement& config);
+        ConfigNode(const QDomElement& dom, const Config* config );
 
         /// Constructs the configuration node from the specified QDomElement list.
         ConfigNode(const QList<QDomElement>& config);
@@ -96,6 +98,9 @@ class ConfigNode
 
         /// Returns the list of unsigned integers, if any.
         std::vector<unsigned> getUnsignedList(const QString& tagName) const;
+
+        /// search for the specifed file in the configuration search path
+        QString searchFile( const QString& filename ) const;
 };
 
 } // namespace pelican

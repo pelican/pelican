@@ -2,6 +2,7 @@
 
 #include <QtCore/QTextStream>
 #include <QtCore/QFile>
+#include <QtCore/QDir>
 #include <QtXml/QDomDocumentType>
 
 #include <iostream>
@@ -21,8 +22,12 @@ namespace pelican {
  * Configuration constructor.
  */
 Config::Config(const QString& fileName)
+    : _fileName(fileName)
 {
-    _fileName = fileName;
+    // set the search path for configuration files
+    _searchPaths.append( QDir::currentPath() );
+
+    // read in the document
     _document = read(fileName);
 }
 
@@ -42,6 +47,21 @@ QString Config::getAttribute(const TreeAddress& address, const QString& key) con
         return QString();
     else
         return e.attribute(key);
+}
+
+/* we use QList<QString> in place of QStringList in the main interface incase we ever need
+ * to go to support versions < 4.3
+ */
+void Config::setSearchPaths( const QList<QString>& paths ) {
+     _searchPaths.clear();
+     foreach( const QString& path, paths ) {
+        if( ! path.endsWith( QDir::separator() ) ) {
+            _searchPaths.append( path + QDir::separator() );
+        }
+        else {
+            _searchPaths.append( path );
+        }
+     }
 }
 
 bool Config::verifyAddress( const TreeAddress &address) const
@@ -92,12 +112,15 @@ void Config::importFile(QDomDocument& document,
     // Return if name is empty.
     if (name.isEmpty()) return;
 
+    // find the file
+    QString filename = searchFile(name);
+
     // Write comment.
     parent.appendChild(document.createComment(
-            "% Imported file " + name) );
+            "% Imported file " + filename) );
 
     // Import the file.
-    QDomDocument newDoc = read(name);
+    QDomDocument newDoc = read(filename);
 
     // Loop over each child under the root node of the file, and append it.
     QDomNodeList list = newDoc.documentElement().childNodes();
@@ -105,6 +128,22 @@ void Config::importFile(QDomDocument& document,
         parent.appendChild(list.at(j).cloneNode());
     }
 }
+
+QString Config::searchFile( const QString& file ) const {
+    // check the filename
+    // must put in absoulte check otherwise will return files in cwd
+    // which may not be in the path
+    if( QDir::isAbsolutePath(file) && QFile::exists( file ) ) return file;
+
+    // search the configuration path
+    foreach( const QString& path, _searchPaths ) {
+       QString tmp = path + file;
+       if( QFile::exists( tmp ) ) return tmp;
+    }
+    throw QString("unable to find config file \"%1\""
+            " in (").arg(file) + QStringList(_searchPaths).join(",") + ")";
+}
+
 
 /**
  * @details
