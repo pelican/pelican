@@ -54,6 +54,11 @@ not provided as part of the remote data), then they should also be created
 here using the \c createBlob() protected method. The method returns a
 \c DataBlob base class pointer.
 
+Configuration information, if required, can be specified inside the
+<pipelineConfig> tag of the pipelines xml file. 
+The appropriate \c ConfigNode object can be accessed through a call
+to the \config() protected method.
+
 \subsection user_referencePipelines_overview_run The run() method
 
 This is where data processing happens, and is called each time a new

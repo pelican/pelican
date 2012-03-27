@@ -114,14 +114,16 @@ AbstractDataClient::DataBlobHash DirectStreamDataClient::getData(
     // Keep polling the data manager until we can match a suitable request.
     DataBlobHash validData;
     QList<LockedData> dataList; // Will contain the list of valid StreamDataObjects
-    while (dataList.size() == 0) {
+    do {
         // Must cycle the event loop for unlocked signals to be processed.
         for (int i = 0; i < _nPipelines; ++i) {
             dataList = _dataManager->getDataRequirements(dataRequirements().at(i));
             if (dataList.size() != 0) break;
         }
-        QCoreApplication::processEvents( QEventLoop::WaitForMoreEvents );
+        if( dataList.size() == 0 )
+            QCoreApplication::processEvents( QEventLoop::WaitForMoreEvents );
     }
+    while (dataList.size() == 0 );
 
     // Transform the data into DataBlobs.
     for (int i = 0; i < dataList.size(); ++i) {

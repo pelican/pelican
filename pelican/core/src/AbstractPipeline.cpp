@@ -85,6 +85,19 @@ const QList<DataBlob*>& AbstractPipeline::streamHistory(const QString& stream) c
       return *(_streamHistory[stream]);
 }
 
+ConfigNode AbstractPipeline::config( const QString& tag, const QString& name )
+{
+     return _pipelineDriver->config( tag, name );
+}
+
+void AbstractPipeline::copyConfig( AbstractPipeline* pipeline ) const
+{
+    pipeline->setBlobFactory(_blobFactory);
+    pipeline->setModuleFactory(_moduleFactory);
+    pipeline->setPipelineDriver(_pipelineDriver);
+    pipeline->setOutputStreamManager(_osmanager);
+}
+
 void AbstractPipeline::exec( QHash<QString,DataBlob*>& data )
 {
       // update the history information

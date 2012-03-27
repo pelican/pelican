@@ -24,8 +24,10 @@ namespace pelican {
  */
 PipelineDriver::PipelineDriver(FactoryGeneric<DataBlob>* blobFactory,
         FactoryConfig<AbstractModule>* moduleFactory,
-        DataClientFactory* clientFactory, OutputStreamManager* osmanager)
-    : _osmanager(osmanager)
+        DataClientFactory* clientFactory, OutputStreamManager* osmanager,
+        const Config* config,
+        const Config::TreeAddress& pipelineConfig )
+    : _osmanager(osmanager), _config(config), _base(pipelineConfig)
 {
     // Initialise member variables.
     _run = false;
@@ -35,6 +37,7 @@ PipelineDriver::PipelineDriver(FactoryGeneric<DataBlob>* blobFactory,
     _blobFactory = blobFactory;
     _moduleFactory = moduleFactory;
     _clientFactory = clientFactory;
+    Q_ASSERT(_config != 0 );
     Q_ASSERT(_blobFactory != 0 );
     Q_ASSERT(_moduleFactory != 0 );
     Q_ASSERT(_clientFactory != 0 );
@@ -86,10 +89,19 @@ void PipelineDriver::_registerPipeline(AbstractPipeline *pipeline)
     pipeline->setModuleFactory(_moduleFactory);
     pipeline->setPipelineDriver(this);
     pipeline->setOutputStreamManager(_osmanager);
+    // determine any pipeline configuration
+    
     pipeline->init();
 
     // Store the remote data requirements.
     _allDataReq.append(pipeline->requiredDataRemote());
+}
+
+ConfigNode PipelineDriver::config( const QString& tag, const QString& name ) const {
+    if (!_config) throw QString("PipelineDriver configuration not set");
+    Config::TreeAddress address(_base);
+    address << Config::NodeId(tag, name);
+    return _config->get(address);
 }
 
 void PipelineDriver::_activatePipeline(AbstractPipeline *pipeline)
