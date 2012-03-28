@@ -37,6 +37,10 @@ PipelineApplication::PipelineApplication(const Config& config )
     init();
 }
 
+void PipelineApplication::setConfigurationSearchPaths( const QList<QString>& paths ) {
+    _config.setSearchPaths( paths );
+}
+
 void PipelineApplication::init() 
 {
      _adapterFactory = 0;

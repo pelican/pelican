@@ -1,4 +1,5 @@
 #include "pelican/utility/ConfigNode.h"
+#include "pelican/utility/Config.h"
 #include "pelican/data/DataBlob.h"
 
 #include <QtXml/QDomNode>
@@ -16,7 +17,8 @@ namespace pelican {
  * @details
  * Creates a new configuration node.
  */
-ConfigNode::ConfigNode(const QDomElement& config)
+ConfigNode::ConfigNode(const QDomElement& config, const Config* cfgObject )
+    : _configObject(cfgObject)
 {
     _config = config;
 }
@@ -264,6 +266,11 @@ std::vector<unsigned> ConfigNode::getUnsignedList(const QString& tagName) const
     if (list.size() == 0)
         throw QString("%1: No integer list specified.").arg(_config.tagName());
     return list;
+}
+
+QString ConfigNode::searchFile( const QString& filename ) const
+{
+    return _configObject->searchFile( filename );
 }
 
 } // namespace pelican

@@ -84,6 +84,9 @@ class PipelineApplication
         PipelineApplication(int argc, char** argv);
         PipelineApplication(const Config& config );
 
+        /// convenience method to set search paths
+        void setConfigurationSearchPaths( const QList<QString>& paths );
+
         /// Destructor.
         ~PipelineApplication();
 
