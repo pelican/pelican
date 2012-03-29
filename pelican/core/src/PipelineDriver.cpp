@@ -204,6 +204,10 @@ void PipelineDriver::setDataClient(QString name)
     _dataClientName = name;
 }
 
+void PipelineDriver::setDataClient( AbstractDataClient* client ) {
+    _dataClient = client;
+}
+
 /**
  * @details
  * Iterates over all registered pipelines to determine the required data and

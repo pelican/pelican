@@ -121,6 +121,7 @@ class PipelineDriver
 
         /// Sets the data client.
         void setDataClient(QString name);
+        void setDataClient(AbstractDataClient* client);
 
         /// Starts the data flow through the pipelines.
         void start();

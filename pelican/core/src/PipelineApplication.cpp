@@ -162,6 +162,11 @@ void PipelineApplication::setDataClient(const QString& name)
     _driver->setDataClient(name);
 }
 
+void PipelineApplication::setDataClient(AbstractDataClient* client)
+{
+    _driver->setDataClient(client);
+}
+
 /**
  * @details
  * Starts the pipeline driver. This should be called from main().

@@ -17,6 +17,7 @@
 namespace pelican {
 
 class AbstractPipeline;
+class AbstractDataClient;
 class Config;
 class PipelineDriver;
 class DataClientFactory;
@@ -116,6 +117,7 @@ class PipelineApplication
 
         /// Sets the data client.
         void setDataClient(const QString& name);
+        void setDataClient(AbstractDataClient* client);
 
         /// Starts the pipeline driver.
         void start();
