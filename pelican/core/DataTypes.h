@@ -52,6 +52,9 @@ class DataTypes
         /// Return the adapter type associated with the given data stream.
         AbstractAdapter::AdapterType_t type(const QString& dataName) const;
 
+        /// return true is the object maps an adapter to the specified type
+        bool adapterAvailable( const QString& type ) const;
+
     private:
         QList<DataRequirements> _dataRequirements;
         QHash<QString,AbstractAdapter*> _adapters;

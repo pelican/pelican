@@ -21,6 +21,7 @@ class AbstractDataClient;
 class Config;
 class PipelineDriver;
 class DataClientFactory;
+class AbstractAdapterFactory;
 class OutputStreamManager;
 class PipelineSwitcher;
 
@@ -92,7 +93,7 @@ class PipelineApplication
         ~PipelineApplication();
 
         /// Return a pointer to the adapter factory.
-        FactoryConfig<AbstractAdapter>* adapterFactory();
+        AbstractAdapterFactory* adapterFactory();
 
         /// Return a pointer to the client factory.
         DataClientFactory* clientFactory();
@@ -150,7 +151,7 @@ class PipelineApplication
         // Base nodes to define configuration file.
         Config::TreeAddress _osmanagerBase;
 
-        FactoryConfig<AbstractAdapter>* _adapterFactory;
+        AbstractAdapterFactory* _adapterFactory;
         DataClientFactory* _clientFactory;
         FactoryConfig<AbstractModule>* _moduleFactory;
 };

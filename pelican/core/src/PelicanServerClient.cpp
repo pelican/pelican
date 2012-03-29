@@ -35,8 +35,9 @@ namespace pelican {
  * @param config
  */
 PelicanServerClient::PelicanServerClient(const ConfigNode& configNode,
-        const DataTypes& types, const Config* config)
-    : AbstractDataClient(configNode, types, config), _protocol(0)
+        const DataTypes& types, const Config* config
+        )
+    : AbstractAdaptingDataClient(configNode, types, config), _protocol(0)
 {
     _protocol = new PelicanClientProtocol;
 

@@ -5,7 +5,7 @@
  * @file DirectStreamDataClient.h
  */
 
-#include "pelican/core/AbstractDataClient.h"
+#include "pelican/core/AbstractAdaptingDataClient.h"
 
 namespace pelican {
 
@@ -30,12 +30,13 @@ class Config;
  * Add the chunkers using the addChunker() method in a derived class
  * constructor.
  */
-class DirectStreamDataClient : public AbstractDataClient
+class DirectStreamDataClient : public AbstractAdaptingDataClient
 {
     public:
         /// Constructs the direct stream data client.
         DirectStreamDataClient(const ConfigNode& configNode,
-                const DataTypes& types, const Config* config);
+                const DataTypes& types, const Config* config
+                );
 
         /// Destroys the direct stream data client.
         virtual ~DirectStreamDataClient();

@@ -15,8 +15,8 @@ namespace pelican {
  * This creates a new file data client.
  */
 FileDataClient::FileDataClient(const ConfigNode& configNode,
-        const DataTypes& types, const Config* config) :
-    AbstractDataClient(configNode, types, config)
+        const DataTypes& types, const Config* config)
+        : AbstractAdaptingDataClient(configNode, types, config)
 {
     // Get the configuration options.
     _getConfig();

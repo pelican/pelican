@@ -6,6 +6,7 @@
  */
 
 #include "pelican/core/AbstractDataClient.h"
+#include "pelican/core/AbstractAdapterFactory.h"
 #include "pelican/utility/FactoryConfig.h"
 
 #include <QtCore/QList>
@@ -31,12 +32,12 @@ class DataRequirements;
 class DataClientFactory : public FactoryConfig<AbstractDataClient>
 {
     private:
-        FactoryConfig<AbstractAdapter>* _adapterFactory;
+        AbstractAdapterFactory* _adapterFactory;
 
     public:
         /// Constructs the data client factory.
         DataClientFactory(const Config* config, const QString& section,
-                const QString& group, FactoryConfig<AbstractAdapter>* aFactory)
+                const QString& group, AbstractAdapterFactory* aFactory)
         : FactoryConfig<AbstractDataClient>(config, section, group),
           _adapterFactory(aFactory) {}
 

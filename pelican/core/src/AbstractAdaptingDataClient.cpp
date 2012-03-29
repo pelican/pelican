@@ -12,31 +12,17 @@ namespace pelican {
  *@details AbstractAdaptingDataClient 
  */
 AbstractAdaptingDataClient::AbstractAdaptingDataClient( const ConfigNode& configNode, 
-                const QList<DataRequirements>& requirements,
-                const Config* config, FactoryConfig<AbstractAdapter>* adapterFactory )
-    : AbstractDataClient( configNode, requirements, config, adapterFactory )
+                const DataTypes& requirements,
+                const Config* config )
+    : AbstractDataClient( configNode, requirements, config )
 {
-    _dataReqs.addData(requirements);
-
-    // Find the configuration information for adapters.
-    QHash<QString, QString> adapterNames = configNode.getOptionHash("data", "type", "adapter");
-
-    // Construct the adapters and add them to the DataTypes structure.
-    foreach (const DataRequirements& req, requirements)
-    {
-        QSet<QString> all = req.allData();
-        foreach (const QString& dataType, all)
-        {
-            if (!adapterNames.contains(dataType))
-                throw QString("DataClientFactory: Unable to find adapter for "
-                        "data type '%1'.").arg(dataType);
-            AbstractAdapter* adapter =
-                    _adapterFactory->create(adapterNames.value(dataType), 
-                                configNode.getNamedOption("data","name","") );
-            _dataReqs.setAdapter(dataType, adapter);
-        }
+    _dataReqs = requirements;
+    // check we have adapters for each type
+    foreach (const QString& dataType, _requireSet) {
+        if (!_dataReqs.adapterAvailable(dataType))
+            throw QString("AbstractAdaptingDataClient: Unable to find adapter for "
+                    "data type '%1'.").arg(dataType);
     }
-
 }
 
 /**

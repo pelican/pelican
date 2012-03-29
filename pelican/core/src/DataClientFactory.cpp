@@ -34,19 +34,22 @@ AbstractDataClient* DataClientFactory::create(const QString& type,
         QSet<QString> all = req.allData();
         foreach (const QString& dataType, all)
         {
-            if (!adapterNames.contains(dataType))
-                throw QString("DataClientFactory: Unable to find adapter for "
-                        "data type '%1'.").arg(dataType);
-            AbstractAdapter* adapter =
-                    _adapterFactory->create(adapterNames.value(dataType), 
-                                conf(type, name).getNamedOption("data","name","") );
-            dataTypes.setAdapter(dataType, adapter);
+            //if (!adapterNames.contains(dataType))
+            //    throw QString("DataClientFactory: Unable to find adapter for "
+            //            "data type '%1'.").arg(dataType);
+            if (adapterNames.contains(dataType)) {
+                AbstractAdapter* adapter =
+                        _adapterFactory->create(adapterNames.value(dataType), 
+                                    conf(type, name).getNamedOption("data","name","") );
+                dataTypes.setAdapter(dataType, adapter);
+            }
         }
     }
 
     // Call the base class implementation and set the data requirements.
     AbstractDataClient* client = FactoryConfig<AbstractDataClient>::create(
-            type, dataTypes, _config, name);
+            type, dataTypes, _config , name);
+
     return client;
 }
 

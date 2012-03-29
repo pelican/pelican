@@ -25,11 +25,13 @@ namespace pelican {
  * @param[in] config     \todo needs description
  */
 AbstractDataClient::AbstractDataClient(const ConfigNode& configNode,
-        const DataTypes& types, const Config* config)
-: _configNode(configNode), _dataReqs(types), _config(config)
+        const DataTypes& types, const Config* config )
+: _configNode(configNode),  _config(config)
 {
+    _dataRequirements = types.dataRequirements();
+
     // Quick sanity check.
-    if (_dataReqs.dataRequirements().size() == 0)
+    if (_dataRequirements.size() == 0)
         throw QString("AbstractDataClient: No data requirements specified");
 
     // Construct the total set of requirements.
@@ -65,6 +67,7 @@ void AbstractDataClient::log(const QString& msg)
  *
  * @return
  */
+/*
 AbstractDataClient::DataBlobHash AbstractDataClient::adaptStream(
         QIODevice& device, const StreamData* sd, DataBlobHash& dataHash)
 {
@@ -80,6 +83,7 @@ AbstractDataClient::DataBlobHash AbstractDataClient::adaptStream(
 
     return validData;
 }
+*/
 
 /**
  * @details
@@ -90,7 +94,6 @@ AbstractDataClient::DataBlobHash AbstractDataClient::adaptStream(
  * @param dataHash
  *
  * @return
- */
 AbstractDataClient::DataBlobHash AbstractDataClient::adaptService(
         QIODevice& device, const DataChunk* d, DataBlobHash& dataHash)
 {
@@ -104,5 +107,6 @@ AbstractDataClient::DataBlobHash AbstractDataClient::adaptService(
     validData.insert(type, dataHash.value(type));
     return validData;
 }
+ */
 
 } // namespace pelican

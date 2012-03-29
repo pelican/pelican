@@ -1,6 +1,7 @@
 #include "pelican/core/test/DirectStreamDataClientTest.h"
 
 #include "pelican/core/AbstractAdapter.h"
+#include "pelican/core/AbstractAdapterFactory.h"
 #include "pelican/core/DataClientFactory.h"
 #include "pelican/core/DirectStreamDataClient.h"
 #include "pelican/data/DataBlob.h"
@@ -110,7 +111,7 @@ void DirectStreamDataClientTest::test_singleChunker()
         EmulatorDriver emulator(new RealUdpEmulator(*_emulatorConfig1));
 
         // Create the adapter factory.
-        FactoryConfig<AbstractAdapter> adapterFactory(_config, "pipeline", "adapters");
+        AbstractAdapterFactory adapterFactory(_config, "pipeline", "adapters");
 
         // Create the data client factory.
         DataClientFactory clientFactory(_config, "pipeline", "clients", &adapterFactory);
@@ -162,7 +163,7 @@ void DirectStreamDataClientTest::test_twoChunkersMultipleStarts()
             EmulatorDriver emulator2(new RealUdpEmulator(*_emulatorConfig2));
 
             // Create the adapter factory.
-            FactoryConfig<AbstractAdapter> adapterFactory(_config,
+            AbstractAdapterFactory adapterFactory(_config,
                     "pipeline", "adapters");
 
             // Create the data client factory.
@@ -218,7 +219,7 @@ void DirectStreamDataClientTest::test_twoChunkersSingleStart()
         EmulatorDriver emulator2(new RealUdpEmulator(*_emulatorConfig2));
 
         // Create the adapter factory.
-        FactoryConfig<AbstractAdapter> adapterFactory(_config,
+        AbstractAdapterFactory adapterFactory(_config,
                 "pipeline", "adapters");
 
         // Create the data client factory.

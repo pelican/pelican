@@ -9,6 +9,7 @@
 #include "pelican/utility/FactoryRegistrar.h"
 #include "pelican/utility/Config.h"
 #include "pelican/utility/ConfigNode.h"
+#include "pelican/utility/FactoryConfig.h"
 
 #include <QtCore/QHash>
 #include <QtCore/QList>
@@ -64,14 +65,16 @@ class AbstractDataClient
         typedef QHash<QString, DataBlob*> DataBlobHash;
 
     public:
-        PELICAN_CONSTRUCT_TYPES(const ConfigNode&, const DataTypes&, const Config*)
 
         /// Data client constructor.
         AbstractDataClient(const ConfigNode& configNode, const DataTypes& types,
-                const Config* config);
+                           const Config* config
+                );
 
         /// Data client destructor.
         virtual ~AbstractDataClient();
+
+        PELICAN_CONSTRUCT_TYPES(const ConfigNode&, const DataTypes&, const Config*)
 
     public:
         /// Retrieves data requested by pipelines and fills the given data hash,
@@ -80,18 +83,17 @@ class AbstractDataClient
         virtual DataBlobHash getData(DataBlobHash&) = 0;
 
         /// Returns the list of data requirements for each pipeline.
-        const QList<DataRequirements>& dataRequirements()
-        { return _dataReqs.dataRequirements(); }
+        const QList<DataRequirements>& dataRequirements() { return _dataRequirements; }
 
-        /// Returns the type of data associated with the data name
-        /// (stream/service/unknown)
-        AbstractAdapter::AdapterType_t type(const QString& dataName) const
-        { return _dataReqs.type(dataName); }
 
     protected:
         /// Writes a message to the log.
         void log(const QString& msg);
 
+        /// Returns a pointer to the configuration node.
+        const ConfigNode& configNode() const {return _configNode;}
+
+/*
         /// Adapts (de-serialises) stream data.
         DataBlobHash adaptStream(QIODevice& device, const StreamData* d,
                 DataBlobHash& dataHash);
@@ -100,8 +102,6 @@ class AbstractDataClient
         DataBlobHash adaptService(QIODevice& device, const DataChunk* sd,
                 DataBlobHash& dataHash);
 
-        /// Returns a pointer to the configuration node.
-        const ConfigNode& configNode() const {return _configNode;}
 
         /// Returns the adapter for service data of the required type.
         AbstractServiceAdapter* serviceAdapter(const QString& type) const
@@ -110,12 +110,12 @@ class AbstractDataClient
         /// Returns the adapter for stream data of the required type.
         AbstractStreamAdapter* streamAdapter(const QString& type) const
         { return _dataReqs.streamAdapter(type); }
-
-    private:
-        ConfigNode _configNode; ///< The configuration node for the data client.
-        DataTypes _dataReqs;    ///< The DataTypes and requirements.
+*/
 
     protected:
+        ConfigNode _configNode; ///< The configuration node for the data client.
+        QList<DataRequirements> _dataRequirements;
+        //DataTypes _dataReqs;    ///< The DataTypes and requirements.
         const Config* _config;
         QSet<QString> _requireSet;
 };

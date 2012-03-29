@@ -21,8 +21,9 @@ class ConfigNode;
  * @details Constructs the DirectStreamDataClient.
  */
 DirectStreamDataClient::DirectStreamDataClient(const ConfigNode& configNode,
-        const DataTypes& types, const Config* config)
-: AbstractDataClient(configNode, types, config)
+        const DataTypes& types, const Config* config
+        )
+        : AbstractAdaptingDataClient(configNode, types, config )
 {
     // Initialise members.
     _started = false;
