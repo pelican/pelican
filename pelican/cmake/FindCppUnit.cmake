@@ -23,7 +23,9 @@ FOREACH(lib ${CPPUNIT_NAMES} )
     FIND_LIBRARY(CPPUNIT_LIBRARY_${lib}
         NAMES ${lib}
         PATHS
+        /usr/lib64
         /usr/lib
+        /usr/local/lib64
         /usr/local/lib
     )
     LIST(APPEND CPPUNIT_LIBRARIES ${CPPUNIT_LIBRARY_${lib}})
