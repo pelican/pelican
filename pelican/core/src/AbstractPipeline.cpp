@@ -106,7 +106,11 @@ void AbstractPipeline::exec( QHash<QString,DataBlob*>& data )
           if( data.contains(stream) ) {
               QList<DataBlob*>& h = *(_streamHistory[stream]);
               DataBlob* blob=data[stream];
+#if QT_VERSION >= 0x040300
               h.removeOne(blob); 
+#else
+              h.removeAll(blob); 
+#endif
               h.push_front(blob);
           }
       }
