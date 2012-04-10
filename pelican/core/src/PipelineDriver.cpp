@@ -143,9 +143,12 @@ void PipelineDriver::deactivatePipeline(AbstractPipeline *pipeline)
 void PipelineDriver::_deactivatePipeline(AbstractPipeline *pipeline)
 {
     if( pipeline ) {
-        _pipelines.remove(pipeline->requiredDataRemote(),pipeline);
+        // put reqs in a temporary to work around broken QMultiHash headers
+        // in Qt 4.2 which don't accept a const key
+        DataRequirements reqs = pipeline->requiredDataRemote();
+        _pipelines.remove(reqs, pipeline);
          // adjust history buffers
-         foreach ( const QString& type, pipeline->requiredDataRemote().allData() ) {
+         foreach ( const QString& type, reqs.allData() ) {
               if( _history.contains(type) ) {
                  _history[type].remove( pipeline->historySize(type) );
                 if( _history[type].isEmpty() || _history[type].max() == 0 ) {
