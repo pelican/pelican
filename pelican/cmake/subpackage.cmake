@@ -95,7 +95,8 @@ macro(SUBPACKAGE_LIBRARY name)
             endforeach(project_file)
             # Add the library generated to list of sub-package libs in the sub-pacakge file.
             file(APPEND ${subpackage_file}
-                "list(INSERT ${subpackage_current}_shared_libs 0 "${name}")\n\n")
+            #    "list(INSERT ${subpackage_current}_shared_libs 0 "${name}")\n\n")
+                "set(${subpackage_current}_shared_libs "${name}")\n\n")
         endif(BUILD_SHARED)
 
         if(BUILD_STATIC)
