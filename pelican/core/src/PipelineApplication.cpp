@@ -65,7 +65,7 @@ void PipelineApplication::init()
     _adapterFactory = new AbstractAdapterFactory(config(), "pipeline", "adapters");
     _clientFactory = new DataClientFactory(config(), "pipeline", "clients",
             adapterFactory() );
-    _moduleFactory = new FactoryConfig<AbstractModule>(config(), "pipeline", "modules");
+    _moduleFactory = new FactoryConfig<AbstractModule>(config(), "pipeline", "modules", false);
 
     // Construct the pipeline driver.
     _driver = new PipelineDriver( dataBlobFactory(), _moduleFactory,
@@ -250,7 +250,6 @@ void PipelineApplication::_createConfig(int argc, char** argv)
     try {
         // The static object is initialised only once.
         _config = Config(QString::fromStdString(configFilename));
-        
     }
     catch (QString error) {
         std::cerr << error.toStdString() << std::endl;
