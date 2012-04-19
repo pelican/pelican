@@ -12,7 +12,10 @@ class SignalProcessingPipeline : public AbstractPipeline
 {
     public:
         // Constructor.
-        SignalProcessingPipeline() : AbstractPipeline() {}
+        SignalProcessingPipeline();
+        
+        // Destructor
+        ~SignalProcessingPipeline();
 
         // Initialises the pipeline.
         void init();
