@@ -8,7 +8,6 @@
 #include "pelican/utility/ConfigNode.h"
 #include "pelican/utility/FactoryRegistrar.h"
 #include "pelican/data/DataBlob.h"
-
 #include <QtCore/QString>
 #include <algorithm>
 #include <iostream>
@@ -16,6 +15,7 @@
 using std::vector;
 
 namespace pelican {
+class AbstractPipeline;
 
 /// This macro is used to register the named module type.
 #define PELICAN_DECLARE_MODULE(type) PELICAN_DECLARE(AbstractModule, type)
@@ -39,13 +39,31 @@ class AbstractModule
         /// The configuration node for the module.
         ConfigNode _config;
 
+        // reference to the pipeline the module is running in
+        AbstractPipeline* _pipeline;
+
     public:
         /// Creates a new abstract Pelican module with the given configuration.
         PELICAN_CONSTRUCT_TYPES(ConfigNode)
-        AbstractModule(const ConfigNode config) : _config(config) {}
+        AbstractModule(const ConfigNode& config);
 
         /// Destroys the module (virtual).
-        virtual ~AbstractModule() {}
+        virtual ~AbstractModule();
+
+        /// set the pipeline context
+        void setPipeline( AbstractPipeline* p ) { _pipeline = p; };
+
+        /// create a single DataBlob of the specified type
+        DataBlob* createBlob(const QString& type) const;
+
+        /** 
+         * @details
+         * Sends data to the output streams managed by the OutputStreamManger
+         *
+         * @param[in] DataBlob to be sent.
+         * @param[in] name of the output stream (defaults to DataBlob->type()).
+         */
+        void dataOutput( const DataBlob*, const QString& stream = "" ) const;
 
     protected:
         /// Returns the index of the first occurrence of value in the data.

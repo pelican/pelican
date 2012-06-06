@@ -76,6 +76,7 @@ AbstractModule* AbstractPipeline::createModule(const QString& type,
            throw QString("AbstractPipeline::createModule(): No module factory.");
 
     AbstractModule* module = _moduleFactory->create(type, name);
+    module->setPipeline(this);
     _modules.append(module);
     return module;
 }
