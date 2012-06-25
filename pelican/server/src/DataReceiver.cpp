@@ -100,7 +100,8 @@ void DataReceiver::_setupDevice() {
 
 void DataReceiver::_deleteDevice() {
     _chunker->stop();
-    delete _device;
+    _device->disconnect();
+    _device->deleteLater();
     _device = 0;
 }
 
