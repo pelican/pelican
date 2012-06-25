@@ -14,7 +14,6 @@ namespace pelican {
 DataReceiver::DataReceiver(AbstractChunker* chunker) :
         QThread(), _chunker(chunker), _device(0)
 {
-    _abort = false;
     if (!chunker)
         throw QString("DataReceiver: Invalid chunker.");
 }
@@ -26,7 +25,7 @@ DataReceiver::DataReceiver(AbstractChunker* chunker) :
  */
 DataReceiver::~DataReceiver()
 {
-    _abort = true;
+    _active = false; // mark destructor disconnect
     _chunker->stop();
     do quit(); while (!wait(10));
 }
@@ -40,24 +39,69 @@ DataReceiver::~DataReceiver()
  */
 void DataReceiver::run()
 {
+    _active = true;
     // Open up the device to use.
-    _device = _chunker->newDevice();
-    _chunker->setDevice(_device);
+    // N.B. must be done in this thread (i.e. in run())
+    _setupDevice();
     //    int tid = syscall(__NR_gettid);
     //    std::cout << "Thread ID : " << tid << std::endl;
     if (_device) {
-        connect(_device, SIGNAL(readyRead()), SLOT(_processIncomingData()),
-                Qt::DirectConnection);
         // process any existing data on the stream
         if( _device->bytesAvailable() > 0 )
             _processIncomingData();
+
+        // enter main event loop (until quit() is called)
         exec();
+
+        // clean up 
+        _deleteDevice();
     }
 }
 
 void DataReceiver::_processIncomingData()
 {
     _chunker->next(_device);
+}
+
+void DataReceiver::_registerSocket( QAbstractSocket* socket ) {
+    connect( socket, SIGNAL( error(QAbstractSocket::SocketError) ), 
+             SLOT(_processError())
+             , Qt::DirectConnection );
+    connect( socket, SIGNAL( disconnected() ), 
+             SLOT(_reconnect())
+             , Qt::DirectConnection);
+}
+
+void DataReceiver::_processError() {
+    std::cerr << "DataReceiver: socket error: " << 
+        _device->errorString().toStdString() << std::endl;
+    _reconnect();
+}
+
+void DataReceiver::_reconnect() {
+    _deleteDevice();
+    if( ! _active ) _setupDevice();
+}
+
+void DataReceiver::_setupDevice() {
+    std::cout << "DataReceiver: connecting " << std::endl;
+    _device = _chunker->newDevice();
+
+    if( _device ) {
+        _chunker->activate();
+        // If its a socket we must try and catch the failure conditions
+        connect(_device, SIGNAL(readyRead()), SLOT(_processIncomingData()),
+                Qt::DirectConnection);
+        if( QAbstractSocket* s = dynamic_cast<QAbstractSocket*>(_device) ) {
+            _registerSocket( s );
+        }
+    }
+}
+
+void DataReceiver::_deleteDevice() {
+    _chunker->stop();
+    delete _device;
+    _device = 0;
 }
 
 } // namespace pelican

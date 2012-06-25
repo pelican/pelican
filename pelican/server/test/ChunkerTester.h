@@ -48,7 +48,10 @@ class ChunkerTester
         LockedData getData();
 
         /// return pointer to the chunker created in the tester
-        AbstractChunker* chunker();
+        AbstractChunker* chunker() const;
+
+        /// return pointer to the current device associated with the cunker
+        QIODevice* getCurrentDevice() const;
 
     private:
         QString          _stream; // name of the test stream

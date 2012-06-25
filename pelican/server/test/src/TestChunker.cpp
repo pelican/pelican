@@ -59,7 +59,6 @@ QIODevice* TestChunker::newDevice()
 
     if (!_device) {
         _device = new QBuffer;
-        setDevice(_device);
     }
     return _device;
 }

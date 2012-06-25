@@ -44,9 +44,6 @@ ChunkerTester::ChunkerTester(const QString& chunkerType,
     // setup the data manager
     _dataManager = new DataManager(&_config , dataAddress);
 
-    // Setup the data manager.
-    _dataManager = new DataManager(&_config , dataAddress);
-
     // start the chunkers listening
     try {
         _chunkManager->init(*_dataManager);
@@ -74,7 +71,7 @@ ChunkerTester::~ChunkerTester()
 }
 
 
-AbstractChunker* ChunkerTester::chunker()
+AbstractChunker* ChunkerTester::chunker() const
 {
     QList<AbstractChunker* > chunkers = _chunkManager->chunkers().values();
     Q_ASSERT(chunkers.size() == 1);
@@ -82,6 +79,9 @@ AbstractChunker* ChunkerTester::chunker()
     return chunkers.first();
 }
 
+QIODevice* ChunkerTester::getCurrentDevice() const {
+    return _chunkManager->getCurrentDevice( chunker() );
+}
 
 /**
  * @details
