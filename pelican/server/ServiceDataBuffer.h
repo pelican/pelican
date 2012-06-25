@@ -4,7 +4,6 @@
 #include "pelican/server/AbstractDataBuffer.h"
 
 #include <QtCore/QObject>
-#include <QtCore/QMutex>
 #include <QtCore/QHash>
 
 /**
