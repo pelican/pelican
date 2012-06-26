@@ -27,7 +27,11 @@ DataReceiver::~DataReceiver()
 {
     _active = false; // mark destructor disconnect
     _chunker->stop();
-    do quit(); while (!wait(10));
+    if( isRunning() ) {
+        do quit(); 
+        while( !wait(10) );// { terminate(); }
+    }
+    delete _device;
 }
 
 /**
@@ -52,9 +56,6 @@ void DataReceiver::run()
 
         // enter main event loop (until quit() is called)
         exec();
-
-        // clean up 
-        _deleteDevice();
     }
 }
 
@@ -84,7 +85,6 @@ void DataReceiver::_reconnect() {
 }
 
 void DataReceiver::_setupDevice() {
-    std::cout << "DataReceiver: connecting " << std::endl;
     _device = _chunker->newDevice();
 
     if( _device ) {

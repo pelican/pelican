@@ -38,7 +38,7 @@ class AbstractEmulator
         virtual void getPacketData(char*& ptr, unsigned long& size) = 0;
 
         /// Returns the interval in microseconds between packets.
-        virtual unsigned long interval() {return 100000;}
+        virtual unsigned long interval() { return 100000;}
 
         /// Returns the number of packets to send. If negative, run forever.
         virtual int nPackets() {return -1;}
