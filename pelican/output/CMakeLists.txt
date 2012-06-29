@@ -7,6 +7,7 @@ SUBPACKAGE(output comms data server)
 
 set(output_moc_headers
     DataBlobClient.h
+    DataBlobRelay.h
     ThreadedDataBlobClient.h
     ThreadedBlobServer.h
     TCPConnectionManager.h
@@ -20,6 +21,7 @@ set(output_src
     src/DataBlobClient.cpp
     src/DataBlobFileType.cpp
     src/DataBlobFile.cpp
+    src/DataBlobRelay.cpp
     src/DataBlobFileReader.cpp
     src/ThreadedDataBlobClient.cpp
     src/ThreadedClientImpl.cpp

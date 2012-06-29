@@ -268,6 +268,18 @@ std::vector<unsigned> ConfigNode::getUnsignedList(const QString& tagName) const
     return list;
 }
 
+QList<ConfigNode> ConfigNode::getNodes(const QString& tagName) const
+{
+    QList<ConfigNode> list;
+    QDomNodeList doms = _config.elementsByTagName(tagName);
+    for (int i = 0; i < doms.size(); ++i) {
+        QDomElement element = doms.at(i).toElement();
+        list.append( ConfigNode( element, _configObject) );
+    }
+    return list;
+}
+    
+
 QString ConfigNode::searchFile( const QString& filename ) const
 {
     return _configObject->searchFile( filename );
