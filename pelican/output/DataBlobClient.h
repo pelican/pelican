@@ -34,7 +34,8 @@ class Stream;
  *
  * \par Example Config:
  * \code
- * <server host="hostname" port="1234">
+ * <connection host="hostname" port="1234" >
+ * <subscribe stream="streamName" />
  * \endcode
  */
 

@@ -39,6 +39,10 @@ DataBlobClient::DataBlobClient( const ConfigNode& configNode, QObject* parent )
                          this, SLOT( _response() ));
     connect(_tcpSocket, SIGNAL( disconnected()),
                          this, SLOT( _reconnect() ));
+
+    // configured subsciptions
+    QSet<QString> subs = QSet<QString>::fromList(configNode.getOptionList("subscribe","stream") );
+    subscribe( subs );
 }
 
 /**
