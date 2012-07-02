@@ -23,11 +23,11 @@ macro(SUBPACKAGE name)
     # Set the project (single library) files to which the current sub-package belongs.
     _SET_SUBPACKAGE_PROJECT_FILES()
 
-    # Add include_directories() defined before this macro to the sub-package file.
-    _SET_INCLUDE_DIRECTORIES()
-
     # Save and process packages that the sub-package depends on.
     _GET_SUBPACKAGE_DEPS(${ARGN})
+
+    # Add include_directories() defined before this macro to the sub-package file.
+    _SET_INCLUDE_DIRECTORIES()
 
 
     if(BUILD_STATIC)
@@ -408,11 +408,19 @@ macro(_SET_INCLUDE_DIRECTORIES)
         set(includes ${CMAKE_INCLUDE_PATH})
     endif(COMMAND GET_PROPERTY)
     list(REMOVE_DUPLICATES includes)
-    file(APPEND ${subpackage_file} "include_directories(${includes})\n\n")
+    file(APPEND ${subpackage_file}
+        "set(${subpackage_current}_SUBPACKAGE_INCLUDES ${includes})\n\n")
     foreach(project_file ${project_files})
         file(APPEND ${project_file} "######### subpackge: ${subpackage_current} ##########\n\n")
         file(APPEND ${project_file} "include_directories(${includes})\n\n")
     endforeach(project_file)
+    if(subpackage_deps)
+        foreach(dep ${subpackage_deps})
+           list(APPEND includes ${${dep}_SUBPACKAGE_INCLUDES})
+        endforeach(dep)
+        list(REMOVE_DUPLICATES includes)
+    endif(subpackage_deps)
+    include_directories(${includes})
 endmacro(_SET_INCLUDE_DIRECTORIES)
 
 
