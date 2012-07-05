@@ -21,8 +21,9 @@ class ConfigNode;
  * @details Constructs the DirectStreamDataClient.
  */
 DirectStreamDataClient::DirectStreamDataClient(const ConfigNode& configNode,
-        const DataTypes& types, const Config* config)
-: AbstractDataClient(configNode, types, config)
+        const DataTypes& types, const Config* config
+        )
+        : AbstractAdaptingDataClient(configNode, types, config )
 {
     // Initialise members.
     _started = false;
@@ -121,7 +122,8 @@ AbstractDataClient::DataBlobHash DirectStreamDataClient::getData(
             if (dataList.size() != 0) break;
         }
         if( dataList.size() == 0 )
-            QCoreApplication::processEvents( QEventLoop::WaitForMoreEvents );
+            QCoreApplication::processEvents( QEventLoop::WaitForMoreEvents, 10 );
+            //QCoreApplication::processEvents( QEventLoop::AllEvents, 5 );
     }
     while (dataList.size() == 0 );
 

@@ -158,7 +158,8 @@ module as a string.
   </li>
   <li> Create any required data blobs that are local to the pipeline (e.g. for
 output data) by calling the inherited AbstractPipeline::createBlob() method,
-supplying the class name of the data blob as a string.
+supplying the class name of the data blob as a string. You must delete these
+when you have finished with them, usually in the destructor.
   </li>
   <li> Request the input data to be supplied to the pipeline by calling the
 inherited AbstractPipeline::requestRemoteData() method as many times as

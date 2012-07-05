@@ -63,7 +63,7 @@ int main(int argc, char** argv)
     config.setFromString(pipelineXml);
 
     // Create the adapter factory.
-    FactoryConfig<AbstractAdapter> adapterFactory(&config, "pipeline", "adapters");
+    AbstractAdapterFactory adapterFactory(&config, "pipeline", "adapters");
 
     // Create the data client factory.
     DataClientFactory clientFactory(&config, "pipeline", "clients", &adapterFactory);

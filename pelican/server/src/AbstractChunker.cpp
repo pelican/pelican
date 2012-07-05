@@ -17,7 +17,6 @@ AbstractChunker::AbstractChunker(const ConfigNode& config)
 {
     // Initialise members.
     _dataManager = 0;
-    _device = 0;
 
     _chunkTypes = config.getOptionList("data", "type");
     _host = config.getOption("connection", "host", "");
@@ -34,10 +33,6 @@ AbstractChunker::AbstractChunker(const ConfigNode& config)
 AbstractChunker::~AbstractChunker()
 {
     stop();
-    if (_device) {
-        delete _device;
-        _device = 0;
-    }
 }
 
 /**

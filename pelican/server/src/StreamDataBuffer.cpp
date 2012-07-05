@@ -174,13 +174,18 @@ void StreamDataBuffer::deactivateData()
  */
 void StreamDataBuffer::deactivateData(LockableStreamData* data)
 {
-    QMutexLocker locker(&_mutex);
-    if (!data->served()) {
-        _serveQueue.prepend(data);
-        return;
+    {
+        // server queue mutex context - be sure to release
+        // before attempting to get writeMutex
+        // otherwise it can lock-up
+        QMutexLocker locker(&_mutex);
+        if (!data->served()) {
+            _serveQueue.prepend(data);
+            return;
+        }
+        data->reset(0);
+        if( _serveQueue.empty() )  {  _manager->emptiedBuffer(this); }
     }
-    data->reset(0);
-    if( _serveQueue.empty() )  {  _manager->emptiedBuffer(this); }
 
     QMutexLocker writeLocker(&_writeMutex);
     _emptyQueue.push_back(data);

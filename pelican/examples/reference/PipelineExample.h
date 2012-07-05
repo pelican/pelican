@@ -11,14 +11,15 @@ class DataBlobExample;
 class PipelineExample : public AbstractPipeline
 {
     public:
-        PipelineExample() : AbstractPipeline() {}
+        PipelineExample();
+        ~PipelineExample();
         virtual void init();
         virtual void run(QHash<QString, DataBlob*>& remoteData);
 
     private:
         // Module pointers.
         ModuleExample* adder;
-        ModuleExample* multipler;
+        ModuleExample* multiplier;
 
         // Local data blob pointers.
         DataBlobExample* outputData;

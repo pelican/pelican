@@ -6,8 +6,10 @@
 #include "pelican/data/DataRequirements.h"
 #include "pelican/data/DataBlob.h"
 #include "pelican/core/DataTypes.h"
+#include "pelican/core/test/TestStreamAdapter.h"
 
 namespace pelican {
+using test::TestStreamAdapter;
 
 CPPUNIT_TEST_SUITE_REGISTRATION( FileDataClientTest );
 /**
@@ -79,6 +81,7 @@ void FileDataClientTest::test_method()
         CPPUNIT_ASSERT_THROW(client = new FileDataClient(configNode, dt, 0), QString);
         delete client;
     }
+    TestStreamAdapter streamAdapter;
     QString stream1("stream1");
     QString version1("version1");
     DataRequirements req;
@@ -92,6 +95,7 @@ void FileDataClientTest::test_method()
         lreq.append(req);
         DataTypes dt;
         dt.addData(lreq);
+        dt.setAdapter(stream1,&streamAdapter);
         FileDataClient client(configNode, dt, 0);
 
         QHash<QString, DataBlob*> dataHash;
@@ -106,6 +110,7 @@ void FileDataClientTest::test_method()
         lreq.append(req);
        DataTypes types;
        types.addData(lreq);
+       types.setAdapter(stream1,&streamAdapter);
        FileDataClient client(configNode, types, &config);
 
        QHash<QString, DataBlob*> dataHash;

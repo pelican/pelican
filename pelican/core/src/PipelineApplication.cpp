@@ -4,6 +4,7 @@
 #include "pelican/core/PipelineApplication.h"
 #include "pelican/core/PipelineDriver.h"
 #include "pelican/core/DataClientFactory.h"
+#include "pelican/core/AbstractAdapterFactory.h"
 #include "boost/program_options.hpp"
 #include "pelican/utility/Config.h"
 #include "pelican/utility/ConfigNode.h"
@@ -59,11 +60,12 @@ void PipelineApplication::init()
     pipelineConfig << Config::NodeId("pipelineConfig","");
 
     // initialise the factories
-    _adapterFactory = new FactoryConfig<AbstractAdapter>(config(),
-                "pipeline", "adapters");
+    //_adapterFactory = new FactoryConfig<AbstractAdapter>(config(),
+    //            "pipeline", "adapters");
+    _adapterFactory = new AbstractAdapterFactory(config(), "pipeline", "adapters");
     _clientFactory = new DataClientFactory(config(), "pipeline", "clients",
             adapterFactory() );
-    _moduleFactory = new FactoryConfig<AbstractModule>(config(), "pipeline", "modules");
+    _moduleFactory = new FactoryConfig<AbstractModule>(config(), "pipeline", "modules", false);
 
     // Construct the pipeline driver.
     _driver = new PipelineDriver( dataBlobFactory(), _moduleFactory,
@@ -86,7 +88,7 @@ PipelineApplication::~PipelineApplication()
  * @details
  * Returns a pointer to the application's adapter factory.
  */
-FactoryConfig<AbstractAdapter>* PipelineApplication::adapterFactory()
+AbstractAdapterFactory* PipelineApplication::adapterFactory()
 {
     return _adapterFactory;
 }
@@ -160,6 +162,11 @@ void PipelineApplication::addPipelineSwitcher(const PipelineSwitcher& switcher)
 void PipelineApplication::setDataClient(const QString& name)
 {
     _driver->setDataClient(name);
+}
+
+void PipelineApplication::setDataClient(AbstractDataClient* client)
+{
+    _driver->setDataClient(client);
 }
 
 /**
@@ -243,7 +250,6 @@ void PipelineApplication::_createConfig(int argc, char** argv)
     try {
         // The static object is initialised only once.
         _config = Config(QString::fromStdString(configFilename));
-        
     }
     catch (QString error) {
         std::cerr << error.toStdString() << std::endl;

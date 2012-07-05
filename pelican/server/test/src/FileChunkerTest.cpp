@@ -79,7 +79,7 @@ void FileChunkerTest::test_update()
     ChunkerTester tester("FileChunker", 100*_msg.size(), QString("<FileChunker file=\"") + _testFile + "\"/>");
     sleep(1);
 
-    QSignalSpy spy( tester.chunker()->getDevice(), SIGNAL( readyRead() ) );
+    QSignalSpy spy( tester.getCurrentDevice(), SIGNAL( readyRead() ) );
     //CPPUNIT_ASSERT_EQUAL( 1, tester.writeRequestCount() );
     QString moredata("moredata");
     _updateFile(moredata);

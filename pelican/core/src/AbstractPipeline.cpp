@@ -76,6 +76,7 @@ AbstractModule* AbstractPipeline::createModule(const QString& type,
            throw QString("AbstractPipeline::createModule(): No module factory.");
 
     AbstractModule* module = _moduleFactory->create(type, name);
+    module->setPipeline(this);
     _modules.append(module);
     return module;
 }
@@ -106,7 +107,11 @@ void AbstractPipeline::exec( QHash<QString,DataBlob*>& data )
           if( data.contains(stream) ) {
               QList<DataBlob*>& h = *(_streamHistory[stream]);
               DataBlob* blob=data[stream];
+#if QT_VERSION >= 0x040300
               h.removeOne(blob); 
+#else
+              h.removeAll(blob); 
+#endif
               h.push_front(blob);
           }
       }

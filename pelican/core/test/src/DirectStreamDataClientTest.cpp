@@ -1,6 +1,7 @@
 #include "pelican/core/test/DirectStreamDataClientTest.h"
 
 #include "pelican/core/AbstractAdapter.h"
+#include "pelican/core/AbstractAdapterFactory.h"
 #include "pelican/core/DataClientFactory.h"
 #include "pelican/core/DirectStreamDataClient.h"
 #include "pelican/data/DataBlob.h"
@@ -84,13 +85,13 @@ void DirectStreamDataClientTest::setUp()
     _emulatorConfig1->setFromString(""
             "<RealUdpEmulator>"
             "    <connection host=\"127.0.0.1\" port=\"2002\"/>"
-            "    <packet size=\"512\" interval=\"1000\" initialValue=\"0.1\"/>"
+            "    <packet size=\"512\" interval=\"1500\" initialValue=\"0.1\"/>"
             "</RealUdpEmulator>"
             );
     _emulatorConfig2->setFromString(""
             "<RealUdpEmulator>"
             "    <connection host=\"127.0.0.1\" port=\"2003\"/>"
-            "    <packet size=\"512\" interval=\"1000\" initialValue=\"0.2\"/>"
+            "    <packet size=\"512\" interval=\"1500\" initialValue=\"0.2\"/>"
             "</RealUdpEmulator>"
             );
 }
@@ -110,7 +111,7 @@ void DirectStreamDataClientTest::test_singleChunker()
         EmulatorDriver emulator(new RealUdpEmulator(*_emulatorConfig1));
 
         // Create the adapter factory.
-        FactoryConfig<AbstractAdapter> adapterFactory(_config, "pipeline", "adapters");
+        AbstractAdapterFactory adapterFactory(_config, "pipeline", "adapters");
 
         // Create the data client factory.
         DataClientFactory clientFactory(_config, "pipeline", "clients", &adapterFactory);
@@ -155,14 +156,14 @@ void DirectStreamDataClientTest::test_singleChunker()
 void DirectStreamDataClientTest::test_twoChunkersMultipleStarts()
 {
     for (int i = 0; i < 100; ++i) {
-        std::cout << "---------------------------------- " << i << std::endl;
+        //std::cout << "---------------------------------- " << i << std::endl;
         try {
             // Start two telescope emulators.
             EmulatorDriver emulator1(new RealUdpEmulator(*_emulatorConfig1));
             EmulatorDriver emulator2(new RealUdpEmulator(*_emulatorConfig2));
 
             // Create the adapter factory.
-            FactoryConfig<AbstractAdapter> adapterFactory(_config,
+            AbstractAdapterFactory adapterFactory(_config,
                     "pipeline", "adapters");
 
             // Create the data client factory.
@@ -212,13 +213,14 @@ void DirectStreamDataClientTest::test_twoChunkersMultipleStarts()
  */
 void DirectStreamDataClientTest::test_twoChunkersSingleStart()
 {
+    std::cout << "-------- test_twoChunkersSingleStart -------"  << std::endl;
     try {
         // Start two telescope emulators.
         EmulatorDriver emulator1(new RealUdpEmulator(*_emulatorConfig1));
         EmulatorDriver emulator2(new RealUdpEmulator(*_emulatorConfig2));
 
         // Create the adapter factory.
-        FactoryConfig<AbstractAdapter> adapterFactory(_config,
+        AbstractAdapterFactory adapterFactory(_config,
                 "pipeline", "adapters");
 
         // Create the data client factory.
@@ -247,7 +249,6 @@ void DirectStreamDataClientTest::test_twoChunkersSingleStart()
         dataHash.insert(dataType, blobFactory.create(dataType));
 
         for (int i = 0; i < 2000; i++) {
-            std::cout << "---------------------------------- " << i << std::endl;
             // Get the data.
             QHash<QString, DataBlob*> validData = client->getData(dataHash);
 
@@ -272,10 +273,10 @@ void DirectStreamDataClientTest::_printData(DoubleData* data)
     CPPUNIT_ASSERT(data); // Check that the blob exists.
     CPPUNIT_ASSERT(data->size() != 0);
 
-    double* ptr = data->ptr();
-    for (unsigned i = 0; i < data->size(); i++) {
-        std::cout << "Data: " << ptr[i] << std::endl;
-    }
+    //double* ptr = data->ptr();
+    //for (unsigned i = 0; i < data->size(); i++) {
+    //    std::cout << "Data: " << ptr[i] << "(" << i << " of " << data->size() - 1 << " )"<< std::endl;
+    //}
 }
 
 } // namespace pelican

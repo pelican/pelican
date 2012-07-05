@@ -88,7 +88,7 @@ bool ChunkerManager::init(DataManager& dataManager)
         foreach (AbstractChunker* chunker, _chunkers ) {
             chunker->setDataManager(&dataManager);
             DataReceiver* receiver = new DataReceiver(chunker);
-            _dataReceivers.append(receiver);
+            _dataReceivers.insert( chunker, receiver);
             receiver->start();
         }
     }
@@ -106,7 +106,7 @@ bool ChunkerManager::isRunning() const
         return false;
 
     bool rv = true;
-    foreach (DataReceiver* dr, _dataReceivers ) {
+    foreach (DataReceiver* dr, _dataReceivers.values() ) {
          rv &= dr->isRunning();
     }
     return rv;
@@ -180,6 +180,13 @@ void ChunkerManager::addServiceChunker(QString type, QString name)
         _serviceDataTypes.insert(chunkType);
 }
 
+QIODevice* ChunkerManager::getCurrentDevice( AbstractChunker* chunker ) const
+{
+   if( _dataReceivers.contains( chunker ) ) {
+       return _dataReceivers[chunker]->currentDevice();
+   }
+   return 0;
+}
 
 /**
  * @details

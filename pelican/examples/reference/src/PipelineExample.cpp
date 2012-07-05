@@ -2,13 +2,28 @@
 #include "reference/ModuleExample.h"
 #include "reference/DataBlobExample.h"
 
+PipelineExample::PipelineExample() 
+    : AbstractPipeline(), adder(0), multiplier(0), outputData(0)
+{
+}
+
+// Destructor
+// clean up and created Modules and DataBlobs:w
+//
+PipelineExample::~PipelineExample() 
+{
+   delete adder;
+   delete multiplier;
+   delete outputData;
+}
+
 // Initialises the pipeline, creating any modules and data blobs required,
 // and requesting any remote data.
 void PipelineExample::init()
 {
     // Create the pipeline modules.
     adder = (ModuleExample*) createModule("ModuleExample", "adder");
-    multipler = (ModuleExample*) createModule("ModuleExample", "multiplier");
+    multiplier = (ModuleExample*) createModule("ModuleExample", "multiplier");
 
     // Create local data blobs.
     outputData = (DataBlobExample*) createBlob("DataBlobExample");
@@ -30,5 +45,5 @@ void PipelineExample::run(QHash<QString, DataBlob*>& remoteData)
 
     // Run each module as required.
     adder->run(x, y, outputData);
-    multipler->run(x, outputData, outputData);
+    multiplier->run(x, outputData, outputData);
 }

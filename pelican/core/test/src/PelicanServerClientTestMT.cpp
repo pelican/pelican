@@ -89,6 +89,7 @@ void PelicanServerClientTestMT::test_getData()
         lreq.append(req);
         DataTypes dt;
         dt.addData(lreq);
+        dt.setAdapter(service1, &serviceAdapter);
         PelicanServerClient client(configNode, dt, 0);
         client.setPort(port);
 

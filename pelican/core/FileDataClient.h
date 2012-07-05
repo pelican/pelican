@@ -5,7 +5,7 @@
  * @file FileDataClient.h
  */
 
-#include "pelican/core/AbstractDataClient.h"
+#include "pelican/core/AbstractAdaptingDataClient.h"
 #include <QtCore/QHash>
 #include <QtCore/QString>
 class QFile;
@@ -30,7 +30,7 @@ class DataTypes;
  * makes it available to the pipelines via the pipeline driver.
  */
 
-class FileDataClient : public AbstractDataClient
+class FileDataClient : public AbstractAdaptingDataClient
 {
     public:
         /// Data client constructor.

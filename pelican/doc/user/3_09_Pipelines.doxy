@@ -47,12 +47,14 @@ performed here. Use the \c createModule() protected method with the module
 type (class name) and an optional given name (if using a configuration file
 containing multiple different configurations for the same module type).
 The method returns an \c AbstractModule pointer, which should be stored and
-used to call methods on the module.
+used to call methods on the module. Remember to call delete on this pointer
+in the destructor.
 
 If there are any data blobs that exist local to the pipeline (i.e. that are
 not provided as part of the remote data), then they should also be created
 here using the \c createBlob() protected method. The method returns a
-\c DataBlob base class pointer.
+\c DataBlob base class pointer. You can use the \createBlobs<type> method 
+to create a \c QList of datablobs all at once.
 
 Configuration information, if required, can be specified inside the
 <pipelineConfig> tag of the pipelines xml file. 

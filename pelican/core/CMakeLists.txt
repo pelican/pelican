@@ -9,6 +9,9 @@ SUBPACKAGE(core server output comms data)
 
 set(core_src
     src/AbstractDataClient.cpp
+    src/AbstractAdaptingDataClient.cpp
+    src/AbstractAdapterFactory.cpp
+    src/AbstractModule.cpp
     src/AdapterRealData.cpp
     src/DirectStreamDataClient.cpp
     src/AbstractPipeline.cpp

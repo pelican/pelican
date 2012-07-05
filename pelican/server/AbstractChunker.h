@@ -38,7 +38,6 @@ class AbstractChunker
     private:
         QString _host;      ///< Host address for incoming connections.
         quint16 _port;      ///< Port for incoming connections.
-        QIODevice* _device; ///< QIODevice for receiving the incoming data.
 
         DataManager* _dataManager;  ///< Data manager used to access writable data objects.
         QList<QString> _chunkTypes; ///< List of the chunk data types written.
@@ -51,8 +50,8 @@ class AbstractChunker
         AbstractChunker(const ConfigNode& config);
 
         /// Constructs a new AbstractChunker (used in testing).
-        AbstractChunker() : _host(""), _port(0), _device(0), _dataManager(0),
-        _active(true)
+        AbstractChunker() : _host(""), _port(0), _dataManager(0),
+        _active(false)
         {}
 
         /// Destroys the AbstractChunker.
@@ -69,12 +68,6 @@ class AbstractChunker
         /// Sets the data manager.
         void setDataManager(DataManager* dataManager)
         { _dataManager = dataManager; }
-
-        /// Sets the device pointer.
-        void setDevice(QIODevice* device) { _device = device; }
-
-        /// Returns the QIODevice pointer previously set with setDevice().
-        QIODevice* getDevice() { return _device; };
 
         /// Set the IP address to listen on for data.
         void setHost(const QString& ipaddress) { _host = ipaddress; }
@@ -103,6 +96,7 @@ class AbstractChunker
 
         /// Stops the chunker.
         void stop() { _active = false; }
+        void activate() { _active = true; }
 
     protected:
         /// Access to memory to store data is through this interface.
@@ -117,6 +111,7 @@ class AbstractChunker
 
         /// Returns the state of the chunker (running or not).
         bool isActive() { return _active; }
+
 };
 
 } // namespace pelican

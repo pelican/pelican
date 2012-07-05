@@ -24,7 +24,7 @@
  * can be a maxiumum of MAX_FACTORIES-1 constructor arguments for objects
  * created by any factory.</b>
  */
-#define MAX_FACTORIES 4
+#define MAX_FACTORIES 5
 #endif
 
 /**

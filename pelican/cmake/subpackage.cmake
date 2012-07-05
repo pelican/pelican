@@ -6,6 +6,7 @@
 # Variables:
 #
 #===============================================================================
+include(cmake/CleanLibraryList.cmake)
 
 
 
@@ -23,11 +24,11 @@ macro(SUBPACKAGE name)
     # Set the project (single library) files to which the current sub-package belongs.
     _SET_SUBPACKAGE_PROJECT_FILES()
 
-    # Add include_directories() defined before this macro to the sub-package file.
-    _SET_INCLUDE_DIRECTORIES()
-
     # Save and process packages that the sub-package depends on.
     _GET_SUBPACKAGE_DEPS(${ARGN})
+
+    # Add include_directories() defined before this macro to the sub-package file.
+    _SET_INCLUDE_DIRECTORIES()
 
 
     if(BUILD_STATIC)
@@ -95,7 +96,8 @@ macro(SUBPACKAGE_LIBRARY name)
             endforeach(project_file)
             # Add the library generated to list of sub-package libs in the sub-pacakge file.
             file(APPEND ${subpackage_file}
-                "list(INSERT ${subpackage_current}_shared_libs 0 "${name}")\n\n")
+            #    "list(INSERT ${subpackage_current}_shared_libs 0 "${name}")\n\n")
+                "set(${subpackage_current}_shared_libs "${name}")\n\n")
         endif(BUILD_SHARED)
 
         if(BUILD_STATIC)
@@ -119,7 +121,8 @@ macro(SUBPACKAGE_LIBRARY name)
         # This is required for the case in which subpacakge binaries depend
         # locally on the subpackage library.
         _SET_SUBPACKAGE_LIBRARIES(${subpackage_current})
-        #list(REMOVE_DUPLICATES SUBPACKAGE_LIBRARIES)
+        clean_library_list( SUBPACKAGE_LIBRARIES )
+        message("Libs for ${name}: ${SUBPACKAGE_LIBRARIES}")
 
     else(subpackage_current)
         message(FATAL_ERROR "ERROR: SUBPACKAGE_LIBRARY "
@@ -248,8 +251,7 @@ macro(_SET_SUBPACKAGE_LIBRARIES)
         list(APPEND SUBPACKAGE_EXTERNAL_LIBRARIES ${${dep}_external_LIBS})
     endforeach(dep)
 
-    #list(REMOVE_DUPLICATES SUBPACKAGE_LIBRARIES)
-    #list(REMOVE_DUPLICATES SUBPACKAGE_EXTERNAL_LIBRARIES)
+    clean_library_list( SUBPACKAGE_EXTERNAL_LIBRARIES )
 
     #message(STATUS "**** subpackage = '${subpackage_current}' (deps = ${subpackage_deps})")
     #message(STATUS "**** SUBPACKAGE_LIBRARIES = '${SUBPACKAGE_LIBRARIES}'\n")
@@ -407,11 +409,19 @@ macro(_SET_INCLUDE_DIRECTORIES)
         set(includes ${CMAKE_INCLUDE_PATH})
     endif(COMMAND GET_PROPERTY)
     list(REMOVE_DUPLICATES includes)
-    file(APPEND ${subpackage_file} "include_directories(${includes})\n\n")
+    file(APPEND ${subpackage_file}
+        "set(${subpackage_current}_SUBPACKAGE_INCLUDES ${includes})\n\n")
     foreach(project_file ${project_files})
         file(APPEND ${project_file} "######### subpackge: ${subpackage_current} ##########\n\n")
         file(APPEND ${project_file} "include_directories(${includes})\n\n")
     endforeach(project_file)
+    if(subpackage_deps)
+        foreach(dep ${subpackage_deps})
+           list(APPEND includes ${${dep}_SUBPACKAGE_INCLUDES})
+        endforeach(dep)
+        list(REMOVE_DUPLICATES includes)
+    endif(subpackage_deps)
+    include_directories(${includes})
 endmacro(_SET_INCLUDE_DIRECTORIES)
 
 
@@ -497,7 +507,6 @@ macro(_GET_SUBPACKAGE_DEPS)
             file(APPEND ${project_file}
                 "include(${SUBPACKAGE_WORK_DIR}/${pack}.cmake)\n")
         endforeach(project_file)
-
     endforeach(pack)
     file(APPEND ${subpackage_file} "\n")
 

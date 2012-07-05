@@ -63,6 +63,7 @@ void TestUdpChunker::next(QIODevice* device)
             bool ok = udpSocket->hasPendingDatagrams();
             if (!ok) {
                 // MUST WAIT for the next datagram.
+                if( ! isActive() ) return;
                 udpSocket->waitForReadyRead(100);
                 continue;
             }
@@ -75,6 +76,7 @@ void TestUdpChunker::next(QIODevice* device)
 
     // Must discard the datagram if there is no available space.
     else {
+        if( ! isActive() ) return;
         udpSocket->readDatagram(0, 0);
     }
 }

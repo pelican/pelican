@@ -5,7 +5,7 @@
  * @file PelicanServerClient.h
  */
 
-#include "AbstractDataClient.h"
+#include "AbstractAdaptingDataClient.h"
 #include <boost/shared_ptr.hpp>
 using boost::shared_ptr;
 
@@ -29,12 +29,13 @@ class ServiceDataRequest;
  * @details
  */
 
-class PelicanServerClient : public AbstractDataClient
+class PelicanServerClient : public AbstractAdaptingDataClient
 {
     public:
         /// Construct and initialise the Pelican server client.
         PelicanServerClient(const ConfigNode& configNode,
-                const DataTypes& types, const Config* config);
+                const DataTypes& types, const Config* config
+                );
 
         virtual ~PelicanServerClient();
 

@@ -7,6 +7,7 @@
 
 #include <QtCore/QSet>
 #include <QtCore/QMap>
+#include <QtCore/QHash>
 #include <QtCore/QString>
 #include <QtCore/QPair>
 #include <QtCore/QVector>
@@ -61,6 +62,10 @@ class ChunkerManager
         /// Returns the list of chunkers.
         const QSet<AbstractChunker* >& chunkers() const { return _chunkers; };
 
+        /// return the current device associated with the specified
+        //  chunker
+        QIODevice* getCurrentDevice( AbstractChunker* chunker ) const;
+
         /// Returns true if all the data chunkers are operating, otherwise false.
         bool isRunning() const;
 
@@ -74,7 +79,7 @@ class ChunkerManager
         QSet<AbstractChunker* > _chunkers;
         QSet<QString> _streamDataTypes;
         QSet<QString> _serviceDataTypes;
-        QVector<DataReceiver*> _dataReceivers;
+        QHash<AbstractChunker*, DataReceiver*> _dataReceivers;
 };
 
 } // namespace pelican

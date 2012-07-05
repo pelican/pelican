@@ -77,6 +77,7 @@ void PelicanServerClientTest::test_getData()
         CPPUNIT_ASSERT_THROW(client = new PelicanServerClient(configNode, dt, 0), QString);
         delete client;
     }
+    TestStreamAdapter streamAdapter;
     QString stream1("stream1");
     QString version1("version1");
     DataRequirements req;
@@ -90,8 +91,8 @@ void PelicanServerClientTest::test_getData()
         lreq.append(req);
         DataTypes dt;
         dt.addData(lreq);
+        dt.setAdapter(stream1,&streamAdapter);
         PelicanServerClient client(configNode, dt, 0);
-
         QHash<QString, DataBlob*> dataHash;
         CPPUNIT_ASSERT_THROW(client.getData(dataHash), QString );
     }
@@ -106,6 +107,7 @@ void PelicanServerClientTest::test_getData()
         lreq.append(req);
         DataTypes dt;
         dt.addData(lreq);
+        dt.setAdapter(stream1,&streamAdapter);
         PelicanServerClient client(configNode, dt, 0);
 
         QHash<QString, DataBlob*> dataHash;

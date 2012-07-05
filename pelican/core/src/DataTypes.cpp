@@ -88,4 +88,8 @@ const QList<DataRequirements>& DataTypes::dataRequirements() const
     return _dataRequirements;
 }
 
+bool DataTypes::adapterAvailable( const QString& type ) const {
+     return _adapters.contains(type);
+}
+
 } // namespace pelican

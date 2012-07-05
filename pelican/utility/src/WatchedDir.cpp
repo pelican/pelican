@@ -82,7 +82,7 @@ void WatchedDir::_dirChanged(const QString& dir )
     QStringList flist = d.entryList( QDir::Files | QDir::Readable );
     // find out any new files that have been added
     foreach( const QString& file, flist ) {
-       if( ! _files.removeOne( file ) ) {
+       if( ! _files.removeAll( file ) ) {
            _streamFiles.append(dir + "/" + file);
            ++num;
        }

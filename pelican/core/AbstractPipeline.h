@@ -220,6 +220,7 @@ class AbstractPipeline
         /// \todo fix me (horrible use of friend class)!
         friend class test::TestPipeline;
         friend class AbstractPipelineTest;
+        friend class AbstractModule;
 };
 
 } // namespace pelican
