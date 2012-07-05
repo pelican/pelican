@@ -6,6 +6,7 @@
 # Variables:
 #
 #===============================================================================
+include(cmake/CleanLibraryList.cmake)
 
 
 
@@ -120,7 +121,8 @@ macro(SUBPACKAGE_LIBRARY name)
         # This is required for the case in which subpacakge binaries depend
         # locally on the subpackage library.
         _SET_SUBPACKAGE_LIBRARIES(${subpackage_current})
-        #list(REMOVE_DUPLICATES SUBPACKAGE_LIBRARIES)
+        clean_library_list( SUBPACKAGE_LIBRARIES )
+        message("Libs for ${name}: ${SUBPACKAGE_LIBRARIES}")
 
     else(subpackage_current)
         message(FATAL_ERROR "ERROR: SUBPACKAGE_LIBRARY "
@@ -249,8 +251,7 @@ macro(_SET_SUBPACKAGE_LIBRARIES)
         list(APPEND SUBPACKAGE_EXTERNAL_LIBRARIES ${${dep}_external_LIBS})
     endforeach(dep)
 
-    #list(REMOVE_DUPLICATES SUBPACKAGE_LIBRARIES)
-    #list(REMOVE_DUPLICATES SUBPACKAGE_EXTERNAL_LIBRARIES)
+    clean_library_list( SUBPACKAGE_EXTERNAL_LIBRARIES )
 
     #message(STATUS "**** subpackage = '${subpackage_current}' (deps = ${subpackage_deps})")
     #message(STATUS "**** SUBPACKAGE_LIBRARIES = '${SUBPACKAGE_LIBRARIES}'\n")
@@ -506,7 +507,6 @@ macro(_GET_SUBPACKAGE_DEPS)
             file(APPEND ${project_file}
                 "include(${SUBPACKAGE_WORK_DIR}/${pack}.cmake)\n")
         endforeach(project_file)
-
     endforeach(pack)
     file(APPEND ${subpackage_file} "\n")
 
