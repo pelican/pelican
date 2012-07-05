@@ -3,6 +3,7 @@
 #include "pelican/output/Stream.h"
 #include "pelican/output/DataBlobClient.h"
 #include "pelican/output/OutputStreamManager.h"
+#include <iostream>
 
 
 namespace pelican {
@@ -19,7 +20,7 @@ DataBlobRelay::DataBlobRelay( const Config* config, const Config::TreeAddress& a
     _outputManager = new OutputStreamManager( config, outputAddress );
 
     // setup clients
-    foreach( const ConfigNode& node, localConfig.getNodes("listen")   ) {
+    foreach( const ConfigNode& node, localConfig.getNodes("client")   ) {
         DataBlobClient* c = new DataBlobClient( node );
         _myClients.append( c );
         addClient( c );

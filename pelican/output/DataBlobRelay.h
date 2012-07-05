@@ -22,7 +22,16 @@ class Stream;
  *    Connect to a DataBlob server at one end and redistribute
  *    via an OutputManager
  * @details
- *    
+ *    Input configuration takes the format:
+ *    <OutputManager>
+ *         See the OutputStreamManager for details
+ *    </OutputManager>
+ *    <client>
+ *         See the DataBlobClient configuration for details
+ *    </client>
+ *    <client>
+ *         ...
+ *    </client>
  */
 
 class DataBlobRelay : public QObject
