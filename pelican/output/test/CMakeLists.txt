@@ -37,6 +37,7 @@ if (CPPUNIT_FOUND)
         src/DataBlobClientTest.cpp
         src/ThreadedDataBlobClientTest.cpp
         src/DataBlobFileTest.cpp
+        src/DataBlobRelayTest.cpp
     )
     add_executable(outputTestMT ${outputTest_src})
     target_link_libraries(outputTestMT
