@@ -201,10 +201,10 @@ void DataBlobClient::_response()
     }
 }
 
-DataBlob* DataBlobClient::_blob(const QString& type, const QString& /*stream*/)
+boost::shared_ptr<DataBlob> DataBlobClient::_blob(const QString& type, const QString& /*stream*/)
 {
     // TODO speedup with circular Blob buffers etc?
-    return _blobFactory->create(type);
+    return boost::shared_ptr<DataBlob>( _blobFactory->create(type) );
 }
 
 } // namespace pelican

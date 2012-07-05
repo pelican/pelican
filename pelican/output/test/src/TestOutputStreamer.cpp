@@ -32,5 +32,8 @@ void TestOutputStreamer::sendStream(const QString& streamName, const DataBlob* d
     _received[streamName] = dataBlob;
 }
 
+const DataBlob* TestOutputStreamer::lastReceived( const QString& streamName ) {
+    return _received[streamName];
+}
 } // namespace test
 } // namespace pelican

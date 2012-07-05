@@ -12,6 +12,7 @@
 
 #include <QtGui/QApplication>
 #include <QtCore/QDebug>
+#include <boost/shared_ptr.hpp>
 
 #include <iostream>
 
@@ -50,7 +51,7 @@ void DataViewerTest::tearDown()
 void DataViewerTest::test_client()
 {
     QString testStream("testStream");
-    TestDataBlob* blob = new TestDataBlob;
+    boost::shared_ptr<TestDataBlob> blob( new TestDataBlob );
     blob->setData("somedata");
 
     // Use Case:

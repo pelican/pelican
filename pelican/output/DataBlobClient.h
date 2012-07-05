@@ -5,6 +5,7 @@
  * @file DataBlobClient.h
  */
 
+#include <boost/shared_ptr.hpp>
 #include "pelican/output/AbstractDataBlobClient.h"
 #include "pelican/data/DataRequirements.h"
 
@@ -76,7 +77,7 @@ class DataBlobClient : public AbstractDataBlobClient
         bool _connect();
 
         /// return a data blob ready to be deserialised
-        DataBlob* _blob(const QString& type, const QString& stream);
+        boost::shared_ptr<DataBlob> _blob(const QString& type, const QString& stream);
 
     private:
         bool _requestStreamInfo();

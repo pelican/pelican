@@ -34,10 +34,6 @@ TCPConnectionManagerTest::~TCPConnectionManagerTest()
 
 void TCPConnectionManagerTest::setUp()
 {
-    int argc = 1;
-    char *argv[] = {(char*)"pelican"};
-    _app = new QCoreApplication(argc,argv);
-
     _clientProtocol = new PelicanClientProtocol;
     _server = new TCPConnectionManager(0);
 }
@@ -46,7 +42,6 @@ void TCPConnectionManagerTest::tearDown()
 {
     delete _server;
     delete _clientProtocol;
-    delete _app;
 }
 
 void TCPConnectionManagerTest::test_dataSupportedRequest()
@@ -60,11 +55,11 @@ void TCPConnectionManagerTest::test_dataSupportedRequest()
     QTcpSocket* client = _createClient();
     CPPUNIT_ASSERT_EQUAL( 0, _server->clientsForStream(streamInfo) );
     _sendRequest( client, req );
-    _app->processEvents();
+    QCoreApplication::processEvents();
     CPPUNIT_ASSERT_EQUAL( 1, _server->clientsForStream(streamInfo) );
 
     sleep(1);
-    _app->processEvents();
+    QCoreApplication::processEvents();
     CPPUNIT_ASSERT( client->state() == QAbstractSocket::ConnectedState );
     boost::shared_ptr<ServerResponse> r = _clientProtocol->receive( *client );
     CPPUNIT_ASSERT( r->type() == ServerResponse::DataSupport );
@@ -78,7 +73,7 @@ void TCPConnectionManagerTest::test_dataSupportedRequest()
     blob.setData("stream1Data");
     _server->send(stream1,&blob);
     sleep(1);
-    _app->processEvents();
+    QCoreApplication::processEvents();
 
     r = _clientProtocol->receive(*client);
     CPPUNIT_ASSERT( r->type() == ServerResponse::DataSupport );
@@ -92,7 +87,7 @@ void TCPConnectionManagerTest::test_dataSupportedRequest()
     // not to receive a new DataRequest
     _server->send(stream1,&blob);
     sleep(1);
-    _app->processEvents();
+    QCoreApplication::processEvents();
 
     r = _clientProtocol->receive(*client);
     CPPUNIT_ASSERT( r->type() != ServerResponse::DataSupport );
@@ -110,7 +105,7 @@ void TCPConnectionManagerTest::test_send()
 
     QTcpSocket* client = _createClient();
     _sendRequest( client, req );
-    _app->processEvents();
+    QCoreApplication::processEvents();
     CPPUNIT_ASSERT_EQUAL( 1, _server->clientsForStream("testData") );
     TestDataBlob blob;
     blob.setData("sometestData");
@@ -141,8 +136,7 @@ void TCPConnectionManagerTest::test_brokenConnection()
 
     QTcpSocket* client = _createClient();
     _sendRequest( client, req );
-    sleep(1);
-    _app->processEvents();
+    QCoreApplication::processEvents();
 
     CPPUNIT_ASSERT_EQUAL( 1, _server->clientsForStream("testData") );
 
@@ -150,7 +144,7 @@ void TCPConnectionManagerTest::test_brokenConnection()
     // client dies after connection
     // expect to be removed from the system
     delete client;
-    _app->processEvents();
+    QCoreApplication::processEvents();
     CPPUNIT_ASSERT_EQUAL( 0, _server->clientsForStream("testData") );
 }
 
@@ -178,6 +172,7 @@ void TCPConnectionManagerTest::_sendRequest(QTcpSocket* tcpSocket, const ServerR
     tcpSocket->write(data);
     tcpSocket->waitForBytesWritten(data.size());
     tcpSocket->flush();
+    QCoreApplication::processEvents( QEventLoop::WaitForMoreEvents );
 }
 
 } // namespace pelican

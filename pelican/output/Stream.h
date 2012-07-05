@@ -38,8 +38,7 @@ class Stream
         boost::shared_ptr<DataBlob> data() const;
 
         /// set the data
-        //  note that this transfers ownership of the data object
-        void setData(DataBlob*);
+        void setData( const boost::shared_ptr<DataBlob>& );
 
         /// Stream destructor.
         ~Stream();

@@ -20,7 +20,9 @@ DataBlobRelay::DataBlobRelay( const Config* config, const Config::TreeAddress& a
 
     // setup clients
     foreach( const ConfigNode& node, localConfig.getNodes("listen")   ) {
-        addClient( new DataBlobClient( node ) );
+        DataBlobClient* c = new DataBlobClient( node );
+        _myClients.append( c );
+        addClient( c );
     }
 }
 
@@ -29,17 +31,21 @@ DataBlobRelay::DataBlobRelay( const Config* config, const Config::TreeAddress& a
  */
 DataBlobRelay::~DataBlobRelay()
 {
-    foreach( DataBlobClient* client, _clients ) {
+    foreach( DataBlobClient* client, _myClients ) {
         delete client;
     }
     delete _outputManager;
 }
 
-void DataBlobRelay::addClient( DataBlobClient* client ) 
+void DataBlobRelay::connectToStream( AbstractOutputStream* streamer, const QString& stream) {
+    _outputManager->connectToStream( streamer, stream );
+}
+
+void DataBlobRelay::addClient( AbstractDataBlobClient* client ) 
 {
     _clients.append(client);
     connect( client, SIGNAL( newData(const Stream&) ), 
-             this, SLOT( _streamData() ) );
+             this, SLOT( _streamData( const Stream& ) ) );
 } 
 
 void DataBlobRelay::_streamData( const Stream& s ) {
