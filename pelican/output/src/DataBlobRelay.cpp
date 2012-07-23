@@ -16,7 +16,7 @@ DataBlobRelay::DataBlobRelay( const Config* config, const Config::TreeAddress& a
     ConfigNode localConfig = config->get( address );
     // setup output manager
     Config::TreeAddress outputAddress = address;
-    outputAddress << Config::NodeId("OutputManager","");
+    outputAddress << Config::NodeId("output","");
     _outputManager = new OutputStreamManager( config, outputAddress );
 
     // setup clients

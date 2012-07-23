@@ -1,0 +1,60 @@
+namespace pelican {
+
+/**
+\page user_dataRelay Relaying Post-Processing Data
+
+\section user_dataRelay_introduction Introduction
+
+Pelican provides a number of useful tools to utilise
+the output from the PelicanTCPBlob output streamer.
+This is useful in cases where you wish to offload 
+distribution or storage tasks to another physical
+machine. Typical use cases include directing the
+data to a local expandable data storage facilty, or
+provide data to external consumers of the data via a
+dedicated server machine for that purpose.
+
+\section user_dataRelay_client The DataBlobClient
+A class you can use to connect to a PelicanTCPBlobServer and
+receive messages ever time new data becomes available.
+
+\section user_dataRelay_relay The DataBlobRelay
+A class that connects the DataBlobClient to an 
+OutputStreamManager. This provides a easy to use 
+facility to use any OutputStreamer to write out the
+incoming data.
+
+\section user_dataRelay_relay_exe The \em pelicanrelay executable
+A small program that instantiates the DataBlobRelay for 
+the default pelican OutputStreamers. You provide it with an XML
+configuration file to describe the servers you wish to connect to
+and the configuration for the output streamer. e.g.
+\verbatim
+<PelicanRelay>
+    <output>
+       See the OutputStreamManager for details
+    </output>
+    <client>
+       See the DataBlobClient configuration for details
+    </client>
+    <client>
+       ...
+    </client>
+</PelicanRelay>
+\endverbatim
+
+\section user_dataRelay_daisyChaining Daisy-Chain Pelican Pipelines
+Comming soon - the ability to daisy-chain pelican pipelines together to 
+provide any length of processing chain.
+
+
+The final section of the tutorial shows how all the components are linked
+together to build a working Pelican system.
+
+\latexonly
+\clearpage
+\endlatexonly
+
+*/ 
+
+} // namespace pelican

@@ -23,9 +23,9 @@ class Stream;
  *    via an OutputManager
  * @details
  *    Input configuration takes the format:
- *    <OutputManager>
+ *    <output>
  *         See the OutputStreamManager for details
- *    </OutputManager>
+ *    </output>
  *    <client>
  *         See the DataBlobClient configuration for details
  *    </client>

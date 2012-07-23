@@ -76,7 +76,8 @@ using a network TCP connection.
 As any processing done in an output streamer is done serially within the pipeline
 processing, and so any latencies, e.g disk writes, will slow down your processing.
 If this will be a problem, it is better to export the data via the 
-PelicanTCPBlobServer and process the streams elsewhere.
+PelicanTCPBlobServer and process the streams elsewhere. See \ref user_dataRelay
+the data relay section for more information.
 
 @subsection user_dataOutput_example  Tutorial Output
 
@@ -175,8 +176,6 @@ objects as they are passed over the TCP stream. Use of the DataBlobClient is
 outside the scope of this tutorial, but it is described in the Pelican API
 reference.
 
-The final section of the tutorial shows how all the components are linked
-together to build a working Pelican system.
 
 \latexonly
 \clearpage
