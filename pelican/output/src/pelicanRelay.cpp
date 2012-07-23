@@ -16,20 +16,29 @@ opts::variables_map process_options(int argc, char** argv);
 int main( int argc, char** argv ) {
     // parse the args
     opts::variables_map options = process_options(argc,argv);
-    Config config = createConfig(options);
-    Config::TreeAddress address;
-    address << Config::NodeId("PelicanRelay", "");
 
     // start up the relay
+    int rv = 0;
+    DataBlobRelay* relay = 0;
     try {
+        Config config = createConfig(options);
+        Config::TreeAddress address;
+        address << Config::NodeId("PelicanRelay", "");
+
         QCoreApplication app(argc, argv );
-        DataBlobRelay relay = new DataBlobRelay( &config, address );
-        return app.exec();
+        relay = new DataBlobRelay( &config, address );
+        rv = app.exec();
     }
-    catch (const QString err)
+    catch(const boost::program_options::error& err) {
+        std::cerr << "pelicanRelay ERROR: " << err.what() << std::endl;
+    }
+    catch (const QString& err)
     {
-        std::cout << "pelicanRelay ERROR: " << err.toStdString() << endl;
+        std::cerr << "pelicanRelay ERROR: " << err.toStdString() << std::endl;
+        rv = 1;
     }
+    delete relay;
+    return rv;
     
 }
 
@@ -51,12 +60,12 @@ opts::variables_map process_options(int argc, char** argv)
     // Parse the command line arguments.
     opts::variables_map varMap;
     opts::store(opts::command_line_parser(argc, argv).options(desc)
-            .positional(p).run(), varMap);
+            .run(), varMap);
     opts::notify(varMap);
 
     // Check for help message.
     if (varMap.count("help")) {
-        cout << desc << endl;;
+        std::cout << desc << std::endl;
         exit(0);
     }
     return varMap;
@@ -70,8 +79,10 @@ Config createConfig(const opts::variables_map& varMap)
         configFilename = varMap["config"].as<std::string>();
 
     pelican::Config config;
-    if (!configFilename.empty())
+    if (!configFilename.empty()) {
         config = pelican::Config(QString(configFilename.c_str()));
-
+    } else {
+        throw QString("must specify a configuration file");
+    }
     return config;
 }

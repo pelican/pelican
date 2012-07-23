@@ -41,5 +41,8 @@ SUBPACKAGE_SET_EXTERNAL_LIBRARIES(
     ${QT_QTCORE_LIBRARY}
     ${QT_QTNETWORK_LIBRARY}
 )
+add_executable( pelicanrelay src/pelicanRelay.cpp )
+target_link_libraries( pelicanrelay ${SUBPACKAGE_LIBRARIES} )
+install(TARGETS pelicanrelay DESTINATION ${BINARY_INSTALL_DIR} )
 
 add_subdirectory(test)
