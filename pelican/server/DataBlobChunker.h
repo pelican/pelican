@@ -22,14 +22,13 @@ namespace pelican {
 class DataBlobChunker : public AbstractChunker
 {
     public:
-        DataBlobChunker();
+        DataBlobChunker(const ConfigNode& config);
         ~DataBlobChunker();
 
         virtual QIODevice* newDevice();
         virtual void next(QIODevice*);
 
     private:
-        DataBlobClient _client;
 };
 
 } // namespace pelican
