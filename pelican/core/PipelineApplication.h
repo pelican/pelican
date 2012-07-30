@@ -133,7 +133,7 @@ class PipelineApplication
     private:
         /// initialise the object
         //  assumes _config is set
-        void init();
+        void _init();
 
         /// Creates the configuration object based on the command line arguments.
         void _createConfig(int argc, char** argv);
@@ -154,6 +154,9 @@ class PipelineApplication
         AbstractAdapterFactory* _adapterFactory;
         DataClientFactory* _clientFactory;
         FactoryConfig<AbstractModule>* _moduleFactory;
+
+        // signal handling function
+        static void exit(int sig);
 };
 
 } // namespace pelican

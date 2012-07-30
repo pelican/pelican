@@ -10,6 +10,7 @@
 #include "pelican/utility/ConfigNode.h"
 #include "pelican/output/OutputStreamManager.h"
 #include <string>
+#include <csignal>
 #include <iostream>
 
 namespace pelican {
@@ -29,20 +30,20 @@ PipelineApplication::PipelineApplication(int argc, char** argv)
 {
     // Set configuration using command line arguments
     _createConfig(argc, argv);
-    init();
+    _init();
 }
 
 PipelineApplication::PipelineApplication(const Config& config )
 {
     _config = config;
-    init();
+    _init();
 }
 
 void PipelineApplication::setConfigurationSearchPaths( const QList<QString>& paths ) {
     _config.setSearchPaths( paths );
 }
 
-void PipelineApplication::init() 
+void PipelineApplication::_init() 
 {
      _adapterFactory = 0;
      _clientFactory = 0;
@@ -68,8 +69,17 @@ void PipelineApplication::init()
     _moduleFactory = new FactoryConfig<AbstractModule>(config(), "pipeline", "modules", false);
 
     // Construct the pipeline driver.
-    _driver = new PipelineDriver( dataBlobFactory(), _moduleFactory,
-            _clientFactory, outputStreamManager(), &_config, pipelineConfig );
+    _driver = new PipelineDriver( dataBlobFactory(), _moduleFactory, _clientFactory, 
+                                  outputStreamManager(), &_config, pipelineConfig );
+
+    // install signal handlers
+    // to ensure we clean up properly
+    signal( SIGINT, &PipelineApplication::exit );
+    signal( SIGTERM, &PipelineApplication::exit);
+}
+
+void PipelineApplication::exit(int) {
+    QCoreApplication::exit(0);
 }
 
 /**
