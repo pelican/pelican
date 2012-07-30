@@ -157,6 +157,7 @@ class PipelineApplication
 
         // signal handling function
         static void exit(int sig);
+        static QList<PipelineDriver*> _allDrivers;
 };
 
 } // namespace pelican

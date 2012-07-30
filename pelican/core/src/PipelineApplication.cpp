@@ -17,6 +17,8 @@ namespace pelican {
 
 namespace opts = boost::program_options;
 
+QList<PipelineDriver*> PipelineApplication::_allDrivers;
+
 /**
  * @details
  * PipelineApplication constructor. This requires a QCoreApplication object
@@ -71,6 +73,7 @@ void PipelineApplication::_init()
     // Construct the pipeline driver.
     _driver = new PipelineDriver( dataBlobFactory(), _moduleFactory, _clientFactory, 
                                   outputStreamManager(), &_config, pipelineConfig );
+    _allDrivers.append(_driver);
 
     // install signal handlers
     // to ensure we clean up properly
@@ -80,6 +83,9 @@ void PipelineApplication::_init()
 
 void PipelineApplication::exit(int) {
     QCoreApplication::exit(0);
+    foreach( PipelineDriver* d, _allDrivers ) {
+        d->stop();
+    }
 }
 
 /**
@@ -88,6 +94,8 @@ void PipelineApplication::exit(int) {
  */
 PipelineApplication::~PipelineApplication()
 {
+    _driver->stop();
+    _allDrivers.removeAll(_driver);
     delete _driver;
     delete _adapterFactory;
     delete _clientFactory;
