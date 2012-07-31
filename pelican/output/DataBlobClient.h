@@ -13,7 +13,6 @@
 #include <QtCore/QString>
 #include <QtCore/QHash>
 
-class QTcpSocket;
 
 namespace pelican {
 class AbstractClientProtocol;
@@ -56,46 +55,23 @@ class DataBlobClient : public AbstractDataBlobClient
         using AbstractDataBlobClient::subscribe;
         virtual void subscribe( const QSet<QString>& streams );
 
-        /// set the host to listen to
-        void setHost(const QString& host);
-
-        /// set the port to listen on
-        void setPort(quint16 port);
-
-        /// return the port of the host connected to
-        quint16 port() const;
-
-    protected slots:
-        void _response();
-
-        /// attempt to reconnect to the server and restore subscriptions
-        //in case of a sudden disconnect
-        void _reconnect();
-
     protected:
-        bool  _sendRequest( const ServerRequest* req );
-        bool _connect();
+        virtual void onReconnect();
+        virtual void dataSupport( DataSupportResponse* );
+        virtual void dataReceived( DataBlobResponse* );
 
         /// return a data blob ready to be deserialised
         boost::shared_ptr<DataBlob> _blob(const QString& type, const QString& stream);
-
-    private:
-        bool _requestStreamInfo();
 
     protected:
         QSet<QString> _streams;
 
     private:
         QHash<QString, Stream*> _streamMap;
-        AbstractClientProtocol* _protocol;
-        QTcpSocket* _tcpSocket;
         DataBlobFactory* _blobFactory;
-        QString       _server;
-        quint16       _port;
         QSet<QString> _subscriptions;
         mutable bool  _streamInfo; // marker to test if stream response has been received
         mutable bool  _streamInfoSubscription;
-        bool _destructor;
         DataRequirements _currentSubscription;
 
 };

@@ -24,9 +24,7 @@ namespace pelican {
 DataBlobClient::DataBlobClient( const ConfigNode& configNode, QObject* parent )
     : AbstractDataBlobClient(parent), _streamInfoSubscription(false)
 {
-    _destructor = false;
-    _protocol = new PelicanClientProtocol;
-    _tcpSocket = new QTcpSocket;
+    setProtocol( new PelicanClientProtocol );
     _blobFactory = new DataBlobFactory;
 
 
@@ -35,10 +33,6 @@ DataBlobClient::DataBlobClient( const ConfigNode& configNode, QObject* parent )
     setHost(configNode.getOption("connection", "host"));
     setPort(configNode.getOption("connection", "port").toUInt());
 
-    connect(_tcpSocket, SIGNAL( readyRead()),
-                         this, SLOT( _response() ));
-    connect(_tcpSocket, SIGNAL( disconnected()),
-                         this, SLOT( _reconnect() ));
 
     // configured subsciptions
     QSet<QString> subs = QSet<QString>::fromList(configNode.getOptionList("subscribe","stream") );
@@ -50,25 +44,6 @@ DataBlobClient::DataBlobClient( const ConfigNode& configNode, QObject* parent )
  */
 DataBlobClient::~DataBlobClient()
 {
-    _destructor = true;
-    delete _tcpSocket;
-    delete _protocol;
-}
-
-void DataBlobClient::setPort(quint16 port)
-{
-    _port = port;
-}
-
-quint16 DataBlobClient::port() const
-{
-    return _port;
-}
-
-
-void DataBlobClient::setHost(const QString& ipaddress)
-{
-    _server = ipaddress;
 }
 
 QSet<QString> DataBlobClient::streams()
@@ -76,7 +51,7 @@ QSet<QString> DataBlobClient::streams()
     if( ! _streamInfoSubscription ) {
         _streamInfoSubscription = true;
         _streamInfo = false;
-        if ( _requestStreamInfo() )
+        if ( requestStreamInfo() )
         {
             while ( (! _streamInfo) && _tcpSocket->state() == QAbstractSocket::ConnectedState ) {
                 sleep(1);
@@ -87,16 +62,11 @@ QSet<QString> DataBlobClient::streams()
     return _streams;
 }
 
-bool DataBlobClient::_requestStreamInfo()
-{
-    DataSupportRequest req;
-    return _sendRequest(&req);
-}
 
 void DataBlobClient::subscribe(const QSet<QString>& streams)
 {
 
-    // Define the data type which the client will except and send request
+    // Define the data type which the client will accept and send request
     if( streams.size() > 0 ) {
         StreamDataRequest req;
         DataRequirements require;
@@ -110,95 +80,43 @@ void DataBlobClient::subscribe(const QSet<QString>& streams)
         if( require != _currentSubscription )
         {
             req.addDataOption(require);
-            _sendRequest(&req);
+            sendRequest(&req);
             _subscriptions.unite(streams);
         }
     }
 
 }
 
-bool DataBlobClient::_sendRequest( const ServerRequest* req )
+void DataBlobClient::onReconnect()
 {
-    // construct request and connect to the port
-    QByteArray data = _protocol->serialise(*req);
-
-    bool sent = _connect() ;
-    if ( sent )
-    {
-        _tcpSocket->write(data);
-        _tcpSocket->waitForBytesWritten(data.size());
-        _tcpSocket->flush();
-    }
-    return sent;
+    _currentSubscription.clear();
+    subscribe( _subscriptions );
+    if( _streamInfoSubscription )
+        requestStreamInfo();
 }
 
-void DataBlobClient::_reconnect()
-{
-    if( ! _destructor ) {
-        verbose( "DataBlobClient: Connection lost - reconnecting()", 1);
-        _currentSubscription.clear();
-        subscribe( _subscriptions );
-        if( _streamInfoSubscription )
-            _requestStreamInfo();
-    }
-}
-
-bool DataBlobClient::_connect()
-{
-    while (_tcpSocket->state() == QAbstractSocket::UnconnectedState) {
-       _tcpSocket->connectToHost( _server, _port );
-       if (!_tcpSocket -> waitForConnected(5000) || _tcpSocket -> state() == QAbstractSocket::UnconnectedState) {
-           std::cerr << "Client could not connect to server:" << _server.toStdString() << " port:" << _port << std::endl;
-           sleep(2);
-           continue;
-       }
-    }
-    return true;
-}
-
-void DataBlobClient::_response()
-{
-    boost::shared_ptr<ServerResponse> r = _protocol->receive(*_tcpSocket);
-    // Check what type of response we have
-    switch( r -> type() ) {
-        case ServerResponse::Error:  // Error occurred!!
-            std::cerr << "DataBlobClient: Server Error: " << r -> message().toStdString() << std::endl;
-            break;
-        case ServerResponse::DataSupport:   // We have received supported data info
-            {
-                verbose("DataSupport information received");
-                DataSupportResponse* res = static_cast<DataSupportResponse*>(r.get());
+void DataBlobClient::dataSupport( DataSupportResponse* res ) {
 #ifdef BROKEN_QT_SET_HEADER
-                _streams = res->streamData();
-                _streams.unite(res->serviceData());
+    _streams = res->streamData();
+    _streams.unite(res->serviceData());
 #else
-                _streams = res->streamData() + res->serviceData();
+    _streams = res->streamData() + res->serviceData();
 #endif
-                emit newStreamsAvailable();
-                _streamInfo = true;
-            }
-            break;
-        case ServerResponse::Blob:   // We have received a blob
-            {
-                verbose("DataBlob received");
-                DataBlobResponse* res = static_cast<DataBlobResponse*>(r.get());
-                while (_tcpSocket->bytesAvailable() < (qint64)res->dataSize())
-                   _tcpSocket -> waitForReadyRead(-1);
-                const QString& stream = res->dataName();
+    emit newStreamsAvailable();
+    _streamInfo = true;
+}
 
-                // configure the appropriate Stream Object ready for sending
-                Stream* s = _streamMap[stream];
-                s->setData(_blob( res->blobClass(), res->dataName() ) );
-                s->data()->deserialise(*_tcpSocket, res->byteOrder());
+void DataBlobClient::dataReceived( DataBlobResponse* res ) {
+    while (_tcpSocket->bytesAvailable() < (qint64)res->dataSize())
+        _tcpSocket -> waitForReadyRead(-1);
+    const QString& stream = res->dataName();
 
-                emit newData(*s);
-            }
-            break;
-        default:
-            // all other repsonses are irrelevant
-            std::cerr << "PelicanBlobClient: Unknown Response" << std::endl;
-            break;
-    }
+    // configure the appropriate Stream Object ready for sending
+    Stream* s = _streamMap[stream];
+    s->setData(_blob( res->blobClass(), res->dataName() ) );
+    s->data()->deserialise(*_tcpSocket, res->byteOrder());
+
+    emit newData(*s);
 }
 
 boost::shared_ptr<DataBlob> DataBlobClient::_blob(const QString& type, const QString& /*stream*/)

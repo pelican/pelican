@@ -43,6 +43,8 @@ void DataBlobChunker::setHost(const QString& ipaddress)
 QIODevice* DataBlobChunker::newDevice() {
     QTcpSocket* s = new QTcpSocket;
     s->connectToHost( _server, _port );
+    // subscribe to the streams
+    StreamDataRequest req;
     return s;
 }
 
@@ -53,7 +55,7 @@ void DataBlobChunker::next(QIODevice*) {
         case ServerResponse::Blob:
             {
                 while (_tcpSocket->bytesAvailable() < (qint64)res->dataSize())
-                   _tcpSocket -> waitForReadyRead(-1);
+                   _tcpSocket->waitForReadyRead(-1);
                 const QString& stream = res->dataName();
             }
             break;
