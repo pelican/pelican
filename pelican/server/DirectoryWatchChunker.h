@@ -12,13 +12,13 @@ namespace pelican {
 
 /**
  * @class DirectoryWatchChunker
- *  
+ *
  * @brief
  *    Monitors a directory for new files
  * @details
  *    Watches a Directory, As new files appear they are
  *    sent as a new chunk
- * 
+ *
  */
 
 class DirectoryWatchChunker : public AbstractChunker
@@ -33,6 +33,7 @@ class DirectoryWatchChunker : public AbstractChunker
     private:
         QString _dirName;
 };
+PELICAN_DECLARE_CHUNKER(DirectoryWatchChunker)
 
 } // namespace pelican
 #endif // DIRECTORYWATCHCHUNKER_H 
