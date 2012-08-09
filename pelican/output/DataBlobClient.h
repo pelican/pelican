@@ -7,7 +7,6 @@
 
 #include <boost/shared_ptr.hpp>
 #include "pelican/output/AbstractDataBlobClient.h"
-#include "pelican/data/DataRequirements.h"
 
 #include <QtCore/QSet>
 #include <QtCore/QString>
@@ -53,9 +52,9 @@ class DataBlobClient : public AbstractDataBlobClient
 
         /// listen for the named streams
         using AbstractDataBlobClient::subscribe;
-        virtual void subscribe( const QSet<QString>& streams );
 
     protected:
+        virtual void onSubscribe(const QString&);
         virtual void onReconnect();
         virtual void dataSupport( DataSupportResponse* );
         virtual void dataReceived( DataBlobResponse* );
@@ -63,16 +62,11 @@ class DataBlobClient : public AbstractDataBlobClient
         /// return a data blob ready to be deserialised
         boost::shared_ptr<DataBlob> _blob(const QString& type, const QString& stream);
 
-    protected:
-        QSet<QString> _streams;
-
     private:
         QHash<QString, Stream*> _streamMap;
         DataBlobFactory* _blobFactory;
-        QSet<QString> _subscriptions;
         mutable bool  _streamInfo; // marker to test if stream response has been received
         mutable bool  _streamInfoSubscription;
-        DataRequirements _currentSubscription;
 
 };
 

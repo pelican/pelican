@@ -7,7 +7,6 @@
 #include "pelican/data/DataBlobFactory.h"
 #include "pelican/utility/ConfigNode.h"
 #include "pelican/comms/PelicanClientProtocol.h"
-#include "pelican/comms/StreamDataRequest.h"
 #include "pelican/data/DataRequirements.h"
 #include "pelican/comms/DataBlobResponse.h"
 #include "pelican/comms/ServerResponse.h"
@@ -59,49 +58,24 @@ QSet<QString> DataBlobClient::streams()
             }
         }
     }
-    return _streams;
+    return AbstractDataBlobClient::streams();
 }
 
-
-void DataBlobClient::subscribe(const QSet<QString>& streams)
-{
-
-    // Define the data type which the client will accept and send request
-    if( streams.size() > 0 ) {
-        StreamDataRequest req;
-        DataRequirements require;
-        foreach( const QString& stream, streams )
-        {
-            verbose(QString("Subscribing to stream : \"") + stream + " \"" );
-            if( ! _streamMap.contains(stream) )
-                _streamMap.insert(stream, new Stream(stream) );
-            require.setStreamData(stream);
-        }
-        if( require != _currentSubscription )
-        {
-            req.addDataOption(require);
-            sendRequest(&req);
-            _subscriptions.unite(streams);
-        }
-    }
-
-}
 
 void DataBlobClient::onReconnect()
 {
-    _currentSubscription.clear();
-    subscribe( _subscriptions );
     if( _streamInfoSubscription )
         requestStreamInfo();
 }
 
+void DataBlobClient::onSubscribe(const QString& stream)
+{
+    if( ! _streamMap.contains(stream) )
+        _streamMap.insert(stream, new Stream(stream) );
+}
+
 void DataBlobClient::dataSupport( DataSupportResponse* res ) {
-#ifdef BROKEN_QT_SET_HEADER
-    _streams = res->streamData();
-    _streams.unite(res->serviceData());
-#else
-    _streams = res->streamData() + res->serviceData();
-#endif
+    AbstractDataBlobClient::dataSupport( res );
     emit newStreamsAvailable();
     _streamInfo = true;
 }

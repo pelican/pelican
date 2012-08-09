@@ -6,6 +6,7 @@ include_directories(${QT_INCLUDE_DIR})
 SUBPACKAGE(output comms data server)
 
 set(output_moc_headers
+    DataBlobChunkerClient.h
     DataBlobClient.h
     DataBlobRelay.h
     ThreadedDataBlobClient.h
@@ -18,6 +19,8 @@ set(output_moc_headers
 set(output_src
     src/AbstractOutputStream.cpp
     src/AbstractDataBlobClient.cpp
+    src/DataBlobChunker.cpp
+    src/DataBlobChunkerClient.cpp
     src/DataBlobClient.cpp
     src/DataBlobFileType.cpp
     src/DataBlobFile.cpp

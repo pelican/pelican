@@ -3,6 +3,8 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QString>
+#include <QtCore/QSet>
+#include "pelican/data/DataRequirements.h"
 class QTcpSocket;
 
 /**
@@ -56,10 +58,10 @@ class AbstractDataBlobClient : public QObject
         quint16 port() const;
 
         /// returns the streams served by the blob server
-        virtual QSet<QString> streams() = 0;
+        virtual QSet<QString> streams() { return _streams; };
 
         /// listen for the named streams
-        virtual void subscribe( const QSet<QString>& streams ) = 0;
+        virtual void subscribe( const QSet<QString>& streams );
         void subscribe( const QString& stream );
         QTcpSocket* socket() { return _tcpSocket; }
 
@@ -71,7 +73,7 @@ class AbstractDataBlobClient : public QObject
         bool sendRequest( const ServerRequest* req );
 
         // send server a request for StreamInfo
-        bool requestStreamInfo();;
+        bool requestStreamInfo();
 
         /// reimplement in your class
         //  for dealing with the various responses to 
@@ -82,6 +84,7 @@ class AbstractDataBlobClient : public QObject
         virtual void unknownResponse( ServerResponse* );
 
         virtual void onReconnect() {};
+        virtual void onSubscribe( const QString& ) {};
 
     signals:
         void newData(const Stream& stream);
@@ -100,9 +103,13 @@ class AbstractDataBlobClient : public QObject
         QString       _server;
         quint16       _port;
 
+
     private:
         AbstractClientProtocol* _protocol;
         bool _destructor;
+        DataRequirements _currentSubscription;
+        QSet<QString> _subscriptions;
+        QSet<QString> _streams;
 
 };
 

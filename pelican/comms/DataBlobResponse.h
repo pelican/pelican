@@ -31,6 +31,11 @@ class DataBlobResponse : public ServerResponse
         quint64 dataSize() const {return _dataSize;}
         QSysInfo::Endian byteOrder() const {return _endianness;}
 
+        // serialise and deserialise important data to/from a stream
+        void serialise( QDataStream& stream );
+        void deserialise( QDataStream& stream );
+        static size_t serialisedSize();
+
     private:
         QString _type;
         QString _name;

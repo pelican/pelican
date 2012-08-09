@@ -5,6 +5,7 @@
 
 #include "pelican/comms/AbstractClientProtocol.h"
 #include "pelican/comms/ServerResponse.h"
+#include "pelican/comms/StreamDataRequest.h"
 #include "pelican/comms/DataSupportRequest.h"
 #include "pelican/comms/DataSupportResponse.h"
 #include "pelican/comms/DataBlobResponse.h"
@@ -64,6 +65,29 @@ void AbstractDataBlobClient::verbose(const QString& msg, int level)
     }
 }
 
+void AbstractDataBlobClient::subscribe(const QSet<QString>& streams)
+{
+
+    // Define the data type which the client will accept and send request
+    if( streams.size() > 0 ) {
+        StreamDataRequest req;
+        DataRequirements require;
+        foreach( const QString& stream, streams )
+        {
+            verbose(QString("Subscribing to stream : \"") + stream + " \"" );
+            onSubscribe( stream );
+            require.setStreamData(stream);
+        }
+        if( require != _currentSubscription )
+        {
+            req.addDataOption(require);
+            sendRequest(&req);
+            _subscriptions.unite(streams);
+        }
+    }
+
+}
+
 void AbstractDataBlobClient::subscribe(const QString& stream)
 {
     QSet<QString> set;
@@ -99,7 +123,13 @@ void AbstractDataBlobClient::serverError( ServerResponse* r ) {
               << std::endl;
 }
 
-void AbstractDataBlobClient::dataSupport( DataSupportResponse* ) {
+void AbstractDataBlobClient::dataSupport( DataSupportResponse* res ) {
+#ifdef BROKEN_QT_SET_HEADER
+    _streams = res->streamData();
+    _streams.unite(res->serviceData());
+#else
+    _streams = res->streamData() + res->serviceData();
+#endif
 }
 
 void AbstractDataBlobClient::unknownResponse( ServerResponse* )
@@ -151,6 +181,8 @@ void AbstractDataBlobClient::_reconnect()
 {
     if( ! _destructor ) {
         verbose( "DataBlobClient: Connection lost - reconnecting()", 1);
+        _currentSubscription.clear();
+        subscribe( _subscriptions );
         onReconnect();
     }
 }
