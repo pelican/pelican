@@ -5,6 +5,7 @@
  * @file DataBlobResponse.h
  */
 
+#include <QtCore/QSysInfo>
 #include "ServerResponse.h"
 
 namespace pelican {

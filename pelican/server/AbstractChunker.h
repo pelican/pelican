@@ -92,6 +92,7 @@ class AbstractChunker
 
         /// Returns the type name associated with the data.
         /// NOTE: This will be depricated. DO NOT USE!.
+#pragma deprecated(type)
         const QString& type() const { return _chunkTypes[0]; }
 
         /// Stops the chunker.
@@ -110,7 +111,7 @@ class AbstractChunker
         WritableData getDataStorage(size_t size, const QString& chunkType) const;
 
         /// Returns the state of the chunker (running or not).
-        bool isActive() { return _active; }
+        bool isActive() const { return _active; }
 
 };
 
