@@ -42,9 +42,6 @@ PelicanTCPBlobServerTest::~PelicanTCPBlobServerTest()
  */
 void PelicanTCPBlobServerTest::setUp()
 {
-    int argc = 1;
-    char *argv[] = {(char*)"pelican"};
-    _app = new QCoreApplication(argc,argv);
 }
 
 /**
@@ -53,7 +50,6 @@ void PelicanTCPBlobServerTest::setUp()
  */
 void PelicanTCPBlobServerTest::tearDown()
 {
-    delete _app;
 }
 
 /**

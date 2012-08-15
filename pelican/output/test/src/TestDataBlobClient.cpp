@@ -1,5 +1,6 @@
 #include "TestDataBlobClient.h"
 #include "pelican/output/Stream.h"
+#include <QtCore/QCoreApplication>
 
 namespace pelican {
 namespace test {
@@ -27,6 +28,8 @@ void TestDataBlobClient::send(const Stream& s)
         emit newStreamsAvailable();
     }
     emit newData(s);
+    // force any events to process
+    QCoreApplication::processEvents( QEventLoop::WaitForMoreEvents, 200 );
 }
 
 QSet<QString> TestDataBlobClient::streams()

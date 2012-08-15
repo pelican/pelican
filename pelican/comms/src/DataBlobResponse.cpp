@@ -1,4 +1,5 @@
 #include "pelican/comms/DataBlobResponse.h"
+#include <QtCore/QDataStream>
 
 namespace pelican {
 
@@ -23,4 +24,21 @@ DataBlobResponse::~DataBlobResponse()
 {
 }
 
+void DataBlobResponse::serialise( QDataStream& stream ) {
+    stream <<  _type << _name;
+    stream << _dataSize;
+    stream << (int)_endianness;
+}
+
+void DataBlobResponse::deserialise( QDataStream& stream ) {
+    stream >> _type >> _name;
+    stream >> _dataSize;
+    int tmp;
+    stream >> tmp;
+    _endianness = (QSysInfo::Endian)tmp;
+}
+
+size_t DataBlobResponse::serialisedSize() {
+    return sizeof(_type) + sizeof(_name) + sizeof(_dataSize) + sizeof(_endianness);
+}
 } // namespace pelican

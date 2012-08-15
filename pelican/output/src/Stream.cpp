@@ -30,9 +30,10 @@ const QString& Stream::type() const {
     return _type;
 }
 
-void Stream::setData(DataBlob* blob)
+void Stream::setData( const boost::shared_ptr<DataBlob>& blob)
 {
-    _data.reset(blob);
+    //_data.reset(blob);
+    _data = blob;
     _type = blob->type();
 }
 

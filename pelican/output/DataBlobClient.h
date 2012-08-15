@@ -5,14 +5,13 @@
  * @file DataBlobClient.h
  */
 
+#include <boost/shared_ptr.hpp>
 #include "pelican/output/AbstractDataBlobClient.h"
-#include "pelican/data/DataRequirements.h"
 
 #include <QtCore/QSet>
 #include <QtCore/QString>
 #include <QtCore/QHash>
 
-class QTcpSocket;
 
 namespace pelican {
 class AbstractClientProtocol;
@@ -53,49 +52,21 @@ class DataBlobClient : public AbstractDataBlobClient
 
         /// listen for the named streams
         using AbstractDataBlobClient::subscribe;
-        virtual void subscribe( const QSet<QString>& streams );
-
-        /// set the host to listen to
-        void setHost(const QString& host);
-
-        /// set the port to listen on
-        void setPort(quint16 port);
-
-        /// return the port of the host connected to
-        quint16 port() const;
-
-    protected slots:
-        void _response();
-
-        /// attempt to reconnect to the server and restore subscriptions
-        //in case of a sudden disconnect
-        void _reconnect();
 
     protected:
-        bool  _sendRequest( const ServerRequest* req );
-        bool _connect();
+        virtual void onSubscribe(const QString&);
+        virtual void onReconnect();
+        virtual void dataSupport( DataSupportResponse* );
+        virtual void dataReceived( DataBlobResponse* );
 
         /// return a data blob ready to be deserialised
-        DataBlob* _blob(const QString& type, const QString& stream);
-
-    private:
-        bool _requestStreamInfo();
-
-    protected:
-        QSet<QString> _streams;
+        boost::shared_ptr<DataBlob> _blob(const QString& type, const QString& stream);
 
     private:
         QHash<QString, Stream*> _streamMap;
-        AbstractClientProtocol* _protocol;
-        QTcpSocket* _tcpSocket;
         DataBlobFactory* _blobFactory;
-        QString       _server;
-        quint16       _port;
-        QSet<QString> _subscriptions;
         mutable bool  _streamInfo; // marker to test if stream response has been received
         mutable bool  _streamInfoSubscription;
-        bool _destructor;
-        DataRequirements _currentSubscription;
 
 };
 

@@ -34,6 +34,7 @@ class TestOutputStreamer : public AbstractOutputStream
         TestOutputStreamer( const ConfigNode& config );
         ~TestOutputStreamer();
         const QString& id() const { return _id; };
+        const DataBlob* lastReceived( const QString& streamName );
 
     protected:
         virtual void sendStream(const QString& streamName, const DataBlob* dataBlob);

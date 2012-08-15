@@ -75,6 +75,10 @@ if(NOT MODULES_INSTALL_DIR)
     set (MODULES_INSTALL_DIR "share/pelican")
 endif(NOT MODULES_INSTALL_DIR)
 
+if(NOT BINARY_INSTALL_DIR)
+    set (BINARY_INSTALL_DIR "bin/")
+endif(NOT BINARY_INSTALL_DIR)
+
 # === Installation target for project cmake files.
 install(DIRECTORY cmake DESTINATION ${MODULES_INSTALL_DIR}
         FILES_MATCHING PATTERN "*.cmake")

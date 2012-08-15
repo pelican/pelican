@@ -7,7 +7,6 @@
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <QtCore/QString>
-#include <QtCore/QCoreApplication>
 
 namespace pelican {
 class DataBlobClient;
@@ -49,7 +48,6 @@ class DataBlobClientTest : public CppUnit::TestFixture
         DataBlobClient* _client(PelicanTCPBlobServer* server, const QString& xml = QString( ));
         PelicanTCPBlobServer* _server(quint16 port = 0 ); // default => find free port
 
-        QCoreApplication* _app;
 };
 
 } // namespace pelican

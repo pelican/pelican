@@ -10,6 +10,8 @@
 
 namespace pelican {
 class OutputStreamManager;
+class AbstractOutputStream;
+class AbstractDataBlobClient;
 class DataBlobClient;
 class Stream;
 
@@ -20,7 +22,16 @@ class Stream;
  *    Connect to a DataBlob server at one end and redistribute
  *    via an OutputManager
  * @details
- *    
+ *    Input configuration takes the format:
+ *    <output>
+ *         See the OutputStreamManager for details
+ *    </output>
+ *    <client>
+ *         See the DataBlobClient configuration for details
+ *    </client>
+ *    <client>
+ *         ...
+ *    </client>
  */
 
 class DataBlobRelay : public QObject
@@ -32,14 +43,18 @@ class DataBlobRelay : public QObject
         ~DataBlobRelay();
 
         // add a client to the relay
-        void addClient( DataBlobClient* client );
+        void addClient( AbstractDataBlobClient* client );
+
+        /// associate an output streamer to a specific data stream
+        void connectToStream( AbstractOutputStream* streamer, const QString& stream);
 
     private slots:
         void _streamData( const Stream& );
 
     private:
         OutputStreamManager* _outputManager;
-        QList<DataBlobClient*> _clients;
+        QList<AbstractDataBlobClient*> _clients;   // clients to listen to
+        QList<DataBlobClient*> _myClients; // clients to delete
         
 };
 

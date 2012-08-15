@@ -7,7 +7,6 @@
 
 #include <cppunit/extensions/HelperMacros.h>
 class QTcpSocket;
-class QCoreApplication;
 
 namespace pelican {
 class ServerRequest;
@@ -53,7 +52,6 @@ class TCPConnectionManagerTest : public CppUnit::TestFixture
         QTcpSocket* _createClient() const;
         void _sendRequest(QTcpSocket* tcpSocket, const ServerRequest& req);
         TCPConnectionManager* _server;
-        QCoreApplication* _app;
         PelicanClientProtocol* _clientProtocol;
 };
 

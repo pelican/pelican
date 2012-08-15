@@ -6,7 +6,8 @@
 #include "pelican/data/test/TestDataBlob.h"
 #include "pelican/utility/ConfigNode.h"
 
-#include <QtCore/QSet>
+#include <QtCore/QCoreApplication>
+#include <QtCore/QString>
 #include <QtCore/QString>
 #include <QtCore/QtDebug>
 #include <QtTest/QSignalSpy>
@@ -34,14 +35,10 @@ DataBlobClientTest::~DataBlobClientTest()
 
 void DataBlobClientTest::setUp()
 {
-    int argc = 1;
-    char *argv[] = {(char*)"pelican"};
-    _app = new QCoreApplication(argc,argv);
 }
 
 void DataBlobClientTest::tearDown()
 {
-    delete _app;
 }
 
 void DataBlobClientTest::test_streamInfo()
@@ -80,7 +77,7 @@ void DataBlobClientTest::test_streamInfo()
         DataBlobClient* client = _client(server);
         CPPUNIT_ASSERT( client->streams() == QSet<QString>() );
         sleep(1);
-        _app->processEvents(); // give server chance to process subsciption request
+        QCoreApplication::processEvents(); // give server chance to process subsciption request
 
         // Use Case:
         // server updates streams
@@ -89,9 +86,9 @@ void DataBlobClientTest::test_streamInfo()
         // correct data
         QSignalSpy spy(client, SIGNAL( newStreamsAvailable()) );
         server->send( stream1, &blob);
-        _app->processEvents(); // server side events
+        QCoreApplication::processEvents(); // server side events
         sleep(1);
-        _app->processEvents(); // process
+        QCoreApplication::processEvents(); // process
         QSet<QString> streams = client->streams();
         CPPUNIT_ASSERT_EQUAL( 1, spy.count() );
         CPPUNIT_ASSERT_EQUAL( 1, streams.size() );
@@ -179,13 +176,13 @@ void DataBlobClientTest::test_subscribe()
         // send some data and see if we get a copy
         QSignalSpy spy(client, SIGNAL( newData(const Stream&) ) );
         server->send(stream1,&blob1);
-        _app->processEvents();
+        QCoreApplication::processEvents();
         sleep(1);
-        _app->processEvents();
+        QCoreApplication::processEvents();
         CPPUNIT_ASSERT_EQUAL( 1, spy.count() );
         server->send(stream1,&blob2);
         sleep(1);
-        _app->processEvents();
+        QCoreApplication::processEvents();
         CPPUNIT_ASSERT_EQUAL( 2, spy.count() );
 
         // Use Case:
@@ -193,7 +190,7 @@ void DataBlobClientTest::test_subscribe()
         // Expect: to receive no signal
         server->send("otherstream", &blob2);
         sleep(1);
-        _app->processEvents();
+        QCoreApplication::processEvents();
         CPPUNIT_ASSERT_EQUAL( 2, spy.count() );
 
         // Use Case:
@@ -202,12 +199,12 @@ void DataBlobClientTest::test_subscribe()
         client->subscribe( stream2 );
         server->send(stream1, &blob1);
         sleep(1);
-        _app->processEvents();
+        QCoreApplication::processEvents();
         CPPUNIT_ASSERT_EQUAL( 3, spy.count() );
         server->send(stream2, &blob2);
         client->streams();
         sleep(1);
-        _app->processEvents();
+        QCoreApplication::processEvents();
         CPPUNIT_ASSERT_EQUAL( 4, spy.count() );
 
         // Use Case:
@@ -216,7 +213,7 @@ void DataBlobClientTest::test_subscribe()
         QSet<QString> streams = client->streams();
         server->send(stream2, &blob1);
         sleep(1);
-        _app->processEvents();
+        QCoreApplication::processEvents();
         CPPUNIT_ASSERT_EQUAL( 3 , streams.size() );
         CPPUNIT_ASSERT( streams.contains(stream1) );
         CPPUNIT_ASSERT( streams.contains(stream2) );

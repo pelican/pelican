@@ -3,6 +3,7 @@
 #include "pelican/output/Stream.h"
 #include "pelican/output/DataBlobClient.h"
 #include "pelican/output/OutputStreamManager.h"
+#include <iostream>
 
 
 namespace pelican {
@@ -15,12 +16,14 @@ DataBlobRelay::DataBlobRelay( const Config* config, const Config::TreeAddress& a
     ConfigNode localConfig = config->get( address );
     // setup output manager
     Config::TreeAddress outputAddress = address;
-    outputAddress << Config::NodeId("OutputManager","");
+    outputAddress << Config::NodeId("output","");
     _outputManager = new OutputStreamManager( config, outputAddress );
 
     // setup clients
-    foreach( const ConfigNode& node, localConfig.getNodes("listen")   ) {
-        addClient( new DataBlobClient( node ) );
+    foreach( const ConfigNode& node, localConfig.getNodes("client")   ) {
+        DataBlobClient* c = new DataBlobClient( node );
+        _myClients.append( c );
+        addClient( c );
     }
 }
 
@@ -29,17 +32,21 @@ DataBlobRelay::DataBlobRelay( const Config* config, const Config::TreeAddress& a
  */
 DataBlobRelay::~DataBlobRelay()
 {
-    foreach( DataBlobClient* client, _clients ) {
+    foreach( DataBlobClient* client, _myClients ) {
         delete client;
     }
     delete _outputManager;
 }
 
-void DataBlobRelay::addClient( DataBlobClient* client ) 
+void DataBlobRelay::connectToStream( AbstractOutputStream* streamer, const QString& stream) {
+    _outputManager->connectToStream( streamer, stream );
+}
+
+void DataBlobRelay::addClient( AbstractDataBlobClient* client ) 
 {
     _clients.append(client);
     connect( client, SIGNAL( newData(const Stream&) ), 
-             this, SLOT( _streamData() ) );
+             this, SLOT( _streamData( const Stream& ) ) );
 } 
 
 void DataBlobRelay::_streamData( const Stream& s ) {

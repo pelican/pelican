@@ -36,6 +36,7 @@ class FileChunker : public AbstractChunker
     private:
         QString _fileName;
 };
+PELICAN_DECLARE_CHUNKER(FileChunker)
 
 } // namespace pelican
 
