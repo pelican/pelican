@@ -33,15 +33,18 @@ class TestDataBlob : public DataBlob
         /// Destroys the TestDataBlob.
         ~TestDataBlob() {}
 
+        size_t size() const { return _data.size(); }
+
     public:
         /// Sets the content of the data blob.
         void setData(const QByteArray& data) { _data = data; }
 
         /// Returns a reference to the byte array that this data blob wraps.
         QByteArray& data() { return _data; }
+        const QByteArray& data() const { return _data; }
 
         /// De-serialises the content from a QIODevice.
-        void deserialise(QIODevice&, QSysInfo::Endian);
+        virtual void deserialise(QIODevice&, QSysInfo::Endian endianness);
 
         /// Resizes the byte array in the data blob.
         void resize(int size) { _data.resize(size); }
@@ -50,7 +53,7 @@ class TestDataBlob : public DataBlob
         void serialise(QIODevice&) const;
 
         /// Returns the number of bytes in the serialised data blob.
-        quint64 serialisedBytes() const { return _data.size(); }
+        quint64 serialisedBytes() const { return _data.size() + sizeof(int); }
 
         /// Tests for equality with another data test blob.
         bool operator==(const TestDataBlob& blob) { return _data == blob._data; }

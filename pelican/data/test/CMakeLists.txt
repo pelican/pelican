@@ -19,6 +19,7 @@ if (CPPUNIT_FOUND)
         src/dataTest.cpp
         src/DataRequirementsTest.cpp
         src/DataBlobBufferTest.cpp
+        src/DataBlobVerifyTest.cpp
     )
     add_executable(dataTest ${dataTest_src})
     target_link_libraries(dataTest ${SUBPACKAGE_LIBRARIES} ${CPPUNIT_LIBRARIES})
