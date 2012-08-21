@@ -104,6 +104,13 @@ class DataManager
         //  to be called by the streambuffer only
         void emptiedBuffer(StreamDataBuffer* buffer);
 
+        /// set the max buffer size to be used for any new buffers
+        //  to be created of the specified stream
+        void setMaxBufferSize( const QString& stream, size_t size );
+        /// set the max chunk size to be used for any new buffers
+        //  to be created of the specified stream
+        void setMaxChunkSize( const QString& stream, size_t size );
+
     protected:
         void verbose( const QString& msg, int verboseLevel = 1 );
 
@@ -112,6 +119,8 @@ class DataManager
         Config::TreeAddress _bufferConfigBaseAddress;
 
     private:
+        QHash<QString,size_t> _bufferMaxSizes;
+        QHash<QString,size_t> _bufferMaxChunkSizes;
         int _verboseLevel;
 };
 

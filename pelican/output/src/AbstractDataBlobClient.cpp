@@ -118,7 +118,7 @@ bool AbstractDataBlobClient::requestStreamInfo()
 
 // default implementation
 void AbstractDataBlobClient::serverError( ServerResponse* r ) {
-    std::cerr << "DataBlobClient: Server Error: "
+    std::cerr << "AbstractDataBlobClient: Server Error: "
               << r->message().toStdString()
               << std::endl;
 }

@@ -51,7 +51,6 @@ class PelicanTCPBlobServer : public AbstractOutputStream
         // start listening for incomming connections
         void listen();
 
-
         /// return the number of clients listening to a specified stream
         int clientsForStream(const QString& stream) const;
 

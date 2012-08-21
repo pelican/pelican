@@ -10,6 +10,7 @@
 #include "pelican/comms/StreamData.h"
 #include "pelican/data/DataRequirements.h"
 #include "pelican/data/DataBlob.h"
+#include "pelican/data/DataBlobVerify.h"
 
 #include <QtNetwork/QTcpSocket>
 #include <QtCore/QDataStream>
@@ -233,6 +234,17 @@ void PelicanProtocol::send(QIODevice& device, const QString& name, const DataBlo
     if (device.write(array) < 0)
         throw QString("PelicanProtocol::send: Unable to write.");
     data.serialise(device);
+#ifndef NDEBUG
+    // Sanity check for debug mode
+    // as this can cause massive headaches
+    DataBlobVerify dbv( &data );
+    if( ! dbv.verifySerialisedBytes() ) {
+        QString msg( "PelicanProtocol: DataBlob ");
+        msg += data.type() + " inconsistent serialisedBytes() method";
+        std::cerr << msg.toStdString();
+        throw( msg );
+    }
+#endif
 }
 
 

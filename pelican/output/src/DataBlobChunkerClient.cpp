@@ -3,6 +3,8 @@
 #include "pelican/comms/DataBlobResponse.h"
 #include "pelican/server/WritableData.h"
 #include <QtNetwork/QTcpSocket>
+#include <QtCore/QDebug>
+#include <iostream>
 
 
 namespace pelican {
@@ -27,7 +29,9 @@ DataBlobChunkerClient::~DataBlobChunkerClient()
 
 void DataBlobChunkerClient::dataReceived( DataBlobResponse* res ) {
     int hSize = res->serialisedSize();
-    WritableData writableData = _chunker->getDataStorage( hSize + res->dataSize() );
+    const QString& stream = res->dataName();
+    WritableData writableData = _chunker->getDataStorage( hSize + res->dataSize(),
+        stream );
     if( writableData.isValid() ) {
         // -- write out the Response info as a header
 #if QT_VERSION >= 0x040700
@@ -42,7 +46,15 @@ void DataBlobChunkerClient::dataReceived( DataBlobResponse* res ) {
         while (_tcpSocket->bytesAvailable() < (qint64)res->dataSize())
             _tcpSocket -> waitForReadyRead(-1);
         // -- write out the actual DataBlob
-        _tcpSocket->read( (char*)writableData.ptr() + hSize + 1, res->dataSize() );
+        _tcpSocket->read( (char*)writableData.ptr() + hSize , res->dataSize() );
+    }
+    else {
+        // discard the data
+        while (_tcpSocket->bytesAvailable() < (qint64)res->dataSize())
+            _tcpSocket -> waitForReadyRead(-1);
+        _tcpSocket->read( res->dataSize() );
+        std::cout << "DataBlobChunkerClient: discarding data for stream: " 
+                  << stream.toStdString() << std::endl;
     }
 }
 

@@ -60,14 +60,16 @@ void DataManager::verbose( const QString& msg, int verboseLevel )
  */
 WritableData DataManager::getWritableData(const QString& type, size_t size)
 {
-    verbose("data block of type \"" + type + "\" requested", 2 );
+    verbose("data block of type \"" + type + "\" requested (size=" + QString().setNum((int)size) + ")", 2 );
     if ( _streams.contains(type) ) {
+        verbose( "returning stream", 2);
         return _streams[type]->getWritable(size);
     }
 
     if ( _service.contains(type) )
         return _service[type]->getWritable(size);
 
+    verbose("data block of type \"" + type + "\" unknown", 2 );
     return WritableData(0);
 }
 
@@ -87,9 +89,13 @@ StreamDataBuffer* DataManager::getStreamBuffer(const QString& type)
         Config::TreeAddress configAddress(_bufferConfigBaseAddress);
         configAddress << Config::NodeId(type, "");
         ConfigNode config = _config->get(configAddress);
-        size_t maxSize = config.getOption("buffer", "maxSize", "10240").toULongLong();
-        size_t maxChunkSize = config.getOption("buffer", "maxChunkSize", "10240").toULongLong();
-        setStreamDataBuffer( type, new StreamDataBuffer(type, maxSize, maxChunkSize) );
+        if( ! _bufferMaxSizes.contains(type) ) {
+           _bufferMaxSizes[type] = config.getOption("buffer", "maxSize", "10240").toULongLong();
+        }
+        if( ! _bufferMaxChunkSizes.contains(type) ) {
+            _bufferMaxChunkSizes[type] = config.getOption("buffer", "maxChunkSize", "10240").toULongLong();
+        }
+        setStreamDataBuffer( type, new StreamDataBuffer(type, _bufferMaxSizes[type], _bufferMaxChunkSizes[type]) );
     }
     return _streams[type];
 }
@@ -118,13 +124,20 @@ ServiceDataBuffer* DataManager::getServiceBuffer(const QString& type)
  */
 void DataManager::setStreamDataBuffer(const QString& name, StreamDataBuffer* buffer)
 {
-    verbose("Adding StreamBuffer \"" + name + "\"");
+    verbose("Adding StreamBuffer \"" + name + "\" of size " + QString().setNum( buffer->size() ));
     _specs.setStreamData(name);
     buffer->setVerbosity(_verboseLevel);
     buffer->setDataManager(this);
     _streams[name]=buffer;
 }
 
+void DataManager::setMaxBufferSize( const QString& stream, size_t size ) {
+    _bufferMaxSizes[stream] = size;
+}
+
+void DataManager::setMaxChunkSize( const QString& stream, size_t size ) {
+     _bufferMaxChunkSizes[stream] = size;
+}
 
 /**
  * @details
