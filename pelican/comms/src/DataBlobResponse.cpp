@@ -17,6 +17,12 @@ DataBlobResponse::DataBlobResponse(const QString& blobType,
 {
 }
 
+DataBlobResponse::DataBlobResponse( QDataStream& stream ) 
+    : ServerResponse( ServerResponse::Blob )
+{
+    deserialise(stream);
+}
+
 /**
  * @details
  */
