@@ -7,6 +7,7 @@
 
 #include "pelican/core/AbstractDataClient.h"
 #include "pelican/core/DataTypes.h"
+#include "pelican/data/DataSpec.h"
 
 
 namespace pelican {
@@ -33,7 +34,11 @@ class TestDataClient : public AbstractDataClient
         ~TestDataClient();
 
         /// Implements the getData() method.
-        QHash<QString, DataBlob*> getData(QHash<QString, DataBlob*>&);
+        virtual QHash<QString, DataBlob*> getData(QHash<QString, DataBlob*>&);
+        virtual const DataSpec& dataSpec() const;
+
+    private:
+        DataSpec _dataSpec;
 };
 
 } // namepace test

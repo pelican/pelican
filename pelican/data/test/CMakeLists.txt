@@ -18,6 +18,7 @@ if (CPPUNIT_FOUND)
     set(dataTest_src
         src/dataTest.cpp
         src/DataRequirementsTest.cpp
+        src/DataSpecTest.cpp
         src/DataBlobBufferTest.cpp
         src/DataBlobVerifyTest.cpp
     )

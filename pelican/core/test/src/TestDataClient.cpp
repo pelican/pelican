@@ -10,6 +10,9 @@ namespace test {
 TestDataClient::TestDataClient(const ConfigNode& config, const DataTypes& types) :
     AbstractDataClient(config, types, 0)
 {
+    foreach( const DataSpec& s, types.dataSpec() ) {
+        _dataSpec += s;
+    }
 }
 
 /**
@@ -27,12 +30,16 @@ TestDataClient::~TestDataClient()
 QHash<QString, DataBlob*> TestDataClient::getData(QHash<QString, DataBlob*>&)
 {
     QHash<QString, DataBlob*> hash;
-    foreach (DataRequirements req, dataRequirements()) {
-        foreach (QString type, req.allData()) {
+    foreach(const DataSpec& req, dataRequirements()) {
+        foreach(const QString& type, req.allData()) {
             hash.insert(type, 0);
         }
     }
     return hash;
+}
+
+const DataSpec& TestDataClient::dataSpec() const {
+    return _dataSpec;
 }
 
 } // namespace test

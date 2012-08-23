@@ -106,7 +106,7 @@ bool TCPConnectionManager::_processIncomming(QTcpSocket *client)
                     return false;
                 }
                 // Check data requirements
-                DataRequirementsIterator it = req.begin();
+                DataSpecIterator it = req.begin();
                 while(it != req.end()) {
                     // Add all client data requirement to type-client list
                     foreach(const QString& streamData, it->streamData() ) {

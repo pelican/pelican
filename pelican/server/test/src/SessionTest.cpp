@@ -5,7 +5,7 @@
 #include "pelican/server/LockableStreamData.h"
 #include "pelican/server/WritableData.h"
 #include "pelican/server/StreamDataBuffer.h"
-#include "pelican/data/DataRequirements.h"
+#include "pelican/data/DataSpec.h"
 #include "pelican/comms/DataChunk.h"
 #include "pelican/comms/StreamData.h"
 #include "pelican/comms/ServerRequest.h"
@@ -81,8 +81,8 @@ void SessionTest::test_processRequest()
         // Use Case:
         // Request a single StreamData, no data available
         // Expect send StreamData on protocol not to be called
-        DataRequirements req;
-        req.setStreamData(stream1);
+        DataSpec req;
+        req.addStreamData(stream1);
         StreamDataRequest request;
         request.addDataOption(req);
         CPPUNIT_ASSERT_EQUAL( 0, _block->size() );
@@ -97,8 +97,8 @@ void SessionTest::test_processRequest()
         // Use Case:
         // Request a single StreamData, with data available
         // Expect send StreamData on protocol to be called
-        DataRequirements req;
-        req.setStreamData(stream1);
+        DataSpec req;
+        req.addStreamData(stream1);
         StreamDataRequest request;
         request.addDataOption(req);
         CPPUNIT_ASSERT_EQUAL( 0, _block->size() );
@@ -198,8 +198,8 @@ void SessionTest::test_streamData()
         // Use Case:
         // Request StreamData for a stream that is not supported by the server.
         // Expect error message to be returned.
-        DataRequirements requirements;
-        requirements.setStreamData("NotSupported");
+        DataSpec requirements;
+        requirements.addStreamData("NotSupported");
         StreamDataRequest request;
         request.addDataOption(requirements);
         try {
@@ -215,8 +215,8 @@ void SessionTest::test_streamData()
         // Request StreamData for a stream that is supported but for which no
         // data exists and set the request timeout.
         // Expect to throw an error after the timeout as been exceeded.
-        DataRequirements requirements;
-        requirements.setStreamData(stream1);
+        DataSpec requirements;
+        requirements.addStreamData(stream1);
         StreamDataRequest request;
         request.addDataOption(requirements);
         try {
@@ -232,8 +232,8 @@ void SessionTest::test_streamData()
         // Request StreamData for a stream that is supported and the data exists
         // no service data.
         // Expect to return the data.
-        DataRequirements requirements;
-        requirements.setStreamData(stream1);
+        DataSpec requirements;
+        requirements.addStreamData(stream1);
 
         StreamDataRequest request;
         request.addDataOption(requirements);
@@ -258,9 +258,9 @@ void SessionTest::test_streamData()
         // service data requested, but not available
         // Expect to throw after the timeout has been reached and the stream
         // data to still be available in the buffer at the end.
-        DataRequirements requirements;
-        requirements.setStreamData(stream1);
-        requirements.setServiceData(service1);
+        DataSpec requirements;
+        requirements.addStreamData(stream1);
+        requirements.addServiceData(service1);
         StreamDataRequest request;
         request.addDataOption(requirements);
 
@@ -285,9 +285,9 @@ void SessionTest::test_streamData()
             // service data requested, and it exists
             // Expect to return data, and service data record
 
-            DataRequirements requirements;
-            requirements.setStreamData(stream1);
-            requirements.setServiceData(service1);
+            DataSpec requirements;
+            requirements.addStreamData(stream1);
+            requirements.addServiceData(service1);
             StreamDataRequest request;
             request.addDataOption(requirements);
 
@@ -339,9 +339,9 @@ void SessionTest::test_streamDataBufferFull()
     _dataManager->setStreamDataBuffer(stream1, streamBuffer);
     _dataManager->setServiceDataBuffer(service1, serviceBuffer);
 
-    DataRequirements requirements;
-    requirements.setStreamData(stream1);
-    requirements.setServiceData(service1);
+    DataSpec requirements;
+    requirements.addStreamData(stream1);
+    requirements.addServiceData(service1);
     StreamDataRequest request;
     request.addDataOption(requirements);
 

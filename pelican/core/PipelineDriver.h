@@ -8,11 +8,11 @@
 #include "PipelineSwitcher.h"
 #include "pelican/data/DataBlob.h"
 #include "pelican/data/DataRequirements.h"
+#include "pelican/data/DataSpec.h"
 #include "pelican/modules/AbstractModule.h"
 #include "pelican/utility/FactoryConfig.h"
 #include "pelican/utility/TypeCounter.h"
 #include "pelican/utility/FactoryGeneric.h"
-#include <QtCore/QMultiHash>
 #include <QtCore/QList>
 #include <QtCore/QVector>
 
@@ -51,8 +51,11 @@ class PipelineDriver
         const Config* _config;
         Config::TreeAddress _base; 
 
-        /// Pointer to the data client.
+        /// Pointer to the defualt data client.
         AbstractDataClient* _dataClient;
+
+        /// Pointer to the data clients for each pipeline
+        QHash<AbstractPipeline*, AbstractDataClient*> _dataClients;
 
         /// A pointer to the data blob factory.
         FactoryGeneric<DataBlob>* _blobFactory;
@@ -64,8 +67,11 @@ class PipelineDriver
         /// Pointer to the module factory.
         DataClientFactory* _clientFactory;
 
+        /// valid data specs for each pipeline
+        QHash<AbstractPipeline*, DataSpec> _dataSpecs;
+
         /// Hash of pipelines with known remote data requirements.
-        QMultiHash<DataRequirements, AbstractPipeline*> _pipelines;
+        QVector<AbstractPipeline*> _activePipelines;
 
         /// List of all requirements objects from each pipeline.
         QList<DataRequirements> _allDataReq;
@@ -115,7 +121,7 @@ class PipelineDriver
         //  and activates it to be run at start()
         void registerPipeline(AbstractPipeline *pipeline);
 
-        /// A a switchable block of pipelines, The next will be activated each
+        /// A switchable block of pipelines, The next will be activated each
         //  time the current pipeline is deactivated
         void addPipelineSwitcher(const PipelineSwitcher& switcher);
 
@@ -148,11 +154,18 @@ class PipelineDriver
         /// register a pipeline
         void _registerPipeline(AbstractPipeline*);
 
-        /// activates a pipeline, ensuring datablobs are available.
+        /// activates a pipeline
         void _activatePipeline(AbstractPipeline*);
+
+        /// set up the DataBlob buffers for the pipeline
+        void _activatePipelineBuffers(AbstractPipeline *pipeline);
 
         /// adjust internals to a new history size
         void _updateHistoryBuffers();
+
+        /// check and update the pipeline requirements to match that
+        //  provided by the data client
+        void _checkPipelineRequirements( AbstractPipeline* p, AbstractDataClient*  );
 };
 
 } // namespace pelican

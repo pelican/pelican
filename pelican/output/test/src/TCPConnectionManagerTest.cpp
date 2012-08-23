@@ -99,8 +99,8 @@ void TCPConnectionManagerTest::test_send()
     // client requests a connection
     // expect client to be registered for any data
     StreamDataRequest req;
-    DataRequirements require;
-    require.setStreamData("testData");
+    DataSpec require;
+    require.addStreamData("testData");
     req.addDataOption(require);
 
     QTcpSocket* client = _createClient();
@@ -130,8 +130,8 @@ void TCPConnectionManagerTest::test_brokenConnection()
     // client requests a connection
     // expect client to be registered for any data
     StreamDataRequest req;
-    DataRequirements require;
-    require.setStreamData("testData");
+    DataSpec require;
+    require.addStreamData("testData");
     req.addDataOption(require);
 
     QTcpSocket* client = _createClient();

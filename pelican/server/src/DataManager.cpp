@@ -125,7 +125,7 @@ ServiceDataBuffer* DataManager::getServiceBuffer(const QString& type)
 void DataManager::setStreamDataBuffer(const QString& name, StreamDataBuffer* buffer)
 {
     verbose("Adding StreamBuffer \"" + name + "\" of size " + QString().setNum( buffer->size() ));
-    _specs.setStreamData(name);
+    _specs.addStreamData(name);
     buffer->setVerbosity(_verboseLevel);
     buffer->setDataManager(this);
     _streams[name]=buffer;
@@ -148,7 +148,7 @@ void DataManager::setServiceDataBuffer(const QString& name, ServiceDataBuffer* b
 {
     verbose("Adding ServiceBuffer \"" + name + "\"");
     buffer->setVerbosity(_verboseLevel);
-    _specs.setServiceData(name);
+    _specs.addServiceData(name);
     _service[name]=buffer;
 }
 
@@ -208,7 +208,7 @@ LockedData DataManager::getNext(const QString& type)
  *         associated service data) or the request
  *         returns an empty string
  */
-QList<LockedData> DataManager::getDataRequirements(const DataRequirements& req)
+QList<LockedData> DataManager::getDataRequirements(const DataSpec& req)
 {
     QList<LockedData> dataList;
     if( ! req.isCompatible( dataSpec() ) ) {

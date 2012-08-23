@@ -6,6 +6,7 @@
  */
 
 #include "pelican/core/AbstractAdaptingDataClient.h"
+#include "pelican/data/DataSpec.h"
 #include <QtCore/QHash>
 #include <QtCore/QString>
 class QFile;
@@ -42,7 +43,8 @@ class FileDataClient : public AbstractAdaptingDataClient
 
     public:
         /// Gets the requested data.
-        DataBlobHash getData(DataBlobHash&);
+        virtual DataBlobHash getData(DataBlobHash&);
+        virtual const DataSpec& dataSpec() const;
 
     private:
         /// Reads the configuration options.
@@ -53,6 +55,7 @@ class FileDataClient : public AbstractAdaptingDataClient
         // Hash of filenames for each data type.
         QHash<QString, QString> _fileNames;
         QHash<QString, QFile*> _openFiles;
+        DataSpec _dataSpec;
 };
 
 PELICAN_DECLARE_CLIENT(FileDataClient)

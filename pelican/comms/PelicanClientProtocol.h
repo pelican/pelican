@@ -11,7 +11,7 @@ class QDataStream;
 
 namespace pelican {
 
-class DataRequirements;
+class DataSpec;
 
 /**
  * @ingroup c_comms
@@ -34,7 +34,7 @@ class PelicanClientProtocol : public AbstractClientProtocol
 
     private:
         void _serializeDataRequirements(QDataStream& stream,
-                const DataRequirements& req) const;
+                const DataSpec& req) const;
 };
 
 } // namespace pelican

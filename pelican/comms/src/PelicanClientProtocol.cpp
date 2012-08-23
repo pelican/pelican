@@ -9,7 +9,7 @@
 #include "pelican/comms/DataSupportResponse.h"
 #include "pelican/comms/ServiceDataRequest.h"
 #include "pelican/comms/StreamDataRequest.h"
-#include "pelican/data/DataRequirements.h"
+#include "pelican/data/DataSpec.h"
 #include "pelican/data/DataBlob.h"
 
 #include <QtCore/QByteArray>
@@ -47,7 +47,7 @@ QByteArray PelicanClientProtocol::serialise(const ServerRequest& req)
         {
             const StreamDataRequest& r = static_cast<const StreamDataRequest&>(req);
             ds << (quint16)r.size();
-            DataRequirementsIterator it=r.begin();
+            DataSpecIterator it=r.begin();
             while( it != r.end() )
             {
                 _serializeDataRequirements(ds, *it);
@@ -182,7 +182,7 @@ boost::shared_ptr<ServerResponse> PelicanClientProtocol::receive(QAbstractSocket
 
 
 void PelicanClientProtocol::_serializeDataRequirements(QDataStream& stream,
-        const DataRequirements& req) const
+        const DataSpec& req) const
 {
     QSet<QString> serviceData = req.serviceData();
     QSet<QString> streamData = req.streamData();

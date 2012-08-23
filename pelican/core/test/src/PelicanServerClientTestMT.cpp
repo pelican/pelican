@@ -56,7 +56,7 @@ void PelicanServerClientTestMT::test_getData()
     QString service1("service1");
     QString version1("version1");
     QString version2("version2");
-    DataRequirements reqStream1;
+    DataSpec reqStream1;
     reqStream1.addStreamData(stream1);
     QByteArray data1("pelican/data1");
     QByteArray data2("pelican/data2");
@@ -83,9 +83,9 @@ void PelicanServerClientTestMT::test_getData()
         CPPUNIT_ASSERT_EQUAL( (long)data1.size(), (long)sd.size() );
 
         // setup the test
-        DataRequirements req;
+        DataSpec req;
         req.addServiceData(service1);
-        QList<DataRequirements> lreq;
+        QList<DataSpec> lreq;
         lreq.append(req);
         DataTypes dt;
         dt.addData(lreq);
@@ -109,7 +109,7 @@ void PelicanServerClientTestMT::test_getData()
         server.serveStreamData(sd);
 
         // setup the test
-        QList<DataRequirements> lreq;
+        QList<DataSpec> lreq;
         lreq.append(reqStream1);
         DataTypes dt;
         dt.addData(lreq);
@@ -137,10 +137,10 @@ void PelicanServerClientTestMT::test_getData()
         server.serveStreamData(sd);
 
         // setup the test
-        DataRequirements req;
+        DataSpec req;
         req.addServiceData(service1);
         req.addStreamData(stream1);
-        QList<DataRequirements> lreq;
+        QList<DataSpec> lreq;
         lreq.append(req);
         DataTypes dt;
         dt.addData(lreq);

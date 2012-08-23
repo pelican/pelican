@@ -195,7 +195,7 @@ QList<LockedData> Session::processStreamDataRequest(const StreamDataRequest& req
             throw QString("Session::processStreamDataRequest():"
             " Request timed out after %1 ms.").arg(time.elapsed());
         }
-        DataRequirementsIterator it = req.begin();
+        DataSpecIterator it = req.begin();
         while(it != req.end() && dataList.size() == 0) {
             dataList = _dataManager->getDataRequirements(*it);
             ++it;

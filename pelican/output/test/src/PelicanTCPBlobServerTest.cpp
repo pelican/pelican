@@ -77,8 +77,8 @@ void PelicanTCPBlobServerTest::test_connection()
 
     // Define the data type which the client will except and send request
     StreamDataRequest req;
-    DataRequirements require;
-    require.setStreamData("testData");
+    DataSpec require;
+    require.addStreamData("testData");
     req.addDataOption(require);
 
     PelicanClientProtocol clientProtocol;

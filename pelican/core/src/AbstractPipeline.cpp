@@ -125,7 +125,7 @@ void AbstractPipeline::exec( QHash<QString,DataBlob*>& data )
 void AbstractPipeline::requestRemoteData(const QString& type, 
                                          unsigned int history)
 {
-    _requiredDataRemote.addStreamData(type);
+    _requiredDataRemote.addRequired(type);
     _history[type]=history;
     if( ! _streamHistory.contains(type) ) {
         _streamHistory[type]=new QList<DataBlob*>;
@@ -147,7 +147,7 @@ unsigned int AbstractPipeline::historySize(const QString& type) const {
  *
  * @return Returns the remote data required by the pipeline.
  */
-const DataRequirements& AbstractPipeline::requiredDataRemote() const
+const DataRequirements& AbstractPipeline::dataRequirements() const
 {
     return _requiredDataRemote;
 }

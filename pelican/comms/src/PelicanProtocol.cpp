@@ -8,7 +8,7 @@
 #include "pelican/comms/ServiceDataRequest.h"
 #include "pelican/comms/StreamDataRequest.h"
 #include "pelican/comms/StreamData.h"
-#include "pelican/data/DataRequirements.h"
+#include "pelican/data/DataSpec.h"
 #include "pelican/data/DataBlob.h"
 #include "pelican/data/DataBlobVerify.h"
 
@@ -99,7 +99,7 @@ boost::shared_ptr<ServerRequest> PelicanProtocol::request(QTcpSocket& socket)
                 QSet<QString> streamData;
                 in >> serviceData;
                 in >> streamData;
-                DataRequirements dr;
+                DataSpec dr;
                 dr.addServiceData(serviceData);
                 dr.addStreamData(streamData);
                 s->addDataOption(dr);

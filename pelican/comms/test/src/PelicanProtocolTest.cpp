@@ -306,12 +306,12 @@ void PelicanProtocolTest::test_request()
         // Use Case:
         // A non-empty StreamData Request
         StreamDataRequest req;
-        DataRequirements require1;
-        require1.setStreamData("teststream");
-        require1.setServiceData("testservice");
-        DataRequirements require2;
-        require2.setStreamData("teststream2");
-        require2.setServiceData("testservice2");
+        DataSpec require1;
+        require1.addStreamData("teststream");
+        require1.addServiceData("testservice");
+        DataSpec require2;
+        require2.addStreamData("teststream2");
+        require2.addServiceData("testservice2");
         PelicanProtocol proto;
         req.addDataOption(require1);
         req.addDataOption(require2);
