@@ -1,7 +1,7 @@
 #include "PelicanServerClient.h"
 #include "pelican/core/AbstractServiceAdapter.h"
 #include "pelican/core/AbstractStreamAdapter.h"
-#include "pelican/data/DataRequirements.h"
+#include "pelican/data/DataSpec.h"
 #include "pelican/data/DataBlob.h"
 #include "pelican/comms/ServerResponse.h"
 #include "pelican/comms/DataBlobResponse.h"
@@ -11,6 +11,8 @@
 #include "pelican/comms/StreamDataResponse.h"
 #include "pelican/comms/ServiceDataResponse.h"
 #include "pelican/comms/PelicanClientProtocol.h"
+#include "pelican/comms/DataSupportRequest.h"
+#include "pelican/comms/DataSupportResponse.h"
 
 #include <QtNetwork/QTcpSocket>
 #include <QtCore/QHash>
@@ -82,7 +84,7 @@ AbstractDataClient::DataBlobHash PelicanServerClient::getData(DataBlobHash& data
 
     // Construct the request
     StreamDataRequest sr;
-    foreach(const DataRequirements& d, dataRequirements())
+    foreach(const DataSpec& d, dataRequirements())
     {
         sr.addDataOption( d );
     }
@@ -112,7 +114,14 @@ AbstractDataClient::DataBlobHash PelicanServerClient::_sendRequest(
         const ServerRequest& request, DataBlobHash& dataHash)
 {
     // Connect to the server.
+    DataBlobHash validData;
     QTcpSocket sock;
+    validData = _response(sock, _sendRequest( sock, request ), dataHash);
+
+    return validData;
+}
+
+boost::shared_ptr<ServerResponse> PelicanServerClient::_sendRequest( QTcpSocket& sock, const ServerRequest& request ) const {
     Q_ASSERT(_server != "");
     sock.connectToHost(_server, _port , QIODevice::ReadWrite);
     if(! sock.waitForConnected(-1))
@@ -127,14 +136,8 @@ AbstractDataClient::DataBlobHash PelicanServerClient::_sendRequest(
 
     // Receive the response from the server and process it.
     sock.waitForReadyRead(-1); // Need to supply -1 so this doesn't time out.
-    boost::shared_ptr<ServerResponse> r = _protocol->receive(sock);
-    DataBlobHash validData;
-    validData = _response(sock, r, dataHash);
-
-    return validData;
+    return _protocol->receive(sock);
 }
-
-
 
 /**
  * @details
@@ -310,4 +313,17 @@ AbstractDataClient::DataBlobHash PelicanServerClient::_adaptStream(
     return adaptStream(device, sd, dataHash);
 }
 
+const DataSpec& PelicanServerClient::dataSpec() const {
+    // send a request to the server for the types of data
+    DataSupportRequest request;
+    QTcpSocket sock;
+    boost::shared_ptr<ServerResponse> r = _sendRequest( sock, request );
+    Q_ASSERT( r->type() == ServerResponse::DataSupport);
+    DataSupportResponse* res = static_cast<DataSupportResponse*>(r.get());
+    _dataSpec.clear();
+    _dataSpec.addServiceData( res->serviceData() );
+    _dataSpec.addServiceData( res->streamData() );
+    return _dataSpec;
+    
+}
 } // namespace pelican

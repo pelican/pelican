@@ -4,7 +4,7 @@
 #include <QtCore/QObject>
 #include <QtCore/QString>
 #include <QtCore/QSet>
-#include "pelican/data/DataRequirements.h"
+#include "pelican/data/DataSpec.h"
 class QTcpSocket;
 
 /**
@@ -107,7 +107,7 @@ class AbstractDataBlobClient : public QObject
     private:
         AbstractClientProtocol* _protocol;
         bool _destructor;
-        DataRequirements _currentSubscription;
+        DataSpec _currentSubscription;
         QSet<QString> _subscriptions;
         QSet<QString> _streams;
 

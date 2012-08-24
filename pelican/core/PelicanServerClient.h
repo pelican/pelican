@@ -7,7 +7,10 @@
 
 #include "AbstractAdaptingDataClient.h"
 #include <boost/shared_ptr.hpp>
+#include "pelican/data/DataSpec.h"
+
 using boost::shared_ptr;
+class QTcpSocket;
 
 namespace pelican {
 
@@ -42,6 +45,7 @@ class PelicanServerClient : public AbstractAdaptingDataClient
     public:
         /// Retrieve and adapt data required by the pipelines.
         virtual DataBlobHash getData(DataBlobHash& dataHash);
+        virtual const DataSpec& dataSpec() const;
 
         /// Sets the port of the Pelican server being connected to.
         void setPort (unsigned port);
@@ -53,6 +57,9 @@ class PelicanServerClient : public AbstractAdaptingDataClient
         /// Send a request to a PelicanServer for required data.
         DataBlobHash _sendRequest(const ServerRequest& request,
                 DataBlobHash& dataHash);
+
+        /// mechanics of sending a request and waiting for a response
+        boost::shared_ptr<ServerResponse> _sendRequest( QTcpSocket& sock, const ServerRequest& request ) const;
 
         /// Process the response from the server.
         DataBlobHash _response(QIODevice&, shared_ptr<ServerResponse> r,
@@ -70,6 +77,7 @@ class PelicanServerClient : public AbstractAdaptingDataClient
         AbstractClientProtocol* _protocol;
         QString _server;
         unsigned _port;
+        mutable DataSpec _dataSpec;
 
     private:
         /// Unit testing class.

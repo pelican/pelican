@@ -7,6 +7,7 @@
 #include "pelican/comms/ServerRequest.h"
 #include "pelican/utility/ConfigNode.h"
 #include "pelican/comms/StreamData.h"
+#include "pelican/data/DataBlob.h"
 
 #include <QtCore/QBuffer>
 #include <QtCore/QMutexLocker>
@@ -105,13 +106,13 @@ bool TCPConnectionManager::_processIncomming(QTcpSocket *client)
                     return false;
                 }
                 // Check data requirements
-                DataRequirementsIterator it = req.begin();
+                DataSpecIterator it = req.begin();
                 while(it != req.end()) {
                     // Add all client data requirement to type-client list
                     foreach(const QString& streamData, it->streamData() ) {
                         // Check if clients map already has the key, if so add client to list
-                        std::cout << "TCPConnectionManager: Adding new client for stream: "
-                                << streamData.toStdString()  << std::endl;
+                        //std::cout << "TCPConnectionManager: Adding new client for stream: "
+                        //        << streamData.toStdString()  << std::endl;
                         if( ! _clients[streamData].contains(client) )
                             _clients[streamData].push_back(client);
                     }
@@ -191,11 +192,12 @@ void TCPConnectionManager::send(const QString& streamName, const DataBlob* blob)
 
             // Send data to client
             try {
-                //std::cout << "Sending to:" << client->peerName().toStdString() << std::endl;
+                //std::cout << "Sending blob of type " << blob->type().toStdString()
+                //          << " on stream " << streamName.toStdString() << " to:"
+                //          << client->peerName().toStdString() << std::endl;
                 Q_ASSERT( client->state() == QAbstractSocket::ConnectedState );
                 _protocol->send(*client, streamName, *blob);
                 client->flush();
-                //std::cout << "Finished sending" << std::endl;
             }
             catch ( ... )
             {

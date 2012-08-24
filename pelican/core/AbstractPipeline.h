@@ -121,7 +121,7 @@ class AbstractPipeline
         unsigned int historySize(const QString& type) const;
 
         /// Return the remote data requirements for the pipeline.
-        const DataRequirements& requiredDataRemote() const;
+        const DataRequirements& dataRequirements() const;
 
         /// Primary interface for pipelines to emit data from the pipeline
         void dataOutput(const DataBlob*, const QString& stream = "") const;

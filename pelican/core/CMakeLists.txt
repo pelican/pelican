@@ -16,6 +16,7 @@ set(core_src
     src/DirectStreamDataClient.cpp
     src/AbstractPipeline.cpp
     src/DataClientFactory.cpp
+    src/DataBlobAdapter.cpp
     src/DataTypes.cpp
     src/FileDataClient.cpp
     src/PelicanServerClient.cpp

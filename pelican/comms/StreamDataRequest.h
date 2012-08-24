@@ -7,7 +7,7 @@
 
 #include <QtCore/QVector>
 #include "pelican/comms/ServerRequest.h"
-#include "pelican/data/DataRequirements.h"
+#include "pelican/data/DataSpec.h"
 #include <iostream>
 
 namespace pelican {
@@ -18,7 +18,7 @@ namespace pelican {
  * @class StreamDataRequest
  *
  * @brief
- * Specifications of a set of DataRequirements.
+ * Specifications of a set of DataSpec.
  *
  * @details
  */
@@ -26,10 +26,10 @@ namespace pelican {
 class StreamDataRequest : public ServerRequest
 {
     private:
-        QVector<DataRequirements> _dataOptions;
+        QVector<DataSpec> _dataOptions;
 
     public:
-        typedef QVector<DataRequirements>::const_iterator DataRequirementsIterator;
+        typedef QVector<DataSpec>::const_iterator DataSpecIterator;
 
     public:
         StreamDataRequest();
@@ -38,14 +38,14 @@ class StreamDataRequest : public ServerRequest
         /// Adds a dataset specification that is required.
         /// The first added option will be serviced if available
         /// otherwise the server will try to satisfy subsequent options
-        void addDataOption(const DataRequirements& data);
+        void addDataOption(const DataSpec& data);
 
-        /// Returns an iterator for the DataRequirements options.
+        /// Returns an iterator for the DataSpec options.
         /// The order will correspond to the addDataOption call sequence.
-        DataRequirementsIterator begin() const {return _dataOptions.begin();}
+        DataSpecIterator begin() const {return _dataOptions.begin();}
 
-        /// Returns an iterator at the end of the DataRequirements options.
-        DataRequirementsIterator end() const {return _dataOptions.end();}
+        /// Returns an iterator at the end of the DataSpec options.
+        DataSpecIterator end() const {return _dataOptions.end();}
 
         /// Returns true if there are no stream data
         /// in any of the requirements passed.
@@ -58,7 +58,7 @@ class StreamDataRequest : public ServerRequest
         virtual bool operator==(const ServerRequest&) const;
 };
 
-typedef StreamDataRequest::DataRequirementsIterator DataRequirementsIterator;
+typedef StreamDataRequest::DataSpecIterator DataSpecIterator;
 
 } // namespace pelican
 #endif // STREAMDATAREQUEST_H

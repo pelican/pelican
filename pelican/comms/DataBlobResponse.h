@@ -26,6 +26,7 @@ class DataBlobResponse : public ServerResponse
     public:
         DataBlobResponse( const QString& blobType, const QString& dataName,
                 quint64 dataSize, QSysInfo::Endian endianness );
+        DataBlobResponse( QDataStream& stream );
         ~DataBlobResponse();
         const QString& blobClass() const { return _type; }
         const QString& dataName() const { return _name; }

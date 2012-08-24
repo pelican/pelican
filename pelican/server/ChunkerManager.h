@@ -54,10 +54,10 @@ class ChunkerManager
         bool init(DataManager& dm);
 
         /// Adds a stream chunker by class name (\p type).
-        void addStreamChunker(QString type, QString name = QString());
+        AbstractChunker* addStreamChunker(QString type, QString name = QString());
 
         /// Adds a service chunker by class name (\p type).
-        void addServiceChunker(QString type, QString name = QString());
+        AbstractChunker* addServiceChunker(QString type, QString name = QString());
 
         /// Returns the list of chunkers.
         const QSet<AbstractChunker* >& chunkers() const { return _chunkers; };

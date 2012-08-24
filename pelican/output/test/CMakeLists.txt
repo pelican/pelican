@@ -4,13 +4,14 @@
 
 # Set dependencies for Pelican output tests.
 include_directories(${QT_INCLUDE_DIR})
-SUBPACKAGE(outputTest output dataTest utilityTest)
+SUBPACKAGE(outputTest output dataTest serverTest utilityTest)
 
 # Build Pelican output test library.
 # ==============================================================================
 set(outputTestUtils_src
     src/TestOutputStreamer.cpp
     src/TestDataBlobClient.cpp
+    src/TestDataBlobServer.cpp
 )
 set(outputTestUtils_moc_headers
     TestDataBlobClient.h
@@ -37,6 +38,7 @@ if (CPPUNIT_FOUND)
         src/DataBlobClientTest.cpp
         src/ThreadedDataBlobClientTest.cpp
         src/DataBlobFileTest.cpp
+        src/DataBlobChunkerTest.cpp
         src/DataBlobRelayTest.cpp
     )
     add_executable(outputTestMT ${outputTest_src})

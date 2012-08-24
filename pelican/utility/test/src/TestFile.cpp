@@ -1,4 +1,5 @@
 #include "TestFile.h"
+#include <QtCore/QFileInfo>
 #include <QtCore/QFile>
 #include <QtCore/QDir>
 #include <QtCore/QMutexLocker>
@@ -32,7 +33,7 @@ TestFile::~TestFile()
         _reserved.removeAll(_filename);
     }
     else {
-        if( QFile::exists(_filename) ) {
+        if( QFileInfo(_filename).isDir() ) {
             std::cout << "TestFile: not removing temporary file: "
                       << _filename.toStdString() << std::endl;
         }

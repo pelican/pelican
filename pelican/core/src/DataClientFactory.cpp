@@ -17,11 +17,11 @@ namespace pelican {
  * @param[in] name          An optional specific named configuration to use.
  */
 AbstractDataClient* DataClientFactory::create(const QString& type,
-        const QList<DataRequirements>& requirements, const QString& name)
+        const QList<DataSpec>& requirements, const QString& name)
 {
     // Create a DataTypes object from the DataRequirements.
     DataTypes dataTypes;
-    foreach (const DataRequirements& req, requirements)
+    foreach (const DataSpec& req, requirements)
         dataTypes.addData(req);
 
     // Find the configuration information for adapters.
@@ -29,7 +29,7 @@ AbstractDataClient* DataClientFactory::create(const QString& type,
             getOptionHash("data", "type", "adapter");
 
     // Construct the adapters and add them to the DataTypes structure.
-    foreach (const DataRequirements& req, requirements)
+    foreach (const DataSpec& req, requirements)
     {
         QSet<QString> all = req.allData();
         foreach (const QString& dataType, all)

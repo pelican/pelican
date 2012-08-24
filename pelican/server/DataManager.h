@@ -10,7 +10,7 @@
 #include "pelican/server/StreamDataBuffer.h"
 #include "pelican/server/ServiceDataBuffer.h"
 #include "pelican/server/LockedData.h"
-#include "pelican/data/DataRequirements.h"
+#include "pelican/data/DataSpec.h"
 #include "pelican/utility/Config.h"
 
 namespace pelican {
@@ -45,7 +45,7 @@ class DataManager
         QHash<QString, StreamDataBuffer*> _streams;
         QHash<QString, ServiceDataBuffer*> _service;
         QHash<StreamDataBuffer*, QString> _deactivate;
-        DataRequirements _specs;
+        DataSpec _specs;
 
     public:
         /// DataManager constructor.
@@ -62,11 +62,11 @@ class DataManager
         void associateServiceData(LockableStreamData* data);
 
         /// Returns the data types handled by this manager.
-        const DataRequirements& dataSpec() const {return _specs;}
+        const DataSpec& dataSpec() const {return _specs;}
 
         /// Return a list of Stream Data objects corresponding
-        //  to a DataRequirement object
-        QList<LockedData> getDataRequirements(const DataRequirements& req);
+        //  to a DataSpec object
+        QList<LockedData> getDataRequirements(const DataSpec& req);
 
         /// Return the next unlocked data block from Stream Data.
         /// If the associate data requested is unavailable,
@@ -104,6 +104,13 @@ class DataManager
         //  to be called by the streambuffer only
         void emptiedBuffer(StreamDataBuffer* buffer);
 
+        /// set the max buffer size to be used for any new buffers
+        //  to be created of the specified stream
+        void setMaxBufferSize( const QString& stream, size_t size );
+        /// set the max chunk size to be used for any new buffers
+        //  to be created of the specified stream
+        void setMaxChunkSize( const QString& stream, size_t size );
+
     protected:
         void verbose( const QString& msg, int verboseLevel = 1 );
 
@@ -112,6 +119,8 @@ class DataManager
         Config::TreeAddress _bufferConfigBaseAddress;
 
     private:
+        QHash<QString,size_t> _bufferMaxSizes;
+        QHash<QString,size_t> _bufferMaxChunkSizes;
         int _verboseLevel;
 };
 

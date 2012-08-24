@@ -44,7 +44,7 @@ class DataClientFactory : public FactoryConfig<AbstractDataClient>
         /// Create a configured object with the given name and type from a list
         /// of data requirements.
         AbstractDataClient* create(const QString& type,
-                const QList<DataRequirements>& requirements,
+                const QList<DataSpec>& requirements,
                 const QString& name="");
 
     private:

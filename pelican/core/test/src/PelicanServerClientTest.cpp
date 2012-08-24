@@ -1,6 +1,6 @@
 #include "PelicanServerClientTest.h"
 #include "PelicanServerClient.h"
-#include "pelican/data/DataRequirements.h"
+#include "pelican/data/DataSpec.h"
 
 #include "pelican/data/test/TestDataBlob.h"
 #include "pelican/core/test/TestServiceAdapter.h"
@@ -70,7 +70,7 @@ void PelicanServerClientTest::test_getData()
         // Expect: throw with a suitable complaint
 
         // setup the test
-        QList<DataRequirements> lreq;
+        QList<DataSpec> lreq;
         DataTypes dt;
         dt.addData(lreq);
         PelicanServerClient* client = 0;
@@ -80,14 +80,14 @@ void PelicanServerClientTest::test_getData()
     TestStreamAdapter streamAdapter;
     QString stream1("stream1");
     QString version1("version1");
-    DataRequirements req;
+    DataSpec req;
     req.addStreamData(stream1);
     {
         // Use Case:
         //    data requirements are set, empty hash passed
         // Expect: throw
 
-        QList<DataRequirements> lreq;
+        QList<DataSpec> lreq;
         lreq.append(req);
         DataTypes dt;
         dt.addData(lreq);
@@ -103,7 +103,7 @@ void PelicanServerClientTest::test_getData()
         //     throw with a suitable message
 
         // setup the test
-        QList<DataRequirements> lreq;
+        QList<DataSpec> lreq;
         lreq.append(req);
         DataTypes dt;
         dt.addData(lreq);
@@ -132,7 +132,7 @@ void PelicanServerClientTest::test_response()
     QString version1("v1");
     QString service1("service1");
     QString serviceVersion1("sv1");
-    DataRequirements reqStream1;
+    DataSpec reqStream1;
     reqStream1.addStreamData(stream1);
     QByteArray data1("data1");
     {
@@ -142,7 +142,7 @@ void PelicanServerClientTest::test_response()
         static_cast<StreamDataResponse*>(res.get())->setStreamData( new StreamData(stream1,version1, data1.size()) );
 
         // set up the adapters and client
-        QList<DataRequirements> lreq;
+        QList<DataSpec> lreq;
         lreq.append(reqStream1);
         DataTypes dt;
         dt.addData(lreq);
@@ -174,9 +174,9 @@ void PelicanServerClientTest::test_response()
         dataHash.insert(service1, &db);
 
         // set up the adapters and client
-        DataRequirements req;
+        DataSpec req;
         req.addStreamData(service1);
-        QList<DataRequirements> lreq;
+        QList<DataSpec> lreq;
         lreq.append(req);
         DataTypes dt;
         dt.addData(lreq);
@@ -206,9 +206,9 @@ void PelicanServerClientTest::test_response()
         dataHash.insert(service2, &db2);
 
         // set up the adapters and client
-        DataRequirements req;
+        DataSpec req;
         req.addStreamData(service1);
-        QList<DataRequirements> lreq;
+        QList<DataSpec> lreq;
         lreq.append(req);
         DataTypes dt;
         dt.addData(lreq);
@@ -236,10 +236,10 @@ void PelicanServerClientTest::test_response()
 //        static_cast<StreamDataResponse*>(res.get())->setStreamData( sd );
 //
 //        // set up the adapters and client
-//        DataRequirements req;
+//        DataSpec req;
 //        req.addStreamData(stream1);
 //        req.addServiceData(service1);
-//        QList<DataRequirements> lreq;
+//        QList<DataSpec> lreq;
 //        lreq.append(req);
 //        DataTypes dt;
 //        dt.addData(lreq);

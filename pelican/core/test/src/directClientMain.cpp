@@ -73,8 +73,8 @@ int main(int argc, char** argv)
 
     // Create a list of data requirements.
     QString dataType = "DoubleData";
-    DataRequirements req;
-    QList<DataRequirements> requirements;
+    DataSpec req;
+    QList<DataSpec> requirements;
     req.addStreamData(dataType);
     requirements.append(req);
 

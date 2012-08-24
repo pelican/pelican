@@ -43,6 +43,9 @@ DirectStreamDataClient::~DirectStreamDataClient()
     delete _dataManager;
 }
 
+const DataSpec& DirectStreamDataClient::dataSpec() const {
+    return _dataManager->dataSpec();
+}
 /**
  * @details
  * Sets the chunker for the given data type.
@@ -177,7 +180,7 @@ void DirectStreamDataClient::_init(QHash<QString, DataBlob*>& dataHash)
 
     // Check that the data requested is held by the data manager.
     _nPipelines = dataRequirements().size();
-    QList<DataRequirements>::const_iterator it = dataRequirements().begin();
+    QList<DataSpec>::const_iterator it = dataRequirements().begin();
     while (it != dataRequirements().end())
     {
         if (!it->isCompatible( _dataManager->dataSpec() ))

@@ -30,7 +30,7 @@ TestPipeline::TestPipeline(const DataRequirements& requirements, int iterations)
     : AbstractPipeline(), _deactivateStop(false), _blobFactory(0)
 {
     reset();
-    foreach ( const QString& type, requirements.allData() ) {
+    foreach ( const QString& type, requirements.allStreams() ) {
         requestRemoteData(type);
     }
     _iterations = iterations;
@@ -92,7 +92,7 @@ void TestPipeline::run(QHash<QString, DataBlob*>& dataHash)
     //cout << "Running TestPipeline, iteration " << _counter << endl;
 
     // Check the data is correct.
-    if (_requiredDataRemote == dataHash)
+    if (_requiredDataRemote == dataHash.keys())
         ++_matchedCounter;
 
     // Increment counter and test for completion.

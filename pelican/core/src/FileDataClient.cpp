@@ -45,7 +45,7 @@ AbstractDataClient::DataBlobHash FileDataClient::getData(DataBlobHash& dataHash)
     DataBlobHash validHash;
 
     // Loop over each pipeline's set of data requirements.
-    foreach (DataRequirements req, dataRequirements()) {
+    foreach(const DataSpec& req, dataRequirements()) {
         // Loop over service data requirements.
         foreach (QString type, req.serviceData())
         {
@@ -117,6 +117,10 @@ bool FileDataClient::_openFile( const QString& type )
         return true;
     }
     return false;
+}
+
+const DataSpec& FileDataClient::dataSpec() const {
+    return _dataSpec;
 }
 
 /**

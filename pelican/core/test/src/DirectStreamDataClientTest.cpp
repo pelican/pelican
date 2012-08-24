@@ -9,7 +9,7 @@
 #include "pelican/core/AdapterRealData.h"
 #include "pelican/server/test/TestUdpChunker.h"
 
-#include "pelican/data/DataRequirements.h"
+#include "pelican/data/DataSpec.h"
 #include "pelican/emulator/EmulatorDriver.h"
 #include "pelican/emulator/test/RealUdpEmulator.h"
 #include "pelican/utility/Config.h"
@@ -121,8 +121,8 @@ void DirectStreamDataClientTest::test_singleChunker()
 
         // Create a list of data requirements.
         QString dataType = "DoubleData";
-        DataRequirements req;
-        QList<DataRequirements> requirements;
+        DataSpec req;
+        QList<DataSpec> requirements;
         req.addStreamData(dataType);
         requirements.append(req);
 
@@ -175,8 +175,8 @@ void DirectStreamDataClientTest::test_twoChunkersMultipleStarts()
 
             // Create a list of data requirements.
             QString dataType = "DoubleData";
-            DataRequirements req;
-            QList<DataRequirements> requirements;
+            DataSpec req;
+            QList<DataSpec> requirements;
             req.addStreamData(dataType);
             requirements.append(req);
 
@@ -232,8 +232,8 @@ void DirectStreamDataClientTest::test_twoChunkersSingleStart()
 
         // Create a list of data requirements.
         QString dataType = "DoubleData";
-        DataRequirements req;
-        QList<DataRequirements> requirements;
+        DataSpec req;
+        QList<DataSpec> requirements;
         req.addStreamData(dataType);
         requirements.append(req);
 

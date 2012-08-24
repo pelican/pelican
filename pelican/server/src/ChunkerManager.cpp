@@ -10,9 +10,6 @@
 #include "pelican/server/FileChunker.h"
 
 #include <iostream>
-using std::cout;
-using std::cerr;
-using std::endl;
 
 namespace pelican {
 
@@ -94,7 +91,7 @@ bool ChunkerManager::init(DataManager& dataManager)
     }
     catch( const QString& msg )
     {
-        cerr << "Error Initiating Chunkers: " << msg.toStdString() << endl;
+        std::cerr << "Error Initiating Chunkers: " << msg.toStdString() << std::endl;
         return false;
     }
     return true;
@@ -119,7 +116,7 @@ bool ChunkerManager::isRunning() const
  * @param type The chunker type (class name).
  * @param name The optional chunker configuration name.
  */
-void ChunkerManager::addStreamChunker(QString chunkerType, QString name)
+AbstractChunker* ChunkerManager::addStreamChunker(QString chunkerType, QString name)
 {
     Q_ASSERT(chunkerType != "");
 
@@ -131,9 +128,9 @@ void ChunkerManager::addStreamChunker(QString chunkerType, QString name)
     // NOTE: This should probably never happen!
     if (chunker->chunkTypes().empty())
     {
-        cerr << "ChunkerManager::addStreamChunker(): WARNING Chunker '"
+        std::cerr << "ChunkerManager::addStreamChunker(): WARNING Chunker '"
              << chunkerType.toStdString() << "' has no registered chunk data types."
-             << endl;
+             << std::endl;
         chunker->addChunkType(chunkerType);
     }
 
@@ -144,6 +141,8 @@ void ChunkerManager::addStreamChunker(QString chunkerType, QString name)
     // by the chunker and add them to the list of stream data types.
     foreach (QString chunkType, chunker->chunkTypes())
         _streamDataTypes.insert(chunkType);
+
+    return chunker;
 }
 
 
@@ -154,7 +153,7 @@ void ChunkerManager::addStreamChunker(QString chunkerType, QString name)
  * @param type The chunker type (class name).
  * @param name The optional chunker configuration name.
  */
-void ChunkerManager::addServiceChunker(QString type, QString name)
+AbstractChunker* ChunkerManager::addServiceChunker(QString type, QString name)
 {
     Q_ASSERT(type != "" );
 
@@ -165,9 +164,9 @@ void ChunkerManager::addServiceChunker(QString type, QString name)
     // to the chunker name.
     if (chunker->chunkTypes().empty())
     {
-        cerr << "ChunkerManager::addStreamChunker(): WARNING Chunker '"
+        std::cerr << "ChunkerManager::addStreamChunker(): WARNING Chunker '"
              << type.toStdString() << "' has no registered chunk data types."
-             << endl;
+             << std::endl;
         chunker->addChunkType(type);
     }
 
@@ -178,6 +177,8 @@ void ChunkerManager::addServiceChunker(QString type, QString name)
     // by the chunker and add them to the list of service data types.
     foreach (QString chunkType, chunker->chunkTypes())
         _serviceDataTypes.insert(chunkType);
+
+    return chunker;
 }
 
 QIODevice* ChunkerManager::getCurrentDevice( AbstractChunker* chunker ) const

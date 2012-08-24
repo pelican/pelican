@@ -1,7 +1,7 @@
 #include "pelican/core/DataTypes.h"
 #include "pelican/core/AbstractStreamAdapter.h"
 #include "pelican/core/AbstractServiceAdapter.h"
-#include "pelican/data/DataRequirements.h"
+#include "pelican/data/DataSpec.h"
 
 
 namespace pelican {
@@ -26,12 +26,12 @@ DataTypes::~DataTypes()
  * adds a data requirement. All data must be added before
  * any adapters are set.
  */
-void DataTypes::addData(const DataRequirements& data)
+void DataTypes::addData(const DataSpec& data)
 {
     _dataRequirements.append(data);
 }
 
-void DataTypes::addData(const QList<DataRequirements>& data)
+void DataTypes::addData(const QList<DataSpec>& data)
 {
     _dataRequirements += data;
 }
@@ -47,7 +47,7 @@ void DataTypes::setAdapter(const QString& type, AbstractAdapter* adapter)
     // ensure each data requirement is of the correct type
     for(int i=0; i < _dataRequirements.size(); ++i )
     {
-        DataRequirements& req = _dataRequirements[i];
+        DataSpec& req = _dataRequirements[i];
         switch( adapter->type() )
         {
             case AbstractAdapter::Service :
@@ -83,7 +83,7 @@ AbstractAdapter::AdapterType_t DataTypes::type(const QString& dataName) const
     return _adapters.value(dataName)->type();
 }
 
-const QList<DataRequirements>& DataTypes::dataRequirements() const
+const QList<DataSpec>& DataTypes::dataSpec() const
 {
     return _dataRequirements;
 }

@@ -5,7 +5,7 @@
  * @file DataTypes.h
  */
 
-#include "pelican/data/DataRequirements.h"
+#include "pelican/data/DataSpec.h"
 #include "pelican/core/AbstractAdapter.h"
 
 #include <QtCore/QString>
@@ -33,15 +33,15 @@ class DataTypes
         ~DataTypes();
 
         /// Add a data set.
-        void addData(const DataRequirements& data);
-        void addData(const QList<DataRequirements>& data);
+        void addData(const DataSpec& data);
+        void addData(const QList<DataSpec>& data);
 
         /// Set an adapter to interpret the data.
         void setAdapter(const QString& type, AbstractAdapter* adapter);
 
         /// Get a list of datarequirements. These will be adapted to be.
         //  consistent with the adapters added with setAdapter
-        const QList<DataRequirements>& dataRequirements() const;
+        const QList<DataSpec>& dataSpec() const;
 
         /// Return a Stream Adapter for the specified type.
         AbstractStreamAdapter* streamAdapter(const QString& type) const;
@@ -56,7 +56,7 @@ class DataTypes
         bool adapterAvailable( const QString& type ) const;
 
     private:
-        QList<DataRequirements> _dataRequirements;
+        QList<DataSpec> _dataRequirements;
         QHash<QString,AbstractAdapter*> _adapters;
 };
 

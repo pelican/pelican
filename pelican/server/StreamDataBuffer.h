@@ -57,6 +57,7 @@ class StreamDataBuffer : public AbstractDataBuffer
 
         /// Sets the maximum size of the buffer in bytes.
         void setMaxSize(const size_t size) { _max = size; }
+        size_t size() const { return _max; }
 
         /// Sets the maximum chunk size of the in bytes.
         void setMaxChunkSize(const size_t size) { _maxChunkSize = size; }

@@ -7,7 +7,9 @@ SUBPACKAGE(data utility)
 set(data_src
     src/DataBlob.cpp
     src/DataBlobBuffer.cpp
+    src/DataBlobVerify.cpp
     src/DataRequirements.cpp
+    src/DataSpec.cpp
     src/DataBlobFactory.cpp
 )
 SUBPACKAGE_LIBRARY(data ${data_src})

@@ -17,6 +17,9 @@ DataBlobChunker::DataBlobChunker(const ConfigNode& configNode)
 
     QSet<QString> subs = QSet<QString>::fromList(configNode.getOptionList("subscribe","stream") );
     _client->subscribe( subs );
+    foreach( const QString& s, subs ) {
+        addChunkType(s);
+    }
 }
 
 /**

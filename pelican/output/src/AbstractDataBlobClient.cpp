@@ -71,12 +71,12 @@ void AbstractDataBlobClient::subscribe(const QSet<QString>& streams)
     // Define the data type which the client will accept and send request
     if( streams.size() > 0 ) {
         StreamDataRequest req;
-        DataRequirements require;
+        DataSpec require;
         foreach( const QString& stream, streams )
         {
             verbose(QString("Subscribing to stream : \"") + stream + " \"" );
             onSubscribe( stream );
-            require.setStreamData(stream);
+            require.addStreamData(stream);
         }
         if( require != _currentSubscription )
         {
@@ -118,7 +118,7 @@ bool AbstractDataBlobClient::requestStreamInfo()
 
 // default implementation
 void AbstractDataBlobClient::serverError( ServerResponse* r ) {
-    std::cerr << "DataBlobClient: Server Error: "
+    std::cerr << "AbstractDataBlobClient: Server Error: "
               << r->message().toStdString()
               << std::endl;
 }

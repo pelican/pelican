@@ -42,7 +42,8 @@ class DirectStreamDataClient : public AbstractAdaptingDataClient
         virtual ~DirectStreamDataClient();
 
         /// Obtains a hash of data blobs required by the pipeline.
-        DataBlobHash getData(DataBlobHash& dataHash);
+        virtual DataBlobHash getData(DataBlobHash& dataHash);
+        virtual const DataSpec& dataSpec() const;
 
         /// Sets the chunker for the given data type.
         void addChunker(const QString& dataType, const QString& chunkerType,

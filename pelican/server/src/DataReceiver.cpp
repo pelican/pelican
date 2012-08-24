@@ -53,10 +53,10 @@ void DataReceiver::run()
         // process any existing data on the stream
         if( _device->bytesAvailable() > 0 )
             _processIncomingData();
-
-        // enter main event loop (until quit() is called)
-        exec();
     }
+
+    // enter main event loop (until quit() is called)
+    exec();
 }
 
 void DataReceiver::_processIncomingData()
@@ -86,9 +86,9 @@ void DataReceiver::_reconnect() {
 
 void DataReceiver::_setupDevice() {
     _device = _chunker->newDevice();
+    _chunker->activate();
 
     if( _device ) {
-        _chunker->activate();
         // If its a socket we must try and catch the failure conditions
         connect(_device, SIGNAL(readyRead()), SLOT(_processIncomingData()),
                 Qt::DirectConnection);

@@ -17,7 +17,7 @@ StreamDataRequest::~StreamDataRequest()
 {
 }
 
-void StreamDataRequest::addDataOption(const DataRequirements& data)
+void StreamDataRequest::addDataOption(const DataSpec& data)
 {
     if( data.streamData().size() != 0 )
         _dataOptions.append(data);

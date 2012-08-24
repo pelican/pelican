@@ -84,6 +84,8 @@ void PipelineDriver::_registerPipeline(AbstractPipeline *pipeline)
     // Store the pointer to the registered pipeline.
     _registeredPipelines.append(pipeline);
 
+    // Find the appropriate DataClient
+
     // Set up and initialise the pipeline.
     pipeline->setBlobFactory(_blobFactory);
     pipeline->setModuleFactory(_moduleFactory);
@@ -94,7 +96,7 @@ void PipelineDriver::_registerPipeline(AbstractPipeline *pipeline)
     pipeline->init();
 
     // Store the remote data requirements.
-    _allDataReq.append(pipeline->requiredDataRemote());
+    _allDataReq.append(pipeline->dataRequirements());
 }
 
 ConfigNode PipelineDriver::config( const QString& tag, const QString& name ) const {
@@ -104,10 +106,23 @@ ConfigNode PipelineDriver::config( const QString& tag, const QString& name ) con
     return _config->get(address);
 }
 
-void PipelineDriver::_activatePipeline(AbstractPipeline *pipeline)
+void PipelineDriver::_activatePipeline(AbstractPipeline *pipeline) {
+    _activePipelines.append(pipeline);
+}
+
+void PipelineDriver::_activatePipelineBuffers(AbstractPipeline *pipeline)
 {
      if( pipeline ) {
-        foreach ( const QString& type, pipeline->requiredDataRemote().allData() ) {
+        if( ! _dataClients.contains(pipeline) ) {
+            // use the default data client if not
+            // specified by the pipeline
+            _dataClients.insert(pipeline, _dataClient );
+        }
+        if( ! _dataSpecs.contains(pipeline) ) {
+            // consolidate pipeline with the dataclient
+            _checkPipelineRequirements(pipeline, _dataClients[pipeline]);
+        }
+        foreach( const QString& type, _dataSpecs[pipeline].allData() ) {
             // add history requirements
             _history[type].add( pipeline->historySize(type) );
             // create a history buffer for each type
@@ -127,7 +142,6 @@ void PipelineDriver::_activatePipeline(AbstractPipeline *pipeline)
                 _dataBuffers[type]->shrink(max);
             }
         }
-        _pipelines.insert(pipeline->requiredDataRemote(), pipeline);
      }
 }
 
@@ -145,8 +159,9 @@ void PipelineDriver::_deactivatePipeline(AbstractPipeline *pipeline)
     if( pipeline ) {
         // put reqs in a temporary to work around broken QMultiHash headers
         // in Qt 4.2 which don't accept a const key
-        DataRequirements reqs = pipeline->requiredDataRemote();
-        _pipelines.remove(reqs, pipeline);
+        //DataRequirements reqs = pipeline->dataRequirements();
+        DataSpec reqs = _dataSpecs[pipeline];
+        _activePipelines.remove(_activePipelines.indexOf(pipeline));
          // adjust history buffers
          foreach ( const QString& type, reqs.allData() ) {
               if( _history.contains(type) ) {
@@ -179,11 +194,11 @@ void PipelineDriver::addPipelineSwitcher(const PipelineSwitcher& switcher)
      PipelineSwitcher* sw = &_switchers.last(); // pointer to local switcher copy
 
      AbstractPipeline* next = sw->next();
-     DataRequirements reqs = next->requiredDataRemote();
+     DataRequirements reqs = next->dataRequirements();
 
      // register all the pipelines in the switcher
      foreach( AbstractPipeline* pipe, switcher.pipelines() ) {
-        if( pipe->requiredDataRemote() != reqs )
+        if( pipe->dataRequirements() != reqs )
                 throw( QString("PipelineDriver: Pipelines with different Data requirements in"
                                " the same switcher is not supported") );
         _registerPipeline(pipe);
@@ -226,10 +241,16 @@ void PipelineDriver::start()
 
     // Create the data client.
     if (!_dataClientName.isEmpty() && _dataClient == NULL )
-        _dataClient = _clientFactory->create(_dataClientName, _allDataReq);
-
+        _dataClient = _clientFactory->create( _dataClientName, _dataSpecs.values() );
     // Check the data requirements.
     _checkDataRequirements();
+
+    // set up the data buffers
+    if( _dataClient ) {
+        foreach( AbstractPipeline* p, _activePipelines ) {
+            _activatePipelineBuffers(p);
+        }
+    }
 
     // Enter main program loop.
     _run = true;
@@ -257,11 +278,19 @@ void PipelineDriver::start()
 
         // Run all the pipelines compatible with this data hash.
         bool ranPipeline = false;
+/*
         QMultiHash<DataRequirements, AbstractPipeline*>::iterator pipe;
         for (pipe = _pipelines.begin(); pipe != _pipelines.end(); ++pipe) {
             if (pipe.key().isCompatible(validData)) {
                 ranPipeline = true;
                 pipe.value()->exec(_dataHash);
+            }
+        }
+*/
+        foreach(AbstractPipeline* p, _activePipelines ) {
+            if( _dataSpecs[p].isCompatible(validData) ) {
+                ranPipeline = true;
+                p->exec(_dataHash);
             }
         }
 
@@ -308,16 +337,45 @@ void PipelineDriver::_checkDataRequirements()
      * Data is not currently copied, so this ensures that two pipelines do not
      * try to modify the same data. */
     DataRequirements totalReq;
-    foreach (DataRequirements req, _dataClient->dataRequirements()) {
+    foreach (const DataRequirements& req, _allDataReq ) {
 #ifdef BROKEN_QT_SET_HEADER
-        QSet<QString> temp = totalReq.streamData();
-        if ((temp & req.streamData()).size() > 0) {
+        QSet<QString> temp = totalReq.allStreams();
+        if ((temp & req.allStreams()).size() > 0) {
 #else
-        if ((totalReq.streamData() & req.streamData()).size() > 0) {
+        if ((totalReq.allStreams() & req.allStreams()).size() > 0) {
 #endif
             throw QString("Multiple pipelines requiring the same remote stream data are not supported.");
         }
         totalReq += req;
+    }
+}
+
+void PipelineDriver::_checkPipelineRequirements( AbstractPipeline* p, AbstractDataClient* dataClient ) {
+    
+    const DataSpec& avail = dataClient->dataSpec();
+    const DataRequirements& pipereq = p->dataRequirements();
+    _dataSpecs[p].clear();
+    // check we have all required data
+    foreach(const QString& stream, pipereq.required() ) {
+        if( avail.streamData().contains(stream) ) {
+            _dataSpecs[p].setStreamData(stream);
+            continue;
+        }
+        if( avail.serviceData().contains(stream) ) {
+            _dataSpecs[p].setServiceData(stream);
+            continue;
+        }
+        throw(QString("PipelineDriver: DataClient does not support data required"));
+    }
+    // add optional data if available
+    foreach(const QString& stream, pipereq.optional() ) {
+        if( avail.streamData().contains(stream) ) {
+            _dataSpecs[p].setStreamData(stream);
+            continue;
+        }
+        if( avail.serviceData().contains(stream) ) {
+            _dataSpecs[p].setStreamData(stream);
+        }
     }
 }
 

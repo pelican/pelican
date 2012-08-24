@@ -35,8 +35,10 @@ class PipelineDriverTest : public CppUnit::TestFixture
 {
     public:
         CPPUNIT_TEST_SUITE( PipelineDriverTest );
+        CPPUNIT_TEST( test_checkPipelineRequirements);
         CPPUNIT_TEST( test_registerPipeline );
         CPPUNIT_TEST( test_registerSwitcher );
+/*
         CPPUNIT_TEST( test_registerSwitcherData );
         CPPUNIT_TEST( test_registerPipeline_null );
         CPPUNIT_TEST( test_start_noPipelinesRegistered );
@@ -47,6 +49,7 @@ class PipelineDriverTest : public CppUnit::TestFixture
         CPPUNIT_TEST( test_start_multiPipelineRunDifferentData );
         CPPUNIT_TEST( test_start_multiPipelineRunOne );
         CPPUNIT_TEST( test_start_pipelineWithHistory );
+*/
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -54,6 +57,7 @@ class PipelineDriverTest : public CppUnit::TestFixture
         void tearDown();
 
         // Test Methods
+        void test_checkPipelineRequirements();
         void test_registerPipeline();
         void test_registerSwitcher();
         void test_registerSwitcherData();

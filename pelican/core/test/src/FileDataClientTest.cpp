@@ -3,7 +3,7 @@
 
 #include "pelican/utility/Config.h"
 #include "pelican/utility/ConfigNode.h"
-#include "pelican/data/DataRequirements.h"
+#include "pelican/data/DataSpec.h"
 #include "pelican/data/DataBlob.h"
 #include "pelican/core/DataTypes.h"
 #include "pelican/core/test/TestStreamAdapter.h"
@@ -74,7 +74,7 @@ void FileDataClientTest::test_method()
         // Expect: throw with a suitable complaint
 
         // setup the test
-        QList<DataRequirements> lreq;
+        QList<DataSpec> lreq;
         DataTypes dt;
         dt.addData(lreq);
         FileDataClient* client = 0;
@@ -84,14 +84,14 @@ void FileDataClientTest::test_method()
     TestStreamAdapter streamAdapter;
     QString stream1("stream1");
     QString version1("version1");
-    DataRequirements req;
+    DataSpec req;
     req.addStreamData(stream1);
     {
         // Use Case:
         //    data requirements are set, empty hash passed
         // Expect: throw
 
-        QList<DataRequirements> lreq;
+        QList<DataSpec> lreq;
         lreq.append(req);
         DataTypes dt;
         dt.addData(lreq);
@@ -106,7 +106,7 @@ void FileDataClientTest::test_method()
        // correct hash is passed
        // Expect:
        // Data in file to be streamed
-       QList<DataRequirements> lreq;
+       QList<DataSpec> lreq;
         lreq.append(req);
        DataTypes types;
        types.addData(lreq);

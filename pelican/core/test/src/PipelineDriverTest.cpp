@@ -88,6 +88,83 @@ void PipelineDriverTest::tearDown()
     //delete _coreApp;
 }
 
+void PipelineDriverTest::test_checkPipelineRequirements()
+{
+    ConfigNode config;
+    QString stream1("stream1");
+    QString stream2("stream2");
+    {
+        // Use case:
+        // pipeline has required data only. 
+        // Client has this and other data as stream data
+        // Expect:
+        // Requirements to be selected and marked as stream data
+        DataRequirements req; req.addRequired(stream1);
+        DataSpec spec; 
+        spec.addStreamData(stream1);
+        spec.addStreamData(stream2);
+        DataTypes types;
+        types.addData(spec);
+        TestDataClient client(config, types);
+        TestPipeline* p1 = new TestPipeline( req );
+        _pipelineDriver->_checkPipelineRequirements( p1, &client );
+        CPPUNIT_ASSERT( (_pipelineDriver->_dataSpecs[p1].streamData()) == (req.required()) );
+        CPPUNIT_ASSERT_EQUAL(0 , _pipelineDriver->_dataSpecs[p1].serviceData().size() );
+    }
+    {
+        // Use case:
+        // pipeline has required data only. 
+        // Client has this as service data other data as stream data
+        // Expect:
+        // Requirements to be selected and marked as service data
+        DataRequirements req; req.addRequired(stream1);
+        DataSpec spec; 
+        spec.addServiceData(stream1);
+        spec.addStreamData(stream2);
+        DataTypes types;
+        types.addData(spec);
+        TestDataClient client(config, types);
+        TestPipeline* p1 = new TestPipeline( req );
+        _pipelineDriver->_checkPipelineRequirements( p1, &client );
+        CPPUNIT_ASSERT( (_pipelineDriver->_dataSpecs[p1].serviceData()) == (req.required()) );
+        CPPUNIT_ASSERT_EQUAL(0 , _pipelineDriver->_dataSpecs[p1].streamData().size() );
+    }
+    {
+        // Use case:
+        // pipeline has required data and optional data. 
+        // Client has this as service data other data as stream data
+        // Expect:
+        // Requirements to be selected and marked as stream/service data
+        DataRequirements req; req.addRequired(stream1);
+        req.addOptional(stream2);
+        DataSpec spec; 
+        spec.addServiceData(stream1);
+        spec.addStreamData(stream2);
+        DataTypes types;
+        types.addData(spec);
+        TestDataClient client(config, types);
+        TestPipeline* p1 = new TestPipeline( req );
+        _pipelineDriver->_checkPipelineRequirements( p1, &client );
+        CPPUNIT_ASSERT( (_pipelineDriver->_dataSpecs[p1].serviceData()) == (req.required()) );
+        CPPUNIT_ASSERT( (_pipelineDriver->_dataSpecs[p1].streamData()) == (req.optional()) );
+    }
+    {
+        // Use case:
+        // pipeline has required data 
+        // Client does not have this data 
+        // Expect:
+        // throw
+        DataRequirements req; req.addRequired(stream1);
+        DataSpec spec; 
+        DataTypes types;
+        types.addData(spec);
+        TestDataClient client(config, types);
+        TestPipeline* p1 = new TestPipeline( req );
+        CPPUNIT_ASSERT_THROW(_pipelineDriver->_checkPipelineRequirements( p1, &client ), QString );
+       
+    }
+}
+
 /**
  * @details
  * Tests the registerPipeline() method with a pipeline that requires no data,
@@ -100,13 +177,15 @@ void PipelineDriverTest::test_registerPipeline()
     CPPUNIT_ASSERT_NO_THROW(_pipelineDriver->registerPipeline(new TestPipeline));
 
     // try a pipeline with an unknown datablob type
+    /* current implementation will not throw until start!
     DataRequirements req;
-    req.setStreamData("requiredData");
+    req.addRequired("requiredData");
     CPPUNIT_ASSERT_THROW(_pipelineDriver->registerPipeline(new TestPipeline(req)), QString);
+    */
 
     // try a pipeline with an known datablob type
     DataRequirements req2;
-    req2.setStreamData("TestDataBlob");
+    req2.addRequired("TestDataBlob");
     CPPUNIT_ASSERT_NO_THROW(_pipelineDriver->registerPipeline(new TestPipeline(req2)));
 }
 
@@ -119,6 +198,7 @@ void PipelineDriverTest::test_registerSwitcher()
         PipelineSwitcher sw;
         CPPUNIT_ASSERT_THROW(_pipelineDriver->addPipelineSwitcher(sw), QString);
     }
+    try
     {
         // Use Case:
         // A switcher with two pipelines requiring no data
@@ -143,18 +223,23 @@ void PipelineDriverTest::test_registerSwitcher()
         CPPUNIT_ASSERT_EQUAL(num, p1->count());
         CPPUNIT_ASSERT_EQUAL(num, p2->count());
     }
+    catch( const QString& s ) {
+        CPPUNIT_FAIL( s.toStdString() );
+    }
 }
 
 void PipelineDriverTest::test_registerSwitcherData()
 {
     try {
     DataRequirements req;
-    req.setStreamData("TestDataBlob");
+    req.addRequired("TestDataBlob");
 
     // Create the data client.
     ConfigNode config;
+    DataSpec spec;
+    spec.addStreamData("TestDataBlob");
     DataTypes types;
-    types.addData(req);
+    types.addData(spec);
     TestDataClient client(config, types);
     _pipelineDriver->_dataClient = &client;
 
@@ -215,7 +300,7 @@ void PipelineDriverTest::test_start_noPipelinesRegistered()
 void PipelineDriverTest::test_start_noPipelinesRun()
 {
     DataRequirements req;
-    req.setStreamData("TestDataBlob");
+    req.addRequired("TestDataBlob");
     _pipelineDriver->registerPipeline(new TestPipeline(req));
 
     // No data client set, so no data will be returned.
@@ -253,15 +338,17 @@ void PipelineDriverTest::test_start_singlePipelineClientReturnsGoodData()
         // Create the pipeline.
         int num = 10;
         DataRequirements req;
-        req.addStreamData("FloatData");
+        req.addRequired("FloatData");
         TestPipeline *pipeline = new TestPipeline(req, num);
         _pipelineDriver->registerPipeline(pipeline);
         CPPUNIT_ASSERT_EQUAL(0, pipeline->count());
 
         // Create the data client.
         ConfigNode config;
+        DataSpec spec;
+        spec.addStreamData("FloatData");
         DataTypes types;
-        types.addData(req);
+        types.addData(spec);
         TestDataClient client(config, types);
         _pipelineDriver->_dataClient = &client;
 
@@ -288,7 +375,7 @@ void PipelineDriverTest::test_start_singlePipelineClientReturnsWrongData()
         // Create the pipeline.
         int num = 10;
         DataRequirements pipelineReq;
-        pipelineReq.addStreamData("FloatData");
+        pipelineReq.addRequired("FloatData");
         TestPipeline *pipeline = new TestPipeline(pipelineReq, num);
         _pipelineDriver->registerPipeline(pipeline);
         CPPUNIT_ASSERT_EQUAL(0, pipeline->count());
@@ -296,7 +383,7 @@ void PipelineDriverTest::test_start_singlePipelineClientReturnsWrongData()
         // Create the data client.
         ConfigNode config;
         DataTypes types;
-        DataRequirements clientTypes;
+        DataSpec clientTypes;
         clientTypes.addStreamData("OtherStreamData");
         types.addData(clientTypes);
         TestDataClient client(config, types);
@@ -326,8 +413,8 @@ void PipelineDriverTest::test_start_multiPipelineRunDifferentData()
         int num = 10;
         DataRequirements pipelineReq1, pipelineReq2;
         QString type1 = "FloatData", type2 = "DoubleData";
-        pipelineReq1.addStreamData(type1);
-        pipelineReq2.addStreamData(type2);
+        pipelineReq1.addRequired(type1);
+        pipelineReq2.addRequired(type2);
         TestPipeline *pipeline1 = new TestPipeline(pipelineReq1, num);
         TestPipeline *pipeline2 = new TestPipeline(pipelineReq2, num);
         _pipelineDriver->registerPipeline(pipeline1);
@@ -338,7 +425,7 @@ void PipelineDriverTest::test_start_multiPipelineRunDifferentData()
         // Create the data client.
         ConfigNode config;
         DataTypes types;
-        DataRequirements clientTypes;
+        DataSpec clientTypes;
         clientTypes.addStreamData(type1); // Add both types of required data.
         clientTypes.addStreamData(type2); // Add both types of required data.
         types.addData(clientTypes);
@@ -371,8 +458,8 @@ void PipelineDriverTest::test_start_multiPipelineRunOne()
         int num = 10;
         DataRequirements pipelineReq1, pipelineReq2;
         QString type1 = "FloatData", type2 = "DoubleData";
-        pipelineReq1.addStreamData(type1);
-        pipelineReq2.addStreamData(type2);
+        pipelineReq1.addRequired(type1);
+        pipelineReq2.addRequired(type2);
         TestPipeline *pipeline1 = new TestPipeline(pipelineReq1, num);
         TestPipeline *pipeline2 = new TestPipeline(pipelineReq2, num);
         _pipelineDriver->registerPipeline(pipeline1);
@@ -383,7 +470,7 @@ void PipelineDriverTest::test_start_multiPipelineRunOne()
         // Create the data client.
         ConfigNode config;
         DataTypes types;
-        DataRequirements clientTypes;
+        DataSpec clientTypes;
         clientTypes.addStreamData(type1); // Add one type of required data.
         types.addData(clientTypes);
         TestDataClient client(config, types);
@@ -419,7 +506,7 @@ void PipelineDriverTest::test_start_pipelineWithHistory()
             int history=5;
             DataRequirements pipelineReq;
             QString type1 = "FloatData";
-            pipelineReq.addStreamData(type1);
+            pipelineReq.addRequired(type1);
             TestPipeline *pipeline1 = new TestPipeline(pipelineReq, num);
             pipeline1->setHistory(type1, history);
             _pipelineDriver->registerPipeline(pipeline1);
@@ -428,7 +515,7 @@ void PipelineDriverTest::test_start_pipelineWithHistory()
             // Create the data client.
             ConfigNode config;
             DataTypes types;
-            DataRequirements clientTypes;
+            DataSpec clientTypes;
             clientTypes.addStreamData(type1); // Add one type of required data.
             types.addData(clientTypes);
             TestDataClient client(config, types);
