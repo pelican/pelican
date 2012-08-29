@@ -6,6 +6,7 @@
  */
 
 #include "pelican/data/DataSpec.h"
+#include "pelican/utility/ConfigNode.h"
 #include "pelican/core/AbstractAdapter.h"
 
 #include <QtCore/QString>
@@ -14,6 +15,7 @@
 namespace pelican {
 class AbstractStreamAdapter;
 class AbstractServiceAdapter;
+class AbstractAdapterFactory;
 
 /**
  * @ingroup c_core
@@ -30,6 +32,7 @@ class DataTypes
 {
     public:
         DataTypes();
+        DataTypes( const ConfigNode& config, AbstractAdapterFactory* );
         ~DataTypes();
 
         /// Add a data set.
@@ -56,8 +59,14 @@ class DataTypes
         bool adapterAvailable( const QString& type ) const;
 
     private:
+        AbstractAdapter* _createAdapter( const QString& type ) const;
+
+    private:
         QList<DataSpec> _dataRequirements;
         QHash<QString,AbstractAdapter*> _adapters;
+        ConfigNode      _conf;
+        AbstractAdapterFactory* _adapterFactory;
+        QHash<QString, QString> _adapterNames;
 };
 
 } // namespace pelican

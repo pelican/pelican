@@ -1,17 +1,22 @@
 #include "pelican/core/DataTypes.h"
 #include "pelican/core/AbstractStreamAdapter.h"
 #include "pelican/core/AbstractServiceAdapter.h"
+#include "pelican/core/DataClientFactory.h"
 #include "pelican/data/DataSpec.h"
 
 
 namespace pelican {
 
 
-/**
- *@details DataTypes
- */
 DataTypes::DataTypes()
+    : _adapterFactory(0)
 {
+}
+
+DataTypes::DataTypes(  const ConfigNode& config, AbstractAdapterFactory* factory )
+    : _conf(config), _adapterFactory(factory)
+{
+    _adapterNames = _conf.getOptionHash("data", "type", "adapter");
 }
 
 /**
@@ -29,11 +34,16 @@ DataTypes::~DataTypes()
 void DataTypes::addData(const DataSpec& data)
 {
     _dataRequirements.append(data);
+    foreach( const QString& dataType, data.allData() ) {
+        setAdapter(dataType, _createAdapter(dataType) );
+    }
 }
 
 void DataTypes::addData(const QList<DataSpec>& data)
 {
-    _dataRequirements += data;
+    foreach( const DataSpec& s, data) {
+        addData(s);
+    }
 }
 
 /**
@@ -90,6 +100,13 @@ const QList<DataSpec>& DataTypes::dataSpec() const
 
 bool DataTypes::adapterAvailable( const QString& type ) const {
      return _adapters.contains(type);
+}
+
+AbstractAdapter* DataTypes::_createAdapter( const QString& dataType ) const {
+
+    // Find the configuration information for adapters.
+    return _adapterFactory->create( _adapterNames.value(dataType),
+                _conf.getNamedOption("data","name","") );
 }
 
 } // namespace pelican
