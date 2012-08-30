@@ -356,7 +356,7 @@ void PipelineDriver::_checkPipelineRequirements( AbstractPipeline* p, AbstractDa
             _dataSpecs[p].setServiceData(stream);
             continue;
         }
-        throw(QString("PipelineDriver: DataClient does not support data required"));
+        throw(QString("PipelineDriver: DataClient does not support data required (%1)").arg(stream));
     }
     // add optional data if available
     foreach(const QString& stream, pipereq.optional() ) {
