@@ -19,6 +19,7 @@ namespace pelican {
 class PipelineDriver;
 class DataClientFactory;
 class OutputStreamManager;
+class AbstractDataClient;
 
 /**
  * @ingroup t_core
@@ -82,6 +83,8 @@ class PipelineDriverTest : public CppUnit::TestFixture
         FactoryConfig<AbstractModule>* _moduleFactory;
         DataClientFactory* _clientFactory;
         OutputStreamManager* _osmanager;
+        AbstractDataClient* _client;
+        void  _setTestClient();
 };
 
 } // namespace pelican

@@ -7,12 +7,10 @@ namespace test {
 /**
  * @details TestDataClient
  */
-TestDataClient::TestDataClient(const ConfigNode& config, const DataTypes& types) :
-    AbstractDataClient(config, types, 0)
+TestDataClient::TestDataClient(const ConfigNode& config, const DataSpec& spec) :
+    AbstractDataClient(config, DataTypes(), 0)
 {
-    foreach( const DataSpec& s, types.dataSpec() ) {
-        _dataSpec += s;
-    }
+    _dataSpec = spec;
 }
 
 /**

@@ -60,6 +60,7 @@ class DataTypes
 
     private:
         AbstractAdapter* _createAdapter( const QString& type ) const;
+        void _setAdapter( DataSpec& req, const QString& type );
 
     private:
         QList<DataSpec> _dataRequirements;

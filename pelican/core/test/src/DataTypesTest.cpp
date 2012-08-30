@@ -46,9 +46,9 @@ void DataTypesTest::test_method()
         req.addServiceData("service1");
         req.addStreamData("stream1");
         DataTypes dt;
-        dt.addData(req);
         dt.setAdapter("service1", &service_adapter);
         dt.setAdapter("stream1", &stream_adapter);
+        dt.addData(req);
         CPPUNIT_ASSERT_EQUAL(1, dt.dataSpec().size() );
         DataSpec out = dt.dataSpec()[0];
         CPPUNIT_ASSERT( req.streamData().values()[0] == out.streamData().values()[0] );
@@ -63,9 +63,9 @@ void DataTypesTest::test_method()
         req.addStreamData("service1");
         req.addServiceData("stream1");
         DataTypes dt;
-        dt.addData(req);
         dt.setAdapter("service1", &service_adapter);
         dt.setAdapter("stream1", &stream_adapter);
+        dt.addData(req);
         CPPUNIT_ASSERT_EQUAL(1, dt.dataSpec().size() );
         const DataSpec& out = dt.dataSpec()[0];
         CPPUNIT_ASSERT( (req.streamData().values()[0]) == (out.serviceData().values()[0]) );

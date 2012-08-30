@@ -73,7 +73,9 @@ class AbstractDataClient
 
         /// Data client destructor.
         virtual ~AbstractDataClient();
-        // TODO virtual void init( const QList<DataSpec>& specification );
+        virtual void reset( const QList<DataSpec>& specification );
+
+        /// get the Data specifications that the client provides
         virtual const DataSpec& dataSpec() const = 0;
 
         PELICAN_CONSTRUCT_TYPES(const ConfigNode&, const DataTypes&, const Config*)
@@ -85,7 +87,7 @@ class AbstractDataClient
         virtual DataBlobHash getData(DataBlobHash&) = 0;
 
         /// Returns the list of data requirements for each pipeline.
-        const QList<DataSpec>& dataRequirements() { return _dataRequirements; }
+        const QList<DataSpec>& dataRequirements() { return _dataReqs.dataSpec(); }
 
 
     protected:
@@ -116,10 +118,12 @@ class AbstractDataClient
 
     protected:
         ConfigNode _configNode; ///< The configuration node for the data client.
-        QList<DataSpec> _dataRequirements;
-        //DataTypes _dataReqs;    ///< The DataTypes and requirements.
+//        QList<DataSpec> _dataRequirements;
         const Config* _config;
         QSet<QString> _requireSet;
+        DataTypes _dataReqs;    ///< The DataTypes and requirements.
+
+    private:
 };
 
 } // namespace pelican

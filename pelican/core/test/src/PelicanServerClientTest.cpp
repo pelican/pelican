@@ -64,19 +64,6 @@ void PelicanServerClientTest::test_getData()
     Config::TreeAddress address;
     address << Config::NodeId("testconfig", "");
     ConfigNode configNode = config.get(address);
-    {
-        // Use Case:
-        //    Empty data requirements
-        // Expect: throw with a suitable complaint
-
-        // setup the test
-        QList<DataSpec> lreq;
-        DataTypes dt;
-        dt.addData(lreq);
-        PelicanServerClient* client = 0;
-        CPPUNIT_ASSERT_THROW(client = new PelicanServerClient(configNode, dt, 0), QString);
-        delete client;
-    }
     TestStreamAdapter streamAdapter;
     QString stream1("stream1");
     QString version1("version1");
@@ -90,8 +77,8 @@ void PelicanServerClientTest::test_getData()
         QList<DataSpec> lreq;
         lreq.append(req);
         DataTypes dt;
-        dt.addData(lreq);
         dt.setAdapter(stream1,&streamAdapter);
+        dt.addData(lreq);
         PelicanServerClient client(configNode, dt, 0);
         QHash<QString, DataBlob*> dataHash;
         CPPUNIT_ASSERT_THROW(client.getData(dataHash), QString );
@@ -106,8 +93,8 @@ void PelicanServerClientTest::test_getData()
         QList<DataSpec> lreq;
         lreq.append(req);
         DataTypes dt;
-        dt.addData(lreq);
         dt.setAdapter(stream1,&streamAdapter);
+        dt.addData(lreq);
         PelicanServerClient client(configNode, dt, 0);
 
         QHash<QString, DataBlob*> dataHash;
@@ -120,6 +107,7 @@ void PelicanServerClientTest::test_getData()
 
 void PelicanServerClientTest::test_response()
 {
+    try {
     TestServiceAdapter serviceAdapter;
     TestStreamAdapter streamAdapter;
     ConfigNode configNode;
@@ -145,8 +133,8 @@ void PelicanServerClientTest::test_response()
         QList<DataSpec> lreq;
         lreq.append(reqStream1);
         DataTypes dt;
-        dt.addData(lreq);
         dt.setAdapter(stream1,&streamAdapter);
+        dt.addData(lreq);
         PelicanServerClient client(configNode, dt, 0);
 
         // set up the memory for receiving data
@@ -179,8 +167,8 @@ void PelicanServerClientTest::test_response()
         QList<DataSpec> lreq;
         lreq.append(req);
         DataTypes dt;
-        dt.addData(lreq);
         dt.setAdapter(service1,&serviceAdapter);
+        dt.addData(lreq);
         PelicanServerClient client(configNode, dt, 0);
 
         SocketTester st;
@@ -211,9 +199,9 @@ void PelicanServerClientTest::test_response()
         QList<DataSpec> lreq;
         lreq.append(req);
         DataTypes dt;
-        dt.addData(lreq);
         dt.setAdapter(service1,&serviceAdapter);
         dt.setAdapter(service2,&serviceAdapter);
+        dt.addData(lreq);
         PelicanServerClient client(configNode, dt, 0);
 
         SocketTester st;
@@ -242,9 +230,9 @@ void PelicanServerClientTest::test_response()
 //        QList<DataSpec> lreq;
 //        lreq.append(req);
 //        DataTypes dt;
-//        dt.addData(lreq);
 //        dt.setAdapter(stream1,&streamAdapter);
 //        dt.setAdapter(service1,&serviceAdapter);
+//        dt.addData(lreq);
 //        PelicanServerClient client(configNode, dt, 0);
 //
 //        // set up the memory for receiving data
@@ -268,6 +256,9 @@ void PelicanServerClientTest::test_response()
 //        CPPUNIT_ASSERT_EQUAL( std::string( data2.data() ) , std::string( static_cast<TestDataBlob*>( vhash[service1])->data() ) );
 //    }
 
+        } catch ( const QString& e ) {
+                CPPUNIT_FAIL( e.toStdString() );
+        }
 }
 
 } // namespace pelican

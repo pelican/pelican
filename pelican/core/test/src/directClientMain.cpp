@@ -80,7 +80,8 @@ int main(int argc, char** argv)
 
     // Create the client.
     DirectStreamDataClient* client = static_cast<DirectStreamDataClient*>(
-            clientFactory.create("DirectStreamDataClient", requirements));
+            clientFactory.create("DirectStreamDataClient"));
+    client->reset( requirements );
     client->addStreamChunker("TestUdpChunker", "a");
 
     // Set up the data hash.

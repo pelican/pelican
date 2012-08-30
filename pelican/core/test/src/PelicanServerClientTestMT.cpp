@@ -88,8 +88,8 @@ void PelicanServerClientTestMT::test_getData()
         QList<DataSpec> lreq;
         lreq.append(req);
         DataTypes dt;
-        dt.addData(lreq);
         dt.setAdapter(service1, &serviceAdapter);
+        dt.addData(lreq);
         PelicanServerClient client(configNode, dt, 0);
         client.setPort(port);
 
@@ -112,8 +112,8 @@ void PelicanServerClientTestMT::test_getData()
         QList<DataSpec> lreq;
         lreq.append(reqStream1);
         DataTypes dt;
-        dt.addData(lreq);
         dt.setAdapter(stream1, &streamAdapter);
+        dt.addData(lreq);
         PelicanServerClient client(configNode, dt, 0);
         client.setPort(port);
 
@@ -143,9 +143,9 @@ void PelicanServerClientTestMT::test_getData()
         QList<DataSpec> lreq;
         lreq.append(req);
         DataTypes dt;
-        dt.addData(lreq);
         dt.setAdapter(stream1, &streamAdapter);
         dt.setAdapter(service1, &serviceAdapter);
+        dt.addData(lreq);
         PelicanServerClient client(configNode, dt, 0);
         client.setPort(port);
 

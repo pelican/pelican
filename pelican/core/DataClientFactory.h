@@ -44,13 +44,13 @@ class DataClientFactory : public FactoryConfig<AbstractDataClient>
         /// Create a configured object with the given name and type from a list
         /// of data requirements.
         AbstractDataClient* create(const QString& type,
-                const QList<DataSpec>& requirements,
+                //const QList<DataSpec>& requirements,
                 const QString& name="");
 
     private:
         /// Disable inherited method.
-        AbstractDataClient* create(const QString&, const QString& = "")
-        { return 0; }
+        //AbstractDataClient* create(const QString&, const QString& = "")
+        //{ return 0; }
 };
 
 } // namespace pelican

@@ -39,6 +39,8 @@ class AbstractAdaptingDataClient : public AbstractDataClient
         AbstractAdapter::AdapterType_t type(const QString& dataName) const
         { return _dataReqs.type(dataName); }
 
+        virtual void reset( const QList<DataSpec>& specification );
+
     protected:
         /// Adapts (de-serialises) stream data.
         DataBlobHash adaptStream(QIODevice& device, const StreamData* d,
@@ -59,8 +61,6 @@ class AbstractAdaptingDataClient : public AbstractDataClient
         AbstractStreamAdapter* streamAdapter(const QString& type) const
         { return _dataReqs.streamAdapter(type); }
 
-    private:
-        DataTypes _dataReqs;    ///< The DataTypes and requirements.
 };
 
 } // namespace pelican

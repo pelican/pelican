@@ -16,12 +16,10 @@ namespace pelican {
  * @param[in] requirements  The data sets to be provided by the client.
  * @param[in] name          An optional specific named configuration to use.
  */
-AbstractDataClient* DataClientFactory::create(const QString& type,
-        const QList<DataSpec>& requirements, const QString& name)
+AbstractDataClient* DataClientFactory::create(const QString& type, const QString& name)
 {
     // Create a DataTypes object from the DataRequirements.
     DataTypes dataTypes( conf(type,name), _adapterFactory );
-    dataTypes.addData(requirements);
 
     // Call the base class implementation and set the data requirements.
     AbstractDataClient* client = FactoryConfig<AbstractDataClient>::create(

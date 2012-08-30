@@ -28,14 +28,20 @@ DataTypes::~DataTypes()
 
 /**
  * @details
- * adds a data requirement. All data must be added before
- * any adapters are set.
+ * adds a data requirement. If the appropriate adapter
+ * has not already been added with setAdater() then
+ * this method will attemp to create a suitable one.
  */
 void DataTypes::addData(const DataSpec& data)
 {
     _dataRequirements.append(data);
     foreach( const QString& dataType, data.allData() ) {
-        setAdapter(dataType, _createAdapter(dataType) );
+        if( ! adapterAvailable( dataType ) ) {
+            setAdapter(dataType, _createAdapter(dataType) );
+        }
+        else {
+            _setAdapter( _dataRequirements.last(), dataType );
+        }
     }
 }
 
@@ -58,18 +64,23 @@ void DataTypes::setAdapter(const QString& type, AbstractAdapter* adapter)
     for(int i=0; i < _dataRequirements.size(); ++i )
     {
         DataSpec& req = _dataRequirements[i];
-        switch( adapter->type() )
-        {
-            case AbstractAdapter::Service :
-                req.setServiceData( type );
-                break;
-            case AbstractAdapter::Stream :
-                req.setStreamData( type );
-                break;
-            default:
-                throw QString("unknown adapter type");
-                break;
-        }
+        _setAdapter( req, type );
+    }
+}
+
+void DataTypes::_setAdapter( DataSpec& req, const QString& type )
+{
+    switch( _adapters[type]->type() )
+    {
+        case AbstractAdapter::Service :
+            req.setServiceData( type );
+            break;
+        case AbstractAdapter::Stream :
+            req.setStreamData( type );
+            break;
+        default:
+            throw QString("unknown adapter type");
+            break;
     }
 }
 
