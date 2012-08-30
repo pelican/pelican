@@ -3,6 +3,7 @@
 #include "pelican/core/AbstractServiceAdapter.h"
 #include "pelican/core/DataClientFactory.h"
 #include "pelican/data/DataSpec.h"
+#include <iostream>
 
 
 namespace pelican {
@@ -116,7 +117,9 @@ bool DataTypes::adapterAvailable( const QString& type ) const {
 AbstractAdapter* DataTypes::_createAdapter( const QString& dataType ) const {
 
     // Find the configuration information for adapters.
-    return _adapterFactory->create( _adapterNames.value(dataType),
+    QString adapterType = _adapterNames.value(dataType);
+    if( adapterType == "" ) throw QString("No adpater type specified for stream \"%1\"").arg(dataType);
+    return _adapterFactory->create( adapterType ,
                 _conf.getNamedOption("data","name","") );
 }
 
