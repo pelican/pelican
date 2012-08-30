@@ -16,6 +16,7 @@ AbstractAdaptingDataClient::AbstractAdaptingDataClient( const ConfigNode& config
                 const Config* config )
     : AbstractDataClient( configNode, requirements, config )
 {
+    _dataReqs = requirements;
 }
 
 /**
@@ -28,6 +29,10 @@ AbstractAdaptingDataClient::~AbstractAdaptingDataClient()
 void AbstractAdaptingDataClient::reset( const QList<DataSpec>& requirements  ) {
 
     AbstractDataClient::reset(requirements);
+
+    // remove any previous settings
+    //_dataReqs.clear();
+    _dataReqs.addData( requirements );
 
     // check we have adapters for each type
     foreach (const QString& dataType, _requireSet) {

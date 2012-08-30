@@ -61,6 +61,8 @@ class AbstractAdaptingDataClient : public AbstractDataClient
         AbstractStreamAdapter* streamAdapter(const QString& type) const
         { return _dataReqs.streamAdapter(type); }
 
+    private:
+        DataTypes _dataReqs;    ///< The DataTypes and requirements.
 };
 
 } // namespace pelican

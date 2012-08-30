@@ -87,7 +87,7 @@ class AbstractDataClient
         virtual DataBlobHash getData(DataBlobHash&) = 0;
 
         /// Returns the list of data requirements for each pipeline.
-        const QList<DataSpec>& dataRequirements() { return _dataReqs.dataSpec(); }
+        const QList<DataSpec>& dataRequirements() { return _dataRequirements; }
 
 
     protected:
@@ -118,12 +118,11 @@ class AbstractDataClient
 
     protected:
         ConfigNode _configNode; ///< The configuration node for the data client.
-//        QList<DataSpec> _dataRequirements;
         const Config* _config;
         QSet<QString> _requireSet;
-        DataTypes _dataReqs;    ///< The DataTypes and requirements.
 
     private:
+        QList<DataSpec> _dataRequirements;
 };
 
 } // namespace pelican

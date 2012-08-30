@@ -28,7 +28,7 @@ AbstractDataClient::AbstractDataClient(const ConfigNode& configNode,
         const DataTypes& types, const Config* config )
 : _configNode(configNode),  _config(config)
 {
-    _dataReqs = types;
+    _dataRequirements = types.dataSpec();
 
     // Construct the total set of requirements.
     foreach (const DataSpec& dr, dataRequirements()) {
@@ -53,12 +53,8 @@ void AbstractDataClient::log(const QString& msg)
     std::cerr << msg.toStdString() << std::endl;
 }
 
-void AbstractDataClient::reset( const QList<DataSpec>& requirements  ) {
-     // remove any previous settings
-     //_dataReqs.clear();
-
-     // sort out the adapters
-     _dataReqs.addData( requirements );
+void AbstractDataClient::reset( const QList<DataSpec>& requirements ) {
+    _dataRequirements = requirements;
 }
 
 /**
