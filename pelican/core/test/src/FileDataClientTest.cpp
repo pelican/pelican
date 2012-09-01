@@ -68,6 +68,7 @@ void FileDataClientTest::test_method()
     Config::TreeAddress address;
     address << Config::NodeId("testconfig", "");
     ConfigNode configNode = config.get(address);
+/* No longer relevant
     {
         // Use Case:
         //    Empty data requirements
@@ -81,6 +82,7 @@ void FileDataClientTest::test_method()
         CPPUNIT_ASSERT_THROW(client = new FileDataClient(configNode, dt, 0), QString);
         delete client;
     }
+*/
     TestStreamAdapter streamAdapter;
     QString stream1("stream1");
     QString version1("version1");
@@ -94,8 +96,8 @@ void FileDataClientTest::test_method()
         QList<DataSpec> lreq;
         lreq.append(req);
         DataTypes dt;
-        dt.addData(lreq);
         dt.setAdapter(stream1,&streamAdapter);
+        dt.addData(lreq);
         FileDataClient client(configNode, dt, 0);
 
         QHash<QString, DataBlob*> dataHash;
@@ -106,11 +108,9 @@ void FileDataClientTest::test_method()
        // correct hash is passed
        // Expect:
        // Data in file to be streamed
-       QList<DataSpec> lreq;
-        lreq.append(req);
        DataTypes types;
-       types.addData(lreq);
        types.setAdapter(stream1,&streamAdapter);
+       types.addData(req);
        FileDataClient client(configNode, types, &config);
 
        QHash<QString, DataBlob*> dataHash;

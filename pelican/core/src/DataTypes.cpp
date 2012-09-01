@@ -1,17 +1,23 @@
 #include "pelican/core/DataTypes.h"
 #include "pelican/core/AbstractStreamAdapter.h"
 #include "pelican/core/AbstractServiceAdapter.h"
+#include "pelican/core/DataClientFactory.h"
 #include "pelican/data/DataSpec.h"
+#include <iostream>
 
 
 namespace pelican {
 
 
-/**
- *@details DataTypes
- */
 DataTypes::DataTypes()
+    : _adapterFactory(0)
 {
+}
+
+DataTypes::DataTypes(  const ConfigNode& config, AbstractAdapterFactory* factory )
+    : _conf(config), _adapterFactory(factory)
+{
+    _adapterNames = _conf.getOptionHash("data", "type", "adapter");
 }
 
 /**
@@ -23,17 +29,28 @@ DataTypes::~DataTypes()
 
 /**
  * @details
- * adds a data requirement. All data must be added before
- * any adapters are set.
+ * adds a data requirement. If the appropriate adapter
+ * has not already been added with setAdater() then
+ * this method will attemp to create a suitable one.
  */
 void DataTypes::addData(const DataSpec& data)
 {
     _dataRequirements.append(data);
+    foreach( const QString& dataType, data.allData() ) {
+        if( ! adapterAvailable( dataType ) ) {
+            setAdapter(dataType, _createAdapter(dataType) );
+        }
+        else {
+            _setAdapter( _dataRequirements.last(), dataType );
+        }
+    }
 }
 
 void DataTypes::addData(const QList<DataSpec>& data)
 {
-    _dataRequirements += data;
+    foreach( const DataSpec& s, data) {
+        addData(s);
+    }
 }
 
 /**
@@ -48,18 +65,23 @@ void DataTypes::setAdapter(const QString& type, AbstractAdapter* adapter)
     for(int i=0; i < _dataRequirements.size(); ++i )
     {
         DataSpec& req = _dataRequirements[i];
-        switch( adapter->type() )
-        {
-            case AbstractAdapter::Service :
-                req.setServiceData( type );
-                break;
-            case AbstractAdapter::Stream :
-                req.setStreamData( type );
-                break;
-            default:
-                throw QString("unknown adapter type");
-                break;
-        }
+        _setAdapter( req, type );
+    }
+}
+
+void DataTypes::_setAdapter( DataSpec& req, const QString& type )
+{
+    switch( _adapters[type]->type() )
+    {
+        case AbstractAdapter::Service :
+            req.setServiceData( type );
+            break;
+        case AbstractAdapter::Stream :
+            req.setStreamData( type );
+            break;
+        default:
+            throw QString("unknown adapter type");
+            break;
     }
 }
 
@@ -90,6 +112,15 @@ const QList<DataSpec>& DataTypes::dataSpec() const
 
 bool DataTypes::adapterAvailable( const QString& type ) const {
      return _adapters.contains(type);
+}
+
+AbstractAdapter* DataTypes::_createAdapter( const QString& dataType ) const {
+
+    // Find the configuration information for adapters.
+    QString adapterType = _adapterNames.value(dataType);
+    if( adapterType == "" ) throw QString("No adpater type specified for stream \"%1\"").arg(dataType);
+    return _adapterFactory->create( adapterType ,
+                _conf.getNamedOption("data","name","") );
 }
 
 } // namespace pelican

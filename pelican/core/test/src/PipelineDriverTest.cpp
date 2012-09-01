@@ -67,6 +67,7 @@ void PipelineDriverTest::setUp()
     // Create the pipeline driver.
     _pipelineDriver = new PipelineDriver( _dataBlobFactory, _moduleFactory,
                                           _clientFactory, _osmanager, &config, address);
+    _client = NULL; // will be set if required
 }
 
 /**
@@ -83,9 +84,7 @@ void PipelineDriverTest::tearDown()
     delete _moduleFactory;
     delete _clientFactory;
     delete _osmanager;
-
-    // Delete the QCoreApplication.
-    //delete _coreApp;
+    delete _client;
 }
 
 void PipelineDriverTest::test_checkPipelineRequirements()
@@ -103,9 +102,7 @@ void PipelineDriverTest::test_checkPipelineRequirements()
         DataSpec spec; 
         spec.addStreamData(stream1);
         spec.addStreamData(stream2);
-        DataTypes types;
-        types.addData(spec);
-        TestDataClient client(config, types);
+        TestDataClient client(config, spec);
         TestPipeline* p1 = new TestPipeline( req );
         _pipelineDriver->_checkPipelineRequirements( p1, &client );
         CPPUNIT_ASSERT( (_pipelineDriver->_dataSpecs[p1].streamData()) == (req.required()) );
@@ -121,9 +118,7 @@ void PipelineDriverTest::test_checkPipelineRequirements()
         DataSpec spec; 
         spec.addServiceData(stream1);
         spec.addStreamData(stream2);
-        DataTypes types;
-        types.addData(spec);
-        TestDataClient client(config, types);
+        TestDataClient client(config, spec);
         TestPipeline* p1 = new TestPipeline( req );
         _pipelineDriver->_checkPipelineRequirements( p1, &client );
         CPPUNIT_ASSERT( (_pipelineDriver->_dataSpecs[p1].serviceData()) == (req.required()) );
@@ -140,9 +135,7 @@ void PipelineDriverTest::test_checkPipelineRequirements()
         DataSpec spec; 
         spec.addServiceData(stream1);
         spec.addStreamData(stream2);
-        DataTypes types;
-        types.addData(spec);
-        TestDataClient client(config, types);
+        TestDataClient client(config, spec);
         TestPipeline* p1 = new TestPipeline( req );
         _pipelineDriver->_checkPipelineRequirements( p1, &client );
         CPPUNIT_ASSERT( (_pipelineDriver->_dataSpecs[p1].serviceData()) == (req.required()) );
@@ -156,9 +149,7 @@ void PipelineDriverTest::test_checkPipelineRequirements()
         // throw
         DataRequirements req; req.addRequired(stream1);
         DataSpec spec; 
-        DataTypes types;
-        types.addData(spec);
-        TestDataClient client(config, types);
+        TestDataClient client(config, spec);
         TestPipeline* p1 = new TestPipeline( req );
         CPPUNIT_ASSERT_THROW(_pipelineDriver->_checkPipelineRequirements( p1, &client ), QString );
        
@@ -191,6 +182,7 @@ void PipelineDriverTest::test_registerPipeline()
 
 void PipelineDriverTest::test_registerSwitcher()
 {
+    _setTestClient();
     {
         // Use Case:
         // An empty switcher
@@ -238,9 +230,7 @@ void PipelineDriverTest::test_registerSwitcherData()
     ConfigNode config;
     DataSpec spec;
     spec.addStreamData("TestDataBlob");
-    DataTypes types;
-    types.addData(spec);
-    TestDataClient client(config, types);
+    TestDataClient client(config, spec);
     _pipelineDriver->_dataClient = &client;
 
     {
@@ -347,9 +337,7 @@ void PipelineDriverTest::test_start_singlePipelineClientReturnsGoodData()
         ConfigNode config;
         DataSpec spec;
         spec.addStreamData("FloatData");
-        DataTypes types;
-        types.addData(spec);
-        TestDataClient client(config, types);
+        TestDataClient client(config, spec);
         _pipelineDriver->_dataClient = &client;
 
         // Start the pipeline driver.
@@ -382,11 +370,9 @@ void PipelineDriverTest::test_start_singlePipelineClientReturnsWrongData()
 
         // Create the data client.
         ConfigNode config;
-        DataTypes types;
         DataSpec clientTypes;
         clientTypes.addStreamData("OtherStreamData");
-        types.addData(clientTypes);
-        TestDataClient client(config, types);
+        TestDataClient client(config, clientTypes);
         _pipelineDriver->_dataClient = &client;
 
         // Start the pipeline driver.
@@ -424,12 +410,10 @@ void PipelineDriverTest::test_start_multiPipelineRunDifferentData()
 
         // Create the data client.
         ConfigNode config;
-        DataTypes types;
         DataSpec clientTypes;
         clientTypes.addStreamData(type1); // Add both types of required data.
         clientTypes.addStreamData(type2); // Add both types of required data.
-        types.addData(clientTypes);
-        TestDataClient client(config, types);
+        TestDataClient client(config, clientTypes);
         _pipelineDriver->_dataClient = &client;
 
         // Start the pipeline driver.
@@ -469,11 +453,9 @@ void PipelineDriverTest::test_start_multiPipelineRunOne()
 
         // Create the data client.
         ConfigNode config;
-        DataTypes types;
         DataSpec clientTypes;
         clientTypes.addStreamData(type1); // Add one type of required data.
-        types.addData(clientTypes);
-        TestDataClient client(config, types);
+        TestDataClient client(config, clientTypes);
         _pipelineDriver->_dataClient = &client;
 
         // Start the pipeline driver.
@@ -514,11 +496,9 @@ void PipelineDriverTest::test_start_pipelineWithHistory()
 
             // Create the data client.
             ConfigNode config;
-            DataTypes types;
             DataSpec clientTypes;
             clientTypes.addStreamData(type1); // Add one type of required data.
-            types.addData(clientTypes);
-            TestDataClient client(config, types);
+            TestDataClient client(config, clientTypes);
             _pipelineDriver->_dataClient = &client;
 
             // Start the pipeline driver.
@@ -535,6 +515,16 @@ void PipelineDriverTest::test_start_pipelineWithHistory()
     catch(const QString& e) {
         CPPUNIT_FAIL("Unexpected exception: " + e.toStdString());
     }
+}
+
+void PipelineDriverTest::_setTestClient() {
+    if ( ! _client  ) {
+        ConfigNode config;
+        DataSpec spec;
+        spec.addStreamData("TestDataBlob");
+        _client = new TestDataClient(config, spec);
+    }
+    _pipelineDriver->setDataClient( _client );
 }
 
 } // namespace pelican

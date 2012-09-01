@@ -30,10 +30,6 @@ AbstractDataClient::AbstractDataClient(const ConfigNode& configNode,
 {
     _dataRequirements = types.dataSpec();
 
-    // Quick sanity check.
-    if (_dataRequirements.size() == 0)
-        throw QString("AbstractDataClient: No data requirements specified");
-
     // Construct the total set of requirements.
     foreach (const DataSpec& dr, dataRequirements()) {
         _requireSet += dr.allData();
@@ -55,6 +51,10 @@ AbstractDataClient::~AbstractDataClient()
 void AbstractDataClient::log(const QString& msg)
 {
     std::cerr << msg.toStdString() << std::endl;
+}
+
+void AbstractDataClient::reset( const QList<DataSpec>& requirements ) {
+    _dataRequirements = requirements;
 }
 
 /**

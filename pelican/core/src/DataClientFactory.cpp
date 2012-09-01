@@ -16,35 +16,10 @@ namespace pelican {
  * @param[in] requirements  The data sets to be provided by the client.
  * @param[in] name          An optional specific named configuration to use.
  */
-AbstractDataClient* DataClientFactory::create(const QString& type,
-        const QList<DataSpec>& requirements, const QString& name)
+AbstractDataClient* DataClientFactory::create(const QString& type, const QString& name)
 {
     // Create a DataTypes object from the DataRequirements.
-    DataTypes dataTypes;
-    foreach (const DataSpec& req, requirements)
-        dataTypes.addData(req);
-
-    // Find the configuration information for adapters.
-    QHash<QString, QString> adapterNames = conf(type, name).
-            getOptionHash("data", "type", "adapter");
-
-    // Construct the adapters and add them to the DataTypes structure.
-    foreach (const DataSpec& req, requirements)
-    {
-        QSet<QString> all = req.allData();
-        foreach (const QString& dataType, all)
-        {
-            //if (!adapterNames.contains(dataType))
-            //    throw QString("DataClientFactory: Unable to find adapter for "
-            //            "data type '%1'.").arg(dataType);
-            if (adapterNames.contains(dataType)) {
-                AbstractAdapter* adapter =
-                        _adapterFactory->create(adapterNames.value(dataType), 
-                                    conf(type, name).getNamedOption("data","name","") );
-                dataTypes.setAdapter(dataType, adapter);
-            }
-        }
-    }
+    DataTypes dataTypes( conf(type,name), _adapterFactory );
 
     // Call the base class implementation and set the data requirements.
     AbstractDataClient* client = FactoryConfig<AbstractDataClient>::create(

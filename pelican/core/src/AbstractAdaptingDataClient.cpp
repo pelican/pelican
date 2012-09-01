@@ -17,12 +17,6 @@ AbstractAdaptingDataClient::AbstractAdaptingDataClient( const ConfigNode& config
     : AbstractDataClient( configNode, requirements, config )
 {
     _dataReqs = requirements;
-    // check we have adapters for each type
-    foreach (const QString& dataType, _requireSet) {
-        if (!_dataReqs.adapterAvailable(dataType))
-            throw QString("AbstractAdaptingDataClient: Unable to find adapter for "
-                    "data type '%1'.").arg(dataType);
-    }
 }
 
 /**
@@ -30,6 +24,22 @@ AbstractAdaptingDataClient::AbstractAdaptingDataClient( const ConfigNode& config
  */
 AbstractAdaptingDataClient::~AbstractAdaptingDataClient()
 {
+}
+
+void AbstractAdaptingDataClient::reset( const QList<DataSpec>& requirements  ) {
+
+    AbstractDataClient::reset(requirements);
+
+    // remove any previous settings
+    //_dataReqs.clear();
+    _dataReqs.addData( requirements );
+
+    // check we have adapters for each type
+    foreach (const QString& dataType, _requireSet) {
+        if (!_dataReqs.adapterAvailable(dataType))
+            throw QString("AbstractAdaptingDataClient: Unable to find adapter for "
+                    "data type '%1'.").arg(dataType);
+    }
 }
 
 /**

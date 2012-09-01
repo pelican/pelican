@@ -219,7 +219,7 @@ void PipelineDriver::addPipelineSwitcher(const PipelineSwitcher& switcher)
  */
 void PipelineDriver::setDataClient(QString name)
 {
-    _dataClientName = name;
+    _dataClient = _clientFactory->create( name );
 }
 
 void PipelineDriver::setDataClient( AbstractDataClient* client ) {
@@ -235,22 +235,22 @@ void PipelineDriver::setDataClient( AbstractDataClient* client ) {
  */
 void PipelineDriver::start()
 {
+    Q_ASSERT( _dataClient );
+
     // Check for at least one registered pipeline.
     if (_registeredPipelines.isEmpty())
         throw QString("PipelineDriver::start(): No pipelines registered.");
 
-    // Create the data client.
-    if (!_dataClientName.isEmpty() && _dataClient == NULL )
-        _dataClient = _clientFactory->create( _dataClientName, _dataSpecs.values() );
     // Check the data requirements.
     _checkDataRequirements();
 
     // set up the data buffers
-    if( _dataClient ) {
-        foreach( AbstractPipeline* p, _activePipelines ) {
-            _activatePipelineBuffers(p);
-        }
+    foreach( AbstractPipeline* p, _activePipelines ) {
+        _activatePipelineBuffers(p);
     }
+
+    // prepare the dataclient
+    _dataClient->reset( _dataSpecs.values() );
 
     // Enter main program loop.
     _run = true;
@@ -278,15 +278,6 @@ void PipelineDriver::start()
 
         // Run all the pipelines compatible with this data hash.
         bool ranPipeline = false;
-/*
-        QMultiHash<DataRequirements, AbstractPipeline*>::iterator pipe;
-        for (pipe = _pipelines.begin(); pipe != _pipelines.end(); ++pipe) {
-            if (pipe.key().isCompatible(validData)) {
-                ranPipeline = true;
-                pipe.value()->exec(_dataHash);
-            }
-        }
-*/
         foreach(AbstractPipeline* p, _activePipelines ) {
             if( _dataSpecs[p].isCompatible(validData) ) {
                 ranPipeline = true;
@@ -365,7 +356,7 @@ void PipelineDriver::_checkPipelineRequirements( AbstractPipeline* p, AbstractDa
             _dataSpecs[p].setServiceData(stream);
             continue;
         }
-        throw(QString("PipelineDriver: DataClient does not support data required"));
+        throw(QString("PipelineDriver: DataClient does not support data required (%1)").arg(stream));
     }
     // add optional data if available
     foreach(const QString& stream, pipereq.optional() ) {
