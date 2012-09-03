@@ -18,6 +18,7 @@ namespace pelican {
 namespace opts = boost::program_options;
 
 QList<PipelineDriver*> PipelineApplication::_allDrivers;
+int PipelineApplication::_exitCount = 0;
 
 /**
  * @details
@@ -81,7 +82,10 @@ void PipelineApplication::_init()
     signal( SIGTERM, &PipelineApplication::exit);
 }
 
-void PipelineApplication::exit(int) {
+void PipelineApplication::exit(int i) {
+    // if this is called more than three times,
+    // abandon the clean exit
+    if( ++_exitCount > 3 ) exit(i);
     QCoreApplication::exit(0);
     foreach( PipelineDriver* d, _allDrivers ) {
         d->stop();
