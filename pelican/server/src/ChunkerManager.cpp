@@ -139,7 +139,7 @@ AbstractChunker* ChunkerManager::addStreamChunker(QString chunkerType, QString n
 
     // Loop over the list of chunk types written into the data buffer
     // by the chunker and add them to the list of stream data types.
-    foreach (QString chunkType, chunker->chunkTypes())
+    foreach( const QString& chunkType, chunker->chunkTypes())
         _streamDataTypes.insert(chunkType);
 
     return chunker;
