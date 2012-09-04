@@ -6,6 +6,7 @@
 #include "pelican/server/LockableStreamData.h"
 #include "pelican/server/LockableServiceData.h"
 #include "pelican/comms/StreamData.h"
+#include "pelican/comms/DataSupportResponse.h"
 #include "pelican/comms/ServerRequest.h"
 #include "pelican/comms/StreamDataRequest.h"
 #include "pelican/comms/ServiceDataRequest.h"
@@ -97,6 +98,13 @@ void Session::processRequest(const ServerRequest& req, QIODevice& out,
                 break;
             }
 
+            case ServerRequest::DataSupport:
+            {
+                verbose("DataSupport request received");
+                DataSupportResponse r( _dataManager->dataSpec() );
+                _protocol->send(out, r);
+                break;
+            }
             case ServerRequest::StreamData:
             {
                 QList<LockedData> dataList = processStreamDataRequest(static_cast<const StreamDataRequest&>(req), timeout);

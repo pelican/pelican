@@ -77,7 +77,7 @@ boost::shared_ptr<ServerResponse> PelicanClientProtocol::receive(QAbstractSocket
     ServerResponse::Response type = ServerResponse::Error;
     while (socket.bytesAvailable() < (int)sizeof(quint16)) {
         if ( !socket.waitForReadyRead(timeout) ) {
-            std::cout << "PelicanClientProtocol: Receive error!" << std::endl;
+            std::cout << "PelicanClientProtocol: Receive error: " << socket.errorString().toStdString() << std::endl;
             return boost::shared_ptr<ServerResponse>(new ServerResponse(type,
                     socket.errorString()));
         }
@@ -100,8 +100,10 @@ boost::shared_ptr<ServerResponse> PelicanClientProtocol::receive(QAbstractSocket
             QSet<QString> services;
             in >> streams;
             in >> services;
-            boost::shared_ptr<DataSupportResponse> s(new DataSupportResponse(
-                    streams, services));
+            DataSpec spec; 
+            spec.addServiceData( services );
+            spec.addStreamData( streams );
+            boost::shared_ptr<DataSupportResponse> s(new DataSupportResponse(spec));
             return s;
             break;
         }

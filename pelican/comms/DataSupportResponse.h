@@ -6,6 +6,7 @@
  */
 
 #include "ServerResponse.h"
+#include "pelican/data/DataSpec.h"
 
 #include <QtCore/QSet>
 #include <QtCore/QString>
@@ -26,15 +27,14 @@ namespace pelican {
 class DataSupportResponse : public ServerResponse
 {
     public:
-        DataSupportResponse(const QSet<QString>& streams,
-                const QSet<QString>& serviceStreams = QSet<QString>());
+        DataSupportResponse(const DataSpec& spec );
+        DataSupportResponse(const QSet<QString>& streams, const QSet<QString>& service = QSet<QString>() );
         ~DataSupportResponse();
-        const QSet<QString>& streamData() const { return _streams; };
-        const QSet<QString>& serviceData() const { return _services; };
+        const QSet<QString>& streamData() const { return _spec.streamData(); };
+        const QSet<QString>& serviceData() const { return _spec.serviceData(); };
 
     private:
-         QSet<QString> _streams;
-         QSet<QString> _services;
+         DataSpec _spec;
 };
 
 } // namespace pelican
