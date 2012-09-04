@@ -15,6 +15,7 @@
 #include "pelican/comms/DataSupportResponse.h"
 
 #include <QtNetwork/QTcpSocket>
+#include <QtNetwork/QAbstractSocket>
 #include <QtCore/QHash>
 #include <QtCore/QBuffer>
 #include <QtCore/QByteArray>
@@ -124,10 +125,17 @@ AbstractDataClient::DataBlobHash PelicanServerClient::_sendRequest(
 boost::shared_ptr<ServerResponse> PelicanServerClient::_sendRequest( QTcpSocket& sock, const ServerRequest& request ) const {
     Q_ASSERT(_server != "");
     sock.connectToHost(_server, _port , QIODevice::ReadWrite);
-    if(! sock.waitForConnected(-1))
+    while(! sock.waitForConnected(-1))
     {
-        throw(QString("PelicanServerClient: unable to connect to host ") + _server 
-            + QString(" port %1").arg( _port) + " : " + sock.errorString() );
+        QAbstractSocket::SocketError e = sock.error();
+        if( e != QAbstractSocket::ConnectionRefusedError
+         && e != QAbstractSocket::RemoteHostClosedError
+         && e != QAbstractSocket::QAbstractSocket::NetworkError ) {
+            throw(QString("PelicanServerClient: unable to connect to host ") + _server 
+                + QString(" port %1").arg( _port) + " : " + sock.errorString() );
+        }
+        sleep(4); // wait before trying again
+        sock.connectToHost(_server, _port , QIODevice::ReadWrite);
     }
 
     // Write the request to the open TCP socket with the PelicanClientProtocol.
@@ -322,7 +330,7 @@ const DataSpec& PelicanServerClient::dataSpec() const {
     DataSupportResponse* res = static_cast<DataSupportResponse*>(r.get());
     _dataSpec.clear();
     _dataSpec.addServiceData( res->serviceData() );
-    _dataSpec.addServiceData( res->streamData() );
+    _dataSpec.addStreamData( res->streamData() );
     return _dataSpec;
     
 }
