@@ -123,6 +123,7 @@ void PelicanServer::run()
             servers.append(server);
             if ( !server->listen(QHostAddress::Any, ports[i]) )
                 throw QString("Cannot run PelicanServer on port %1").arg(ports[i]);
+            verbose( QString("PelicanServer: listening on port %1").arg(ports[i]), 1 );
         }
 
         // Set ready flag.
