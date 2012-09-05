@@ -101,10 +101,20 @@ class DataSpec
         /// return the number of data types required
         int size() const;
 
+        /// add adapter type associations with streams
+        void addAdapterTypes( const QHash<QString, QString>& types );
+
+        /// return the adapter types (see addAdapterTypes )
+        inline const QHash<QString,QString>& getAdapterTypes() const
+        {
+             return _adapterTypes;
+        }
+
     private:
         mutable uint _hash;
         QSet<QString> _streamData;
         QSet<QString> _serviceData;
+        QHash<QString, QString> _adapterTypes;
 };
 
 /// Test for compatibility with a data blob hash.

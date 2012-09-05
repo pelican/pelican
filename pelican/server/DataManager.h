@@ -61,6 +61,9 @@ class DataManager
         /// Associate service data
         void associateServiceData(LockableStreamData* data);
 
+        /// add to the  list of default adapters
+        void addDefaultAdapters( const QHash<QString,QString>& );
+
         /// Returns the data types handled by this manager.
         const DataSpec& dataSpec() const {return _specs;}
 

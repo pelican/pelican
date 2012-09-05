@@ -44,6 +44,8 @@ class AbstractChunker
 
         bool _active;
 
+        QHash< QString, QString > _adapterTypes;
+
     public:
         /// Constructs a new AbstractChunker.
         PELICAN_CONSTRUCT_TYPES(ConfigNode)
@@ -66,8 +68,7 @@ class AbstractChunker
         virtual void next(QIODevice*) = 0;
 
         /// Sets the data manager.
-        void setDataManager(DataManager* dataManager)
-        { _dataManager = dataManager; }
+        void setDataManager(DataManager* dataManager);
 
         /// Set the IP address to listen on for data.
         void setHost(const QString& ipaddress) { _host = ipaddress; }
@@ -89,6 +90,13 @@ class AbstractChunker
 
         /// Return the type name to be associated with this data.
         const QList<QString> & chunkTypes() const { return _chunkTypes; }
+
+        /// associates a default adapter to a named
+        /// stream. Note that the stream (or chunkType)
+        /// must already be registered
+        void setDefaultAdapter( const QString& adapter );
+        void setDefaultAdapter( const QString& adapter,
+                                const QString& stream );
 
         /// Returns the type name associated with the data.
         /// NOTE: This will be depricated. DO NOT USE!.
@@ -112,6 +120,11 @@ class AbstractChunker
 
         /// Returns the state of the chunker (running or not).
         bool isActive() const { return _active; }
+
+
+        const QHash<QString, QString>& defaultAdapters() const {
+             return _adapterTypes;
+        };
 
 };
 

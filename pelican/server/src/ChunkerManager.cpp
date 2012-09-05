@@ -71,16 +71,7 @@ bool ChunkerManager::init(DataManager& dataManager)
         dataManager.getServiceBuffer(type);
     }
 
-    //QList<QPair<QString,quint16> > inputPorts = _chunkerPortMap.keys();
-
     // Set up data-stream inputs.
-    //for (int i = 0; i < inputPorts.size(); ++i) {
-    //    AbstractChunker* chunker = _chunkerPortMap[inputPorts[i]];
-    //    chunker->setDataManager(&dataManager);
-    //    DataReceiver* receiver = new DataReceiver(chunker);
-    //    _dataReceivers.append(receiver);
-    //    receiver->start();
-    //}
     try {
         foreach (AbstractChunker* chunker, _chunkers ) {
             chunker->setDataManager(&dataManager);

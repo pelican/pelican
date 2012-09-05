@@ -40,7 +40,8 @@ namespace pelican {
 PelicanServerClient::PelicanServerClient(const ConfigNode& configNode,
         const DataTypes& types, const Config* config
         )
-    : AbstractAdaptingDataClient(configNode, types, config), _protocol(0)
+    : AbstractAdaptingDataClient(configNode, types, config)
+        , _protocol(0), _specRecieved(false)
 {
     _protocol = new PelicanClientProtocol;
 
@@ -322,16 +323,20 @@ AbstractDataClient::DataBlobHash PelicanServerClient::_adaptStream(
 }
 
 const DataSpec& PelicanServerClient::dataSpec() const {
-    // send a request to the server for the types of data
-    DataSupportRequest request;
-    QTcpSocket sock;
-    boost::shared_ptr<ServerResponse> r = _sendRequest( sock, request );
-    Q_ASSERT( r->type() == ServerResponse::DataSupport);
-    DataSupportResponse* res = static_cast<DataSupportResponse*>(r.get());
-    _dataSpec.clear();
-    _dataSpec.addServiceData( res->serviceData() );
-    _dataSpec.addStreamData( res->streamData() );
+    if( ! _specRecieved ) {
+        // send a request to the server for the types of data
+        DataSupportRequest request;
+        QTcpSocket sock;
+        boost::shared_ptr<ServerResponse> r = _sendRequest( sock, request );
+        Q_ASSERT( r->type() == ServerResponse::DataSupport);
+        DataSupportResponse* res = static_cast<DataSupportResponse*>(r.get());
+        _dataSpec.clear();
+        _dataSpec.addServiceData( res->serviceData() );
+        _dataSpec.addStreamData( res->streamData() );
+        _dataSpec.addAdapterTypes( res->defaultAdapters() );
+        _specRecieved = true;
+    }
     return _dataSpec;
-    
 }
+
 } // namespace pelican

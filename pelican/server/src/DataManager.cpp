@@ -282,5 +282,8 @@ void DataManager::emptiedBuffer(StreamDataBuffer* buffer)
     }
 }
 
+void DataManager::addDefaultAdapters( const QHash<QString,QString>& types ) {
+    _specs.addAdapterTypes( types );
+}
 
 } // namespace pelican

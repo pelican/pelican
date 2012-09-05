@@ -17,8 +17,7 @@ class AbstractStreamAdapter;
 class AbstractServiceAdapter;
 class AbstractAdapterFactory;
 
-/**
- * @ingroup c_core
+/** * @ingroup c_core
  *
  * @class DataTypes
  *
@@ -35,9 +34,10 @@ class DataTypes
         DataTypes( const ConfigNode& config, AbstractAdapterFactory* );
         ~DataTypes();
 
-        /// Add a data set.
-        void addData(const DataSpec& data);
-        void addData(const QList<DataSpec>& data);
+        /// Add a data set, and attempt to find a suitable adapter.
+        /// Will throw QString if no suitable adapter is found
+        void addData(const DataSpec& data );
+        void addData(const QList<DataSpec>& data );
 
         /// Set an adapter to interpret the data.
         void setAdapter(const QString& type, AbstractAdapter* adapter);

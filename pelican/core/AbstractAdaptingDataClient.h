@@ -39,6 +39,8 @@ class AbstractAdaptingDataClient : public AbstractDataClient
         AbstractAdapter::AdapterType_t type(const QString& dataName) const
         { return _dataReqs.type(dataName); }
 
+        /// reconfigure the client to deliver the specified
+        /// data requirements
         virtual void reset( const QList<DataSpec>& specification );
 
     protected:
@@ -60,6 +62,7 @@ class AbstractAdaptingDataClient : public AbstractDataClient
         /// Returns the adapter for stream data of the required type.
         AbstractStreamAdapter* streamAdapter(const QString& type) const
         { return _dataReqs.streamAdapter(type); }
+
 
     private:
         DataTypes _dataReqs;    ///< The DataTypes and requirements.
