@@ -117,11 +117,11 @@ macro(SUBPACKAGE_LIBRARY name)
 
         set(current_library_target ${name})
 
-        # Add the library to the list of sub-pacakge libraries.
-        # This is required for the case in which subpacakge binaries depend
+        # Add the library to the list of sub-package libraries.
+        # This is required for the case in which subpackage binaries depend
         # locally on the subpackage library.
         _SET_SUBPACKAGE_LIBRARIES(${subpackage_current})
-        clean_library_list( SUBPACKAGE_LIBRARIES )
+        #clean_library_list( SUBPACKAGE_LIBRARIES )
         message("Libs for ${name}: ${SUBPACKAGE_LIBRARIES}")
 
     else(subpackage_current)
