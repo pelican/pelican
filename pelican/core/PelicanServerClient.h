@@ -77,6 +77,7 @@ class PelicanServerClient : public AbstractAdaptingDataClient
         AbstractClientProtocol* _protocol;
         QString _server;
         unsigned _port;
+        mutable bool _specRecieved;
         mutable DataSpec _dataSpec;
 
     private:

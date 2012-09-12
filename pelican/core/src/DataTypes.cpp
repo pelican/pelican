@@ -33,12 +33,24 @@ DataTypes::~DataTypes()
  * has not already been added with setAdater() then
  * this method will attemp to create a suitable one.
  */
-void DataTypes::addData(const DataSpec& data)
+void DataTypes::addData( const DataSpec& data )
 {
     _dataRequirements.append(data);
+    const QHash<QString,QString>& defaultAdapters = data.getAdapterTypes();
     foreach( const QString& dataType, data.allData() ) {
         if( ! adapterAvailable( dataType ) ) {
-            setAdapter(dataType, _createAdapter(dataType) );
+            if( ! _adapterNames.contains(dataType) 
+                && defaultAdapters.contains(dataType)
+                && defaultAdapters.value(dataType) != "" ) {
+                // Use the default value if there is one
+                // and the config does not override it
+                setAdapter(dataType, _createAdapter(defaultAdapters.value(dataType)) );
+            } else {
+                // use the configuration specified adapter
+                // if available
+                // will throw if nothing is found
+                setAdapter(dataType, _createAdapter(dataType) );
+            }
         }
         else {
             _setAdapter( _dataRequirements.last(), dataType );
@@ -46,7 +58,7 @@ void DataTypes::addData(const DataSpec& data)
     }
 }
 
-void DataTypes::addData(const QList<DataSpec>& data)
+void DataTypes::addData(const QList<DataSpec>& data )
 {
     foreach( const DataSpec& s, data) {
         addData(s);

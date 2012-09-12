@@ -131,6 +131,7 @@ void PelicanProtocol::send(QIODevice& device, const DataSupportResponse& support
     out << (quint16)ServerResponse::DataSupport;
     out << supported.streamData();
     out << supported.serviceData();
+    out << supported.defaultAdapters();
     device.write(array);
 }
 

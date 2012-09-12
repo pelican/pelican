@@ -70,8 +70,8 @@ void EmulatorDriver::run()
             _device->write(ptr, size);
             _device->waitForBytesWritten(100);
 
-            // Sleep. - minimum of 1 microsec to ensure thread swapping
-            unsigned long interval = _emulator->interval() || 1;
+            // Sleep.
+            unsigned long interval = _emulator->interval();
             if (interval != 0) usleep(interval);
             ++packetCounter;
 #if QT_VERSION >= 0x040300

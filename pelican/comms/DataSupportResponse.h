@@ -6,6 +6,7 @@
  */
 
 #include "ServerResponse.h"
+#include "pelican/data/DataSpec.h"
 
 #include <QtCore/QSet>
 #include <QtCore/QString>
@@ -26,15 +27,22 @@ namespace pelican {
 class DataSupportResponse : public ServerResponse
 {
     public:
-        DataSupportResponse(const QSet<QString>& streams,
-                const QSet<QString>& serviceStreams = QSet<QString>());
+        DataSupportResponse(const DataSpec& spec );
+        DataSupportResponse(const QSet<QString>& streams, const QSet<QString>& service = QSet<QString>() );
         ~DataSupportResponse();
-        const QSet<QString>& streamData() const { return _streams; };
-        const QSet<QString>& serviceData() const { return _services; };
+
+        /// set the default adapter types for each stream
+        void setDefaultAdapters( const QHash<QString, QString>& a ) { _spec.addAdapterTypes(a); }
+
+        const QSet<QString>& streamData() const { return _spec.streamData(); }
+        const QSet<QString>& serviceData() const { return _spec.serviceData(); }
+
+        /// return a hash of Adapter types for each stream to use as a default
+        //  if not overidden elsewhere
+        const QHash<QString, QString>& defaultAdapters() const { return _spec.getAdapterTypes(); }
 
     private:
-         QSet<QString> _streams;
-         QSet<QString> _services;
+         DataSpec _spec;
 };
 
 } // namespace pelican

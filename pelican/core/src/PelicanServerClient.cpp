@@ -15,6 +15,7 @@
 #include "pelican/comms/DataSupportResponse.h"
 
 #include <QtNetwork/QTcpSocket>
+#include <QtNetwork/QAbstractSocket>
 #include <QtCore/QHash>
 #include <QtCore/QBuffer>
 #include <QtCore/QByteArray>
@@ -39,7 +40,8 @@ namespace pelican {
 PelicanServerClient::PelicanServerClient(const ConfigNode& configNode,
         const DataTypes& types, const Config* config
         )
-    : AbstractAdaptingDataClient(configNode, types, config), _protocol(0)
+    : AbstractAdaptingDataClient(configNode, types, config)
+        , _protocol(0), _specRecieved(false)
 {
     _protocol = new PelicanClientProtocol;
 
@@ -124,10 +126,17 @@ AbstractDataClient::DataBlobHash PelicanServerClient::_sendRequest(
 boost::shared_ptr<ServerResponse> PelicanServerClient::_sendRequest( QTcpSocket& sock, const ServerRequest& request ) const {
     Q_ASSERT(_server != "");
     sock.connectToHost(_server, _port , QIODevice::ReadWrite);
-    if(! sock.waitForConnected(-1))
+    while(! sock.waitForConnected(-1))
     {
-        throw(QString("PelicanServerClient: unable to connect to host ") + _server 
-            + QString(" port %1").arg( _port) + " : " + sock.errorString() );
+        QAbstractSocket::SocketError e = sock.error();
+        if( e != QAbstractSocket::ConnectionRefusedError
+         && e != QAbstractSocket::RemoteHostClosedError
+         && e != QAbstractSocket::QAbstractSocket::NetworkError ) {
+            throw(QString("PelicanServerClient: unable to connect to host ") + _server 
+                + QString(" port %1").arg( _port) + " : " + sock.errorString() );
+        }
+        sleep(4); // wait before trying again
+        sock.connectToHost(_server, _port , QIODevice::ReadWrite);
     }
 
     // Write the request to the open TCP socket with the PelicanClientProtocol.
@@ -314,16 +323,20 @@ AbstractDataClient::DataBlobHash PelicanServerClient::_adaptStream(
 }
 
 const DataSpec& PelicanServerClient::dataSpec() const {
-    // send a request to the server for the types of data
-    DataSupportRequest request;
-    QTcpSocket sock;
-    boost::shared_ptr<ServerResponse> r = _sendRequest( sock, request );
-    Q_ASSERT( r->type() == ServerResponse::DataSupport);
-    DataSupportResponse* res = static_cast<DataSupportResponse*>(r.get());
-    _dataSpec.clear();
-    _dataSpec.addServiceData( res->serviceData() );
-    _dataSpec.addServiceData( res->streamData() );
+    if( ! _specRecieved ) {
+        // send a request to the server for the types of data
+        DataSupportRequest request;
+        QTcpSocket sock;
+        boost::shared_ptr<ServerResponse> r = _sendRequest( sock, request );
+        Q_ASSERT( r->type() == ServerResponse::DataSupport);
+        DataSupportResponse* res = static_cast<DataSupportResponse*>(r.get());
+        _dataSpec.clear();
+        _dataSpec.addServiceData( res->serviceData() );
+        _dataSpec.addStreamData( res->streamData() );
+        _dataSpec.addAdapterTypes( res->defaultAdapters() );
+        _specRecieved = true;
+    }
     return _dataSpec;
-    
 }
+
 } // namespace pelican

@@ -7,18 +7,21 @@ namespace pelican {
 
 /**
  * @details
- *  Setup from the configuration file
- *  option 1:
+ *  Setup options in the configuration file:
  *    listen to an incoming port
  *    <connection host="dataHost" port="12345" />
+ *    To set the stream name for the chunker
+ *    <data type="streamName" />
+ *    To set a default adapter for the specifc stream
+ *    <data type="streamName" adapter="AdapterType" />
  */
-
 AbstractChunker::AbstractChunker(const ConfigNode& config)
 {
     // Initialise members.
     _dataManager = 0;
 
     _chunkTypes = config.getOptionList("data", "type");
+    _adapterTypes = config.getOptionHash("data","type","adapter");
     _host = config.getOption("connection", "host", "");
     _port = (quint16)config.getOption("connection", "port", "0").toUInt();
 
@@ -33,6 +36,12 @@ AbstractChunker::AbstractChunker(const ConfigNode& config)
 AbstractChunker::~AbstractChunker()
 {
     stop();
+}
+
+void AbstractChunker::setDataManager(DataManager* dataManager)
+{ 
+    _dataManager = dataManager; 
+    dataManager->addDefaultAdapters( defaultAdapters() );
 }
 
 /**
@@ -76,6 +85,20 @@ WritableData AbstractChunker::getDataStorage(size_t size,
         throw QString("AbstractChunker::getDataStorage(): No data manager.");
 
     return _dataManager->getWritableData(chunkType, size);
+}
+
+void AbstractChunker::setDefaultAdapter( const QString& adapter ) {
+    if (_chunkTypes.size() != 1)
+        throw QString("AbstractChunker::setDefaultAdapter(): "
+                "More than one chunk type registered, ambiguous request.");
+   setDefaultAdapter( adapter, _chunkTypes[0] );
+}
+
+void AbstractChunker::setDefaultAdapter( const QString& adapter, 
+                                const QString& stream )
+{
+    _adapterTypes.insert(stream,adapter);
+    
 }
 
 } // namespace pelican

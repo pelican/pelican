@@ -368,6 +368,8 @@ void PipelineDriver::_checkPipelineRequirements( AbstractPipeline* p, AbstractDa
             _dataSpecs[p].setStreamData(stream);
         }
     }
+    // ensure the default adapters are installed
+    _dataSpecs[p].addAdapterTypes( avail.getAdapterTypes() );
 }
 
 } // namespace pelican

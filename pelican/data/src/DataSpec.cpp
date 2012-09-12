@@ -92,6 +92,7 @@ void DataSpec::clear()
     _hash = 0; // Mark for rehashing.
     _streamData.clear();
     _serviceData.clear();
+    _adapterTypes.clear();
 }
 
 /**
@@ -234,6 +235,12 @@ bool operator==(const DataSpec& r, const QHash<QString, DataBlob*>& hash)
 int DataSpec::size() const
 {
     return _streamData.size() + _serviceData.size();
+}
+
+void DataSpec::addAdapterTypes( const QHash<QString, QString>& types ) {
+    foreach( const QString& s, types ) {
+        _adapterTypes.insert(s, types[s] );
+    }
 }
 
 /**

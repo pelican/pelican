@@ -7,12 +7,17 @@ namespace pelican {
 /**
  *@details DataSupportResponse 
  */
-DataSupportResponse::DataSupportResponse( const QSet<QString>& streams, const QSet<QString>& serviceStreams )
-    : ServerResponse(ServerResponse::DataSupport)
-      , _streams(streams), _services(serviceStreams)
+DataSupportResponse::DataSupportResponse( const DataSpec& streams )
+    : ServerResponse(ServerResponse::DataSupport) , _spec(streams)
 {
 }
 
+DataSupportResponse::DataSupportResponse(const QSet<QString>& streams, const QSet<QString>& service  )
+    : ServerResponse(ServerResponse::DataSupport)
+{
+    _spec.addStreamData( streams );
+    _spec.addServiceData( service );
+}
 /**
  *@details
  */
