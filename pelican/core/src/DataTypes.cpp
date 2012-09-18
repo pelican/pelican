@@ -37,19 +37,27 @@ void DataTypes::addData( const DataSpec& data )
 {
     _dataRequirements.append(data);
     const QHash<QString,QString>& defaultAdapters = data.getAdapterTypes();
-    foreach( const QString& dataType, data.allData() ) {
+    _addData( data.serviceData(), defaultAdapters, AbstractAdapter::Service );
+    _addData( data.streamData(), defaultAdapters, AbstractAdapter::Stream );
+}
+
+void DataTypes::_addData( const QSet<QString>& data, const QHash<QString,QString>& defaultAdapters,
+         const AbstractAdapter::AdapterType_t& defaultType ) 
+{
+    foreach( const QString& dataType, data ) {
         if( ! adapterAvailable( dataType ) ) {
             if( ! _adapterNames.contains(dataType) 
                 && defaultAdapters.contains(dataType)
                 && defaultAdapters.value(dataType) != "" ) {
                 // Use the default value if there is one
                 // and the config does not override it
-                setAdapter(dataType, _createAdapter(defaultAdapters.value(dataType)) );
+                setAdapter(dataType, _createAdapter(defaultAdapters.value(dataType),
+                           defaultType ) );
             } else {
                 // use the configuration specified adapter
                 // if available
                 // will throw if nothing is found
-                setAdapter(dataType, _createAdapter(dataType) );
+                setAdapter(dataType, _createAdapter(dataType, defaultType ) );
             }
         }
         else {
@@ -126,13 +134,18 @@ bool DataTypes::adapterAvailable( const QString& type ) const {
      return _adapters.contains(type);
 }
 
-AbstractAdapter* DataTypes::_createAdapter( const QString& dataType ) const {
+AbstractAdapter* DataTypes::_createAdapter( const QString& dataType,
+                const AbstractAdapter::AdapterType_t& defaultType ) const {
 
     // Find the configuration information for adapters.
     QString adapterType = _adapterNames.value(dataType);
     if( adapterType == "" ) throw QString("No adpater type specified for stream \"%1\"").arg(dataType);
-    return _adapterFactory->create( adapterType ,
+    AbstractAdapter* a = _adapterFactory->create( adapterType ,
                 _conf.getNamedOption("data","name","") );
+    if( a->type() == AbstractAdapter::Unknown ) {
+        a->setType( defaultType );
+    }
+    return a;
 }
 
 } // namespace pelican

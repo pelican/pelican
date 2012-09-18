@@ -59,8 +59,11 @@ class DataTypes
         bool adapterAvailable( const QString& type ) const;
 
     private:
-        AbstractAdapter* _createAdapter( const QString& type ) const;
+        AbstractAdapter* _createAdapter( const QString& type,
+                const AbstractAdapter::AdapterType_t& ) const;
         void _setAdapter( DataSpec& req, const QString& type );
+        void _addData( const QSet<QString>& data, const QHash<QString,QString>& defaultAdapters,
+                       const AbstractAdapter::AdapterType_t& defaultType );
 
     private:
         QList<DataSpec> _dataRequirements;

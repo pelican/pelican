@@ -31,22 +31,25 @@ class ConfigNode;
  * This class is the base class for all Pelican data adapters, which
  * de-serialise data from an input device.
  *
- * When creating a new adapter, do not inherit this class directly, but use
- * either the AbstractStreamAdapter or AbstractServiceAdapter classes for
- * (respectively) stream data or service data. In either case, the
- * deserialise() method must be implemented.
+ * You would normally inherit directly from this class using the default
+ * Unknown type to allow the server configuration to determine the type
+ * of adapter it is at runtime.
+ *
+ * The deserialise() method must be implemented.
  */
 
 class AbstractAdapter
 {
     public:
-        typedef enum { Stream, Service } AdapterType_t;
+        // Unknown implies that the type will be determined
+        // at runtime by the configuration of the DataManager
+        typedef enum { Unknown, Stream, Service } AdapterType_t;
 
     public:
         PELICAN_CONSTRUCT_TYPES(ConfigNode)
 
         /// Constructs an adapter of the given type and configuration.
-        AbstractAdapter(AdapterType_t type, const ConfigNode&)
+        AbstractAdapter(const ConfigNode&, AdapterType_t type = Unknown)
         : _type(type), _chunkSize(0), _data(0) {}
 
         /// Destroys the adapter (virtual).
@@ -55,8 +58,24 @@ class AbstractAdapter
         /// Return the type of adapter as passed in the constructor.
         AdapterType_t type() const { return _type; }
 
+        /// set the type of adapter .
+        void setType( const AdapterType_t& type ) { _type = type; }
+
         /// Deserialises the data from the input device.
         virtual void deserialise(QIODevice* in) = 0;
+
+        /// Configures the service adapter, where there are no data dependencies.
+        void config(DataBlob* data, std::size_t size) {
+            _data = data; _chunkSize = size;
+        }
+
+        /// Configures the service adapter, providing the dependent data.
+        void config(DataBlob* data, std::size_t chunkSize,
+                const QHash<QString, DataBlob*>& serviceData) {
+            config(data, chunkSize);
+            _serviceData = serviceData;
+        }
+
 
     protected:
         /// Returns a pointer to the data blob to fill.
@@ -70,6 +89,9 @@ class AbstractAdapter
         AdapterType_t _type;    ///< Type of adapter.
         std::size_t _chunkSize; ///< Chunk size in bytes.
         DataBlob* _data;        ///< Pointer to data blob to be filled.
+        /// Hash of service data blobs associated with the stream data.
+        /// e.g. Service data containing updated dimensions of the stream data.
+        QHash<QString, DataBlob*> _serviceData;
 };
 
 } // namespace pelican

@@ -12,7 +12,7 @@ namespace pelican {
  *@details DataBlobAdapter 
  */
 DataBlobAdapter::DataBlobAdapter(const ConfigNode& config)
-    : AbstractAdapter( AbstractAdapter::Service, config )
+    : AbstractAdapter( config, AbstractAdapter::Unknown )
 {
 }
 
