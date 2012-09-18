@@ -13,6 +13,7 @@ set(emulator_src
 # Headers requiring MOC pre-processing (i.e. QObjects)
 set(emulator_moc_headers
     EmulatorDriver.h
+    AbstractEmulator.h
 )
 
 # MOC Compile headers.
