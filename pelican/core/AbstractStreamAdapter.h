@@ -26,6 +26,10 @@ class DataBlob;
  * @details
  * This class is the base class for all Pelican stream data adapters, which
  * de-serialise data from an input stream.
+ 
+ * Normally you should inherit directly form AbstractAdapter unless you wish to
+ * force pelican to ignore the server confiugration and always provide the
+ * dependent data
  *
  * Inherit this class and implement the stream operator method to create a new
  * adapter.
@@ -35,24 +39,11 @@ class AbstractStreamAdapter : public AbstractAdapter
     public:
         /// Constructs a new stream adapter with the given configuration.
         AbstractStreamAdapter(const ConfigNode& config)
-        : AbstractAdapter(AbstractAdapter::Stream, config) {}
+        : AbstractAdapter(config, AbstractAdapter::Stream) {}
 
         /// Destroys the stream adapter (virtual).
         virtual ~AbstractStreamAdapter() {}
 
-    public:
-        /// Configures the abstract stream adapter.
-        void config(DataBlob* data, std::size_t chunkSize,
-                const QHash<QString, DataBlob*>& serviceData) {
-            _data = data;
-            _chunkSize = chunkSize;
-            _serviceData = serviceData;
-        }
-
-    protected:
-        /// Hash of service data blobs associated with the stream data.
-        /// e.g. Service data containing updated dimensions of the stream data.
-        QHash<QString, DataBlob*> _serviceData;
 };
 
 } // namespace pelican

@@ -44,8 +44,29 @@ and the configuration for the output streamer. e.g.
 \endverbatim
 
 \section user_dataRelay_daisyChaining Daisy-Chain Pelican Pipelines
-Comming soon - the ability to daisy-chain pelican pipelines together to 
-provide any length of processing chain.
+You can use the DataBlobChunker to daisy chain different 
+pipelines together. 
+You use this chunker as you would any other AbstractChunker,
+e.g. in a pelican server, or the DirectStreamClient.
+
+The \class DataBlobChunker will subscribe to a stream published by
+the PelicanTCPBlobServer. Each DataBlob passed will be considered 
+to be a separate chunk to be served to other pipelines.
+A typical configuration might look like
+\verbatim
+<DataBlobChunker>
+   <connection host="PelicanTCPBlobServer_IP_ADDRESS" port="PelicanTCPBlobServer_PORT" />
+   <subscribe stream="MyDataBlobStream" />
+</DataBlobChunker>
+
+Note that multiple subscriptions can be used, creating Data Streams on your 
+server with the same name.
+
+There is a DataBlobAdapter available, and the DataClient will automatically 
+use this to reconstruct the DataBlobs for the pipelines.
+
+\endverbatim
+
 
 
 The final section of the tutorial shows how all the components are linked

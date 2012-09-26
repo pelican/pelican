@@ -19,6 +19,7 @@ DataBlobChunker::DataBlobChunker(const ConfigNode& configNode)
     _client->subscribe( subs );
     foreach( const QString& s, subs ) {
         addChunkType(s);
+        setDefaultAdapter( "DataBlobAdapter", s );
     }
 }
 
