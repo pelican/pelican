@@ -1,3 +1,4 @@
+#include <unistd.h>
 #include "WatchedFileTest.h"
 #include <QtTest/QSignalSpy>
 #include <QtCore/QTemporaryFile>
