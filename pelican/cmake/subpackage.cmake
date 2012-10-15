@@ -30,7 +30,6 @@ macro(SUBPACKAGE name)
     # Add include_directories() defined before this macro to the sub-package file.
     _SET_INCLUDE_DIRECTORIES()
 
-
     if(BUILD_STATIC)
         link_directories(${link_dirs})
         link_directories(${CMAKE_CURRENT_BINARY_DIR})
@@ -71,6 +70,7 @@ macro(SUBPACKAGE_LIBRARY name)
         if(BUILD_SHARED)
             add_library("${name}" SHARED ${ARGN})
             set_target_properties("${name}" PROPERTIES CLEAN_DIRECT_OUTPUT 1)
+            target_link_libraries("${name}" ${SUBPACKAGE_LIBRARIES})
         endif(BUILD_SHARED)
 
         # Add a target for a shared library. (note this will compile a 2nd set
@@ -122,7 +122,7 @@ macro(SUBPACKAGE_LIBRARY name)
         # locally on the subpackage library.
         _SET_SUBPACKAGE_LIBRARIES(${subpackage_current})
         #clean_library_list( SUBPACKAGE_LIBRARIES )
-        message("Libs for ${name}: ${SUBPACKAGE_LIBRARIES}")
+        #message("Libs for ${name}: ${SUBPACKAGE_LIBRARIES}")
 
     else(subpackage_current)
         message(FATAL_ERROR "ERROR: SUBPACKAGE_LIBRARY "
