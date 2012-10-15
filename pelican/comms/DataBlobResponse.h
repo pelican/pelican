@@ -36,7 +36,7 @@ class DataBlobResponse : public ServerResponse
         // serialise and deserialise important data to/from a stream
         void serialise( QDataStream& stream );
         void deserialise( QDataStream& stream );
-        static size_t serialisedSize();
+        size_t serialisedSize();
 
     private:
         QString _type;
