@@ -67,7 +67,7 @@ public: \
     /* Creates a concrete object with a registered ID */ \
     B* create(const QString& id BOOST_PP_ENUM_TRAILING(n, PARAM, ~)) { \
         RegBase<B, n>::check(id); \
-        return add(RegBase<B, n>::types()[id]->create( \
+        return this->add(RegBase<B, n>::types()[id]->create( \
                 BOOST_PP_ENUM_PARAMS(n, P)), id); \
     } \
 \

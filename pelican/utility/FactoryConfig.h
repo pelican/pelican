@@ -87,7 +87,7 @@ public: \
     B* create(const QString& id BOOST_PP_ENUM_TRAILING(BOOST_PP_DEC(n),PARAM1,~) , \
             const QString& name="") { \
         RegBase<B, n>::check(id); \
-        return add(RegBase<B, n>::types()[id]->create(FactoryBase<B>::conf(id, name) \
+        return this->add(RegBase<B, n>::types()[id]->create(FactoryBase<B>::conf(id, name) \
             BOOST_PP_ENUM_TRAILING_PARAMS(BOOST_PP_DEC(n), P) ), id); \
     } \
 \
@@ -95,7 +95,7 @@ public: \
     B* construct(B* memory, const QString& id BOOST_PP_ENUM_TRAILING(BOOST_PP_DEC(n),PARAM1,~) , \
             const QString& name="") { \
         RegBase<B, n>::check(id); \
-        return add(RegBase<B, n>::types()[id]->construct(memory, FactoryBase<B>::conf(id, name) \
+        return this->add(RegBase<B, n>::types()[id]->construct(memory, FactoryBase<B>::conf(id, name) \
             BOOST_PP_ENUM_TRAILING_PARAMS(BOOST_PP_DEC(n), P) ), id); \
     } \
 \

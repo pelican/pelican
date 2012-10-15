@@ -1,3 +1,4 @@
+#include <unistd.h>
 #include "PelicanTimeRecorderTest.h"
 #include "PelicanTimeRecorder.h"
 
