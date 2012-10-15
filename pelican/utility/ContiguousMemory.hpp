@@ -2,6 +2,7 @@
 #define CONTIGUOUSMEMORY_H
 #include <memory>
 #include <QtCore/QList>
+#include <QtCore/QString>
 
 /**
  * @file ContiguousMemory.h
