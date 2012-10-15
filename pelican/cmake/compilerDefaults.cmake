@@ -3,7 +3,7 @@
 # This file is included in the top level pelican CMakeLists.txt.
 #
 
-#=== Build in debug mode if not otherwise specified.
+# Build in debug mode if not otherwise specified.
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE debug)
 endif(NOT CMAKE_BUILD_TYPE)
@@ -15,16 +15,13 @@ endif(NOT CMAKE_BUILD_TYPE MATCHES "^RELEASE|DEBUG|[Rr]elease|[Dd]ebug$")
 message("*****************************************************************")
 if (CMAKE_BUILD_TYPE MATCHES RELEASE|[Rr]elease)
     message("** NOTE: Building in release mode!")
-    message("** NOTE: Run cmake with -DCMAKE_BUILD_TYPE=<release|debug> to change.")
 else ()
     message("** NOTE: Building in debug mode!")
-    message("** NOTE: Run cmake with -DCMAKE_BUILD_TYPE=<release|debug> to change.")
 endif()
+message("** NOTE: Run cmake with -DCMAKE_BUILD_TYPE=<release|debug> to change.")
 message("*****************************************************************")
 
-
 # For now if in release mode build a single library libpelican.so.
-# TODO make this an option.
 if(CMAKE_BUILD_TYPE MATCHES RELEASE|[Rr]elease)
     set(BUILD_SINGLE_LIB ON)
 endif(CMAKE_BUILD_TYPE MATCHES RELEASE|[Rr]elease)
@@ -66,32 +63,30 @@ if(NOT STATIC_LINK_BINARIES AND NOT BUILD_SHARED)
         "with BUILD_SHARED disabled!")
 endif(NOT STATIC_LINK_BINARIES AND NOT BUILD_SHARED)
 
-
 set(CPP_PLATFORM_LIBS ${CMAKE_THREAD_LIBS_INIT})
 
-#=== Include the pelican base source directory.
+# Include the pelican base source directory.
 include_directories(${PROJECT_SOURCE_DIR}/..)
 
-# Set the C++ release flags.
-set(CMAKE_CXX_FLAGS_RELEASE "-O2 -DQT_NO_DEBUG -DNDEBUG")
+# Set compiler flags
+set(CMAKE_CXX_FLAGS_RELEASE "-O2 -fPIC -DNDEBUG -DQT_NO_DEBUG -DQT_NO_DEBUG_OUTPUT")
+set(CMAKE_CXX_FLAGS_DEBUG "-O0 -fPIC -g -Wall")
 
-if(CMAKE_COMPILER_IS_GNUCXX)
-    add_definitions(-Wall -Wextra)
-    add_definitions(-Wno-deprecated -Wno-unknown-pragmas)
+if (CMAKE_COMPILER_IS_GNUCXX)
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wextra")
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -pedantic")
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wno-long-long") # Only needed for gcc 4.2?
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wno-variadic-macros")
     list(APPEND CPP_PLATFORM_LIBS util dl)
-elseif(CMAKE_CXX_COMPILER MATCHES icpc)
-    add_definitions(-Wall -Wcheck)
-    add_definitions(-wd383 -wd981)  # Suppress remarks / warnings.
-    add_definitions(-ww111 -ww1572) # Promote remarks to warnings.
-else(CMAKE_COMPILER_IS_GNUCXX)
-    # use defaults (and pray it works...)
-endif(CMAKE_COMPILER_IS_GNUCXX)
+endif ()
 
-if(APPLE)
-    add_definitions(-DDARWIN)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -undefined dynamic_lookup")
-endif(APPLE)
-
-
-
-
+if (CMAKE_CXX_COMPILER MATCHES icpc)
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wcheck")
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -wd2259")
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -wd1125")
+endif ()
+    
+if (APPLE)
+#    add_definitions(-DDARWIN)
+#    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -undefined dynamic_lookup")
+endif ()
