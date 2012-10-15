@@ -70,7 +70,9 @@ macro(SUBPACKAGE_LIBRARY name)
         if(BUILD_SHARED)
             add_library("${name}" SHARED ${ARGN})
             set_target_properties("${name}" PROPERTIES CLEAN_DIRECT_OUTPUT 1)
-            target_link_libraries("${name}" ${SUBPACKAGE_LIBRARIES})
+            if (NOT BUILD_SINGLE_LIB)
+                target_link_libraries("${name}" ${SUBPACKAGE_LIBRARIES})
+            endif()
         endif(BUILD_SHARED)
 
         # Add a target for a shared library. (note this will compile a 2nd set
