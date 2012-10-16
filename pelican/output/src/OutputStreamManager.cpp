@@ -36,11 +36,11 @@ OutputStreamManager::OutputStreamManager( const Config* config , const Config::T
                 if( n.hasAttribute("name") )
                     id = n.attribute("name");
                 if(localStreamers.contains(id))
-                    throw(QString("OutputStreamManager configuration error: Multiple OutputStreamers with the same \"name\" defined \"%1\% on line : %2").arg(id).arg(n.lineNumber()) );
+                    throw(QString("OutputStreamManager configuration error: Multiple OutputStreamers with the same \"name\" defined \"%1\" on line : %2").arg(id).arg(n.lineNumber()) );
                 if( !n.hasAttribute("active") ||  n.attribute("active").toLower() == QString("true") ) {
                     AbstractOutputStream* streamer = _factory -> create(n.tagName(), n.attribute("name"));
                     if( ! streamer )
-                        throw(QString("OutputStreamManager configuration error: Unknown OuputStreamer type \"%1\%").arg(n.tagName()) );
+                        throw(QString("OutputStreamManager configuration error: Unknown OuputStreamer type \"%1\"").arg(n.tagName()) );
                     localStreamers[id] = streamer;
                 }
                 else {

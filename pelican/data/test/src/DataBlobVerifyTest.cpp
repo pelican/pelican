@@ -15,7 +15,7 @@ class BrokenTestDataBlob: public test::TestDataBlob {
             data()="some rubbish";
         };
 };
-PELICAN_DECLARE_DATABLOB(BrokenTestDataBlob);
+PELICAN_DECLARE_DATABLOB(BrokenTestDataBlob)
 } // namespace test
 
 
