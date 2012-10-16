@@ -11,22 +11,28 @@ IF (CPPUNIT_INCLUDE_DIR)
 ENDIF (CPPUNIT_INCLUDE_DIR)
 
 FIND_PATH(CPPUNIT_INCLUDE_DIR TestSuite.h
+    HINTS
+        ${CPPUNIT_ROOT}
     PATHS
-    /usr/include/cppunit
-    /usr/local/include/
-    /usr/local/include/cppunit
-    /usr/include/libcppunit
+        /usr
+        /usr/local
+    PATH_SUFFIXES
+        include
+        include/cppunit
 )
 
 SET(CPPUNIT_NAMES cppunit)
 FOREACH(lib ${CPPUNIT_NAMES} )
     FIND_LIBRARY(CPPUNIT_LIBRARY_${lib}
         NAMES ${lib}
+        HINTS
+            ${CPPUNIT_ROOT}
         PATHS
-        /usr/lib64
-        /usr/lib
-        /usr/local/lib64
-        /usr/local/lib
+            /usr
+            /usr/local
+        PATH_SUFFIXES
+            lib
+            lib64
     )
     LIST(APPEND CPPUNIT_LIBRARIES ${CPPUNIT_LIBRARY_${lib}})
     #message(STATUS "===== ${CPPUNIT_LIBRARY_${lib}}")
