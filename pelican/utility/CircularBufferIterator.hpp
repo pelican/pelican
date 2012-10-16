@@ -51,7 +51,7 @@ class CircularBufferIterator
 
         /// get the next item from the buffer
         T& next() {
-            _index=++_index%_size;
+            _index=(++_index)%_size;
             return (*_data)[_index];
         };
 

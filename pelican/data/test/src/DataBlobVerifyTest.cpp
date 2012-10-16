@@ -24,7 +24,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION( DataBlobVerifyTest );
  *@details DataBlobVerifyTest 
  */
 DataBlobVerifyTest::DataBlobVerifyTest()
-    : CppUnit::TestFixture()
+    : CppUnit::TestFixture(), _testBlob(0)
 {
 }
 

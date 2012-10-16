@@ -100,8 +100,9 @@ class AbstractChunker
 
         /// Returns the type name associated with the data.
         /// NOTE: This will be depricated. DO NOT USE!.
-#pragma deprecated(type)
-        const QString& type() const { return _chunkTypes[0]; }
+//#pragma deprecated(type)
+        const QString& type() const __attribute__ ((deprecated))
+        { return _chunkTypes[0]; }
 
         /// Stops the chunker.
         void stop() { _active = false; }
