@@ -2,7 +2,7 @@
 doc/html
 
 # build directory
-build
+build*
 release*
 debug*
 
@@ -11,3 +11,5 @@ debug*
 .cproject
 .project
 
+# Other
+.DS_Store
