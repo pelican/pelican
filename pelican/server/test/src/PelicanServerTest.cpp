@@ -21,7 +21,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION( PelicanServerTest );
 
 // class PelicanServerTest
 PelicanServerTest::PelicanServerTest()
-    : CppUnit::TestFixture()
+    : CppUnit::TestFixture(), _app(0)
 {
 //    int ac = 0;
 //    _app = new QCoreApplication(ac, NULL);
@@ -55,7 +55,7 @@ void PelicanServerTest::test_singleProtocolAcknowledge()
         PelicanTestClient client(port);
         client.processAcknowledgement();
     }
-    catch (QString e)
+    catch (const QString& e)
     {
         CPPUNIT_FAIL("Unexpected exception: " +  e.toStdString());
     }
@@ -79,15 +79,17 @@ void PelicanServerTest::test_singleProtocolStream()
 
         // Set up the server.
         PelicanServer server(&config);
+        //server.setVerbosity(10000);
         quint16 port = 2000;
         server.addProtocol(new TestProtocol("", ServerRequest::StreamData), port);
         server.addStreamChunker("TestChunker");
         server.start();
         while (!server.isReady()) {}
+
         PelicanTestClient client(port);
         client.processStreamData();
     }
-    catch (QString e)
+    catch (const QString& e)
     {
         CPPUNIT_FAIL("Unexpected exception: " +  e.toStdString());
     }
@@ -128,10 +130,9 @@ void PelicanServerTest::test_multiProtocol()
             client1.processAcknowledgement();
             client2.processAcknowledgement();
         }
-        catch (QString e) {
+        catch (const QString& e) {
             CPPUNIT_FAIL("Unexpected exception: " +  e.toStdString());
         }
-
 //        CPPUNIT_ASSERT_EQUAL(id1.toStdString(), client1.processAcknowledgement().toStdString());
 //        CPPUNIT_ASSERT_EQUAL(id2.toStdString(), client2.processAcknowledgement().toStdString());
     }
