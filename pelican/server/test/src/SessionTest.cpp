@@ -29,7 +29,8 @@ using test::TestProtocol;
 CPPUNIT_TEST_SUITE_REGISTRATION( SessionTest );
 // class SessionTest
 SessionTest::SessionTest()
-    : CppUnit::TestFixture()
+    : CppUnit::TestFixture(), _app(0), _out(0), _session(0), _block(0),
+      _device(0), _proto(0), _dataManager(0)
 {
     int ac = 0;
     _app = new QCoreApplication(ac, NULL);
@@ -202,10 +203,12 @@ void SessionTest::test_streamData()
         requirements.addStreamData("NotSupported");
         StreamDataRequest request;
         request.addDataOption(requirements);
-        try {
+        try
+        {
             _session->processStreamDataRequest(request);
         }
-        catch (QString error) {
+        catch (const QString& error)
+        {
             CPPUNIT_ASSERT(error.contains("data requested not supported by server"));
         }
     }
@@ -222,7 +225,8 @@ void SessionTest::test_streamData()
         try {
             _session->processStreamDataRequest(request, 100);
         }
-        catch (QString error) {
+        catch (const QString& error)
+        {
             CPPUNIT_ASSERT(error.contains("Request timed out"));
         }
     }
@@ -267,7 +271,7 @@ void SessionTest::test_streamData()
         try {
             _session->processStreamDataRequest(request, 10);
         }
-        catch (QString error) {
+        catch (const QString& error) {
             CPPUNIT_ASSERT(error.contains("Request timed out"));
         }
         CPPUNIT_ASSERT(_dataManager->getNext(stream1).isValid() == true);
@@ -296,7 +300,7 @@ void SessionTest::test_streamData()
                 _injectData(myServiceBuffer, version);
                 _injectData(myStreamBuffer); // NOTE don't need to inject data again
             }
-            catch (QString error) {
+            catch (const QString& error) {
                 std::cout << "ALERT !! " << error.toStdString() << std::endl;
             }
 
