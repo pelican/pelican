@@ -200,7 +200,7 @@ void PipelineApplication::start()
     try {
         _driver->start();
     }
-    catch (QString err) {
+    catch (const QString& err) {
         std::cout << "ERROR: " << err.toStdString() << std::endl;
     }
 
@@ -211,7 +211,7 @@ void PipelineApplication::stop()
     try {
         _driver->stop();
     }
-    catch (QString err) {
+    catch (const QString& err) {
         std::cout << "ERROR: " << err.toStdString() << std::endl;
     }
 
@@ -273,7 +273,7 @@ void PipelineApplication::_createConfig(int argc, char** argv)
         // The static object is initialised only once.
         _config = Config(QString::fromStdString(configFilename));
     }
-    catch (QString error) {
+    catch (const QString& error) {
         std::cerr << error.toStdString() << std::endl;
     }
 }
