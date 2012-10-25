@@ -24,7 +24,7 @@ DataManager::DataManager(const Config* config, const QString section)
 }
 
 DataManager::DataManager(const Config* config, const Config::TreeAddress& base)
-    : _config(config)
+    : _config(config), _verboseLevel(0)
 {
     _bufferConfigBaseAddress = base;
 }
@@ -262,14 +262,14 @@ void DataManager::associateServiceData(LockableStreamData* data)
 
 void DataManager::deactivateStream(const QString& stream)
 {
-    // if it is streaming data we simply wait untill 
+    // if it is streaming data we simply wait untill
     // the buffer is empty
     if( _streams.contains(stream) ) {
-        _deactivate[_streams[stream]] = stream; 
+        _deactivate[_streams[stream]] = stream;
     }
 }
 
-void DataManager::emptiedBuffer(StreamDataBuffer* buffer) 
+void DataManager::emptiedBuffer(StreamDataBuffer* buffer)
 {
     if( _deactivate.contains(buffer) ) {
         // remove from the data specifications

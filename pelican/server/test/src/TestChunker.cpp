@@ -2,6 +2,7 @@
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QBuffer>
+#include <QtCore/QDebug>
 
 #include <iostream>
 
@@ -14,7 +15,7 @@ namespace test {
  */
 TestChunker::TestChunker(const QString& type, bool badSocket, size_t size,
         const QString& host, quint16 port, QObject* parent)
-: QThread(parent), AbstractChunker()
+: QThread(parent), AbstractChunker(), _abort(false)
 {
     addChunkType(type);
     setHost(host);
@@ -30,7 +31,7 @@ TestChunker::TestChunker(const QString& type, bool badSocket, size_t size,
  * Constructs a new TestChunker.
  */
 TestChunker::TestChunker(const ConfigNode& config)
-: QThread(), AbstractChunker(config)
+: QThread(), AbstractChunker(config), _abort(false)
 {
     _device = 0;
     _badSocket = false;
@@ -73,17 +74,20 @@ void TestChunker::next(QIODevice* device)
     device->open(QIODevice::ReadOnly);
     QByteArray array = device->readAll();
     device->close();
-    if (array.size() == 0) {
+    if (array.size() == 0)
+    {
         std::cout << "Nothing to read!" << std::endl;
         return;
     }
 
     // Get writable data object.
     WritableData writableData(0);
-    try {
+    try
+    {
         writableData = getDataStorage(_size);
     }
-    catch (QString e) {
+    catch (const QString& e)
+    {
         std::cout << "Unexpected exception: " << e.toStdString() << std::endl;
         return;
     }
@@ -115,8 +119,10 @@ void TestChunker::run()
     unsigned nDoubles = _size / sizeof(double);
     std::vector<double> array(nDoubles);
 
-    while (!_abort) {
-        if (_device) {
+    while (!_abort)
+    {
+        if (_device)
+        {
             for (unsigned i = 0; i < nDoubles; i++)
                 array[i] = counter;
             counter++;

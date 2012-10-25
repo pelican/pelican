@@ -30,6 +30,7 @@ class WatchedFileTest : public CppUnit::TestFixture
         CPPUNIT_TEST_SUITE( WatchedFileTest );
         CPPUNIT_TEST( test_watch );
         CPPUNIT_TEST( test_nameChange );
+        CPPUNIT_TEST( test_QFileSystemWatcher );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -39,6 +40,7 @@ class WatchedFileTest : public CppUnit::TestFixture
         // Test Methods
         void test_watch();
         void test_nameChange();
+        void test_QFileSystemWatcher();
 
     public:
         /// WatchedFileTest constructor.
