@@ -111,8 +111,29 @@ StreamDataBuffer* DataManager::getStreamBuffer(const QString& type)
  */
 ServiceDataBuffer* DataManager::getServiceBuffer(const QString& type)
 {
-    if ( ! _service.contains(type) )
-        setServiceDataBuffer( type, new ServiceDataBuffer(type) );
+    if (!_service.contains(type))
+    {
+        Config::TreeAddress configAddress(_bufferConfigBaseAddress);
+        configAddress << Config::NodeId(type, "");
+        ConfigNode config = _config->get(configAddress);
+
+        qulonglong maxSize = config.getOption("buffer", "maxSize", "10240").toULongLong();
+        qulonglong maxChunkSize = config.getOption("buffer", "maxChunkSize", 0).toULongLong();
+
+        if (!_bufferMaxSizes.contains(type))
+        {
+            _bufferMaxSizes[type] = maxSize;
+        }
+        if (!_bufferMaxChunkSizes.contains(type))
+        {
+            _bufferMaxChunkSizes[type] = maxChunkSize;
+            if (!_bufferMaxChunkSizes[type])
+                _bufferMaxChunkSizes[type] = _bufferMaxSizes[type];
+        }
+
+        setServiceDataBuffer(type, new ServiceDataBuffer(type,
+                _bufferMaxSizes[type], _bufferMaxChunkSizes[type]));
+    }
     return _service[type];
 }
 
