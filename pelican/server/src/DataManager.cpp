@@ -8,6 +8,7 @@
 
 #include <iostream>
 #include <QtCore/QMutexLocker>
+#include <QtCore/QDebug>
 
 namespace pelican {
 
