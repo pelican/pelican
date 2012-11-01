@@ -82,46 +82,38 @@ void ServiceDataBuffer::getCurrent(LockedData& lockedData)
  */
 WritableData ServiceDataBuffer::getWritable(size_t size)
 {
-//    qDebug() << "ServiceDataBuffer::getWritable()";
-//    qDebug() << ">>>>>>>> " <<_newData;
-    if (! _newData) {
+    // FIXME find out what determines if _newData is allocated...
+    if (!_newData)
+    {
         QMutexLocker lock(&_mutex);
-        for (int i = 0; i < _expiredData.size(); ++i) {
+        for (int i = 0; i < _expiredData.size(); ++i)
+        {
             LockableServiceData* lockableData = _expiredData[i];
-            if (lockableData->maxSize() >= size) {
+            if (lockableData->maxSize() >= size)
+            {
                 // We found one, so reuse it and remove it from the
                 // expired data queue.
                 _data.remove(lockableData->id());
                 _expiredData.removeAt(i);
                 lockableData->setSize(size);
-                qDebug() << "----> AA " << lockableData->isValid();
                 return lockableData;
             }
         }
 
-        qDebug() << "***** size = " << size;
-        qDebug() << "***** _space = " << _space;
-        qDebug() << "***** _maxChunkSize = " << _maxChunkSize;
         // Create a new data object if we have enough space.
         if (size <= _space && size <= _maxChunkSize)
         {
             void* memory = calloc(size, sizeof(char)); // Released in destructor.
-            if (memory) {
+            if (memory)
+            {
                 _space -= size;
                 _newData = new LockableServiceData(_type, memory, size);
                 connect(_newData, SIGNAL(unlockedWrite()), SLOT(activateData()));
                 connect(_newData, SIGNAL(unlocked()), SLOT(deactivateData()));
-                qDebug() << "----> XX " << _newData->isValid();
                 return WritableData(_newData);
             }
         }
-        else
-        {
-            qDebug() << "_space = " << _space;
-            qDebug() << "_maxChunkSize = " << _maxChunkSize;
-        }
     }
-    qDebug() << "EEEK " << _newData;
     return WritableData(0); // no free containers so we return an invalid
 }
 

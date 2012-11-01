@@ -61,7 +61,9 @@ void DataManager::verbose( const QString& msg, int verboseLevel )
  */
 WritableData DataManager::getWritableData(const QString& type, size_t size)
 {
-    verbose("data block of type \"" + type + "\" requested (size=" + QString().setNum((int)size) + ")", 2 );
+    verbose("data block of type \"" + type + "\" requested (size=" +
+            QString().setNum((int)size) + ")", 2);
+
     if ( _streams.contains(type) ) {
         verbose( "returning stream", 2);
         return _streams[type]->getWritable(size);
