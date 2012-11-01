@@ -47,6 +47,9 @@ class EmulatorDriver : public QThread
         // return the number of bytes that have been sent
         unsigned long dataCount() const { return _dataCount; };
 
+    signals:
+        void finished();
+
     protected:
         /// Runs the thread owned by the emulator driver.
         void run();
