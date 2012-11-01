@@ -77,6 +77,7 @@ void EmulatorDriver::run()
             yieldCurrentThread();
 #endif
         }
+        _emulator->emulationFinished();
     }
     catch( QString& e )
     {

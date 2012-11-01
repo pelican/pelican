@@ -49,6 +49,9 @@ class AbstractEmulator
         /// Returns the start delay interval in seconds.
         virtual int startDelay() {return 0;}
 
+        /// Called just before the emulator driver exits.
+        virtual void emulationFinished() {}
+
     private:
         QIODevice* _device; ///< The output device to use.
 };
