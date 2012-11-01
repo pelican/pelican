@@ -17,6 +17,8 @@ EmulatorDriver::EmulatorDriver(AbstractEmulator* emulator) : QThread()
     _emulator = emulator;
     _dataCount = 0;
 
+    QObject::connect(this, SIGNAL(finished()), _emulator, SLOT(emulationFinished()));
+
     // Start the thread if required.
     if (_emulator->autoStart())
         start(QThread::LowPriority);
@@ -83,6 +85,8 @@ void EmulatorDriver::run()
         std::cerr << "EmulaterDriver: Caught error " << e.toStdString() << std::endl;
         exit(1);
     }
+
+    emit finished();
 }
 
 } // namespace pelican
