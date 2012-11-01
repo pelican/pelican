@@ -42,7 +42,6 @@ EmulatorDriver::~EmulatorDriver()
  */
 void EmulatorDriver::run()
 {
-    bool noData = false;
     try {
         // Create the device.
         _device = _emulator->createDevice();
@@ -55,13 +54,15 @@ void EmulatorDriver::run()
         _dataCount = 0;
 
         // Enter loop.
-        while (!_abort && !noData &&
-                (packetCounter < _emulator->nPackets() || continuous)) {
+        while (!_abort && (packetCounter < _emulator->nPackets() || continuous))
+        {
             // Get the data.
             char* ptr = 0;
             unsigned long size = 0;
             _emulator->getPacketData(ptr, size);
-            if (ptr == 0 || size == 0) noData = true;
+            if (ptr == 0 || size == 0)
+                break;
+
             _dataCount += size;
 
             // Write to the device.
@@ -82,10 +83,6 @@ void EmulatorDriver::run()
         std::cerr << "EmulaterDriver: Caught error " << e.toStdString() << std::endl;
         exit(1);
     }
-
-    // Warn if no data returned.
-    if (noData)
-        std::cerr << "EmulatorDriver: No data to send." << std::endl;
 }
 
 } // namespace pelican
