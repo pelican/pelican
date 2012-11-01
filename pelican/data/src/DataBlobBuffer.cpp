@@ -29,7 +29,7 @@ void DataBlobBuffer::addDataBlob(DataBlob* blob)
 }
 
 DataBlob* DataBlobBuffer::next() {
-    _index=++_index%_size;
+    _index=++_index%_size; // FIXME this line is a bit dodgy
     return _data[_index];
 }
 
