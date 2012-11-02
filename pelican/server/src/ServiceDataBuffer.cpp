@@ -19,13 +19,13 @@ namespace pelican {
  * @param maxChunkSize The maximum chunk size in bytes.
  * @param parent       (Optional.) Pointer to the object's parent.
  */
-ServiceDataBuffer::ServiceDataBuffer(const QString& type,
-        const size_t max, const size_t maxChunkSize, QObject* parent) :
-        AbstractDataBuffer(type, parent)
+ServiceDataBuffer::ServiceDataBuffer(const QString& type, const size_t max,
+        const size_t maxChunkSize, QObject* parent)
+: AbstractDataBuffer(type, parent)
 {
     _max = max;
     _maxChunkSize = maxChunkSize;
-    if( _maxChunkSize == 0 ) {
+    if (_maxChunkSize == 0) {
         _maxChunkSize = max;
     }
     _space = _max; // Buffer initially empty so space = max size.
@@ -83,6 +83,7 @@ void ServiceDataBuffer::getCurrent(LockedData& lockedData)
 WritableData ServiceDataBuffer::getWritable(size_t size)
 {
     // FIXME find out what determines if _newData is allocated...
+    // --> something to do with activation of the data. (activateData() method...)
     if (!_newData)
     {
         QMutexLocker lock(&_mutex);
@@ -114,7 +115,13 @@ WritableData ServiceDataBuffer::getWritable(size_t size)
             }
         }
     }
-    return WritableData(0); // no free containers so we return an invalid
+    // no free containers so we return an invalid
+    // FIXME Clarify this return case.
+    // It seems we get here if
+    // 1) There is no memory left in the buffer.
+    // 2) There is already an active LockableServiceData chunk.
+    // NOTE: case (2) needs looking into more carefully.
+    return WritableData(0);
 }
 
 /**
