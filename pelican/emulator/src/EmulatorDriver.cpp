@@ -16,6 +16,7 @@ EmulatorDriver::EmulatorDriver(AbstractEmulator* emulator) : QThread()
     _abort = false;
     _emulator = emulator;
     _dataCount = 0;
+    _device = 0;
 
     // Start the thread if required.
     if (_emulator->autoStart())
@@ -77,7 +78,8 @@ void EmulatorDriver::run()
             yieldCurrentThread();
 #endif
         }
-        _emulator->emulationFinished();
+        if (!_abort)
+            _emulator->emulationFinished();
     }
     catch( QString& e )
     {
