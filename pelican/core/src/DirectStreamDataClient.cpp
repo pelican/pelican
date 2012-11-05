@@ -13,6 +13,11 @@
 #include <QtCore/QBuffer>
 #include <QtCore/QCoreApplication>
 
+#include <iostream>
+#include <string>
+
+using namespace std;
+
 namespace pelican {
 
 class ConfigNode;
@@ -21,9 +26,8 @@ class ConfigNode;
  * @details Constructs the DirectStreamDataClient.
  */
 DirectStreamDataClient::DirectStreamDataClient(const ConfigNode& configNode,
-        const DataTypes& types, const Config* config
-        )
-        : AbstractAdaptingDataClient(configNode, types, config )
+        const DataTypes& types, const Config* config)
+: AbstractAdaptingDataClient(configNode, types, config), _nPipelines(0)
 {
     // Initialise members.
     _started = false;
@@ -43,7 +47,10 @@ DirectStreamDataClient::~DirectStreamDataClient()
     delete _dataManager;
 }
 
-const DataSpec& DirectStreamDataClient::dataSpec() const {
+const DataSpec& DirectStreamDataClient::dataSpec() const
+{
+    bool ok = _chunkerManager->init(*_dataManager);
+    if (!ok) throw QString("Failed to initialise the ChunkerManager");
     return _dataManager->dataSpec();
 }
 /**
@@ -57,6 +64,10 @@ const DataSpec& DirectStreamDataClient::dataSpec() const {
 void DirectStreamDataClient::addChunker(const QString& dataType,
         const QString& chunkerType, const QString& chunkerName)
 {
+    cerr << string(80, '*') << endl;
+    cerr << "WARNING: This function is deprecated please use "
+         << "addStreamChunker() or addServiceChunker() instead." << endl;
+    cerr << string(80, '*') << endl;
     switch (type(dataType))
     {
         case AbstractAdapter::Stream:
@@ -131,7 +142,8 @@ AbstractDataClient::DataBlobHash DirectStreamDataClient::getData(
     while (dataList.size() == 0 );
 
     // Transform the data into DataBlobs.
-    for (int i = 0; i < dataList.size(); ++i) {
+    for (int i = 0; i < dataList.size(); ++i)
+    {
         LockableStreamData* lockedData = static_cast<LockableStreamData*>(dataList[i].object());
         StreamData* sd = lockedData->streamData();
         Q_ASSERT(sd != 0);
