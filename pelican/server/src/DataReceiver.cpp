@@ -5,14 +5,16 @@
 #include <QtCore/QFile>
 #include <iostream>
 
+using namespace std;
+
 namespace pelican {
 
 /**
  * @details
  * DataReceiver constructor.
  */
-DataReceiver::DataReceiver(AbstractChunker* chunker) :
-        QThread(), _chunker(chunker), _device(0)
+DataReceiver::DataReceiver(AbstractChunker* chunker)
+: QThread(), _active(false), _chunker(chunker), _device(0)
 {
     if (!chunker)
         throw QString("DataReceiver: Invalid chunker.");
@@ -84,7 +86,8 @@ void DataReceiver::_reconnect() {
     if( ! _active ) _setupDevice();
 }
 
-void DataReceiver::_setupDevice() {
+void DataReceiver::_setupDevice()
+{
     _device = _chunker->newDevice();
     _chunker->activate();
 
