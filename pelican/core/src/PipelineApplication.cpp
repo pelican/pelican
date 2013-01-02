@@ -48,9 +48,9 @@ void PipelineApplication::setConfigurationSearchPaths( const QList<QString>& pat
 
 void PipelineApplication::_init() 
 {
-     _adapterFactory = 0;
-     _clientFactory = 0;
-     _moduleFactory = 0;
+    _adapterFactory = 0;
+    _clientFactory = 0;
+    _moduleFactory = 0;
 
     // Check for QCoreApplication
     if (QCoreApplication::instance() == NULL)
@@ -72,8 +72,8 @@ void PipelineApplication::_init()
     _moduleFactory = new FactoryConfig<AbstractModule>(config(), "pipeline", "modules", false);
 
     // Construct the pipeline driver.
-    _driver = new PipelineDriver( dataBlobFactory(), _moduleFactory, _clientFactory, 
-                                  outputStreamManager(), &_config, pipelineConfig );
+    _driver = new PipelineDriver( dataBlobFactory(), _moduleFactory,
+            _clientFactory, outputStreamManager(), &_config, pipelineConfig );
     _allDrivers.append(_driver);
 
     // install signal handlers
@@ -82,13 +82,17 @@ void PipelineApplication::_init()
     signal( SIGTERM, &PipelineApplication::exit);
 }
 
-void PipelineApplication::exit(int i) {
-    // if this is called more than three times,
-    // abandon the clean exit
-    if( ++_exitCount > 3 ) exit(i);
+void PipelineApplication::exit(int i)
+{
+    QCoreApplication::flush();
     QCoreApplication::exit(0);
-    foreach( PipelineDriver* d, _allDrivers ) {
+    foreach (PipelineDriver* d, _allDrivers) {
         d->stop();
+    }
+
+    // If this is called more than once, abandon the 'clean' exit
+    if (++_exitCount > 1) {
+        ::exit(i);
     }
 }
 
