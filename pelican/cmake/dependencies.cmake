@@ -16,7 +16,7 @@ find_package(CppUnit)
 
 if (NOT CPPUNIT_FOUND)
     message("===================================================================")
-    message("= WARNING: CppUnit library not found, unit tests will not be build!")
+    message("= WARNING: CppUnit library not found, unit tests will not be built!")
     message("===================================================================")
 endif (NOT CPPUNIT_FOUND)
 
