@@ -2,12 +2,8 @@
 # pelican/core/CMakeLists.txt
 #
 
-include_directories(${QT_INCLUDE_DIR})
-include_directories(${Boost_INCLUDE_DIRS})
-
-SUBPACKAGE(core server output comms data)
-
-set(core_src
+set(module pelican_core)
+set(${module}_src
     src/AbstractDataClient.cpp
     src/AbstractAdaptingDataClient.cpp
     src/AbstractAdapterFactory.cpp
@@ -24,12 +20,14 @@ set(core_src
     src/PipelineDriver.cpp
     src/PipelineSwitcher.cpp
 )
-
-SUBPACKAGE_LIBRARY(core ${core_src})
-
-SUBPACKAGE_SET_EXTERNAL_LIBRARIES(
-    ${QT_QTCORE_LIBRARY}
-    ${Boost_PROGRAM_OPTIONS_LIBRARY}
+declare_module_library(${module}
+    SRC ${${module}_src}
+    DEPS pelican_server
+         pelican_output
+         pelican_comms
+         pelican_data
+    LIBS ${QT_QTCORE_LIBRARY}
+         ${Boost_PROGRAM_OPTIONS_LIBRARY}
 )
 
 add_subdirectory(test)

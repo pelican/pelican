@@ -29,18 +29,18 @@ namespace test {
  * Convenience class for testing a chunker.
  *
  * @details
- * The tester will construct and start your chunker listening
- * on the appropriate channel.
- * example:
+ * The tester will construct and start your chunker listening on the
+ * appropriate channel.
  *
- *
+ * Example:
+ * @code
  * QString chunkerConfig("<MyDataChunker>");
  * chunkerConfig += QString("<connect host=\"localhost\" port=\"%1\" \>"
- *                  "</MyDataChunker>").arg( port);
+ *     "</MyDataChunker>").arg( port);
  * ChunkerTester t("MyDataChunker" , chunkSize*10, chunkerConfig );
  * QUdpSocket socket;
  * socket.write( testData, "localhost", port );
- *
+ * @endcode
  */
 
 class ChunkerTester

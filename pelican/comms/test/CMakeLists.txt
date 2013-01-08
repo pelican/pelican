@@ -3,18 +3,18 @@
 #
 
 if (CPPUNIT_FOUND)
-
-    include_directories(${CPPUNIT_INCLUDE_DIR})
-    SUBPACKAGE(commsTest comms dataTest utilityTest)
-
-    set(commsTest_src
-        src/commsTest.cpp
+    set(name commsTest)
+    set(${name}_src
+        src/CppUnitMain.cpp
         src/DataChunkTest.cpp
         src/StreamDataTest.cpp
         src/PelicanProtocolTest.cpp
     )
-    add_executable(commsTest ${commsTest_src})
-    target_link_libraries(commsTest ${SUBPACKAGE_LIBRARIES} ${CPPUNIT_LIBRARIES})
-    add_test(commsTest commsTest)
-
+    add_executable(${name} ${${name}_src})
+    target_link_libraries(${name}
+        ${pelican_comms_LIBRARY}
+        ${pelican_dataTestUtils_LIBRARY}
+        ${pelican_utilityTestUtils_LIBRARY}
+        ${CPPUNIT_LIBRARIES})
+    add_test(${name} ${name})
 endif (CPPUNIT_FOUND)

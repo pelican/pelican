@@ -41,11 +41,11 @@ class TCPConnectionManagerTest : public CppUnit::TestFixture
         // Test Methods
         void test_send();
         void test_brokenConnection();
-        void test_multiClients();
+        void test_multiClients(); // NOTE not implemented yet!
         void test_dataSupportedRequest();
 
     public:
-        TCPConnectionManagerTest(  );
+        TCPConnectionManagerTest();
         ~TCPConnectionManagerTest();
 
     private:

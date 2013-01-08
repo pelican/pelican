@@ -2,26 +2,21 @@
 # pelican/viewer/CMakeLists.txt
 #
 
-include_directories(${QT_INCLUDE_DIR})
-SUBPACKAGE(viewer output comms utility)
-set(viewer_src
+set(module pelican_viewer)
+set(${module}_src
     src/DataBlobWidgetFactory.cpp
     src/DataBlobWidget.cpp
     src/DataViewer.cpp
 )
-
-set(viewer_moc_headers
+set(${module}_moc
     DataBlobWidget.h
     DataViewer.h
 )
-
-QT4_WRAP_CPP(viewer_src ${viewer_moc_headers})
-
-SUBPACKAGE_LIBRARY( viewer ${viewer_src} )
-
-SUBPACKAGE_SET_EXTERNAL_LIBRARIES(
-    ${QT_QTGUI_LIBRARY}
-    ${QT_QTCORE_LIBRARY}
+declare_module_library(${module}
+    SRC ${${module}_src}
+    MOC ${${module}_moc}
+    DEPS pelican_output pelican_comms pelican_utility
+    LIBS ${QT_QTGUI_LIBRARY} ${QT_QTCORE_LIBRARY}
 )
 
 add_subdirectory(test)

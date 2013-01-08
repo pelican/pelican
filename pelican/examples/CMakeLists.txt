@@ -2,11 +2,9 @@
 # pelican/examples/CMakeLists.txt
 #
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-SUBPACKAGE(examples core server emulator)
-
+set(module pelican_examples)
 # Build example codes (to check they work!)
-set(examples_src
+set(${module}_src
     reference/src/AdapterExample.cpp
     reference/src/ChunkerExample.cpp
     reference/src/DirectDataClientExample.cpp
@@ -21,37 +19,23 @@ set(examples_src
     tutorial/src/SignalEmulator.cpp
     tutorial/src/SignalProcessingPipeline.cpp
 )
-add_library(examples ${examples_src})
-target_link_libraries(examples
-    ${SUBPACKAGE_LIBRARIES}
+
+declare_module_library(${module}
+    SRC ${${module}_src}
+    DEPS pelican_core pelican_server pelican_emulator
 )
 
 # Create the pipeline binary.
-add_executable(signalPipeline
-    tutorial/src/mainPipeline.cpp
-)
-target_link_libraries(signalPipeline
-    ${SUBPACKAGE_LIBRARIES}
-    examples
-)
+add_executable(signalPipeline tutorial/src/mainPipeline.cpp)
+target_link_libraries(signalPipeline ${${module}_LIBRARY})
 
 # Create the server binary.
-add_executable(signalServer
-    tutorial/src/mainServer.cpp
-)
-target_link_libraries(signalServer
-    ${SUBPACKAGE_LIBRARIES}
-    examples
-)
+add_executable(signalServer tutorial/src/mainServer.cpp)
+target_link_libraries(signalServer ${${module}_LIBRARY})
 
 # Create the emulator binary.
-add_executable(signalEmulator
-    tutorial/src/mainEmulator.cpp
-)
-target_link_libraries(signalEmulator
-    ${SUBPACKAGE_LIBRARIES}
-    examples
-)
+add_executable(signalEmulator tutorial/src/mainEmulator.cpp)
+target_link_libraries(signalEmulator ${${module}_LIBRARY})
 
 # Copy the XML configuration files needed for the tutorial.
 include(CopyFiles)

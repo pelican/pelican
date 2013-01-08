@@ -17,17 +17,12 @@ namespace pelican {
 using test::TestDataBlob;
 
 CPPUNIT_TEST_SUITE_REGISTRATION( TCPConnectionManagerTest );
-/**
- *@details TCPConnectionManagerTest
- */
+
 TCPConnectionManagerTest::TCPConnectionManagerTest()
-    : CppUnit::TestFixture()
+: CppUnit::TestFixture()
 {
 }
 
-/**
- *@details
- */
 TCPConnectionManagerTest::~TCPConnectionManagerTest()
 {
 }
@@ -47,9 +42,10 @@ void TCPConnectionManagerTest::tearDown()
 void TCPConnectionManagerTest::test_dataSupportedRequest()
 {
     // Use Case:
-    // Send a dataSupport request with no data
-    // Expect: stream to return a DataSupportResponse
-    // and add us to the datasupport stream
+    //   Send a dataSupport request with no data.
+    // Expect:
+    //   Stream to return a DataSupportResponse and add us to the DataSupport
+    //   stream
     QString streamInfo("__streamInfo__");
     DataSupportRequest req;
     QTcpSocket* client = _createClient();
@@ -65,9 +61,9 @@ void TCPConnectionManagerTest::test_dataSupportedRequest()
     CPPUNIT_ASSERT( r->type() == ServerResponse::DataSupport );
 
     // Use case:
-    // New stream type arrives
+    //   New stream type arrives.
     // Expect:
-    // to receive a new DataRequest with the new data
+    //   To receive a new DataRequest with the new data.
     QString stream1("stream1");
     TestDataBlob blob;
     blob.setData("stream1Data");
@@ -82,9 +78,9 @@ void TCPConnectionManagerTest::test_dataSupportedRequest()
     CPPUNIT_ASSERT( res->streamData().contains(stream1) );
 
     // Use case:
-    // Existing stream type arrives
+    //   Existing stream type arrives.
     // Expect:
-    // not to receive a new DataRequest
+    //   Not to receive a new DataRequest.
     _server->send(stream1,&blob);
     sleep(1);
     QCoreApplication::processEvents();
@@ -96,15 +92,17 @@ void TCPConnectionManagerTest::test_dataSupportedRequest()
 void TCPConnectionManagerTest::test_send()
 {
     // Use Case:
-    // client requests a connection
-    // expect client to be registered for any data
-    StreamDataRequest req;
-    DataSpec require;
-    require.addStreamData("testData");
-    req.addDataOption(require);
+    //   Client requests a connection.
+    // Expect:
+    //   Client to be registered for any data.
+    StreamDataRequest request;
+    DataSpec dataSpec;
+
+    dataSpec.addStreamData("testData");
+    request.addDataOption(dataSpec);
 
     QTcpSocket* client = _createClient();
-    _sendRequest( client, req );
+    _sendRequest( client, request );
     QCoreApplication::processEvents();
     CPPUNIT_ASSERT_EQUAL( 1, _server->clientsForStream("testData") );
     TestDataBlob blob;
@@ -127,22 +125,27 @@ void TCPConnectionManagerTest::test_send()
 void TCPConnectionManagerTest::test_brokenConnection()
 {
     // Use Case:
-    // client requests a connection
-    // expect client to be registered for any data
-    StreamDataRequest req;
-    DataSpec require;
-    require.addStreamData("testData");
-    req.addDataOption(require);
+    //   Client requests a connection.
+    // Expect:
+    //   Client to be registered for any data.
+
+    DataSpec dataSpec;
+    StreamDataRequest request;
+
+    dataSpec.addStreamData("testData");
+    request.addDataOption(dataSpec);
 
     QTcpSocket* client = _createClient();
-    _sendRequest( client, req );
+    _sendRequest(client, request);
+
     QCoreApplication::processEvents();
 
-    CPPUNIT_ASSERT_EQUAL( 1, _server->clientsForStream("testData") );
+    CPPUNIT_ASSERT_EQUAL(1, _server->clientsForStream("testData"));
 
     // Use Case:
-    // client dies after connection
-    // expect to be removed from the system
+    //   Client dies after connection.
+    // Expect:
+    //   To be removed from the system.
     delete client;
     QCoreApplication::processEvents();
     CPPUNIT_ASSERT_EQUAL( 0, _server->clientsForStream("testData") );
@@ -150,20 +153,21 @@ void TCPConnectionManagerTest::test_brokenConnection()
 
 void TCPConnectionManagerTest::test_multiClients()
 {
+    // TODO implement or remove?
 }
 
 QTcpSocket* TCPConnectionManagerTest::_createClient() const
 {
-   // Create a client and connect it to the server
-   QTcpSocket* tcpSocket = new QTcpSocket;
-   tcpSocket->connectToHost( QHostAddress::LocalHost, _server->serverPort() );
-   if (!tcpSocket->waitForConnected(5000) || tcpSocket->state() == QAbstractSocket::UnconnectedState)
-   {
-       delete tcpSocket;
-       tcpSocket = 0;
-       CPPUNIT_FAIL("Client could not connect to server");
-   }
-   return tcpSocket;
+    // Create a client and connect it to the server
+    QTcpSocket* tcpSocket = new QTcpSocket;
+    tcpSocket->connectToHost( QHostAddress::LocalHost, _server->serverPort() );
+    if (!tcpSocket->waitForConnected(5000) || tcpSocket->state() == QAbstractSocket::UnconnectedState)
+    {
+        delete tcpSocket;
+        tcpSocket = 0;
+        CPPUNIT_FAIL("Client could not connect to server");
+    }
+    return tcpSocket;
 }
 
 void TCPConnectionManagerTest::_sendRequest(QTcpSocket* tcpSocket, const ServerRequest& req)

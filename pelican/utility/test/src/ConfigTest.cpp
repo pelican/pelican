@@ -199,7 +199,7 @@ void ConfigTest::test_configFileRead()
         try {
             TestConfig config("emptyConfig.xml", "utility");
         }
-        catch (QString err) {
+        catch (const QString& err) {
             CPPUNIT_ASSERT(err.startsWith("Config::read(): Parse error"));
         }
     }
@@ -211,7 +211,7 @@ void ConfigTest::test_configFileRead()
         try {
             TestConfig config("badConfig.xml", "utility");
         }
-        catch (QString err) {
+        catch (const QString& err) {
             CPPUNIT_ASSERT(err.startsWith("Config::read(): Invalid doctype"));
         }
     }
@@ -339,7 +339,7 @@ void ConfigTest::test_preprocess()
         config.setFromString(pipeline, server, nodesets);
         //config.summary();
     }
-    catch (QString e) {
+    catch (const QString& e) {
         CPPUNIT_FAIL("Unexpected exception: " + e.toStdString());
     }
 }

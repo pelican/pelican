@@ -2,9 +2,8 @@
 # pelican/data/CMakeLists.txt
 #
 
-include_directories(${QT_INCLUDE_DIR})
-SUBPACKAGE(data utility)
-set(data_src
+set(module pelican_data)
+set(${module}_src
     src/DataBlob.cpp
     src/DataBlobBuffer.cpp
     src/DataBlobVerify.cpp
@@ -12,6 +11,10 @@ set(data_src
     src/DataSpec.cpp
     src/DataBlobFactory.cpp
 )
-SUBPACKAGE_LIBRARY(data ${data_src})
-SUBPACKAGE_SET_EXTERNAL_LIBRARIES(${QT_QTCORE_LIBRARY})
+declare_module_library(${module}
+    SRC ${${module}_src}
+    DEPS pelican_utility
+    LIBS ${QT_QTCORE_LIBRARY}
+)
+
 add_subdirectory(test)

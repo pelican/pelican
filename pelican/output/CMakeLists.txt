@@ -2,10 +2,9 @@
 # pelican/output/CMakeLists.txt
 #
 
-include_directories(${QT_INCLUDE_DIR})
-SUBPACKAGE(output comms data server)
 
-set(output_moc_headers
+set(module pelican_output)
+set(${module}_moc
     DataBlobChunkerClient.h
     DataBlobClient.h
     DataBlobRelay.h
@@ -15,8 +14,7 @@ set(output_moc_headers
     AbstractDataBlobClient.h
     ThreadedClientImpl.h
 )
-
-set(output_src
+set(${module}_src
     src/AbstractOutputStream.cpp
     src/AbstractDataBlobClient.cpp
     src/DataBlobChunker.cpp
@@ -34,18 +32,16 @@ set(output_src
     src/TCPConnectionManager.cpp
     src/ThreadedBlobServer.cpp
 )
-
-QT4_WRAP_CPP(output_src ${output_moc_headers})
-
-SUBPACKAGE_LIBRARY(output ${output_src})
-
-# Specify external dependencies.
-SUBPACKAGE_SET_EXTERNAL_LIBRARIES(
-    ${QT_QTCORE_LIBRARY}
-    ${QT_QTNETWORK_LIBRARY}
+declare_module_library(${module}
+    SRC ${${module}_src}
+    MOC ${${module}_moc}
+    DEPS pelican_comms pelican_data pelican_server
+    LIBS ${QT_QTCORE_LIBRARY} ${QT_QTNETWORK_LIBRARY}
 )
-add_executable( pelicanrelay src/pelicanRelay.cpp )
-target_link_libraries( pelicanrelay ${SUBPACKAGE_LIBRARIES} ${Boost_LIBRARIES} )
-install(TARGETS pelicanrelay DESTINATION ${BINARY_INSTALL_DIR} )
+
+set(name pelicanrelay)
+add_executable(${name} src/pelicanRelay.cpp)
+target_link_libraries(${name} ${${module}_LIBRARY} ${Boost_LIBRARIES})
+install(TARGETS ${name} DESTINATION ${BINARY_INSTALL_DIR})
 
 add_subdirectory(test)

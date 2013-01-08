@@ -26,7 +26,7 @@ class FileChunkerTest : public CppUnit::TestFixture
 {
     public:
         CPPUNIT_TEST_SUITE( FileChunkerTest );
-        CPPUNIT_TEST( test_startup );
+//        CPPUNIT_TEST( test_startup );
         CPPUNIT_TEST( test_update );
         CPPUNIT_TEST_SUITE_END();
 

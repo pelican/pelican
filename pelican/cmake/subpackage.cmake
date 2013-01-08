@@ -1,3 +1,6 @@
+message(FATAL_ERROR "Subpackage macros are deprecated")
+
+
 #===============================================================================
 # subpackage.cmake
 #
