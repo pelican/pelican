@@ -1,13 +1,13 @@
-#include "pelican/output/test/TCPConnectionManagerTest.h"
-#include "pelican/output/TCPConnectionManager.h"
-#include "pelican/comms/DataSupportRequest.h"
-#include "pelican/comms/DataSupportResponse.h"
-#include "pelican/comms/ServerRequest.h"
-#include "pelican/comms/ServerResponse.h"
-#include "pelican/comms/DataBlobResponse.h"
-#include "pelican/comms/StreamDataRequest.h"
-#include "pelican/comms/PelicanClientProtocol.h"
-#include "pelican/data/test/TestDataBlob.h"
+#include "output/test/TCPConnectionManagerTest.h"
+#include "output/TCPConnectionManager.h"
+#include "comms/DataSupportRequest.h"
+#include "comms/DataSupportResponse.h"
+#include "comms/ServerRequest.h"
+#include "comms/ServerResponse.h"
+#include "comms/DataBlobResponse.h"
+#include "comms/StreamDataRequest.h"
+#include "comms/PelicanClientProtocol.h"
+#include "data/test/TestDataBlob.h"
 
 #include <QtNetwork/QTcpSocket>
 #include <QtCore/QCoreApplication>

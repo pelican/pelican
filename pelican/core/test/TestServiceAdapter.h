@@ -5,7 +5,7 @@
  * @file TestServiceAdapter.h
  */
 
-#include "pelican/core/AbstractServiceAdapter.h"
+#include "core/AbstractServiceAdapter.h"
 
 namespace pelican {
 namespace test {

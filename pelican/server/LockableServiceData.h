@@ -2,7 +2,7 @@
 #define LOCKABLESERVICEDATA_H
 
 #include <cstring>
-#include "pelican/server/AbstractLockableData.h"
+#include "server/AbstractLockableData.h"
 
 /**
  * @file LockableServiceData.h

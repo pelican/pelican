@@ -1,6 +1,6 @@
 #include "DataBlobVerify.h"
-#include "pelican/data/DataBlob.h"
-#include "pelican/data/DataBlobFactory.h"
+#include "data/DataBlob.h"
+#include "data/DataBlobFactory.h"
 #include <QtCore/QDebug>
 
 

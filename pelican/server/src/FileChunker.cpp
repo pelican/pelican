@@ -1,5 +1,5 @@
-#include "pelican/server/FileChunker.h"
-#include "pelican/utility/WatchedFile.h"
+#include "server/FileChunker.h"
+#include "utility/WatchedFile.h"
 
 namespace pelican {
 

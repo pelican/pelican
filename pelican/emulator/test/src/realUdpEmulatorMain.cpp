@@ -1,5 +1,5 @@
-#include "pelican/emulator/test/RealUdpEmulator.h"
-#include "pelican/emulator/EmulatorDriver.h"
+#include "emulator/test/RealUdpEmulator.h"
+#include "emulator/EmulatorDriver.h"
 
 #include <iostream>
 #include <QtCore/QCoreApplication>

@@ -1,6 +1,6 @@
 #include "reference/ModuleExample.h"
 #include "reference/DataBlobExample.h"
-#include "pelican/utility/Config.h"
+#include "utility/Config.h"
 
 // Construct the example module.
 ModuleExample::ModuleExample(const ConfigNode& config)

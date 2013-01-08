@@ -5,7 +5,7 @@
  * @file Config.h
  */
 
-#include "pelican/utility/ConfigNode.h"
+#include "utility/ConfigNode.h"
 #include <QtXml/QDomDocument>
 #include <QtCore/QString>
 #include <QtCore/QHash>

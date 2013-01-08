@@ -1,4 +1,4 @@
-#include "pelican/data/DataBlob.h"
+#include "data/DataBlob.h"
 #include <QtCore/QIODevice>
 
 namespace pelican {

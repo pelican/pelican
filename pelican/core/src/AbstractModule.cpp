@@ -1,5 +1,5 @@
 #include "AbstractModule.h"
-#include "pelican/core/AbstractPipeline.h"
+#include "core/AbstractPipeline.h"
 
 
 namespace pelican {

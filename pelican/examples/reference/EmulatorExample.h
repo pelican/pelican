@@ -1,7 +1,7 @@
 #ifndef EMULATOREXAMPLE_H
 #define EMULATOREXAMPLE_H
 
-#include "pelican/emulator/AbstractUdpEmulator.h"
+#include "emulator/AbstractUdpEmulator.h"
 #include <QtCore/QByteArray>
 
 /**

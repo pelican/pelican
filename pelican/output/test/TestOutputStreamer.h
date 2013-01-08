@@ -5,8 +5,8 @@
  * @file TestOutputStreamer.h
  */
 
-#include "pelican/output/AbstractOutputStream.h"
-#include "pelican/utility/ConfigNode.h"
+#include "output/AbstractOutputStream.h"
+#include "utility/ConfigNode.h"
 #include <QtCore/QString>
 #include <QtCore/QMap>
 

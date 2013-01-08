@@ -1,6 +1,6 @@
 #include "DataBlobVerifyTest.h"
 #include "DataBlobVerify.h"
-#include "pelican/data/test/TestDataBlob.h"
+#include "data/test/TestDataBlob.h"
 #include <QtCore/QDebug>
 
 namespace pelican {

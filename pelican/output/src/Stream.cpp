@@ -1,7 +1,7 @@
 #include "Stream.h"
 
 
-#include "pelican/data/DataBlob.h"
+#include "data/DataBlob.h"
 
 namespace pelican {
 

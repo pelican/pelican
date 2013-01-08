@@ -1,4 +1,4 @@
-#include "pelican/server/AbstractLockable.h"
+#include "server/AbstractLockable.h"
 
 namespace pelican {
 

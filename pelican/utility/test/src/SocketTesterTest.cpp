@@ -1,5 +1,5 @@
-#include "pelican/utility/test/SocketTesterTest.h"
-#include "pelican/utility/test/SocketTester.h"
+#include "utility/test/SocketTesterTest.h"
+#include "utility/test/SocketTester.h"
 
 #include <QtCore/QByteArray>
 #include <QtCore/QCoreApplication>

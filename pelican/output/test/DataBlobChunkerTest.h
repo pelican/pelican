@@ -2,7 +2,7 @@
 #define DATABLOBCHUNKERTEST_H
 
 #include <cppunit/extensions/HelperMacros.h>
-#include "pelican/data/test/TestDataBlob.h"
+#include "data/test/TestDataBlob.h"
 
 /**
  * @file DataBlobChunkerTest.h

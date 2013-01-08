@@ -5,11 +5,11 @@
  * @file AbstractDataClient.h
  */
 
-#include "pelican/core/DataTypes.h"
-#include "pelican/utility/FactoryRegistrar.h"
-#include "pelican/utility/Config.h"
-#include "pelican/utility/ConfigNode.h"
-#include "pelican/utility/FactoryConfig.h"
+#include "core/DataTypes.h"
+#include "utility/FactoryRegistrar.h"
+#include "utility/Config.h"
+#include "utility/ConfigNode.h"
+#include "utility/FactoryConfig.h"
 
 #include <QtCore/QHash>
 #include <QtCore/QList>

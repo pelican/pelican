@@ -1,7 +1,7 @@
 #include <iostream>
 #include "PelicanTCPBlobServer.h"
 #include "ThreadedBlobServer.h"
-#include "pelican/utility/ConfigNode.h"
+#include "utility/ConfigNode.h"
 
 namespace pelican {
 

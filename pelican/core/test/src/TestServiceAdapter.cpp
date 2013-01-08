@@ -1,5 +1,5 @@
 #include "TestServiceAdapter.h"
-#include "pelican/data/test/TestDataBlob.h"
+#include "data/test/TestDataBlob.h"
 
 namespace pelican {
 namespace test {

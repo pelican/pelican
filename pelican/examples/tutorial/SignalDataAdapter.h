@@ -1,7 +1,7 @@
 #ifndef SIGNALDATAADAPTER_H
 #define SIGNALDATAADAPTER_H
 
-#include "pelican/core/AbstractStreamAdapter.h"
+#include "core/AbstractStreamAdapter.h"
 
 using namespace pelican;
 

@@ -1,6 +1,6 @@
 #include "DataBlobAdapter.h"
-#include "pelican/data/DataBlob.h"
-#include "pelican/comms/DataBlobResponse.h"
+#include "data/DataBlob.h"
+#include "comms/DataBlobResponse.h"
 #include <QtCore/QDataStream>
 #include <QtCore/QSysInfo>
 

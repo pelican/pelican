@@ -2,8 +2,8 @@
 #define ABSTRACTADAPTERFACTORY_H
 
 
-#include "pelican/utility/FactoryConfig.h"
-#include "pelican/core/AbstractAdapter.h"
+#include "utility/FactoryConfig.h"
+#include "core/AbstractAdapter.h"
 
 /**
  * @file AbstractAdapterFactory.h

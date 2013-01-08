@@ -7,7 +7,7 @@
 
 #include <cppunit/extensions/HelperMacros.h>
 
-#include "pelican/comms/PelicanClientProtocol.h"
+#include "comms/PelicanClientProtocol.h"
 
 class QTcpSocket;
 

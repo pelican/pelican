@@ -5,8 +5,8 @@
  * @file TestPipeline.h
  */
 
-#include "pelican/core/AbstractPipeline.h"
-#include "pelican/data/DataRequirements.h"
+#include "core/AbstractPipeline.h"
+#include "data/DataRequirements.h"
 
 namespace pelican {
 namespace test {

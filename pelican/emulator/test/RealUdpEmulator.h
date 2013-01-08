@@ -5,7 +5,7 @@
  * @file RealUdpEmulator.h
  */
 
-#include "pelican/emulator/AbstractUdpEmulator.h"
+#include "emulator/AbstractUdpEmulator.h"
 #include <QtCore/QByteArray>
 
 namespace pelican {

@@ -5,7 +5,7 @@
  * @file TestDataViewerWidget.h
  */
 
-#include "pelican/viewer/DataBlobWidget.h"
+#include "viewer/DataBlobWidget.h"
 
 namespace pelican {
 namespace test {

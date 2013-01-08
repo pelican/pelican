@@ -1,13 +1,13 @@
-#include "pelican/server/PelicanServer.h"
+#include "server/PelicanServer.h"
 
-#include "pelican/comms/AbstractProtocol.h"
-#include "pelican/server/AbstractChunker.h"
-#include "pelican/server/ChunkerManager.h"
-#include "pelican/server/DataManager.h"
-#include "pelican/server/DataReceiver.h"
-#include "pelican/comms/PelicanProtocol.h"
-#include "pelican/server/PelicanPortServer.h"
-#include "pelican/utility/Config.h"
+#include "comms/AbstractProtocol.h"
+#include "server/AbstractChunker.h"
+#include "server/ChunkerManager.h"
+#include "server/DataManager.h"
+#include "server/DataReceiver.h"
+#include "comms/PelicanProtocol.h"
+#include "server/PelicanPortServer.h"
+#include "utility/Config.h"
 
 #include <boost/shared_ptr.hpp>
 

@@ -5,8 +5,8 @@
  * @file AbstractAdapter.h
  */
 
-#include "pelican/utility/ConfigNode.h"
-#include "pelican/utility/FactoryRegistrar.h"
+#include "utility/ConfigNode.h"
+#include "utility/FactoryRegistrar.h"
 
 class QIODevice;
 

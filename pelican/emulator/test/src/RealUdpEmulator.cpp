@@ -1,5 +1,5 @@
-#include "pelican/emulator/test/RealUdpEmulator.h"
-#include "pelican/utility/ConfigNode.h"
+#include "emulator/test/RealUdpEmulator.h"
+#include "utility/ConfigNode.h"
 
 namespace pelican {
 namespace test {

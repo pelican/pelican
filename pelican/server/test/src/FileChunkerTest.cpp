@@ -4,8 +4,8 @@
 #include <QtCore/QTemporaryFile>
 #include <QtTest/QSignalSpy>
 #include "FileChunker.h"
-#include "pelican/server/LockedData.h"
-#include "pelican/server/test/ChunkerTester.h"
+#include "server/LockedData.h"
+#include "server/test/ChunkerTester.h"
 #include <QtCore/QDebug>
 
 namespace pelican {

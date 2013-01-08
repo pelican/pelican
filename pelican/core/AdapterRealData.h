@@ -5,7 +5,7 @@
  * @file AdapterRealData.h
  */
 
-#include "pelican/core/AbstractStreamAdapter.h"
+#include "core/AbstractStreamAdapter.h"
 
 namespace pelican {
 

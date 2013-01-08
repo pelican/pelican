@@ -1,4 +1,4 @@
-#include "pelican/comms/DataBlobResponse.h"
+#include "comms/DataBlobResponse.h"
 #include <QtCore/QDataStream>
 
 namespace pelican {

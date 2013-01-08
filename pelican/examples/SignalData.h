@@ -5,7 +5,7 @@
  * @file SignalData.h
  */
 
-#include "pelican/data/DataBlob.h"
+#include "data/DataBlob.h"
 #include <vector>
 
 using namespace pelican;

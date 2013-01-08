@@ -1,5 +1,5 @@
-#include "pelican/server/AbstractChunker.h"
-#include "pelican/utility/ConfigNode.h"
+#include "server/AbstractChunker.h"
+#include "utility/ConfigNode.h"
 
 #include <iostream>
 

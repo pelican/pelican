@@ -5,8 +5,8 @@
  * @file TestChunker.h
  */
 
-#include "pelican/server/AbstractChunker.h"
-#include "pelican/utility/Config.h"
+#include "server/AbstractChunker.h"
+#include "utility/Config.h"
 
 #include <QtCore/QString>
 #include <QtCore/QThread>

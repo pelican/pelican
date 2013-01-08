@@ -6,8 +6,8 @@
  */
 
 #include <boost/shared_ptr.hpp>
-#include "pelican/server/AbstractLockable.h"
-#include "pelican/comms/DataChunk.h"
+#include "server/AbstractLockable.h"
+#include "comms/DataChunk.h"
 
 namespace pelican {
 

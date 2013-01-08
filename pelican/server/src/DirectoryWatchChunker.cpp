@@ -1,5 +1,5 @@
 #include "DirectoryWatchChunker.h"
-#include "pelican/utility/WatchedDir.h"
+#include "utility/WatchedDir.h"
 
 
 namespace pelican {

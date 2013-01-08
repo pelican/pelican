@@ -1,5 +1,5 @@
-#include "pelican/server/DataReceiver.h"
-#include "pelican/utility/pelicanTimer.h"
+#include "server/DataReceiver.h"
+#include "utility/pelicanTimer.h"
 #include <QtCore/QIODevice>
 #include <QtCore/QTimer>
 #include <QtCore/QFile>

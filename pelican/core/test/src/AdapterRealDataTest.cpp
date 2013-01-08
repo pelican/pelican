@@ -1,7 +1,7 @@
 #include "AdapterRealDataTest.h"
-#include "pelican/core/AdapterRealData.h"
-#include "pelican/data/ArrayData.h"
-#include "pelican/utility/ConfigNode.h"
+#include "core/AdapterRealData.h"
+#include "data/ArrayData.h"
+#include "utility/ConfigNode.h"
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QString>

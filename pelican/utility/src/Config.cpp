@@ -1,4 +1,4 @@
-#include "pelican/utility/Config.h"
+#include "utility/Config.h"
 
 #include <QtCore/QTextStream>
 #include <QtCore/QFile>

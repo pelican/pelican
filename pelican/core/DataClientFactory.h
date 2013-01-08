@@ -5,9 +5,9 @@
  * @file DataClientFactory.h
  */
 
-#include "pelican/core/AbstractDataClient.h"
-#include "pelican/core/AbstractAdapterFactory.h"
-#include "pelican/utility/FactoryConfig.h"
+#include "core/AbstractDataClient.h"
+#include "core/AbstractAdapterFactory.h"
+#include "utility/FactoryConfig.h"
 
 #include <QtCore/QList>
 #include <QtCore/QString>

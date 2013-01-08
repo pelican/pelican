@@ -3,11 +3,11 @@
  * Main server executable
  */
 
-#include "pelican/server/PelicanServer.h"
-#include "pelican/server/DataManager.h"
-#include "pelican/server/PelicanPortServer.h"
-#include "pelican/comms/PelicanProtocol.h"
-#include "pelican/utility/Config.h"
+#include "server/PelicanServer.h"
+#include "server/DataManager.h"
+#include "server/PelicanPortServer.h"
+#include "comms/PelicanProtocol.h"
+#include "utility/Config.h"
 
 #include <QtCore/QCoreApplication>
 

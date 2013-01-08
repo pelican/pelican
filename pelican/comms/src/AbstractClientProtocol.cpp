@@ -1,4 +1,4 @@
-#include "pelican/comms/AbstractClientProtocol.h"
+#include "comms/AbstractClientProtocol.h"
 
 namespace pelican {
 

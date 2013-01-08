@@ -5,7 +5,7 @@
  * @file AbstractServiceAdapter.h
  */
 
-#include "pelican/core/AbstractAdapter.h"
+#include "core/AbstractAdapter.h"
 
 namespace pelican {
 

@@ -1,10 +1,10 @@
-#include "pelican/server/DataManager.h"
+#include "server/DataManager.h"
 
-#include "pelican/server/LockableServiceData.h"
-#include "pelican/server/LockableStreamData.h"
-#include "pelican/server/WritableData.h"
-#include "pelican/comms/StreamData.h"
-#include "pelican/utility/Config.h"
+#include "server/LockableServiceData.h"
+#include "server/LockableStreamData.h"
+#include "server/WritableData.h"
+#include "comms/StreamData.h"
+#include "utility/Config.h"
 
 #include <iostream>
 #include <QtCore/QMutexLocker>

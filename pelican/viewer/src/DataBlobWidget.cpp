@@ -1,5 +1,5 @@
-#include "pelican/viewer/DataBlobWidget.h"
-#include "pelican/data/DataBlob.h"
+#include "viewer/DataBlobWidget.h"
+#include "data/DataBlob.h"
 #include <iostream>
 
 

@@ -5,9 +5,9 @@
  * @file AbstractModule.h
  */
 
-#include "pelican/utility/ConfigNode.h"
-#include "pelican/utility/FactoryRegistrar.h"
-#include "pelican/data/DataBlob.h"
+#include "utility/ConfigNode.h"
+#include "utility/FactoryRegistrar.h"
+#include "data/DataBlob.h"
 #include <QtCore/QString>
 #include <algorithm>
 #include <iostream>

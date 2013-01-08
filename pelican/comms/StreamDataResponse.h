@@ -5,8 +5,8 @@
  * @file StreamDataResponse.h
  */
 
-#include "pelican/comms/ServerResponse.h"
-#include "pelican/comms/StreamData.h"
+#include "comms/ServerResponse.h"
+#include "comms/StreamData.h"
 
 namespace pelican {
 

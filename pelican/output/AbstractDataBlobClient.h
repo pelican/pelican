@@ -4,7 +4,7 @@
 #include <QtCore/QObject>
 #include <QtCore/QString>
 #include <QtCore/QSet>
-#include "pelican/data/DataSpec.h"
+#include "data/DataSpec.h"
 class QTcpSocket;
 
 /**

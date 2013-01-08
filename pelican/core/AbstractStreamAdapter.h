@@ -5,7 +5,7 @@
  * @file AbstractStreamAdapter.h
  */
 
-#include "pelican/core/AbstractAdapter.h"
+#include "core/AbstractAdapter.h"
 #include <QtCore/QHash>
 #include <QtCore/QString>
 #include <QtCore/QIODevice>

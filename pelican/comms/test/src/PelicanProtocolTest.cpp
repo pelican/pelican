@@ -10,12 +10,12 @@
 #include "ServiceDataResponse.h"
 #include "StreamData.h"
 
-#include "pelican/comms/DataSupportRequest.h"
-#include "pelican/comms/DataSupportResponse.h"
-#include "pelican/data/DataRequirements.h"
-#include "pelican/utility/test/SocketTester.h"
-#include "pelican/data/test/TestDataBlob.h"
-#include "pelican/server/WritableData.h"
+#include "comms/DataSupportRequest.h"
+#include "comms/DataSupportResponse.h"
+#include "data/DataRequirements.h"
+#include "utility/test/SocketTester.h"
+#include "data/test/TestDataBlob.h"
+#include "server/WritableData.h"
 
 #include <QtCore/QBuffer>
 #include <QtCore/QDataStream>

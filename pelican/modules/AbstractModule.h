@@ -3,4 +3,4 @@
  * at pelican/core/AbstractModule.h instead.
  */
 
-#include "pelican/core/AbstractModule.h"
+#include "core/AbstractModule.h"

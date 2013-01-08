@@ -1,5 +1,5 @@
-#include "pelican/output/ThreadedBlobServer.h"
-#include "pelican/output/TCPConnectionManager.h"
+#include "output/ThreadedBlobServer.h"
+#include "output/TCPConnectionManager.h"
 
 #include <QtCore/QTimer>
 

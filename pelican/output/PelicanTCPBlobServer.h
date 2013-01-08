@@ -1,8 +1,8 @@
 #ifndef PELICANTCPBLOBSERVER_H
 #define PELICANTCPBLOBSERVER_H
 
-#include "pelican/output/TCPConnectionManager.h"
-#include "pelican/output/AbstractOutputStream.h"
+#include "output/TCPConnectionManager.h"
+#include "output/AbstractOutputStream.h"
 
 /**
  * @file PelicanTCPBlobServer.h

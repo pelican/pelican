@@ -1,8 +1,8 @@
-#include "pelican/core/test/DataTypesTest.h"
-#include "pelican/core/DataTypes.h"
-#include "pelican/core/test/TestServiceAdapter.h"
-#include "pelican/core/test/TestStreamAdapter.h"
-#include "pelican/data/DataSpec.h"
+#include "core/test/DataTypesTest.h"
+#include "core/DataTypes.h"
+#include "core/test/TestServiceAdapter.h"
+#include "core/test/TestStreamAdapter.h"
+#include "data/DataSpec.h"
 
 namespace pelican {
 

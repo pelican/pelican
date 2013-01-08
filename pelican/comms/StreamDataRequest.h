@@ -6,8 +6,8 @@
  */
 
 #include <QtCore/QVector>
-#include "pelican/comms/ServerRequest.h"
-#include "pelican/data/DataSpec.h"
+#include "comms/ServerRequest.h"
+#include "data/DataSpec.h"
 #include <iostream>
 
 namespace pelican {

@@ -5,7 +5,7 @@
  * @file ArrayData.h
  */
 
-#include "pelican/data/DataBlob.h"
+#include "data/DataBlob.h"
 #include <vector>
 
 namespace pelican {

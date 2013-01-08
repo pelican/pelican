@@ -1,8 +1,8 @@
-#include "pelican/server/test/ServiceDataBufferTest.h"
-#include "pelican/server/ServiceDataBuffer.h"
-#include "pelican/server/WritableData.h"
-#include "pelican/server/LockedData.h"
-#include "pelican/server/LockableServiceData.h"
+#include "server/test/ServiceDataBufferTest.h"
+#include "server/ServiceDataBuffer.h"
+#include "server/WritableData.h"
+#include "server/LockedData.h"
+#include "server/LockableServiceData.h"
 #include <QtCore/QCoreApplication>
 
 namespace pelican {

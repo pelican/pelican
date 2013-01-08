@@ -1,13 +1,13 @@
 #include <iostream>
 
-#include "pelican/output/TCPConnectionManager.h"
-#include "pelican/comms/StreamDataRequest.h"
-#include "pelican/comms/DataSupportResponse.h"
-#include "pelican/comms/PelicanProtocol.h"
-#include "pelican/comms/ServerRequest.h"
-#include "pelican/utility/ConfigNode.h"
-#include "pelican/comms/StreamData.h"
-#include "pelican/data/DataBlob.h"
+#include "output/TCPConnectionManager.h"
+#include "comms/StreamDataRequest.h"
+#include "comms/DataSupportResponse.h"
+#include "comms/PelicanProtocol.h"
+#include "comms/ServerRequest.h"
+#include "utility/ConfigNode.h"
+#include "comms/StreamData.h"
+#include "data/DataBlob.h"
 
 #include <QtCore/QBuffer>
 #include <QtCore/QMutexLocker>

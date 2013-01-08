@@ -5,8 +5,8 @@
  * @file DataBlobFactory.h
  */
 
-#include "pelican/utility/FactoryGeneric.h"
-#include "pelican/data/DataBlob.h"
+#include "utility/FactoryGeneric.h"
+#include "data/DataBlob.h"
 
 #include <QtCore/QString>
 

@@ -5,9 +5,9 @@
  * @file DataTypes.h
  */
 
-#include "pelican/data/DataSpec.h"
-#include "pelican/utility/ConfigNode.h"
-#include "pelican/core/AbstractAdapter.h"
+#include "data/DataSpec.h"
+#include "utility/ConfigNode.h"
+#include "core/AbstractAdapter.h"
 
 #include <QtCore/QString>
 #include <QtCore/QList>

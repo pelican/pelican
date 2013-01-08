@@ -5,8 +5,8 @@
  * @file DataBlobWidgetFactory.h
  */
 
-#include "pelican/utility/FactoryConfig.h"
-#include "pelican/viewer/DataBlobWidget.h"
+#include "utility/FactoryConfig.h"
+#include "viewer/DataBlobWidget.h"
 
 namespace pelican {
 class Config;

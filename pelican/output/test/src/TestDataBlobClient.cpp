@@ -1,5 +1,5 @@
 #include "TestDataBlobClient.h"
-#include "pelican/output/Stream.h"
+#include "output/Stream.h"
 #include <QtCore/QCoreApplication>
 
 namespace pelican {

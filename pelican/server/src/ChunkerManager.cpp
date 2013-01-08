@@ -1,13 +1,13 @@
-#include "pelican/server/ChunkerManager.h"
-#include "pelican/server/DataReceiver.h"
-#include "pelican/server/DataManager.h"
-#include "pelican/server/AbstractChunker.h"
+#include "server/ChunkerManager.h"
+#include "server/DataReceiver.h"
+#include "server/DataManager.h"
+#include "server/AbstractChunker.h"
 
 #include <QtCore/QVector>
 #include <boost/shared_ptr.hpp>
 
 // Include default chunkers here to ensure they are available in the factory.
-#include "pelican/server/FileChunker.h"
+#include "server/FileChunker.h"
 
 #include <iostream>
 

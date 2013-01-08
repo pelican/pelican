@@ -1,8 +1,8 @@
-#include "pelican/server/ServiceDataBuffer.h"
+#include "server/ServiceDataBuffer.h"
 
-#include "pelican/server/LockedData.h"
-#include "pelican/server/WritableData.h"
-#include "pelican/server/LockableServiceData.h"
+#include "server/LockedData.h"
+#include "server/WritableData.h"
+#include "server/LockableServiceData.h"
 
 #include <QtCore/QDebug>
 #include <QtCore/QMutexLocker>

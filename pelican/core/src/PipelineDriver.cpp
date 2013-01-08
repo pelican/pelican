@@ -1,14 +1,14 @@
-#include "pelican/core/PipelineDriver.h"
+#include "core/PipelineDriver.h"
 
-#include "pelican/core/DataClientFactory.h"
-#include "pelican/core/AbstractDataClient.h"
-#include "pelican/core/FileDataClient.h"
-#include "pelican/core/AbstractPipeline.h"
-#include "pelican/data/DataBlob.h"
-#include "pelican/data/DataBlobBuffer.h"
-#include "pelican/utility/Config.h"
-#include "pelican/utility/ConfigNode.h"
-#include "pelican/core/PipelineSwitcher.h"
+#include "core/DataClientFactory.h"
+#include "core/AbstractDataClient.h"
+#include "core/FileDataClient.h"
+#include "core/AbstractPipeline.h"
+#include "data/DataBlob.h"
+#include "data/DataBlobBuffer.h"
+#include "utility/Config.h"
+#include "utility/ConfigNode.h"
+#include "core/PipelineSwitcher.h"
 
 #include <QtCore/QString>
 #include <QtCore/QtGlobal>

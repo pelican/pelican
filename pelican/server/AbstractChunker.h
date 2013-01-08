@@ -5,9 +5,9 @@
  * @file AbstractChunker.h
  */
 
-#include "pelican/server/DataManager.h"
-#include "pelican/server/WritableData.h"
-#include "pelican/utility/FactoryRegistrar.h"
+#include "server/DataManager.h"
+#include "server/WritableData.h"
+#include "utility/FactoryRegistrar.h"
 
 #include <QtNetwork/QUdpSocket>
 #include <QtCore/QList>

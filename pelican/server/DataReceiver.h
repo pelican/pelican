@@ -1,7 +1,7 @@
 #ifndef DATARECEIVER_H
 #define DATARECEIVER_H
 
-#include "pelican/server/AbstractChunker.h"
+#include "server/AbstractChunker.h"
 
 #include <QtCore/QThread>
 #include <QtCore/QMutex>

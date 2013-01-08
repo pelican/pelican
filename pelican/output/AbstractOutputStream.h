@@ -1,7 +1,7 @@
 #ifndef ABSTRACTOUTPUTSTREAM_H
 #define ABSTRACTOUTPUTSTREAM_H
 
-#include "pelican/utility/FactoryRegistrar.h"
+#include "utility/FactoryRegistrar.h"
 #include <QtCore/QString>
 
 /**

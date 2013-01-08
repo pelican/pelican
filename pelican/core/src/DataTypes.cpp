@@ -1,8 +1,8 @@
-#include "pelican/core/DataTypes.h"
-#include "pelican/core/AbstractStreamAdapter.h"
-#include "pelican/core/AbstractServiceAdapter.h"
-#include "pelican/core/DataClientFactory.h"
-#include "pelican/data/DataSpec.h"
+#include "core/DataTypes.h"
+#include "core/AbstractStreamAdapter.h"
+#include "core/AbstractServiceAdapter.h"
+#include "core/DataClientFactory.h"
+#include "data/DataSpec.h"
 #include <iostream>
 
 

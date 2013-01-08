@@ -5,8 +5,8 @@
  * @file EmptyModule.h
  */
 
-#include "pelican/core/AbstractModule.h"
-#include "pelican/utility/ConfigNode.h"
+#include "core/AbstractModule.h"
+#include "utility/ConfigNode.h"
 
 namespace pelican {
 namespace test {

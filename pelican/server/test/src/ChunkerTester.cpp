@@ -1,6 +1,6 @@
 #include "ChunkerTester.h"
-#include "pelican/server/StreamDataBuffer.h"
-#include "pelican/server/ChunkerManager.h"
+#include "server/StreamDataBuffer.h"
+#include "server/ChunkerManager.h"
 
 #include <QtCore/QCoreApplication>
 

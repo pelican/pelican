@@ -1,7 +1,7 @@
 #include "ThreadedClientImpl.h"
 
 
-#include "pelican/output/DataBlobClient.h"
+#include "output/DataBlobClient.h"
 
 namespace pelican {
 

@@ -1,14 +1,14 @@
-#include "pelican/core/DirectStreamDataClient.h"
+#include "core/DirectStreamDataClient.h"
 
-#include "pelican/core/PipelineApplication.h"
-#include "pelican/comms/StreamData.h"
-#include "pelican/data/DataRequirements.h"
-#include "pelican/data/DataBlob.h"
-#include "pelican/server/ChunkerManager.h"
-#include "pelican/server/DataManager.h"
-#include "pelican/server/LockableStreamData.h"
-#include "pelican/server/LockedData.h"
-#include "pelican/utility/Config.h"
+#include "core/PipelineApplication.h"
+#include "comms/StreamData.h"
+#include "data/DataRequirements.h"
+#include "data/DataBlob.h"
+#include "server/ChunkerManager.h"
+#include "server/DataManager.h"
+#include "server/LockableStreamData.h"
+#include "server/LockedData.h"
+#include "utility/Config.h"
 
 #include <QtCore/QBuffer>
 #include <QtCore/QCoreApplication>

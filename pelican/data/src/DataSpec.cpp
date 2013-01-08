@@ -1,4 +1,4 @@
-#include "pelican/data/DataSpec.h"
+#include "data/DataSpec.h"
 #include <QtCore/QHash>
 #include <QtCore/QtGlobal>
 #include <QtCore/QStringList>

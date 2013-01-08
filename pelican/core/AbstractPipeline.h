@@ -5,10 +5,10 @@
  * @file AbstractPipeline.h
  */
 
-#include "pelican/data/DataRequirements.h"
-#include "pelican/modules/AbstractModule.h"
-#include "pelican/utility/FactoryConfig.h"
-#include "pelican/utility/FactoryGeneric.h"
+#include "data/DataRequirements.h"
+#include "modules/AbstractModule.h"
+#include "utility/FactoryConfig.h"
+#include "utility/FactoryGeneric.h"
 
 #include <QtCore/QString>
 #include <QtCore/QList>

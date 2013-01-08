@@ -1,5 +1,5 @@
-#include "pelican/comms/test/DataChunkTest.h"
-#include "pelican/comms/DataChunk.h"
+#include "comms/test/DataChunkTest.h"
+#include "comms/DataChunk.h"
 
 namespace pelican {
 

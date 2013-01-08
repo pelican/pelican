@@ -1,7 +1,7 @@
 #include "OutputStreamManagerTest.h"
 #include "OutputStreamManager.h"
 
-#include "pelican/output/test/TestOutputStreamer.h"
+#include "output/test/TestOutputStreamer.h"
 
 namespace pelican {
 

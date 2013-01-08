@@ -1,8 +1,8 @@
-#include "pelican/core/FileDataClient.h"
-#include "pelican/core/AbstractServiceAdapter.h"
-#include "pelican/core/AbstractStreamAdapter.h"
-#include "pelican/data/DataRequirements.h"
-#include "pelican/utility/ConfigNode.h"
+#include "core/FileDataClient.h"
+#include "core/AbstractServiceAdapter.h"
+#include "core/AbstractStreamAdapter.h"
+#include "data/DataRequirements.h"
+#include "utility/ConfigNode.h"
 
 #include <QtCore/QFile>
 #include <QtCore/QSet>

@@ -3,7 +3,7 @@
 #include <QtCore/QString>
 #include <QtCore/QDataStream>
 
-#include "pelican/data/DataBlob.h"
+#include "data/DataBlob.h"
 
 namespace pelican {
 

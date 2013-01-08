@@ -1,8 +1,8 @@
 #include <QtCore/QFile>
 #include "DataBlobFileTest.h"
-#include "pelican/utility/ConfigNode.h"
-#include "pelican/data/test/TestDataBlob.h"
-#include "pelican/utility/test/TestFile.h"
+#include "utility/ConfigNode.h"
+#include "data/test/TestDataBlob.h"
+#include "utility/test/TestFile.h"
 #include "DataBlobFile.h"
 #include "DataBlobFileReader.h"
 

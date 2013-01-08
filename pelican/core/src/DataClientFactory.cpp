@@ -1,8 +1,8 @@
-#include "pelican/core/DataClientFactory.h"
-#include "pelican/core/FileDataClient.h"
-#include "pelican/core/PelicanServerClient.h"
-#include "pelican/core/DataTypes.h"
-#include "pelican/data/DataRequirements.h"
+#include "core/DataClientFactory.h"
+#include "core/FileDataClient.h"
+#include "core/PelicanServerClient.h"
+#include "core/DataTypes.h"
+#include "data/DataRequirements.h"
 
 #include <iostream>
 

@@ -7,12 +7,12 @@
 #include <QtGui/QTabWidget>
 #include <QtGui/QCloseEvent>
 
-#include "pelican/viewer/DataViewer.h"
-#include "pelican/viewer/DataBlobWidget.h"
-#include "pelican/output/AbstractDataBlobClient.h"
-#include "pelican/output/Stream.h"
-#include "pelican/viewer/DataBlobWidgetFactory.h"
-#include "pelican/utility/ConfigNode.h"
+#include "viewer/DataViewer.h"
+#include "viewer/DataBlobWidget.h"
+#include "output/AbstractDataBlobClient.h"
+#include "output/Stream.h"
+#include "viewer/DataBlobWidgetFactory.h"
+#include "utility/ConfigNode.h"
 
 #include <iostream>
 

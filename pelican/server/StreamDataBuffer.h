@@ -5,7 +5,7 @@
  * @file StreamDataBuffer.h
  */
 
-#include "pelican/server/AbstractDataBuffer.h"
+#include "server/AbstractDataBuffer.h"
 #include <QtCore/QQueue>
 #include <QtCore/QObject>
 

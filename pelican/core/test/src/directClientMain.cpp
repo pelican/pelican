@@ -1,12 +1,12 @@
-#include "pelican/core/DirectStreamDataClient.h"
-#include "pelican/utility/Config.h"
-#include "pelican/utility/FactoryConfig.h"
-#include "pelican/utility/FactoryGeneric.h"
-#include "pelican/core/DataClientFactory.h"
-#include "pelican/core/AbstractAdapter.h"
-#include "pelican/data/DataBlob.h"
-#include "pelican/data/ArrayData.h"
-#include "pelican/server/test/TestUdpChunker.h"
+#include "core/DirectStreamDataClient.h"
+#include "utility/Config.h"
+#include "utility/FactoryConfig.h"
+#include "utility/FactoryGeneric.h"
+#include "core/DataClientFactory.h"
+#include "core/AbstractAdapter.h"
+#include "data/DataBlob.h"
+#include "data/ArrayData.h"
+#include "server/test/TestUdpChunker.h"
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QTime>

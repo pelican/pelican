@@ -1,5 +1,5 @@
-#include "pelican/utility/test/ConfigNodeTest.h"
-#include "pelican/utility/ConfigNode.h"
+#include "utility/test/ConfigNodeTest.h"
+#include "utility/ConfigNode.h"
 
 #include <QtCore/QCoreApplication>
 

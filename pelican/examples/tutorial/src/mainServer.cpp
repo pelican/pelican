@@ -1,6 +1,6 @@
-#include "pelican/server/PelicanServer.h"
-#include "pelican/comms/PelicanProtocol.h"
-#include "pelican/utility/Config.h"
+#include "server/PelicanServer.h"
+#include "comms/PelicanProtocol.h"
+#include "utility/Config.h"
 
 #include "tutorial/SignalChunker.h"
 

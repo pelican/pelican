@@ -2,16 +2,16 @@
 #include <QtNetwork/QTcpSocket>
 #include <QtCore/QCoreApplication>
 
-#include "pelican/output/Stream.h"
-#include "pelican/data/DataBlob.h"
-#include "pelican/data/DataBlobFactory.h"
-#include "pelican/utility/ConfigNode.h"
-#include "pelican/comms/PelicanClientProtocol.h"
-#include "pelican/data/DataRequirements.h"
-#include "pelican/comms/DataBlobResponse.h"
-#include "pelican/comms/ServerResponse.h"
-#include "pelican/comms/DataSupportRequest.h"
-#include "pelican/comms/DataSupportResponse.h"
+#include "output/Stream.h"
+#include "data/DataBlob.h"
+#include "data/DataBlobFactory.h"
+#include "utility/ConfigNode.h"
+#include "comms/PelicanClientProtocol.h"
+#include "data/DataRequirements.h"
+#include "comms/DataBlobResponse.h"
+#include "comms/ServerResponse.h"
+#include "comms/DataSupportRequest.h"
+#include "comms/DataSupportResponse.h"
 
 #include <iostream>
 

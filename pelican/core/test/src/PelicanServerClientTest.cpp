@@ -1,19 +1,19 @@
 #include "PelicanServerClientTest.h"
 #include "PelicanServerClient.h"
-#include "pelican/data/DataSpec.h"
+#include "data/DataSpec.h"
 
-#include "pelican/data/test/TestDataBlob.h"
-#include "pelican/core/test/TestServiceAdapter.h"
-#include "pelican/core/test/TestStreamAdapter.h"
+#include "data/test/TestDataBlob.h"
+#include "core/test/TestServiceAdapter.h"
+#include "core/test/TestStreamAdapter.h"
 
-#include "pelican/utility/Config.h"
-#include "pelican/utility/ConfigNode.h"
-#include "pelican/utility/test/SocketTester.h"
-#include "pelican/comms/StreamData.h"
-#include "pelican/comms/DataChunk.h"
-#include "pelican/comms/StreamDataResponse.h"
-#include "pelican/comms/ServiceDataResponse.h"
-#include "pelican/server/test/TestServer.h"
+#include "utility/Config.h"
+#include "utility/ConfigNode.h"
+#include "utility/test/SocketTester.h"
+#include "comms/StreamData.h"
+#include "comms/DataChunk.h"
+#include "comms/StreamDataResponse.h"
+#include "comms/ServiceDataResponse.h"
+#include "server/test/TestServer.h"
 
 #include <QtCore/QList>
 #include <QtCore/QString>
@@ -99,7 +99,7 @@ void PelicanServerClientTest::test_getData()
 
         QHash<QString, DataBlob*> dataHash;
         DataBlob db("DataBlob");
-        dataHash.insert("pelican/data2", &db);
+        dataHash.insert("data2", &db);
 
         CPPUNIT_ASSERT_THROW(client.getData(dataHash), QString);
     }

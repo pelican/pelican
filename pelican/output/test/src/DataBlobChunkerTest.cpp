@@ -2,8 +2,8 @@
 #include <QtCore/QCoreApplication>
 #include <QtNetwork/QTcpSocket>
 #include <QtTest/QSignalSpy>
-#include "pelican/server/test/ChunkerTester.h"
-#include "pelican/output/test/TestDataBlobServer.h"
+#include "server/test/ChunkerTester.h"
+#include "output/test/TestDataBlobServer.h"
 #include <QtCore/QDebug>
 
 

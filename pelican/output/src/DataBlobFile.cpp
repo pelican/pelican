@@ -5,8 +5,8 @@
 
 #include "DataBlobFile.h"
 #include "DataBlobFileType.h"
-#include "pelican/data/DataBlob.h"
-#include "pelican/utility/ConfigNode.h"
+#include "data/DataBlob.h"
+#include "utility/ConfigNode.h"
 
 namespace pelican {
 

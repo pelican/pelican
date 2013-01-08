@@ -5,7 +5,7 @@
  * @file DataViewer.h
  */
 
-#include "pelican/utility/Config.h"
+#include "utility/Config.h"
 
 #include <QtGui/QWidget>
 #include <QtCore/QMap>

@@ -1,7 +1,7 @@
 #ifndef SIGNALAMPLIFIER_H
 #define SIGNALAMPLIFIER_H
 
-#include "pelican/core/AbstractModule.h"
+#include "core/AbstractModule.h"
 
 using namespace pelican;
 

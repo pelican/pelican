@@ -1,6 +1,6 @@
 #include "AbstractPipelineTest.h"
 #include "AbstractPipeline.h"
-#include "pelican/data/test/TestDataBlob.h"
+#include "data/test/TestDataBlob.h"
 #include "TestPipeline.h"
 
 

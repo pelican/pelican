@@ -3,8 +3,8 @@
 #include "TestDataBlobClient.h"
 #include "TestOutputStreamer.h"
 #include "Stream.h"
-#include "pelican/utility/Config.h"
-#include "pelican/data/test/TestDataBlob.h"
+#include "utility/Config.h"
+#include "data/test/TestDataBlob.h"
 #include <boost/shared_ptr.hpp>
 
 

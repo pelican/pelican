@@ -1,6 +1,6 @@
-#include "pelican/utility/ConfigNode.h"
-#include "pelican/utility/Config.h"
-#include "pelican/data/DataBlob.h"
+#include "utility/ConfigNode.h"
+#include "utility/Config.h"
+#include "data/DataBlob.h"
 
 #include <QtXml/QDomNode>
 #include <QtXml/QDomNodeList>

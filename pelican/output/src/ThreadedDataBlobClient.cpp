@@ -1,8 +1,8 @@
 #include "ThreadedDataBlobClient.h"
 #include <QtCore/QSet>
 
-#include "pelican/output/ThreadedClientImpl.h"
-#include "pelican/output/DataBlobClient.h"
+#include "output/ThreadedClientImpl.h"
+#include "output/DataBlobClient.h"
 
 namespace pelican {
 

@@ -7,7 +7,7 @@
 
 #include "AbstractAdaptingDataClient.h"
 #include <boost/shared_ptr.hpp>
-#include "pelican/data/DataSpec.h"
+#include "data/DataSpec.h"
 
 using boost::shared_ptr;
 class QTcpSocket;

@@ -31,11 +31,7 @@
 #                         be either /usr/local or /usr
 #
 # ============================================================================
-# Known Issues
-#   - This script is untested with either Mac OS or Windows.
-#
-# ============================================================================
-# Last Update: 26 Oct 2010
+# Last Update: 8th January 2013
 # =============================================================================
 
 
@@ -44,12 +40,12 @@ include(FindPackageHandleStandardArgs)
 
 
 # Find the top level Pelican include directory.
-find_path(PELICAN_INCLUDE_DIR pelican
+find_path(PELICAN_INCLUDE_DIR pelican_version.h
     PATHS
-    ${PELICAN_INSTALL_DIR}/include
-    $ENV{PELICAN_INSTALL_DIR}/include
-    /usr/include
-    /usr/local/include
+    ${PELICAN_INSTALL_DIR}/include/pelican
+    $ENV{PELICAN_INSTALL_DIR}/include/pelican
+    /usr/include/pelican
+    /usr/local/include/pelican
 )
 set(PELICAN_INCLUDES ${PELICAN_INCLUDE_DIR})
 
@@ -123,8 +119,6 @@ FIND_PACKAGE_HANDLE_STANDARD_ARGS(Pelican
 # Add the Pelican CMake modules into the CMake module path.
 list(INSERT CMAKE_MODULE_PATH 0 "${PELICAN_CMAKE_MODULE_DIR}")
 list(INSERT CMAKE_INCLUDE_PATH 0 "${PELICAN_CMAKE_MODULE_DIR}")
-
-
 
 # Find dependencies.
 find_package(Boost COMPONENTS program_options REQUIRED)

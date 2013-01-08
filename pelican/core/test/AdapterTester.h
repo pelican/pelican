@@ -3,9 +3,9 @@
 
 #include <QtCore/QString>
 #include <QtCore/QHash>
-#include "pelican/utility/FactoryConfig.h"
-#include "pelican/utility/Config.h"
-#include "pelican/core/AbstractAdapter.h"
+#include "utility/FactoryConfig.h"
+#include "utility/Config.h"
+#include "core/AbstractAdapter.h"
 
 class QIODevice;
 

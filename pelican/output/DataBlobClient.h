@@ -6,7 +6,7 @@
  */
 
 #include <boost/shared_ptr.hpp>
-#include "pelican/output/AbstractDataBlobClient.h"
+#include "output/AbstractDataBlobClient.h"
 
 #include <QtCore/QSet>
 #include <QtCore/QString>

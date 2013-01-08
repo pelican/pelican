@@ -1,7 +1,7 @@
 #ifndef PIPELINEEXAMPLE_H
 #define PIPELINEEXAMPLE_H
 
-#include "pelican/core/AbstractPipeline.h"
+#include "core/AbstractPipeline.h"
 
 using namespace pelican;
 

@@ -5,8 +5,8 @@
  * @file TestProtocol.h
  */
 
-#include "pelican/comms/AbstractProtocol.h"
-#include "pelican/comms/ServerRequest.h"
+#include "comms/AbstractProtocol.h"
+#include "comms/ServerRequest.h"
 
 #include <QtCore/QString>
 #include <QtCore/QIODevice>

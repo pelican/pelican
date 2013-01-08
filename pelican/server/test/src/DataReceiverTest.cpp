@@ -1,12 +1,12 @@
-#include "pelican/server/test/DataReceiverTest.h"
-#include "pelican/server/DataReceiver.h"
-#include "pelican/server/test/TestChunker.h"
-#include "pelican/server/test/TestUdpChunker.h"
-#include "pelican/emulator/EmulatorDriver.h"
-#include "pelican/emulator/test/RealUdpEmulator.h"
-#include "pelican/server/DataManager.h"
-#include "pelican/utility/pelicanTimer.h"
-#include "pelican/utility/Config.h"
+#include "server/test/DataReceiverTest.h"
+#include "server/DataReceiver.h"
+#include "server/test/TestChunker.h"
+#include "server/test/TestUdpChunker.h"
+#include "emulator/EmulatorDriver.h"
+#include "emulator/test/RealUdpEmulator.h"
+#include "server/DataManager.h"
+#include "utility/pelicanTimer.h"
+#include "utility/Config.h"
 
 #include <QtCore/QThread>
 #include <QtCore/QCoreApplication>

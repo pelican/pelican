@@ -21,9 +21,9 @@ if (NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "RelWithDebInfo")
 endif ()
 
-# Set include directories
+# Set include directories (these probably are not all needed!)
 include_directories(
-    ${PROJECT_SOURCE_DIR}/..
+    ${PROJECT_SOURCE_DIR}
     ${PROJECT_SOURCE_DIR}/utility
     ${PROJECT_SOURCE_DIR}/utility/test
     ${PROJECT_SOURCE_DIR}/data

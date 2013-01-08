@@ -1,5 +1,5 @@
 #include "tutorial/SignalChunker.h"
-#include "pelican/utility/Config.h"
+#include "utility/Config.h"
 #include <QtNetwork/QUdpSocket>
 
 // Construct the example chunker.

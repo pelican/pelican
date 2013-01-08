@@ -1,7 +1,7 @@
 #ifndef SIGNALPROCESSINGPIPELINE_H
 #define SIGNALPROCESSINGPIPELINE_H
 
-#include "pelican/core/AbstractPipeline.h"
+#include "core/AbstractPipeline.h"
 
 using namespace pelican;
 

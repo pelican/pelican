@@ -1,5 +1,5 @@
-#include "pelican/server/LockableServiceData.h"
-#include "pelican/comms/DataChunk.h"
+#include "server/LockableServiceData.h"
+#include "comms/DataChunk.h"
 
 namespace pelican {
 

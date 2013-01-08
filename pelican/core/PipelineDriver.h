@@ -6,13 +6,13 @@
  */
 
 #include "PipelineSwitcher.h"
-#include "pelican/data/DataBlob.h"
-#include "pelican/data/DataRequirements.h"
-#include "pelican/data/DataSpec.h"
-#include "pelican/modules/AbstractModule.h"
-#include "pelican/utility/FactoryConfig.h"
-#include "pelican/utility/TypeCounter.h"
-#include "pelican/utility/FactoryGeneric.h"
+#include "data/DataBlob.h"
+#include "data/DataRequirements.h"
+#include "data/DataSpec.h"
+#include "modules/AbstractModule.h"
+#include "utility/FactoryConfig.h"
+#include "utility/TypeCounter.h"
+#include "utility/FactoryGeneric.h"
 #include <QtCore/QList>
 #include <QtCore/QVector>
 

@@ -1,12 +1,12 @@
 #include "FileDataClientTest.h"
 #include "FileDataClient.h"
 
-#include "pelican/utility/Config.h"
-#include "pelican/utility/ConfigNode.h"
-#include "pelican/data/DataSpec.h"
-#include "pelican/data/DataBlob.h"
-#include "pelican/core/DataTypes.h"
-#include "pelican/core/test/TestStreamAdapter.h"
+#include "utility/Config.h"
+#include "utility/ConfigNode.h"
+#include "data/DataSpec.h"
+#include "data/DataBlob.h"
+#include "core/DataTypes.h"
+#include "core/test/TestStreamAdapter.h"
 
 namespace pelican {
 using test::TestStreamAdapter;

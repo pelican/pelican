@@ -1,7 +1,7 @@
 #include "ModuleFactoryTest.h"
-#include "pelican/modules/AbstractModule.h"
-#include "pelican/utility/FactoryConfig.h"
-#include "pelican/utility/Config.h"
+#include "modules/AbstractModule.h"
+#include "utility/FactoryConfig.h"
+#include "utility/Config.h"
 #include <iostream>
 
 namespace pelican {

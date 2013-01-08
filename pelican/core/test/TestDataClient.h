@@ -5,9 +5,9 @@
  * @file TestDataClient.h
  */
 
-#include "pelican/core/AbstractDataClient.h"
-#include "pelican/core/DataTypes.h"
-#include "pelican/data/DataSpec.h"
+#include "core/AbstractDataClient.h"
+#include "core/DataTypes.h"
+#include "data/DataSpec.h"
 
 
 namespace pelican {

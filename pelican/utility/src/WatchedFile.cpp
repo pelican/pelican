@@ -1,4 +1,4 @@
-#include "pelican/utility/WatchedFile.h"
+#include "utility/WatchedFile.h"
 #include <QtCore/QtGlobal>
 
 namespace pelican {

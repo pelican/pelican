@@ -1,5 +1,5 @@
-#include "pelican/emulator/AbstractUdpEmulator.h"
-#include "pelican/utility/ConfigNode.h"
+#include "emulator/AbstractUdpEmulator.h"
+#include "utility/ConfigNode.h"
 
 #include <QtNetwork/QUdpSocket>
 

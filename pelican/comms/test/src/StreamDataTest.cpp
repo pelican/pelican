@@ -1,7 +1,7 @@
-#include "pelican/comms/test/StreamDataTest.h"
+#include "comms/test/StreamDataTest.h"
 
-#include "pelican/comms/StreamData.h"
-#include "pelican/comms/DataChunk.h"
+#include "comms/StreamData.h"
+#include "comms/DataChunk.h"
 
 namespace pelican {
 

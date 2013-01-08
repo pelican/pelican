@@ -1,5 +1,5 @@
 #include "DataBlobBuffer.h"
-#include "pelican/data/DataBlob.h"
+#include "data/DataBlob.h"
 #include <iostream>
 
 namespace pelican {

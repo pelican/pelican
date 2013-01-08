@@ -2,7 +2,7 @@
 
 
 #include <iostream>
-#include "pelican/utility/ConfigNode.h"
+#include "utility/ConfigNode.h"
 
 namespace pelican {
 

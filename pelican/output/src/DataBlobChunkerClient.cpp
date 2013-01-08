@@ -1,7 +1,7 @@
 #include "DataBlobChunkerClient.h"
 #include "DataBlobChunker.h"
-#include "pelican/comms/DataBlobResponse.h"
-#include "pelican/server/WritableData.h"
+#include "comms/DataBlobResponse.h"
+#include "server/WritableData.h"
 #include <QtNetwork/QTcpSocket>
 #include <QtCore/QDebug>
 #include <iostream>

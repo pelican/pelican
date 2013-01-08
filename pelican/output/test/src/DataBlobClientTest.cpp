@@ -1,10 +1,10 @@
-#include "pelican/output/test/DataBlobClientTest.h"
-#include "pelican/output/DataBlobClient.h"
+#include "output/test/DataBlobClientTest.h"
+#include "output/DataBlobClient.h"
 
-#include "pelican/output/PelicanTCPBlobServer.h"
-#include "pelican/output/Stream.h"
-#include "pelican/data/test/TestDataBlob.h"
-#include "pelican/utility/ConfigNode.h"
+#include "output/PelicanTCPBlobServer.h"
+#include "output/Stream.h"
+#include "data/test/TestDataBlob.h"
+#include "utility/ConfigNode.h"
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QString>

@@ -1,7 +1,7 @@
-#include "pelican/utility/test/ConfigTest.h"
-#include "pelican/utility/TestConfig.h"
-#include "pelican/utility/Config.h"
-#include "pelican/utility/ConfigNode.h"
+#include "utility/test/ConfigTest.h"
+#include "utility/TestConfig.h"
+#include "utility/Config.h"
+#include "utility/ConfigNode.h"
 #include <QtCore/QCoreApplication>
 #include <QtCore/QTextStream>
 #include <QtCore/QFile>

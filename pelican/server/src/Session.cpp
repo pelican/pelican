@@ -1,15 +1,15 @@
-#include "pelican/server/Session.h"
+#include "server/Session.h"
 
-#include "pelican/comms/AbstractProtocol.h"
-#include "pelican/server/DataManager.h"
-#include "pelican/server/LockedData.h"
-#include "pelican/server/LockableStreamData.h"
-#include "pelican/server/LockableServiceData.h"
-#include "pelican/comms/StreamData.h"
-#include "pelican/comms/DataSupportResponse.h"
-#include "pelican/comms/ServerRequest.h"
-#include "pelican/comms/StreamDataRequest.h"
-#include "pelican/comms/ServiceDataRequest.h"
+#include "comms/AbstractProtocol.h"
+#include "server/DataManager.h"
+#include "server/LockedData.h"
+#include "server/LockableStreamData.h"
+#include "server/LockableServiceData.h"
+#include "comms/StreamData.h"
+#include "comms/DataSupportResponse.h"
+#include "comms/ServerRequest.h"
+#include "comms/StreamDataRequest.h"
+#include "comms/ServiceDataRequest.h"
 
 #include <QtNetwork/QTcpSocket>
 #include <QtNetwork/QHostAddress>

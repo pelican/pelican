@@ -1,12 +1,12 @@
-#include "pelican/server/test/StreamDataBufferTest.h"
+#include "server/test/StreamDataBufferTest.h"
 
-#include "pelican/server/DataManager.h"
-#include "pelican/comms/StreamData.h"
-#include "pelican/server/StreamDataBuffer.h"
-#include "pelican/server/WritableData.h"
-#include "pelican/server/LockedData.h"
-#include "pelican/server/LockableStreamData.h"
-#include "pelican/utility/Config.h"
+#include "server/DataManager.h"
+#include "comms/StreamData.h"
+#include "server/StreamDataBuffer.h"
+#include "server/WritableData.h"
+#include "server/LockedData.h"
+#include "server/LockableStreamData.h"
+#include "utility/Config.h"
 
 #include <QtCore/QCoreApplication>
 

@@ -3,12 +3,12 @@
 #include <QtCore/QSet>
 #include <iostream>
 
-#include "pelican/comms/AbstractClientProtocol.h"
-#include "pelican/comms/ServerResponse.h"
-#include "pelican/comms/StreamDataRequest.h"
-#include "pelican/comms/DataSupportRequest.h"
-#include "pelican/comms/DataSupportResponse.h"
-#include "pelican/comms/DataBlobResponse.h"
+#include "comms/AbstractClientProtocol.h"
+#include "comms/ServerResponse.h"
+#include "comms/StreamDataRequest.h"
+#include "comms/DataSupportRequest.h"
+#include "comms/DataSupportResponse.h"
+#include "comms/DataBlobResponse.h"
 
 namespace pelican {
 

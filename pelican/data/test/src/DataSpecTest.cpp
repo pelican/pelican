@@ -1,5 +1,5 @@
-#include "pelican/data/test/DataSpecTest.h"
-#include "pelican/data/DataSpec.h"
+#include "data/test/DataSpecTest.h"
+#include "data/DataSpec.h"
 #include <QtCore/QSet>
 #include <QtCore/QStringList>
 

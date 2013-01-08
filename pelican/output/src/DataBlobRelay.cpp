@@ -1,8 +1,8 @@
 #include "DataBlobRelay.h"
-#include "pelican/utility/Config.h"
-#include "pelican/output/Stream.h"
-#include "pelican/output/DataBlobClient.h"
-#include "pelican/output/OutputStreamManager.h"
+#include "utility/Config.h"
+#include "output/Stream.h"
+#include "output/DataBlobClient.h"
+#include "output/OutputStreamManager.h"
 #include <iostream>
 
 

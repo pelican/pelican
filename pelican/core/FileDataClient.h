@@ -5,8 +5,8 @@
  * @file FileDataClient.h
  */
 
-#include "pelican/core/AbstractAdaptingDataClient.h"
-#include "pelican/data/DataSpec.h"
+#include "core/AbstractAdaptingDataClient.h"
+#include "data/DataSpec.h"
 #include <QtCore/QHash>
 #include <QtCore/QString>
 class QFile;

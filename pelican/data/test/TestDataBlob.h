@@ -5,7 +5,7 @@
  * @file TestDataBlob.h
  */
 
-#include "pelican/data/DataBlob.h"
+#include "data/DataBlob.h"
 #include <QtCore/QByteArray>
 
 namespace pelican {

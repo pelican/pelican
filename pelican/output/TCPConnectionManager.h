@@ -13,7 +13,7 @@
 #include <QtCore/QSet>
 #include <QtCore/QMap>
 
-#include "pelican/utility/ConfigNode.h"
+#include "utility/ConfigNode.h"
 
 namespace pelican {
 

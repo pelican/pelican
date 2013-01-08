@@ -7,7 +7,7 @@
  * @file ChunkerTester.h
  */
 
-#include "pelican/utility/Config.h"
+#include "utility/Config.h"
 
 
 namespace pelican {

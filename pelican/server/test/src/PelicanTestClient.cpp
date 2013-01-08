@@ -1,4 +1,4 @@
-#include "pelican/server/test/PelicanTestClient.h"
+#include "server/test/PelicanTestClient.h"
 
 #include <QtNetwork/QTcpSocket>
 #include <QtCore/QDebug>

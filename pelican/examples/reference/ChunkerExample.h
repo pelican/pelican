@@ -5,7 +5,7 @@
  * @file ChunkerExample.h
  */
 
-#include "pelican/server/AbstractChunker.h"
+#include "server/AbstractChunker.h"
 
 using namespace pelican;
 

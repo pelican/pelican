@@ -1,4 +1,4 @@
-#include "pelican/comms/StreamDataResponse.h"
+#include "comms/StreamDataResponse.h"
 
 namespace pelican {
 

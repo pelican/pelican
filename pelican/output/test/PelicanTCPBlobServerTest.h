@@ -6,7 +6,7 @@
  */
 
 #include <cppunit/extensions/HelperMacros.h>
-#include "pelican/utility/Config.h"
+#include "utility/Config.h"
 
 namespace pelican {
 

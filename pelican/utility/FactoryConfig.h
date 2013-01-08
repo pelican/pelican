@@ -5,8 +5,8 @@
  * @file FactoryConfig.h
  */
 
-#include "pelican/utility/FactoryRegistrar.h"
-#include "pelican/utility/FactoryBase.h"
+#include "utility/FactoryRegistrar.h"
+#include "utility/FactoryBase.h"
 
 #include <boost/preprocessor/repetition/enum_trailing.hpp>
 #include <boost/preprocessor/repetition/enum_trailing_params.hpp>
@@ -33,7 +33,7 @@ namespace pelican {
  * in their constructor arguments would use
  *
  * @code
- * #include "pelican/utility/FactoryRegistrar.h"
+ * #include "utility/FactoryRegistrar.h"
  *
  * public:
  *     PELICAN_CONSTRUCT_TYPES(ConfigNode, double)

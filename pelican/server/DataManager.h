@@ -7,11 +7,11 @@
 
 #include <QtCore/QString>
 #include <QtCore/QHash>
-#include "pelican/server/StreamDataBuffer.h"
-#include "pelican/server/ServiceDataBuffer.h"
-#include "pelican/server/LockedData.h"
-#include "pelican/data/DataSpec.h"
-#include "pelican/utility/Config.h"
+#include "server/StreamDataBuffer.h"
+#include "server/ServiceDataBuffer.h"
+#include "server/LockedData.h"
+#include "data/DataSpec.h"
+#include "utility/Config.h"
 
 namespace pelican {
 

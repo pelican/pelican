@@ -1,8 +1,8 @@
 #include "AbstractAdaptingDataClient.h"
-#include "pelican/core/AbstractStreamAdapter.h"
-#include "pelican/core/AbstractServiceAdapter.h"
-#include "pelican/comms/StreamData.h"
-#include "pelican/data/DataBlob.h"
+#include "core/AbstractStreamAdapter.h"
+#include "core/AbstractServiceAdapter.h"
+#include "comms/StreamData.h"
+#include "data/DataBlob.h"
 
 
 namespace pelican {

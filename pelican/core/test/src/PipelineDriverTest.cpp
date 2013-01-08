@@ -1,13 +1,13 @@
-#include "pelican/core/test/PipelineDriverTest.h"
-#include "pelican/modules/AbstractModule.h"
-#include "pelican/output/OutputStreamManager.h"
-#include "pelican/core/DataClientFactory.h"
-#include "pelican/core/DataTypes.h"
-#include "pelican/core/PipelineDriver.h"
-#include "pelican/core/test/TestPipeline.h"
-#include "pelican/core/test/TestDataClient.h"
-#include "pelican/data/DataRequirements.h"
-#include "pelican/data/test/TestDataBlob.h"
+#include "core/test/PipelineDriverTest.h"
+#include "modules/AbstractModule.h"
+#include "output/OutputStreamManager.h"
+#include "core/DataClientFactory.h"
+#include "core/DataTypes.h"
+#include "core/PipelineDriver.h"
+#include "core/test/TestPipeline.h"
+#include "core/test/TestDataClient.h"
+#include "data/DataRequirements.h"
+#include "data/test/TestDataBlob.h"
 
 #include <QtCore/QCoreApplication>
 

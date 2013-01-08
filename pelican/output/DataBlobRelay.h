@@ -2,7 +2,7 @@
 #define DATABLOBRELAY_H
 
 #include <QtCore/QObject>
-#include "pelican/utility/Config.h"
+#include "utility/Config.h"
 
 /**
  * @file DataBlobRelay.h

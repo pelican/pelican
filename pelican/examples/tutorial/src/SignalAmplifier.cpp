@@ -1,6 +1,6 @@
 #include "tutorial/SignalAmplifier.h"
 #include "tutorial/SignalData.h"
-#include "pelican/utility/Config.h"
+#include "utility/Config.h"
 
 // Construct the example module.
 SignalAmplifier::SignalAmplifier(const ConfigNode& config)

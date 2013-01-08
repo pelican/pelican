@@ -6,7 +6,7 @@
 #include <QtCore/QFileSystemWatcher>
 #include <QtCore/QStringList>
 
-#include "pelican/utility/WatchedFile.h"
+#include "utility/WatchedFile.h"
 
 namespace pelican {
 

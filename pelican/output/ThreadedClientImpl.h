@@ -5,7 +5,7 @@
  * @file ThreadedClientImpl.h
  */
 
-#include "pelican/utility/ConfigNode.h"
+#include "utility/ConfigNode.h"
 #include <QtCore/QThread>
 
 namespace pelican {

@@ -6,7 +6,7 @@
  */
 
 #include "ServerResponse.h"
-#include "pelican/data/DataSpec.h"
+#include "data/DataSpec.h"
 
 #include <QtCore/QSet>
 #include <QtCore/QString>

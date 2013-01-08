@@ -13,9 +13,9 @@
 #include <QtCore/QVector>
 #include <boost/shared_ptr.hpp>
 
-#include "pelican/utility/FactoryConfig.h"
-#include "pelican/server/DataReceiver.h"
-#include "pelican/utility/Config.h"
+#include "utility/FactoryConfig.h"
+#include "server/DataReceiver.h"
+#include "utility/Config.h"
 
 
 namespace pelican {

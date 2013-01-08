@@ -2,7 +2,7 @@
 #include "ThreadedDataBlobClient.h"
 
 
-#include "pelican/output/PelicanTCPBlobServer.h"
+#include "output/PelicanTCPBlobServer.h"
 
 namespace pelican {
 

@@ -1,4 +1,4 @@
-#include "pelican/utility/test/SocketTester.h"
+#include "utility/test/SocketTester.h"
 
 namespace pelican {
 namespace test {

@@ -5,7 +5,7 @@
  * @file TestDataBlobClient.h
  */
 
-#include "pelican/output/AbstractDataBlobClient.h"
+#include "output/AbstractDataBlobClient.h"
 #include <QtCore/QSet>
 
 namespace pelican {

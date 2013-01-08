@@ -3,7 +3,7 @@
 
 #include <QtCore/QThread>
 #include "AbstractDataBlobClient.h"
-#include "pelican/utility/ConfigNode.h"
+#include "utility/ConfigNode.h"
 
 /**
  * @file ThreadedDataBlobClient.h

@@ -5,7 +5,7 @@
  * @file DirectStreamDataClient.h
  */
 
-#include "pelican/core/AbstractAdaptingDataClient.h"
+#include "core/AbstractAdaptingDataClient.h"
 
 namespace pelican {
 

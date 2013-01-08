@@ -1,7 +1,7 @@
 #include <string>
-#include "pelican/comms/DataChunk.h"
-#include "pelican/server/WritableData.h"
-#include "pelican/server/AbstractLockableData.h"
+#include "comms/DataChunk.h"
+#include "server/WritableData.h"
+#include "server/AbstractLockableData.h"
 
 namespace pelican {
 

@@ -1,4 +1,4 @@
-#include "pelican/server/LockedData.h"
+#include "server/LockedData.h"
 
 namespace pelican {
 

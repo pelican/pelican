@@ -1,10 +1,10 @@
 #include <QtCore/QtGlobal>
-#include "pelican/modules/AbstractModule.h"
-#include "pelican/core/AbstractPipeline.h"
-#include "pelican/core/PipelineApplication.h"
-#include "pelican/core/PipelineDriver.h"
-#include "pelican/data/DataBlobBuffer.h"
-#include "pelican/output/OutputStreamManager.h"
+#include "modules/AbstractModule.h"
+#include "core/AbstractPipeline.h"
+#include "core/PipelineApplication.h"
+#include "core/PipelineDriver.h"
+#include "data/DataBlobBuffer.h"
+#include "output/OutputStreamManager.h"
 
 namespace pelican {
 

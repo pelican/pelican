@@ -5,12 +5,12 @@
  * @file PipelineApplication.h
  */
 
-#include "pelican/core/AbstractAdapter.h"
-#include "pelican/data/DataBlob.h"
-#include "pelican/modules/AbstractModule.h"
-#include "pelican/utility/FactoryConfig.h"
-#include "pelican/utility/FactoryGeneric.h"
-#include "pelican/utility/ConfigNode.h"
+#include "core/AbstractAdapter.h"
+#include "data/DataBlob.h"
+#include "modules/AbstractModule.h"
+#include "utility/FactoryConfig.h"
+#include "utility/FactoryGeneric.h"
+#include "utility/ConfigNode.h"
 
 #include <QtCore/QString>
 

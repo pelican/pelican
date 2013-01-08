@@ -5,15 +5,15 @@
  * @file OutputStreamManager.h
  */
 
-#include "pelican/output/AbstractOutputStream.h"
-#include "pelican/utility/FactoryConfig.h"
-#include "pelican/utility/Config.h"
-#include "pelican/utility/ConfigNode.h"
+#include "output/AbstractOutputStream.h"
+#include "utility/FactoryConfig.h"
+#include "utility/Config.h"
+#include "utility/ConfigNode.h"
 
 // include the basic types available for all pelican users
 // to ensure the factory is aware of them
-#include "pelican/output/PelicanTCPBlobServer.h"
-#include "pelican/output/DataBlobFile.h"
+#include "output/PelicanTCPBlobServer.h"
+#include "output/DataBlobFile.h"
 
 #include <QtCore/QString>
 #include <QtCore/QMap>

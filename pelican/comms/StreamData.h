@@ -5,7 +5,7 @@
  * @file StreamData.h
  */
 
-#include "pelican/comms/DataChunk.h"
+#include "comms/DataChunk.h"
 
 #include <QtCore/QSet>
 #include <QtCore/QString>

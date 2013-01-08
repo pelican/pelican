@@ -3,7 +3,7 @@
  */
 #include <QtCore/QCoreApplication>
 #include <boost/program_options.hpp>
-#include "pelican/utility/Config.h"
+#include "utility/Config.h"
 #include <iostream>
 #include "DataBlobRelay.h"
 

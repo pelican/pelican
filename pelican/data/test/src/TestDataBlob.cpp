@@ -1,4 +1,4 @@
-#include "pelican/data/test/TestDataBlob.h"
+#include "data/test/TestDataBlob.h"
 
 #include <QtCore/QDataStream>
 

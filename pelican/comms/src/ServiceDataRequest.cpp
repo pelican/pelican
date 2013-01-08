@@ -1,4 +1,4 @@
-#include "pelican/comms/ServiceDataRequest.h"
+#include "comms/ServiceDataRequest.h"
 
 namespace pelican {
 

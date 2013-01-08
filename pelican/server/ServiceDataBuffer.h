@@ -1,7 +1,7 @@
 #ifndef SERVICEDATABUFFER_H
 #define SERVICEDATABUFFER_H
 
-#include "pelican/server/AbstractDataBuffer.h"
+#include "server/AbstractDataBuffer.h"
 
 #include <QtCore/QObject>
 #include <QtCore/QHash>

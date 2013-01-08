@@ -8,7 +8,7 @@ class QFile;
 
 #include "DataBlobFileType.h"
 
-#include "pelican/output/AbstractOutputStream.h"
+#include "output/AbstractOutputStream.h"
 
 /**
  * @file DataBlobFile.h

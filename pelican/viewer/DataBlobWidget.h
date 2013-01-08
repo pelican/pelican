@@ -5,8 +5,8 @@
  * @file DataBlobWidget.h
  */
 
-#include "pelican/utility/ConfigNode.h"
-#include "pelican/utility/FactoryConfig.h"
+#include "utility/ConfigNode.h"
+#include "utility/FactoryConfig.h"
 
 #include <QtGui/QWidget>
 

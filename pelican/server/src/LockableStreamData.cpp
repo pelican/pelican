@@ -1,8 +1,8 @@
-#include "pelican/server/LockableStreamData.h"
-#include "pelican/server/LockableServiceData.h"
-#include "pelican/server/LockedData.h"
-#include "pelican/comms/DataChunk.h"
-#include "pelican/comms/StreamData.h"
+#include "server/LockableStreamData.h"
+#include "server/LockableServiceData.h"
+#include "server/LockedData.h"
+#include "comms/DataChunk.h"
+#include "comms/StreamData.h"
 
 #include <iostream>
 

@@ -2,13 +2,13 @@
 #include "DataViewer.h"
 #include "TestDataViewerWidget.h"
 
-#include "pelican/output/DataBlobClient.h"
-#include "pelican/output/PelicanTCPBlobServer.h"
-#include "pelican/output/Stream.h"
-#include "pelican/data/test/TestDataBlob.h"
-#include "pelican/utility/Config.h"
-#include "pelican/utility/ConfigNode.h"
-#include "pelican/output/test/TestDataBlobClient.h"
+#include "output/DataBlobClient.h"
+#include "output/PelicanTCPBlobServer.h"
+#include "output/Stream.h"
+#include "data/test/TestDataBlob.h"
+#include "utility/Config.h"
+#include "utility/ConfigNode.h"
+#include "output/test/TestDataBlobClient.h"
 
 #include <QtGui/QApplication>
 #include <QtCore/QDebug>

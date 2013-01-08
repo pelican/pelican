@@ -2,8 +2,8 @@
 #include <QtCore/QtDebug>
 #include <QtCore/QStringList>
 #include "OutputStreamManager.h"
-#include "pelican/utility/Config.h"
-#include "pelican/utility/ConfigNode.h"
+#include "utility/Config.h"
+#include "utility/ConfigNode.h"
 
 namespace pelican {
 

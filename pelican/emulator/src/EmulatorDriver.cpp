@@ -1,5 +1,5 @@
-#include "pelican/emulator/EmulatorDriver.h"
-#include "pelican/emulator/AbstractEmulator.h"
+#include "emulator/EmulatorDriver.h"
+#include "emulator/AbstractEmulator.h"
 
 #include <QtCore/QIODevice>
 #include <QtCore/QCoreApplication>

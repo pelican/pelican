@@ -1,11 +1,11 @@
-#include "pelican/core/AbstractDataClient.h"
-#include "pelican/core/AbstractStreamAdapter.h"
-#include "pelican/core/AbstractServiceAdapter.h"
-#include "pelican/data/DataRequirements.h"
-#include "pelican/data/DataBlob.h"
-#include "pelican/comms/DataChunk.h"
-#include "pelican/comms/StreamData.h"
-#include "pelican/utility/ConfigNode.h"
+#include "core/AbstractDataClient.h"
+#include "core/AbstractStreamAdapter.h"
+#include "core/AbstractServiceAdapter.h"
+#include "data/DataRequirements.h"
+#include "data/DataBlob.h"
+#include "comms/DataChunk.h"
+#include "comms/StreamData.h"
+#include "utility/ConfigNode.h"
 
 #include <QtCore/QtGlobal>
 

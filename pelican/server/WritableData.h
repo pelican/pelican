@@ -5,7 +5,7 @@
  * @file WritableData.h
  */
 
-#include "pelican/server/AbstractLockableData.h"
+#include "server/AbstractLockableData.h"
 
 namespace pelican {
 

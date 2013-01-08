@@ -1,7 +1,7 @@
 #include "TestDataBlobServer.h"
-#include "pelican/output/PelicanTCPBlobServer.h"
-#include "pelican/data/DataBlob.h"
-#include "pelican/utility/ConfigNode.h"
+#include "output/PelicanTCPBlobServer.h"
+#include "data/DataBlob.h"
+#include "utility/ConfigNode.h"
 #include <QtCore/QCoreApplication>
 
 

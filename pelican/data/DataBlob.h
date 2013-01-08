@@ -5,7 +5,7 @@
  * @file DataBlob.h
  */
 
-#include "pelican/utility/FactoryRegistrar.h"
+#include "utility/FactoryRegistrar.h"
 
 #include <QtCore/QString>
 #include <QtCore/QSysInfo>

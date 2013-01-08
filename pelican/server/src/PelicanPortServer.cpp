@@ -1,6 +1,6 @@
-#include "pelican/server/PelicanPortServer.h"
-#include "pelican/server/Session.h"
-#include "pelican/comms/AbstractProtocol.h"
+#include "server/PelicanPortServer.h"
+#include "server/Session.h"
+#include "comms/AbstractProtocol.h"
 
 #include <QtNetwork/QTcpSocket>
 

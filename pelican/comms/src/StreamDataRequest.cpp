@@ -1,6 +1,6 @@
-#include "pelican/comms/StreamDataRequest.h"
+#include "comms/StreamDataRequest.h"
 
-#include "pelican/data/DataRequirements.h"
+#include "data/DataRequirements.h"
 
 namespace pelican {
 

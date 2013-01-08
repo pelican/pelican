@@ -5,7 +5,7 @@
  * @file AbstractUdpEmulator.h
  */
 
-#include "pelican/emulator/AbstractEmulator.h"
+#include "emulator/AbstractEmulator.h"
 #include <QtNetwork/QHostAddress>
 
 class QIODevice;

@@ -3,7 +3,7 @@
 #include <QtCore/QList>
 class QIODevice;
 
-#include "pelican/output/AbstractOutputStream.h"
+#include "output/AbstractOutputStream.h"
 
 /**
  * @file OutputStreamExample.h

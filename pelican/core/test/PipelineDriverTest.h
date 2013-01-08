@@ -5,10 +5,10 @@
  * @file PipelineDriverTest.h
  */
 
-#include "pelican/data/DataBlob.h"
-#include "pelican/modules/AbstractModule.h"
-#include "pelican/utility/FactoryConfig.h"
-#include "pelican/utility/FactoryGeneric.h"
+#include "data/DataBlob.h"
+#include "modules/AbstractModule.h"
+#include "utility/FactoryConfig.h"
+#include "utility/FactoryGeneric.h"
 
 #include <cppunit/extensions/HelperMacros.h>
 

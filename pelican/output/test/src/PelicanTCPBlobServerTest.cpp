@@ -1,15 +1,15 @@
-#include "pelican/output/test/PelicanTCPBlobServerTest.h"
-#include "pelican/output/PelicanTCPBlobServer.h"
+#include "output/test/PelicanTCPBlobServerTest.h"
+#include "output/PelicanTCPBlobServer.h"
 
-#include "pelican/data/test/TestDataBlob.h"
-#include "pelican/comms/PelicanClientProtocol.h"
-#include "pelican/comms/StreamDataRequest.h"
-#include "pelican/comms/PelicanProtocol.h"
-#include "pelican/comms/StreamData.h"
-#include "pelican/comms/ServerResponse.h"
-#include "pelican/comms/DataBlobResponse.h"
-#include "pelican/server/DataManager.h"
-#include "pelican/comms/DataChunk.h"
+#include "data/test/TestDataBlob.h"
+#include "comms/PelicanClientProtocol.h"
+#include "comms/StreamDataRequest.h"
+#include "comms/PelicanProtocol.h"
+#include "comms/StreamData.h"
+#include "comms/ServerResponse.h"
+#include "comms/DataBlobResponse.h"
+#include "server/DataManager.h"
+#include "comms/DataChunk.h"
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QString>

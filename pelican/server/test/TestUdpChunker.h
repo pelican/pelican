@@ -5,7 +5,7 @@
  * @file TestUdpChunker.h
  */
 
-#include "pelican/server/AbstractChunker.h"
+#include "server/AbstractChunker.h"
 
 #include <QtCore/QString>
 #include <QtCore/QObject>

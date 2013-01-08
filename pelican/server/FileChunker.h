@@ -2,7 +2,7 @@
 #define FILECHUNKER_H
 
 
-#include "pelican/server/AbstractChunker.h"
+#include "server/AbstractChunker.h"
 
 /**
  * @file FileChunker.h

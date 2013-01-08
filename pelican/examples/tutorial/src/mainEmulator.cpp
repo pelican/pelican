@@ -1,5 +1,5 @@
-#include "pelican/emulator/EmulatorDriver.h"
-#include "pelican/utility/ConfigNode.h"
+#include "emulator/EmulatorDriver.h"
+#include "utility/ConfigNode.h"
 #include "tutorial/SignalEmulator.h"
 #include <QtCore/QCoreApplication>
 #include <QtCore/QString>

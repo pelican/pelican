@@ -1,8 +1,8 @@
 #include <QtCore/QFile>
 
 #include "AdapterTester.h"
-#include "pelican/core/AbstractStreamAdapter.h"
-#include "pelican/core/AbstractServiceAdapter.h"
+#include "core/AbstractStreamAdapter.h"
+#include "core/AbstractServiceAdapter.h"
 
 
 namespace pelican {

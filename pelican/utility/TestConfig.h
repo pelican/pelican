@@ -5,7 +5,7 @@
  * @file TestConfig.h
  */
 
-#include "pelican/utility/Config.h"
+#include "utility/Config.h"
 
 #include <QtCore/QDir>
 #include <QtCore/QFile>
