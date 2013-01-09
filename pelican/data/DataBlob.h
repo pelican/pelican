@@ -13,12 +13,13 @@
 
 class QIODevice;
 
-namespace pelican {
 
 /**
  * This macro is used to register the named data blob type.
  */
-#define PELICAN_DECLARE_DATABLOB(type) PELICAN_DECLARE(DataBlob, type)
+#define PELICAN_DECLARE_DATABLOB(type) PELICAN_DECLARE(pelican::DataBlob, type)
+
+namespace pelican {
 
 /**
  * @ingroup c_data

@@ -48,8 +48,6 @@ class ServiceData : public pelican::DataBlob
         QVector<float> values_;
 };
 
-namespace pelican {
 PELICAN_DECLARE_DATABLOB(ServiceData)
-}
 
 #endif /* SERVICE_DATA_HPP_ */

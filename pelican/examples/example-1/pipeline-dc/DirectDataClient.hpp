@@ -41,8 +41,6 @@ class DirectDataClient : public pelican::DirectStreamDataClient
         ~DirectDataClient();
 };
 
-namespace pelican {
 PELICAN_DECLARE_CLIENT(DirectDataClient)
-}
 
 #endif /* DIRECT_DATA_CLIENT_HPP_ */

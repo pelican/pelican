@@ -43,8 +43,6 @@ class StreamDataAdapter : public pelican::AbstractStreamAdapter
         unsigned packetSize_;
 };
 
-namespace pelican {
 PELICAN_DECLARE_ADAPTER(StreamDataAdapter)
-}
 
 #endif /* STREAM_DATA_ADAPTER_HPP_ */

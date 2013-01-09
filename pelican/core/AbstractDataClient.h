@@ -18,10 +18,10 @@
 
 class QIODevice;
 
-namespace pelican {
-
 // This macro is used to register the named client type.
-#define PELICAN_DECLARE_CLIENT(type) PELICAN_DECLARE(AbstractDataClient, type)
+#define PELICAN_DECLARE_CLIENT(type) PELICAN_DECLARE(pelican::AbstractDataClient, type)
+
+namespace pelican {
 
 class AbstractAdapter;
 class DataBlob;

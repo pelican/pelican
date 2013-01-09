@@ -49,8 +49,6 @@ class ServiceDataChunker : public pelican::AbstractChunker
         int chunkCounter_;
 };
 
-namespace pelican {
 PELICAN_DECLARE_CHUNKER(ServiceDataChunker)
-}
 
 #endif /* SERVICE_DATA_CHUNKER_HPP_ */

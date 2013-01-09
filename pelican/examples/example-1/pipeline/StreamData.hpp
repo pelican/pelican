@@ -47,8 +47,6 @@ class StreamData : public pelican::DataBlob
         QVector<float> data_;
 };
 
-namespace pelican {
 PELICAN_DECLARE_DATABLOB(StreamData)
-}
 
 #endif /* STREAM_DATA_HPP_ */

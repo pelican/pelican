@@ -14,11 +14,12 @@
 #include <vector>
 using std::vector;
 
+/// This macro is used to register the named module type.
+#define PELICAN_DECLARE_MODULE(type) PELICAN_DECLARE(pelican::AbstractModule, type)
+
 namespace pelican {
 class AbstractPipeline;
 
-/// This macro is used to register the named module type.
-#define PELICAN_DECLARE_MODULE(type) PELICAN_DECLARE(AbstractModule, type)
 
 /**
  * @ingroup c_core

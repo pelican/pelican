@@ -13,10 +13,10 @@
 #include <QtCore/QList>
 #include <QtCore/QString>
 
-namespace pelican {
-
 // Macro is used to register the named chunker type.
-#define PELICAN_DECLARE_CHUNKER(type) PELICAN_DECLARE(AbstractChunker, type)
+#define PELICAN_DECLARE_CHUNKER(type) PELICAN_DECLARE(pelican::AbstractChunker, type)
+
+namespace pelican {
 
 class ConfigNode;
 

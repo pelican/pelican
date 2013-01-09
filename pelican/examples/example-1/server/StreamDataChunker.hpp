@@ -31,7 +31,6 @@
 
 #include <pelican/server/AbstractChunker.h>
 
-
 class StreamDataChunker : public pelican::AbstractChunker
 {
     public:
@@ -49,8 +48,6 @@ class StreamDataChunker : public pelican::AbstractChunker
         int chunkCounter_;
 };
 
-namespace pelican {
 PELICAN_DECLARE_CHUNKER(StreamDataChunker)
-}
 
 #endif /* STREAM_DATA_CHUNKER_HPP_ */

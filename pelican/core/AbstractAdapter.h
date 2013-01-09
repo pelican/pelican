@@ -10,11 +10,10 @@
 
 class QIODevice;
 
-namespace pelican {
-
-
 // This macro is used to register the named adapter type.
-#define PELICAN_DECLARE_ADAPTER(type) PELICAN_DECLARE(AbstractAdapter, type)
+#define PELICAN_DECLARE_ADAPTER(type) PELICAN_DECLARE(pelican::AbstractAdapter, type)
+
+namespace pelican {
 
 class DataBlob;
 class ConfigNode;
