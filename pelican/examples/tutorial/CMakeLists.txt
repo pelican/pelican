@@ -2,6 +2,16 @@
 # pelican/examples/tutorial/CMakeLists.txt
 #
 
+# ********** FIXME ******************
+#TODO create ${PELICAN_LIBRARIES} variable (to mirror FindPELICAN.cake).
+#which resolves either to pelican or a list of modules.
+set(PELICAN_LIBRARIES 
+    ${pelican_core_LIBRARY}
+    ${pelican_server_LIBRARY}
+    ${pelican_emulator_LIBRARY})
+list(REMOVE_DUPLICATES PELICAN_LIBRARIES)
+# ********** FIXME ******************
+
 set(lib_name pelican_tutorial)
 set(${lib_name}_src
     src/OutputStreamExample.cpp
@@ -12,17 +22,8 @@ set(${lib_name}_src
     src/SignalEmulator.cpp
     src/SignalProcessingPipeline.cpp
 )
-
 add_library(${lib_name} STATIC ${${lib_name}_src})
-#TODO create ${pelican_LIBRARY} variable (to mirror FindPELICAN.cake).
-# which resolves either to pelican or a list of modules.
-set(pelican_LIBRARIES 
-    ${pelican_core_LIBRARY}
-    ${pelican_server_LIBRARY}
-    ${pelican_emulator_LIBRARY})
-list(REMOVE_DUPLICATES pelican_LIBRARIES)
-target_link_libraries(${lib_name} ${pelican_LIBRARIES})
-
+target_link_libraries(${lib_name} ${PELICAN_LIBRARIES})
 
 # Create the pipeline binary.
 add_executable(signalPipeline src/mainPipeline.cpp)
@@ -43,3 +44,8 @@ copy_files(
     *.xml
     ${CMAKE_CURRENT_BINARY_DIR}
 )
+
+# Create a dependency between the pelican_tutorial library target and the
+# file copy target to ensure that the xml and readme files are always updated
+# when building the example.
+add_dependencies(pelican_tutorial copy_files)
