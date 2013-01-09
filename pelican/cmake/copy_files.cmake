@@ -5,12 +5,14 @@
 #
 
 #
-# Create a target to attach file copy commands to (if not already created)
+# Keep track of the number of copy files targets created.
 #
-set(target copy_files)
-if (NOT TARGET ${target})
-    add_custom_target(${target} ALL)
-endif(NOT TARGET ${target})
+if (NOT copy_target_count)
+    set(copy_target_count 0)
+    add_custom_target(copy_files ALL)
+endif (NOT copy_target_count)
+set(copy_target_count ${copy_target_count} CACHE INTERNAL "" FORCE)
+
 
 
 #-------------------------------------------------------------------------------
@@ -39,12 +41,19 @@ macro(COPY_FILES SRC_DIR GLOB_PAT DST_DIR)
     file(GLOB file_list 
         RELATIVE ${SRC_DIR} 
         ${SRC_DIR}/${GLOB_PAT})
+    math(EXPR copy_target_count '${copy_target_count}+1')
+    set(copy_target_count ${copy_target_count} CACHE INTERNAL "" FORCE)
+    set(target "copy_files_${copy_target_count}")
+    add_custom_target(${target}) 
     foreach(filename ${file_list})
         set(src "${SRC_DIR}/${filename}")
         set(dst "${DST_DIR}/${filename}")
-        add_custom_command(TARGET ${target} 
-            COMMAND ${CMAKE_COMMAND} -E copy ${src} ${dst})
+        add_custom_command(TARGET ${target} PRE_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy ${src} ${dst}
+            COMMENT "** copying file: ${src} to ${dst} " VERBATIM
+        )
     endforeach(filename)
+    add_dependencies(copy_files ${target})
 endmacro(COPY_FILES)
 
 #-------------------------------------------------------------------------------
@@ -69,6 +78,14 @@ endmacro(COPY_FILES)
 #   )
 #
 macro(COPY_FILE SRC DST)
-    add_custom_command(TARGET ${target}
-        COMMAND ${CMAKE_COMMAND} -E copy ${SRC} ${DST})
+    math(EXPR copy_target_count '${copy_target_count}+1')
+    set(copy_target_count ${copy_target_count} CACHE INTERNAL "" FORCE)
+    set(target "copy_files_${copy_target_count}")
+    add_custom_target(${target})
+    add_custom_command(TARGET ${target} PRE_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy ${SRC} ${DST}
+        COMMENT "** copying file: ${SRC} to ${DST}" VERBATIM
+    )
+    add_dependencies(copy_files ${target})
 endmacro(COPY_FILE)
+
