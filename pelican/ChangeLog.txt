@@ -10,4 +10,15 @@
     * Added an addition example code 'example-1' using pelican with 
       service data.
     * Updated Doxygen documentation parameter files for Doxygen 1.8.x.
+    * Moved object registation macros out of pelican namespace in order
+      to make code using PELICAN slightly cleaner. This change will not effect
+      codes already using PELICAN but allow more friendly namespace usage
+      in future. Macros affected:
+         PELICAN_DECLARE_ADAPTER
+         PELICAN_DECLARE_CLIENT
+         PELICAN_DECLARE_MODULE
+         PELICAN_DECLARE_DATABLOB
+         PELICAN_DECLARE_CHUNKER
+
+
 
