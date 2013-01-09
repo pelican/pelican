@@ -28,27 +28,27 @@ target_link_libraries(${name}
     ${QT_QTXML_LIBRARY}
     ${QT_QTNETWORK_LIBRARY})
 
-set(name serviceEmulator)
-add_executable(${name} 
-    emulator/mainServiceEmulator.cpp 
-    emulator/ServiceDataEmulator.cpp)
-target_link_libraries(${name}
-    ${PELICAN_LIBRARY}
-    ${PELICAN_TESTUTILS_LIBRARY}
-    ${QT_QTCORE_LIBRARY}
-    ${QT_QTXML_LIBRARY}
-    ${QT_QTNETWORK_LIBRARY})
+#set(name serviceEmulator)
+#add_executable(${name} 
+#    emulator/mainServiceEmulator.cpp 
+#    emulator/ServiceDataEmulator.cpp)
+#target_link_libraries(${name}
+#    ${PELICAN_LIBRARY}
+#    ${PELICAN_TESTUTILS_LIBRARY}
+#    ${QT_QTCORE_LIBRARY}
+#    ${QT_QTXML_LIBRARY}
+#    ${QT_QTNETWORK_LIBRARY})
 
-set(name streamEmulator)
-add_executable(${name} 
-    emulator/mainStreamEmulator.cpp 
-    emulator/StreamDataEmulator.cpp)
-target_link_libraries(${name}
-    ${PELICAN_LIBRARY}
-    ${PELICAN_TESTUTILS_LIBRARY}
-    ${QT_QTCORE_LIBRARY}
-    ${QT_QTXML_LIBRARY}
-    ${QT_QTNETWORK_LIBRARY})
+#set(name streamEmulator)
+#add_executable(${name} 
+#    emulator/mainStreamEmulator.cpp 
+#    emulator/StreamDataEmulator.cpp)
+#target_link_libraries(${name}
+#    ${PELICAN_LIBRARY}
+#    ${PELICAN_TESTUTILS_LIBRARY}
+#    ${QT_QTCORE_LIBRARY}
+#    ${QT_QTXML_LIBRARY}
+#    ${QT_QTNETWORK_LIBRARY})
 
 # Build the server binary.
 set(name server)
@@ -78,22 +78,22 @@ target_link_libraries(${name}
     ${QT_QTNETWORK_LIBRARY})
 
 # Build the direct client pipeline binary.
-set(name pipeline-dc)
-add_executable(${name} 
-    pipeline-dc/main.cpp
-    pipeline-dc/DirectDataClient.cpp
-    server/StreamDataChunker.cpp
-    server/ServiceDataChunker.cpp
-    pipeline/ServiceDataAdapter.cpp
-    pipeline/StreamData.cpp
-    pipeline/StreamDataAdapter.cpp
-    pipeline/Pipeline.cpp
-)
-target_link_libraries(${name}
-    ${PELICAN_LIBRARY}
-    ${QT_QTCORE_LIBRARY}
-    ${QT_QTXML_LIBRARY}
-    ${QT_QTNETWORK_LIBRARY})
+#set(name pipeline-dc)
+#add_executable(${name} 
+#    pipeline-dc/main.cpp
+#    pipeline-dc/DirectDataClient.cpp
+#    server/StreamDataChunker.cpp
+#    server/ServiceDataChunker.cpp
+#    pipeline/ServiceDataAdapter.cpp
+#    pipeline/StreamData.cpp
+#    pipeline/StreamDataAdapter.cpp
+#    pipeline/Pipeline.cpp
+#)
+#target_link_libraries(${name}
+#    ${PELICAN_LIBRARY}
+#    ${QT_QTCORE_LIBRARY}
+#    ${QT_QTXML_LIBRARY}
+#    ${QT_QTNETWORK_LIBRARY})
 
 # Copy the XML configuration files needed for the tutorial.
 include(copy_files)
@@ -105,4 +105,7 @@ copy_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/server/server.xml
     ${CMAKE_CURRENT_BINARY_DIR}/serverConfig.xml
 )
-
+copy_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/readme.txt
+    ${CMAKE_CURRENT_BINARY_DIR}/readme.txt
+)
