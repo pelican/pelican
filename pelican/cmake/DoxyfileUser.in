@@ -32,7 +32,7 @@ PROJECT_NAME           = "Pelican User Guide"
 # This could be handy for archiving the generated documentation or 
 # if some version control system is used.
 
-PROJECT_NUMBER         = "@PROJECT_VERSION@"
+PROJECT_NUMBER         = @PROJECT_VERSION@
 
 # Using the PROJECT_BRIEF tag one can provide an optional one line description 
 # for a project that appears at the top of each page and should give viewer 
@@ -52,7 +52,7 @@ PROJECT_LOGO           =
 # If a relative path is entered, it will be relative to the location 
 # where doxygen was started. If left blank the current directory will be used.
 
-OUTPUT_DIRECTORY       =
+OUTPUT_DIRECTORY       = @DOXYFILE_OUTPUT_DIR@
 
 # If the CREATE_SUBDIRS tag is set to YES, then doxygen will create 
 # 4096 sub-directories (in 2 levels) under the output directory of each output 
@@ -130,8 +130,8 @@ FULL_PATH_NAMES        = YES
 # relative paths, which will be relative from the directory where doxygen is 
 # started.
 
-STRIP_FROM_PATH        = "@CMAKE_CURRENT_SOURCE_DIR@" \
-                         "@CMAKE_CURRENT_BINARY_DIR@"
+STRIP_FROM_PATH        = "@PROJECT_SOURCE_DIR@" \
+                         "@PROJECT_BINARY_DIR@"
 
 # The STRIP_FROM_INC_PATH tag can be used to strip a user-defined part of 
 # the path mentioned in the documentation of a class, which tells 
@@ -140,7 +140,7 @@ STRIP_FROM_PATH        = "@CMAKE_CURRENT_SOURCE_DIR@" \
 # definition is used. Otherwise one should specify the include paths that 
 # are normally passed to the compiler using the -I flag.
 
-STRIP_FROM_INC_PATH    = @CMAKE_CURRENT_SOURCE_DIR@
+STRIP_FROM_INC_PATH    = @PROJECT_SOURCE_DIR@
 
 # If the SHORT_NAMES tag is set to YES, doxygen will generate much shorter 
 # (but less readable) file names. This can be useful if your file system 
@@ -702,8 +702,8 @@ RECURSIVE              = NO
 # run.
 
 EXCLUDE                = _darcs \
-                          @CMAKE_CURRENT_SOURCE_DIR@/doc/developer/DeveloperMain.doxy \
-                          @CMAKE_CURRENT_SOURCE_DIR@/doc/API.doxy
+                         @CMAKE_CURRENT_SOURCE_DIR@/doc/developer/DeveloperMain.doxy \
+                         @CMAKE_CURRENT_SOURCE_DIR@/doc/API.doxy
 
 # The EXCLUDE_SYMLINKS tag can be used to select whether or not files or 
 # directories that are symbolic links (a Unix file system feature) are excluded 
@@ -886,7 +886,7 @@ GENERATE_HTML          = YES
 # If a relative path is entered the value of OUTPUT_DIRECTORY will be 
 # put in front of it. If left blank `html' will be used as the default path.
 
-HTML_OUTPUT            = "@DOXYFILE_HTML_DIR@"
+HTML_OUTPUT            = @DOXYFILE_HTML_DIR@
 
 # The HTML_FILE_EXTENSION tag can be used to specify the file extension for 
 # each generated HTML page (for example: .htm,.php,.asp). If it is left blank 
@@ -1171,7 +1171,7 @@ ENUM_VALUES_PER_LINE   = 4
 # used to set the initial width (in pixels) of the frame in which the tree 
 # is shown.
 
-TREEVIEW_WIDTH         = 250
+TREEVIEW_WIDTH         = 200
 
 # When the EXT_LINKS_IN_WINDOW option is set to YES doxygen will open 
 # links to external symbols imported via tag files in a separate window.
@@ -1246,13 +1246,13 @@ SERVER_BASED_SEARCH    = NO
 # If the GENERATE_LATEX tag is set to YES (the default) Doxygen will 
 # generate Latex output.
 
-GENERATE_LATEX         = @DOXYFILE_LATEX@
+GENERATE_LATEX         = NO
 
 # The LATEX_OUTPUT tag is used to specify where the LaTeX docs will be put. 
 # If a relative path is entered the value of OUTPUT_DIRECTORY will be 
 # put in front of it. If left blank `latex' will be used as the default path.
 
-LATEX_OUTPUT           = "@DOXYFILE_LATEX_DIR@"
+LATEX_OUTPUT           = @DOXYFILE_LATEX_DIR@
 
 # The LATEX_CMD_NAME tag can be used to specify the LaTeX command name to be 
 # invoked. If left blank `latex' will be used as the default command name. 
@@ -1260,7 +1260,7 @@ LATEX_OUTPUT           = "@DOXYFILE_LATEX_DIR@"
 # generating bitmaps for formulas in the HTML output, but not in the 
 # Makefile that is written to the output directory.
 
-LATEX_CMD_NAME         = "@LATEX_COMPILER@"
+LATEX_CMD_NAME         = @LATEX_COMPILER@
 
 # The MAKEINDEX_CMD_NAME tag can be used to specify the command name to 
 # generate index for LaTeX. If left blank `makeindex' will be used as the 
@@ -1625,7 +1625,7 @@ HIDE_UNDOC_RELATIONS   = YES
 # toolkit from AT&T and Lucent Bell Labs. The other options in this section 
 # have no effect if this option is set to NO (the default)
 
-HAVE_DOT               = @DOXYFILE_DOT@
+HAVE_DOT               = NO
 
 # The DOT_NUM_THREADS specifies the number of dot invocations doxygen is 
 # allowed to run in parallel. When set to 0 (the default) doxygen will 
@@ -1756,7 +1756,7 @@ INTERACTIVE_SVG        = NO
 # The tag DOT_PATH can be used to specify the path where the dot tool can be 
 # found. If left blank, it is assumed the dot tool can be found in the path.
 
-DOT_PATH               = "@DOXYGEN_DOT_PATH@"
+DOT_PATH               = @DOXYGEN_DOT_PATH@
 
 # The DOTFILE_DIRS tag can be used to specify one or more directories that 
 # contain dot files that are included in the documentation (see the 

@@ -1,8 +1,8 @@
 +------------------------------------------------------------------------------+
-| PELICAN 0.5                                     Last update: 07 January 2013 |
+| PELICAN README                                  Last update: 07 January 2013 |
 +------------------------------------------------------------------------------+
 
-1. PELICAN
+1. Introduction
 --------------------------------------------------------------------------------
 The PELICAN library is a high performance, light-weight, pipeline framework 
 designed for writing streaming applications.

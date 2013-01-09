@@ -33,7 +33,7 @@ cmake_minimum_required(VERSION 2.6 FATAL_ERROR)
 
 # === Project version.
 set(VERSION_MAJOR 0)
-set(VERSION_MINOR 5)
+set(VERSION_MINOR 9)
 set(VERSION_PATCH 0)
 set(PROJECT_VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
 
@@ -75,11 +75,9 @@ if(NOT BINARY_INSTALL_DIR)
     set(BINARY_INSTALL_DIR "bin/")
 endif(NOT BINARY_INSTALL_DIR)
 
-# === Setup project dependencies.
+# === Set project dependencies and compiler settings.
 include(dependencies)
-
-# === Compiler defaults.
-include(compilerDefaults)
+include(compiler_settings)
 
 # === Set Broken Package flags.
 if(QT_VERSION_MINOR LESS 3)
@@ -137,10 +135,10 @@ include(packaging)
 # === Doxygen documentation targets.
 include(UseDoxygen)
 set(PDFLATEX_COMPILER TRUE)
-add_doxygen_target(api DoxyfileAPI)
-add_doxygen_target(developer DoxyfileDeveloper)
-add_doxygen_target(user DoxyfileUser15)
-add_doxygen_target(user18 DoxyfileUser18)
+file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/doc")
+add_doxygen_target(api  DoxyfileAPI)
+add_doxygen_target(dev  DoxyfileDeveloper)
+add_doxygen_target(user DoxyfileUser)
 
 # === Print build options summary.
 set(DEBUG_PRINT ON) 
@@ -156,6 +154,11 @@ message(STATUS "  C++ Compiler:         ${CMAKE_CXX_COMPILER}")
 message(STATUS "  C++ (Release):        ${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_RELEASE}")
 message(STATUS "  C++ (RelWithDebInfo): ${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_RELWITHDEBINFO}")
 message(STATUS "  C++ (Debug):          ${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_DEBUG}")
+message(STATUS "")
+message(STATUS "Documentation targets:")
+message(STATUS "  'make user_doc' - Builds library user documentation.")
+message(STATUS "  'make api_doc'  - Builds library API documentation.")
+message(STATUS "  'make dev_doc'  - Builds framework developer documentation.")
 message(STATUS "")
 message(STATUS "Install locations: (make install)")
 message(STATUS "  Libraries: ${CMAKE_INSTALL_PREFIX}/lib")

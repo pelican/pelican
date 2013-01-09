@@ -1,13 +1,15 @@
 #ifndef OUTPUTSTREAMEXAMPLE_H
 #define OUTPUTSTREAMEXAMPLE_H
-#include <QtCore/QList>
-class QIODevice;
-
-#include "output/AbstractOutputStream.h"
 
 /**
  * @file OutputStreamExample.h
  */
+
+#include <QtCore/QList>
+
+class QIODevice;
+
+#include "output/AbstractOutputStream.h"
 
 using namespace pelican;
 

@@ -51,6 +51,10 @@ if (CPPUNIT_FOUND)
     add_test(utilityTestMT utilityTestMT)
 
     # Copy test xml files to build directory.
-    include(CopyFiles)
-    copy_files(${CMAKE_CURRENT_SOURCE_DIR}/data/*.xml . testXMLFiles)
+    include(copy_files)
+    copy_files(
+        ${CMAKE_CURRENT_SOURCE_DIR}/data
+        *.xml 
+        ${CMAKE_CURRENT_BINARY_DIR}/data
+    )
 endif (CPPUNIT_FOUND)

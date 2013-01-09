@@ -1,6 +1,7 @@
 #include "tutorial/SignalProcessingPipeline.h"
 #include "tutorial/SignalAmplifier.h"
 #include "tutorial/SignalData.h"
+#include <iostream>
 
 // The constructor. It is good practice to initialise any pointer
 // members to zero.
