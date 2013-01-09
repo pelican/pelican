@@ -5,15 +5,19 @@
 #
 
 #
-# Keep track of the number of copy files targets created.
+# Create a target for copying files.
+#
+if (NOT TARGET copy_files)
+    add_custom_target(copy_files ALL)
+endif()
+
+#
+# Create a variable to keep track of the number of copy files targets created.
 #
 if (NOT copy_target_count)
     set(copy_target_count 0)
-    add_custom_target(copy_files ALL)
 endif (NOT copy_target_count)
 set(copy_target_count ${copy_target_count} CACHE INTERNAL "" FORCE)
-
-
 
 #-------------------------------------------------------------------------------
 # Macro: COPY_FILES
@@ -50,7 +54,7 @@ macro(COPY_FILES SRC_DIR GLOB_PAT DST_DIR)
         set(dst "${DST_DIR}/${filename}")
         add_custom_command(TARGET ${target} PRE_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy ${src} ${dst}
-            COMMENT "** copying file: ${src} to ${dst} " VERBATIM
+            COMMENT "copying: ${src} to ${dst} " VERBATIM
         )
     endforeach(filename)
     add_dependencies(copy_files ${target})
@@ -84,7 +88,7 @@ macro(COPY_FILE SRC DST)
     add_custom_target(${target})
     add_custom_command(TARGET ${target} PRE_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy ${SRC} ${DST}
-        COMMENT "** copying file: ${SRC} to ${DST}" VERBATIM
+        COMMENT "copying: ${SRC} to ${DST}" VERBATIM
     )
     add_dependencies(copy_files ${target})
 endmacro(COPY_FILE)
