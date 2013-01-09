@@ -24,7 +24,7 @@
 
         <output>
             <streamers>
-                <PelicanTCPBlobServer active="true">
+                <PelicanTCPBlobServer active="false">
                      <connection port="1234" />
                 </PelicanTCPBlobServer>
                 <OutputStreamExample name="precsv" active="true">
@@ -40,5 +40,6 @@
                 <stream name="pre" listeners="precsv" />
             </dataStreams>
         </output>
+
     </pipeline>
 </configuration>

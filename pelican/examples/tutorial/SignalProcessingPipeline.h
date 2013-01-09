@@ -13,7 +13,7 @@ class SignalProcessingPipeline : public AbstractPipeline
     public:
         // Constructor.
         SignalProcessingPipeline();
-        
+
         // Destructor
         ~SignalProcessingPipeline();
 
@@ -29,6 +29,8 @@ class SignalProcessingPipeline : public AbstractPipeline
 
         // Local data blob pointers.
         SignalData* outputData;
+
+        unsigned long counter;
 };
 
 #endif // SIGNALPROCESSINGPIPELINE_H

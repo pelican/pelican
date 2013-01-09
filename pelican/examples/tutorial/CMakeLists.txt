@@ -44,6 +44,14 @@ copy_files(
     *.xml
     ${CMAKE_CURRENT_BINARY_DIR}
 )
+copy_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/readme.txt
+    ${CMAKE_CURRENT_BINARY_DIR}/readme.txt
+)
+copy_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/data/plotScript.gnu
+    ${CMAKE_CURRENT_BINARY_DIR}/plotScript.gnu
+)
 
 # Create a dependency between the pelican_tutorial library target and the
 # file copy target to ensure that the xml and readme files are always updated
