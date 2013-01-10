@@ -125,9 +125,9 @@ install(FILES ${PROJECT_BINARY_DIR}/pelican_version.h
     DESTINATION ${INCLUDE_INSTALL_DIR})
 
 # === Installation target for project cmake files.
-install(DIRECTORY cmake 
-    DESTINATION ${MODULES_INSTALL_DIR}
-    FILES_MATCHING PATTERN "*.cmake")
+#install(DIRECTORY cmake 
+#    DESTINATION ${MODULES_INSTALL_DIR}
+#    FILES_MATCHING PATTERN "*.cmake")
 
 # === Include packaging script (still needs some work!)
 include(packaging)
