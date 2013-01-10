@@ -6,7 +6,6 @@
 # Dependencies for Pelican searched for
 # - Boost program options
 # - Qt (Core, Xml, Network, Gui)
-# - CppUnit
 #
 # =============================================================================
 # Defines the following variables:
@@ -111,7 +110,6 @@ list(APPEND PELICAN_LIBRARIES ${PELICAN_TESTUTILS_LIBRARY})
 
 find_package(Boost COMPONENTS program_options REQUIRED)
 find_package(Qt4 COMPONENTS QtCore QtNetwork QtXml QtGui REQUIRED)
-find_package(CppUnit)
 list(APPEND PELICAN_INCLUDES
     ${Boost_PROJECT_OPTIONS_INCLUDE_DIR}
     ${QT_INCLUDE_DIR}
