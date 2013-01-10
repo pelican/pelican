@@ -1,15 +1,13 @@
-2013-01-09  PELICAN 0.9.0
+2013-01-11  PELICAN 1.0.0
 
-    * First versioned release! (Note pelican should still be considered in
-      beta until version 1.0.0)
+    * First versioned release!
     * Complete rework of the modular build system.
+    * Rework of the build system macro for copying files.
     * Updated header include paths thoughout pelican, removing the pelican
       prefix. Projects using FindPelican.cmake will need to update to the
       new version of this script.
-    * Rework of the CopyFiles macro for added flexibility.
-    * Added an addition example code 'example-1' using pelican with 
-      service data.
-    * Updated Doxygen documentation parameter files for Doxygen 1.8.x.
+    * Updated Doxygen documentation configuration files to work correctly with
+      Doxygen 1.8.x.
     * Moved object registation macros out of pelican namespace in order
       to make code using PELICAN slightly cleaner. This change will not effect
       codes already using PELICAN but allow more friendly namespace usage
@@ -19,6 +17,8 @@
          PELICAN_DECLARE_MODULE
          PELICAN_DECLARE_DATABLOB
          PELICAN_DECLARE_CHUNKER
+    * Added an additional example code (examples/example-1) which demonstrates
+      the use of pelican with service data.
 
 
 
