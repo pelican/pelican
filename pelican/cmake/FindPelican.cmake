@@ -11,16 +11,14 @@
 # =============================================================================
 # Defines the following variables:
 #
-#   PELICAN_FOUND             = True if Pelican is found.
-#
-#   PELICAN_CMAKE_MODULE_DIR  = Pelican CMake module path.
-#
+#   PELICAN_FOUND             = TRUE if Pelican is found.
 #   PELICAN_INCLUDE_DIR       = Top level Pelican include directory.
-#   PELICAN_INCLUDES          = Set of include directories needed by Pelican.
-#
+#   PELICAN_INCLUDES          = All include directories in the Pelican header
+#                               tree as well as include directories for
+#                               external dependencies.
 #   PELICAN_LIBRARY           = The Pelican library.
 #   PELICAN_TESTUTILS_LIBRARY = The Pelican test utility library.
-#   PELICAN_LIBRARIES         = Set of libraries required for linking.
+#   PELICAN_LIBRARIES         = All Pelican libraries.
 #
 # ============================================================================
 # Environment and CMake variables effecting this script.
@@ -31,30 +29,61 @@
 #                         be either /usr/local or /usr
 #
 # ============================================================================
-# Last Update: 8th January 2013
+# Last Update: 10th January 2013
 # =============================================================================
 
+
+################################################################################
+#
+#   INCLUDE-variables
+#
+################################################################################
 
 # Include default error handling macro.
 include(FindPackageHandleStandardArgs)
 
-
 # Find the top level Pelican include directory.
 find_path(PELICAN_INCLUDE_DIR pelican_version.h
+    HINTS ${PELICAN_INC_DIR}
     PATHS
-    ${PELICAN_INSTALL_DIR}/include/pelican
     $ENV{PELICAN_INSTALL_DIR}/include/pelican
     /usr/include/pelican
     /usr/local/include/pelican
 )
-set(PELICAN_INCLUDES ${PELICAN_INCLUDE_DIR})
 
+set(PELICAN_INCLUDES ${PELICAN_INCLUDE_DIR})
+list(APPEND PELICAN_INCLUDES ${PELICAN_INCLUDE_DIR}/comms)
+list(APPEND PELICAN_INCLUDES ${PELICAN_INCLUDE_DIR}/comms/test)
+list(APPEND PELICAN_INCLUDES ${PELICAN_INCLUDE_DIR}/core)
+list(APPEND PELICAN_INCLUDES ${PELICAN_INCLUDE_DIR}/core/test)
+list(APPEND PELICAN_INCLUDES ${PELICAN_INCLUDE_DIR}/data)
+list(APPEND PELICAN_INCLUDES ${PELICAN_INCLUDE_DIR}/data/test)
+list(APPEND PELICAN_INCLUDES ${PELICAN_INCLUDE_DIR}/emulator)
+list(APPEND PELICAN_INCLUDES ${PELICAN_INCLUDE_DIR}/emulator/test)
+list(APPEND PELICAN_INCLUDES ${PELICAN_INCLUDE_DIR}/modules)
+list(APPEND PELICAN_INCLUDES ${PELICAN_INCLUDE_DIR}/output)
+list(APPEND PELICAN_INCLUDES ${PELICAN_INCLUDE_DIR}/output/test)
+list(APPEND PELICAN_INCLUDES ${PELICAN_INCLUDE_DIR}/server)
+list(APPEND PELICAN_INCLUDES ${PELICAN_INCLUDE_DIR}/server/test)
+list(APPEND PELICAN_INCLUDES ${PELICAN_INCLUDE_DIR}/utility)
+list(APPEND PELICAN_INCLUDES ${PELICAN_INCLUDE_DIR}/utility/test)
+list(APPEND PELICAN_INCLUDES ${PELICAN_INCLUDE_DIR}/viewer)
+list(APPEND PELICAN_INCLUDES ${PELICAN_INCLUDE_DIR}/viewer/test)
+
+
+
+
+################################################################################
+#
+#   LIBRARY-variables
+#
+################################################################################
 
 # Find the Pelican library.
 find_library(PELICAN_LIBRARY pelican
     NAMES pelican
+    HINTS ${PELICAN_LIB_DIR}
     PATHS
-    ${PELICAN_INSTALL_DIR}/lib
     $ENV{PELICAN_INSTALL_DIR}/lib
     /usr/lib
     /usr/local/lib
@@ -66,64 +95,23 @@ set(PELICAN_LIBRARIES ${PELICAN_LIBRARY})
 find_library(PELICAN_TESTUTILS_LIBRARY pelican-testutils
     NAMES
     pelican-testutils
+    HINTS ${PELICAN_LIB_DIR}
     PATHS
-    ${PELICAN_INSTALL_DIR}/lib
     $ENV{PELICAN_INSTALL_DIR}/lib
     /usr/lib
     /usr/local/lib
 )
 list(APPEND PELICAN_LIBRARIES ${PELICAN_TESTUTILS_LIBRARY})
 
+################################################################################
+#
+#  Find depencencies.
+#
+################################################################################
 
-# Find Pelican cmake modules.
-find_path(PELICAN_CMAKE_MODULE_DIR FindPelicanInstall.cmake
-    PATHS
-    ${PELICAN_INSTALL_DIR}/share/pelican/cmake
-    $ENV{PELICAN_INSTALL_DIR}/share/pelican/cmake
-    /usr/
-    /usr/share
-    /usr/share/pelican
-    /usr/share/pelican/cmake
-    /usr/local/
-    /usr/local/share
-    /usr/local/share/pelican
-    /usr/local/share/pelican/cmake
-    PATH_SUFFIXES
-    share
-    cmake
-    pelican
-    DOC
-    "Location of Pelican cmake modules."
-)
-
-
-# Check for errors.
-FIND_PACKAGE_HANDLE_STANDARD_ARGS(Pelican
-    "ERROR: Could not find Pelican include directory."
-    PELICAN_INCLUDE_DIR
-)
-FIND_PACKAGE_HANDLE_STANDARD_ARGS(Pelican
-    "ERROR: Could not find Pelican library."
-    PELICAN_LIBRARY
-)
-FIND_PACKAGE_HANDLE_STANDARD_ARGS(Pelican
-    "ERROR: Could not find Pelican test utility library."
-    PELICAN_TESTUTILS_LIBRARY
-)
-FIND_PACKAGE_HANDLE_STANDARD_ARGS(Pelican
-    "ERROR: Could not find Required Pelican cmake module path"
-    PELICAN_CMAKE_MODULE_DIR
-)
-
-
-# Add the Pelican CMake modules into the CMake module path.
-list(INSERT CMAKE_MODULE_PATH 0 "${PELICAN_CMAKE_MODULE_DIR}")
-list(INSERT CMAKE_INCLUDE_PATH 0 "${PELICAN_CMAKE_MODULE_DIR}")
-
-# Find dependencies.
 find_package(Boost COMPONENTS program_options REQUIRED)
-find_package(Qt4 COMPONENTS QtCore QtNetwork QtXml REQUIRED)
-find_package(CppUnit REQUIRED)
+find_package(Qt4 COMPONENTS QtCore QtNetwork QtXml QtGui REQUIRED)
+find_package(CppUnit)
 list(APPEND PELICAN_INCLUDES
     ${Boost_PROJECT_OPTIONS_INCLUDE_DIR}
     ${QT_INCLUDE_DIR}
@@ -132,10 +120,28 @@ list(APPEND PELICAN_INCLUDES
 include_directories(${PELICAN_INCLUDES})
 
 
+################################################################################
+#
+#   Checks
+#
+################################################################################
+
+# Check for errors.
+find_package_handle_standard_args(PELICAN
+    "ERROR: Could not find Pelican include directory."
+    PELICAN_INCLUDE_DIR
+)
+find_package_handle_standard_args(PELICAN
+    "ERROR: Could not find Pelican library."
+    PELICAN_LIBRARY
+)
+find_package_handle_standard_args(PELICAN
+    "ERROR: Could not find Pelican test utility library."
+    PELICAN_TESTUTILS_LIBRARY
+)
+
 # Put variables in the advanced section of the CMake cache.
 mark_as_advanced(
-    PELICAN_FOUND
-    PELICAN_CMAKE_MODULE_DIR
     PELICAN_INCLUDE_DIR
     PELICAN_INCLUDES
     PELICAN_LIBRARY
