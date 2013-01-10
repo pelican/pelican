@@ -30,6 +30,7 @@
 #include <pelican/utility/ConfigNode.h>
 #include <cmath>
 #include <iostream>
+#include <QtCore/QDebug>
 
 using namespace std;
 

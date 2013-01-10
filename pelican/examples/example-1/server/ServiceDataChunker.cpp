@@ -29,6 +29,7 @@
 #include "ServiceDataChunker.hpp"
 #include <pelican/utility/Config.h>
 #include <QtNetwork/QUdpSocket>
+#include <QtCore/QDebug>
 
 #include <iostream>
 using namespace std;
