@@ -37,6 +37,8 @@
 #include <QtCore/QString>
 #include <QtCore/QObject>
 
+#include <unistd.h>
+
 using pelican::ConfigNode;
 using pelican::EmulatorDriver;
 
