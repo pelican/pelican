@@ -36,7 +36,7 @@ namespace pelican {
  *@details DataBlobBuffer
  */
 DataBlobBuffer::DataBlobBuffer()
-        : _index(-1), _size(0)
+: _index(-1), _size(0)
 {
 }
 
@@ -57,14 +57,15 @@ void DataBlobBuffer::addDataBlob(DataBlob* blob)
 }
 
 DataBlob* DataBlobBuffer::next() {
-    _index=++_index%_size; // FIXME this line is a bit dodgy
+    //_index=++_index%_size; // FIXME this line is a bit dodgy
+    _index = (_index + 1) % _size; // NOTE this replacement for the line above needs checking.
     return _data[_index];
 }
 
 void DataBlobBuffer::shrink(int newSize) {
     // remove oldest/unused data first
     while( _data.size() > newSize ) {
-        unsigned int index=_index+1%_size;
+        unsigned int index = (_index+1) % _size;
         delete _data[index];
         _data.removeAt(index);
         if( index < _index && _index != (unsigned int)-1 ) { --_index; }

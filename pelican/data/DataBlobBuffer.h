@@ -67,12 +67,12 @@ class DataBlobBuffer
         void shrink(int newSize);
 
         /// return the size (number of DataBlobs) held in the Buffer
-        unsigned int size() { return _size; }
+        long int size() { return _size; }
 
     private:
         QList<DataBlob*> _data;
-        unsigned int _index;
-        unsigned int _size;
+        long int _index;
+        long int _size;
 };
 
 } // namespace pelican
