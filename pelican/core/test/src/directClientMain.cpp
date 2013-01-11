@@ -151,7 +151,7 @@ int main(int argc, char** argv)
             << " Mb/sec" << std::endl;
     std::cout << "---------------------------------------------------------\n";
 
-    } catch (QString error) {
+    } catch (const QString& error) {
         std::cerr << error.toStdString() << std::endl;
     }
 

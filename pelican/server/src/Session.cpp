@@ -173,6 +173,7 @@ void Session::processRequest(const ServerRequest& req, QIODevice& out,
             default:
                 verbose("protocol error: " + req.message());
                 _protocol->sendError(out, req.message());
+                break;
         }
     }
     catch (const QString& e)

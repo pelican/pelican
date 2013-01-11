@@ -172,7 +172,7 @@ void DirectStreamDataClientTest::test_singleChunker()
         DoubleData* data = (DoubleData*)validData.value("DoubleData");
         _printData(data);
     }
-    catch (QString e) {
+    catch (const QString& e) {
         CPPUNIT_FAIL("Unexpected exception: " + e.toStdString());
     }
 }
@@ -230,7 +230,7 @@ void DirectStreamDataClientTest::test_twoChunkersMultipleStarts()
                 _printData(data);
             }
         }
-        catch (QString e) {
+        catch (const QString& e) {
             CPPUNIT_FAIL("Unexpected exception: " + e.toStdString());
         }
     }
@@ -288,7 +288,7 @@ void DirectStreamDataClientTest::test_twoChunkersSingleStart()
             _printData(data);
         }
     }
-    catch (QString e) {
+    catch (const QString& e) {
         CPPUNIT_FAIL("Unexpected exception: " + e.toStdString());
     }
 }

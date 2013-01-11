@@ -281,7 +281,7 @@ void PipelineDriverTest::test_registerSwitcherData()
         CPPUNIT_ASSERT_EQUAL(num, p2->count());
     }
     }
-    catch( QString e ) {
+    catch(const QString& e ) {
         CPPUNIT_FAIL("Caught QString(\"" + e.toStdString() + "\")");
     }
 }
@@ -373,7 +373,7 @@ void PipelineDriverTest::test_start_singlePipelineClientReturnsGoodData()
         CPPUNIT_ASSERT_EQUAL(num, pipeline->count());
         CPPUNIT_ASSERT_EQUAL(pipeline->count(), pipeline->matchedCounter());
     }
-    catch (QString e) {
+    catch (const QString& e) {
         CPPUNIT_FAIL("Unexpected exception: " + e.toStdString());
     }
 }
@@ -408,7 +408,7 @@ void PipelineDriverTest::test_start_singlePipelineClientReturnsWrongData()
         CPPUNIT_ASSERT_EQUAL(0, pipeline->count());
         CPPUNIT_ASSERT_EQUAL(pipeline->count(), pipeline->matchedCounter());
     }
-    catch (QString e) {
+    catch (const QString& e) {
         CPPUNIT_FAIL("Unexpected exception: " + e.toStdString());
     }
 }
@@ -451,7 +451,7 @@ void PipelineDriverTest::test_start_multiPipelineRunDifferentData()
         CPPUNIT_ASSERT_EQUAL(num, pipeline2->count());
         CPPUNIT_ASSERT_EQUAL(pipeline2->count(), pipeline2->matchedCounter());
     }
-    catch (QString e) {
+    catch (const QString& e) {
         CPPUNIT_FAIL("Unexpected exception: " + e.toStdString());
     }
 }
@@ -497,7 +497,7 @@ void PipelineDriverTest::test_start_multiPipelineRunOne()
         CPPUNIT_ASSERT_EQUAL(1, pipeline1->streamHistory(type1).size() );
 
     }
-    catch (QString e) {
+    catch (const QString& e) {
         CPPUNIT_FAIL("Unexpected exception: " + e.toStdString());
     }
 }

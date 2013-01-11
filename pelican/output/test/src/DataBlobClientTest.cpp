@@ -141,7 +141,7 @@ void DataBlobClientTest::test_streamInfo()
         delete server;
     }
     }
-    catch( const QString msg )
+    catch( const QString& msg )
     {
         CPPUNIT_FAIL(msg.toStdString());
     }

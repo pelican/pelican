@@ -84,7 +84,7 @@ void DataBlobChunkerTest::test_method()
     CPPUNIT_ASSERT_EQUAL( 1, tester.writeRequestCount() );
     server.send(&_blob);
     CPPUNIT_ASSERT_EQUAL( 2, tester.writeRequestCount() );
-    } catch( QString e ) {
+    } catch(const QString& e) {
         CPPUNIT_FAIL(e.toStdString().c_str());
     }
 }
