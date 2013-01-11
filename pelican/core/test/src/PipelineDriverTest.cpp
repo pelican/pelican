@@ -1,3 +1,31 @@
+/*
+ * Copyright (c) 2013, The University of Oxford
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ * 3. Neither the name of the University of Oxford nor the names of its
+ *    contributors may be used to endorse or promote products derived from this
+ *    software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ */
+
 #include "core/test/PipelineDriverTest.h"
 #include "modules/AbstractModule.h"
 #include "output/OutputStreamManager.h"
@@ -94,12 +122,12 @@ void PipelineDriverTest::test_checkPipelineRequirements()
     QString stream2("stream2");
     {
         // Use case:
-        // pipeline has required data only. 
+        // pipeline has required data only.
         // Client has this and other data as stream data
         // Expect:
         // Requirements to be selected and marked as stream data
         DataRequirements req; req.addRequired(stream1);
-        DataSpec spec; 
+        DataSpec spec;
         spec.addStreamData(stream1);
         spec.addStreamData(stream2);
         TestDataClient client(config, spec);
@@ -110,12 +138,12 @@ void PipelineDriverTest::test_checkPipelineRequirements()
     }
     {
         // Use case:
-        // pipeline has required data only. 
+        // pipeline has required data only.
         // Client has this as service data other data as stream data
         // Expect:
         // Requirements to be selected and marked as service data
         DataRequirements req; req.addRequired(stream1);
-        DataSpec spec; 
+        DataSpec spec;
         spec.addServiceData(stream1);
         spec.addStreamData(stream2);
         TestDataClient client(config, spec);
@@ -126,13 +154,13 @@ void PipelineDriverTest::test_checkPipelineRequirements()
     }
     {
         // Use case:
-        // pipeline has required data and optional data. 
+        // pipeline has required data and optional data.
         // Client has this as service data other data as stream data
         // Expect:
         // Requirements to be selected and marked as stream/service data
         DataRequirements req; req.addRequired(stream1);
         req.addOptional(stream2);
-        DataSpec spec; 
+        DataSpec spec;
         spec.addServiceData(stream1);
         spec.addStreamData(stream2);
         TestDataClient client(config, spec);
@@ -143,16 +171,16 @@ void PipelineDriverTest::test_checkPipelineRequirements()
     }
     {
         // Use case:
-        // pipeline has required data 
-        // Client does not have this data 
+        // pipeline has required data
+        // Client does not have this data
         // Expect:
         // throw
         DataRequirements req; req.addRequired(stream1);
-        DataSpec spec; 
+        DataSpec spec;
         TestDataClient client(config, spec);
         TestPipeline* p1 = new TestPipeline( req );
         CPPUNIT_ASSERT_THROW(_pipelineDriver->_checkPipelineRequirements( p1, &client ), QString );
-       
+
     }
 }
 
