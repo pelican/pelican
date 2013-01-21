@@ -1,5 +1,5 @@
 +------------------------------------------------------------------------------+
-| BUILDING & INSTALLING PELICAN                   Last update: 07 January 2013 |
+| BUILDING & INSTALLING PELICAN                   Last update: 21 January 2013 |
 +------------------------------------------------------------------------------+
 
 1. Introduction
@@ -9,7 +9,7 @@ TODO
 
 2. Dependencies
 --------------------------------------------------------------------------------
-Required:   
+Required:
     C++ compiler (g++, clang, icpc)
     Qt4 (QtCore QtNetwork QtXml QtGui)
     Boost (program_options)
@@ -20,7 +20,7 @@ Optional:
 
 3. Documentation Build Dependencies:
 --------------------------------------------------------------------------------
-Required: 
+Required:
     Doxygen
 
 Optional:
@@ -41,7 +41,7 @@ PELICAN can then be installed with:
 
     $ make install
 
-    
+
 3.1. Build Options
 --------------------------------------------------------------------------------
 When running the 'cmake' command a number of build options can be specified.
@@ -53,8 +53,8 @@ These are listed below.
         Prefix install path used when installing PELICAN (with make install).
 
     * -DCMAKE_BUILD_TYPE = <Release/RelWithDebInfo/Debug> (default = debug)
-        Release = build with release flags. 
-        relwithdebinfo = build with release flags and with debugging symbols 
+        Release = build with release flags.
+        relwithdebinfo = build with release flags and with debugging symbols
         enabled.
         debug = build with debug flags.
 

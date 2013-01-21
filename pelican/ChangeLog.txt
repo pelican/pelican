@@ -1,4 +1,4 @@
-2013-01-11  PELICAN 1.0.0
+2013-01-21  PELICAN 1.0.0
 
     * First versioned release!
     * Complete rework of the modular build system.
