@@ -52,7 +52,7 @@ These are listed below.
     * -DCMAKE_INSTALL_PREFIX=<path> (default: /usr/local/)
         Prefix install path used when installing PELICAN (with make install).
 
-    * -DCMAKE_BUILD_TYPE = <Release/RelWithDebInfo/Debug> (default = debug)
+    * -DCMAKE_BUILD_TYPE = <Release/RelWithDebInfo/Debug> (default = release)
         Release = build with release flags.
         relwithdebinfo = build with release flags and with debugging symbols
         enabled.
