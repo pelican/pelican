@@ -104,9 +104,9 @@ void DataBlobBufferTest::test_shrink()
           // Expect:
           // nothing to change
           buffer.shrink(11);
-          CPPUNIT_ASSERT_EQUAL( (unsigned int)10, buffer.size() );
+          CPPUNIT_ASSERT_EQUAL((long int)10, buffer.size());
           buffer.shrink(10);
-          CPPUNIT_ASSERT_EQUAL( (unsigned int)10, buffer.size() );
+          CPPUNIT_ASSERT_EQUAL((long int)10, buffer.size());
         }
         { // Use Case:
           // Shrink To value < existing size
@@ -115,7 +115,7 @@ void DataBlobBufferTest::test_shrink()
           // buffer to be set to the size specified
           // next to return a valid object
           buffer.shrink(9);
-          CPPUNIT_ASSERT_EQUAL( (unsigned int)9, buffer.size() );
+          CPPUNIT_ASSERT_EQUAL((long int)9, buffer.size());
           DataBlob* b = buffer.next();
           int history=1;
           QString msg = QString("blobnumber=%3, blob expected=%4, got blob %5").arg(history).arg((long)blobs[history],0,16).arg((long)b,0,16);
