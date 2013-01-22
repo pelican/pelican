@@ -1,3 +1,7 @@
+2013-01-22  PELICAN 1.0.1
+
+    * Adding missing build_macros cmake script!
+
 2013-01-21  PELICAN 1.0.0
 
     * First versioned release!

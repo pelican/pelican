@@ -34,7 +34,7 @@ cmake_minimum_required(VERSION 2.6 FATAL_ERROR)
 # === Project version.
 set(VERSION_MAJOR 1)
 set(VERSION_MINOR 0)
-set(VERSION_PATCH 0)
+set(VERSION_PATCH 1)
 set(PROJECT_VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
 
 # === CMake setup.
@@ -121,11 +121,11 @@ create_header_install_target(${INCLUDE_INSTALL_DIR})
 # === Create a header file with the project version.
 configure_file(${PROJECT_SOURCE_DIR}/cmake/pelican_version.h.in
     ${PROJECT_BINARY_DIR}/pelican_version.h)
-install(FILES ${PROJECT_BINARY_DIR}/pelican_version.h 
+install(FILES ${PROJECT_BINARY_DIR}/pelican_version.h
     DESTINATION ${INCLUDE_INSTALL_DIR})
 
 # === Installation target for project cmake files.
-#install(DIRECTORY cmake 
+#install(DIRECTORY cmake
 #    DESTINATION ${MODULES_INSTALL_DIR}
 #    FILES_MATCHING PATTERN "*.cmake")
 
@@ -141,7 +141,7 @@ add_doxygen_target(dev  DoxyfileDeveloper)
 add_doxygen_target(user DoxyfileUser)
 
 # === Print build options summary.
-set(DEBUG_PRINT ON) 
+set(DEBUG_PRINT ON)
 if (DEBUG_PRINT)
 message(STATUS "")
 print_build_options()
