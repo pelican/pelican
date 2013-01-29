@@ -28,7 +28,7 @@
 #                         be either /usr/local or /usr
 #
 # ============================================================================
-# Last Update: 10th January 2013
+# Last Update: 29th January 2013
 # =============================================================================
 
 
@@ -49,6 +49,12 @@ find_path(PELICAN_INCLUDE_DIR pelican_version.h
     /usr/include/pelican
     /usr/local/include/pelican
 )
+# Also include the parent directory (needed for some projects who have
+# includes of the form
+#     #include <pelican/../*.h>
+# and where the pelican include folder is not in a default search path.
+get_filename_component(RESULT ${PELICAN_INCLUDE_DIR}/.. ABSOLUTE)
+list(APPEND PELICAN_INCLUDE_DIR ${RESULT})
 
 set(PELICAN_INCLUDES ${PELICAN_INCLUDE_DIR})
 list(APPEND PELICAN_INCLUDES ${PELICAN_INCLUDE_DIR}/comms)
@@ -68,9 +74,6 @@ list(APPEND PELICAN_INCLUDES ${PELICAN_INCLUDE_DIR}/utility)
 list(APPEND PELICAN_INCLUDES ${PELICAN_INCLUDE_DIR}/utility/test)
 list(APPEND PELICAN_INCLUDES ${PELICAN_INCLUDE_DIR}/viewer)
 list(APPEND PELICAN_INCLUDES ${PELICAN_INCLUDE_DIR}/viewer/test)
-
-
-
 
 ################################################################################
 #
@@ -115,8 +118,6 @@ list(APPEND PELICAN_INCLUDES
     ${QT_INCLUDE_DIR}
     ${QT_QTCORE_INCLUDE_DIR}
 )
-include_directories(${PELICAN_INCLUDES})
-
 
 ################################################################################
 #
