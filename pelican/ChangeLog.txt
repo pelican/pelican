@@ -1,3 +1,9 @@
+2013-01-29  PELICAN 1.0.2
+
+    * Updated version number in doxygen targets
+    * Updated FindPelican.cmake script to fix an issue for projects
+      using an install of pelican in a non-default install location.
+
 2013-01-22  PELICAN 1.0.1
 
     * Adding missing build_macros cmake script!
