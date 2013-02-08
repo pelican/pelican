@@ -1,0 +1,80 @@
++------------------------------------------------------------------------------+
+| BUILDING & INSTALLING PELICAN                   Last update: 21 January 2013 |
++------------------------------------------------------------------------------+
+
+1. Introduction
+--------------------------------------------------------------------------------
+TODO
+
+
+2. Dependencies
+--------------------------------------------------------------------------------
+Required:
+    C++ compiler (g++, clang, icpc)
+    Qt4 (QtCore QtNetwork QtXml QtGui)
+    Boost (program_options)
+
+Optional:
+    cppunit (to build unit tests)
+
+
+3. Documentation Build Dependencies:
+--------------------------------------------------------------------------------
+Required:
+    Doxygen
+
+Optional:
+    LATEX (On Ubuntu this is the 'texlive' package)
+
+
+3. Building PELICAN
+--------------------------------------------------------------------------------
+PELICAN can be built by issuing the following commands:
+
+    $ mkdir build
+    $ cd build
+    $ cmake [OPTIONS] ../path/to/top/level/CMakeLists.txt
+    $ make
+
+
+PELICAN can then be installed with:
+
+    $ make install
+
+
+3.1. Build Options
+--------------------------------------------------------------------------------
+When running the 'cmake' command a number of build options can be specified.
+These are listed below.
+
+    * -DCMAKE_CXX_COMPILER=<compiler path> (default = c++)
+
+    * -DCMAKE_INSTALL_PREFIX=<path> (default: /usr/local/)
+        Prefix install path used when installing PELICAN (with make install).
+
+    * -DCMAKE_BUILD_TYPE = <Release/RelWithDebInfo/Debug> (default = release)
+        Release = build with release flags.
+        relwithdebinfo = build with release flags and with debugging symbols
+        enabled.
+        debug = build with debug flags.
+
+    * -DBUILD_SHARED=<ON/OFF> (default = ON)
+
+    * -DBUILD_STATIC=<ON/OFF> (default = OFF)
+
+    * -DBUILD_MODULES=<ON/OFF> (default = OFF)
+
+    * -DBUILD_PACKAGES=<ON/OFF> (default = ON)
+
+
+4. Testing the Installation
+--------------------------------------------------------------------------------
+TODO
+
+4.1 Unit Tests
+--------------------------------------------------------------------------------
+TODO
+
+4.2 Running PELICAN examples
+--------------------------------------------------------------------------------
+TODO

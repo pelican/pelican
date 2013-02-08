@@ -1,7 +1,7 @@
-#include "pelican/server/test/LockedDataTest.h"
-#include "pelican/server/LockedData.h"
-#include "pelican/server/LockableServiceData.h"
-#include "pelican/server/LockableStreamData.h"
+#include "server/test/LockedDataTest.h"
+#include "server/LockedData.h"
+#include "server/LockableServiceData.h"
+#include "server/LockableStreamData.h"
 
 
 namespace pelican {

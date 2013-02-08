@@ -1,0 +1,34 @@
+2013-01-29  PELICAN 1.0.2
+
+    * Updated version number in doxygen targets
+    * Updated FindPelican.cmake script to fix an issue for projects
+      using an install of pelican in a non-default install location.
+
+2013-01-22  PELICAN 1.0.1
+
+    * Adding missing build_macros cmake script!
+
+2013-01-21  PELICAN 1.0.0
+
+    * First versioned release!
+    * Complete rework of the modular build system.
+    * Rework of the build system macro for copying files.
+    * Updated header include paths thoughout pelican, removing the pelican
+      prefix. Projects using FindPelican.cmake will need to update to the
+      new version of this script.
+    * Updated Doxygen documentation configuration files to work correctly with
+      Doxygen 1.8.x.
+    * Moved object registation macros out of pelican namespace in order
+      to make code using PELICAN slightly cleaner. This change will not effect
+      codes already using PELICAN but allow more friendly namespace usage
+      in future. Macros affected:
+         PELICAN_DECLARE_ADAPTER
+         PELICAN_DECLARE_CLIENT
+         PELICAN_DECLARE_MODULE
+         PELICAN_DECLARE_DATABLOB
+         PELICAN_DECLARE_CHUNKER
+    * Added an additional example code (examples/example-1) which demonstrates
+      the use of pelican with service data.
+
+
+

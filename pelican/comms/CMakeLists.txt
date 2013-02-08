@@ -2,11 +2,8 @@
 # pelican/comms/CMakeLists.txt
 #
 
-include_directories(${QT_INCLUDE_DIR})
-set(comms_DEPS data utility)
-SUBPACKAGE(comms ${comms_DEPS})
-
-set(comms_src
+set(module pelican_comms)
+set(${module}_src
     src/AbstractClientProtocol.cpp
     src/DataBlobResponse.cpp
     src/DataSupportRequest.cpp
@@ -19,10 +16,10 @@ set(comms_src
     src/StreamDataRequest.cpp
     src/StreamDataResponse.cpp
 )
-
-SUBPACKAGE_LIBRARY(comms ${comms_src})
-
-SUBPACKAGE_SET_EXTERNAL_LIBRARIES(
+declare_module_library(${module}
+    SRC ${${module}_src}
+    DEPS pelican_data pelican_utility
+    LIBS 
     ${QT_QTCORE_LIBRARY}
     ${QT_QTNETWORK_LIBRARY}
     ${QT_QTXML_LIBRARY}

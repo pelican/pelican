@@ -1,14 +1,42 @@
+/*
+ * Copyright (c) 2013, The University of Oxford
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ * 3. Neither the name of the University of Oxford nor the names of its
+ *    contributors may be used to endorse or promote products derived from this
+ *    software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ */
+
 #include <QtCore/QCoreApplication>
 #include <QtCore/QString>
-#include "pelican/modules/AbstractModule.h"
-#include "pelican/core/PipelineApplication.h"
-#include "pelican/core/PipelineDriver.h"
-#include "pelican/core/DataClientFactory.h"
-#include "pelican/core/AbstractAdapterFactory.h"
+#include "modules/AbstractModule.h"
+#include "core/PipelineApplication.h"
+#include "core/PipelineDriver.h"
+#include "core/DataClientFactory.h"
+#include "core/AbstractAdapterFactory.h"
 #include "boost/program_options.hpp"
-#include "pelican/utility/Config.h"
-#include "pelican/utility/ConfigNode.h"
-#include "pelican/output/OutputStreamManager.h"
+#include "utility/Config.h"
+#include "utility/ConfigNode.h"
+#include "output/OutputStreamManager.h"
 #include <string>
 #include <csignal>
 #include <iostream>
@@ -46,11 +74,11 @@ void PipelineApplication::setConfigurationSearchPaths( const QList<QString>& pat
     _config.setSearchPaths( paths );
 }
 
-void PipelineApplication::_init() 
+void PipelineApplication::_init()
 {
-     _adapterFactory = 0;
-     _clientFactory = 0;
-     _moduleFactory = 0;
+    _adapterFactory = 0;
+    _clientFactory = 0;
+    _moduleFactory = 0;
 
     // Check for QCoreApplication
     if (QCoreApplication::instance() == NULL)
@@ -72,8 +100,8 @@ void PipelineApplication::_init()
     _moduleFactory = new FactoryConfig<AbstractModule>(config(), "pipeline", "modules", false);
 
     // Construct the pipeline driver.
-    _driver = new PipelineDriver( dataBlobFactory(), _moduleFactory, _clientFactory, 
-                                  outputStreamManager(), &_config, pipelineConfig );
+    _driver = new PipelineDriver( dataBlobFactory(), _moduleFactory,
+            _clientFactory, outputStreamManager(), &_config, pipelineConfig );
     _allDrivers.append(_driver);
 
     // install signal handlers
@@ -82,13 +110,17 @@ void PipelineApplication::_init()
     signal( SIGTERM, &PipelineApplication::exit);
 }
 
-void PipelineApplication::exit(int i) {
-    // if this is called more than three times,
-    // abandon the clean exit
-    if( ++_exitCount > 3 ) exit(i);
+void PipelineApplication::exit(int i)
+{
+    QCoreApplication::flush();
     QCoreApplication::exit(0);
-    foreach( PipelineDriver* d, _allDrivers ) {
+    foreach (PipelineDriver* d, _allDrivers) {
         d->stop();
+    }
+
+    // If this is called more than once, abandon the 'clean' exit
+    if (++_exitCount > 1) {
+        ::exit(i);
     }
 }
 

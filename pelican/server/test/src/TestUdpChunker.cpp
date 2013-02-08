@@ -1,5 +1,5 @@
-#include "pelican/server/test/TestUdpChunker.h"
-#include "pelican/utility/Config.h"
+#include "server/test/TestUdpChunker.h"
+#include "utility/Config.h"
 
 #include <QtNetwork/QUdpSocket>
 #include <iostream>

@@ -1,15 +1,16 @@
 #include "tutorial/SignalProcessingPipeline.h"
 #include "tutorial/SignalAmplifier.h"
 #include "tutorial/SignalData.h"
+#include <iostream>
 
 // The constructor. It is good practice to initialise any pointer
 // members to zero.
 SignalProcessingPipeline::SignalProcessingPipeline()
-    : AbstractPipeline(), amplifier(0), outputData(0) 
+    : AbstractPipeline(), amplifier(0), outputData(0), counter(0)
 {
 }
 
-// The desttructor must clean up and created modules and
+// The destructor must clean up and created modules and
 // any local DataBlob's created.
 SignalProcessingPipeline::~SignalProcessingPipeline()
 {
@@ -43,4 +44,9 @@ void SignalProcessingPipeline::run(QHash<QString, DataBlob*>& remoteData)
 
     // Output the processed data.
     dataOutput(outputData, "post");
+
+    if (counter%10 == 0)
+        std::cout << counter << " Chunks processed." << std::endl;
+
+    counter++;
 }

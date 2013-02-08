@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pelican>
+
+<configuration version="1.0">
+    <server>
+        <buffers>
+            <StreamData>
+                <buffer maxSize="50000000" maxChunkSize="50000000" />
+            </StreamData>
+            <ServiceData>
+                <buffer maxSize="50000000" maxChunkSize="50000000" />
+            </ServiceData>
+        </buffers>
+
+        <chunkers>
+            <StreamDataChunker>
+                <!-- packet of n floats + 32 byte header -->
+                <data type="StreamData" packetSize="4032" packets="1" /> 
+                <connection host="127.0.0.1" port="2001" />
+            </StreamDataChunker>
+            <ServiceDataChunker>
+                <data type="ServiceData" packetSize="800" packets="1" />
+                <connection host="127.0.0.1" port="2002" />
+            </ServiceDataChunker>
+        </chunkers>
+    </server>
+</configuration>

@@ -1,4 +1,4 @@
-#include "pelican/core/PipelineApplication.h"
+#include "core/PipelineApplication.h"
 #include "tutorial/SignalProcessingPipeline.h"
 #include <QtCore/QCoreApplication>
 

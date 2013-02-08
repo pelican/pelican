@@ -1,8 +1,8 @@
-#include "pelican/server/test/LockableStreamDataTest.h"
-#include "pelican/server/LockableStreamData.h"
-#include "pelican/server/LockableServiceData.h"
-#include "pelican/server/LockedData.h"
-#include "pelican/comms/StreamData.h"
+#include "server/test/LockableStreamDataTest.h"
+#include "server/LockableStreamData.h"
+#include "server/LockableServiceData.h"
+#include "server/LockedData.h"
+#include "comms/StreamData.h"
 #include <QtCore/QString>
 
 

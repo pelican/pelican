@@ -2,11 +2,10 @@
 # pelican/server/CMakeLists.txt
 #
 
-include_directories(${QT_INCLUDE_DIR})
-SUBPACKAGE(server comms utility)
+set(module pelican_server)
 
 # files requiring MOC pre-processing (i.e. QObjects)
-set(server_moc_headers
+set(${module}_moc
     AbstractDataBuffer.h
     AbstractLockable.h
     AbstractLockableData.h
@@ -19,8 +18,7 @@ set(server_moc_headers
     Session.h
     LockableStreamData.h
 )
-
-set(server_src
+set(${module}_src
     src/AbstractChunker.cpp
     src/AbstractDataBuffer.cpp
     src/AbstractLockable.cpp
@@ -39,28 +37,20 @@ set(server_src
     src/FileChunker.cpp
     src/DirectoryWatchChunker.cpp
 )
-
-# MOC Compile headers.
-QT4_WRAP_CPP(server_src ${server_moc_headers})
-
-# Build the subpackage library.
-SUBPACKAGE_LIBRARY(server ${server_src})
-
-# Specify dependencies.
-SUBPACKAGE_SET_EXTERNAL_LIBRARIES(
-    ${QT_QTCORE_LIBRARY}
-    ${QT_QTNETWORK_LIBRARY}
+declare_module_library(${module}
+    SRC ${${module}_src}
+    MOC ${${module}_moc}
+    LIBS ${QT_QTCORE_LIBRARY} ${QT_QTNETWORK_LIBRARY}
+    DEPS pelican_comms pelican_utility
 )
 
-# Recurse into test directory.
+
+# Decsend into test directory.
 add_subdirectory(test)
 
 # Create the server executable.
-#===============================================================================
 set(serverExe_src src/main.cpp)
 add_executable(pelicanServer ${serverExe_src})
-target_link_libraries(pelicanServer
-    ${SUBPACKAGE_LIBRARIES}
-)
+target_link_libraries(pelicanServer ${${module}_LIBRARY})
 
 

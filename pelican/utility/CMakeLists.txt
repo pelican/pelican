@@ -2,11 +2,10 @@
 # pelican/utility/CMakeLists.txt
 #
 
-include_directories(${QT_INCLUDE_DIR})
-SUBPACKAGE(utility)
+set(module pelican_utility)
 
 # Thread safe library.
-set(utility_src
+set(${module}_src
     src/ConfigNode.cpp
     src/Config.cpp
     src/ClientTestServer.cpp
@@ -14,18 +13,18 @@ set(utility_src
     src/WatchedFile.cpp
     src/WatchedDir.cpp
 )
-set(utility_moc_headers
+set(${module}_moc_headers
     WatchedFile.h
     WatchedDir.h
     ClientTestServer.h
 )
-
-QT4_WRAP_CPP(utility_src ${utility_moc_headers})
-SUBPACKAGE_LIBRARY(utility ${utility_src})
-SUBPACKAGE_SET_EXTERNAL_LIBRARIES(
+declare_module_library(${module}
+    SRC ${${module}_src}
+    MOC ${${module}_moc_headers}
+    LIBS
     ${QT_QTCORE_LIBRARY}
     ${QT_QTXML_LIBRARY}
-    ${QT_QTNETWORK_LIBRARY}
+    ${QT_QTNETWORK_LIBRARY} 
 )
 
 # Recurse into test sub-directory to build tests.

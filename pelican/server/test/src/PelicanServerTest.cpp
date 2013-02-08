@@ -1,12 +1,12 @@
-#include "pelican/server/test/PelicanServerTest.h"
+#include "server/test/PelicanServerTest.h"
 
-#include "pelican/server/test/PelicanTestClient.h"
-#include "pelican/server/PelicanServer.h"
-#include "pelican/server/test/TestProtocol.h"
-#include "pelican/server/DataManager.h"
-#include "pelican/server/test/TestChunker.h"
-#include "pelican/data/DataRequirements.h"
-#include "pelican/utility/Config.h"
+#include "server/test/PelicanTestClient.h"
+#include "server/PelicanServer.h"
+#include "server/test/TestProtocol.h"
+#include "server/DataManager.h"
+#include "server/test/TestChunker.h"
+#include "data/DataRequirements.h"
+#include "utility/Config.h"
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QThread>

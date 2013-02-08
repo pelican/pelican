@@ -6,7 +6,7 @@
 #include <iostream>
 
 #include "tutorial/SignalData.h"
-#include "pelican/utility/ConfigNode.h"
+#include "utility/ConfigNode.h"
 
 // Constructs the output stream.
 OutputStreamExample::OutputStreamExample(const ConfigNode& configNode)

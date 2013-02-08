@@ -2,9 +2,9 @@
 doc/html
 
 # build directory
-build*
-release*
-debug*
+build
+release
+debug
 
 # Eclipse settings directory
 .settings

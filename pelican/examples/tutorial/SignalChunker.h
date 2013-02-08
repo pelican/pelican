@@ -1,7 +1,7 @@
 #ifndef SIGNALCHUNKER_H
 #define SIGNALCHUNKER_H
 
-#include "pelican/server/AbstractChunker.h"
+#include "server/AbstractChunker.h"
 
 using namespace pelican;
 

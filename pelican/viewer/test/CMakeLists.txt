@@ -2,24 +2,24 @@
 # viewer/test/CMakeLists.txt
 #
 
-
-include_directories(${QT_INCLUDE_DIR})
-SUBPACKAGE(viewerTest viewer outputTest)
-set(viewerUtilityTest_src
+set(module pelican_viewerTestUtils)
+set(${module}_src
     src/TestDataViewerWidget.cpp
 )
-SUBPACKAGE_LIBRARY(viewerTestUtils ${viewerUtilityTest_src})
-SUBPACKAGE_SET_EXTERNAL_LIBRARIES(${QT_QTCORE_LIBRARY})
+declare_module_library(${module}
+    SRC ${${module}_src}
+    DEPS pelican_viewer pelican_outputTestUtils
+    LIBS ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY}
+)
 
 if (CPPUNIT_FOUND)
-    include_directories(${CPPUNIT_INCLUDE_DIR})
     set(viewerTest_src
-        src/viewerTest.cpp
+        src/CppUnitMain.cpp
         src/DataViewerTest.cpp
     )
     add_executable(viewerTest ${viewerTest_src} )
     target_link_libraries(viewerTest
-        ${SUBPACKAGE_LIBRARIES}
+        ${${module}_LIBRARY}
         ${CPPUNIT_LIBRARIES}
     )
     add_test(viewerTest viewerTest)

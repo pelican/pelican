@@ -3,26 +3,24 @@
 #
 
 # Build the Pelican utility testing library module
-include_directories(${QT_INCLUDE_DIR})
-SUBPACKAGE(utilityTest utility)
-set(utilityTestLib_src
+set(module pelican_utilityTestUtils)
+set(${module}_src
     src/SocketTester.cpp
     src/TestFile.cpp
 )
-SUBPACKAGE_LIBRARY(utilityTestUtils ${utilityTestLib_src})
-SUBPACKAGE_SET_EXTERNAL_LIBRARIES(
+declare_module_library(${module}
+    SRC ${${module}_src}
+    DEPS pelican_utility
+    LIBS 
     ${QT_QTCORE_LIBRARY}
     ${QT_QTNETWORK_LIBRARY}
 )
 
-
 if (CPPUNIT_FOUND)
-    include_directories(${CPPUNIT_INCLUDE_DIR})
-
     # Build Pelcain utility tests.
     set(utilityTest_src
+        src/CppUnitMain.cpp
         src/TypeCounterTest
-        src/utilityTest.cpp
         src/SocketTesterTest.cpp
         src/ConfigTest.cpp
         src/ConfigNodeTest.cpp
@@ -32,20 +30,20 @@ if (CPPUNIT_FOUND)
         src/PelicanTimeRecorderTest.cpp
     )
     set(utilityTest_mt_src
-        src/utilityTest.cpp
+        src/CppUnitMain.cpp
         src/WatchedFileTest.cpp
         src/WatchedDirTest.cpp
     )
 
     add_executable(utilityTestMT ${utilityTest_mt_src} )
     target_link_libraries(utilityTestMT
-        ${SUBPACKAGE_LIBRARIES}
+        ${${module}_LIBRARY}
         ${CPPUNIT_LIBRARIES}
     )
 
     add_executable(utilityTest ${utilityTest_src} )
     target_link_libraries(utilityTest
-        ${SUBPACKAGE_LIBRARIES}
+        ${${module}_LIBRARY}
         ${CPPUNIT_LIBRARIES}
     )
 
@@ -53,6 +51,10 @@ if (CPPUNIT_FOUND)
     add_test(utilityTestMT utilityTestMT)
 
     # Copy test xml files to build directory.
-    include(CopyFiles)
-    copy_files(${CMAKE_CURRENT_SOURCE_DIR}/data/*.xml . testXMLFiles)
+    include(copy_files)
+    copy_files(
+        ${CMAKE_CURRENT_SOURCE_DIR}/data
+        *.xml 
+        ${CMAKE_CURRENT_BINARY_DIR}/data
+    )
 endif (CPPUNIT_FOUND)

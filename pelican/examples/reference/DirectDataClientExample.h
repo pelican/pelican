@@ -2,7 +2,7 @@
 #define DIRECTDATACLIENTEXAMPLE_H
 
 
-#include "pelican/core/DirectStreamDataClient.h"
+#include "core/DirectStreamDataClient.h"
 
 /**
  * @file DirectDataClientExample.h

@@ -1,15 +1,15 @@
-#include "pelican/server/test/TestServer.h"
+#include "server/test/TestServer.h"
 
-#include "pelican/server/PelicanPortServer.h"
-#include "pelican/server/StreamDataBuffer.h"
-#include "pelican/server/ServiceDataBuffer.h"
-#include "pelican/server/WritableData.h"
-#include "pelican/server/LockableServiceData.h"
-#include "pelican/server/LockableStreamData.h"
-#include "pelican/comms/PelicanProtocol.h"
-#include "pelican/comms/StreamData.h"
-#include "pelican/comms/DataChunk.h"
-#include "pelican/utility/Config.h"
+#include "server/PelicanPortServer.h"
+#include "server/StreamDataBuffer.h"
+#include "server/ServiceDataBuffer.h"
+#include "server/WritableData.h"
+#include "server/LockableServiceData.h"
+#include "server/LockableStreamData.h"
+#include "comms/PelicanProtocol.h"
+#include "comms/StreamData.h"
+#include "comms/DataChunk.h"
+#include "utility/Config.h"
 
 #include <iostream>
 

@@ -1,13 +1,41 @@
-#include "pelican/output/test/TCPConnectionManagerTest.h"
-#include "pelican/output/TCPConnectionManager.h"
-#include "pelican/comms/DataSupportRequest.h"
-#include "pelican/comms/DataSupportResponse.h"
-#include "pelican/comms/ServerRequest.h"
-#include "pelican/comms/ServerResponse.h"
-#include "pelican/comms/DataBlobResponse.h"
-#include "pelican/comms/StreamDataRequest.h"
-#include "pelican/comms/PelicanClientProtocol.h"
-#include "pelican/data/test/TestDataBlob.h"
+/*
+ * Copyright (c) 2013, The University of Oxford
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ * 3. Neither the name of the University of Oxford nor the names of its
+ *    contributors may be used to endorse or promote products derived from this
+ *    software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ */
+
+#include "output/test/TCPConnectionManagerTest.h"
+#include "output/TCPConnectionManager.h"
+#include "comms/DataSupportRequest.h"
+#include "comms/DataSupportResponse.h"
+#include "comms/ServerRequest.h"
+#include "comms/ServerResponse.h"
+#include "comms/DataBlobResponse.h"
+#include "comms/StreamDataRequest.h"
+#include "comms/PelicanClientProtocol.h"
+#include "data/test/TestDataBlob.h"
 
 #include <QtNetwork/QTcpSocket>
 #include <QtCore/QCoreApplication>
@@ -17,17 +45,12 @@ namespace pelican {
 using test::TestDataBlob;
 
 CPPUNIT_TEST_SUITE_REGISTRATION( TCPConnectionManagerTest );
-/**
- *@details TCPConnectionManagerTest
- */
+
 TCPConnectionManagerTest::TCPConnectionManagerTest()
-    : CppUnit::TestFixture()
+: CppUnit::TestFixture()
 {
 }
 
-/**
- *@details
- */
 TCPConnectionManagerTest::~TCPConnectionManagerTest()
 {
 }
@@ -47,9 +70,10 @@ void TCPConnectionManagerTest::tearDown()
 void TCPConnectionManagerTest::test_dataSupportedRequest()
 {
     // Use Case:
-    // Send a dataSupport request with no data
-    // Expect: stream to return a DataSupportResponse
-    // and add us to the datasupport stream
+    //   Send a dataSupport request with no data.
+    // Expect:
+    //   Stream to return a DataSupportResponse and add us to the DataSupport
+    //   stream
     QString streamInfo("__streamInfo__");
     DataSupportRequest req;
     QTcpSocket* client = _createClient();
@@ -65,9 +89,9 @@ void TCPConnectionManagerTest::test_dataSupportedRequest()
     CPPUNIT_ASSERT( r->type() == ServerResponse::DataSupport );
 
     // Use case:
-    // New stream type arrives
+    //   New stream type arrives.
     // Expect:
-    // to receive a new DataRequest with the new data
+    //   To receive a new DataRequest with the new data.
     QString stream1("stream1");
     TestDataBlob blob;
     blob.setData("stream1Data");
@@ -82,9 +106,9 @@ void TCPConnectionManagerTest::test_dataSupportedRequest()
     CPPUNIT_ASSERT( res->streamData().contains(stream1) );
 
     // Use case:
-    // Existing stream type arrives
+    //   Existing stream type arrives.
     // Expect:
-    // not to receive a new DataRequest
+    //   Not to receive a new DataRequest.
     _server->send(stream1,&blob);
     sleep(1);
     QCoreApplication::processEvents();
@@ -96,15 +120,17 @@ void TCPConnectionManagerTest::test_dataSupportedRequest()
 void TCPConnectionManagerTest::test_send()
 {
     // Use Case:
-    // client requests a connection
-    // expect client to be registered for any data
-    StreamDataRequest req;
-    DataSpec require;
-    require.addStreamData("testData");
-    req.addDataOption(require);
+    //   Client requests a connection.
+    // Expect:
+    //   Client to be registered for any data.
+    StreamDataRequest request;
+    DataSpec dataSpec;
+
+    dataSpec.addStreamData("testData");
+    request.addDataOption(dataSpec);
 
     QTcpSocket* client = _createClient();
-    _sendRequest( client, req );
+    _sendRequest( client, request );
     QCoreApplication::processEvents();
     CPPUNIT_ASSERT_EQUAL( 1, _server->clientsForStream("testData") );
     TestDataBlob blob;
@@ -127,22 +153,27 @@ void TCPConnectionManagerTest::test_send()
 void TCPConnectionManagerTest::test_brokenConnection()
 {
     // Use Case:
-    // client requests a connection
-    // expect client to be registered for any data
-    StreamDataRequest req;
-    DataSpec require;
-    require.addStreamData("testData");
-    req.addDataOption(require);
+    //   Client requests a connection.
+    // Expect:
+    //   Client to be registered for any data.
+
+    DataSpec dataSpec;
+    StreamDataRequest request;
+
+    dataSpec.addStreamData("testData");
+    request.addDataOption(dataSpec);
 
     QTcpSocket* client = _createClient();
-    _sendRequest( client, req );
+    _sendRequest(client, request);
+
     QCoreApplication::processEvents();
 
-    CPPUNIT_ASSERT_EQUAL( 1, _server->clientsForStream("testData") );
+    CPPUNIT_ASSERT_EQUAL(1, _server->clientsForStream("testData"));
 
     // Use Case:
-    // client dies after connection
-    // expect to be removed from the system
+    //   Client dies after connection.
+    // Expect:
+    //   To be removed from the system.
     delete client;
     QCoreApplication::processEvents();
     CPPUNIT_ASSERT_EQUAL( 0, _server->clientsForStream("testData") );
@@ -150,20 +181,21 @@ void TCPConnectionManagerTest::test_brokenConnection()
 
 void TCPConnectionManagerTest::test_multiClients()
 {
+    // TODO implement or remove?
 }
 
 QTcpSocket* TCPConnectionManagerTest::_createClient() const
 {
-   // Create a client and connect it to the server
-   QTcpSocket* tcpSocket = new QTcpSocket;
-   tcpSocket->connectToHost( QHostAddress::LocalHost, _server->serverPort() );
-   if (!tcpSocket->waitForConnected(5000) || tcpSocket->state() == QAbstractSocket::UnconnectedState)
-   {
-       delete tcpSocket;
-       tcpSocket = 0;
-       CPPUNIT_FAIL("Client could not connect to server");
-   }
-   return tcpSocket;
+    // Create a client and connect it to the server
+    QTcpSocket* tcpSocket = new QTcpSocket;
+    tcpSocket->connectToHost( QHostAddress::LocalHost, _server->serverPort() );
+    if (!tcpSocket->waitForConnected(5000) || tcpSocket->state() == QAbstractSocket::UnconnectedState)
+    {
+        delete tcpSocket;
+        tcpSocket = 0;
+        CPPUNIT_FAIL("Client could not connect to server");
+    }
+    return tcpSocket;
 }
 
 void TCPConnectionManagerTest::_sendRequest(QTcpSocket* tcpSocket, const ServerRequest& req)

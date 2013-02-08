@@ -1,7 +1,7 @@
-#include "pelican/server/test/DataManagerTest.h"
-#include "pelican/server/DataManager.h"
-#include "pelican/server/WritableData.h"
-#include "pelican/utility/Config.h"
+#include "server/test/DataManagerTest.h"
+#include "server/DataManager.h"
+#include "server/WritableData.h"
+#include "utility/Config.h"
 
 namespace pelican {
 

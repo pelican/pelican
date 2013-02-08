@@ -1,7 +1,7 @@
 #ifndef MODULEEXAMPLE_H
 #define MODULEEXAMPLE_H
 
-#include "pelican/core/AbstractModule.h"
+#include "core/AbstractModule.h"
 
 /**
  * @file ModuleExample.h

@@ -1,7 +1,7 @@
 #ifndef SIGNALEMULATOR_H
 #define SIGNALEMULATOR_H
 
-#include "pelican/emulator/AbstractUdpEmulator.h"
+#include "emulator/AbstractUdpEmulator.h"
 #include <QtCore/QByteArray>
 
 namespace pelican {

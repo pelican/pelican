@@ -1,7 +1,7 @@
 #include "ChunkerFactoryTest.h"
-#include "pelican/utility/FactoryConfig.h"
-#include "pelican/utility/Config.h"
-#include "pelican/server/test/TestUdpChunker.h"
+#include "utility/FactoryConfig.h"
+#include "utility/Config.h"
+#include "server/test/TestUdpChunker.h"
 
 namespace pelican {
 

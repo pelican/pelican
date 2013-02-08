@@ -1,5 +1,5 @@
 #include "tutorial/SignalEmulator.h"
-#include "pelican/utility/ConfigNode.h"
+#include "utility/ConfigNode.h"
 #include <cmath>
 
 namespace pelican {

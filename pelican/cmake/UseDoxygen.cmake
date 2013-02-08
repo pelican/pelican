@@ -102,7 +102,8 @@ if(DOXYGEN_FOUND AND DOXYFILE_IN_${name})
                 WORKING_DIRECTORY "${DOXYFILE_OUTPUT_DIR}/${DOXYFILE_LATEX_DIR}")
         endif()
 
-        configure_file(${DOXYFILE_IN_${name}} ${doxyfile_name} ESCAPE_QUOTES IMMEDIATE @ONLY)
+        configure_file(${DOXYFILE_IN_${name}} ${doxyfile_name} 
+            ESCAPE_QUOTES IMMEDIATE @ONLY)
 
         get_target_property(DOC_TARGET doc TYPE)
         if(NOT DOC_TARGET)

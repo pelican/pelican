@@ -5,7 +5,7 @@
  * @file TestServer.h
  */
 
-#include "pelican/server/DataManager.h"
+#include "server/DataManager.h"
 
 #include <QtCore/QList>
 #include <QtCore/QString>
