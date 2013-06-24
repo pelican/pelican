@@ -96,7 +96,8 @@ void EmulatorDriver::run()
 
             // Write to the device.
             _device->write(ptr, size);
-            _device->waitForBytesWritten(100);
+            while (_device->bytesToWrite() > 0)
+                _device->waitForBytesWritten(100);
 
             // Sleep.
             unsigned long interval = _emulator->interval();
