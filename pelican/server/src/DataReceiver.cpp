@@ -74,9 +74,11 @@ DataReceiver::~DataReceiver()
 void DataReceiver::run()
 {
     _active = true;
+
     // Open up the device to use.
     // N.B. must be done in this thread (i.e. in run())
     _setupDevice();
+
     //    int tid = syscall(__NR_gettid);
     //    std::cout << "Thread ID : " << tid << std::endl;
     if (_device) {
@@ -96,22 +98,21 @@ void DataReceiver::_processIncomingData()
 
 void DataReceiver::_registerSocket( QAbstractSocket* socket ) {
     connect( socket, SIGNAL( error(QAbstractSocket::SocketError) ),
-             SLOT(_processError())
-             , Qt::DirectConnection );
+             SLOT(_processError()), Qt::DirectConnection );
     connect( socket, SIGNAL( disconnected() ),
-             SLOT(_reconnect())
-             , Qt::DirectConnection);
+             SLOT(_reconnect()), Qt::DirectConnection);
 }
 
 void DataReceiver::_processError() {
     std::cerr << "DataReceiver: socket error: " <<
         _device->errorString().toStdString() << std::endl;
-    _reconnect();
+    if (_active) _reconnect();
 }
 
 void DataReceiver::_reconnect() {
+    std::cerr << "DataReceiver: Attempting to reconnect.\n";
     _deleteDevice();
-    if( ! _active ) _setupDevice();
+    _setupDevice();
 }
 
 void DataReceiver::_setupDevice()
@@ -119,20 +120,26 @@ void DataReceiver::_setupDevice()
     _device = _chunker->newDevice();
     _chunker->activate();
 
-    if( _device ) {
+    if (_device) {
         // If its a socket we must try and catch the failure conditions
         connect(_device, SIGNAL(readyRead()), SLOT(_processIncomingData()),
                 Qt::DirectConnection);
-        if( QAbstractSocket* s = dynamic_cast<QAbstractSocket*>(_device) ) {
+        if (QAbstractSocket* s = dynamic_cast<QAbstractSocket*>(_device)) {
             _registerSocket( s );
         }
     }
 }
 
-void DataReceiver::_deleteDevice() {
+
+void DataReceiver::_deleteDevice()
+{
     _chunker->stop();
-    _device->disconnect();
-    _device->deleteLater();
+    _device->disconnect();  // Disconnects all signals in this object from receiver's method.
+    _device->deleteLater(); // Delete later acts on the current pointer
+                            // (i.e. takes a copy of the current pointer for
+                            // deletion)
+                            // therefore it is safe to set to null or reassign
+                            // immediately
     _device = 0;
 }
 
