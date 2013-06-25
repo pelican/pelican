@@ -35,7 +35,7 @@
 using namespace std;
 
 Pipeline::Pipeline()
-: AbstractPipeline(), amplifier_(0), dataOut_(0), gains_(0), count_(0)
+: AbstractPipeline(), count_(0)
 {
 }
 

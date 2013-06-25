@@ -68,7 +68,6 @@ class SessionTest : public CppUnit::TestFixture
 
     private:
         QCoreApplication* _app;
-        QDataStream* _out;
         Session* _session;
         QByteArray* _block;
         QBuffer* _device;
