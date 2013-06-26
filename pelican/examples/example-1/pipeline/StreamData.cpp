@@ -30,7 +30,7 @@
 
 #include <QtCore/QDataStream>
 
-StreamData::StreamData() : DataBlob("SignalData")
+StreamData::StreamData() : DataBlob("StreamData")
 {
 }
 

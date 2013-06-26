@@ -33,7 +33,6 @@
 
 class StreamData;
 class ServiceData;
-class SignalAmplifier;
 
 class Pipeline : public pelican::AbstractPipeline
 {
