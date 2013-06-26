@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pelican>
+
+<configuration version="1.0">
+    <pipeline>
+        <clients>
+            <PelicanServerClient>
+                <server host="127.0.0.1" port="2000" />
+                <data type="StreamData" adapter="StreamDataAdapter" />
+            </PelicanServerClient>
+        </clients>
+
+        <adapters>
+            <StreamDataAdapter></StreamDataAdapter>
+        </adapters>
+
+        <modules>
+        </modules>
+
+        <output>
+        </output>
+
+    </pipeline>
+</configuration>
