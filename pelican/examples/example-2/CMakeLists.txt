@@ -42,7 +42,6 @@ target_link_libraries(${name}
     ${QT_QTNETWORK_LIBRARY})
 set_target_properties(${name} PROPERTIES OUTPUT_NAME server)
 
-
 # Build the pipeline binary.
 set(name pipeline_${subproject_name})
 add_executable(${name}
@@ -56,7 +55,6 @@ target_link_libraries(${name}
     ${QT_QTXML_LIBRARY}
     ${QT_QTNETWORK_LIBRARY})
 set_target_properties(${name} PROPERTIES OUTPUT_NAME pipeline)
-
 
 #Copy the XML configuration files needed for the tutorial.
 include(copy_files)
@@ -73,9 +71,7 @@ copy_file(
     ${CMAKE_CURRENT_BINARY_DIR}/README.md
 )
 
-
 # Create a dependency between the server binary target and the file copy
 # target to ensure that the xml and readme files are always updated
 # when building the example.
 add_dependencies(server_${subproject_name} copy_files)
-
