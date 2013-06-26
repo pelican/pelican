@@ -132,8 +132,10 @@ bool AbstractDataBlobClient::sendRequest( const ServerRequest* req )
     if ( sent )
     {
         _tcpSocket->write(data);
-        _tcpSocket->waitForBytesWritten(data.size());
-        _tcpSocket->flush();
+        while (_tcpSocket->bytesToWrite() > 0)
+            _tcpSocket->waitForBytesWritten(-1);
+//        _tcpSocket->waitForBytesWritten(data.size());
+//        _tcpSocket->flush();
     }
     return sent;
 }

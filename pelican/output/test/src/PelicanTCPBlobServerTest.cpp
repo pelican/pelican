@@ -112,8 +112,10 @@ void PelicanTCPBlobServerTest::test_connection()
     PelicanClientProtocol clientProtocol;
     QByteArray data = clientProtocol.serialise(req);
     tcpSocket.write(data);
-    tcpSocket.waitForBytesWritten(data.size());
-    tcpSocket.flush();
+    while (tcpSocket.bytesToWrite() > 0)
+        tcpSocket.waitForBytesWritten(-1);
+//    tcpSocket.waitForBytesWritten(data.size());
+//    tcpSocket.flush();
 
     /// ensure we are registered before continuing
     while( server.clientsForStream("testData") == 0 )

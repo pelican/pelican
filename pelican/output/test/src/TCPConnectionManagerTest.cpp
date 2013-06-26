@@ -202,8 +202,10 @@ void TCPConnectionManagerTest::_sendRequest(QTcpSocket* tcpSocket, const ServerR
 {
     QByteArray data = _clientProtocol->serialise(req);
     tcpSocket->write(data);
-    tcpSocket->waitForBytesWritten(data.size());
-    tcpSocket->flush();
+    while (tcpSocket->bytesToWrite() > 0)
+        tcpSocket->waitForBytesWritten(-1);
+//    tcpSocket->waitForBytesWritten(data.size());
+//    tcpSocket->flush();
     QCoreApplication::processEvents( QEventLoop::WaitForMoreEvents );
 }
 
