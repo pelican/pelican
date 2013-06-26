@@ -1,3 +1,9 @@
+2013-06-26  PELICAN 1.0.3
+
+    * Fixed a bug in the emulator driver related to non-blocking write
+      operations when sending QTcp packets.
+    * Added an example using
+
 2013-01-29  PELICAN 1.0.2
 
     * Updated version number in doxygen targets
@@ -18,7 +24,7 @@
       new version of this script.
     * Updated Doxygen documentation configuration files to work correctly with
       Doxygen 1.8.x.
-    * Moved object registation macros out of pelican namespace in order
+    * Moved object registration macros out of pelican namespace in order
       to make code using PELICAN slightly cleaner. This change will not effect
       codes already using PELICAN but allow more friendly namespace usage
       in future. Macros affected:
@@ -29,6 +35,4 @@
          PELICAN_DECLARE_CHUNKER
     * Added an additional example code (examples/example-1) which demonstrates
       the use of pelican with service data.
-
-
 
