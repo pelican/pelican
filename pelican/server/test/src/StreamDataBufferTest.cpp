@@ -121,7 +121,9 @@ void StreamDataBufferTest::test_getWritable()
 
 void StreamDataBufferTest::test_getWritableStreams()
 {
-    std::cout << "#############################################" << std::endl;
+    using namespace std;
+    cout << endl;
+    bool verbose = false;
     // Use case:
     // Multiple calls to getWritable() simulating filling of a stream buffer.
     // Expect: unique data pointers to be returned.
@@ -134,7 +136,8 @@ void StreamDataBufferTest::test_getWritableStreams()
             void* dataPtr =  dataChunk.data()->data()->ptr();
             double value = 1;
             dataChunk.write(&value, 8, 0);
-            std::cout << "[1] dataPtr = " << dataPtr << std::endl;
+            if (verbose)
+                cout << "[1] dataPtr = " << dataPtr << endl;
         }
         CPPUNIT_ASSERT_EQUAL(1, buffer._serveQueue.size());
         {
@@ -142,7 +145,8 @@ void StreamDataBufferTest::test_getWritableStreams()
             void* dataPtr =  dataChunk.data()->data()->ptr();
             double value = 2;
             dataChunk.write(&value, 8, 0);
-            std::cout << "[2] dataPtr = " << dataPtr << std::endl;
+            if (verbose)
+                cout << "[2] dataPtr = " << dataPtr << endl;
         }
         CPPUNIT_ASSERT_EQUAL(2, buffer._serveQueue.size());
         {
@@ -150,7 +154,8 @@ void StreamDataBufferTest::test_getWritableStreams()
             void* dataPtr =  dataChunk.data()->data()->ptr();
             double value = 3;
             dataChunk.write(&value, 8, 0);
-            std::cout << "[3] dataPtr = " << dataPtr << std::endl;
+            if (verbose)
+                cout << "[3] dataPtr = " << dataPtr << endl;
         }
 
         CPPUNIT_ASSERT_EQUAL(3, buffer._serveQueue.size());
@@ -182,13 +187,15 @@ void StreamDataBufferTest::test_getWritableStreams()
             void* dataPtr =  dataChunk.data()->data()->ptr();
             double value = 4;
             dataChunk.write(&value, 8, 0);
-            std::cout << "[4] dataPtr = " << dataPtr << std::endl;
+            if (verbose)
+                cout << "[4] dataPtr = " << dataPtr << endl;
         }
         CPPUNIT_ASSERT_EQUAL(1, buffer._serveQueue.size());
         CPPUNIT_ASSERT_EQUAL(2, buffer._emptyQueue.size());
 
     }
-    std::cout << "#############################################" << std::endl;
+    if (verbose)
+        cout << endl;
 }
 
 } // namespace pelican

@@ -29,7 +29,6 @@
 #include <QtCore/QCoreApplication>
 #include <pelican/core/PipelineApplication.h>
 #include "Pipeline.hpp"
-//#include "StreamDataAdapter.hpp"
 #include <iostream>
 #include <cstdlib>
 

@@ -27,36 +27,65 @@
  */
 
 #include <pelican/emulator/EmulatorDriver.h>
-#include <pelican/utility/ConfigNode.h>
-
+#include <pelican/utility/Config.h>
 #include <QtCore/QCoreApplication>
 #include <QtCore/QString>
-#include <QtCore/QObject>
-
 #include "StreamEmulator.hpp"
+#include <iostream>
+#include <cstdio>
 
-using pelican::ConfigNode;
-using pelican::EmulatorDriver;
+using namespace std;
+using namespace pelican;
+
+void usage(const char* msg = 0)
+{
+    if (msg) {
+        cerr << endl;
+        cerr << "ERROR: " << msg  << endl;
+    }
+    cerr << endl;
+    cerr << "Usage: :" << endl;
+    cerr << "  $ emulator <XML configuration file> [node name]" << endl;
+    cerr << endl;
+}
 
 int main(int argc, char** argv)
 {
     QCoreApplication app(argc, argv);
 
-    // Emulator configuration.
-    QString host = "127.0.0.1";
-    quint16 port = 2000;
-    QString xml = QString(
-            "<StreamEmulator>"
-            "   <connection host=\"%1\" port=\"%2\" />"
-            "</StreamEmulator>").arg(host).arg(port);
-    ConfigNode config(xml);
+    if (argc < 2 || argc > 3) {
+        usage("Please specify an XML configuration file.");
+        return EXIT_FAILURE;
+    }
 
-    StreamEmulator* emulator = new StreamEmulator(config);
-    EmulatorDriver emulatorDriver(emulator);
-//    QObject::connect(&emulatorDriver, SIGNAL(finished()),
-//            &app, SLOT(quit()));
-
-    return app.exec();
+    try {
+        const char* configFile = argv[1];
+        const char* nodeName = (argc == 3) ? argv[2] : "opt1";
+        cout << "Running emulator ..." << endl;
+        cout << " * Config. file  = " << configFile << endl;
+        cout << " * Settings name = " << nodeName << endl;
+        cout << endl;
+        Config config(configFile);
+        Config::TreeAddress address;
+        address << Config::NodeId("configuration", "");
+        address << Config::NodeId("StreamEmulator", nodeName);
+        ConfigNode settings;
+        if (config.verifyAddress(address)) {
+            settings = config.get(address);
+        }
+        else {
+            usage("Unable to find valid XML config. node in the specified XML file.");
+            return EXIT_FAILURE;
+        }
+        EmulatorDriver emulatorDriver(new StreamEmulator(settings));
+        return app.exec();
+    }
+    catch (const QString& err)
+    {
+        cerr << "ERROR: " << err.toStdString() << endl;
+        usage();
+    }
+    return EXIT_SUCCESS;
 }
 
 

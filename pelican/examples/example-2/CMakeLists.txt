@@ -59,6 +59,10 @@ set_target_properties(${name} PROPERTIES OUTPUT_NAME pipeline)
 #Copy the XML configuration files needed for the tutorial.
 include(copy_files)
 copy_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/emulator/emulator.xml
+    ${CMAKE_CURRENT_BINARY_DIR}/emulator.xml
+)
+copy_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/pipeline/pipeline.xml
     ${CMAKE_CURRENT_BINARY_DIR}/pipelineConfig.xml
 )

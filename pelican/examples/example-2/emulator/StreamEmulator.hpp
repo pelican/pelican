@@ -32,7 +32,7 @@
 #include <pelican/emulator/AbstractEmulator.h>
 #include <pelican/utility/ConfigNode.h>
 
-#include <QtCore/QbyteArray>
+#include <QtCore/QByteArray>
 #include <QtCore/QTime>
 #include <QtNetwork/QHostAddress>
 
