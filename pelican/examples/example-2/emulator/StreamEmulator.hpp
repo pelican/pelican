@@ -52,7 +52,7 @@ private:
 
     QHostAddress host_;
     quint16 port_;
-    quint32 numPackets_;
+    qint32 numPackets_;
     size_t  numSamples_;
     size_t  packetSize_;
     quint32 packetInterval_;

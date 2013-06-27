@@ -55,7 +55,7 @@ void Pipeline::run(QHash<QString, pelican::DataBlob*>& data)
     quint32 packetSize = stream->packetSize();
 
     quint32 reportInterval = 50;
-    if (counter_%reportInterval == 0)
+    if (counter_%reportInterval == 0 && counter_ > 0)
     {
         float elapsed = timer_.elapsed() / 1.0e3;
         float MiB = (packetSize * reportInterval) / (1024.0 * 1024.0);
@@ -63,6 +63,7 @@ void Pipeline::run(QHash<QString, pelican::DataBlob*>& data)
         cout << string(80, '*') << endl;
         cout << __PRETTY_FUNCTION__ << endl;
         cout << std::string(80, '-') << endl;
+        cout << "-- counter     = " << counter_ << endl;
         cout << "-- no. packets = " << reportInterval << endl;
         cout << "-- packet size = " << packetSize << " bytes" << endl;
         cout << "-- packet size = " << packetSize/(1024.0*1024.0) << " MiB" << endl;

@@ -45,14 +45,18 @@ StreamEmulator::StreamEmulator(const pelican::ConfigNode& config)
     host_ = QHostAddress(config.getOption("connection", "host", "127.0.0.1"));
     port_ = config.getOption("connection", "port", "127.0.0.1").toShort();
     numSamples_ = (quint32)config.getOption("packet", "numSamples", "10000").toUInt();
-    numPackets_ = config.getOption("data", "numPackets", "2000").toUInt();
+    numPackets_ = config.getOption("data", "numPackets", "2000").toInt();
     packetInterval_ = config.getOption("data", "packetIntercval", "0").toUInt();
 
     packetSize_     = (4+numSamples_)*sizeof(quint32); // Bytes (header + data).
 
-    cout << "StreamEmulator: packet samples = " << numSamples_ << endl;
-    cout << "StreamEmulator: packet size    = " << packetSize_ << " bytes" << endl;
-    cout << "StreamEmulator: packet size    = " << packetSize_/(1024.0*1024.0) << " MiB" << endl;
+    cout << "StreamEmulator: host            = " << host_.toString().toStdString() << endl;
+    cout << "StreamEmulator: port            = " << port_ << endl;
+    cout << "StreamEmulator: packet samples  = " << numSamples_ << endl;
+    cout << "StreamEmulator: packet size     = " << packetSize_ << " bytes" << endl;
+    cout << "StreamEmulator: packet size     = " << packetSize_/(1024.0*1024.0) << " MiB" << endl;
+    cout << "StreamEmulator: no. packets     = " << numPackets_ << endl;
+    cout << "StreamEmulator: packet interval = " << packetInterval_ << endl;
 
     // Resize the packet data.
     packet_.resize(packetSize_);
