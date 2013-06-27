@@ -26,63 +26,19 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "StreamData.hpp"
 
-#include <QtCore/QDataStream>
+#ifndef STREAMDATAADAPTER_HPP_
+#define STREAMDATAADAPTER_HPP_
 
-StreamData::StreamData() : DataBlob("StreamData")
+#include <pelican/core/AbstractStreamAdapter.h>
+
+class StreamDataAdapter : public pelican::AbstractStreamAdapter
 {
-}
+public:
+    StreamDataAdapter(const pelican::ConfigNode&);
+    void deserialise(QIODevice*);
+};
 
-const float* StreamData::ptr() const
-{
-    return data_.size() > 0 ? data_.constData() : 0;
-}
+PELICAN_DECLARE_ADAPTER(StreamDataAdapter)
 
-float* StreamData::ptr()
-{
-    return data_.size() > 0 ? data_.data() : 0;
-}
-
-void StreamData::resize(int length)
-{
-    data_.resize(length);
-}
-
-int StreamData::size() const
-{
-    return data_.size();
-}
-
-void StreamData::serialise(QIODevice& out) const
-{
-    QDataStream stream(&out);
-
-    // Write the number of samples in the time series.
-    quint32 numSamples = size();
-    stream << numSamples;
-
-    // Write the data to the output device.
-    const float* data = ptr();
-    for (quint32 i = 0; i < numSamples; ++i)
-    {
-        stream << data[i];
-    }
-}
-
-void StreamData::deserialise(QIODevice& in, QSysInfo::Endian)
-{
-    QDataStream stream(&in);
-
-    // Read the number of samples in the time series.
-    quint32 numSamples = 0;
-    stream >> numSamples;
-
-    // Read data into the blob
-    resize(numSamples);
-    float* data = ptr();
-    for (quint32 i = 0; i < numSamples; ++i)
-    {
-        stream >> data[i];
-    }
-}
+#endif /* STREAMDATAADAPTER_HPP_ */

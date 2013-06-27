@@ -26,63 +26,33 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "StreamData.hpp"
+#include <QtCore/QCoreApplication>
+#include <pelican/core/PipelineApplication.h>
+#include "Pipeline.hpp"
+//#include "StreamDataAdapter.hpp"
+#include <iostream>
+#include <cstdlib>
 
-#include <QtCore/QDataStream>
+using namespace std;
 
-StreamData::StreamData() : DataBlob("StreamData")
+int main(int argc, char** argv)
 {
-}
+    QCoreApplication app(argc, argv);
 
-const float* StreamData::ptr() const
-{
-    return data_.size() > 0 ? data_.constData() : 0;
-}
-
-float* StreamData::ptr()
-{
-    return data_.size() > 0 ? data_.data() : 0;
-}
-
-void StreamData::resize(int length)
-{
-    data_.resize(length);
-}
-
-int StreamData::size() const
-{
-    return data_.size();
-}
-
-void StreamData::serialise(QIODevice& out) const
-{
-    QDataStream stream(&out);
-
-    // Write the number of samples in the time series.
-    quint32 numSamples = size();
-    stream << numSamples;
-
-    // Write the data to the output device.
-    const float* data = ptr();
-    for (quint32 i = 0; i < numSamples; ++i)
-    {
-        stream << data[i];
+    if (argc != 2) {
+        cerr << "Please specify an XML configuration file." << endl;
+        return 0;
     }
-}
 
-void StreamData::deserialise(QIODevice& in, QSysInfo::Endian)
-{
-    QDataStream stream(&in);
-
-    // Read the number of samples in the time series.
-    quint32 numSamples = 0;
-    stream >> numSamples;
-
-    // Read data into the blob
-    resize(numSamples);
-    float* data = ptr();
-    for (quint32 i = 0; i < numSamples; ++i)
-    {
-        stream >> data[i];
+    try {
+        pelican::PipelineApplication pApp(argc, argv);
+        pApp.registerPipeline(new Pipeline);
+        pApp.setDataClient("PelicanServerClient");
+        pApp.start();
     }
+    catch (const QString& err) {
+        cerr << "ERROR: " << err.toStdString() << endl;
+    }
+
+    return EXIT_SUCCESS;
 }

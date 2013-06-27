@@ -26,63 +26,31 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "StreamData.hpp"
 
-#include <QtCore/QDataStream>
+#ifndef STREAMCHUNKER_HPP_
+#define STREAMCHUNKER_HPP_
 
-StreamData::StreamData() : DataBlob("StreamData")
+#include <pelican/server/AbstractChunker.h>
+#include <QtCore/QTime>
+
+class QIODevice;
+class QTcpServer;
+
+class StreamChunker : public pelican::AbstractChunker
 {
-}
+public:
+    StreamChunker(const pelican::ConfigNode& config);
+    virtual ~StreamChunker();
 
-const float* StreamData::ptr() const
-{
-    return data_.size() > 0 ? data_.constData() : 0;
-}
+    virtual QIODevice* newDevice();
+    virtual void next(QIODevice* device);
 
-float* StreamData::ptr()
-{
-    return data_.size() > 0 ? data_.data() : 0;
-}
+private:
+    QTcpServer* tcpServer_;
+    quint32 chunkCounter_;
+    QTime timer_;
+};
 
-void StreamData::resize(int length)
-{
-    data_.resize(length);
-}
+PELICAN_DECLARE_CHUNKER(StreamChunker)
 
-int StreamData::size() const
-{
-    return data_.size();
-}
-
-void StreamData::serialise(QIODevice& out) const
-{
-    QDataStream stream(&out);
-
-    // Write the number of samples in the time series.
-    quint32 numSamples = size();
-    stream << numSamples;
-
-    // Write the data to the output device.
-    const float* data = ptr();
-    for (quint32 i = 0; i < numSamples; ++i)
-    {
-        stream << data[i];
-    }
-}
-
-void StreamData::deserialise(QIODevice& in, QSysInfo::Endian)
-{
-    QDataStream stream(&in);
-
-    // Read the number of samples in the time series.
-    quint32 numSamples = 0;
-    stream >> numSamples;
-
-    // Read data into the blob
-    resize(numSamples);
-    float* data = ptr();
-    for (quint32 i = 0; i < numSamples; ++i)
-    {
-        stream >> data[i];
-    }
-}
+#endif /* STREAMCHUNKER_HPP_ */

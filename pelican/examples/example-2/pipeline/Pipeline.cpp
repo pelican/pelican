@@ -26,63 +26,56 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include "Pipeline.hpp"
 #include "StreamData.hpp"
+#include <iostream>
 
-#include <QtCore/QDataStream>
+using namespace std;
 
-StreamData::StreamData() : DataBlob("StreamData")
+Pipeline::Pipeline()
+: AbstractPipeline(), counter_(0)
 {
 }
 
-const float* StreamData::ptr() const
+void Pipeline::init()
 {
-    return data_.size() > 0 ? data_.constData() : 0;
+    requestRemoteData("StreamData");
 }
 
-float* StreamData::ptr()
+void Pipeline::run(QHash<QString, pelican::DataBlob*>& data)
 {
-    return data_.size() > 0 ? data_.data() : 0;
-}
+    if (counter_ == 0)
+        timer_.start();
 
-void StreamData::resize(int length)
-{
-    data_.resize(length);
-}
+    StreamData* stream = (StreamData*) data["StreamData"];
 
-int StreamData::size() const
-{
-    return data_.size();
-}
+//    quint32 timeStamp  = stream->timeStamp();
+//    quint32 packetId   = stream->packetId();
+//    quint32 numPackets = stream->totalPackets();
+    quint32 packetSize = stream->packetSize();
 
-void StreamData::serialise(QIODevice& out) const
-{
-    QDataStream stream(&out);
-
-    // Write the number of samples in the time series.
-    quint32 numSamples = size();
-    stream << numSamples;
-
-    // Write the data to the output device.
-    const float* data = ptr();
-    for (quint32 i = 0; i < numSamples; ++i)
+    quint32 reportInterval = 50;
+    if (counter_%reportInterval == 0)
     {
-        stream << data[i];
+        float elapsed = timer_.elapsed() / 1.0e3;
+        float MiB = (packetSize * reportInterval) / (1024.0 * 1024.0);
+        cout << endl;
+        cout << string(80, '*') << endl;
+        cout << __PRETTY_FUNCTION__ << endl;
+        cout << std::string(80, '-') << endl;
+        cout << "-- no. packets = " << reportInterval << endl;
+        cout << "-- packet size = " << packetSize << " bytes" << endl;
+        cout << "-- packet size = " << packetSize/(1024.0*1024.0) << " MiB" << endl;
+        cout << "-- time taken  = " << elapsed << " seconds." << endl;
+        cout << "-- MiB (sent)  = " << MiB << std::endl;
+        cout << "-- MiB/s       = " << MiB/elapsed  << endl;
+        cout << std::string(80, '*') << endl;
+        cout << endl;
+        timer_.restart();
     }
+
+    ++counter_;
 }
 
-void StreamData::deserialise(QIODevice& in, QSysInfo::Endian)
-{
-    QDataStream stream(&in);
 
-    // Read the number of samples in the time series.
-    quint32 numSamples = 0;
-    stream >> numSamples;
 
-    // Read data into the blob
-    resize(numSamples);
-    float* data = ptr();
-    for (quint32 i = 0; i < numSamples; ++i)
-    {
-        stream >> data[i];
-    }
-}

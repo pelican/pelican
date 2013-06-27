@@ -121,6 +121,9 @@ void FileChunkerTest::_updateFile(const QString& data)
     else
         msg.append( data );
     CPPUNIT_ASSERT( _temp->write(msg.data(), msg.size() ) != -1 );
+    CPPUNIT_ASSERT(_temp->flush());
+    while (_temp->bytesToWrite() > 0)
+        _temp->waitForBytesWritten(-1);
     _app->processEvents();
     CPPUNIT_ASSERT(_temp->flush());
     fsync(_temp->handle());

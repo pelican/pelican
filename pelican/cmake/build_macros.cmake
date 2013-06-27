@@ -20,7 +20,7 @@
 #
 # Note: This currently requires FindQt4 due to the qt4_wrap_cpp call
 #       - this could probably be guarded to support build systems with no qt
-#         dependency 
+#         dependency
 #
 # Build Options (variables) used:
 #   - BUILD_SHARED       (ON/OFF)
@@ -38,7 +38,7 @@
 #-------------------------------------------------------------------------------
 #
 # Description:
-#   Declare a package library into the build system. 
+#   Declare a package library into the build system.
 #
 #   TODO ...
 #      clarify what is a package library?!
@@ -57,19 +57,19 @@
 #
 # Details:
 #   This macro populates the variables:
-#     DECLARED_PACKAGES ... Appends to this list of all currently declared 
+#     DECLARED_PACKAGES ... Appends to this list of all currently declared
 #                           packages
 #     [package]_MODULES ... Modules required for building the package
 #
 macro(DECLARE_PACKAGE_LIBRARY name)
     if (NOT BUILD_SHARED AND NOT BUILD_STATIC)
-        message(FATAL_ERROR 
+        message(FATAL_ERROR
         "-------------------------\n"
         "ERROR: Please set at least one of BUILD_SHARED & BUILD_STATIC to ON."
         "\n-------------------------\n")
     endif ()
     if (NOT BUILD_PACKAGES AND NOT BUILD_MODULES)
-        message(FATAL_ERROR 
+        message(FATAL_ERROR
         "-------------------------\n"
         "ERROR: Please set at least one of BUILD_PACKAGES & BUILD_MODULES to ON."
         "\n-------------------------\n")
@@ -108,7 +108,7 @@ endmacro(DECLARE_PACKAGE_LIBRARY)
 #   LIBS    LIBS followed by a list of external libraries that this module
 #           depends on.
 #
-# Example: 
+# Example:
 #   DECLARE_MODULE_LIBRARY(
 #       myModule
 #       SRC     src/source1.cpp src/source2.cpp
@@ -119,9 +119,9 @@ endmacro(DECLARE_PACKAGE_LIBRARY)
 # Details:
 #   This macro populates the variables:
 #      [module]_PATH    ... Path of the module relative to the project source
-#                           directory (top level CMakeLists.txt file) 
+#                           directory (top level CMakeLists.txt file)
 #      [module]_SRC     ... Source files for the module.
-#      [module]_MOC     ... Source files for the module requiring Qt MOC 
+#      [module]_MOC     ... Source files for the module requiring Qt MOC
 #                           complication
 #      [module]_DEPS    ... Module dependencies (on other modules)
 #      [module]_LIBS    ... Module external library dependencies.
@@ -137,11 +137,11 @@ macro(DECLARE_MODULE_LIBRARY)
         ${ARGN})
     first_arg(ARG_NAME ${ARG_DEFAULT_ARGS})
 
-    string(REGEX REPLACE "${${CMAKE_PROJECT_NAME}_SOURCE_DIR}/" "" path 
+    string(REGEX REPLACE "${${CMAKE_PROJECT_NAME}_SOURCE_DIR}/" "" path
         "${CMAKE_CURRENT_SOURCE_DIR}")
     set(module ${ARG_NAME})
 
-    # TODO catch (with useful error message) for ${module} being empty...! 
+    # TODO catch (with useful error message) for ${module} being empty...!
 
     list(APPEND DECLARED_MODULES ${module})
     set(DECLARED_MODULES ${DECLARED_MODULES} CACHE INTERNAL "" FORCE)
@@ -175,16 +175,16 @@ macro(DECLARE_MODULE_LIBRARY)
     set(${module}_PACKAGE ${package} CACHE INTERNAL "" FORCE)
 
     #
-    # Construct [module]_LIBRARY variable. 
+    # Construct [module]_LIBRARY variable.
     # This constains the library required to link binaries which depend on the
     # current module library.
     #
-    # This variable should be used for linking instead of an explicit 
+    # This variable should be used for linking instead of an explicit
     # link to the library name as in order to make use CMake's internal (and
     # very smart) dependency scanner the link should be with the CMake library
     # target name rather than the name of the library itself.
     # While in many cases the library target and library name will be the same,
-    # in order to support all of the build options avaiable to these set of 
+    # in order to support all of the build options avaiable to these set of
     # build macros the library link target is one of:
     #
     #     - module
@@ -192,7 +192,7 @@ macro(DECLARE_MODULE_LIBRARY)
     #     - package
     #     - package_static
     #
-    # The variable [module]_LIBRARY is populated with the library target 
+    # The variable [module]_LIBRARY is populated with the library target
     # corresponding to the selected buid options.
     #
     if (BUILD_MODULES OR ${package} MATCHES "UNDEF")
@@ -242,7 +242,7 @@ endmacro(DECLARE_MODULE_LIBRARY)
 #   LIBRARY_INSTALL_DIR ... Install directory for libraries.
 #
 # Details:
-#   This macro constructs package and module library targets based on the 
+#   This macro constructs package and module library targets based on the
 #   values of build options (BUILD_SHARED, BUILD_STATIC, BUILD_PACKAGES, and
 #   BUILD_MODULES) for the packages and modules declared with the
 #   DECLARE_PACKAGE_LIBRARAY() and DECLARE_MODULE_LIBRARAY() macros.
@@ -255,7 +255,7 @@ macro(CREATE_LIBRARY_TARGETS LIBRARY_VERSION LIBRARY_INSTALL_DIR)
 
             # Construct path to source file
             foreach (file ${${module}_SRC})
-                list(APPEND "${module}_sources" "${${module}_PATH}/${file}") 
+                list(APPEND "${module}_sources" "${${module}_PATH}/${file}")
             endforeach()
 
             # Shared module libraries.
@@ -264,12 +264,12 @@ macro(CREATE_LIBRARY_TARGETS LIBRARY_VERSION LIBRARY_INSTALL_DIR)
                     get_filename_component(filename ${file} NAME)
                     qt4_wrap_CPP(${module}_MOC_SRC "${${module}_PATH}/${filename}")
                 endforeach()
-                add_library("${module}" SHARED 
-                    ${${module}_sources} 
+                add_library("${module}" SHARED
+                    ${${module}_sources}
                     ${${module}_MOC_SRC})
-                target_link_libraries("${module}" 
+                target_link_libraries("${module}"
                     ${${module}_DEPS} ${${module}_LIBS})
-                set_target_properties("${module}" PROPERTIES 
+                set_target_properties("${module}" PROPERTIES
                     CLEAN_DIRECT_OUTPUT 1
                     LIBRARY_OUTPUT_DIRECTORY "${${module}_PATH}"
                     SOVERSION ${LIBRARY_VERSION}
@@ -291,8 +291,8 @@ macro(CREATE_LIBRARY_TARGETS LIBRARY_VERSION LIBRARY_INSTALL_DIR)
                     target_link_libraries("${module}_static" ${d}_static)
                 endforeach()
                 target_link_libraries("${module}_static" ${${module}_LIBS})
-                set_target_properties("${module}_static" PROPERTIES 
-                    CLEAN_DIRECT_OUTPUT 1 PREFIX "" 
+                set_target_properties("${module}_static" PROPERTIES
+                    CLEAN_DIRECT_OUTPUT 1 PREFIX ""
                     LIBRARY_OUTPUT_DIRECTORY "${${module}_PATH}"
                     OUTPUT_NAME "${${module}_PATH}/lib${module}")
                 module_object_files("${module}_static" ${module} "${${module}_PACKAGE}_static_objs")
@@ -312,7 +312,7 @@ macro(CREATE_LIBRARY_TARGETS LIBRARY_VERSION LIBRARY_INSTALL_DIR)
             foreach (module ${${package}_MODULES})
               # Construct path to source file
                 foreach (file ${${module}_SRC})
-                    list(APPEND "${module}_sources" "${${module}_PATH}/${file}") 
+                    list(APPEND "${module}_sources" "${${module}_PATH}/${file}")
                 endforeach()
                 foreach (file ${${module}_MOC})
                     get_filename_component(filename ${file} NAME)
@@ -355,21 +355,21 @@ macro(CREATE_LIBRARY_TARGETS LIBRARY_VERSION LIBRARY_INSTALL_DIR)
                 # If we have already build shared modules, reuse object files
                 if (BUILD_MODULES)
                     foreach (obj ${${package}_shared_objs})
-                        set_source_files_properties(${obj} PROPERTIES 
+                        set_source_files_properties(${obj} PROPERTIES
                             GENERATED 1)
                     endforeach()
-                    add_library("${package}" SHARED 
+                    add_library("${package}" SHARED
                         ${${package}_shared_objs})
-                    set_target_properties("${package}" PROPERTIES 
+                    set_target_properties("${package}" PROPERTIES
                         LINKER_LANGUAGE CXX)
                     add_dependencies("${package}" ${${package}_MODULES})
                 else()
-                    add_library("${package}" SHARED 
-                        ${${package}_SRC} 
+                    add_library("${package}" SHARED
+                        ${${package}_SRC}
                         ${${package}_MOC_SRC})
                 endif()
                 target_link_libraries("${package}" ${${package}_LIBS} ${${package}_DEPS})
-                set_target_properties("${package}" PROPERTIES 
+                set_target_properties("${package}" PROPERTIES
                     CLEAN_DIRECT_OUTPUT 1
                     SOVERSION ${LIBRARY_VERSION}
                     VERSION ${LIBRARY_VERSION})
@@ -384,7 +384,7 @@ macro(CREATE_LIBRARY_TARGETS LIBRARY_VERSION LIBRARY_INSTALL_DIR)
                         set_source_files_properties(${obj} PROPERTIES GENERATED 1)
                     endforeach()
                     add_library("${package}_static" STATIC ${${package}_static_objs})
-                    set_target_properties("${package}_static" PROPERTIES 
+                    set_target_properties("${package}_static" PROPERTIES
                         LINKER_LANGUAGE CXX)
                     foreach (pm ${${package}_MODULES})
                         add_dependencies("${package}_static" ${pm}_static)
@@ -398,7 +398,7 @@ macro(CREATE_LIBRARY_TARGETS LIBRARY_VERSION LIBRARY_INSTALL_DIR)
                     target_link_libraries("${package}_static" ${pd}_static)
                 endforeach()
                 target_link_libraries("${package}_static" ${${package}_LIBS})
-                set_target_properties("${package}_static" PROPERTIES 
+                set_target_properties("${package}_static" PROPERTIES
                     CLEAN_DIRECT_OUTPUT 1
                     PREFIX "lib"
                     OUTPUT_NAME "${package}")
@@ -418,10 +418,10 @@ macro(CREATE_LIBRARY_TARGETS LIBRARY_VERSION LIBRARY_INSTALL_DIR)
                     #message("  >>> ${module}")
                     # Construct path to source file
                     foreach (file ${${module}_SRC})
-                        list(APPEND "${module}_sources" "${${module}_PATH}/${file}") 
+                        list(APPEND "${module}_sources" "${${module}_PATH}/${file}")
                     endforeach()
 
-                    # Convert module DEPS to packages (as we are not building modules) 
+                    # Convert module DEPS to packages (as we are not building modules)
                     foreach(dep ${${module}_DEPS})
                         list(APPEND MODULE_PACKAGE_DEPS ${${dep}_PACKAGE})
                     endforeach()
@@ -434,12 +434,12 @@ macro(CREATE_LIBRARY_TARGETS LIBRARY_VERSION LIBRARY_INSTALL_DIR)
                             get_filename_component(filename ${file} NAME)
                             qt4_wrap_CPP(${module}_MOC_SRC "${${module}_PATH}/${filename}")
                         endforeach()
-                        add_library("${module}" SHARED 
-                            ${${module}_sources} 
+                        add_library("${module}" SHARED
+                            ${${module}_sources}
                             ${${module}_MOC_SRC})
-                        target_link_libraries("${module}" 
+                        target_link_libraries("${module}"
                             ${MODULE_PACKAGE_DEPS} ${${module}_LIBS})
-                        set_target_properties("${module}" PROPERTIES 
+                        set_target_properties("${module}" PROPERTIES
                             CLEAN_DIRECT_OUTPUT 1
                             LIBRARY_OUTPUT_DIRECTORY "${${module}_PATH}"
                             SOVERSION ${LIBRARY_VERSION}
@@ -460,18 +460,18 @@ macro(CREATE_LIBRARY_TARGETS LIBRARY_VERSION LIBRARY_INSTALL_DIR)
                             target_link_libraries("${module}_static" ${d}_static)
                         endforeach()
                         target_link_libraries("${module}_static" ${${module}_LIBS})
-                        set_target_properties("${module}_static" PROPERTIES 
-                            CLEAN_DIRECT_OUTPUT 1 PREFIX "" 
+                        set_target_properties("${module}_static" PROPERTIES
+                            CLEAN_DIRECT_OUTPUT 1 PREFIX ""
                             LIBRARY_OUTPUT_DIRECTORY "${${module}_PATH}"
                             OUTPUT_NAME "${${module}_PATH}/lib${module}")
                         module_object_files("${module}_static" ${module} "${${module}_PACKAGE}_static_objs")
                         install(TARGETS ${module}_static DESTINATION ${LIBRARY_INSTALL_DIR})
                     endif(BUILD_STATIC)
-    
+
                 endif(${${module}_PACKAGE} MATCHES "UNDEF")
             endforeach(module ${DECLARED_MODULES})
         endif (NOT BUILD_MODULES)
-        
+
     endif(BUILD_PACKAGES)
 
     # Reset cache variables.
@@ -487,16 +487,16 @@ endmacro(CREATE_LIBRARY_TARGETS)
 #-------------------------------------------------------------------------------
 # Macro: CREATE_HEADER_INSTALL_TARGET
 #-------------------------------------------------------------------------------
-# 
+#
 # Description
 #   Adds an install target for copying headers from the project source code
 #   directories to the install location '${CMAKE_INSTALL_PREFIX}/include'.
 #   All header files with the extensions *.h and *.hpp are copied.
 #
 # Details:
-#   This functions makes special care to allow for the case where the 
+#   This functions makes special care to allow for the case where the
 #   install location is inside the source tree. This is the case, for example,
-#   when installing to a local build directory inside the source tree. 
+#   when installing to a local build directory inside the source tree.
 #   Header folders matching build, release, debug, .settings, cmake, src,
 #   .svn are excluded from the header tree installed.
 #
@@ -561,7 +561,7 @@ endmacro(CREATE_HEADER_INSTALL_TARGET)
 #===============================================================================
 
 macro(PRINT_MODULE_SUMMARY)
-    message("=================================================================")    
+    message("=================================================================")
     message("* DECLARED MODULES:")
     foreach (mod ${DECLARED_MODULES})
         message("  - ${mod}")
@@ -589,7 +589,7 @@ macro(PRINT_MODULE_SUMMARY)
         message("    = PACKAGE: ${${mod}_PACKAGE}")
         message("    = LIBRARY: ${${mod}_LIBRARY}")
     endforeach()
-    message("=================================================================")    
+    message("=================================================================")
 endmacro(PRINT_MODULE_SUMMARY)
 
 
@@ -655,7 +655,7 @@ macro(MODULE_OBJECT_FILES target module objs)
     foreach(sourcefile ${target_sources})
         if(IS_ABSOLUTE ${sourcefile})
             get_filename_component(source_name_temp "${sourcefile}" NAME)
-            set(source_name "${${module}_PATH}/${source_name_temp}") 
+            set(source_name "${${module}_PATH}/${source_name_temp}")
         else(IS_ABSOLUTE ${sourcefile})
             set(source_name "${sourcefile}")
         endif(IS_ABSOLUTE ${sourcefile})
@@ -682,16 +682,16 @@ endmacro(ADD_DIR_PREFIX)
 #
 macro(SET_BUILD_OPTION_DEFAULTS)
     if (NOT DEFINED BUILD_SHARED)
-        set(BUILD_SHARED ON) 
+        set(BUILD_SHARED ON)
     endif()
     if (NOT DEFINED BUILD_STATIC)
-        set(BUILD_STATIC ON)
+        set(BUILD_STATIC OFF)
     endif()
     if (NOT DEFINED BUILD_PACKAGES)
-        set(BUILD_PACKAGES ON) 
+        set(BUILD_PACKAGES ON)
     endif()
     if (NOT DEFINED BUILD_MODULES)
-        set(BUILD_MODULES ON) 
+        set(BUILD_MODULES OFF)
     endif()
 endmacro(SET_BUILD_OPTION_DEFAULTS)
 

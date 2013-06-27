@@ -29,7 +29,7 @@ using test::TestProtocol;
 CPPUNIT_TEST_SUITE_REGISTRATION( SessionTest );
 // class SessionTest
 SessionTest::SessionTest()
-    : CppUnit::TestFixture(), _app(0), _out(0), _session(0), _block(0),
+    : CppUnit::TestFixture(), _app(0), _session(0), _block(0),
       _device(0), _proto(0), _dataManager(0)
 {
     int ac = 0;

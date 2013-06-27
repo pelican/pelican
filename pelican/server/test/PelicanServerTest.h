@@ -41,9 +41,6 @@ class PelicanServerTest : public CppUnit::TestFixture
     public:
         PelicanServerTest();
         ~PelicanServerTest();
-
-    private:
-        QCoreApplication* _app;
 };
 
 } // namespace pelican

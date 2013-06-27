@@ -26,63 +26,37 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "StreamData.hpp"
+#include <pelican/emulator/EmulatorDriver.h>
+#include <pelican/utility/ConfigNode.h>
 
-#include <QtCore/QDataStream>
+#include <QtCore/QCoreApplication>
+#include <QtCore/QString>
+#include <QtCore/QObject>
 
-StreamData::StreamData() : DataBlob("StreamData")
+#include "StreamEmulator.hpp"
+
+using pelican::ConfigNode;
+using pelican::EmulatorDriver;
+
+int main(int argc, char** argv)
 {
+    QCoreApplication app(argc, argv);
+
+    // Emulator configuration.
+    QString host = "127.0.0.1";
+    quint16 port = 2000;
+    QString xml = QString(
+            "<StreamEmulator>"
+            "   <connection host=\"%1\" port=\"%2\" />"
+            "</StreamEmulator>").arg(host).arg(port);
+    ConfigNode config(xml);
+
+    StreamEmulator* emulator = new StreamEmulator(config);
+    EmulatorDriver emulatorDriver(emulator);
+//    QObject::connect(&emulatorDriver, SIGNAL(finished()),
+//            &app, SLOT(quit()));
+
+    return app.exec();
 }
 
-const float* StreamData::ptr() const
-{
-    return data_.size() > 0 ? data_.constData() : 0;
-}
 
-float* StreamData::ptr()
-{
-    return data_.size() > 0 ? data_.data() : 0;
-}
-
-void StreamData::resize(int length)
-{
-    data_.resize(length);
-}
-
-int StreamData::size() const
-{
-    return data_.size();
-}
-
-void StreamData::serialise(QIODevice& out) const
-{
-    QDataStream stream(&out);
-
-    // Write the number of samples in the time series.
-    quint32 numSamples = size();
-    stream << numSamples;
-
-    // Write the data to the output device.
-    const float* data = ptr();
-    for (quint32 i = 0; i < numSamples; ++i)
-    {
-        stream << data[i];
-    }
-}
-
-void StreamData::deserialise(QIODevice& in, QSysInfo::Endian)
-{
-    QDataStream stream(&in);
-
-    // Read the number of samples in the time series.
-    quint32 numSamples = 0;
-    stream >> numSamples;
-
-    // Read data into the blob
-    resize(numSamples);
-    float* data = ptr();
-    for (quint32 i = 0; i < numSamples; ++i)
-    {
-        stream >> data[i];
-    }
-}

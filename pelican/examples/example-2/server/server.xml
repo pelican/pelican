@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pelican>
+
+<configuration version="1.0">
+    <server>
+        <buffers>
+            <StreamData>
+                <!-- max chunk size of 200MiB, max size of 4000MiB -->
+                <buffer maxSize="4194304000" maxChunkSize="209715200" />
+            </StreamData>
+        </buffers>
+
+        <chunkers>
+            <StreamChunker>
+                <!-- packet of n floats + 32 byte header -->
+                <data type="StreamData" packetSize="4032" packets="1" />
+                <connection host="127.0.0.1" port="2001" />
+            </StreamChunker>
+        </chunkers>
+    </server>
+</configuration>

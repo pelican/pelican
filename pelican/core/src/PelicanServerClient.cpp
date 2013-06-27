@@ -170,6 +170,8 @@ boost::shared_ptr<ServerResponse> PelicanServerClient::_sendRequest( QTcpSocket&
     // Write the request to the open TCP socket with the PelicanClientProtocol.
     sock.write(_protocol->serialise(request));
     sock.flush();
+    while (sock.bytesToWrite() > 0)
+        sock.waitForBytesWritten(-1);
 
     // Receive the response from the server and process it.
     sock.waitForReadyRead(-1); // Need to supply -1 so this doesn't time out.

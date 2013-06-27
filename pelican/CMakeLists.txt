@@ -34,7 +34,7 @@ cmake_minimum_required(VERSION 2.6 FATAL_ERROR)
 # === Project version.
 set(VERSION_MAJOR 1)
 set(VERSION_MINOR 0)
-set(VERSION_PATCH 2)
+set(VERSION_PATCH 3)
 set(PROJECT_VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
 
 # === CMake setup.
@@ -44,10 +44,6 @@ include(tags) # Add a target to create a tags file for emacs/vim (untested!)
 # === Options for controlling the modular build system.
 include(build_macros)
 set_build_option_defaults()
-set(BUILD_PACKAGES ON)
-set(BUILD_MODULES OFF)
-set(BUILD_SHARED ON)
-set(BUILD_STATIC OFF)
 
 # === Enable the CMake testing framework.
 enable_testing()

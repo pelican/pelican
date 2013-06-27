@@ -21,7 +21,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION( PelicanServerTest );
 
 // class PelicanServerTest
 PelicanServerTest::PelicanServerTest()
-    : CppUnit::TestFixture(), _app(0)
+    : CppUnit::TestFixture()
 {
 //    int ac = 0;
 //    _app = new QCoreApplication(ac, NULL);

@@ -29,6 +29,8 @@
 #include "TestStreamAdapter.h"
 #include "data/test/TestDataBlob.h"
 
+#include <iostream>
+
 namespace pelican {
 namespace test {
 
@@ -43,6 +45,9 @@ void TestStreamAdapter::deserialise(QIODevice* in)
 {
     TestDataBlob* blob = static_cast<TestDataBlob*>(_data);
     blob->resize(_chunkSize);
+    // Ensure there is enough data to read from the device.
+    while (in->bytesAvailable() < (qint64)_chunkSize)
+        in->waitForReadyRead(-1);
     in->read( blob->data().data(), (quint64)_chunkSize);
 }
 

@@ -157,7 +157,7 @@ void DataReceiverTest::test_listen_udpChunker()
         std::cout << "Value : " << value << std::endl;
     }
 
-    catch (QString e) {
+    catch (const QString& e) {
         CPPUNIT_FAIL("Unexpected exception: " + e.toStdString());
     }
 }

@@ -26,63 +26,39 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "StreamData.hpp"
 
-#include <QtCore/QDataStream>
+#ifndef STREAMDATA_HPP_
+#define STREAMDATA_HPP_
 
-StreamData::StreamData() : DataBlob("StreamData")
+#include "pelican/data/DataBlob.h"
+#include <QtCore/QVector>
+
+class StreamData : public pelican::DataBlob
 {
-}
+public:
+    StreamData() : DataBlob("StreamData") {}
+    quint32 packetSize() const { return packetSize_; }
+    void setPacketSize(quint32 value) { packetSize_ = value; }
+    quint32 packetId() const { return packetId_; }
+    void setPacketId(quint32 value) { packetId_ = value; }
+    quint32 totalPackets() const { return numTotalPackets_; }
+    void setTotalPackets(quint32 value) { numTotalPackets_ = value; }
+    quint32 timeStamp() const { return timeStamp_; }
+    void setTimeStamp(quint32 value) { timeStamp_ = value; }
+    void resize(int n) { values_.resize(n); }
+    size_t size() const { return values_.size(); }
+    const quint32* ptr() const { return values_.data(); }
+    quint32* ptr() { return values_.data(); }
 
-const float* StreamData::ptr() const
-{
-    return data_.size() > 0 ? data_.constData() : 0;
-}
+private:
+    quint32 packetSize_;
+    quint32 packetId_;
+    quint32 numTotalPackets_;
+    quint32 timeStamp_;
+    QVector<quint32> values_;
+};
 
-float* StreamData::ptr()
-{
-    return data_.size() > 0 ? data_.data() : 0;
-}
+PELICAN_DECLARE_DATABLOB(StreamData)
 
-void StreamData::resize(int length)
-{
-    data_.resize(length);
-}
 
-int StreamData::size() const
-{
-    return data_.size();
-}
-
-void StreamData::serialise(QIODevice& out) const
-{
-    QDataStream stream(&out);
-
-    // Write the number of samples in the time series.
-    quint32 numSamples = size();
-    stream << numSamples;
-
-    // Write the data to the output device.
-    const float* data = ptr();
-    for (quint32 i = 0; i < numSamples; ++i)
-    {
-        stream << data[i];
-    }
-}
-
-void StreamData::deserialise(QIODevice& in, QSysInfo::Endian)
-{
-    QDataStream stream(&in);
-
-    // Read the number of samples in the time series.
-    quint32 numSamples = 0;
-    stream >> numSamples;
-
-    // Read data into the blob
-    resize(numSamples);
-    float* data = ptr();
-    for (quint32 i = 0; i < numSamples; ++i)
-    {
-        stream >> data[i];
-    }
-}
+#endif /* STREAMDATA_HPP_ */

@@ -33,7 +33,6 @@
 
 class StreamData;
 class ServiceData;
-class SignalAmplifier;
 
 class Pipeline : public pelican::AbstractPipeline
 {
@@ -43,9 +42,6 @@ class Pipeline : public pelican::AbstractPipeline
         void run(QHash<QString, pelican::DataBlob*>&);
 
     private:
-        SignalAmplifier* amplifier_;
-        StreamData* dataOut_;
-        ServiceData* gains_;
         quint32 count_;
 };
 

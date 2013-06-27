@@ -161,6 +161,8 @@ void PelicanProtocol::send(QIODevice& device, const DataSupportResponse& support
     out << supported.serviceData();
     out << supported.defaultAdapters();
     device.write(array);
+    while (device.bytesToWrite() > 0)
+        device.waitForBytesWritten(-1);
 }
 
 
@@ -202,6 +204,9 @@ void PelicanProtocol::send(QIODevice& stream, const AbstractProtocol::StreamData
     }
 
     stream.write(array);
+    while (stream.bytesToWrite() > 0)
+        stream.waitForBytesWritten(-1);
+
 
     // Write the actual stream data.
     i.toFront();
@@ -209,7 +214,8 @@ void PelicanProtocol::send(QIODevice& stream, const AbstractProtocol::StreamData
     {
         StreamData* sd = i.next();
         stream.write((const char*)sd->ptr(), sd->size());
-        stream.waitForBytesWritten(-1);
+        while (stream.bytesToWrite() > 0)
+            stream.waitForBytesWritten(-1);
     }
 }
 
@@ -237,6 +243,8 @@ void PelicanProtocol::send(QIODevice& stream, const AbstractProtocol::ServiceDat
         out << d->name() << d->id() << (quint64)d->size();
     }
     stream.write(array);
+    while (stream.bytesToWrite() > 0)
+        stream.waitForBytesWritten(-1);
 
     // Write (send) binary data.
     i.toFront();
@@ -244,6 +252,8 @@ void PelicanProtocol::send(QIODevice& stream, const AbstractProtocol::ServiceDat
     {
         DataChunk* d = i.next();
         stream.write( (const char*)d->ptr(), (quint64)d->size() );
+        while (stream.bytesToWrite() > 0)
+            stream.waitForBytesWritten(-1);
     }
 }
 
@@ -260,7 +270,10 @@ void PelicanProtocol::send(QIODevice& device, const QString& name, const DataBlo
     out << data.type();
     out << name;
     out << data.serialisedBytes();
-    if (device.write(array) < 0)
+    qint64 bytesWritten = device.write(array);
+    while (device.bytesToWrite() > 0)
+        device.waitForBytesWritten(-1);
+    if (bytesWritten < 0)
         throw QString("PelicanProtocol::send: Unable to write.");
     data.serialise(device);
 #ifndef NDEBUG
@@ -290,6 +303,8 @@ void PelicanProtocol::send(QIODevice& device, const QString& msg)
     out.device()->seek(0);
     out << (quint16)(array.size() - sizeof(quint16));
     device.write(array);
+    while (device.bytesToWrite() > 0)
+        device.waitForBytesWritten(-1);
 }
 
 
@@ -306,6 +321,8 @@ void PelicanProtocol::sendError(QIODevice& stream, const QString& msg)
     out.device()->seek(0);
     out << (quint16)(stream.size() - sizeof(quint16));
     stream.write(array);
+    while (stream.bytesToWrite() > 0)
+        stream.waitForBytesWritten(-1);
 }
 
 } // namespace pelican

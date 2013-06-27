@@ -26,63 +26,50 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "StreamData.hpp"
+#include <pelican/server/PelicanServer.h>
+#include <pelican/comms/PelicanProtocol.h>
+#include <pelican/utility/Config.h>
 
-#include <QtCore/QDataStream>
+#include <QtCore/QCoreApplication>
 
-StreamData::StreamData() : DataBlob("StreamData")
+#include "StreamChunker.hpp"
+
+#include <iostream>
+
+using namespace pelican;
+using namespace std;
+
+int main(int argc, char** argv)
 {
-}
+    QCoreApplication app(argc, argv);
 
-const float* StreamData::ptr() const
-{
-    return data_.size() > 0 ? data_.constData() : 0;
-}
-
-float* StreamData::ptr()
-{
-    return data_.size() > 0 ? data_.data() : 0;
-}
-
-void StreamData::resize(int length)
-{
-    data_.resize(length);
-}
-
-int StreamData::size() const
-{
-    return data_.size();
-}
-
-void StreamData::serialise(QIODevice& out) const
-{
-    QDataStream stream(&out);
-
-    // Write the number of samples in the time series.
-    quint32 numSamples = size();
-    stream << numSamples;
-
-    // Write the data to the output device.
-    const float* data = ptr();
-    for (quint32 i = 0; i < numSamples; ++i)
+    if (argc != 2)
     {
-        stream << data[i];
+        cerr << "Please specify an XML configuration file." << endl;
+        return 0;
     }
-}
 
-void StreamData::deserialise(QIODevice& in, QSysInfo::Endian)
-{
-    QDataStream stream(&in);
-
-    // Read the number of samples in the time series.
-    quint32 numSamples = 0;
-    stream >> numSamples;
-
-    // Read data into the blob
-    resize(numSamples);
-    float* data = ptr();
-    for (quint32 i = 0; i < numSamples; ++i)
+    try
     {
-        stream >> data[i];
+        Config config(argv[1]);
+
+        PelicanServer server(&config);
+        //server.setVerbosity(10000);
+
+        server.addStreamChunker("StreamChunker");
+
+        AbstractProtocol* protocol = new PelicanProtocol;
+        server.addProtocol(protocol, 2000);
+
+        server.start();
+
+        while (!server.isReady()) {}
+        return app.exec();
     }
+    catch (const QString& err)
+    {
+        cerr << "ERROR: " << err.toStdString() << endl;
+    }
+
+    return 0;
 }

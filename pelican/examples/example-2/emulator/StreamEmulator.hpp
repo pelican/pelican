@@ -26,63 +26,42 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "StreamData.hpp"
+#ifndef STREAMEMULATOR_HPP_
+#define STREAMEMULATOR_HPP_
 
-#include <QtCore/QDataStream>
+#include <pelican/emulator/AbstractEmulator.h>
+#include <pelican/utility/ConfigNode.h>
 
-StreamData::StreamData() : DataBlob("StreamData")
+#include <QtCore/QbyteArray>
+#include <QtCore/QTime>
+#include <QtNetwork/QHostAddress>
+
+class StreamEmulator : public pelican::AbstractEmulator
 {
-}
+public:
+    StreamEmulator(const pelican::ConfigNode& config);
+    ~StreamEmulator();
 
-const float* StreamData::ptr() const
-{
-    return data_.size() > 0 ? data_.constData() : 0;
-}
+    void getPacketData(char*& data, unsigned long& bytes);
+    unsigned long interval();
+    int nPackets();
 
-float* StreamData::ptr()
-{
-    return data_.size() > 0 ? data_.data() : 0;
-}
+private:
+    void emulationFinished();
+    QIODevice* createDevice();
 
-void StreamData::resize(int length)
-{
-    data_.resize(length);
-}
+    QHostAddress host_;
+    quint16 port_;
+    quint32 numPackets_;
+    size_t  numSamples_;
+    size_t  packetSize_;
+    quint32 packetInterval_;
+    quint32 packetCounter_;
 
-int StreamData::size() const
-{
-    return data_.size();
-}
+    QByteArray packet_; // Note this is the serialised packet.
 
-void StreamData::serialise(QIODevice& out) const
-{
-    QDataStream stream(&out);
+    QTime timer_;
+};
 
-    // Write the number of samples in the time series.
-    quint32 numSamples = size();
-    stream << numSamples;
 
-    // Write the data to the output device.
-    const float* data = ptr();
-    for (quint32 i = 0; i < numSamples; ++i)
-    {
-        stream << data[i];
-    }
-}
-
-void StreamData::deserialise(QIODevice& in, QSysInfo::Endian)
-{
-    QDataStream stream(&in);
-
-    // Read the number of samples in the time series.
-    quint32 numSamples = 0;
-    stream >> numSamples;
-
-    // Read data into the blob
-    resize(numSamples);
-    float* data = ptr();
-    for (quint32 i = 0; i < numSamples; ++i)
-    {
-        stream >> data[i];
-    }
-}
+#endif /* STREAMEMULATOR_HPP_ */
