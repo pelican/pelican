@@ -23,7 +23,7 @@ namespace test {
  * overridden in the constructor.
  */
 TestServer::TestServer(AbstractProtocol* proto,  QObject* parent)
-    : QThread(parent), _protoOwner(false),
+    : QThread(parent), _protoOwner(false), _dataManager(0),
       _proto(proto), _portServer(0)
 {
     // set up the protocol
@@ -47,7 +47,8 @@ TestServer::~TestServer()
         delete _proto;
     if (_dataManager)
         delete _dataManager;
-    delete _portServer;
+    if (_portServer)
+        delete _portServer;
     wait();
 }
 

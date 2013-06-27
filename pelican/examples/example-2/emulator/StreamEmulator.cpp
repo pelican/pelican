@@ -38,18 +38,17 @@
 
 using namespace std;
 
-StreamEmulator::StreamEmulator(const pelican::ConfigNode& /*config*/)
+StreamEmulator::StreamEmulator(const pelican::ConfigNode& config)
 : AbstractEmulator(), packetCounter_(0)
 {
     // TODO read parameters from settings instead!
+    host_ = QHostAddress(config.getOption("connection", "host", "127.0.0.1"));
+    port_ = config.getOption("connection", "port", "127.0.0.1").toShort();
+    numSamples_ = (quint32)config.getOption("packet", "numSamples", "10000").toUInt();
+    numPackets_ = config.getOption("data", "numPackets", "2000").toUInt();
+    packetInterval_ = config.getOption("data", "packetIntercval", "0").toUInt();
 
-    host_           = QHostAddress::LocalHost;
-    port_           = 2001;
-    numPackets_     = 2000;  // number of packets to send.
-    //numPackets_     = -1;  // number of packets to send.
-    numSamples_     = (quint32)(1e6);
     packetSize_     = (4+numSamples_)*sizeof(quint32); // Bytes (header + data).
-    packetInterval_ = 0; // interval between packets, in microseconds.
 
     cout << "StreamEmulator: packet samples = " << numSamples_ << endl;
     cout << "StreamEmulator: packet size    = " << packetSize_ << " bytes" << endl;

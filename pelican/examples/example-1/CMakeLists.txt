@@ -15,8 +15,10 @@ set(PELICAN_LIBRARY pelican)
 set(PELICAN_TESTUTILS_LIBRARY pelican-testutils)
 # ********** FIXME ******************
 
+set(subproject_name example-1)
+
 # Build the emulator binary.
-set(name emulator)
+set(name emulator_${subproject_name})
 add_executable(${name} 
     emulator/main.cpp 
     emulator/StreamDataEmulator.cpp
@@ -27,10 +29,10 @@ target_link_libraries(${name}
     ${QT_QTCORE_LIBRARY}
     ${QT_QTXML_LIBRARY}
     ${QT_QTNETWORK_LIBRARY})
-
+set_target_properties(${name} PROPERTIES OUTPUT_NAME emulator)
 
 # Build the server binary.
-set(name server)
+set(name server_${subproject_name})
 add_executable(${name} 
     server/main.cpp 
     server/StreamDataChunker.cpp
@@ -40,9 +42,10 @@ target_link_libraries(${name}
     ${QT_QTCORE_LIBRARY}
     ${QT_QTXML_LIBRARY}
     ${QT_QTNETWORK_LIBRARY})
+set_target_properties(${name} PROPERTIES OUTPUT_NAME server)    
 
 # Build the pipeline binary.
-set(name pipeline)
+set(name pipeline_${subproject_name})
 add_executable(${name} 
     pipeline/main.cpp
     pipeline/ServiceDataAdapter.cpp
@@ -55,6 +58,7 @@ target_link_libraries(${name}
     ${QT_QTCORE_LIBRARY}
     ${QT_QTXML_LIBRARY}
     ${QT_QTNETWORK_LIBRARY})
+set_target_properties(${name} PROPERTIES OUTPUT_NAME pipeline)
 
 # Copy the XML configuration files needed for the tutorial.
 include(copy_files)
@@ -74,8 +78,7 @@ copy_file(
 # Create a dependency between the pipeline binary target and the file copy
 # target to ensure that the xml and readme files are always updated
 # when building the example.
-add_dependencies(pipeline copy_files)
-
+add_dependencies(pipeline_${subproject_name} copy_files)
 
 
 # =============================================================================

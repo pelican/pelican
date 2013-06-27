@@ -138,7 +138,7 @@ void SessionTest::test_processServiceDataRequest()
         // expect empty list
         ServiceDataRequest request;
         QList<LockedData> dataList = _session->processServiceDataRequest(request);
-        CPPUNIT_ASSERT( dataList.size() == 0  );
+        CPPUNIT_ASSERT(dataList.size() == 0);
     }
     QString badversion("badv");
     QString badtype("bad");
@@ -156,7 +156,7 @@ void SessionTest::test_processServiceDataRequest()
         // expect throw
         ServiceDataRequest request;
         request.request(type1, badversion);
-        CPPUNIT_ASSERT_THROW( _session->processServiceDataRequest(request), QString );
+        CPPUNIT_ASSERT_THROW(_session->processServiceDataRequest(request), QString);
     }
     {
         // Use Case:
@@ -165,7 +165,7 @@ void SessionTest::test_processServiceDataRequest()
         ServiceDataRequest request;
         request.request(type1, version1);
         request.request(badtype, version1);
-        CPPUNIT_ASSERT_THROW( _session->processServiceDataRequest(request), QString );
+        CPPUNIT_ASSERT_THROW(_session->processServiceDataRequest(request), QString);
     }
     {
         // Use Case:
@@ -175,7 +175,7 @@ void SessionTest::test_processServiceDataRequest()
         request.request(type1, version1);
         request.request(type2, version2);
         QList<LockedData> dataList = _session->processServiceDataRequest(request);
-        CPPUNIT_ASSERT_EQUAL( 2, dataList.size() );
+        CPPUNIT_ASSERT_EQUAL(2, dataList.size());
     }
 }
 

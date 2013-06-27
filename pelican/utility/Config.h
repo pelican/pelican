@@ -52,6 +52,14 @@ namespace pelican {
  * Handles reading and parsing of options for modules and server configuration.
  *
  * @details
+ * <b>Example usage:</b>
+ * @code
+ * Config config(filename);
+ * Config::TreeAddress address;
+ * address << Config::NodeId("modules", "");
+ * address << Config::NodeId("module", "myModule");
+ * ConfigNode node = config.get(address);
+ * @endcode
  */
 
 class Config
