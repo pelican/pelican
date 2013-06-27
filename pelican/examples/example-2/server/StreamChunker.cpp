@@ -139,9 +139,10 @@ void StreamChunker::next(QIODevice* device)
     chunkCounter_++;
 
     // Report performance if on the last packed sent from a run of the emulator.
-    if (chunkCounter_%numPackets == 0) {
+    quint32 reportInterval = 50;
+    if (chunkCounter_%reportInterval == 0) {
         float elapsed = timer_.elapsed() / 1.0e3;
-        float MiB = (packetSize * numPackets) / (1024.0*1024.0);
+        float MiB = (packetSize * reportInterval) / (1024.0*1024.0);
         cout << endl;
         cout << string(80, '*') << endl;
         cout << __PRETTY_FUNCTION__ << endl;

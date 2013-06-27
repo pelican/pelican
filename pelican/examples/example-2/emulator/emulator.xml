@@ -24,4 +24,11 @@
         <data       numPackets="200" packetInterval="0" />
     </StreamEmulator>
     
+    <!-- ========= Option set 3 ========== -->
+    <StreamEmulator name="opt4">
+        <connection host="127.0.0.1" port="2001" />
+        <packet     numSamples="25000000" />
+        <data       numPackets="-1" packetInterval="0" />
+    </StreamEmulator>
+    
 </configuration>
