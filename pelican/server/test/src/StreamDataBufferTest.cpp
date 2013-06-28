@@ -15,7 +15,7 @@ namespace pelican {
 CPPUNIT_TEST_SUITE_REGISTRATION( StreamDataBufferTest );
 // class StreamDataBufferTest
 StreamDataBufferTest::StreamDataBufferTest()
-: CppUnit::TestFixture()
+: CppUnit::TestFixture(), _dataManager(0)
 {
     int ac = 0;
     _app = new QCoreApplication(ac, NULL);

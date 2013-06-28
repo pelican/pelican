@@ -41,8 +41,7 @@ using test::TestConfig;
 
 CPPUNIT_TEST_SUITE_REGISTRATION( ConfigTest );
 // class ConfigTest
-ConfigTest::ConfigTest()
-    : CppUnit::TestFixture()
+ConfigTest::ConfigTest() : CppUnit::TestFixture(), app(0)
 {
 }
 
