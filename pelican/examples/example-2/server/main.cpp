@@ -39,9 +39,36 @@
 using namespace pelican;
 using namespace std;
 
+
+// Re-implementing QApplication::notify() allows capturing of
+// exceptions thrown from within an event handler.
+class MyApp : public QCoreApplication
+{
+public:
+    MyApp(int argc, char** argv) : QCoreApplication(argc, argv) {}
+    virtual ~MyApp() {}
+    virtual bool notify(QObject* rec, QEvent* ev) {
+        try {
+            return QCoreApplication::notify(rec, ev);
+        }
+        catch (const QString& e)
+        {
+            cerr << "ERROR: " << e.toStdString() << endl;
+            exit(0);
+        }
+        catch (...) {
+            cerr << "ERROR: Unknown exception!" << endl;
+            exit(0);
+        }
+        return false;
+    }
+};
+
+
 int main(int argc, char** argv)
 {
-    QCoreApplication app(argc, argv);
+    //QCoreApplication app(argc, argv);
+    MyApp app(argc, argv);
 
     if (argc != 2)
     {
@@ -52,17 +79,11 @@ int main(int argc, char** argv)
     try
     {
         Config config(argv[1]);
-
         PelicanServer server(&config);
         //server.setVerbosity(10000);
-
         server.addStreamChunker("StreamChunker");
-
-        AbstractProtocol* protocol = new PelicanProtocol;
-        server.addProtocol(protocol, 2000);
-
+        server.addProtocol(new PelicanProtocol, 2000);
         server.start();
-
         while (!server.isReady()) {}
         return app.exec();
     }

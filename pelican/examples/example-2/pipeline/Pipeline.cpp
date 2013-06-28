@@ -32,8 +32,7 @@
 
 using namespace std;
 
-Pipeline::Pipeline()
-: AbstractPipeline(), counter_(0)
+Pipeline::Pipeline() : AbstractPipeline(), counter_(0)
 {
 }
 
@@ -77,6 +76,4 @@ void Pipeline::run(QHash<QString, pelican::DataBlob*>& data)
 
     ++counter_;
 }
-
-
 

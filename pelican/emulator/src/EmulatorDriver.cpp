@@ -107,7 +107,6 @@ void EmulatorDriver::run()
 
             if (isTcpSocket) {
                 // On TcpSockets exit if the socket disconnects.
-                // XXX this may slow things down - check this?!
                 QAbstractSocket* s = static_cast<QAbstractSocket*>(_device);
                 while (_device->bytesToWrite() > 0) {
                     if (isTcpSocket && s->state() == QAbstractSocket::UnconnectedState)
