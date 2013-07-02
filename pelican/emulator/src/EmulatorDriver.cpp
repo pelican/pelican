@@ -31,6 +31,10 @@
 
 #include <QtCore/QIODevice>
 #include <QtCore/QCoreApplication>
+#include <QtNetwork/QAbstractSocket>
+#include <QtNetwork/QTcpSocket>
+
+#include <typeinfo>
 #include <iostream>
 
 namespace pelican {
@@ -82,6 +86,8 @@ void EmulatorDriver::run()
         long int packetCounter = 0;
         _dataCount = 0;
 
+        bool isTcpSocket = (typeid(*_device) == typeid(QTcpSocket));
+
         // Enter loop.
         while (!_abort && (packetCounter < _emulator->nPackets() || continuous))
         {
@@ -96,8 +102,22 @@ void EmulatorDriver::run()
 
             // Write to the device.
             _device->write(ptr, size);
-            while (_device->bytesToWrite() > 0)
-                _device->waitForBytesWritten(-1);
+
+            // Block until data has been written to the device.
+
+            if (isTcpSocket) {
+                // On TcpSockets exit if the socket disconnects.
+                QAbstractSocket* s = static_cast<QAbstractSocket*>(_device);
+                while (_device->bytesToWrite() > 0) {
+                    if (isTcpSocket && s->state() == QAbstractSocket::UnconnectedState)
+                        break;
+                    _device->waitForBytesWritten(-1);
+                }
+            }
+            else {
+                while (_device->bytesToWrite() > 0)
+                    _device->waitForBytesWritten(-1);
+            }
 
             // Sleep.
             unsigned long interval = _emulator->interval();

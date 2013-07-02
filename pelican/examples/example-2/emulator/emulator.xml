@@ -23,11 +23,20 @@
         <packet     numSamples="25000000" />
         <data       numPackets="200" packetInterval="0" />
     </StreamEmulator>
-    
-    <!-- ========= Option set 3 ========== -->
+
+    <!-- ========= Option set 4 ========== -->
     <StreamEmulator name="opt4">
         <connection host="127.0.0.1" port="2001" />
         <packet     numSamples="25000000" />
+        <data       numPackets="-1" packetInterval="0" />
+    </StreamEmulator>
+
+    <!-- ========= Option set 5 ========== -->
+    <!-- this option set generates chunks bigger than the chunker (data buffer)
+         can handle. -->
+    <StreamEmulator name="opt5">
+        <connection host="127.0.0.1" port="2001" />
+        <packet     numSamples="100000000" />
         <data       numPackets="-1" packetInterval="0" />
     </StreamEmulator>
     

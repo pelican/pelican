@@ -45,3 +45,4 @@ class Pipeline : public pelican::AbstractPipeline
 };
 
 #endif /* PIPELINE_HPP_ */
+

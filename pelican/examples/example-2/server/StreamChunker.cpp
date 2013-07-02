@@ -70,6 +70,9 @@ QIODevice* StreamChunker::newDevice()
 
 void StreamChunker::next(QIODevice* device)
 {
+    if (chunkCounter_ == 0)
+        timer_.start();
+
     QTcpSocket* socket = static_cast<QTcpSocket*>(device);
     quint64 totalBytesRead = 0;
 
@@ -104,6 +107,8 @@ void StreamChunker::next(QIODevice* device)
     // in the data buffer here.
     pelican::WritableData chunk = getDataStorage(packetSize);
     // XXX should check chunk->isValid() before proceeding! (see also comment above)
+    if (!chunk.isValid())
+        throw QString("StreamChunker::next(): Unable to get a valid chunk");
     char* chunkPtr = (char*)chunk.ptr();
 
     // Write the header into the chunk.
@@ -119,7 +124,7 @@ void StreamChunker::next(QIODevice* device)
     quint64 dataRemaining = packetSize - headerSize;
 
     // XXX this size has an impact on performance.
-    quint64 minReadSize = 128;
+    quint64 minReadSize = 1024;
 
     // Read data block directly into the chunk.
     while (isActive() && dataRemaining > 0)
