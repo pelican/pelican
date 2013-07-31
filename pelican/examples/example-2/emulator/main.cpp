@@ -33,6 +33,7 @@
 #include "StreamEmulator.hpp"
 #include <iostream>
 #include <cstdio>
+#include <cstdlib>
 
 using namespace std;
 using namespace pelican;
