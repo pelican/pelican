@@ -19,7 +19,7 @@ else ()
 endif ()
 
 if (NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE "Release")
+    set(CMAKE_BUILD_TYPE "release")
 endif ()
 
 # Set include directories (these probably are not all needed!)
