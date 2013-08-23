@@ -7,7 +7,7 @@
     <StreamEmulator name="opt1">
         <connection host="127.0.0.1" port="2001" />
         <packet     numSamples="100000" />
-        <data       numPackets="2000" packetInterval="0" />
+        <data       numPackets="2000" packetInterval="0" reportInterval="2000" />
     </StreamEmulator>
     
     <!-- ========= Option set 2 ========== -->
