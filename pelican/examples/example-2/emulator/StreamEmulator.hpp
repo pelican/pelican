@@ -53,10 +53,12 @@ private:
     QHostAddress host_;
     quint16 port_;
     qint32 numPackets_;
-    size_t  numSamples_;
-    size_t  packetSize_;
+    size_t numSamples_;
+    size_t packetSize_;
+    size_t headerSize_;
     quint32 packetInterval_;
     quint32 packetCounter_;
+    qint32 reportInterval_;
 
     QByteArray packet_; // Note this is the serialised packet.
 
