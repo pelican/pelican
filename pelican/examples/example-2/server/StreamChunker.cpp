@@ -70,8 +70,13 @@ QIODevice* StreamChunker::newDevice()
 
 void StreamChunker::next(QIODevice* device)
 {
-    if (chunkCounter_ == 0)
-        timer_.start();
+    // XXX next is slowed down significantly slowed down initially
+    // by allocating the data chunks.
+    // In benchmark mode make sure all chunks are allocated first before the
+    // timing starts.
+
+//    if (chunkCounter_ == 0)
+//        timer_.start();
 
     QTcpSocket* socket = static_cast<QTcpSocket*>(device);
     quint64 totalBytesRead = 0;
@@ -82,33 +87,44 @@ void StreamChunker::next(QIODevice* device)
     quint32 numPackets = 0;
     quint32 packetTime = 0;
     quint64 bytesRead = 0;
-    quint32 numHeaderFields = 4;
+    quint32 reportInterval = 0;
+    quint32 numHeaderFields = 5;
     size_t headerSize = numHeaderFields * sizeof(quint32);
+
+//    while (socket->bytesAvailable() < 400016*100) {
+//        socket->waitForReadyRead(-1);
+//        cout << socket->bytesAvailable() << " / " <<400016*100 <<endl;
+//    }
 
     // Read header values.
     while (isActive() && totalBytesRead != headerSize)
     {
-        if (socket->bytesAvailable() < (int)(headerSize)) {
+        while (socket->bytesAvailable() < (int)(headerSize)) {
             socket->waitForReadyRead(-1);
-            continue;
         }
         bytesRead = socket->read((char*)&packetSize, (qint64)sizeof(quint32));
         totalBytesRead+=bytesRead;
         bytesRead = socket->read((char*)&packetId, (qint64)sizeof(quint32));
         totalBytesRead+=bytesRead;
-        bytesRead = socket->read((char*)&numPackets, (qint64)sizeof(quint32));
-        totalBytesRead+=bytesRead;
         bytesRead = socket->read((char*)&packetTime, (qint64)sizeof(quint32));
         totalBytesRead+=bytesRead;
+        bytesRead = socket->read((char*)&numPackets, (qint64)sizeof(qint32));
+        totalBytesRead+=bytesRead;
+        bytesRead = socket->read((char*)&reportInterval, (qint64)sizeof(qint32));
+        totalBytesRead+=bytesRead;
     }
+
+//    cout << chunkCounter_ << ", " << packetId << ", " << totalBytesRead <<endl;
 
     // Ask the data manager for a writable data chunk and get its data pointer.
     // XXX need some way to query the max chunk size and/or remaing space
     // in the data buffer here.
     pelican::WritableData chunk = getDataStorage(packetSize);
     // XXX should check chunk->isValid() before proceeding! (see also comment above)
-    if (!chunk.isValid())
+    if (!chunk.isValid()) {
+//        cerr << "StreamChunker::next(): Unable to get a valid chunk" << endl;
         throw QString("StreamChunker::next(): Unable to get a valid chunk");
+    }
     char* chunkPtr = (char*)chunk.ptr();
 
     // Write the header into the chunk.
@@ -124,16 +140,15 @@ void StreamChunker::next(QIODevice* device)
     quint64 dataRemaining = packetSize - headerSize;
 
     // XXX this size has an impact on performance.
-    quint64 minReadSize = 1024;
+    quint64 minReadSize = 128;
 
     // Read data block directly into the chunk.
     while (isActive() && dataRemaining > 0)
     {
         if (dataRemaining < minReadSize) minReadSize = dataRemaining;
 
-        if (socket->bytesAvailable() < (qint64)minReadSize) {
+        while (socket->bytesAvailable() < (qint64)minReadSize) {
             socket->waitForReadyRead(-1);
-            continue;
         }
 
         bytesRead = socket->read(chunkPtr+totalBytesRead, dataRemaining);
@@ -141,10 +156,23 @@ void StreamChunker::next(QIODevice* device)
         dataRemaining-=bytesRead;
     }
 
+//    cout << chunkCounter_ << ", " << packetId << ", " << totalBytesRead <<endl;
+
+    // XXX !!HORRIBLE BUG!!
+    // XXX !!HORRIBLE BUG!!
+    // XXX !!HORRIBLE BUG!!
+    // bytes can be avail but next isn't called again....!
+    // this is because next is called on the readyRead() signal!
+    // --> this will be a problem any time the chunker can't keep up with the
+    // input data rate??!!
+    // XXX SOLUTION??
+    // -- replace event loop in the DataReciever with a manual while loop
+    //    which calls next if bytesAvailable() > 0
+    // XXX http://qt-project.org/forums/viewthread/10184
+//    cout << "bytes avail = " << socket->bytesAvailable() << endl << endl;
     chunkCounter_++;
 
     // Report performance if on the last packed sent from a run of the emulator.
-    quint32 reportInterval = 50;
     if (chunkCounter_%reportInterval == 0) {
         float elapsed = timer_.elapsed() / 1.0e3;
         float MiB = (packetSize * reportInterval) / (1024.0*1024.0);
