@@ -1,3 +1,25 @@
+2013-XX-XX  PELICAN 1.0.4
+
+    * Fixed a bug where the chunker next() method would not be called
+      in cases where there was data left to be read in the open device buffer
+      but the readyRead() signal was not being emitted as new data was not 
+      arriving.
+    * Updated the emulator driver to block write operations for all device 
+      types between calls to an emulator's getPacketData() method until 
+      all data has been written the the target device.
+    * Updates to example-2, added in 1.0.3.
+        - Emulators no longer needs a Qt Application event loop. This allows
+          emulators to finish naturally when they have completed sending data.
+          A new emulator binary main() has been written to demonstrate this.
+        - Updated the format of the data sent from the emulator to contain
+          a configurable value which determines the frequency of benchmark
+          reporting.
+        - The emulator now blocks, with a timeout, in its createDevice() method
+          until a connection with the server can be made. The timeout is 
+          configurable in the XML.
+        - Improved consistency of benchmark reporting.
+
+
 2013-06-26  PELICAN 1.0.3
 
     * Fixed a bug in the emulator driver related to non-blocking write
