@@ -79,8 +79,8 @@ void DataReceiver::run()
     // N.B. must be done in this thread (i.e. in run())
     _setupDevice();
 
-    //    int tid = syscall(__NR_gettid);
-    //    std::cout << "Thread ID : " << tid << std::endl;
+    //int tid = syscall(__NR_gettid);
+    //std::cout << "Thread ID : " << tid << std::endl;
     if (_device) {
         // process any existing data on the stream
         if( _device->bytesAvailable() > 0 )
@@ -88,12 +88,35 @@ void DataReceiver::run()
     }
 
     // enter main event loop (until quit() is called)
+    // XXX
     exec();
 }
 
 void DataReceiver::_processIncomingData()
 {
-    _chunker->next(_device);
+    //    cout << __PRETTY_FUNCTION__ << " bytes avail = " << _device->bytesAvailable() << endl;
+
+    // NOTE original behaviour of this function - no while loop as in the code
+    // below this has a problem as if the data stream being chunked isn't
+    // continuous as readyRead() is not triggered unless NEW data is available
+    // on the socket. For example, if 2 chunks arrive on the socket during the
+    // time it takes to read the first followed by no more data chunks arriving
+    // the 2nd chunk is never read as the event loop waits till NEW data arrives
+    // ignoring the data currently in the socket buffer waiting to be read.
+    // ---> See hack below.
+    //_chunker->next(_device);
+
+    // NOTE Below is a hack (or FIX?!?) to solve problem of readyRead() not
+    // being signalled and data left on the socket.
+    // This approach is probably undesirable as it doesn't return to the event
+    // loop between calls of next(). As a result is makes the socket error
+    // signal redundant which is probably not a good idea.
+    // Solution? Replace the event loop (in run()) with a while loop which
+    // includes full error checking.
+    while (_device->bytesAvailable() > 0)
+        _chunker->next(_device);
+//    cout << __PRETTY_FUNCTION__ << " bytes avail = " << _device->bytesAvailable() << endl;
+//    cout << string(80,'^') << endl << endl;;
 }
 
 void DataReceiver::_registerSocket( QAbstractSocket* socket ) {
