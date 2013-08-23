@@ -6,7 +6,8 @@
         <buffers>
             <StreamData>
                 <!-- max chunk size of 200MiB, max size of 4000MiB -->
-                <buffer maxSize="4194304000" maxChunkSize="209715200" />
+                <!-- <buffer maxSize="4194304000" maxChunkSize="209715200" />  -->
+                <buffer maxSize="209715200" maxChunkSize="209715200" />
             </StreamData>
         </buffers>
 
