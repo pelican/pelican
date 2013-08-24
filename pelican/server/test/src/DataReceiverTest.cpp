@@ -11,6 +11,8 @@
 #include <QtCore/QThread>
 #include <QtCore/QCoreApplication>
 
+#include <cfloat>
+
 namespace pelican {
 
 using test::TestChunker;
@@ -107,10 +109,16 @@ void DataReceiverTest::test_listen()
 
 void DataReceiverTest::test_listen_udpChunker()
 {
-    std::cout <<" ========================================== " << std::endl;
+    // FIXME write detailed use case for this test and check that it still
+    // works with the modifications to DataReceiver in 1.0.4
+
+//    using namespace std;
+//    cout << endl << __PRETTY_FUNCTION__ << endl;
     try {
         // Create Data Manager
         Config config;
+        // FIXME are maxSize and maxChunkSize valid? see packet size of the
+        // emulator...?
         QString configString =
                 "<buffers>"
                 "   <VisibilityData>"
@@ -125,7 +133,7 @@ void DataReceiverTest::test_listen_udpChunker()
         ConfigNode emulatorConfig(""
                 "<RealUdpEmulator>"
                 "    <connection host=\"127.0.0.1\" port=\"2002\"/>"
-                "    <packet size=\"512\" interval=\"1000\" initialValue=\"0.1\"/>"
+                "    <packet number=\"10\" size=\"512\" interval=\"1000\" initialValue=\"0.1\"/>"
                 "</RealUdpEmulator>"
                 );
         EmulatorDriver emulator(new RealUdpEmulator(emulatorConfig));
@@ -140,21 +148,30 @@ void DataReceiverTest::test_listen_udpChunker()
         TestUdpChunker chunker(chunkerNode);
         chunker.setDataManager(&dataManager);
 
-        // Create the data receiver.
+        // Create the data receiver (this is a QThread managing the chunker?)
         DataReceiver dr(&chunker);
+        // listen() starts the event loop in the DataReciever thread.
         dr.listen();
 
-        // Must call processEvents() for the data to emit the
-        // unlockedWrite() signal.
+        // Must call processEvents() for the data to emit the unlockedWrite()
+        // signal.
+        // FIXME which data... ?
         sleep(1);
         QCoreApplication::processEvents();
 
-        // Test read data
-        LockedData d = dataManager.getNext("VisibilityData");
-        // std::cout << "Is valid: " << d.isValid() << std::endl;
-        char* dataPtr = (char *)(reinterpret_cast<AbstractLockableData*>(d.object())->data()->data() );
-        double value = *reinterpret_cast<double*>(dataPtr);
-        std::cout << "Value : " << value << std::endl;
+        // Test read of the data from the DataManager.
+        // This function asks the DataManager for the next visibility
+        // data chunk and checks/prints its value.
+        {
+            LockedData d = dataManager.getNext("VisibilityData");
+            CPPUNIT_ASSERT_EQUAL(true, d.isValid());
+            char* data = (char *)(reinterpret_cast<AbstractLockableData*>(
+                    d.object())->data()->data());
+            double value = *reinterpret_cast<double*>(data);
+            // This value should be 0.1?, the initial value of the emulated packet.
+            CPPUNIT_ASSERT_DOUBLES_EQUAL(0.1, value, DBL_EPSILON);
+//            cout << "Value : " << value << endl;
+        }
     }
 
     catch (const QString& e) {

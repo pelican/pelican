@@ -12,7 +12,7 @@ namespace test {
  * Constructs a new TestUdpChunker.
  */
 TestUdpChunker::TestUdpChunker(const ConfigNode& config)
-    : AbstractChunker(config)
+    : AbstractChunker(config), _bytesRead(0)
 {
     // Check configuration node is correct.
     if (config.type() != "TestUdpChunker")
@@ -47,6 +47,9 @@ QIODevice* TestUdpChunker::newDevice()
  */
 void TestUdpChunker::next(QIODevice* device)
 {
+//    using namespace std;
+//    cout << __PRETTY_FUNCTION__ << endl;
+
     // Get a pointer to the UDP socket.
     QUdpSocket* udpSocket = static_cast<QUdpSocket*>(device);
     _bytesRead = 0;
@@ -79,6 +82,7 @@ void TestUdpChunker::next(QIODevice* device)
         if( ! isActive() ) return;
         udpSocket->readDatagram(0, 0);
     }
+//    cout << __PRETTY_FUNCTION__ << endl;
 }
 
 } // namespace test

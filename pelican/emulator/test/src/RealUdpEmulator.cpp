@@ -44,6 +44,8 @@ RealUdpEmulator::RealUdpEmulator(const ConfigNode& configNode)
     _interval = configNode.getOption("packet", "interval", "100000").toULong();
     _packetSize = configNode.getOption("packet", "size", "8192").toULong();
     _initialValue = configNode.getOption("packet", "initialValue", "0").toDouble();
+    // Default of -1 == run forever.
+    _numPackets = configNode.getOption("packet", "number", "-1").toULong();
 
     // Check that the packet size is a multiple of 8.
     if (_packetSize % sizeof(double) != 0)
@@ -79,6 +81,11 @@ void RealUdpEmulator::getPacketData(char*& ptr, unsigned long& size)
 
     // Increment counter for next time.
     _counter++;
+}
+
+int RealUdpEmulator::nPackets()
+{
+    return _numPackets;
 }
 
 } // namespace test
