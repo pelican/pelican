@@ -52,13 +52,14 @@ namespace pelican {
 
 using test::RealUdpEmulator;
 
-CPPUNIT_TEST_SUITE_REGISTRATION( DirectStreamDataClientTest );
+CPPUNIT_TEST_SUITE_REGISTRATION(DirectStreamDataClientTest);
 
 /**
  * @details DirectStreamDataClientTest
  */
 DirectStreamDataClientTest::DirectStreamDataClientTest()
-    : CppUnit::TestFixture()
+: CppUnit::TestFixture(), _config(0), _emulatorConfig1(0),
+  _emulatorConfig2(0)
 {
 }
 
@@ -113,13 +114,13 @@ void DirectStreamDataClientTest::setUp()
     _emulatorConfig1->setFromString(""
             "<RealUdpEmulator>"
             "    <connection host=\"127.0.0.1\" port=\"2002\"/>"
-            "    <packet size=\"512\" interval=\"1500\" initialValue=\"0.1\"/>"
+            "    <packet size=\"512\" interval=\"500\" initialValue=\"0.1\" number=\"100\"/>"
             "</RealUdpEmulator>"
             );
     _emulatorConfig2->setFromString(""
             "<RealUdpEmulator>"
             "    <connection host=\"127.0.0.1\" port=\"2003\"/>"
-            "    <packet size=\"512\" interval=\"1500\" initialValue=\"0.2\"/>"
+            "    <packet size=\"512\" interval=\"500\" initialValue=\"0.2\" number=\"100\"/>"
             "</RealUdpEmulator>"
             );
 }
@@ -133,7 +134,6 @@ void DirectStreamDataClientTest::tearDown()
 
 void DirectStreamDataClientTest::test_singleChunker()
 {
-    std::cout << "----------------------------------" << std::endl;
     try {
         // Start the telescope emulator on port 2002.
         EmulatorDriver emulator(new RealUdpEmulator(*_emulatorConfig1));
@@ -179,13 +179,65 @@ void DirectStreamDataClientTest::test_singleChunker()
 
 /**
  * @details
+ * Tests two chunkers, starting them only once and calling getData()
+ * multiple times.
+ */
+void DirectStreamDataClientTest::test_twoChunkersSingleStart()
+{
+    try {
+        // Start two telescope emulators.
+        EmulatorDriver emulator1(new RealUdpEmulator(*_emulatorConfig1));
+        EmulatorDriver emulator2(new RealUdpEmulator(*_emulatorConfig2));
+
+        // Create factories
+        AbstractAdapterFactory adapterFactory(_config, "pipeline", "adapters");
+        DataClientFactory clientFactory(_config, "pipeline", "clients",
+                &adapterFactory);
+        FactoryGeneric<DataBlob> blobFactory(true);
+
+        // Create a list of data requirements.
+        QString dataType = "DoubleData";
+        DataSpec req;
+        QList<DataSpec> requirements;
+        req.addStreamData(dataType);
+        requirements.append(req);
+
+        // Create the client.
+        DirectStreamDataClient* client = static_cast<DirectStreamDataClient*>(
+                clientFactory.create("DirectStreamDataClient" ));
+        CPPUNIT_ASSERT(DataClientFactory::whatIs(client) == "DirectStreamDataClient");
+        client->reset( requirements );
+        client->addStreamChunker("TestUdpChunker", "a");
+        client->addStreamChunker("TestUdpChunker", "b");
+
+        // Set up the data hash.
+        QHash<QString, DataBlob*> dataHash;
+        dataHash.insert(dataType, blobFactory.create(dataType));
+
+        int n = _emulatorConfig1->getOption("packet", "number").toInt();
+        for (int i = 0; i < n; i++) {
+            // Get the data.
+            QHash<QString, DataBlob*> validData = client->getData(dataHash);
+
+            // Check the content of the data blob.
+            DoubleData* data = (DoubleData*)validData.value("DoubleData");
+            _printData(data);
+        }
+    }
+    catch (const QString& e) {
+        CPPUNIT_FAIL("Unexpected exception: " + e.toStdString());
+    }
+}
+
+
+/**
+ * @details
  * Tests two chunkers, starting them multiple times (test for random segfaults
  * and threading problems).
  */
 void DirectStreamDataClientTest::test_twoChunkersMultipleStarts()
 {
-    for (int i = 0; i < 100; ++i) {
-        //std::cout << "---------------------------------- " << i << std::endl;
+    for (int i = 0; i < 20; ++i) {
         try {
             // Start two telescope emulators.
             EmulatorDriver emulator1(new RealUdpEmulator(*_emulatorConfig1));
@@ -236,62 +288,6 @@ void DirectStreamDataClientTest::test_twoChunkersMultipleStarts()
     }
 }
 
-/**
- * @details
- * Tests two chunkers, starting them only once and calling getData()
- * multiple times.
- */
-void DirectStreamDataClientTest::test_twoChunkersSingleStart()
-{
-    std::cout << "-------- test_twoChunkersSingleStart -------"  << std::endl;
-    try {
-        // Start two telescope emulators.
-        EmulatorDriver emulator1(new RealUdpEmulator(*_emulatorConfig1));
-        EmulatorDriver emulator2(new RealUdpEmulator(*_emulatorConfig2));
-
-        // Create the adapter factory.
-        AbstractAdapterFactory adapterFactory(_config,
-                "pipeline", "adapters");
-
-        // Create the data client factory.
-        DataClientFactory clientFactory(_config, "pipeline",
-                "clients", &adapterFactory);
-
-        // Create the data blob factory.
-        FactoryGeneric<DataBlob> blobFactory(true);
-
-        // Create a list of data requirements.
-        QString dataType = "DoubleData";
-        DataSpec req;
-        QList<DataSpec> requirements;
-        req.addStreamData(dataType);
-        requirements.append(req);
-
-        // Create the client.
-        DirectStreamDataClient* client = static_cast<DirectStreamDataClient*>(
-                clientFactory.create("DirectStreamDataClient" ));
-        CPPUNIT_ASSERT(DataClientFactory::whatIs(client) == "DirectStreamDataClient");
-        client->reset( requirements );
-        client->addStreamChunker("TestUdpChunker", "a");
-        client->addStreamChunker("TestUdpChunker", "b");
-
-        // Set up the data hash.
-        QHash<QString, DataBlob*> dataHash;
-        dataHash.insert(dataType, blobFactory.create(dataType));
-
-        for (int i = 0; i < 2000; i++) {
-            // Get the data.
-            QHash<QString, DataBlob*> validData = client->getData(dataHash);
-
-            // Check the content of the data blob.
-            DoubleData* data = (DoubleData*)validData.value("DoubleData");
-            _printData(data);
-        }
-    }
-    catch (const QString& e) {
-        CPPUNIT_FAIL("Unexpected exception: " + e.toStdString());
-    }
-}
 
 /**
  * @details
@@ -303,7 +299,6 @@ void DirectStreamDataClientTest::_printData(DoubleData* data)
 {
     CPPUNIT_ASSERT(data); // Check that the blob exists.
     CPPUNIT_ASSERT(data->size() != 0);
-
     //double* ptr = data->ptr();
     //for (unsigned i = 0; i < data->size(); i++) {
     //    std::cout << "Data: " << ptr[i] << "(" << i << " of " << data->size() - 1 << " )"<< std::endl;

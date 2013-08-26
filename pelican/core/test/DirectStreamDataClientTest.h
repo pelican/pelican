@@ -69,8 +69,8 @@ class DirectStreamDataClientTest : public CppUnit::TestFixture
 
         // Test Methods
         void test_singleChunker();
-        void test_twoChunkersMultipleStarts();
         void test_twoChunkersSingleStart();
+        void test_twoChunkersMultipleStarts();
 
     public:
         DirectStreamDataClientTest(  );
