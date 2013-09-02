@@ -27,7 +27,8 @@ namespace test {
 class PelicanTestClient
 {
     public:
-        PelicanTestClient( unsigned long port, const QString& host="127.0.0.1" );
+        PelicanTestClient(unsigned long port, const QString& host = "127.0.0.1",
+                bool verbose = false);
         ~PelicanTestClient();
         QString processAcknowledgement() const;
         QString processStreamData() const;
@@ -36,6 +37,7 @@ class PelicanTestClient
         quint16 _port;
         QString _host;
         QTcpSocket* _socket;
+        bool _verbose;
 };
 
 } // namespace test

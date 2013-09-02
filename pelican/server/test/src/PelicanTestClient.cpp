@@ -10,11 +10,13 @@ namespace test {
 
 
 // class PelicanTestClient
-PelicanTestClient::PelicanTestClient(unsigned long port, const QString& host)
+PelicanTestClient::PelicanTestClient(unsigned long port, const QString& host,
+        bool verbose)
 {
     _host = host;
     _port = port;
     _socket = new QTcpSocket;
+    _verbose = verbose;
 }
 
 PelicanTestClient::~PelicanTestClient()
@@ -29,6 +31,7 @@ PelicanTestClient::~PelicanTestClient()
  */
 QString PelicanTestClient::processAcknowledgement() const
 {
+    using namespace std;
     int timeout = 5000;
 
     // send request
@@ -40,8 +43,10 @@ QString PelicanTestClient::processAcknowledgement() const
                 _socket->errorString());
     }
 
-    std::cout << "PelicanTestClient: Connected to " << _host.toStdString()
-              << ":" << _port << std::endl;
+    if (_verbose) {
+        cout << "PelicanTestClient: Connected to " << _host.toStdString()
+             << ":" << _port << endl;
+    }
     while (_socket->bytesAvailable() < (int)sizeof(quint16))
     {
         if (!_socket->waitForReadyRead(timeout))
@@ -50,14 +55,17 @@ QString PelicanTestClient::processAcknowledgement() const
                     _socket->errorString());
         }
     }
-    std::cout << "PelicanTestClient: Ready to read " << _host.toStdString()
-              << ":" << _port << std::endl;
+    if (_verbose) {
+        cout << "PelicanTestClient: Ready to read " << _host.toStdString()
+             << ":" << _port << endl;
+    }
 
     QByteArray ack;
     ack = _socket->readAll();
-    std::cout << "PelicanTestClient: Got string ("
-              << _host.toStdString() << ":" << _port << ") = "
-              << ack.data() <<std::endl;
+    if (_verbose) {
+        cout << "PelicanTestClient: Got string (" << _host.toStdString()
+             << ":" << _port << ") = " << ack.data() << endl;
+    }
 
     return QString("");
 }
@@ -68,6 +76,7 @@ QString PelicanTestClient::processAcknowledgement() const
  */
 QString PelicanTestClient::processStreamData() const
 {
+    using namespace std;
     int timeout = 5000;
 
     // send request
@@ -79,9 +88,10 @@ QString PelicanTestClient::processStreamData() const
                 _socket->errorString());
     }
 
-    std::cout << "PelicanTestClient::processStreamData(): Connected to "
-            << _host.toStdString()
-            << ":" << _port << std::endl;
+    if (_verbose) {
+        cout << "PelicanTestClient::processStreamData(): Connected to "
+             << _host.toStdString() << ":" << _port << endl;
+    }
 
     while (_socket->bytesAvailable() < (int)sizeof(quint16))
     {
@@ -91,9 +101,11 @@ QString PelicanTestClient::processStreamData() const
                     _socket->errorString());
         }
     }
-    std::cout << "PelicanTestClient::processStreamData(): Ready to read "
-            << _host.toStdString()
-            << ":" << _port << std::endl;
+    if (_verbose) {
+        cout << "PelicanTestClient::processStreamData(): Ready to read "
+             << _host.toStdString()
+             << ":" << _port << endl;
+    }
 
     QByteArray ack;
     ack = _socket->readAll();
@@ -104,9 +116,11 @@ QString PelicanTestClient::processStreamData() const
     {
         ack.remove(0, sizeof(char));
     }
-    std::cout << "PelicanTestClient::processStreamData(): Got string ("
-              << _host.toStdString() << ":" << _port << ") = "
-              << ack.data() <<std::endl;
+    if (_verbose) {
+        cout << "PelicanTestClient::processStreamData(): Got string ("
+             << _host.toStdString() << ":" << _port << ") = "
+             << ack.data() << endl;
+    }
 
     return QString();
 }
