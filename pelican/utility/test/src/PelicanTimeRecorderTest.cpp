@@ -60,9 +60,9 @@ void PelicanTimeRecorderTest::test_method()
 {
     PelicanTimeRecorder recorder;
     recorder.start();
-    sleep(1);
+    usleep(10000);
     recorder.tick("test");
-    sleep(1);
+    usleep(10000);
     recorder.report();
 }
 

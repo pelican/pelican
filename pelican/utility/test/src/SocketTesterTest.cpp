@@ -39,7 +39,7 @@ using test::SocketTester;
 CPPUNIT_TEST_SUITE_REGISTRATION( SocketTesterTest );
 // class SocketTesterTest
 SocketTesterTest::SocketTesterTest()
-    : CppUnit::TestFixture()
+    : CppUnit::TestFixture(), _app(0)
 {
 }
 
@@ -65,7 +65,7 @@ void SocketTesterTest::test_method()
     QByteArray b("test");
     QTcpSocket& sock = st.send(b);
     CPPUNIT_ASSERT( sock.isReadable() );
-    sock.waitForReadyRead(2000);
+    sock.waitForReadyRead(200);
     CPPUNIT_ASSERT_EQUAL( b.size(), (int)sock.bytesAvailable() );
     CPPUNIT_ASSERT( sock.readAll() == b );
 }
