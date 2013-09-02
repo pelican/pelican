@@ -110,24 +110,35 @@ WritableData DataManager::getWritableData(const QString& type, size_t size)
  * This method sets up a stream buffer for the specified data type
  * if it does not already exist.
  *
+ * NOTE no respect of buffer names? i.e. if two buffers have the same
+ * type but different names? intensional?
+ *
  * @param[in] type The data type held by the buffer.
  */
 StreamDataBuffer* DataManager::getStreamBuffer(const QString& type)
 {
-    Q_ASSERT( type != "" );
+    Q_ASSERT(type != "");
 
-    if ( ! _streams.contains(type) ) {
+    if (! _streams.contains(type))
+    {
         Config::TreeAddress configAddress(_bufferConfigBaseAddress);
         configAddress << Config::NodeId(type, "");
         ConfigNode config = _config->get(configAddress);
-        if( ! _bufferMaxSizes.contains(type) ) {
-           _bufferMaxSizes[type] = config.getOption("buffer", "maxSize", "10240").toULongLong();
+        if (!_bufferMaxSizes.contains(type))
+        {
+           _bufferMaxSizes[type] = config.getOption("buffer", "maxSize",
+                   "10240").toULongLong();
         }
-        if( ! _bufferMaxChunkSizes.contains(type) ) {
-            _bufferMaxChunkSizes[type] = config.getOption("buffer", "maxChunkSize", 0).toULongLong();
-            if( ! _bufferMaxChunkSizes[type] ) _bufferMaxChunkSizes[type]=_bufferMaxSizes[type];
+        if (!_bufferMaxChunkSizes.contains(type))
+        {
+            _bufferMaxChunkSizes[type] = config.getOption("buffer",
+                    "maxChunkSize", 0).toULongLong();
+            if (!_bufferMaxChunkSizes[type]) {
+                _bufferMaxChunkSizes[type]=_bufferMaxSizes[type];
+            }
         }
-        setStreamDataBuffer( type, new StreamDataBuffer(type, _bufferMaxSizes[type], _bufferMaxChunkSizes[type]) );
+        setStreamDataBuffer(type, new StreamDataBuffer(type,
+                _bufferMaxSizes[type], _bufferMaxChunkSizes[type]));
     }
     return _streams[type];
 }
