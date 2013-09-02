@@ -12,6 +12,7 @@
 #include <QtCore/QCoreApplication>
 
 #include <cfloat>
+#include <unistd.h>
 
 namespace pelican {
 
@@ -28,14 +29,6 @@ DataReceiverTest::DataReceiverTest()
 }
 
 DataReceiverTest::~DataReceiverTest()
-{
-}
-
-void DataReceiverTest::setUp()
-{
-}
-
-void DataReceiverTest::tearDown()
 {
 }
 
@@ -99,7 +92,6 @@ void DataReceiverTest::test_listen()
         DataReceiver dr(&testChunker);
         dr.listen();
 
-        // TODO
 //        TestSocketServer ts(testHost, testPort);
 //        CPPUNIT_ASSERT(ts.send("abcd"));
 //        _app->processEvents();
@@ -109,20 +101,13 @@ void DataReceiverTest::test_listen()
 
 void DataReceiverTest::test_listen_udpChunker()
 {
-    // FIXME write detailed use case for this test and check that it still
-    // works with the modifications to DataReceiver in 1.0.4
-
-//    using namespace std;
-//    cout << endl << __PRETTY_FUNCTION__ << endl;
     try {
         // Create Data Manager
         Config config;
-        // FIXME are maxSize and maxChunkSize valid? see packet size of the
-        // emulator...?
         QString configString =
                 "<buffers>"
                 "   <VisibilityData>"
-                "       <buffer maxSize=\"2000\" maxChunkSize=\"2000\"/>"
+                "       <buffer maxSize=\"5120\" maxChunkSize=\"512\"/>"
                 "   </VisibilityData>"
                 "</buffers>";
         config.setFromString(configString);
@@ -138,42 +123,39 @@ void DataReceiverTest::test_listen_udpChunker()
                 );
         EmulatorDriver emulator(new RealUdpEmulator(emulatorConfig));
 
-        // Create and set up chunker.
+        // Create and set up chunker
         QString chunkerNodeString = ""
                 "<TestUdpChunker>"
-                "       <connection host=\"127.0.0.1\" port=\"2002\"/>"
-                "       <data type=\"VisibilityData\" chunkSize=\"512\"/>"
+                "   <connection host=\"127.0.0.1\" port=\"2002\"/>"
+                "   <data type=\"VisibilityData\" chunkSize=\"512\"/>"
                 "</TestUdpChunker>";
         ConfigNode chunkerNode(chunkerNodeString);
         TestUdpChunker chunker(chunkerNode);
         chunker.setDataManager(&dataManager);
 
-        // Create the data receiver (this is a QThread managing the chunker?)
+        // Create the data receiver (QThread managing the chunker)
         DataReceiver dr(&chunker);
-        // listen() starts the event loop in the DataReciever thread.
+        // Starts the event loop in the DataReciever thread.
         dr.listen();
 
         // Must call processEvents() for the data to emit the unlockedWrite()
         // signal.
-        // FIXME which data... ?
-        sleep(1);
+        usleep(1000);
         QCoreApplication::processEvents();
 
         // Test read of the data from the DataManager.
-        // This function asks the DataManager for the next visibility
-        // data chunk and checks/prints its value.
+        // This function asks the DataManager for the next visibility data
+        // chunk and checks/prints its value.
         {
             LockedData d = dataManager.getNext("VisibilityData");
             CPPUNIT_ASSERT_EQUAL(true, d.isValid());
-            char* data = (char *)(reinterpret_cast<AbstractLockableData*>(
+            char* data = (char*)(reinterpret_cast<AbstractLockableData*>(
                     d.object())->data()->data());
             double value = *reinterpret_cast<double*>(data);
-            // This value should be 0.1?, the initial value of the emulated packet.
+            // This value should be 0.1, the initial value of the emulated packet.
             CPPUNIT_ASSERT_DOUBLES_EQUAL(0.1, value, DBL_EPSILON);
-//            cout << "Value : " << value << endl;
         }
     }
-
     catch (const QString& e) {
         CPPUNIT_FAIL("Unexpected exception: " + e.toStdString());
     }
