@@ -27,8 +27,8 @@
  */
 
 
-#ifndef STREAMDATA_HPP_
-#define STREAMDATA_HPP_
+#ifndef EXAMPLE_2_STREAM_DATA_HPP_
+#define EXAMPLE_2_STREAM_DATA_HPP_
 
 #include "pelican/data/DataBlob.h"
 #include <QtCore/QVector>
@@ -61,4 +61,4 @@ private:
 PELICAN_DECLARE_DATABLOB(StreamData)
 
 
-#endif /* STREAMDATA_HPP_ */
+#endif /* EXAMPLE_2_STREAM_DATA_HPP_ */

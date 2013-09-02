@@ -26,8 +26,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef STREAMEMULATOR_HPP_
-#define STREAMEMULATOR_HPP_
+#ifndef EXAMPLE_2_STREAM_EMULATOR_HPP_
+#define EXAMPLE_2_STREAM_EMULATOR_HPP_
 
 #include <pelican/emulator/AbstractEmulator.h>
 #include <pelican/utility/ConfigNode.h>
@@ -66,4 +66,4 @@ private:
 };
 
 
-#endif /* STREAMEMULATOR_HPP_ */
+#endif /* EXAMPLE_2_STREAM_EMULATOR_HPP_ */

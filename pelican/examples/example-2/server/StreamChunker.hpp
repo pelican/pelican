@@ -27,8 +27,8 @@
  */
 
 
-#ifndef STREAMCHUNKER_HPP_
-#define STREAMCHUNKER_HPP_
+#ifndef EXAMPLE_2_STREAM_CHUNKER_HPP_
+#define EXAMPLE_2_STREAM_CHUNKER_HPP_
 
 #include <pelican/server/AbstractChunker.h>
 #include <QtCore/QTime>
@@ -53,4 +53,4 @@ private:
 
 PELICAN_DECLARE_CHUNKER(StreamChunker)
 
-#endif /* STREAMCHUNKER_HPP_ */
+#endif /* EXAMPLE_2_STREAM_CHUNKER_HPP_ */

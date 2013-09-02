@@ -26,8 +26,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef PIPELINE_HPP_
-#define PIPELINE_HPP_
+#ifndef EXAMPLE_2_PIPELINE_HPP_
+#define EXAMPLE_2_PIPELINE_HPP_
 
 #include <pelican/core/AbstractPipeline.h>
 #include <QtCore/QTime>
@@ -44,5 +44,5 @@ class Pipeline : public pelican::AbstractPipeline
         QTime timer_;
 };
 
-#endif /* PIPELINE_HPP_ */
+#endif /* EXAMPLE_2_PIPELINE_HPP_ */
 
