@@ -48,10 +48,11 @@ StreamChunker::~StreamChunker()
 
 QIODevice* StreamChunker::newDevice()
 {
-    // * Note: The server had to be created here in the newDevice() function
-    //   so that it is created in the DataReciever thread handling this chunker.
-    // * As this function is also used to reconnect it needs to make sure the
-    //   QTcpServer is not allocated and set up twice.
+    // Note:
+    // The server has to be created here (in the newDevice() function)
+    // so that it is created in the DataReciever thread managing this chunker.
+    // As this function is also used to reconnect, it needs to make sure the
+    // QTcpServer is not allocated and set up twice.
     if (tcpServer_ == 0) {
         tcpServer_ = new QTcpServer();
         cout << endl;
@@ -70,13 +71,16 @@ QIODevice* StreamChunker::newDevice()
 
 void StreamChunker::next(QIODevice* device)
 {
-    // XXX next is slowed down significantly slowed down initially
-    // by allocating the data chunks.
-    // In benchmark mode make sure all chunks are allocated first before the
-    // timing starts.
+    // Note:
+    // The next() function is slowed down initially by allocating the
+    // data chunks.
+    // It is probably best therefore, when running the benchmark, to make sure
+    // all chunks are allocated before the timing starts.
 
-//    if (chunkCounter_ == 0)
-//        timer_.start();
+#if 0
+    if (chunkCounter_ == 0)
+        timer_.start();
+#endif
 
     QTcpSocket* socket = static_cast<QTcpSocket*>(device);
     quint64 totalBytesRead = 0;
@@ -91,10 +95,12 @@ void StreamChunker::next(QIODevice* device)
     quint32 numHeaderFields = 5;
     size_t headerSize = numHeaderFields * sizeof(quint32);
 
-//    while (socket->bytesAvailable() < 400016*100) {
-//        socket->waitForReadyRead(-1);
-//        cout << socket->bytesAvailable() << " / " <<400016*100 <<endl;
-//    }
+#if 0
+    while (socket->bytesAvailable() < 400016*100) {
+        socket->waitForReadyRead(-1);
+        cout << socket->bytesAvailable() << " / " <<400016*100 <<endl;
+    }
+#endif
 
     // Read header values.
     while (isActive() && totalBytesRead != headerSize)
@@ -114,15 +120,21 @@ void StreamChunker::next(QIODevice* device)
         totalBytesRead+=bytesRead;
     }
 
-//    cout << chunkCounter_ << ", " << packetId << ", " << totalBytesRead <<endl;
+#if 0
+    cout << chunkCounter_ << ", " << packetId << ", " << totalBytesRead <<endl;
+#endif
 
     // Ask the data manager for a writable data chunk and get its data pointer.
-    // XXX need some way to query the max chunk size and/or remaing space
+    // Note:
+    // Need some way to query the max chunk size and/or remaining space
     // in the data buffer here.
     pelican::WritableData chunk = getDataStorage(packetSize);
-    // XXX should check chunk->isValid() before proceeding! (see also comment above)
+    // Note: should check chunk->isValid() before proceeding!
+    // (see comment above)
     if (!chunk.isValid()) {
-//        cerr << "StreamChunker::next(): Unable to get a valid chunk" << endl;
+#if 0
+        cerr << "StreamChunker::next(): Unable to get a valid chunk" << endl;
+#endif
         throw QString("StreamChunker::next(): Unable to get a valid chunk");
     }
     char* chunkPtr = (char*)chunk.ptr();
@@ -134,12 +146,13 @@ void StreamChunker::next(QIODevice* device)
     header[2] = numPackets;
     header[3] = packetTime;
 
-    // XXX This may have an impact on performance.
+    // Note: Settings the read buffer size may have an impact on performance.
     //socket->setReadBufferSize(1024*1024);
 
     quint64 dataRemaining = packetSize - headerSize;
 
-    // XXX this size has an impact on performance.
+    // Note: The minimum read size has an impact on performance and has not
+    // yet been optimised.
     quint64 minReadSize = 128;
 
     // Read data block directly into the chunk.
@@ -156,20 +169,11 @@ void StreamChunker::next(QIODevice* device)
         dataRemaining-=bytesRead;
     }
 
-//    cout << chunkCounter_ << ", " << packetId << ", " << totalBytesRead <<endl;
+#if 0
+    cout << chunkCounter_ << ", " << packetId << ", " << totalBytesRead <<endl;
+    cout << "bytes avail = " << socket->bytesAvailable() << endl << endl;
+#endif
 
-    // XXX !!HORRIBLE BUG!!
-    // XXX !!HORRIBLE BUG!!
-    // XXX !!HORRIBLE BUG!!
-    // bytes can be avail but next isn't called again....!
-    // this is because next is called on the readyRead() signal!
-    // --> this will be a problem any time the chunker can't keep up with the
-    // input data rate??!!
-    // XXX SOLUTION??
-    // -- replace event loop in the DataReciever with a manual while loop
-    //    which calls next if bytesAvailable() > 0
-    // XXX http://qt-project.org/forums/viewthread/10184
-//    cout << "bytes avail = " << socket->bytesAvailable() << endl << endl;
     chunkCounter_++;
 
     // Report performance if on the last packed sent from a run of the emulator.
