@@ -3,6 +3,7 @@
 #include "server/ChunkerManager.h"
 
 #include <QtCore/QCoreApplication>
+#include <unistd.h>
 
 #include <iostream>
 using std::cerr;
@@ -49,9 +50,10 @@ ChunkerTester::ChunkerTester(const QString& chunkerType,
     try {
         _chunkManager->init(*_dataManager);
         do {
-            sleep(1); // at least one second seems to be necessary
+            usleep(100); // at least one second seems to be necessary...!
+                         // FIXME WHY !?
         }
-        while(! _chunkManager->isRunning());
+        while(!_chunkManager->isRunning());
     }
     catch(const QString& msg)
     {
