@@ -26,8 +26,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef SIGNAL_EMULATOR_HPP_
-#define SIGMAL_EMULATOR_HPP_
+#ifndef EXAMPLE_1_SIGNAL_EMULATOR_HPP_
+#define EXAMPLE_1_SIGMAL_EMULATOR_HPP_
 
 #include <pelican/emulator/AbstractUdpEmulator.h>
 #include <QtCore/QByteArray>
@@ -52,6 +52,6 @@ private:
     int nPackets_;
 };
 
-#endif // SIGNAL_EMULATOR_HPP_
+#endif // EXAMPLE_1_SIGNAL_EMULATOR_HPP_
 
 

@@ -26,8 +26,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef DIRECT_DATA_CLIENT_HPP_
-#define DIRECT_DATA_CLIENT_HPP_
+#ifndef EXAMPLE_1_DIRECT_DATA_CLIENT_HPP_
+#define EXAMPLE_1_DIRECT_DATA_CLIENT_HPP_
 
 #include <pelican/core/DirectStreamDataClient.h>
 
@@ -43,4 +43,4 @@ class DirectDataClient : public pelican::DirectStreamDataClient
 
 PELICAN_DECLARE_CLIENT(DirectDataClient)
 
-#endif /* DIRECT_DATA_CLIENT_HPP_ */
+#endif /* EXAMPLE_1_DIRECT_DATA_CLIENT_HPP_ */

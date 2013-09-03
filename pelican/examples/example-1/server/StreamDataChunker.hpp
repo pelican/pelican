@@ -26,8 +26,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef STREAM_DATA_CHUNKER_HPP_
-#define STREAM_DATA_CHUNKER_HPP_
+#ifndef EXAMPLE_1_STREAM_DATA_CHUNKER_HPP_
+#define EXAMPLE_1_STREAM_DATA_CHUNKER_HPP_
 
 #include <pelican/server/AbstractChunker.h>
 
@@ -50,4 +50,4 @@ class StreamDataChunker : public pelican::AbstractChunker
 
 PELICAN_DECLARE_CHUNKER(StreamDataChunker)
 
-#endif /* STREAM_DATA_CHUNKER_HPP_ */
+#endif /* EXAMPLE_1_STREAM_DATA_CHUNKER_HPP_ */
