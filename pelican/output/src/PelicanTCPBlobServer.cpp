@@ -38,21 +38,19 @@ namespace pelican {
  * PelicanTCPBlobServer constructor
  */
 PelicanTCPBlobServer::PelicanTCPBlobServer(const ConfigNode& configNode )
-      : AbstractOutputStream(configNode),
-        _server(0),
-        _connectionManager(0)
+: AbstractOutputStream(configNode), _server(0), _connectionManager(0)
 {
-    // Initliase connection manager thread
+    // Initialise connection manager thread
     int port = configNode.getOption("connection", "port").toInt();
 
-    // decide to run in threaded/ or non-threaded mode
+    // Decide to run in threaded/ or non-threaded mode
     bool threaded = true;
-    if( configNode.hasAttribute("threaded") )
-    {
-        threaded = ! QString::compare(configNode.getAttribute("threaded"), "false",  Qt::CaseInsensitive);
+    if (configNode.hasAttribute("threaded")) {
+        threaded = ! QString::compare(configNode.getAttribute("threaded"),
+                "false",  Qt::CaseInsensitive);
     }
 
-    if( threaded )
+    if (threaded)
         _server = new ThreadedBlobServer(port);
     else {
         _connectionManager = new TCPConnectionManager;
@@ -76,7 +74,7 @@ PelicanTCPBlobServer::~PelicanTCPBlobServer()
  */
 int PelicanTCPBlobServer::clientsForStream(const QString& stream) const
 {
-    if( _server ) {
+    if (_server) {
         return _server->clientsForStream(stream);
     }
     else {
@@ -93,10 +91,10 @@ void PelicanTCPBlobServer::sendStream(const QString& streamName, const DataBlob*
     // Tell the threaded blob server to send data
     // This must be blocking, to avoid the DataBlob being recycled before
     // the data has been sent
-    if( _server ) {
+    if (_server) {
         _server->blockingSend(streamName, incoming);
     }
-    if( _connectionManager ) {
+    if (_connectionManager) {
         _connectionManager->send(streamName, incoming);
     }
 }
@@ -105,7 +103,7 @@ void PelicanTCPBlobServer::sendStream(const QString& streamName, const DataBlob*
  */
 void PelicanTCPBlobServer::stop()
 {
-    if( _server )
+    if (_server)
         _server->stop();
     else {
         _connectionManager->stop();
@@ -114,7 +112,7 @@ void PelicanTCPBlobServer::stop()
 
 void PelicanTCPBlobServer::listen()
 {
-    if( _server )
+    if (_server)
         _server->listen();
     else {
         _connectionManager->listen();
@@ -127,7 +125,7 @@ void PelicanTCPBlobServer::listen()
  */
 quint16 PelicanTCPBlobServer::serverPort() const
 {
-    if( _server )
+    if (_server)
         return _server->serverPort();
     else {
         return _connectionManager->serverPort();

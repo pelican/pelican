@@ -48,8 +48,7 @@ namespace pelican {
  * TCPConnectionManager constructor
  */
 TCPConnectionManager::TCPConnectionManager(quint16 port, QObject *parent)
-                     : QObject(parent), _port(port),
-                      _dataSupportStream("__streamInfo__")
+: QObject(parent), _port(port), _dataSupportStream("__streamInfo__")
 {
     _protocol = new PelicanProtocol; // TODO - make configurable
     _tcpServer = new QTcpServer;
@@ -101,7 +100,7 @@ void TCPConnectionManager::acceptClientConnection()
 
 void TCPConnectionManager::_incomingFromClient()
 {
-     _processIncomming(static_cast<QTcpSocket*>( sender() ) );
+    _processIncomming(static_cast<QTcpSocket*>( sender() ) );
 }
 
 bool TCPConnectionManager::_processIncomming(QTcpSocket *client)
@@ -113,47 +112,47 @@ bool TCPConnectionManager::_processIncomming(QTcpSocket *client)
     switch ( request->type() )
     {
         case ServerRequest::DataSupport:
+        {
+            DataSupportResponse res( types() );
+            _protocol->send(*client, res);
+            // add the client to the stream update channel
+            if( ! _clients[_dataSupportStream].contains(client) )
             {
-                DataSupportResponse res( types() );
-                _protocol->send(*client,res);
-                // add the client to the stream update channel
-                if( ! _clients[_dataSupportStream].contains(client) )
-                {
-                    //std::cout << "TCPConnectionManager: Adding new client for streamInfo\n";
-                    _clients[_dataSupportStream].push_back(client);
-                }
+                //std::cout << "TCPConnectionManager: Adding new client for streamInfo\n";
+                _clients[_dataSupportStream].push_back(client);
             }
-            break;
+        }
+        break;
         case ServerRequest::StreamData:
-            {
-                StreamDataRequest& req = static_cast<StreamDataRequest&>(*request);
-                // Check for invalid data requirements
-                if (req.isEmpty()) {
-                    std::cerr << "Invalid client data requrements" << std::endl;
-                    //client->close();
-                    return false;
-                }
-                // Check data requirements
-                DataSpecIterator it = req.begin();
-                while(it != req.end()) {
-                    // Add all client data requirement to type-client list
-                    foreach(const QString& streamData, it->streamData() ) {
-                        // Check if clients map already has the key, if so add client to list
-                        //std::cout << "TCPConnectionManager: Adding new client for stream: "
-                        //        << streamData.toStdString()  << std::endl;
-                        if( ! _clients[streamData].contains(client) )
-                            _clients[streamData].push_back(client);
-                    }
-                    ++it;
-                }
-            }
-            break;
-        default:
-            {
-                std::cerr << "TCPConnectionManager: Invalid client request" << std::endl;
+        {
+            StreamDataRequest& req = static_cast<StreamDataRequest&>(*request);
+            // Check for invalid data requirements
+            if (req.isEmpty()) {
+                std::cerr << "Invalid client data requrements" << std::endl;
                 //client->close();
                 return false;
             }
+            // Check data requirements
+            DataSpecIterator it = req.begin();
+            while(it != req.end()) {
+                // Add all client data requirement to type-client list
+                foreach(const QString& streamData, it->streamData() ) {
+                    // Check if clients map already has the key, if so add client to list
+                    //std::cout << "TCPConnectionManager: Adding new client for stream: "
+                    //        << streamData.toStdString()  << std::endl;
+                    if( ! _clients[streamData].contains(client) )
+                        _clients[streamData].push_back(client);
+                }
+                ++it;
+            }
+        }
+        break;
+        default:
+        {
+            std::cerr << "TCPConnectionManager: Invalid client request" << std::endl;
+            //client->close();
+            return false;
+        }
     }
     return true;
 
@@ -202,27 +201,26 @@ void TCPConnectionManager::_sendNewDataTypes()
  */
 void TCPConnectionManager::send(const QString& streamName, const DataBlob* blob)
 {
-
     QMutexLocker sendlocker(&_sendMutex);
 
     // Check if there are any client reading streamName type data
-    if (_clients.contains(streamName) ) {
+    if (_clients.contains(streamName) )
+    {
         clients_t clientListCopy;
         {
-            // control access to the _clients
+            // Control access to the _clients
             QMutexLocker locker(&_mutex);
             clientListCopy = _clients[streamName];
         }
 
-        for(int i = 0; i < clientListCopy.size(); ++i ) {
-
+        for(int i = 0; i < clientListCopy.size(); ++i )
+        {
             QTcpSocket* client =  clientListCopy[i];
-
             // Send data to client
             try {
-                //std::cout << "Sending blob of type " << blob->type().toStdString()
-                //          << " on stream " << streamName.toStdString() << " to:"
-                //          << client->peerName().toStdString() << std::endl;
+//                std::cout << "Sending blob of type " << blob->type().toStdString()
+//                          << " on stream " << streamName.toStdString() << " to:"
+//                          << client->peerName().toStdString() << std::endl;
                 Q_ASSERT( client->state() == QAbstractSocket::ConnectedState );
                 _protocol->send(*client, streamName, *blob);
                 client->flush();
@@ -236,7 +234,7 @@ void TCPConnectionManager::send(const QString& streamName, const DataBlob* blob)
         }
     }
     emit sent(blob); // let any blocked sends continue
-                     // now the blob is sent.
+    // now the blob is sent.
 
     // Ensure we track the data streams and inform any interested
     // clients of updates.

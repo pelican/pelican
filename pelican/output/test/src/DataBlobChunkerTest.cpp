@@ -34,6 +34,7 @@
 #include "output/test/TestDataBlobServer.h"
 #include <QtCore/QDebug>
 
+#include <unistd.h>
 
 namespace pelican {
 using namespace test;
@@ -56,46 +57,48 @@ DataBlobChunkerTest::~DataBlobChunkerTest()
 
 void DataBlobChunkerTest::setUp()
 {
-    _blob.setData( QByteArray("testdata") );
-}
-
-void DataBlobChunkerTest::tearDown()
-{
+    _blob.setData(QByteArray("testdata"));
 }
 
 void DataBlobChunkerTest::test_method()
 {
     // Use Case:
-    // Send datablobs on a single stream
+    //   Send datablobs on a single stream.
     // Expect:
-    // individual requests for buffer space
-    // for each DataBlob
+    //   Individual requests for buffer space for each DataBlob.
     try {
-    TestDataBlobServer server;
-    QString xml("<DataBlobChunker>");
-    xml += QString("<connection host=\"%1\" port=\"%2\" />")
-           .arg(server.host()).arg(server.port());
-    xml += QString("<subscribe stream=\"%1\" />").arg(_blob.type());
-    xml += "</DataBlobChunker>";
-    CPPUNIT_ASSERT_EQUAL( 0, server.clientsForStream(_blob.type()) );
-    ChunkerTester tester("DataBlobChunker", 10*_blob.size(), xml );
-    CPPUNIT_ASSERT_EQUAL( 1, server.clientsForStream(_blob.type()) );
-    server.send(&_blob);
-    CPPUNIT_ASSERT_EQUAL( 1, tester.writeRequestCount() );
-    server.send(&_blob);
-    CPPUNIT_ASSERT_EQUAL( 2, tester.writeRequestCount() );
-    } catch(const QString& e) {
+        TestDataBlobServer server;
+        QString xml("<DataBlobChunker>");
+        xml += QString("<connection host=\"%1\" port=\"%2\" />")
+               .arg(server.host()).arg(server.port());
+        xml += QString("<subscribe stream=\"%1\" />").arg(_blob.type());
+        xml += "</DataBlobChunker>";
+        CPPUNIT_ASSERT_EQUAL(0, server.clientsForStream(_blob.type()));
+
+        ChunkerTester tester("DataBlobChunker", 10*_blob.size(), xml);
+        CPPUNIT_ASSERT_EQUAL(1, server.clientsForStream(_blob.type()));
+
+        server.send(&_blob);
+        usleep(1000); // FIXME sleep needed?
+        CPPUNIT_ASSERT_EQUAL(1, tester.writeRequestCount());
+
+        server.send(&_blob);
+        usleep(1000); // FIXME sleep needed?
+        CPPUNIT_ASSERT_EQUAL(2, tester.writeRequestCount());
+
+    }
+    catch(const QString& e)
+    {
         CPPUNIT_FAIL(e.toStdString().c_str());
     }
 }
 
 void DataBlobChunkerTest::test_multisubscribe() {
     // Use Case:
-    // Send datablobs on multiple streams
+    //   Send datablobs on multiple streams
     // Expect:
-    // individual requests for buffer space
-    // for each DataBlob - different buffers for
-    // each stream
+    //   individual requests for buffer space for each DataBlob -
+    // different buffers for each stream
     TestDataBlobServer server;
     QString stream1("stream1");
     QString stream2("stream2");
@@ -109,9 +112,13 @@ void DataBlobChunkerTest::test_multisubscribe() {
     ChunkerTester tester("DataBlobChunker", 10*_blob.size(), xml );
     CPPUNIT_ASSERT_EQUAL( 1, server.clientsForStream(stream1) );
     CPPUNIT_ASSERT_EQUAL( 1, server.clientsForStream(stream2) );
+
     server.send(&_blob, stream1);
+    usleep(1000); // FIXME sleep needed?
     CPPUNIT_ASSERT_EQUAL( 1, tester.writeRequestCount(stream1) );
+
     server.send(&_blob, stream2);
+    usleep(1000); // FIXME sleep needed?
     CPPUNIT_ASSERT_EQUAL( 1, tester.writeRequestCount(stream2) );
 }
 

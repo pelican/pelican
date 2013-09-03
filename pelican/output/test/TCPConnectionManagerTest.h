@@ -58,7 +58,6 @@ class TCPConnectionManagerTest : public CppUnit::TestFixture
         CPPUNIT_TEST_SUITE( TCPConnectionManagerTest );
         CPPUNIT_TEST( test_send );
         CPPUNIT_TEST( test_brokenConnection );
-        CPPUNIT_TEST( test_multiClients );
         CPPUNIT_TEST( test_dataSupportedRequest );
         CPPUNIT_TEST_SUITE_END();
 
@@ -69,7 +68,6 @@ class TCPConnectionManagerTest : public CppUnit::TestFixture
         // Test Methods
         void test_send();
         void test_brokenConnection();
-        void test_multiClients(); // NOTE not implemented yet!
         void test_dataSupportedRequest();
 
     public:

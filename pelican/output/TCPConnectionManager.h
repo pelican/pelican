@@ -84,15 +84,17 @@ class TCPConnectionManager : public QObject
         void send(const QString& streamName, const DataBlob* incoming);
 
     private:
-        typedef QList<QTcpSocket*>         clients_t;
-        quint16                            _port;
-        QMap<QString, clients_t >          _clients;
-        QTcpServer*                        _tcpServer;
-        QMutex                             _mutex; // controls access to _clients
-        QMutex                             _sendMutex; // controls access to send method
-        AbstractProtocol*                  _protocol;
-        QSet<QString>                      _seenTypes;          // record what types have been seen (via send() )
-        const QString                      _dataSupportStream;  // the name of the subscrition stream for data support requests
+        typedef QList<QTcpSocket*> clients_t;
+        quint16 _port;
+        QMap<QString, clients_t > _clients;
+        QTcpServer* _tcpServer;
+        QMutex _mutex;     // controls access to _clients
+        QMutex _sendMutex; // controls access to send method
+        AbstractProtocol* _protocol;
+        // Record of what types have been seen (via send() )
+        QSet<QString> _seenTypes;
+        // The name of the subscription stream for data support requests
+        const QString _dataSupportStream;
 
     private slots:
         void connectionError(QAbstractSocket::SocketError socketError);

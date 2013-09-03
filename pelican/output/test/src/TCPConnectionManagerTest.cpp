@@ -40,6 +40,9 @@
 #include <QtNetwork/QTcpSocket>
 #include <QtCore/QCoreApplication>
 
+#include <unistd.h>
+#include <iostream>
+
 namespace pelican {
 
 using test::TestDataBlob;
@@ -47,7 +50,7 @@ using test::TestDataBlob;
 CPPUNIT_TEST_SUITE_REGISTRATION( TCPConnectionManagerTest );
 
 TCPConnectionManagerTest::TCPConnectionManagerTest()
-: CppUnit::TestFixture()
+: CppUnit::TestFixture(), _server(0), _clientProtocol(0)
 {
 }
 
@@ -58,6 +61,7 @@ TCPConnectionManagerTest::~TCPConnectionManagerTest()
 void TCPConnectionManagerTest::setUp()
 {
     _clientProtocol = new PelicanClientProtocol;
+    _clientProtocol->setTimeout(200); // 200 ms
     _server = new TCPConnectionManager(0);
 }
 
@@ -67,55 +71,6 @@ void TCPConnectionManagerTest::tearDown()
     delete _clientProtocol;
 }
 
-void TCPConnectionManagerTest::test_dataSupportedRequest()
-{
-    // Use Case:
-    //   Send a dataSupport request with no data.
-    // Expect:
-    //   Stream to return a DataSupportResponse and add us to the DataSupport
-    //   stream
-    QString streamInfo("__streamInfo__");
-    DataSupportRequest req;
-    QTcpSocket* client = _createClient();
-    CPPUNIT_ASSERT_EQUAL( 0, _server->clientsForStream(streamInfo) );
-    _sendRequest( client, req );
-    QCoreApplication::processEvents();
-    CPPUNIT_ASSERT_EQUAL( 1, _server->clientsForStream(streamInfo) );
-
-    sleep(1);
-    QCoreApplication::processEvents();
-    CPPUNIT_ASSERT( client->state() == QAbstractSocket::ConnectedState );
-    boost::shared_ptr<ServerResponse> r = _clientProtocol->receive( *client );
-    CPPUNIT_ASSERT( r->type() == ServerResponse::DataSupport );
-
-    // Use case:
-    //   New stream type arrives.
-    // Expect:
-    //   To receive a new DataRequest with the new data.
-    QString stream1("stream1");
-    TestDataBlob blob;
-    blob.setData("stream1Data");
-    _server->send(stream1,&blob);
-    sleep(1);
-    QCoreApplication::processEvents();
-
-    r = _clientProtocol->receive(*client);
-    CPPUNIT_ASSERT( r->type() == ServerResponse::DataSupport );
-    DataSupportResponse* res = static_cast<DataSupportResponse*>(r.get());
-    CPPUNIT_ASSERT_EQUAL( 1, res->streamData().size() );
-    CPPUNIT_ASSERT( res->streamData().contains(stream1) );
-
-    // Use case:
-    //   Existing stream type arrives.
-    // Expect:
-    //   Not to receive a new DataRequest.
-    _server->send(stream1,&blob);
-    sleep(1);
-    QCoreApplication::processEvents();
-
-    r = _clientProtocol->receive(*client);
-    CPPUNIT_ASSERT( r->type() != ServerResponse::DataSupport );
-}
 
 void TCPConnectionManagerTest::test_send()
 {
@@ -136,7 +91,7 @@ void TCPConnectionManagerTest::test_send()
     TestDataBlob blob;
     blob.setData("sometestData");
     _server->send("testData",&blob);
-    sleep(1);
+    usleep(200);
 
     CPPUNIT_ASSERT( client->state() == QAbstractSocket::ConnectedState );
     boost::shared_ptr<ServerResponse> r = _clientProtocol->receive(*client);
@@ -146,42 +101,90 @@ void TCPConnectionManagerTest::test_send()
     CPPUNIT_ASSERT( res->blobClass() == "TestDataBlob" );
     TestDataBlob recvBlob;
     recvBlob.deserialise(*client, res->byteOrder());
-    CPPUNIT_ASSERT(recvBlob == blob);
 
+    CPPUNIT_ASSERT(recvBlob == blob);
 }
 
 void TCPConnectionManagerTest::test_brokenConnection()
 {
+    QTcpSocket* client = 0;
+
     // Use Case:
     //   Client requests a connection.
     // Expect:
     //   Client to be registered for any data.
-
-    DataSpec dataSpec;
-    StreamDataRequest request;
-
-    dataSpec.addStreamData("testData");
-    request.addDataOption(dataSpec);
-
-    QTcpSocket* client = _createClient();
-    _sendRequest(client, request);
-
-    QCoreApplication::processEvents();
-
-    CPPUNIT_ASSERT_EQUAL(1, _server->clientsForStream("testData"));
+    {
+        DataSpec dataSpec;
+        dataSpec.addStreamData("testData");
+        StreamDataRequest request;
+        request.addDataOption(dataSpec);
+        client = _createClient();
+        _sendRequest(client, request);
+        CPPUNIT_ASSERT_EQUAL(1, _server->clientsForStream("testData"));
+    }
 
     // Use Case:
     //   Client dies after connection.
     // Expect:
     //   To be removed from the system.
-    delete client;
-    QCoreApplication::processEvents();
-    CPPUNIT_ASSERT_EQUAL( 0, _server->clientsForStream("testData") );
+    {
+        delete client;
+        usleep(200);
+        QCoreApplication::processEvents();
+        CPPUNIT_ASSERT_EQUAL(0, _server->clientsForStream("testData"));
+    }
 }
 
-void TCPConnectionManagerTest::test_multiClients()
+
+void TCPConnectionManagerTest::test_dataSupportedRequest()
 {
-    // TODO implement or remove?
+    QTcpSocket* client = _createClient();
+    boost::shared_ptr<ServerResponse> r;
+    QString stream1("stream1");
+    TestDataBlob blob;
+    blob.setData("stream1Data");
+
+    // Use Case:
+    //   Send a dataSupport request with no data.
+    // Expect:
+    //   Stream to return a DataSupportResponse and add us to the DataSupport
+    //   stream.
+    QString streamInfo("__streamInfo__");
+    DataSupportRequest req;
+    CPPUNIT_ASSERT_EQUAL(0, _server->clientsForStream(streamInfo));
+    _sendRequest(client, req);
+    QCoreApplication::processEvents();
+    CPPUNIT_ASSERT_EQUAL(1, _server->clientsForStream(streamInfo));
+    usleep(10);
+    QCoreApplication::processEvents();
+    CPPUNIT_ASSERT(client->state() == QAbstractSocket::ConnectedState);
+    r = _clientProtocol->receive(*client);
+    CPPUNIT_ASSERT(r->type() == ServerResponse::DataSupport);
+
+    // Use case:
+    //   New stream type arrives.
+    // Expect:
+    //   To receive a new DataRequest with the new data.
+    _server->send(stream1, &blob);
+    usleep(10);
+    QCoreApplication::processEvents();
+    r = _clientProtocol->receive(*client);
+    CPPUNIT_ASSERT(r->type() == ServerResponse::DataSupport);
+    DataSupportResponse* res = static_cast<DataSupportResponse*>(r.get());
+    CPPUNIT_ASSERT_EQUAL(1, res->streamData().size());
+    CPPUNIT_ASSERT(res->streamData().contains(stream1));
+
+    // Use case:
+    //   Existing stream type arrives.
+    // Expect:
+    //   Not to receive a new DataRequest.
+    // TODO work out what this test is supposed to demonstrate ...
+    _server->send(stream1, &blob);
+    usleep(10);
+    QCoreApplication::processEvents();
+    r = _clientProtocol->receive(*client);
+    //        CPPUNIT_ASSERT(r->type() == ServerResponse::Error);
+    CPPUNIT_ASSERT(r->type() != ServerResponse::DataSupport);
 }
 
 QTcpSocket* TCPConnectionManagerTest::_createClient() const
@@ -204,8 +207,7 @@ void TCPConnectionManagerTest::_sendRequest(QTcpSocket* tcpSocket, const ServerR
     tcpSocket->write(data);
     while (tcpSocket->bytesToWrite() > 0)
         tcpSocket->waitForBytesWritten(-1);
-//    tcpSocket->waitForBytesWritten(data.size());
-//    tcpSocket->flush();
+    tcpSocket->flush();
     QCoreApplication::processEvents( QEventLoop::WaitForMoreEvents );
 }
 

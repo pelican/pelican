@@ -52,7 +52,7 @@ namespace test {
 class TestDataBlobServer
 {
     public:
-        TestDataBlobServer(  );
+        TestDataBlobServer();
         ~TestDataBlobServer();
         QString host() const;
         quint16 port() const;

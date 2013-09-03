@@ -57,7 +57,6 @@ class DataBlobChunkerTest : public CppUnit::TestFixture
 
     public:
         void setUp();
-        void tearDown();
 
         // Test Methods
         void test_method();
