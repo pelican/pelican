@@ -50,7 +50,7 @@
 namespace pelican {
 
 PelicanClientProtocol::PelicanClientProtocol()
-    : AbstractClientProtocol()
+    : AbstractClientProtocol(), _timeout(2000)
 {
 }
 
@@ -99,12 +99,12 @@ QByteArray PelicanClientProtocol::serialise(const ServerRequest& req)
 }
 
 
-boost::shared_ptr<ServerResponse> PelicanClientProtocol::receive(QAbstractSocket& socket)
+boost::shared_ptr<ServerResponse> PelicanClientProtocol::receive(
+        QAbstractSocket& socket)
 {
-    int timeout = 1000;
     ServerResponse::Response type = ServerResponse::Error;
     while (socket.bytesAvailable() < (int)sizeof(quint16)) {
-        if ( !socket.waitForReadyRead(timeout) ) {
+        if (!socket.waitForReadyRead(_timeout)) {
             std::cerr << "PelicanClientProtocol: Receive error: "
                       << socket.errorString().toStdString() << std::endl;
             return boost::shared_ptr<ServerResponse>(new ServerResponse(type,
@@ -120,10 +120,10 @@ boost::shared_ptr<ServerResponse> PelicanClientProtocol::receive(QAbstractSocket
 
     switch(type)
     {
-        case ServerResponse::Acknowledge:
+        case ServerResponse::Acknowledge: // 0
             break;
 
-        case ServerResponse::DataSupport:
+        case ServerResponse::DataSupport: // 1
         {
             QSet<QString> streams;
             QSet<QString> services;
@@ -140,7 +140,7 @@ boost::shared_ptr<ServerResponse> PelicanClientProtocol::receive(QAbstractSocket
             break;
         }
 
-        case ServerResponse::StreamData:
+        case ServerResponse::StreamData: // 2
         {
             boost::shared_ptr<StreamDataResponse> s(new StreamDataResponse);
             quint16 streams;
@@ -171,7 +171,7 @@ boost::shared_ptr<ServerResponse> PelicanClientProtocol::receive(QAbstractSocket
             break;
         }
 
-        case ServerResponse::ServiceData:
+        case ServerResponse::ServiceData: // 3
         {
             boost::shared_ptr<ServiceDataResponse> s(new ServiceDataResponse);
             quint16 sets;
@@ -189,7 +189,7 @@ boost::shared_ptr<ServerResponse> PelicanClientProtocol::receive(QAbstractSocket
             break;
         }
 
-        case ServerResponse::Blob:
+        case ServerResponse::Blob: // 4
         {
             QString type;
             in >> type;
@@ -197,9 +197,10 @@ boost::shared_ptr<ServerResponse> PelicanClientProtocol::receive(QAbstractSocket
             in >> name;
             quint64 dataSize;
             in >> dataSize;
-            boost::shared_ptr<DataBlobResponse> s(
-                    new DataBlobResponse(type, name, dataSize,
-                            (QSysInfo::Endian)in.byteOrder()));
+            while (socket.bytesAvailable() < (qint64)dataSize)
+                socket.waitForReadyRead(10);
+            boost::shared_ptr<DataBlobResponse> s(new DataBlobResponse(type,
+                    name, dataSize, (QSysInfo::Endian)in.byteOrder()));
             return s;
             break;
         }
@@ -208,10 +209,9 @@ boost::shared_ptr<ServerResponse> PelicanClientProtocol::receive(QAbstractSocket
             break;
     }
 
-    return boost::shared_ptr<ServerResponse>(
-            new ServerResponse(ServerResponse::Error,
-                    QString("PelicanClientProtocol: Unknown type passed: %1")
-                    .arg(type)));
+    return boost::shared_ptr<ServerResponse>(new ServerResponse(
+            ServerResponse::Error, QString("PelicanClientProtocol: Unknown type"
+                    " passed: %1").arg(type)));
 }
 
 

@@ -59,10 +59,13 @@ class PelicanClientProtocol : public AbstractClientProtocol
         ~PelicanClientProtocol();
         virtual QByteArray serialise(const ServerRequest&);
         virtual boost::shared_ptr<ServerResponse> receive(QAbstractSocket&);
-
+        // Set the timeout, in milliseconds
+        void setTimeout(int value = 2000) { _timeout = value; }
+        int getTimeout() const { return _timeout; }
     private:
         void _serializeDataRequirements(QDataStream& stream,
                 const DataSpec& req) const;
+        int _timeout;
 };
 
 } // namespace pelican
