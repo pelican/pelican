@@ -86,6 +86,7 @@ void FileChunkerTest::test_update()
         ChunkerTester tester("FileChunker", 100*_msg.size(), xml);
         usleep(100);
 
+#ifndef __APPLE__
         QSignalSpy spy(tester.getCurrentDevice(), SIGNAL(readyRead()));
         CPPUNIT_ASSERT_EQUAL(1, tester.writeRequestCount());
 
@@ -101,7 +102,7 @@ void FileChunkerTest::test_update()
         // http://www.mail-archive.com/interest@qt-project.org/msg02987.html
         //
         // Note: when spy.count() == 2 the write request count is 3...
-#ifndef __APPLE__
+
         CPPUNIT_ASSERT_EQUAL(1, spy.count());
         CPPUNIT_ASSERT_EQUAL(2, tester.writeRequestCount());
 #endif
