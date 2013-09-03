@@ -66,10 +66,9 @@ class AbstractClientProtocol
         /// Serialises the ServerRequest (pure virtual).
         virtual QByteArray serialise(const ServerRequest&) = 0;
 
-        /// Translate incomming bit stream from a socket into
+        /// Translate incoming bit stream from a socket into
         //  appropriate ServerResponse objects
         virtual boost::shared_ptr<ServerResponse> receive(QAbstractSocket&) = 0;
-
 };
 
 } // namespace pelican
