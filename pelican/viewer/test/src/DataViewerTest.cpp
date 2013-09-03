@@ -43,6 +43,7 @@
 #include <boost/shared_ptr.hpp>
 
 #include <iostream>
+#include <unistd.h>
 
 using namespace std;
 
@@ -64,15 +65,6 @@ DataViewerTest::DataViewerTest()
  * @details Destroys the DataViewerTest object.
  */
 DataViewerTest::~DataViewerTest()
-{
-}
-
-void DataViewerTest::setUp()
-{
-
-}
-
-void DataViewerTest::tearDown()
 {
 }
 
@@ -127,7 +119,7 @@ void DataViewerTest::test_integrationWithDataClient()
 
     ConfigNode config(xml);
     PelicanTCPBlobServer server(config);
-    sleep(1);
+    usleep(100);
 
     DataBlobClient* client = _client( &server );
 //    DataViewer viewer(config, address);

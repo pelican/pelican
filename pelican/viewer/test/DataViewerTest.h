@@ -63,9 +63,6 @@ class DataViewerTest : public CppUnit::TestFixture
         CPPUNIT_TEST_SUITE_END();
 
     public:
-        void setUp();
-        void tearDown();
-
         // Test Methods
         void test_client();
         void test_integrationWithDataClient();
