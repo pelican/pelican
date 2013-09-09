@@ -82,7 +82,7 @@ void Pipeline::run(QHash<QString, pelican::DataBlob*>& data)
         printf("%s\n", prefix);
         printf("%sReport Interval:\n", prefix);
         printf("%s* Pipeline runs  = %i\n", prefix, reportInterval);
-        printf("%s* Data received  = %-7.3f MiB [%zu B]\n", prefix,
+        printf("%s* Data received  = %-7.3f MiB [%lu B]\n", prefix,
                 dataReceived*B2MiB, dataReceived);
         printf("%s* Time taken     = %.3f s\n", prefix, elapsed*1.0e-3);
         printf("%s* Random delay   = %.6f s\n", prefix, randDelay_*1.0e-6);

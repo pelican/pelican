@@ -237,13 +237,13 @@ void StreamChunker::next(QIODevice* device)
         printf("%s\n", prefix);
         printf("%sBuffer state:\n", prefix);
         printf("%s* Percent full       = %.1f%%\n", prefix, pBufferFull);
-        printf("%s* Total size         = %-7.3f MiB [%zu B]\n", prefix,
+        printf("%s* Total size         = %-7.3f MiB [%lu B]\n", prefix,
                 maxBufferSize_*B2MiB, maxBufferSize_);
-        printf("%s* Allocated size     = %-7.3f MiB [%zu B]\n", prefix,
+        printf("%s* Allocated size     = %-7.3f MiB [%lu B]\n", prefix,
                 allocatedSize_*B2MiB, allocatedSize_);
-        printf("%s* In use (active)    = %-7.3f MiB [%zu B]\n", prefix,
+        printf("%s* In use (active)    = %-7.3f MiB [%lu B]\n", prefix,
                 usedSize_*B2MiB, usedSize_);
-        printf("%s* Usable space       = %-7.3f MiB [%zu B]\n", prefix,
+        printf("%s* Usable space       = %-7.3f MiB [%lu B]\n", prefix,
                 usableSize_*B2MiB, usableSize_);
         printf("%s* Total chunks       = %i\n", prefix, numChunks());
         printf("%s* Active chunks      = %i\n", prefix, numActiveChunks());
@@ -256,7 +256,7 @@ void StreamChunker::next(QIODevice* device)
         printf("%s\n", prefix);
         printf("%sReport interval:\n", prefix);
         printf("%s* Chunks received    = %i\n", prefix, reportInterval);
-        printf("%s* Data received      = %-7.3f MiB [%zu B] \n", prefix,
+        printf("%s* Data received      = %-7.3f MiB [%lu B] \n", prefix,
                 dataReceived*B2MiB, dataReceived);
         printf("%s* Time taken         = %.3f s\n", prefix, elapsed*1.0e-3);
         printf("%s* Data rate          = ", prefix);

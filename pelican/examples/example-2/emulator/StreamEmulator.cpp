@@ -203,14 +203,14 @@ void StreamEmulator::printReport()
     printf("%sPacket count  = %i", prefix, packetCounter_);
     if (numPackets_ > 0) printf(" of %i\n", numPackets_);
     else printf("\n");
-    printf("%sPacket size   = %-7.3f MiB [%zu B]\n", prefix,
+    printf("%sPacket size   = %-7.3f MiB [%lu B]\n", prefix,
             packetSize_*B2MiB, packetSize_);
     printf("%sTotal sent    = %.1f MiB\n", prefix,
             packetSize_*packetCounter_*B2MiB);
     printf("%s\n", prefix);
     printf("%sReport interval:\n", prefix);
     printf("%s* Packets sent = %i\n", prefix, reportInterval_);
-    printf("%s* Data sent    = %-7.3f MiB [%zu B]\n", prefix,
+    printf("%s* Data sent    = %-7.3f MiB [%lu B]\n", prefix,
             dataSent*B2MiB, dataSent);
     printf("%s* Time taken   = %.3f s\n", prefix, elapsed*1.0e-3);
     printf("%s* Data rate    = ", prefix);
