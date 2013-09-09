@@ -47,8 +47,11 @@ public:
 
 private:
     QTcpServer* tcpServer_;
-    quint32 chunkCounter_;
+    quint64 chunkCounter_;
     QTime timer_;
+    quint64 reportCounter_;
+    quint64 totalOverwriteCounter_;
+    quint32 intervalOverwriteCounter_;
 };
 
 PELICAN_DECLARE_CHUNKER(StreamChunker)

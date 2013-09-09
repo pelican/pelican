@@ -31,6 +31,7 @@
 #define EXAMPLE_2_STREAM_DATA_ADAPTER_HPP_
 
 #include <pelican/core/AbstractStreamAdapter.h>
+#include <QtCore/QTime>
 
 class StreamDataAdapter : public pelican::AbstractStreamAdapter
 {

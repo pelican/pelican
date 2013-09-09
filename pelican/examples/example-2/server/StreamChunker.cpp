@@ -33,12 +33,23 @@
 #include <QtNetwork/QTcpSocket>
 #include <QtCore/QIODevice>
 #include <iostream>
+#include <cstdio>
 #include <string>
 
 using namespace std;
 
+
+/*
+ * Creates chunks of StreamData from the packets send from the StreamEmulator.
+ *
+ *
+ *
+ *
+ */
+
 StreamChunker::StreamChunker(const pelican::ConfigNode& config)
-: AbstractChunker(config), tcpServer_(0), chunkCounter_(0)
+: AbstractChunker(config), tcpServer_(0), chunkCounter_(0), reportCounter_(0),
+  totalOverwriteCounter_(0), intervalOverwriteCounter_(0)
 {
 }
 
@@ -46,6 +57,22 @@ StreamChunker::~StreamChunker()
 {
 }
 
+/*
+ * Function that returns an IO device from which input data can be read.
+ *
+ * In order for the chunker (and therefore data server) to stay alive between
+ * injection of data from invocations of the emulator binary used in this
+ * example the chunker here creates a TCPServer and returns a connected
+ * TCP socket whenever that becomes available upon connection with the emulator.
+ *
+ * The function blocks until a connection can be made.
+ *
+ * Each time the TCP socket disconnects, for example because the emulator has
+ * finished, the DataReciever will attempt to reconnect by calling this method
+ * again.
+ *
+ * TODO add a configurable timeout when waiting for new connections.
+ */
 QIODevice* StreamChunker::newDevice()
 {
     // Note:
@@ -56,19 +83,24 @@ QIODevice* StreamChunker::newDevice()
     if (tcpServer_ == 0) {
         tcpServer_ = new QTcpServer();
         cout << endl;
-        cout << "StreamChunker: created a QTcpServer listening on:" << endl;
-        cout << "StreamChunker:    host = " << host().toStdString() << endl;
-        cout << "StreamChunker:    port = " << port() << endl;
+        cout << "StreamChunker: Created a QTcpServer listening on:" << endl;
+        cout << " * host = " << host().toStdString() << endl;
+        cout << " * port = " << port() << endl;
         tcpServer_->listen(QHostAddress(host()), port());
     }
-    cout << "StreamChunker: waiting for a connection!\n";
+    cout << " * Waiting for a connection... " << flush;
     tcpServer_->waitForNewConnection(-1);
-    cout << "StreamChunker: connected!\n";
+    cout << " Connected!" << endl << endl;
     timer_.start();
     return tcpServer_->nextPendingConnection();
 }
 
 
+
+/* Function that is called whenever there is data ready to be processed.
+ * This function should block until all data for the chunk has been read from
+ * the device.
+ */
 void StreamChunker::next(QIODevice* device)
 {
     // Note:
@@ -77,40 +109,27 @@ void StreamChunker::next(QIODevice* device)
     // It is probably best therefore, when running the benchmark, to make sure
     // all chunks are allocated before the timing starts.
 
-#if 0
-    if (chunkCounter_ == 0)
-        timer_.start();
-#endif
-
     QTcpSocket* socket = static_cast<QTcpSocket*>(device);
     quint64 totalBytesRead = 0;
+    quint64 bytesRead = 0;
 
     // Header values.
     quint32 packetSize = 0;
-    quint32 packetId = 0;
-    quint32 numPackets = 0;
+    quint32 packetCounter = 0;
     quint32 packetTime = 0;
-    quint64 bytesRead = 0;
-    quint32 reportInterval = 0;
-    quint32 numHeaderFields = 5;
-    size_t headerSize = numHeaderFields * sizeof(quint32);
-
-#if 0
-    while (socket->bytesAvailable() < 400016*100) {
-        socket->waitForReadyRead(-1);
-        cout << socket->bytesAvailable() << " / " <<400016*100 <<endl;
-    }
-#endif
+    qint32 numPackets = 0;
+    qint32 reportInterval = 0;
+    size_t headerSize = 3*sizeof(quint32) + 2*sizeof(qint32);
 
     // Read header values.
     while (isActive() && totalBytesRead != headerSize)
     {
-        while (socket->bytesAvailable() < (int)(headerSize)) {
+        while (socket->bytesAvailable() < (qint64)(headerSize)) {
             socket->waitForReadyRead(-1);
         }
         bytesRead = socket->read((char*)&packetSize, (qint64)sizeof(quint32));
         totalBytesRead+=bytesRead;
-        bytesRead = socket->read((char*)&packetId, (qint64)sizeof(quint32));
+        bytesRead = socket->read((char*)&packetCounter, (qint64)sizeof(quint32));
         totalBytesRead+=bytesRead;
         bytesRead = socket->read((char*)&packetTime, (qint64)sizeof(quint32));
         totalBytesRead+=bytesRead;
@@ -120,42 +139,65 @@ void StreamChunker::next(QIODevice* device)
         totalBytesRead+=bytesRead;
     }
 
-#if 0
-    cout << chunkCounter_ << ", " << packetId << ", " << totalBytesRead <<endl;
+    //
+    // Writable chunks are obtained using the getDataStorage() method
+    // using the the following priority:
+    //
+    // 1) A Pre-allocated chunk in the buffer that has already been served
+    //    and has been marked for reuse.
+    // 2) Allocating a new chunk in the buffer if space allows.
+    // 3) Overwriting the oldest chunk in the buffer that matches the space
+    //    requirements.
+    //
+    // If none of these conditions can be met, an invalid chunk is returned.
+    //
+
+    // If there are no usable chunks, i.e. the buffer is full we will
+    // be overwriting chunks.
+#if 1
+    if (numUsableChunks(packetSize) == 0) {
+        ++totalOverwriteCounter_;
+        ++intervalOverwriteCounter_;
+    }
 #endif
 
     // Ask the data manager for a writable data chunk and get its data pointer.
-    // Note:
-    // Need some way to query the max chunk size and/or remaining space
-    // in the data buffer here.
     pelican::WritableData chunk = getDataStorage(packetSize);
-    // Note: should check chunk->isValid() before proceeding!
-    // (see comment above)
+
+    // Check chunk->isValid() before proceeding!
     if (!chunk.isValid()) {
-#if 0
-        cerr << "StreamChunker::next(): Unable to get a valid chunk" << endl;
-#endif
-        throw QString("StreamChunker::next(): Unable to get a valid chunk");
+        QString error = "StreamChunker::next(): Unable to get a valid chunk. ";
+        if (packetSize > maxChunkSize()) {
+            error += QString(
+                    "\n== The requested packet size is greater than the maximum"
+                    "\n== chunk size allowed by the buffer.");
+        }
+        throw error;
     }
+
+    // Extract the data pointer from the chunk
     char* chunkPtr = (char*)chunk.ptr();
 
     // Write the header into the chunk.
-    quint32* header = reinterpret_cast<quint32*>(chunkPtr);
-    header[0] = packetSize;
-    header[1] = packetId;
-    header[2] = numPackets;
-    header[3] = packetTime;
+    quint32* header1 = reinterpret_cast<quint32*>(chunkPtr);
+    header1[0] = packetSize;
+    header1[1] = packetCounter;
+    header1[2] = packetTime;
+    qint32* header2 = reinterpret_cast<qint32*>(chunkPtr+3*sizeof(quint32));
+    header2[0] = numPackets;
+    header2[1] = reportInterval;
 
-    // Note: Settings the read buffer size may have an impact on performance.
-    //socket->setReadBufferSize(1024*1024);
+    // NOTE Setting the read buffer size may have an impact on performance.
+#if 0
+    socket->setReadBufferSize(2*1024*1024);
+#endif
 
-    quint64 dataRemaining = packetSize - headerSize;
-
-    // Note: The minimum read size has an impact on performance and has not
-    // yet been optimised.
-    quint64 minReadSize = 128;
+    // NOTE The minimum read size has an impact on performance and has not
+    // been optimised.
+    quint64 minReadSize = 1024;//2*1024*1024; // bytes
 
     // Read data block directly into the chunk.
+    quint64 dataRemaining = packetSize - headerSize;
     while (isActive() && dataRemaining > 0)
     {
         if (dataRemaining < minReadSize) minReadSize = dataRemaining;
@@ -169,30 +211,64 @@ void StreamChunker::next(QIODevice* device)
         dataRemaining-=bytesRead;
     }
 
-#if 0
-    cout << chunkCounter_ << ", " << packetId << ", " << totalBytesRead <<endl;
-    cout << "bytes avail = " << socket->bytesAvailable() << endl << endl;
-#endif
-
     chunkCounter_++;
 
-    // Report performance if on the last packed sent from a run of the emulator.
-    if (chunkCounter_%reportInterval == 0) {
-        float elapsed = timer_.elapsed() / 1.0e3;
-        float MiB = (packetSize * reportInterval) / (1024.0*1024.0);
-        cout << endl;
-        cout << string(80, '*') << endl;
-        cout << __PRETTY_FUNCTION__ << endl;
-        cout << std::string(80, '-') << endl;
-        cout << "-- chunks complete = " << chunkCounter_ << endl;
-        cout << "-- packet size     = " << packetSize << " bytes" << endl;
-        cout << "-- packet size     = " << packetSize/(1024.0*1024.0) << " MiB" << endl;
-        cout << "-- time taken      = " << elapsed << " seconds." << endl;
-        cout << "-- MiB (sent)      = " << MiB << std::endl;
-        cout << "-- MiB/s           = " << MiB/elapsed  << endl;
-        cout << std::string(80, '*') << endl;
+    // Report performance
+    if (chunkCounter_%reportInterval == 0)
+    {
+        const double B2MiB = 1.0/(1024.0*1024.0);
+        int elapsed = timer_.elapsed();
+        size_t dataReceived = packetSize * reportInterval;
+        size_t maxBufferSize_ = maxBufferSize();
+        size_t allocatedSize_ = allocatedSize();
+        size_t usedSize_ = usedSize();
+        size_t usableSize_ = usableSize(packetSize);
+        // Buffer % full (how much of the buffer is in use as a %)
+        double pBufferFull = ((maxBufferSize_-usableSize_)/(double)maxBufferSize_)*100.0;
+        char prefix[10];
+        int l = (reportCounter_ < 10) ? 2 : ((reportCounter_ < 100) ? 1 : 0);
+        sprintf(prefix, "S[%s%llu] ", string(l, '-').c_str(), reportCounter_);
+        printf("%s\n", string(80,'*').c_str());
+        printf("%sTotal chunk count    = %llu\n", prefix, chunkCounter_);
+        printf("%sChunk size           = %-7.3f MiB [%i B]\n", prefix,
+                packetSize*B2MiB, packetSize);
+        printf("%sTotal data received  = %.1f MiB\n", prefix,
+                (quint64)packetSize*chunkCounter_*B2MiB);
+        printf("%s\n", prefix);
+        printf("%sBuffer state:\n", prefix);
+        printf("%s* Percent full       = %.1f%%\n", prefix, pBufferFull);
+        printf("%s* Total size         = %-7.3f MiB [%zu B]\n", prefix,
+                maxBufferSize_*B2MiB, maxBufferSize_);
+        printf("%s* Allocated size     = %-7.3f MiB [%zu B]\n", prefix,
+                allocatedSize_*B2MiB, allocatedSize_);
+        printf("%s* In use (active)    = %-7.3f MiB [%zu B]\n", prefix,
+                usedSize_*B2MiB, usedSize_);
+        printf("%s* Usable space       = %-7.3f MiB [%zu B]\n", prefix,
+                usableSize_*B2MiB, usableSize_);
+        printf("%s* Total chunks       = %i\n", prefix, numChunks());
+        printf("%s* Active chunks      = %i\n", prefix, numActiveChunks());
+        printf("%s* Expired chunks     = %i\n", prefix, numExpiredChunks());
+        printf("%s* Usable chunks      = %i\n", prefix, numUsableChunks(packetSize));
+        printf("%s* Overwritten chunks = %llu\n", prefix, totalOverwriteCounter_);
+        printf("%s* Overwritten chunks = %i, %.1f%% (in report interval)\n", prefix,
+                intervalOverwriteCounter_,
+                (double)intervalOverwriteCounter_/reportInterval*100.0);
+        printf("%s\n", prefix);
+        printf("%sReport interval:\n", prefix);
+        printf("%s* Chunks received    = %i\n", prefix, reportInterval);
+        printf("%s* Data received      = %-7.3f MiB [%zu B] \n", prefix,
+                dataReceived*B2MiB, dataReceived);
+        printf("%s* Time taken         = %.3f s\n", prefix, elapsed*1.0e-3);
+        printf("%s* Data rate          = ", prefix);
+        if (elapsed > 0)
+            printf("%-7.3f MiB/s\n", dataReceived*B2MiB/(elapsed*1.0e-3));
+        else
+            printf("---     MiB/s\n");
+        printf("%s\n\n", string(80,'*').c_str());
+        fflush(stdout);
+        reportCounter_++;
+        intervalOverwriteCounter_ = 0;
         timer_.restart();
     }
 }
-
 

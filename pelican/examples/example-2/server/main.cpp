@@ -35,6 +35,8 @@
 #include "StreamChunker.hpp"
 
 #include <iostream>
+#include <cstdlib>
+#include <unistd.h>
 
 using namespace pelican;
 using namespace std;
@@ -54,11 +56,11 @@ public:
         catch (const QString& e)
         {
             cerr << "ERROR: " << e.toStdString() << endl;
-            exit(0);
+            abort();
         }
         catch (...) {
             cerr << "ERROR: Unknown exception!" << endl;
-            exit(0);
+            abort();
         }
         return false;
     }
@@ -67,7 +69,6 @@ public:
 
 int main(int argc, char** argv)
 {
-    //QCoreApplication app(argc, argv);
     MyApp app(argc, argv);
 
     if (argc != 2)
@@ -76,19 +77,20 @@ int main(int argc, char** argv)
         return 0;
     }
 
-    try
-    {
+    try {
         Config config(argv[1]);
         PelicanServer server(&config);
-        //server.setVerbosity(10000);
         server.addStreamChunker("StreamChunker");
         server.addProtocol(new PelicanProtocol, 2000);
         server.start();
-        while (!server.isReady()) {}
+        while (!server.isReady()) { usleep(100); }
+//        while (server.isRunning()) {
+//            MyApp::processEvents();
+//            usleep(100);
+//        }
         return app.exec();
     }
-    catch (const QString& err)
-    {
+    catch (const QString& err) {
         cerr << "ERROR: " << err.toStdString() << endl;
     }
 

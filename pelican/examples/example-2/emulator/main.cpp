@@ -34,6 +34,7 @@
 #include <iostream>
 #include <cstdio>
 #include <unistd.h>
+#include <cstdlib>
 
 using namespace std;
 using namespace pelican;
@@ -53,16 +54,17 @@ public:
         catch (const QString& e)
         {
             cerr << "ERROR: " << e.toStdString() << endl;
-            exit(0);
+            abort();
         }
         catch (...) {
             cerr << "ERROR: Unknown exception!" << endl;
-            exit(0);
+            abort();
         }
         return false;
     }
 };
 
+// Prints usage message for running the emulator binary.
 void usage(const char* msg = 0)
 {
     if (msg) {
@@ -86,7 +88,7 @@ int main(int argc, char** argv)
 
     try {
         const char* configFile = argv[1];
-        const char* nodeName = (argc == 3) ? argv[2] : "opt1";
+        const char* nodeName = (argc == 3) ? argv[2] : "1";
         cout << "Running emulator ..." << endl;
         cout << " * Configuration file  = " << configFile << endl;
         cout << " * Settings name ..... = " << nodeName << endl;
@@ -100,7 +102,8 @@ int main(int argc, char** argv)
             settings = config.get(address);
         }
         else {
-            usage("Unable to find valid configuration tags in the specified XML file.");
+            usage("Unable to find valid configuration tags in the specified "
+                   "XML file.");
             return EXIT_FAILURE;
         }
         AbstractEmulator* emulator = new StreamEmulator(settings);

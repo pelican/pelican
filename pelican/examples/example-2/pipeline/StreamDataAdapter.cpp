@@ -42,48 +42,54 @@ void StreamDataAdapter::deserialise(QIODevice* device)
     size_t bytesRead = 0;
     size_t totalBytesRead = 0;
 
-    size_t headerSize = 4 * sizeof(quint32);
-    quint32 h_packetSize = 0;
-    quint32 h_packetId = 0;
-    quint32 h_numPackets = 0;
-    quint32 h_packetTime = 0;
+    // Header values
+    quint32 packetSize = 0;
+    quint32 packetCounter = 0;
+    quint32 packetTime = 0;
+    qint32 numPackets = 0;
+    qint32 reportInterval = 0;
+    size_t headerSize = 3*sizeof(quint32)+2*sizeof(qint32);
 
     // Read the header.
-    while (totalBytesRead < headerSize) {
-        if (device->bytesAvailable() < (qint64)headerSize) {
+    while (totalBytesRead != headerSize) {
+        while (device->bytesAvailable() < (qint64)headerSize) {
             device->waitForReadyRead(-1);
-            continue;
         }
-        bytesRead = device->read((char*)&h_packetSize, (qint64)sizeof(quint32));
+        bytesRead = device->read((char*)&packetSize, (qint64)sizeof(quint32));
         totalBytesRead+=bytesRead;
-        bytesRead = device->read((char*)&h_packetId, (qint64)sizeof(quint32));
+        bytesRead = device->read((char*)&packetCounter, (qint64)sizeof(quint32));
         totalBytesRead+=bytesRead;
-        bytesRead = device->read((char*)&h_numPackets, (qint64)sizeof(quint32));
+        bytesRead = device->read((char*)&packetTime, (qint64)sizeof(quint32));
         totalBytesRead+=bytesRead;
-        bytesRead = device->read((char*)&h_packetTime, (qint64)sizeof(quint32));
+        bytesRead = device->read((char*)&numPackets, (qint64)sizeof(qint32));
+        totalBytesRead+=bytesRead;
+        bytesRead = device->read((char*)&reportInterval, (qint64)sizeof(qint32));
         totalBytesRead+=bytesRead;
     }
 
-    size_t dataSize = h_packetSize - headerSize;
+    size_t dataSize = packetSize - headerSize;
     int numSamples = dataSize / sizeof(quint32);
 
     // Resize the data blob to hold the chunk.
     StreamData* blob = (StreamData*)dataBlob();
-    blob->setPacketSize(h_packetSize);
-    blob->setTimeStamp(h_packetTime);
-    blob->setTotalPackets(h_numPackets);
-    blob->setPacketId(h_packetId);
+    blob->setPacketSize(packetSize);
+    blob->setPacketId(packetCounter);
+    blob->setTimeStamp(packetTime);
+    blob->setTotalPackets(numPackets);
+    blob->setReportInterval(reportInterval);
     blob->resize(numSamples);
     quint32* values = blob->ptr();
 
     // Read the data section of the chunk.
-    while (totalBytesRead < h_packetSize) {
-        if (device->bytesAvailable() < (qint64)dataSize) {
+    quint64 minReadSize = 1024;
+    quint64 dataRemaining = packetSize-headerSize;
+    while (dataRemaining > 0) {
+        if (dataRemaining < minReadSize) minReadSize = dataRemaining;
+        while (device->bytesAvailable() < (qint64)minReadSize) {
             device->waitForReadyRead(-1);
-            continue;
         }
-        bytesRead = device->read((char*)values, dataSize);
+        bytesRead = device->read((char*)values+totalBytesRead, dataRemaining);
         totalBytesRead+=bytesRead;
+        dataRemaining-=bytesRead;
     }
 }
-

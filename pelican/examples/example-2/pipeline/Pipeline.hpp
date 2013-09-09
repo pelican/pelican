@@ -40,8 +40,10 @@ class Pipeline : public pelican::AbstractPipeline
         void run(QHash<QString, pelican::DataBlob*>&);
 
     private:
-        quint32 counter_;
+        quint32 runCounter_;
+        quint32 reportCounter_;
         QTime timer_;
+        quint32 randDelay_;
 };
 
 #endif /* EXAMPLE_2_PIPELINE_HPP_ */
