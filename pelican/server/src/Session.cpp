@@ -135,10 +135,14 @@ void Session::processRequest(const ServerRequest& req, QIODevice& out,
             }
             case ServerRequest::StreamData:
             {
-                QList<LockedData> dataList = processStreamDataRequest(static_cast<const StreamDataRequest&>(req), timeout);
-                if (dataList.size() > 0) {
+                // List of data to be served.
+                QList<LockedData> dataList = processStreamDataRequest(
+                        static_cast<const StreamDataRequest&>(req), timeout);
+
+                if (dataList.size() > 0)
+                {
                     AbstractProtocol::StreamData_t data;
-                    for (int i=0; i < dataList.size(); ++i) {
+                    for (int i = 0; i < dataList.size(); ++i) {
                         LockableStreamData* lockedData =
                                 static_cast<LockableStreamData*>(dataList[i].object());
                         data.append(static_cast<StreamData*>(lockedData->streamData()));

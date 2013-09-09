@@ -71,16 +71,16 @@ class AbstractLockableData : public AbstractLockable
         virtual ~AbstractLockableData() {}
 
         /// Return the data ID.
-        QString id() const {return _data->id();}
+        QString id() const { return _data->id(); }
 
         /// Set the object identity.
-        void setId(const QString& id) {_data->setId(id);}
+        void setId(const QString& id) { _data->setId(id); }
 
         /// Return the underlying data object.
-        boost::shared_ptr<DataChunk> data() const {return _data;}
+        boost::shared_ptr<DataChunk> data() const { return _data; }
 
         /// Return the maximum size.
-        quint64 maxSize() {return _maxSize;}
+        quint64 maxSize() const { return _maxSize; }
 };
 
 } // namespace pelican

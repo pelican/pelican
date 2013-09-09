@@ -212,9 +212,9 @@ PelicanServerClient::_response(QIODevice& device, shared_ptr<ServerResponse> r,
     {
         case ServerResponse::Error:
         {
-            QString msg = "PelicanServerClient: Server Error: " + r->message();
+            QString msg = "ERROR: PelicanServerClient: Server Error: " + r->message();
             std::cerr << msg.toStdString() << std::endl;
-            throw( msg );
+            throw(msg);
             break;
         }
 
@@ -332,7 +332,7 @@ PelicanServerClient::_response(QIODevice& device, shared_ptr<ServerResponse> r,
         }
 
         default:
-            std::cerr << "PelicanServerClient: Unknown Response" << std::endl;
+            std::cerr << "ERROR: PelicanServerClient: Unknown Response" << std::endl;
             break;
     }
     return validData;

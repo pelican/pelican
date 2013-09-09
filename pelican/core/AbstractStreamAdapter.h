@@ -56,7 +56,7 @@ class DataBlob;
  * de-serialise data from an input stream.
 
  * Normally you should inherit directly form AbstractAdapter unless you wish to
- * force pelican to ignore the server confiugration and always provide the
+ * force pelican to ignore the server configuration and always provide the
  * dependent data
  *
  * Inherit this class and implement the stream operator method to create a new

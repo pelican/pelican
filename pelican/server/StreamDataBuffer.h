@@ -66,10 +66,8 @@ class StreamDataBuffer : public AbstractDataBuffer
 
     public:
         /// Constructs a stream data buffer.
-        StreamDataBuffer(const QString& type,
-                         const size_t max = 10240,
-                         const size_t maxChunkSize = 10240,
-                         QObject* parent = 0);
+        StreamDataBuffer(const QString& type, const size_t max = 10240,
+                const size_t maxChunkSize = 10240, QObject* parent = 0);
 
         /// Destroys the stream data buffer.
         ~StreamDataBuffer();
@@ -83,15 +81,38 @@ class StreamDataBuffer : public AbstractDataBuffer
         /// Set the data manager to use.
         void setDataManager(DataManager* manager) {_manager = manager;}
 
-        /// Sets the maximum size of the buffer in bytes.
-        void setMaxSize(const size_t size) { _max = size; }
-        size_t size() const { return _max; }
+        /// Sets/Gets the maximum size of the buffer in bytes.
+        void setMaxSize(size_t value) { _max = value; }
+        size_t maxSize() const { return _max; }
 
-        /// Sets the maximum chunk size of the in bytes.
-        void setMaxChunkSize(const size_t size) { _maxChunkSize = size; }
+        /// Sets/Gets the maximum chunk size of the in bytes.
+        void setMaxChunkSize(size_t value) { _maxChunkSize = value; }
+        size_t maxChunkSize() const { return _maxChunkSize; }
 
         /// get the number of chunks waiting on the serve queue
         int numberOfActiveChunks() const;
+
+        size_t numberOfEmptyChunks() const;
+
+        /// Returns the amount of unallocated space in the buffer.
+        size_t space() const { return _space; }
+
+        /// Returns the number of bytes allocated in the buffer.
+        size_t allocatedBytes() const;
+
+        /// Returns the number of bytes of free space that can be used
+        /// for chunks of the specified size.
+        size_t usableSize(size_t chunkSize);
+
+        /// Returns the number of bytes of memory in use in the buffer.
+        size_t usedSize();
+
+        /// Returns the total number of chunks allocated in the buffer.
+        int numChunks() const;
+
+        /// Returns the number of chunks that can be used for the given
+        /// specified chunk size.
+        int numUsableChunks(size_t chunkSize);
 
     protected slots:
         /// Places the data chunk that emitted the signal on the serve queue.

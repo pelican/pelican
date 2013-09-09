@@ -64,10 +64,8 @@ class ServiceDataBuffer : public AbstractDataBuffer
 
     public:
         /// Constructs a service data buffer.
-        ServiceDataBuffer(const QString& type,
-                const size_t max = 10240,
-                const size_t maxChunkSize = 10240,
-                QObject* parent = 0);
+        ServiceDataBuffer(const QString& type, const size_t max = 10240,
+                const size_t maxChunkSize = 10240, QObject* parent = 0);
 
         /// Destroys the service data buffer.
         ~ServiceDataBuffer();
@@ -80,6 +78,32 @@ class ServiceDataBuffer : public AbstractDataBuffer
 
         /// Returns a section of writable memory to be filled.
         WritableData getWritable(size_t size);
+
+        /// Returns the maximum buffer size, in bytes.
+        size_t maxSize() const { return _max; }
+
+        /// Returns the maximum chunk size, in bytes.
+        size_t maxChunkSize() const { return _maxChunkSize; }
+
+        /// Returns the unallocated space in the buffer, in bytes.
+        size_t space() const { return _space; }
+
+        /// Returns the number of bytes of free space that can be used
+        /// for chunks of the specified size.
+        size_t usableSize(size_t chunkSize);
+
+        /// Returns the number of bytes of memory in use in the buffer.
+        size_t usedSize();
+
+        /// Returns the total number of chunks in the buffer.
+        int numChunks() const;
+
+        /// Returns the number of empty or expired chunks in the buffer.
+        int numEmptyChunks() const;
+
+        /// Returns the number of usable chunks in the buffer that are large
+        /// enough for the specified chunk size.
+        int numUsableChunks(size_t chunkSize);
 
     protected slots:
         void activateData();

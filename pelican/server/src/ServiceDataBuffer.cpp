@@ -110,11 +110,17 @@ void ServiceDataBuffer::getCurrent(LockedData& lockedData)
  */
 WritableData ServiceDataBuffer::getWritable(size_t size)
 {
-    // FIXME find out what determines if _newData is allocated...
-    // --> something to do with activation of the data. (activateData() method...)
+    // XXX find out what determines if _newData is allocated...
+    // --> something to do with activation of the data.
+    // (activateData() method...)
+
+    // If the temporary lockable service data chunk isn't allocated.
+    // XXX what is this check for?
     if (!_newData)
     {
         QMutexLocker lock(&_mutex);
+
+        // Check if any of the expired data chunks can be reused.
         for (int i = 0; i < _expiredData.size(); ++i)
         {
             LockableServiceData* lockableData = _expiredData[i];
@@ -132,7 +138,8 @@ WritableData ServiceDataBuffer::getWritable(size_t size)
         // Create a new data object if we have enough space.
         if (size <= _space && size <= _maxChunkSize)
         {
-            void* memory = calloc(size, sizeof(char)); // Released in destructor.
+            // Released in destructor.
+            void* memory = calloc(size, sizeof(char));
             if (memory)
             {
                 _space -= size;
@@ -143,7 +150,8 @@ WritableData ServiceDataBuffer::getWritable(size_t size)
             }
         }
     }
-    // no free containers so we return an invalid
+
+    // No free containers so we return an invalid
     // FIXME Clarify this return case.
     // It seems we get here if
     // 1) There is no memory left in the buffer.
@@ -190,8 +198,9 @@ void ServiceDataBuffer::deactivateData()
  */
 void ServiceDataBuffer::deactivateData(LockableServiceData* data)
 {
-   if (data->id() != _current && ! _expiredData.contains(data))
+    if (data->id() != _current && ! _expiredData.contains(data)) {
         _expiredData.append(data);
+    }
 }
 
 /**
@@ -223,5 +232,56 @@ void ServiceDataBuffer::activateData(LockableServiceData* data)
         _current = id;
     }
 }
+
+
+size_t ServiceDataBuffer::usableSize(size_t chunkSize)
+{
+    // Number of chunks that fit in the remaining space
+    size_t total = chunkSize > 0 ? (_space/chunkSize)*chunkSize : _space;
+    QMutexLocker lock(&_mutex);
+    foreach (LockableServiceData* s, _expiredData) {
+        size_t dataSize = s->maxSize();
+        if (dataSize >= chunkSize) {
+            // Yes, I'm adding chunk size here if the chunkSize > 0
+            // as the usable space in the empty chunk, is the requested chunk size
+            // not the total size of the empty chunk.
+            total += chunkSize > 0 ? chunkSize : dataSize;
+        }
+    }
+    return total;
+}
+
+size_t ServiceDataBuffer::usedSize()
+{
+    size_t total = 0;
+    QMutexLocker lock(&_mutex);
+    foreach (const LockableServiceData* s, _data) {
+        total += s->data().get()->size();
+    }
+    return total;
+}
+
+int ServiceDataBuffer::numChunks() const
+{
+    return _data.size();
+}
+
+int ServiceDataBuffer::numEmptyChunks() const
+{
+    return _expiredData.size();
+}
+
+int ServiceDataBuffer::numUsableChunks(size_t chunkSize)
+{
+    Q_ASSERT(chunkSize > 0);
+    int num = _space/chunkSize;
+    QMutexLocker lock(&_mutex);
+    foreach (const LockableServiceData* s, _expiredData) {
+        if (s->maxSize() >= chunkSize)
+            ++num;
+    }
+    return num;
+}
+
 
 } // namespace pelican

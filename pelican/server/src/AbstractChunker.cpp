@@ -28,6 +28,8 @@
 
 #include "server/AbstractChunker.h"
 #include "utility/ConfigNode.h"
+#include "server/StreamDataBuffer.h"
+#include "server/ServiceDataBuffer.h"
 
 #include <iostream>
 
@@ -35,13 +37,16 @@ namespace pelican {
 
 /**
  * @details
- *  Setup options in the configuration file:
- *    listen to an incoming port
- *    <connection host="dataHost" port="12345" />
- *    To set the stream name for the chunker
- *    <data type="streamName" />
- *    To set a default adapter for the specifc stream
- *    <data type="streamName" adapter="AdapterType" />
+ * Setup options in the configuration file:
+ *
+ * listen to an incoming port
+ *   <connection host="dataHost" port="12345" />
+ *
+ * To set the stream name for the chunker
+ *   <data type="streamName" />
+ *
+ * To set a default adapter for the specific stream
+ *   <data type="streamName" adapter="AdapterType" />
  */
 AbstractChunker::AbstractChunker(const ConfigNode& config)
 {
@@ -49,7 +54,10 @@ AbstractChunker::AbstractChunker(const ConfigNode& config)
     _dataManager = 0;
 
     _chunkTypes = config.getOptionList("data", "type");
-    _adapterTypes = config.getOptionHash("data","type","adapter");
+    // NOTE Why do chunkers need to know adapter types... ?
+    _adapterTypes = config.getOptionHash("data", "type", "adapter");
+    // NOTE host and port is only valid for socket chunkers, sort out what
+    // happens for file chunkers.
     _host = config.getOption("connection", "host", "");
     _port = (quint16)config.getOption("connection", "port", "0").toUInt();
 
@@ -69,7 +77,7 @@ AbstractChunker::~AbstractChunker()
 void AbstractChunker::setDataManager(DataManager* dataManager)
 {
     _dataManager = dataManager;
-    dataManager->addDefaultAdapters( defaultAdapters() );
+    dataManager->addDefaultAdapters(defaultAdapters());
 }
 
 /**
@@ -119,14 +127,69 @@ void AbstractChunker::setDefaultAdapter( const QString& adapter ) {
     if (_chunkTypes.size() != 1)
         throw QString("AbstractChunker::setDefaultAdapter(): "
                 "More than one chunk type registered, ambiguous request.");
-   setDefaultAdapter( adapter, _chunkTypes[0] );
+    setDefaultAdapter( adapter, _chunkTypes[0] );
 }
 
 void AbstractChunker::setDefaultAdapter( const QString& adapter,
-                                const QString& stream )
+        const QString& stream )
 {
     _adapterTypes.insert(stream,adapter);
+}
 
+
+bool AbstractChunker::isStream(const QString type) const
+{
+    return _dataManager->isStream(type.isNull()?_chunkTypes[0]:type);
+}
+
+bool AbstractChunker::isService(const QString type) const
+{
+    return _dataManager->isService(type.isNull()?_chunkTypes[0]:type);
+}
+
+size_t AbstractChunker::maxBufferSize(const QString type) const
+{
+    return _dataManager->maxSize(type.isNull()?_chunkTypes[0]:type);
+}
+
+size_t AbstractChunker::maxChunkSize(const QString type) const
+{
+    return _dataManager->maxChunkSize(type.isNull()?_chunkTypes[0]:type);
+}
+
+size_t AbstractChunker::allocatedSize(const QString type) const
+{
+    return _dataManager->allocatedSize(type.isNull()?_chunkTypes[0]:type);
+}
+
+size_t AbstractChunker::usableSize(size_t size, const QString type) const
+{
+    return _dataManager->usableSize(type.isNull()?_chunkTypes[0]:type, size);
+}
+
+size_t AbstractChunker::usedSize(const QString type) const
+{
+    return _dataManager->usedSize(type.isNull()?_chunkTypes[0]:type);
+}
+
+int AbstractChunker::numChunks(const QString type) const
+{
+    return _dataManager->numChunks(type.isNull()?_chunkTypes[0]:type);
+}
+
+int AbstractChunker::numActiveChunks(const QString type) const
+{
+    return _dataManager->numActiveChunks(type.isNull()?_chunkTypes[0]:type);
+}
+
+int AbstractChunker::numExpiredChunks(const QString type) const
+{
+    return _dataManager->numExpiredChunks(type.isNull()?_chunkTypes[0]:type);
+}
+
+int AbstractChunker::numUsableChunks(size_t size, const QString type) const
+{
+    return _dataManager->numUsableChunks(type.isNull()?_chunkTypes[0]:type, size);
 }
 
 } // namespace pelican

@@ -128,6 +128,7 @@ LockableStreamData* StreamDataBuffer::_getWritable(size_t size)
 {
     // Return a pre-allocated block from the empty queue, if one exists.
     for (int i = 0; i < _emptyQueue.size(); ++i) {
+//        std::cout << "Obtaining writable chunk from empty queue..." << std::endl;
         LockableStreamData* lockableData = _emptyQueue[i];
 
         if( lockableData->maxSize() >= size ) {
@@ -137,10 +138,11 @@ LockableStreamData* StreamDataBuffer::_getWritable(size_t size)
         }
     }
 
-    // There are no empty containers already available, so we
-    // create a new data object if we have enough space.
+    // There are no empty containers already available, so we create a new
+    // data object if we have enough space.
     if (size <= _space && size <= _maxChunkSize)
     {
+//        std::cout << "Allocating new writable chunk from empty queue..." << std::endl;
         void* memory = calloc(size, sizeof(char)); // Released in destructor.
         if (memory) {
             _space -= size;
@@ -155,6 +157,7 @@ LockableStreamData* StreamDataBuffer::_getWritable(size_t size)
     // No free containers and no space left, so remove the oldest waiting data
     // that fits the size requirements
     {
+//        std::cout << "Overwriting the oldest chunk in the queue..." << std::endl;
         // lock down the server queue in this context
         QMutexLocker locker(&_mutex);
         for (int i = 0; i < _serveQueue.size(); ++i) {
@@ -242,4 +245,68 @@ int StreamDataBuffer::numberOfActiveChunks() const
 {
     return _serveQueue.size();
 }
+
+size_t StreamDataBuffer::numberOfEmptyChunks() const
+{
+    return (size_t)_emptyQueue.size();
+}
+
+
+size_t StreamDataBuffer::allocatedBytes() const
+{
+#if 0
+    size_t total = 0;
+    for (int i = 0; i < _data.size(); ++i) {
+        total += _data[i]->data().get()->size();
+    }
+    return total;
+#endif
+    return _max - _space;
+}
+
+size_t StreamDataBuffer::usableSize(size_t chunkSize)
+{
+    // Number of chunks that fit in the remaining space
+    size_t total = chunkSize > 0 ? (_space/chunkSize)*chunkSize : _space;
+
+    QMutexLocker writeLocker(&_writeMutex);
+    foreach (const LockableStreamData* s, _emptyQueue) {
+        size_t dataSize = s->maxSize();
+        if (dataSize >= chunkSize) {
+            // Yes, I'm adding chunk size here if the chunkSize > 0
+            // as the usable space in the empty chunk, is the requested chunk size
+            // not the total size of the empty chunk.
+            total += chunkSize > 0 ? chunkSize : dataSize;
+        }
+    }
+    return total;
+}
+size_t StreamDataBuffer::usedSize()
+{
+    size_t total = 0;
+    QMutexLocker writeLocker(&_writeMutex);
+    foreach (const LockableStreamData* s, _serveQueue) {
+        total += s->data().get()->size();
+    }
+    return total;
+}
+
+
+int StreamDataBuffer::numChunks() const
+{
+    return _data.size();
+}
+
+int StreamDataBuffer::numUsableChunks(size_t chunkSize)
+{
+    Q_ASSERT(chunkSize > 0);
+    int num = _space/chunkSize;
+    QMutexLocker writeLocker(&_writeMutex);
+    foreach (const LockableStreamData* s, _emptyQueue) {
+        if (s->maxSize() >= chunkSize)
+            ++num;
+    }
+    return num;
+}
+
 } // namespace pelican

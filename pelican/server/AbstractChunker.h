@@ -63,17 +63,6 @@ class ConfigNode;
 
 class AbstractChunker
 {
-    private:
-        QString _host;      ///< Host address for incoming connections.
-        quint16 _port;      ///< Port for incoming connections.
-
-        DataManager* _dataManager;  ///< Data manager used to access writable data objects.
-        QList<QString> _chunkTypes; ///< List of the chunk data types written.
-
-        bool _active;
-
-        QHash< QString, QString > _adapterTypes;
-
     public:
         /// Constructs a new AbstractChunker.
         PELICAN_CONSTRUCT_TYPES(ConfigNode)
@@ -87,7 +76,6 @@ class AbstractChunker
         /// Destroys the AbstractChunker.
         virtual ~AbstractChunker();
 
-    public:
         /// Create a new device appropriate to the type expected on the data stream.
         virtual QIODevice* newDevice() = 0;
 
@@ -95,6 +83,7 @@ class AbstractChunker
         /// Derived classes must process a complete data chunk in this method.
         virtual void next(QIODevice*) = 0;
 
+    public:
         /// Sets the data manager.
         void setDataManager(DataManager* dataManager);
 
@@ -119,18 +108,18 @@ class AbstractChunker
         /// Return the type name to be associated with this data.
         const QList<QString> & chunkTypes() const { return _chunkTypes; }
 
-        /// associates a default adapter to a named
-        /// stream. Note that the stream (or chunkType)
-        /// must already be registered
-        void setDefaultAdapter( const QString& adapter );
-        void setDefaultAdapter( const QString& adapter,
-                                const QString& stream );
+        /// Associates a default adapter to a named stream. Note that the
+        /// stream (or chunkType) must already be registered.
+        void setDefaultAdapter(const QString& adapter);
+        void setDefaultAdapter(const QString& adapter, const QString& stream );
 
+#if 0
         /// Returns the type name associated with the data.
-        /// NOTE: This will be depricated. DO NOT USE!.
+        /// NOTE: This will be deprecated. DO NOT USE!.
 //#pragma deprecated(type)
         const QString& type() const __attribute__ ((deprecated))
         { return _chunkTypes[0]; }
+#endif
 
         /// Stops the chunker.
         void stop() { _active = false; }
@@ -150,11 +139,76 @@ class AbstractChunker
         /// Returns the state of the chunker (running or not).
         bool isActive() const { return _active; }
 
-
         const QHash<QString, QString>& defaultAdapters() const {
              return _adapterTypes;
         };
 
+
+    protected: // new functions for 1.0.4 that can be used to query the state
+               // of buffers
+
+        /// Returns true if the specified chunk type @p type is being
+        /// stored in a stream data buffer.
+        bool isStream(const QString type = QString::null) const;
+
+        /// Returns true if the specified chunk type @p type is being
+        /// stored in a service data buffer.
+        bool isService(const QString type = QString::null) const;
+
+        /// Returns the maximum size, in bytes, of the data buffer for
+        /// the specified chunk type @p type.
+        size_t maxBufferSize(const QString type = QString::null) const;
+
+        /// Returns the maximum chunk size that can be stored in the buffer
+        /// for the specified chunk type @p type.
+        size_t maxChunkSize(const QString type = QString::null) const;
+
+        /// Returns the number of bytes allocated in the buffer for the
+        /// specified chunk type @p type.
+        size_t allocatedSize(const QString type = QString::null) const;
+
+        /// Returns the number of bytes of usable space in the buffer for the
+        /// specified chunk type @p type. Usable space is defined here
+        /// as free space that is both unallocated and in expired/empty
+        /// chunks.
+        size_t usableSize(size_t size, const QString type = QString::null) const;
+
+        /// Returns the number of bytes of memory in used in the buffer for the
+        /// specified chunk type @p type.
+        size_t usedSize(const QString type = QString::null) const;
+
+        /// Returns the total number of chunks that have been allocated
+        /// in the buffer of the specified chunk type @p type.
+        int numChunks(const QString type = QString::null) const;
+
+        /// Returns the number of active chunks in the buffer of the
+        /// specified chunk type @p type. Active chunks are chunks
+        /// that are ready to be served.
+        int numActiveChunks(const QString type = QString::null) const;
+
+        /// Returns the number of expired chunks in the buffer of the
+        /// specified chunk type @p type. Active chunks are chunks
+        /// that have been served and are ready to be reused.
+        int numExpiredChunks(const QString type = QString::null) const;
+
+        /// Returns the number of usable chunks in the buffer of the specified
+        /// chunk type @p type. This is the number of chunks of that are either
+        /// unallocated or expired and large enough to use given the specified
+        /// size @p size
+        int numUsableChunks(size_t size, const QString type = QString::null) const;
+
+    private:
+        QString _host;  ///< Host address for incoming connections.
+        quint16 _port;  ///< Port for incoming connections.
+
+        /// Data manager used to access writable data objects.
+        DataManager* _dataManager;
+        /// List of the chunk data types written.
+        QList<QString> _chunkTypes;
+
+        bool _active;
+
+        QHash< QString, QString > _adapterTypes;
 };
 
 } // namespace pelican

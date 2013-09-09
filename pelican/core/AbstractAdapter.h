@@ -56,7 +56,7 @@ class ConfigNode;
  *
  * @details
  * This class is the base class for all Pelican data adapters, which
- * de-serialise data from an input device.
+ * deserialise data from an input device.
  *
  * You would normally inherit directly from this class using the default
  * Unknown type to allow the server configuration to determine the type
@@ -103,7 +103,6 @@ class AbstractAdapter
             _serviceData = serviceData;
         }
 
-
     protected:
         /// Returns a pointer to the data blob to fill.
         DataBlob* dataBlob() { return _data; }
@@ -112,7 +111,7 @@ class AbstractAdapter
         size_t chunkSize() const { return _chunkSize; }
 
     protected:
-        /// @todo Make these private?
+        /// TODO Make these private?
         AdapterType_t _type;    ///< Type of adapter.
         std::size_t _chunkSize; ///< Chunk size in bytes.
         DataBlob* _data;        ///< Pointer to data blob to be filled.

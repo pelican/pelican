@@ -233,7 +233,7 @@ void PipelineApplication::start()
         _driver->start();
     }
     catch (const QString& err) {
-        std::cout << "ERROR: " << err.toStdString() << std::endl;
+        std::cerr << "ERROR: " << err.toStdString() << std::endl;
     }
 
 }
@@ -244,7 +244,7 @@ void PipelineApplication::stop()
         _driver->stop();
     }
     catch (const QString& err) {
-        std::cout << "ERROR: " << err.toStdString() << std::endl;
+        std::cerr << "ERROR: " << err.toStdString() << std::endl;
     }
 
 }
@@ -306,7 +306,7 @@ void PipelineApplication::_createConfig(int argc, char** argv)
         _config = Config(QString::fromStdString(configFilename));
     }
     catch (const QString& error) {
-        std::cerr << error.toStdString() << std::endl;
+        std::cerr << "ERROR: " << error.toStdString() << std::endl;
     }
 }
 
