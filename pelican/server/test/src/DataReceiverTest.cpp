@@ -4,6 +4,7 @@
 #include "server/test/TestUdpChunker.h"
 #include "server/LockedData.h"
 #include "server/LockableStreamData.h"
+#include "server/StreamDataBuffer.h"
 #include "emulator/EmulatorDriver.h"
 #include "emulator/test/RealUdpEmulator.h"
 #include "server/DataManager.h"

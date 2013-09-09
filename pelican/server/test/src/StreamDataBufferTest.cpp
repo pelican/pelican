@@ -3,6 +3,7 @@
 #include "server/DataManager.h"
 #include "comms/StreamData.h"
 #include "server/StreamDataBuffer.h"
+#include "server/ServiceDataBuffer.h"
 #include "server/WritableData.h"
 #include "server/LockedData.h"
 #include "server/LockableStreamData.h"
@@ -122,8 +123,9 @@ void StreamDataBufferTest::test_getWritable()
 void StreamDataBufferTest::test_getWritableStreams()
 {
     using namespace std;
-    cout << endl;
     bool verbose = false;
+    if (verbose)
+        cout << endl;
     // Use case:
     // Multiple calls to getWritable() simulating filling of a stream buffer.
     // Expect: unique data pointers to be returned.

@@ -23,19 +23,18 @@ namespace pelican {
 class DataManagerTest : public CppUnit::TestFixture
 {
     public:
-        CPPUNIT_TEST_SUITE( DataManagerTest );
-        CPPUNIT_TEST( test_getWritable );
+        CPPUNIT_TEST_SUITE(DataManagerTest);
+        CPPUNIT_TEST(test_getWritable);
+        CPPUNIT_TEST(test_bufferQueryAPI);
         CPPUNIT_TEST_SUITE_END();
 
     public:
-        void setUp();
-        void tearDown();
-
         // Test Methods
         void test_getWritable();
+        void test_bufferQueryAPI();
 
     public:
-        DataManagerTest(  );
+        DataManagerTest();
         ~DataManagerTest();
 
     private:
