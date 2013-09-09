@@ -31,6 +31,7 @@
 #include <QtCore/QCoreApplication>
 #include <QtCore/QString>
 #include "StreamEmulator.hpp"
+
 #include <iostream>
 #include <cstdio>
 #include <unistd.h>
