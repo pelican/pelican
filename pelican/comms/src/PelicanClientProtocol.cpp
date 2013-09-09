@@ -102,8 +102,10 @@ QByteArray PelicanClientProtocol::serialise(const ServerRequest& req)
 boost::shared_ptr<ServerResponse> PelicanClientProtocol::receive(
         QAbstractSocket& socket)
 {
+    Q_ASSERT(socket.state() == QAbstractSocket::ConnectedState);
+
     ServerResponse::Response type = ServerResponse::Error;
-    while (socket.bytesAvailable() < (int)sizeof(quint16)) {
+    while (socket.bytesAvailable() < (qint64)sizeof(quint16)) {
         if (!socket.waitForReadyRead(_timeout)) {
             std::cerr << "PelicanClientProtocol: Receive error: "
                       << socket.errorString().toStdString() << std::endl;

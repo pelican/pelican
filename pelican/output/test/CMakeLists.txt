@@ -28,13 +28,13 @@ if (CPPUNIT_FOUND)
     set(${name}_src
         src/CppUnitMain.cpp
         src/TCPConnectionManagerTest.cpp
-        src/PelicanTCPBlobServerTest.cpp
-        src/OutputStreamManagerTest.cpp
-        src/DataBlobClientTest.cpp
-        src/ThreadedDataBlobClientTest.cpp
-        src/DataBlobFileTest.cpp
-        src/DataBlobChunkerTest.cpp
-        src/DataBlobRelayTest.cpp
+        #src/PelicanTCPBlobServerTest.cpp
+        #src/OutputStreamManagerTest.cpp
+        #src/DataBlobClientTest.cpp
+        #src/ThreadedDataBlobClientTest.cpp
+        #src/DataBlobFileTest.cpp
+        #src/DataBlobChunkerTest.cpp
+        #src/DataBlobRelayTest.cpp
     )
     add_executable(${name} ${${name}_src})
     target_link_libraries(${name}

@@ -69,30 +69,35 @@ TCPConnectionManager::~TCPConnectionManager()
  * @details
  * Return the port bound to the server
  */
-qint16 TCPConnectionManager::serverPort() const
+quint16 TCPConnectionManager::serverPort() const
 {
     return _tcpServer->serverPort();
 }
 
 /**
  * @details
- * Accpet client connections for data
+ * Accept client connections for data
  */
 void TCPConnectionManager::acceptClientConnection()
 {
-
     // Get new client connection
     QTcpSocket *client = _tcpServer->nextPendingConnection();
-    if ( _processIncomming(client) ) {
+
+    if (_processIncomming(client))
+    {
         // Connect socket error() signals
         connect(client, SIGNAL(error(QAbstractSocket::SocketError)), this,
-                SLOT(connectionError(QAbstractSocket::SocketError)),
-                Qt::DirectConnection);
-        connect(client, SIGNAL(readyRead()), this,
-                SLOT(_incomingFromClient()),
-                Qt::DirectConnection);
+            SLOT(connectionError(QAbstractSocket::SocketError)),
+            Qt::DirectConnection);
+        connect(client, SIGNAL(readyRead()), this, SLOT(_incomingFromClient()),
+            Qt::DirectConnection);
     }
     else {
+        std::cout << "HERE" << std::endl;
+        // Closes the I/O device for the socket,
+        // disconnects the socket's connection with the host,
+        // closes the socket, and resets the name, address,
+        // port number and underlying socket descriptor.
         client->close();
         delete client;
     }
@@ -105,30 +110,29 @@ void TCPConnectionManager::_incomingFromClient()
 
 bool TCPConnectionManager::_processIncomming(QTcpSocket *client)
 {
+    Q_ASSERT(client->state() == QAbstractSocket::ConnectedState);
 
     // Wait for client to send in request type
     boost::shared_ptr<ServerRequest> request = _protocol->request(*client);
 
-    switch ( request->type() )
+    switch (request->type())
     {
         case ServerRequest::DataSupport:
         {
             DataSupportResponse res( types() );
             _protocol->send(*client, res);
-            // add the client to the stream update channel
-            if( ! _clients[_dataSupportStream].contains(client) )
-            {
-                //std::cout << "TCPConnectionManager: Adding new client for streamInfo\n";
+            // Add the client to the stream update channel
+            if (!_clients[_dataSupportStream].contains(client)) {
                 _clients[_dataSupportStream].push_back(client);
             }
+            break;
         }
-        break;
         case ServerRequest::StreamData:
         {
             StreamDataRequest& req = static_cast<StreamDataRequest&>(*request);
             // Check for invalid data requirements
             if (req.isEmpty()) {
-                std::cerr << "Invalid client data requrements" << std::endl;
+                std::cerr << "Invalid client data requirements" << std::endl;
                 //client->close();
                 return false;
             }
@@ -140,13 +144,13 @@ bool TCPConnectionManager::_processIncomming(QTcpSocket *client)
                     // Check if clients map already has the key, if so add client to list
                     //std::cout << "TCPConnectionManager: Adding new client for stream: "
                     //        << streamData.toStdString()  << std::endl;
-                    if( ! _clients[streamData].contains(client) )
+                    if (!_clients[streamData].contains(client))
                         _clients[streamData].push_back(client);
                 }
                 ++it;
             }
+            break;
         }
-        break;
         default:
         {
             std::cerr << "TCPConnectionManager: Invalid client request" << std::endl;
@@ -203,8 +207,9 @@ void TCPConnectionManager::send(const QString& streamName, const DataBlob* blob)
 {
     QMutexLocker sendlocker(&_sendMutex);
 
+
     // Check if there are any client reading streamName type data
-    if (_clients.contains(streamName) )
+    if (_clients.contains(streamName))
     {
         clients_t clientListCopy;
         {
@@ -218,9 +223,6 @@ void TCPConnectionManager::send(const QString& streamName, const DataBlob* blob)
             QTcpSocket* client =  clientListCopy[i];
             // Send data to client
             try {
-//                std::cout << "Sending blob of type " << blob->type().toStdString()
-//                          << " on stream " << streamName.toStdString() << " to:"
-//                          << client->peerName().toStdString() << std::endl;
                 Q_ASSERT( client->state() == QAbstractSocket::ConnectedState );
                 _protocol->send(*client, streamName, *blob);
                 client->flush();
@@ -238,7 +240,7 @@ void TCPConnectionManager::send(const QString& streamName, const DataBlob* blob)
 
     // Ensure we track the data streams and inform any interested
     // clients of updates.
-    if( !_seenTypes.contains(streamName) )
+    if (!_seenTypes.contains(streamName))
     {
         _seenTypes.insert(streamName);
         _sendNewDataTypes();
@@ -279,12 +281,15 @@ void TCPConnectionManager::connectionError(QAbstractSocket::SocketError)
  */
 void TCPConnectionManager::run()
 {
-    // start TCP Server, which listens for incoming connections
-    if (!_tcpServer -> listen( QHostAddress::Any, _port))
-        std::cerr << QString("Unable to start QTcpServer: %1").arg( _tcpServer -> errorString()).toStdString();
-    else
-        connect(_tcpServer, SIGNAL(newConnection()), this, SLOT(acceptClientConnection()), Qt::DirectConnection );
-
+    // Start TCP Server, which listens for incoming connections
+    if (!_tcpServer->listen(QHostAddress::Any, _port)) {
+        std::cerr << QString("Unable to start QTcpServer: %1").
+                arg(_tcpServer->errorString()).toStdString();
+    }
+    else {
+        connect(_tcpServer, SIGNAL(newConnection()), this,
+                SLOT(acceptClientConnection()), Qt::DirectConnection );
+    }
 }
 
 void TCPConnectionManager::stop()
