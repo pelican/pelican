@@ -38,6 +38,7 @@
 #include <QtCore/QObject>
 
 #include <unistd.h>
+#include <iostream>
 
 using pelican::ConfigNode;
 using pelican::EmulatorDriver;
@@ -59,7 +60,7 @@ int main(int argc, char** argv)
     EmulatorDriver serviceDriver(new ServiceDataEmulator(service_config));
 
     // This sleep ensures the a service packet arrives at the server first.
-    sleep(1);
+    usleep(streamInterval*5);
 
     ConfigNode stream_config(QString(
             "<StreamDataEmulator>"
