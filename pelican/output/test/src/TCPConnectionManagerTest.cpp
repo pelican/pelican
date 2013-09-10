@@ -130,7 +130,6 @@ void TCPConnectionManagerTest::test_brokenConnection()
         CPPUNIT_ASSERT_EQUAL(1, _server->clientsForStream(streamName));
     }
 
-#if 1
     // Use Case:
     //   Client dies after connection.
     // Expect:
@@ -139,10 +138,10 @@ void TCPConnectionManagerTest::test_brokenConnection()
         delete client;
         // Need to process events to connect the SocketError signal to the
         // TCPConnectionManager::ConnectionError() SLOT
+        usleep(200);
         QCoreApplication::processEvents();
         CPPUNIT_ASSERT_EQUAL(0, _server->clientsForStream(streamName));
     }
-#endif
 }
 
 
