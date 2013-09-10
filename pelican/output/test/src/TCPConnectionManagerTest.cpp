@@ -43,6 +43,8 @@
 #include <unistd.h>
 #include <iostream>
 
+using namespace std;
+
 namespace pelican {
 
 using test::TestDataBlob;
@@ -75,6 +77,8 @@ void TCPConnectionManagerTest::tearDown()
 
 void TCPConnectionManagerTest::test_send()
 {
+    QString streamName = "testData";
+
     // Use Case:
     //   Client requests a connection.
     // Expect:
@@ -82,23 +86,22 @@ void TCPConnectionManagerTest::test_send()
     StreamDataRequest request;
     DataSpec dataSpec;
 
-    dataSpec.addStreamData("testData");
+    dataSpec.addStreamData(streamName);
     request.addDataOption(dataSpec);
 
     QTcpSocket* client = _createClient();
-    _sendRequest( client, request );
-    QCoreApplication::processEvents();
-    CPPUNIT_ASSERT_EQUAL( 1, _server->clientsForStream("testData") );
+    _sendRequest(client, request);
+    CPPUNIT_ASSERT_EQUAL(1, _server->clientsForStream(streamName));
+
     TestDataBlob blob;
     blob.setData("sometestData");
-    _server->send("testData",&blob);
-    usleep(200);
+    _server->send(streamName, &blob);
 
     CPPUNIT_ASSERT( client->state() == QAbstractSocket::ConnectedState );
     boost::shared_ptr<ServerResponse> r = _clientProtocol->receive(*client);
     CPPUNIT_ASSERT( r->type() == ServerResponse::Blob );
     DataBlobResponse* res = static_cast<DataBlobResponse*>(r.get());
-    CPPUNIT_ASSERT( res->dataName() == "testData" );
+    CPPUNIT_ASSERT( res->dataName() == streamName );
     CPPUNIT_ASSERT( res->blobClass() == "TestDataBlob" );
     TestDataBlob recvBlob;
     recvBlob.deserialise(*client, res->byteOrder());
@@ -109,6 +112,7 @@ void TCPConnectionManagerTest::test_send()
 void TCPConnectionManagerTest::test_brokenConnection()
 {
     QTcpSocket* client = 0;
+    QString streamName = "testData";
 
     // Use Case:
     //   Client requests a connection.
@@ -116,24 +120,29 @@ void TCPConnectionManagerTest::test_brokenConnection()
     //   Client to be registered for any data.
     {
         DataSpec dataSpec;
-        dataSpec.addStreamData("testData");
+        dataSpec.addStreamData(streamName);
         StreamDataRequest request;
         request.addDataOption(dataSpec);
         client = _createClient();
         _sendRequest(client, request);
-        CPPUNIT_ASSERT_EQUAL(1, _server->clientsForStream("testData"));
+        CPPUNIT_ASSERT(client->state() == QAbstractSocket::ConnectedState);
+        QCoreApplication::processEvents();
+        CPPUNIT_ASSERT_EQUAL(1, _server->clientsForStream(streamName));
     }
 
+#if 1
     // Use Case:
     //   Client dies after connection.
     // Expect:
     //   To be removed from the system.
     {
         delete client;
-        usleep(200);
+        // Need to process events to connect the SocketError signal to the
+        // TCPConnectionManager::ConnectionError() SLOT
         QCoreApplication::processEvents();
-        CPPUNIT_ASSERT_EQUAL(0, _server->clientsForStream("testData"));
+        CPPUNIT_ASSERT_EQUAL(0, _server->clientsForStream(streamName));
     }
+#endif
 }
 
 

@@ -93,7 +93,6 @@ void TCPConnectionManager::acceptClientConnection()
             Qt::DirectConnection);
     }
     else {
-        std::cout << "HERE" << std::endl;
         // Closes the I/O device for the socket,
         // disconnects the socket's connection with the host,
         // closes the socket, and resets the name, address,
@@ -309,7 +308,7 @@ void TCPConnectionManager::listen()
  */
 int TCPConnectionManager::clientsForStream(const QString& type) const
 {
-    if( _clients.contains(type) )
+    if (_clients.contains(type))
         return _clients[type].size();
     return 0;
 }
