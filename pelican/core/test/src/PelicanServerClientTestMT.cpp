@@ -38,6 +38,9 @@
 #include "utility/ConfigNode.h"
 
 #include <QtCore/QCoreApplication>
+#include <iostream>
+
+using namespace std;
 
 namespace pelican {
 
@@ -65,14 +68,6 @@ PelicanServerClientTestMT::~PelicanServerClientTestMT()
 {
 }
 
-void PelicanServerClientTestMT::setUp()
-{
-}
-
-void PelicanServerClientTestMT::tearDown()
-{
-}
-
 void PelicanServerClientTestMT::test_getData()
 {
     try{
@@ -92,8 +87,7 @@ void PelicanServerClientTestMT::test_getData()
 
         // common client configuration
         Config config;
-        config.setFromString(
-                "",
+        config.setFromString("",
                 "<testconfig>"
                 "   <server host=\"127.0.0.1\"/>"
                 "</testconfig>"
@@ -104,9 +98,9 @@ void PelicanServerClientTestMT::test_getData()
         ConfigNode configNode = config.get(address);
         {
             // Use Case:
-            // request for Service Data only
+            //   Request for Service Data only
             // Expect :
-            // throw
+            //  Throw
             DataChunk sd(service1, version1, data1 );
             CPPUNIT_ASSERT_EQUAL( (long)data1.size(), (long)sd.size() );
 
@@ -124,14 +118,14 @@ void PelicanServerClientTestMT::test_getData()
             QHash<QString, DataBlob*> dataHash;
             DataBlob db("DataBlob");
             dataHash.insert(service1, &db);
-            CPPUNIT_ASSERT_THROW( client.getData(dataHash), QString );
+            CPPUNIT_ASSERT_THROW(client.getData(dataHash), QString);
         }
         {
             // Use Case:
-            //  Single Request for an existing stream dataset
-            //  no service data
+            //   Single Request for an existing stream dataset
+            //   no service data
             // Expect:
-            //  return the required data stream
+            //   return the required data stream
             StreamData sd(stream1, version1, data1 );
             CPPUNIT_ASSERT_EQUAL( (long)data1.size(), (long)sd.size() );
             server.serveStreamData(sd);
@@ -148,9 +142,10 @@ void PelicanServerClientTestMT::test_getData()
             QHash<QString, DataBlob*> dataHash;
             TestDataBlob db;
             dataHash.insert(stream1, &db);
+
             client.getData(dataHash);
-            CPPUNIT_ASSERT_EQUAL(version1.toStdString(), db.version().toStdString() );
-            CPPUNIT_ASSERT_EQUAL( std::string(data1.data()), std::string(db.data()) );
+            CPPUNIT_ASSERT_EQUAL(version1.toStdString(), db.version().toStdString());
+            CPPUNIT_ASSERT_EQUAL(std::string(data1.data()), std::string(db.data()));
         }
         {
             // Use Case:
@@ -189,7 +184,7 @@ void PelicanServerClientTestMT::test_getData()
             CPPUNIT_ASSERT_EQUAL( std::string(data1.data()), std::string(db.data()) );
         }
     }
-    catch(const QString& e)
+    catch (const QString& e)
     {
         std::cerr << "error: uncaught exception" << e.toStdString();
         throw e;

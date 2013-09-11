@@ -108,15 +108,16 @@ void PelicanServerClient::setIP_Address(const QString& ipaddress)
 AbstractDataClient::DataBlobHash PelicanServerClient::getData(DataBlobHash& dataHash)
 {
     QSet<QString> reqs = _requireSet;
-    if( ! reqs.subtract(QSet<QString>::fromList(dataHash.keys())).isEmpty() )
+    if (!reqs.subtract(QSet<QString>::fromList(dataHash.keys())).isEmpty()) {
         throw(QString("PelicanServerClient::getData() data hash does not "
                 "contain objects for all possible requests"));
+    }
 
     // Construct the request
     StreamDataRequest sr;
     foreach(const DataSpec& d, dataRequirements())
     {
-        sr.addDataOption( d );
+        sr.addDataOption(d);
     }
 
     DataBlobHash validData;
@@ -370,3 +371,4 @@ const DataSpec& PelicanServerClient::dataSpec() const {
 }
 
 } // namespace pelican
+

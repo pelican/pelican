@@ -57,14 +57,11 @@ class PelicanServerClientTestMT : public CppUnit::TestFixture
         CPPUNIT_TEST_SUITE_END();
 
     public:
-        void setUp();
-        void tearDown();
-
         // Test Methods
         void test_getData();
 
     public:
-        PelicanServerClientTestMT(  );
+        PelicanServerClientTestMT();
         ~PelicanServerClientTestMT();
 
     private:

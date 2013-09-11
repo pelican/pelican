@@ -63,14 +63,14 @@ class DirectStreamDataClient : public AbstractAdaptingDataClient
     public:
         /// Constructs the direct stream data client.
         DirectStreamDataClient(const ConfigNode& configNode,
-                const DataTypes& types, const Config* config
-                );
+                const DataTypes& types, const Config* config);
 
         /// Destroys the direct stream data client.
         virtual ~DirectStreamDataClient();
 
         /// Obtains a hash of data blobs required by the pipeline.
         virtual DataBlobHash getData(DataBlobHash& dataHash);
+
         virtual const DataSpec& dataSpec() const;
 
         /// Sets the chunker for the given data type.
