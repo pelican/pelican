@@ -43,6 +43,7 @@ class TestUdpChunker : public AbstractChunker
     private:
         qint64 _chunkSize;
         qint64 _bytesRead;
+        quint64 _chunkCounter;
 };
 
 // Register the chunker.

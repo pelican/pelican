@@ -60,12 +60,6 @@ class DataReceiver : public QThread
 {
     Q_OBJECT
 
-    private:
-        bool _active; // destructor disconnect marker
-        QMutex _mutex;
-        AbstractChunker* _chunker;
-        QIODevice* _device; // This is usually a UDP socket.
-
     public:
         /// Constructor.
         DataReceiver(AbstractChunker* chunker);
@@ -74,10 +68,20 @@ class DataReceiver : public QThread
         ~DataReceiver();
 
         /// Connect to the specified host and listen for incoming data.
-        void listen() {start();}
+        // DEPRECATED in favour of just calling start()
+        void listen() { start(); }
 
-        /// return the current device
+        /// Return the current device
         QIODevice* currentDevice() const { return _device; }
+
+    protected:
+        /// Runs the thread for the data receiver.
+        void run();
+
+    signals:
+        // Signal emitted if there is data still on the device after the
+        // chunker next method has returned.
+        void dataRemaining();
 
     private slots:
         /// This slot is called when data is available on the device.
@@ -85,14 +89,16 @@ class DataReceiver : public QThread
         void _processError();
         void _reconnect();
 
-    protected:
-        /// Runs the thread for the data receiver.
-        void run();
+    private:
+        void _setupDevice();
+        void _registerSocket(QAbstractSocket*);
+        void _deleteDevice();
 
     private:
-        void _registerSocket( QAbstractSocket* );
-        void _setupDevice();
-        void _deleteDevice();
+        bool _active; // destructor disconnect marker
+        QMutex _mutex;
+        AbstractChunker* _chunker;
+        QIODevice* _device; // This is usually a UDP socket.
 };
 
 } // namespace pelican

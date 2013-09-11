@@ -33,8 +33,8 @@ TestServer::TestServer(AbstractProtocol* proto,  QObject* parent)
     }
     start();
     // wait until we have a server object
-    while( ! _portServer ) {msleep(1);}
-    while( ! _portServer->isListening() ) {msleep(1);};
+    while( ! _portServer ) { msleep(1); }
+    while( ! _portServer->isListening() ) { msleep(1); };
 }
 
 /**
@@ -42,13 +42,18 @@ TestServer::TestServer(AbstractProtocol* proto,  QObject* parent)
  */
 TestServer::~TestServer()
 {
-    while (!isFinished()) quit();
-    if(_protoOwner)
+    while (!isFinished()) {
+        quit();
+    }
+    if(_protoOwner) {
         delete _proto;
-    if (_dataManager)
-        delete _dataManager;
-    if (_portServer)
+    }
+    if (_portServer) {
         delete _portServer;
+    }
+    if (_dataManager) {
+        delete _dataManager;
+    }
     wait();
 }
 
