@@ -51,7 +51,6 @@ ChunkerManager::ChunkerManager(const Config* config, const QString& section)
     _factory = new FactoryConfig<AbstractChunker>(config, section, "chunkers");
 }
 
-
 /**
  * @details
  * Constructs the ChunkerManager, creating the chucker factory.
@@ -65,7 +64,6 @@ ChunkerManager::ChunkerManager(const Config* config,
 
     _factory = new FactoryConfig<AbstractChunker>(config, chunkerBase);
 }
-
 
 /**
  * @details
@@ -81,7 +79,6 @@ ChunkerManager::~ChunkerManager()
     // Delete the chunker factory.
     delete _factory;
 }
-
 
 /**
  * @details
@@ -101,14 +98,17 @@ bool ChunkerManager::init(DataManager& dataManager)
 
     // Set up data-stream inputs.
     try {
-        foreach (AbstractChunker* chunker, _chunkers ) {
+        foreach (AbstractChunker* chunker, _chunkers) {
             chunker->setDataManager(&dataManager);
             DataReceiver* receiver = new DataReceiver(chunker);
-            _dataReceivers.insert( chunker, receiver);
+            _dataReceivers.insert(chunker, receiver);
             receiver->start();
+#if 0 // needed?
+            while (!receiver->isRunning()) { sleep(1); }
+#endif
         }
     }
-    catch( const QString& msg )
+    catch (const QString& msg)
     {
         std::cerr << "Error Initiating Chunkers: " << msg.toStdString() << std::endl;
         return false;
@@ -118,11 +118,11 @@ bool ChunkerManager::init(DataManager& dataManager)
 
 bool ChunkerManager::isRunning() const
 {
-    if( _dataReceivers.size() == 0 )
+    if (_dataReceivers.size() == 0)
         return false;
 
     bool rv = true;
-    foreach (DataReceiver* dr, _dataReceivers.values() ) {
+    foreach (DataReceiver* dr, _dataReceivers.values()) {
          rv &= dr->isRunning();
     }
     return rv;
@@ -141,6 +141,7 @@ AbstractChunker* ChunkerManager::addStreamChunker(QString chunkerType, QString n
 
     // Create a chunker of the specified type with the factory.
     AbstractChunker* chunker = _factory->create(chunkerType, name);
+    chunker->setName(name);
 
     // If no data chunk types are registered to the chunker, set the chunker
     // data type to the chunker name.
@@ -163,7 +164,6 @@ AbstractChunker* ChunkerManager::addStreamChunker(QString chunkerType, QString n
 
     return chunker;
 }
-
 
 /**
  * @details

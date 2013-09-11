@@ -122,8 +122,18 @@ class AbstractChunker
 #endif
 
         /// Stops the chunker.
+        /// TODO test this works - at the moment assume it doesnt!
         void stop() { _active = false; }
+
+        /// Marks the chunker as active.
+        /// TODO test this works - at the moment assume it doesnt!
         void activate() { _active = true; }
+
+        /// Sets the name of the chunker (related to XML)
+        void setName(const QString& value) { _name = value; }
+
+        /// Gets the name of the chunker (related to XML)
+        const QString& name() const { return _name; }
 
     protected:
         /// Access to memory to store data is through this interface.
@@ -137,8 +147,11 @@ class AbstractChunker
         WritableData getDataStorage(size_t size, const QString& chunkType) const;
 
         /// Returns the state of the chunker (running or not).
+        /// TODO test this is being respected in the DataReciever
+        /// NOTE at the moment assume its not working!
         bool isActive() const { return _active; }
 
+        /// TODO why do chunkers need to know their adapters...?
         const QHash<QString, QString>& defaultAdapters() const {
              return _adapterTypes;
         };
@@ -146,6 +159,9 @@ class AbstractChunker
 
     protected: // new functions for 1.0.4 that can be used to query the state
                // of buffers
+        // TODO move these to a new class that can also be used in other
+        // places -- strategy design pattern
+        // const BufferStatus& bufferStatus(const QString type == QString::null)
 
         /// Returns true if the specified chunk type @p type is being
         /// stored in a stream data buffer.
@@ -209,6 +225,8 @@ class AbstractChunker
         bool _active;
 
         QHash< QString, QString > _adapterTypes;
+
+        QString _name; // NOTE this may not be respected everywhere yet.
 };
 
 } // namespace pelican

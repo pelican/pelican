@@ -61,7 +61,7 @@ AbstractChunker::AbstractChunker(const ConfigNode& config)
     _host = config.getOption("connection", "host", "");
     _port = (quint16)config.getOption("connection", "port", "0").toUInt();
 
-    _active = true;
+    _active = true; // XXX is this right?
 }
 
 
