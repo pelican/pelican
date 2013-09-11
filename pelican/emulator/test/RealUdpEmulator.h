@@ -80,13 +80,15 @@ class RealUdpEmulator : public AbstractUdpEmulator
 
         int nPackets();
 
+        void emulationFinished();
+
     private:
         double _initialValue;      // Initial value of the packet data.
         unsigned long _packetSize; // Size of the packet.
         unsigned long _interval;   // Interval between packets in microseconds.
         QByteArray _packet;        // Packet data.
         unsigned long _counter;    // Packet counter.
-        unsigned long _numPackets; // Number of packets to send.
+        int _numPackets;           // Number of packets to send.
 };
 
 } // namespace test

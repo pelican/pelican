@@ -78,6 +78,9 @@ class EmulatorDriver : public QThread
         /// Return the number of packets sent by the emulator.
         long int packetCount() const { return _packetCount; }
 
+        /// Stops the emulator driver.
+        void abort() { _abort = true; }
+
     protected:
         /// Runs the thread owned by the emulator driver.
         void run();

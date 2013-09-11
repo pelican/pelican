@@ -66,8 +66,9 @@ EmulatorDriver::~EmulatorDriver()
     wait();
 
     // Delete the emulator.
-    if (_emulator)
+    if (_emulator) {
         delete _emulator;
+    }
 }
 
 /**
@@ -103,7 +104,7 @@ void EmulatorDriver::run()
             _dataCount += size;
 
             // Write to the device.
-
+//            std::cout << "Emulator driver write START. " << _device->bytesAvailable() << " size=" << size << std::endl;
             _device->write(ptr, size);
 
             // Block until all data has been written to the device.
@@ -133,6 +134,9 @@ void EmulatorDriver::run()
                 usleep(interval);
             }
             ++_packetCount;
+
+            //std::cout << "Emulator driver write DONE. " << _device->bytesAvailable() << std::endl;
+
 
 #if QT_VERSION >= 0x040300
             yieldCurrentThread();

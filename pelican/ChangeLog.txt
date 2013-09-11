@@ -13,6 +13,7 @@
       to monitor the status of the buffers they are writing to. Please note
       that some of these functions incur a performance cost so should be used
       carefully.
+    * Added method to stop emulator drivers.
     * Updates to example-2, added in 1.0.3.
         - Emulators no longer needs a Qt Application event loop. This allows
           emulators to finish naturally when they have completed sending data.
