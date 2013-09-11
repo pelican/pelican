@@ -103,7 +103,7 @@ bool ChunkerManager::init(DataManager& dataManager)
             DataReceiver* receiver = new DataReceiver(chunker);
             _dataReceivers.insert(chunker, receiver);
             receiver->start();
-#if 0 // needed?
+#if 0 // needed? note the isRunning() method below on ChunkerManager (this class)
             while (!receiver->isRunning()) { sleep(1); }
 #endif
         }

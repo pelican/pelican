@@ -107,13 +107,15 @@ void DataReceiver::run()
     while (_active) {
         //cout << "DataReceiver: checking for data ... " << endl;
 
+        // NOTE while this check seems like a good idea it fails in some of
+        // the unit tests...
         if (!_device) {
-            cerr << "DataReceiver: invalid device pointer!" << endl;
+            cerr << "DataReceiver ERROR: Invalid device pointer!" << endl;
             _active = false;
             break;
         }
 
-        if (_device->bytesAvailable() > 0) {
+        if (_device && _device->bytesAvailable() > 0) {
             _chunker->next(_device);
         }
 
@@ -127,7 +129,7 @@ void DataReceiver::run()
         // For devices with no reconnect exit the event loop if the
         // device becomes unreadable.
         else if (!_device->isReadable()) {
-            cerr << "DataReceiver: device not readable!" << endl;
+            cerr << "DataReceiver ERROR: Device not readable!" << endl;
             _active = false;
             break;
         }

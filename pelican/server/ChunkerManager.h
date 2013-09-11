@@ -67,8 +67,8 @@ class DataManager;
 class ChunkerManager
 {
     public:
-        /// @deprecated
         /// Creates a chunker manager.
+        /// DEPRECATED
         ChunkerManager(const Config* config, const QString& section = "server");
 
         /// Creates a chunker manager.

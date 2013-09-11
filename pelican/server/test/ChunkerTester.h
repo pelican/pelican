@@ -68,7 +68,7 @@ class ChunkerTester
 
     private:
         QList<QString>   _streams; // name of the test stream
-        ChunkerManager*  _chunkManager;
+        ChunkerManager*  _chunkerManager;
         DataManager*     _dataManager;
         Config           _config;
 };
