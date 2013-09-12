@@ -56,18 +56,77 @@ class LockedData;
  * @class StreamDataBuffer
  *
  * @brief
- * Maintain StreamData and memory access.
+ * Container class for chunks of StreamData.
  *
  * @details
+ *
  * Encapsulates memory allocation for streams, with locking and data
  * consistency checking.
  *
- * Note the default maximum allowed size of the buffer is 10240 bytes
- * and the maximum allowed chunk size in the buffer is also 10240 bytes.
+ * StreamData is data that can be used only once, and once used is discarded
+ * (expired / deactivated).
  *
- * FIXME should buffers have a name as well as the type?
+ * The buffer consists of chunks of data whose size is determined by
+ * requested size at first allocation and limited to the maximum chunk size
+ * attribute of the buffer. The total size of the buffer is also limited by
+ * the maximum buffer size attribute.
+ * Note that as a result of this chunks in the buffer can be of mixed size.
+ *
+ *
+ * Chunks of data in the buffer can be in one of three states:
+ * - Locked    = The state of data chunks that are currently being accessed.
+ *   (in use)    Access can is either in the form of being written to,
+ *               e.g. inside a Chunker, or being read from, e.g. when being
+ *               sent by a server.
+ * - Active    = The state of data chunks which are ready to be used/ served.
+ *   (usable)    These data chunks contain current data that is ready to be
+ *               used or served.
+ * - Expired   = Data chunks marked as already having been used and are ready
+ *   (empty)     for reuse.
+ *
+ *
+ * Chunks of data in the buffer are created using the @p getWriable() method
+ * and returned inside a WriableData container. While under control of
+ * the WriableData object, data chunks are in the Locked sate. The WriableData
+ * becomes unlocked, and active, on destruction.
+ *
+ * Chunks of data in the buffer are accessed for use by using the @p getNext()
+ * method. This returns the oldest active chunk in the buffer inside a
+ * LockedData container. The LockedData container automatically handles
+ * locking and unlocking of the data it contains. The data is locked upon
+ * construction and unlocked upon destruction. When unlocked data is marked
+ * as expired and the memory is then listed for reuse.
+ *
+ * When asking for a writable chunk of data, memory in the buffer is allocated
+ * on demand, using the following priority.
+ *
+ *  1) If an expired (empty) chunk meets the size requirement passed when
+ *     asking for the chunk it is reused.
+ *  2) Otherwise, if there is sufficient space in the buffer a new chunk is
+ *     allocated of the requested size.
+ *  3) If conditions 1 and 2 can't be met, the oldest active chunk which meets
+ *     the size requirement is removed and reused.
+ *  4) Finally if no chunk can be obtained a null, invalid chunk is returned.
+ *
+ *
+ * On creation of the Locked state WriableData object it is associated with the
+ * current version of any ServiceData registered in buffers managed by the
+ * associated DataManager object.
+ *
+ * ----------------------------------------------------------------------------
+ * FIXME should buffers have a **name** as well as the type?
  * FIXME Need for DataManager breaks encapsulation?
+ *       - options:
+ *          * If there are no associated DataManagers ignore service data
+ *            association and don't inform the manager of emptied buffers.
+ *          * Data managers handle the association and emptied status themselves
+ *            so the buffer dosn't need to know about it.
+ *            > This would mean chunkers would be calling getWriable()
+ *              on the DataManager rather than the buffer.
+ *            > ... and whoever calls getNext would do it also via DataManager.
  *
+ * FIXME Make overwrite of old chunks when asking for wriableData a buffer mode
+ *       which is default enabled.
  */
 class StreamDataBuffer : public AbstractDataBuffer
 {
@@ -76,7 +135,8 @@ class StreamDataBuffer : public AbstractDataBuffer
         friend class StreamDataBufferTest;
 
     public:
-        /// Constructs a stream data buffer.
+        /// Constructs a stream data buffer. If @p bufferSizeMax and/or
+        /// @p chunkSizeMax are not specified they are defaulted to 10240 bytes.
         // FIXME is there any case where there is a valid use of passing parent?
         StreamDataBuffer(const QString& type, size_t bufferSizeMax = 10240,
                 size_t chunkSizeMax = 10240, QObject* parent = 0);
@@ -92,7 +152,7 @@ class StreamDataBuffer : public AbstractDataBuffer
         void getNext(LockedData&);
 
         /// Set the data manager to use.
-        void setDataManager(DataManager* manager) { _manager = manager; }
+        void setDataManager(DataManager* manager) { _dataManager = manager; }
 
         /// Returns the maximum size of the buffer, in bytes.
         // DEPRECATED in buffer status function re-write
@@ -177,7 +237,7 @@ class StreamDataBuffer : public AbstractDataBuffer
         // inform the data manager that the serve queue is empty when
         // all chunks have been deactivated.
         // There may be a cleaner way of doing this with better encapsulation.
-        DataManager* _manager;
+        DataManager* _dataManager;
 };
 
 } // namespace pelican

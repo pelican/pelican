@@ -50,7 +50,7 @@ namespace pelican {
 StreamDataBuffer::StreamDataBuffer(const QString& type, size_t max,
         size_t maxChunkSize, QObject* parent)
 : AbstractDataBuffer(type, parent), _max(max), _maxChunkSize(maxChunkSize),
-  _space(max), _manager(0)
+  _space(max), _dataManager(0)
 {
     Q_ASSERT(max > 0);
 
@@ -95,7 +95,7 @@ void StreamDataBuffer::getNext(LockedData& lockedData)
 
 /**
  * @details
- * Gets a writable data object of the given size and returns it.
+ * Gets a writable data object/chunk of the given size and returns it.
  *
  * @param[in] requestedSize The size of the writable data to return.
  *
@@ -110,9 +110,9 @@ WritableData StreamDataBuffer::getWritable(size_t requestedSize)
     if (lockableStreamData)
     {
         lockableStreamData->reset(requestedSize);
-        if (!_manager)
+        if (!_dataManager)
             throw QString("StreamDataBuffer::getWritable(): No data manager.");
-        _manager->associateServiceData(lockableStreamData);
+        _dataManager->associateServiceData(lockableStreamData);
     }
 
     return WritableData(lockableStreamData);
@@ -230,7 +230,7 @@ void StreamDataBuffer::deactivateData(LockableStreamData* data)
         data->reset(0); // FIXME is there any case where the size argument here
                         // isnt == 0 ?!
         if (_serveQueue.empty()) {
-            _manager->emptiedBuffer(this);
+            _dataManager->emptiedBuffer(this);
         }
     }
 

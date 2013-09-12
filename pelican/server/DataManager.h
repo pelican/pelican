@@ -54,6 +54,9 @@ class StreamDataBuffer;
  *
  * @class DataManager
  *
+ * REFACTOR to DataBufferManager ?
+ *
+ *
  * @brief
  * Main class for accessing data in the server.
  *

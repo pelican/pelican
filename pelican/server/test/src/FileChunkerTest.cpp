@@ -84,17 +84,14 @@ void FileChunkerTest::test_update()
                 "   <data type=\"fileDataType\" />"
                 "</FileChunker>";
         ChunkerTester tester("FileChunker", 100*_msg.size(), xml);
-        usleep(100);
 
 #ifndef __APPLE__
+        usleep(1000); // FIXME This sleep really shouldn't be needed!
         QSignalSpy spy(tester.getCurrentDevice(), SIGNAL(readyRead()));
         CPPUNIT_ASSERT_EQUAL(1, tester.writeRequestCount());
 
         QString moredata("moredata");
         _updateFile(moredata);
-        usleep(100);
-
-        _app->processEvents();
 
         // While one might expect only one signal to be emitted it would seem
         // that this is OS dependent, with OS X often emitting two signals
@@ -127,7 +124,9 @@ void FileChunkerTest::_updateFile(const QString& data)
     _app->processEvents();
     CPPUNIT_ASSERT(_temp->flush());
     fsync(_temp->handle());
-    _app->processEvents();
+//    _app->flush(); // Flushes the platform specific event queues
+    _app->processEvents(QEventLoop::WaitForMoreEvents, 10000);
+
 }
 
 } // namespace pelican
