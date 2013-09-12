@@ -26,17 +26,21 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef STREAMDATABUFFER_H
-#define STREAMDATABUFFER_H
+#ifndef PELICAN_STREAM_DATA_BUFFER_H
+#define PELICAN_STREAM_DATA_BUFFER_H
 
 /**
  * @file StreamDataBuffer.h
  */
 
 #include "server/AbstractDataBuffer.h"
-//#include "server/DataBufferStatus.h"
+#include "server/WritableData.h"
+
+#include <QtCore/QString>
 #include <QtCore/QQueue>
 #include <QtCore/QObject>
+
+#include <cstdio> // for size_t
 
 namespace pelican {
 
@@ -44,7 +48,7 @@ class LockableStreamData;
 class DataChunk;
 class DataManager;
 class LockedData;
-class WritableData;
+
 
 /**
  * @ingroup c_server
@@ -61,6 +65,9 @@ class WritableData;
  * Note the default maximum allowed size of the buffer is 10240 bytes
  * and the maximum allowed chunk size in the buffer is also 10240 bytes.
  *
+ * FIXME should buffers have a name as well as the type?
+ * FIXME Need for DataManager breaks encapsulation?
+ *
  */
 class StreamDataBuffer : public AbstractDataBuffer
 {
@@ -70,60 +77,70 @@ class StreamDataBuffer : public AbstractDataBuffer
 
     public:
         /// Constructs a stream data buffer.
+        // FIXME is there any case where there is a valid use of passing parent?
         StreamDataBuffer(const QString& type, size_t bufferSizeMax = 10240,
                 size_t chunkSizeMax = 10240, QObject* parent = 0);
 
         /// Destroys the stream data buffer.
         ~StreamDataBuffer();
 
+        /// Get a data object that is ready to be written to.
+        // REFACTOR to getChunk() ?
+        WritableData getWritable(size_t size);
+
         /// Get the next data object that is ready to be served.
         void getNext(LockedData&);
 
-        /// Get a data object that is ready to be written to.
-        WritableData getWritable(size_t size);
-
         /// Set the data manager to use.
-        void setDataManager(DataManager* manager) {_manager = manager;}
+        void setDataManager(DataManager* manager) { _manager = manager; }
 
-        /// Sets/Gets the maximum size of the buffer in bytes.
-        void setMaxSize(size_t value) { _max = value; }
+        /// Returns the maximum size of the buffer, in bytes.
+        // DEPRECATED in buffer status function re-write
         size_t maxSize() const { return _max; }
 
-        /// Sets/Gets the maximum chunk size of the in bytes.
-        void setMaxChunkSize(size_t value) { _maxChunkSize = value; }
+        /// Returns the maximum allowed chunk size, in bytes.
+        // DEPRECATED in buffer status function re-write
         size_t maxChunkSize() const { return _maxChunkSize; }
 
+#if 0
+        // DEPRECATED
+        void setMaxSize(size_t value) { _max = value; }
+
+        // DEPRECATED
+        void setMaxChunkSize(size_t value) { _maxChunkSize = value; }
+#endif
+
         /// get the number of chunks waiting on the serve queue
-        /// DEPRECATED in buffer status function re-write
+        // DEPRECATED in buffer status function re-write
         int numberOfActiveChunks() const;
 
-        /// DEPRECATED in buffer status function re-write
+        // DEPRECATED in buffer status function re-write
         size_t numberOfEmptyChunks() const;
 
         /// Returns the amount of unallocated space in the buffer.
-        /// DEPRECATED in buffer status function re-write
+        // DEPRECATED in buffer status function re-write
         size_t space() const { return _space; }
 
         /// Returns the number of bytes allocated in the buffer.
-        /// DEPRECATED in buffer status function re-write
+        // DEPRECATED in buffer status function re-write
         size_t allocatedBytes() const;
 
         /// Returns the number of bytes of free space that can be used
         /// for chunks of the specified size.
-        /// DEPRECATED in buffer status function re-write
+        // DEPRECATED in buffer status function re-write
         size_t usableSize(size_t chunkSize);
 
         /// Returns the number of bytes of memory in use in the buffer.
-        /// DEPRECATED in buffer status function re-write
+        // DEPRECATED in buffer status function re-write
         size_t usedSize();
 
         /// Returns the total number of chunks allocated in the buffer.
-        /// DEPRECATED in buffer status function re-write
+        // DEPRECATED in buffer status function re-write
         int numChunks() const;
 
         /// Returns the number of chunks that can be used for the given
         /// specified chunk size.
-        /// DEPRECATED in buffer status function re-write
+        // DEPRECATED in buffer status function re-write
         int numUsableChunks(size_t chunkSize);
 
     protected slots:
@@ -165,4 +182,4 @@ class StreamDataBuffer : public AbstractDataBuffer
 
 } // namespace pelican
 
-#endif // STREAMDATABUFFER_H
+#endif // PELICAN_STREAM_DATA_BUFFER_H
