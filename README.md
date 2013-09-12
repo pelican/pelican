@@ -1,4 +1,19 @@
-pelican
-=======
++------------------------------------------------------------------------------+
+| PELICAN                                                                      |
++------------------------------------------------------------------------------+
 
-Pipeline for Extensible Lightweight Imaging and CAlibratioN
+Introduction
+--------------------------------------------------------------------------------
+The PELICAN library is a high performance, light-weight, pipeline framework
+designed for writing streaming applications.
+
+Pelican is developed under the BSD licence by The Oxford University e-Research
+Centre.
+
+The PELICAN team:
+    Benjamin Mort
+    Fred Dulwich
+    Chris Williams
+    Stefano Salvini
+
+
