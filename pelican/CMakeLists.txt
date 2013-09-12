@@ -104,6 +104,7 @@ declare_package_library(pelican-testutils
 )
 
 # === Sub modules (recurse into sub-directories to build modules).
+add_subdirectory(extern)
 include(modules.cmake)
 
 #print_module_summary()
