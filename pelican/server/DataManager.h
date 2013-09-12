@@ -210,8 +210,8 @@ class DataManager
         Config::TreeAddress _bufferConfigBaseAddress;
         // Set of stream and service data types.
         DataSpec _specs;
-        QHash<QString,size_t> _bufferMaxChunkSizes;
-        QHash<QString,size_t> _bufferMaxSizes;
+        QHash<QString, size_t> _bufferMaxChunkSizes;
+        QHash<QString, size_t> _bufferMaxSizes;
         QHash<StreamDataBuffer*, QString> _deactivate;
         QHash<QString, StreamDataBuffer*> _streams;
         QHash<QString, ServiceDataBuffer*> _service;

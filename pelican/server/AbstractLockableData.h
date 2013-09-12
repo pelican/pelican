@@ -77,7 +77,7 @@ class AbstractLockableData : public AbstractLockable
         void setId(const QString& id) { _data->setId(id); }
 
         /// Return the underlying data object.
-        boost::shared_ptr<DataChunk> data() const { return _data; }
+        boost::shared_ptr<DataChunk> dataChunk() const { return _data; }
 
         /// Return the maximum size.
         quint64 maxSize() const { return _maxSize; }

@@ -34,6 +34,7 @@
  */
 
 #include "server/AbstractDataBuffer.h"
+//#include "server/DataBufferStatus.h"
 #include <QtCore/QQueue>
 #include <QtCore/QObject>
 
@@ -56,18 +57,21 @@ class WritableData;
  * @details
  * Encapsulates memory allocation for streams, with locking and data
  * consistency checking.
+ *
+ * Note the default maximum allowed size of the buffer is 10240 bytes
+ * and the maximum allowed chunk size in the buffer is also 10240 bytes.
+ *
  */
 class StreamDataBuffer : public AbstractDataBuffer
 {
-    Q_OBJECT
-
     private:
+        Q_OBJECT
         friend class StreamDataBufferTest;
 
     public:
         /// Constructs a stream data buffer.
-        StreamDataBuffer(const QString& type, const size_t max = 10240,
-                const size_t maxChunkSize = 10240, QObject* parent = 0);
+        StreamDataBuffer(const QString& type, size_t bufferSizeMax = 10240,
+                size_t chunkSizeMax = 10240, QObject* parent = 0);
 
         /// Destroys the stream data buffer.
         ~StreamDataBuffer();
@@ -90,28 +94,36 @@ class StreamDataBuffer : public AbstractDataBuffer
         size_t maxChunkSize() const { return _maxChunkSize; }
 
         /// get the number of chunks waiting on the serve queue
+        /// DEPRECATED in buffer status function re-write
         int numberOfActiveChunks() const;
 
+        /// DEPRECATED in buffer status function re-write
         size_t numberOfEmptyChunks() const;
 
         /// Returns the amount of unallocated space in the buffer.
+        /// DEPRECATED in buffer status function re-write
         size_t space() const { return _space; }
 
         /// Returns the number of bytes allocated in the buffer.
+        /// DEPRECATED in buffer status function re-write
         size_t allocatedBytes() const;
 
         /// Returns the number of bytes of free space that can be used
         /// for chunks of the specified size.
+        /// DEPRECATED in buffer status function re-write
         size_t usableSize(size_t chunkSize);
 
         /// Returns the number of bytes of memory in use in the buffer.
+        /// DEPRECATED in buffer status function re-write
         size_t usedSize();
 
         /// Returns the total number of chunks allocated in the buffer.
+        /// DEPRECATED in buffer status function re-write
         int numChunks() const;
 
         /// Returns the number of chunks that can be used for the given
         /// specified chunk size.
+        /// DEPRECATED in buffer status function re-write
         int numUsableChunks(size_t chunkSize);
 
     protected slots:
@@ -127,18 +139,27 @@ class StreamDataBuffer : public AbstractDataBuffer
 
         /// Places the given data chunk on the empty queue.
         void deactivateData(LockableStreamData*);
+
         LockableStreamData* _getWritable(size_t size);
 
     private:
-        StreamDataBuffer(const StreamDataBuffer&); // Disallow copying.
+        // Disallow copying.
+        StreamDataBuffer(const StreamDataBuffer&);
 
     private:
-        size_t _max;
-        size_t _maxChunkSize;
-        size_t _space;
-        QList<LockableStreamData*> _data; ///< List of all allocated memory blocks.
-        QQueue<LockableStreamData*> _serveQueue; ///< Queue of blocks waiting to be served.
-        QList<LockableStreamData*> _emptyQueue; ///< List of all available blocks.
+        size_t _max;           // Maximum buffer size, in bytes.
+        size_t _maxChunkSize;  // Maximum allowed chunk size, in bytes.
+        size_t _space;         // Current free (unallocated) space, in bytes.
+
+        QList<LockableStreamData*>  _allChunks;  // All allocated memory blocks.
+        QQueue<LockableStreamData*> _serveQueue; // Blocks waiting to be served.
+        QList<LockableStreamData*>  _emptyQueue; // Blocks ready for reuse.
+
+        // NOTE Currently the stream data buffer has to know about the
+        // data manager so it can associate chunks with service data and
+        // inform the data manager that the serve queue is empty when
+        // all chunks have been deactivated.
+        // There may be a cleaner way of doing this with better encapsulation.
         DataManager* _manager;
 };
 

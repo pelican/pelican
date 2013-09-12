@@ -69,7 +69,7 @@ ServiceDataBuffer::~ServiceDataBuffer()
 {
     delete _newData;
     foreach (LockableServiceData* data, _data) {
-        free(data->data()->data());
+        free(data->dataChunk()->data());
         delete data;
     }
 }
@@ -256,7 +256,7 @@ size_t ServiceDataBuffer::usedSize()
     size_t total = 0;
     QMutexLocker lock(&_mutex);
     foreach (const LockableServiceData* s, _data) {
-        total += s->data().get()->size();
+        total += s->dataChunk().get()->size();
     }
     return total;
 }

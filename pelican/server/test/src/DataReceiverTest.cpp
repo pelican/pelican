@@ -179,7 +179,7 @@ void DataReceiverTest::test_listen_udpChunker()
             LockedData d = dataManager.getNext("VisibilityData");
             CPPUNIT_ASSERT(d.isValid());
             char* data = (char*)(reinterpret_cast<AbstractLockableData*>(
-                    d.object())->data()->data());
+                    d.object())->dataChunk()->data());
             double* values = reinterpret_cast<double*>(data);
             // This value should be p+0.1
             CPPUNIT_ASSERT_DOUBLES_EQUAL(p+0.1, values[0], DBL_EPSILON);

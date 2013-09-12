@@ -60,7 +60,9 @@ class LockedData;
  */
 class ServiceDataBuffer : public AbstractDataBuffer
 {
-    Q_OBJECT
+    private:
+        Q_OBJECT
+        friend class ServiceDataBufferTest;
 
     public:
         /// Constructs a service data buffer.
@@ -114,16 +116,17 @@ class ServiceDataBuffer : public AbstractDataBuffer
         void deactivateData(LockableServiceData*);
 
     private:
-        QHash<QString, LockableServiceData*> _data;
-        QList<LockableServiceData*> _expiredData;
-        LockableServiceData* _newData; // temporary store until activated
-        QString _current;
-        size_t _max;
-        size_t _maxChunkSize;
-        size_t _space;
-        unsigned long _id;
+        size_t _max;           // Maximum buffer size, in bytes.
+        size_t _maxChunkSize;  // Maximum allowed chunk size, in bytes.
+        size_t _space;         // Current free (unallocated) space, in bytes.
 
-    friend class ServiceDataBufferTest;
+        LockableServiceData* _newData; // Temporary store until activated
+
+        QHash<QString, LockableServiceData*> _data; // All allocated memory blocks.
+        QList<LockableServiceData*> _expiredData;   // Expired memory blocks ready for reuse.
+
+        QString _current;     // The current server data block version label
+        unsigned long _id;    // FIXME what exactly is this index ???
 };
 
 } // namespace pelican

@@ -88,9 +88,11 @@ class DataChunk
         void setSize(size_t s) { _size = s; }
 
         /// Returns a pointer to the beginning of the memory block.
+        /// DEPRECATED
         void* ptr() { return _data; }
 
         /// Returns a pointer to the beginning of the memory block.
+        /// DEPRECATED
         const void* ptr() const { return _data; }
 
         /// Returns a pointer to the beginning of the memory block.

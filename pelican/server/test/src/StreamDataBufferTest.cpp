@@ -135,7 +135,7 @@ void StreamDataBufferTest::test_getWritableStreams()
         buffer.setDataManager(_dataManager);
         {
             WritableData dataChunk = buffer.getWritable(dataSize);
-            void* dataPtr =  dataChunk.data()->data()->ptr();
+            void* dataPtr =  dataChunk.data()->dataChunk()->ptr();
             double value = 1;
             dataChunk.write(&value, 8, 0);
             if (verbose)
@@ -144,7 +144,7 @@ void StreamDataBufferTest::test_getWritableStreams()
         CPPUNIT_ASSERT_EQUAL(1, buffer._serveQueue.size());
         {
             WritableData dataChunk = buffer.getWritable(dataSize);
-            void* dataPtr =  dataChunk.data()->data()->ptr();
+            void* dataPtr =  dataChunk.data()->dataChunk()->ptr();
             double value = 2;
             dataChunk.write(&value, 8, 0);
             if (verbose)
@@ -153,7 +153,7 @@ void StreamDataBufferTest::test_getWritableStreams()
         CPPUNIT_ASSERT_EQUAL(2, buffer._serveQueue.size());
         {
             WritableData dataChunk = buffer.getWritable(dataSize);
-            void* dataPtr =  dataChunk.data()->data()->ptr();
+            void* dataPtr =  dataChunk.data()->dataChunk()->ptr();
             double value = 3;
             dataChunk.write(&value, 8, 0);
             if (verbose)
@@ -186,7 +186,7 @@ void StreamDataBufferTest::test_getWritableStreams()
         CPPUNIT_ASSERT_EQUAL(3, buffer._emptyQueue.size());
         {
             WritableData dataChunk = buffer.getWritable(dataSize);
-            void* dataPtr =  dataChunk.data()->data()->ptr();
+            void* dataPtr =  dataChunk.data()->dataChunk()->ptr();
             double value = 4;
             dataChunk.write(&value, 8, 0);
             if (verbose)

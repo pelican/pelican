@@ -168,7 +168,7 @@ void Session::processRequest(const ServerRequest& req, QIODevice& out,
                     {
                         LockableServiceData* lockedData =
                                 static_cast<LockableServiceData*>(d[i].object());
-                        data.append(lockedData->data().get());
+                        data.append(lockedData->dataChunk().get());
                     }
                     _protocol->send(out, data);
                 }

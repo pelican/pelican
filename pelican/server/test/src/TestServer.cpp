@@ -133,7 +133,7 @@ void TestServer::serveServiceData(const DataChunk& d )
     WritableData wd = buf->getWritable(d.size());
     if( ! wd.isValid() )
         throw("unable to add ServiceBuffer Data");
-    DataChunk* data = wd.data()->data().get();
+    DataChunk* data = wd.data()->dataChunk().get();
     data->setId(d.id());
     wd.write(d.ptr(), d.size());
 }
