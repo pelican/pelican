@@ -35,6 +35,7 @@
 #include <string>
 
 #include <unistd.h>
+#include <stdio.h>
 
 #include <QtCore/QTime>
 
