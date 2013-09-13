@@ -70,7 +70,7 @@ class ThreadedBlobServer : public QThread
         void blockingSend(const QString& streamName, const DataBlob* incoming);
 
         /// return the port on which the server is listening
-        qint16 serverPort() const;
+        quint16 serverPort() const;
 
         /// returns the number of clients listening for the specified stream
         int clientsForStream(const QString&) const;

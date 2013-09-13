@@ -27,8 +27,8 @@ class StreamDataBufferTest : public CppUnit::TestFixture
 {
     public:
         CPPUNIT_TEST_SUITE( StreamDataBufferTest );
-        //CPPUNIT_TEST( test_getNext );
-        //CPPUNIT_TEST( test_getWritable );
+        CPPUNIT_TEST( test_getNext );
+        CPPUNIT_TEST( test_getWritable );
         CPPUNIT_TEST( test_getWritableStreams );
         CPPUNIT_TEST_SUITE_END();
 

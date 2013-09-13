@@ -75,6 +75,7 @@ class AbstractEmulator
         void setDevice(QIODevice* device) {_device = device;}
 
         /// Returns the start delay interval in seconds.
+        /// FIXME better design for setting this needed
         virtual int startDelay() {return 0;}
 
         /// Called just before the emulator driver exits.

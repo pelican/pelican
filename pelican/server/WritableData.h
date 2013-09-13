@@ -63,7 +63,7 @@ class WritableData
         AbstractLockableData* data() const {return _data;}
 
         /// Returns a pointer to the start of the memory block.
-        void* ptr() {return _data->data()->data();}
+        void* ptr() {return _data->dataChunk()->data();}
 
         /// returns true if there is a valid Data object
         bool isValid() const {return _data ? _data->isValid() : false;}

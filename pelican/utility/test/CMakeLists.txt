@@ -20,7 +20,7 @@ if (CPPUNIT_FOUND)
     # Build Pelcain utility tests.
     set(utilityTest_src
         src/CppUnitMain.cpp
-        src/TypeCounterTest
+        src/TypeCounterTest.cpp
         src/SocketTesterTest.cpp
         src/ConfigTest.cpp
         src/ConfigNodeTest.cpp

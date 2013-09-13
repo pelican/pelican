@@ -60,14 +60,14 @@ class LockedData;
  */
 class ServiceDataBuffer : public AbstractDataBuffer
 {
-    Q_OBJECT
+    private:
+        Q_OBJECT
+        friend class ServiceDataBufferTest;
 
     public:
         /// Constructs a service data buffer.
-        ServiceDataBuffer(const QString& type,
-                const size_t max = 10240,
-                const size_t maxChunkSize = 10240,
-                QObject* parent = 0);
+        ServiceDataBuffer(const QString& type, const size_t max = 10240,
+                const size_t maxChunkSize = 10240, QObject* parent = 0);
 
         /// Destroys the service data buffer.
         ~ServiceDataBuffer();
@@ -81,6 +81,32 @@ class ServiceDataBuffer : public AbstractDataBuffer
         /// Returns a section of writable memory to be filled.
         WritableData getWritable(size_t size);
 
+        /// Returns the maximum buffer size, in bytes.
+        size_t maxSize() const { return _max; }
+
+        /// Returns the maximum chunk size, in bytes.
+        size_t maxChunkSize() const { return _maxChunkSize; }
+
+        /// Returns the unallocated space in the buffer, in bytes.
+        size_t space() const { return _space; }
+
+        /// Returns the number of bytes of free space that can be used
+        /// for chunks of the specified size.
+        size_t usableSize(size_t chunkSize);
+
+        /// Returns the number of bytes of memory in use in the buffer.
+        size_t usedSize();
+
+        /// Returns the total number of chunks in the buffer.
+        int numChunks() const;
+
+        /// Returns the number of empty or expired chunks in the buffer.
+        int numEmptyChunks() const;
+
+        /// Returns the number of usable chunks in the buffer that are large
+        /// enough for the specified chunk size.
+        int numUsableChunks(size_t chunkSize);
+
     protected slots:
         void activateData();
         void deactivateData();
@@ -90,16 +116,17 @@ class ServiceDataBuffer : public AbstractDataBuffer
         void deactivateData(LockableServiceData*);
 
     private:
-        QHash<QString, LockableServiceData*> _data;
-        QList<LockableServiceData*> _expiredData;
-        LockableServiceData* _newData; // temporary store until activated
-        QString _current;
-        size_t _max;
-        size_t _maxChunkSize;
-        size_t _space;
-        unsigned long _id;
+        size_t _max;           // Maximum buffer size, in bytes.
+        size_t _maxChunkSize;  // Maximum allowed chunk size, in bytes.
+        size_t _space;         // Current free (unallocated) space, in bytes.
 
-    friend class ServiceDataBufferTest;
+        LockableServiceData* _newData; // Temporary store until activated
+
+        QHash<QString, LockableServiceData*> _data; // All allocated memory blocks.
+        QList<LockableServiceData*> _expiredData;   // Expired memory blocks ready for reuse.
+
+        QString _current;     // The current server data block version label
+        unsigned long _id;    // FIXME what exactly is this index ???
 };
 
 } // namespace pelican

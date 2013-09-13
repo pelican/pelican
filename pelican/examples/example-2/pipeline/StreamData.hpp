@@ -27,8 +27,8 @@
  */
 
 
-#ifndef STREAMDATA_HPP_
-#define STREAMDATA_HPP_
+#ifndef EXAMPLE_2_STREAM_DATA_HPP_
+#define EXAMPLE_2_STREAM_DATA_HPP_
 
 #include "pelican/data/DataBlob.h"
 #include <QtCore/QVector>
@@ -36,29 +36,40 @@
 class StreamData : public pelican::DataBlob
 {
 public:
-    StreamData() : DataBlob("StreamData") {}
+    StreamData() : DataBlob("StreamData"),
+    packetSize_(0), packetId_(0), timeStamp_(0), numTotalPackets_(0),
+    reportInterval_(0) {}
+
     quint32 packetSize() const { return packetSize_; }
     void setPacketSize(quint32 value) { packetSize_ = value; }
+
     quint32 packetId() const { return packetId_; }
     void setPacketId(quint32 value) { packetId_ = value; }
-    quint32 totalPackets() const { return numTotalPackets_; }
-    void setTotalPackets(quint32 value) { numTotalPackets_ = value; }
+
     quint32 timeStamp() const { return timeStamp_; }
     void setTimeStamp(quint32 value) { timeStamp_ = value; }
+
+    qint32 totalPackets() const { return numTotalPackets_; }
+    void setTotalPackets(qint32 value) { numTotalPackets_ = value; }
+
+    qint32 reportInteval() const { return reportInterval_; }
+    void setReportInterval(qint32 value) { reportInterval_ = value; }
+
     void resize(int n) { values_.resize(n); }
     size_t size() const { return values_.size(); }
+
     const quint32* ptr() const { return values_.data(); }
     quint32* ptr() { return values_.data(); }
 
 private:
     quint32 packetSize_;
     quint32 packetId_;
-    quint32 numTotalPackets_;
     quint32 timeStamp_;
+    qint32 numTotalPackets_;
+    quint32 reportInterval_;
     QVector<quint32> values_;
 };
 
 PELICAN_DECLARE_DATABLOB(StreamData)
 
-
-#endif /* STREAMDATA_HPP_ */
+#endif /* EXAMPLE_2_STREAM_DATA_HPP_ */

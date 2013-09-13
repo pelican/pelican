@@ -56,10 +56,8 @@ class AbstractAdaptingDataClient : public AbstractDataClient
 
     public:
         //PELICAN_CONSTRUCT_TYPES(const ConfigNode&, const DataTypes&, const Config*)
-        AbstractAdaptingDataClient( const ConfigNode& configNode,
-                                    const DataTypes& types,
-                                    const Config* config
-                                    );
+        AbstractAdaptingDataClient(const ConfigNode& configNode,
+                const DataTypes& types, const Config* config);
         ~AbstractAdaptingDataClient();
 
         /// Returns the type of data associated with the data name

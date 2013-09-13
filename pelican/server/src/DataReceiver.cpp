@@ -35,6 +35,8 @@
 
 using namespace std;
 
+#define USE_SIGNALS 1
+
 namespace pelican {
 
 /**
@@ -55,11 +57,13 @@ DataReceiver::DataReceiver(AbstractChunker* chunker)
  */
 DataReceiver::~DataReceiver()
 {
-    _active = false; // mark destructor disconnect
+    // Setting active to false marks the destructor disconnect.
+    _active = false;
+
     _chunker->stop();
-    if( isRunning() ) {
+    if (isRunning()) {
         do quit();
-        while( !wait(10) );// { terminate(); }
+        while (!wait(10)); // {terminate();}
     }
     delete _device;
 }
@@ -79,29 +83,72 @@ void DataReceiver::run()
     // N.B. must be done in this thread (i.e. in run())
     _setupDevice();
 
-    //    int tid = syscall(__NR_gettid);
-    //    std::cout << "Thread ID : " << tid << std::endl;
+
     if (_device) {
         // process any existing data on the stream
-        if( _device->bytesAvailable() > 0 )
+        if (_device->bytesAvailable() > 0) {
             _processIncomingData();
+        }
     }
 
+    // At this point the event loop takes over to call the chunker
+    // next method
+#if 0
+    cout << "DataReceiver starting event loop for chunker. "
+         << "(" << _chunker->chunkTypes()[0].toStdString() << ", "
+         << _chunker->name().toStdString() << ")" << endl;
+#endif
+
+#if USE_SIGNALS
     // enter main event loop (until quit() is called)
+
     exec();
+#else
+    while (_active) {
+        //cout << "DataReceiver: checking for data ... " << endl;
+
+        // NOTE while this check seems like a good idea it fails in some of
+        // the unit tests...
+        if (!_device) {
+            cerr << "DataReceiver ERROR: Invalid device pointer!" << endl;
+            _active = false;
+            break;
+        }
+
+        if (_device && _device->bytesAvailable() > 0) {
+            _chunker->next(_device);
+        }
+
+        // If the device is a socket handle error conditions
+        if (QAbstractSocket* s = dynamic_cast<QAbstractSocket*>(_device)) {
+//            if (s->error())
+//                _processError();
+            if (s->state() == QAbstractSocket::UnconnectedState)
+                _reconnect();
+        }
+        // For devices with no reconnect exit the event loop if the
+        // device becomes unreadable.
+        else if (!_device->isReadable()) {
+            cerr << "DataReceiver ERROR: Device not readable!" << endl;
+            _active = false;
+            break;
+        }
+
+        usleep(1); // how long should this be.
+    }
+#endif
 }
 
+// NOTE this function is only called if using signals.
+//
 void DataReceiver::_processIncomingData()
 {
     _chunker->next(_device);
+    if (_device && _device->bytesAvailable() > 0) {
+        emit dataRemaining();
+    }
 }
 
-void DataReceiver::_registerSocket( QAbstractSocket* socket ) {
-    connect( socket, SIGNAL( error(QAbstractSocket::SocketError) ),
-             SLOT(_processError()), Qt::DirectConnection );
-    connect( socket, SIGNAL( disconnected() ),
-             SLOT(_reconnect()), Qt::DirectConnection);
-}
 
 void DataReceiver::_processError() {
     std::cerr << "DataReceiver: socket error: " <<
@@ -109,37 +156,56 @@ void DataReceiver::_processError() {
     if (_active) _reconnect();
 }
 
+
 void DataReceiver::_reconnect() {
-    std::cerr << "DataReceiver: Attempting to reconnect.\n";
+    std::cerr << "DataReceiver Attempting to reconnect." << std::endl;
     _deleteDevice();
-    _setupDevice();
+    if (_active)
+        _setupDevice();
 }
+
 
 void DataReceiver::_setupDevice()
 {
     _device = _chunker->newDevice();
     _chunker->activate();
 
+#if USE_SIGNALS
     if (_device) {
-        // If its a socket we must try and catch the failure conditions
+        // Call the chunker->next() method if there is data to process.
         connect(_device, SIGNAL(readyRead()), SLOT(_processIncomingData()),
                 Qt::DirectConnection);
+        connect(this, SIGNAL(dataRemaining()), SLOT(_processIncomingData()),
+                Qt::DirectConnection);
+
+        // If its a socket we must try and catch the failure conditions
         if (QAbstractSocket* s = dynamic_cast<QAbstractSocket*>(_device)) {
-            _registerSocket( s );
+            _registerSocket(s);
         }
     }
+#endif
 }
 
+// NOTE this function is not called if not using signals
+void DataReceiver::_registerSocket(QAbstractSocket* socket)
+{
+    Q_ASSERT(USE_SIGNALS);
+    connect(socket, SIGNAL(error(QAbstractSocket::SocketError)),
+             SLOT(_processError()), Qt::DirectConnection);
+    connect(socket, SIGNAL(disconnected()),
+             SLOT(_reconnect()), Qt::DirectConnection);
+}
 
 void DataReceiver::_deleteDevice()
 {
-    _chunker->stop();
-    _device->disconnect();  // Disconnects all signals in this object from receiver's method.
-    _device->deleteLater(); // Delete later acts on the current pointer
+    _chunker->stop();       // TODO is this only if the chunker writer respects
+                            // the AbstractChunker::_active attribute ?
+    _device->disconnect();  // Disconnects all signals in this object from
+                            // receiver's method.
+    _device->deleteLater(); // Note: deleteLater() acts on the current pointer
                             // (i.e. takes a copy of the current pointer for
-                            // deletion)
-                            // therefore it is safe to set to null or reassign
-                            // immediately
+                            // deletion) therefore it is safe to set to null
+                            // or reassign immediately
     _device = 0;
 }
 

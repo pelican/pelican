@@ -2,42 +2,62 @@
 <!DOCTYPE pelican>
 
 <configuration version="1.0">
-    
-    <!-- ========= Option set 1 ==========  -->
-    <StreamEmulator name="opt1">
-        <connection host="127.0.0.1" port="2001" />
-        <packet     numSamples="100000" />
-        <data       numPackets="2000" packetInterval="0" />
-    </StreamEmulator>
-    
-    <!-- ========= Option set 2 ========== -->
-    <StreamEmulator name="opt2">
+
+    <!-- XML configurations for the StreamEmulator -->
+    <!-- These are selected by passing the 'name' argument to the emulator -->
+    <!-- binary. e.g. --> 
+    <!--    $> ./emulator emulator.xml 4  -->
+
+    <!-- XML Attributes: -->
+    <!-- ****************************************************************** -->
+    <!-- numSamples     = number of samples (32bit values) in a packet -->
+    <!-- numPackets     = number of packets before the emulator finishes -->
+    <!-- packetInterval = microseconds between packets -->
+    <!-- reportInterval = microseconds between packets -->
+
+
+    <!-- ========= Configuration 1 ==========  -->
+    <!-- Packets with 1,000,000 samples -->
+    <!-- Emulator never stop sending packets -->
+    <!-- Packet interval 0.1 second, report log every 10 packets -->
+    <StreamEmulator name="1">
         <connection host="127.0.0.1" port="2001" />
         <packet     numSamples="1000000" />
-        <data       numPackets="100" packetInterval="0" />
+        <data       numPackets="-1" packetInterval="100000" reportInterval="10" />
     </StreamEmulator>
 
-    <!-- ========= Option set 3 ========== -->
-    <StreamEmulator name="opt3">
+
+    <!-- ========= Configuration 2 ==========  -->
+    <!-- Packets with 10,000,000 samples -->
+    <!-- Emulator stops after sending 100 packets -->
+    <!-- Packet interval 0.1 second, report log every 10 packets -->
+    <StreamEmulator name="2">
         <connection host="127.0.0.1" port="2001" />
-        <packet     numSamples="25000000" />
-        <data       numPackets="200" packetInterval="0" />
+        <packet     numSamples="10000000" />
+        <data       numPackets="100" packetInterval="100000" reportInterval="10" />
     </StreamEmulator>
 
-    <!-- ========= Option set 4 ========== -->
-    <StreamEmulator name="opt4">
+
+    <!-- ========= Configuration 3 ==========  -->
+    <!-- Packets with 1,000,000 samples -->
+    <!-- Emulator never stops sending packets -->
+    <!-- Packet interval 0.001 second, report log every 100 packets -->
+    <StreamEmulator name="3">
         <connection host="127.0.0.1" port="2001" />
-        <packet     numSamples="25000000" />
-        <data       numPackets="-1" packetInterval="0" />
+        <packet     numSamples="1000000" />
+        <data       numPackets="-1" packetInterval="1000" reportInterval="100" />
     </StreamEmulator>
 
-    <!-- ========= Option set 5 ========== -->
-    <!-- this option set generates chunks bigger than the chunker (data buffer)
-         can handle. -->
-    <StreamEmulator name="opt5">
+
+    <!-- ========= Configuration 4 ==========  -->
+    <!-- Packets with 100,000 samples -->
+    <!-- Emulator never stops sending packets -->
+    <!-- Packet interval 100 us, report log every 500 packets -->
+    <StreamEmulator name="4">
         <connection host="127.0.0.1" port="2001" />
-        <packet     numSamples="100000000" />
-        <data       numPackets="-1" packetInterval="0" />
+        <packet     numSamples="100000" />
+        <data       numPackets="-1" packetInterval="200" reportInterval="500" />
     </StreamEmulator>
+    
     
 </configuration>

@@ -27,8 +27,8 @@
  */
 
 
-#ifndef STREAMCHUNKER_HPP_
-#define STREAMCHUNKER_HPP_
+#ifndef EXAMPLE_2_STREAM_CHUNKER_HPP_
+#define EXAMPLE_2_STREAM_CHUNKER_HPP_
 
 #include <pelican/server/AbstractChunker.h>
 #include <QtCore/QTime>
@@ -47,10 +47,13 @@ public:
 
 private:
     QTcpServer* tcpServer_;
-    quint32 chunkCounter_;
+    quint64 chunkCounter_;
     QTime timer_;
+    quint64 reportCounter_;
+    quint64 totalOverwriteCounter_;
+    quint32 intervalOverwriteCounter_;
 };
 
 PELICAN_DECLARE_CHUNKER(StreamChunker)
 
-#endif /* STREAMCHUNKER_HPP_ */
+#endif /* EXAMPLE_2_STREAM_CHUNKER_HPP_ */

@@ -3,6 +3,7 @@
 #include "server/ChunkerManager.h"
 
 #include <QtCore/QCoreApplication>
+#include <unistd.h>
 
 #include <iostream>
 using std::cerr;
@@ -16,7 +17,7 @@ namespace test {
  */
 ChunkerTester::ChunkerTester(const QString& chunkerType,
         unsigned long bufferSize, const QString& XML_Config, int verbose )
-: _chunkManager(0), _dataManager(0)
+: _chunkerManager(0), _dataManager(0)
 {
     // Setup the XML configuration.
     Config::TreeAddress dataAddress, chunkerBase;
@@ -33,8 +34,8 @@ ChunkerTester::ChunkerTester(const QString& chunkerType,
             "</root>\n";
     _config.setXML(xml);
 
-    _chunkManager = new ChunkerManager(&_config, chunkerBase);
-    AbstractChunker* chunker = _chunkManager->addStreamChunker(chunkerType);
+    _chunkerManager = new ChunkerManager(&_config, chunkerBase);
+    AbstractChunker* chunker = _chunkerManager->addStreamChunker(chunkerType);
 
     // setup the data manager
     _dataManager = new DataManager(&_config , dataAddress);
@@ -47,11 +48,8 @@ ChunkerTester::ChunkerTester(const QString& chunkerType,
 
     // start the chunkers listening
     try {
-        _chunkManager->init(*_dataManager);
-        do {
-            sleep(1); // at least one second seems to be necessary
-        }
-        while(! _chunkManager->isRunning());
+        _chunkerManager->init(*_dataManager);
+        while(!_chunkerManager->isRunning()) { usleep(100); }
     }
     catch(const QString& msg)
     {
@@ -67,21 +65,21 @@ ChunkerTester::ChunkerTester(const QString& chunkerType,
  */
 ChunkerTester::~ChunkerTester()
 {
-    delete _chunkManager;
+    delete _chunkerManager;
     delete _dataManager;
 }
 
 
 AbstractChunker* ChunkerTester::chunker() const
 {
-    QList<AbstractChunker* > chunkers = _chunkManager->chunkers().values();
+    QList<AbstractChunker* > chunkers = _chunkerManager->chunkers().values();
     Q_ASSERT(chunkers.size() == 1);
     Q_ASSERT(chunkers.first() != 0);
     return chunkers.first();
 }
 
 QIODevice* ChunkerTester::getCurrentDevice() const {
-    return _chunkManager->getCurrentDevice( chunker() );
+    return _chunkerManager->getCurrentDevice( chunker() );
 }
 
 /**

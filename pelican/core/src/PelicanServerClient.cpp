@@ -108,15 +108,16 @@ void PelicanServerClient::setIP_Address(const QString& ipaddress)
 AbstractDataClient::DataBlobHash PelicanServerClient::getData(DataBlobHash& dataHash)
 {
     QSet<QString> reqs = _requireSet;
-    if( ! reqs.subtract(QSet<QString>::fromList(dataHash.keys())).isEmpty() )
+    if (!reqs.subtract(QSet<QString>::fromList(dataHash.keys())).isEmpty()) {
         throw(QString("PelicanServerClient::getData() data hash does not "
                 "contain objects for all possible requests"));
+    }
 
     // Construct the request
     StreamDataRequest sr;
     foreach(const DataSpec& d, dataRequirements())
     {
-        sr.addDataOption( d );
+        sr.addDataOption(d);
     }
 
     DataBlobHash validData;
@@ -212,9 +213,9 @@ PelicanServerClient::_response(QIODevice& device, shared_ptr<ServerResponse> r,
     {
         case ServerResponse::Error:
         {
-            QString msg = "PelicanServerClient: Server Error: " + r->message();
+            QString msg = "ERROR: PelicanServerClient: Server Error: " + r->message();
             std::cerr << msg.toStdString() << std::endl;
-            throw( msg );
+            throw(msg);
             break;
         }
 
@@ -332,7 +333,7 @@ PelicanServerClient::_response(QIODevice& device, shared_ptr<ServerResponse> r,
         }
 
         default:
-            std::cerr << "PelicanServerClient: Unknown Response" << std::endl;
+            std::cerr << "ERROR: PelicanServerClient: Unknown Response" << std::endl;
             break;
     }
     return validData;
@@ -370,3 +371,4 @@ const DataSpec& PelicanServerClient::dataSpec() const {
 }
 
 } // namespace pelican
+

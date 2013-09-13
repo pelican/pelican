@@ -27,10 +27,11 @@
  */
 
 
-#ifndef STREAMDATAADAPTER_HPP_
-#define STREAMDATAADAPTER_HPP_
+#ifndef EXAMPLE_2_STREAM_DATA_ADAPTER_HPP_
+#define EXAMPLE_2_STREAM_DATA_ADAPTER_HPP_
 
 #include <pelican/core/AbstractStreamAdapter.h>
+#include <QtCore/QTime>
 
 class StreamDataAdapter : public pelican::AbstractStreamAdapter
 {
@@ -41,4 +42,4 @@ public:
 
 PELICAN_DECLARE_ADAPTER(StreamDataAdapter)
 
-#endif /* STREAMDATAADAPTER_HPP_ */
+#endif /* EXAMPLE_2_STREAM_DATA_ADAPTER_HPP_ */

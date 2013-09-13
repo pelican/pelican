@@ -26,8 +26,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef SERVICE_DATA_ADAPTER_HPP_
-#define SERVICE_DATA_ADAPTER_HPP_
+#ifndef EXAMPLE_1_SERVICE_DATA_ADAPTER_HPP_
+#define EXAMPLE_1_SERVICE_DATA_ADAPTER_HPP_
 
 #include <pelican/core/AbstractServiceAdapter.h>
 
@@ -42,4 +42,4 @@ private:
 
 PELICAN_DECLARE_ADAPTER(ServiceDataAdapter)
 
-#endif /* SERVICE_DATA_ADAPTER_HPP_ */
+#endif /* EXAMPLE_1_SERVICE_DATA_ADAPTER_HPP_ */

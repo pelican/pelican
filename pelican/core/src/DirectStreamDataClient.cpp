@@ -81,6 +81,7 @@ const DataSpec& DirectStreamDataClient::dataSpec() const
     if (!ok) throw QString("Failed to initialise the ChunkerManager");
     return _dataManager->dataSpec();
 }
+
 /**
  * @details
  * Sets the chunker for the given data type.
@@ -158,16 +159,20 @@ AbstractDataClient::DataBlobHash DirectStreamDataClient::getData(
     DataBlobHash validData;
     QList<LockedData> dataList; // Will contain the list of valid StreamDataObjects
     do {
+        //std::cout << "DirectStreamDataClient::getData() ASKING FOR DATA" << std::endl;
         // Must cycle the event loop for unlocked signals to be processed.
-        for (int i = 0; i < _nPipelines; ++i) {
+        for (int i = 0; i < _nPipelines; ++i)
+        {
             dataList = _dataManager->getDataRequirements(dataRequirements().at(i));
-            if (dataList.size() != 0) break;
+            if (dataList.size() != 0)
+                break;
         }
-        if( dataList.size() == 0 )
-            QCoreApplication::processEvents( QEventLoop::WaitForMoreEvents, 10 );
-            //QCoreApplication::processEvents( QEventLoop::AllEvents, 5 );
+        if (dataList.size() == 0)
+        {
+            QCoreApplication::processEvents(QEventLoop::WaitForMoreEvents, 10);
+        }
     }
-    while (dataList.size() == 0 );
+    while (dataList.size() == 0);
 
     // Transform the data into DataBlobs.
     for (int i = 0; i < dataList.size(); ++i)
@@ -176,25 +181,27 @@ AbstractDataClient::DataBlobHash DirectStreamDataClient::getData(
         StreamData* sd = lockedData->streamData();
         Q_ASSERT(sd != 0);
         // Check for associate data
-        foreach (const boost::shared_ptr<DataChunk>& d, sd->associateData()) {
+        foreach (const boost::shared_ptr<DataChunk>& d, sd->associateData())
+        {
             if (dataHash[d->name()]->version() == d->id())
             {
                 // Data not changed
-                validData[d->name()] = dataHash[ d->name()];
+                validData[d->name()] = dataHash[d->name()];
             }
-            else {
+            else
+            {
                 // Send the associate data through the adapter
                 QByteArray tmp = QByteArray::fromRawData((char*)d->ptr(), d->size());
                 QBuffer device(&tmp);
                 device.open(QIODevice::ReadOnly);
-                validData.unite(adaptService( device, d.get(), dataHash ));
+                validData.unite(adaptService( device, d.get(), dataHash));
             }
         }
         // Send the data for adaption
         QByteArray tmp = QByteArray::fromRawData((char*)sd->ptr(), sd->size());
         QBuffer device(&tmp);
         device.open(QIODevice::ReadOnly);
-        validData.unite(adaptStream( device, sd, dataHash ));
+        validData.unite(adaptStream(device, sd, dataHash));
 
         static_cast<LockableStreamData*>(dataList[i].object())->served() = true;
     }

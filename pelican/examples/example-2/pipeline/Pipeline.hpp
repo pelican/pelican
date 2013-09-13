@@ -26,8 +26,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef PIPELINE_HPP_
-#define PIPELINE_HPP_
+#ifndef EXAMPLE_2_PIPELINE_HPP_
+#define EXAMPLE_2_PIPELINE_HPP_
 
 #include <pelican/core/AbstractPipeline.h>
 #include <QtCore/QTime>
@@ -40,9 +40,11 @@ class Pipeline : public pelican::AbstractPipeline
         void run(QHash<QString, pelican::DataBlob*>&);
 
     private:
-        quint32 counter_;
+        quint32 runCounter_;
+        quint32 reportCounter_;
         QTime timer_;
+        quint32 randDelay_;
 };
 
-#endif /* PIPELINE_HPP_ */
+#endif /* EXAMPLE_2_PIPELINE_HPP_ */
 

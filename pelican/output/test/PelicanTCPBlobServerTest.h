@@ -53,20 +53,17 @@ class PelicanTCPBlobServerTest : public CppUnit::TestFixture
 {
     public:
         CPPUNIT_TEST_SUITE( PelicanTCPBlobServerTest );
-        CPPUNIT_TEST( test_portConfig );
         CPPUNIT_TEST( test_connection );
+//        CPPUNIT_TEST( test_portConfig );
         CPPUNIT_TEST_SUITE_END();
 
     public:
-        void setUp();
-        void tearDown();
-
         // Test Methods
-        void test_portConfig();
         void test_connection();
+        void test_portConfig();
 
     public:
-        PelicanTCPBlobServerTest(  );
+        PelicanTCPBlobServerTest();
         ~PelicanTCPBlobServerTest();
 
     private:

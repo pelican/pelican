@@ -4,10 +4,10 @@
 #
 
 # Set compiler flags
-set(CMAKE_CXX_FLAGS "-Wall -Wextra -pedantic -fPIC")
+set(CMAKE_CXX_FLAGS "-fPIC")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG -DQT_NO_DEBUG -DQT_NO_DEBUG_OUTPUT")
-set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O2 -g")
-set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g")
+set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O2 -g -Wall -Wextra -pedantic ")
+set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g -Wall -Wextra -pedantic ")
 
 if (CMAKE_CXX_COMPILER MATCHES icpc)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wcheck -wd2259 -wd1125")
@@ -19,7 +19,7 @@ else ()
 endif ()
 
 if (NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE "Release")
+    set(CMAKE_BUILD_TYPE "release")
 endif ()
 
 # Set include directories (these probably are not all needed!)

@@ -22,9 +22,9 @@ data type.
 --------------------------------------------------------------------------------
 1. Launch three separate terminals open in the example-1 binary directory.
 2. Start the server binary one of the terminals by running:
-    $ ./server serverConfig.xml
+    $ ./server server.xml
 3. Start the pipeline binary in anther of the terminals by running:
-    $ ./pipeline pipelineConfig.xml
+    $ ./pipeline pipeline.xml
 4. Run the emulator binary to inject some data into the server. This is done
    with by running:
     $ ./emulator

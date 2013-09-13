@@ -64,11 +64,11 @@ set_target_properties(${name} PROPERTIES OUTPUT_NAME pipeline)
 include(copy_files)
 copy_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/pipeline/pipeline.xml
-    ${CMAKE_CURRENT_BINARY_DIR}/pipelineConfig.xml
+    ${CMAKE_CURRENT_BINARY_DIR}/pipeline.xml
 )
 copy_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/server/server.xml
-    ${CMAKE_CURRENT_BINARY_DIR}/serverConfig.xml
+    ${CMAKE_CURRENT_BINARY_DIR}/server.xml
 )
 copy_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/readme.txt

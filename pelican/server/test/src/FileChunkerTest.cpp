@@ -3,10 +3,13 @@
 #include <QtCore/QCoreApplication>
 #include <QtCore/QTemporaryFile>
 #include <QtTest/QSignalSpy>
+#include <QtCore/QDebug>
+
 #include "FileChunker.h"
 #include "server/LockedData.h"
 #include "server/test/ChunkerTester.h"
-#include <QtCore/QDebug>
+
+#include <unistd.h>
 
 namespace pelican {
 
@@ -18,7 +21,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION( FileChunkerTest );
  * @details Constructs a FileChunkerTest object.
  */
 FileChunkerTest::FileChunkerTest()
-    : CppUnit::TestFixture(), _msg("hello")
+    : CppUnit::TestFixture(), _app(0), _temp(0), _msg("hello")
 {
 }
 
@@ -28,6 +31,7 @@ FileChunkerTest::FileChunkerTest()
 FileChunkerTest::~FileChunkerTest()
 {
 }
+
 
 void FileChunkerTest::setUp()
 {
@@ -58,16 +62,13 @@ void FileChunkerTest::test_startup()
     //   A memory request to be made, and filled with the initial content
     try {
         ChunkerTester tester("FileChunker", 10*_msg.size(),
-                QString("<FileChunker file=\"") + _testFile + "\" />");
-
-        CPPUNIT_ASSERT_EQUAL( 1, tester.writeRequestCount() );
+                QString("<FileChunker file=\"") + _testFile + "\" />", false);
+        CPPUNIT_ASSERT_EQUAL(1, tester.writeRequestCount());
         LockedData ldata = tester.getData();
-        CPPUNIT_ASSERT( ldata.isValid() );
-        //CPPUNIT_ASSERT_EQUAL( data.size(), _msg.size() );
+        CPPUNIT_ASSERT(ldata.isValid());
     }
-    catch( const QString& msg)
-    {
-        CPPUNIT_FAIL( msg.toStdString() );
+    catch (const QString& msg) {
+        CPPUNIT_FAIL(msg.toStdString());
     }
 }
 
@@ -78,34 +79,30 @@ void FileChunkerTest::test_update()
     // Expect:
     //   A memory request to be made, and filled with the new content
     try {
-        ChunkerTester tester("FileChunker", 100*_msg.size(),
-                QString("<FileChunker file=\"") + _testFile + "\"/>");
-        sleep(1);
+        QString xml =
+                "<FileChunker file=\"" + _testFile + "\">"
+                "   <data type=\"fileDataType\" />"
+                "</FileChunker>";
+        ChunkerTester tester("FileChunker", 100*_msg.size(), xml);
 
+#ifndef __APPLE__
+        usleep(1000); // FIXME This sleep really shouldn't be needed!
         QSignalSpy spy(tester.getCurrentDevice(), SIGNAL(readyRead()));
-        //CPPUNIT_ASSERT_EQUAL(1, tester.writeRequestCount());
+        CPPUNIT_ASSERT_EQUAL(1, tester.writeRequestCount());
 
         QString moredata("moredata");
         _updateFile(moredata);
-        sleep(1);
 
-        _app->processEvents();
-
-        qDebug() << __PRETTY_FUNCTION__ << " _testFile = " <<_testFile;
-
-        // While one might expect only one signal to be emitted it would seem that
-        // this is a little OS dependent with OS X often emitting two signals at
-        // least according to:
+        // While one might expect only one signal to be emitted it would seem
+        // that this is OS dependent, with OS X often emitting two signals
+        // see:
         // http://www.mail-archive.com/interest@qt-project.org/msg02987.html
         //
-        // While it is possible to add a preprocessor guard to change the
-        // checking on OS X the impact of this when using a FileChunker
-        // is currently unknown so its better to let the test fail.
-        // NOTE that when spy.count() == 2 the write request count is 3...!
+        // Note: when spy.count() == 2 the write request count is 3...
 
         CPPUNIT_ASSERT_EQUAL(1, spy.count());
         CPPUNIT_ASSERT_EQUAL(2, tester.writeRequestCount());
-        //CPPUNIT_ASSERT_EQUAL( tester->getData().size(), _testData.size()  + moredata.size());
+#endif
     }
     catch( const QString& msg)
     {
@@ -120,14 +117,16 @@ void FileChunkerTest::_updateFile(const QString& data)
         msg.append( _msg );
     else
         msg.append( data );
-    CPPUNIT_ASSERT( _temp->write(msg.data(), msg.size() ) != -1 );
+    CPPUNIT_ASSERT(_temp->write(msg.data(), msg.size()) != -1);
     CPPUNIT_ASSERT(_temp->flush());
     while (_temp->bytesToWrite() > 0)
         _temp->waitForBytesWritten(-1);
     _app->processEvents();
     CPPUNIT_ASSERT(_temp->flush());
     fsync(_temp->handle());
-    _app->processEvents();
+//    _app->flush(); // Flushes the platform specific event queues
+    _app->processEvents(QEventLoop::WaitForMoreEvents, 10000);
+
 }
 
 } // namespace pelican

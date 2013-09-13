@@ -41,6 +41,7 @@
 #include "comms/DataSupportRequest.h"
 #include "comms/DataSupportResponse.h"
 
+#include <unistd.h>
 #include <iostream>
 
 namespace pelican {
@@ -54,12 +55,10 @@ DataBlobClient::DataBlobClient( const ConfigNode& configNode, QObject* parent )
     setProtocol( new PelicanClientProtocol );
     _blobFactory = new DataBlobFactory;
 
-
     if( configNode.hasAttribute("verbose") )
         _verbose = 1;
     setHost(configNode.getOption("connection", "host"));
     setPort(configNode.getOption("connection", "port").toUInt());
-
 
     // configured subsciptions
     QSet<QString> subs = QSet<QString>::fromList(configNode.getOptionList("subscribe","stream") );
@@ -80,8 +79,9 @@ QSet<QString> DataBlobClient::streams()
         _streamInfo = false;
         if ( requestStreamInfo() )
         {
-            while ( (! _streamInfo) && _tcpSocket->state() == QAbstractSocket::ConnectedState ) {
-                sleep(1);
+            while ((! _streamInfo) && _tcpSocket->state() == QAbstractSocket::ConnectedState)
+            {
+                usleep(100);
                 QCoreApplication::processEvents();
             }
         }

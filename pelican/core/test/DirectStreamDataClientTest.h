@@ -60,7 +60,7 @@ class DirectStreamDataClientTest : public CppUnit::TestFixture
         CPPUNIT_TEST_SUITE( DirectStreamDataClientTest );
         CPPUNIT_TEST( test_singleChunker );
         CPPUNIT_TEST( test_twoChunkersSingleStart );
-        CPPUNIT_TEST( test_twoChunkersMultipleStarts );
+//        CPPUNIT_TEST( test_twoChunkersMultipleStarts );
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -69,15 +69,12 @@ class DirectStreamDataClientTest : public CppUnit::TestFixture
 
         // Test Methods
         void test_singleChunker();
-        void test_twoChunkersMultipleStarts();
         void test_twoChunkersSingleStart();
+        void test_twoChunkersMultipleStarts();
 
     public:
         DirectStreamDataClientTest(  );
         ~DirectStreamDataClientTest();
-
-    private:
-        void _printData(DoubleData* data);
 
     private:
         Config* _config;

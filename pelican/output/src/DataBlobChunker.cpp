@@ -76,6 +76,7 @@ void DataBlobChunker::setHost(const QString& ipaddress)
 
 QIODevice* DataBlobChunker::newDevice() {
     return 0; // mark as self managed
+              // FIXME what does this mean??
 }
 
 } // namespace pelican

@@ -5,6 +5,7 @@
 #include "server/LockableStreamData.h"
 #include "server/WritableData.h"
 #include "server/StreamDataBuffer.h"
+#include "server/ServiceDataBuffer.h"
 #include "data/DataSpec.h"
 #include "comms/DataChunk.h"
 #include "comms/StreamData.h"
@@ -193,7 +194,7 @@ void SessionTest::test_streamData()
     // Set up stream data for remaining tests.
     QString stream1("stream1");
     StreamDataBuffer* streambuffer = new StreamDataBuffer(stream1);
-    _dataManager->setStreamDataBuffer( stream1, streambuffer );
+    _dataManager->setStreamDataBuffer(stream1, streambuffer);
 
     {
         // Use Case:
@@ -209,7 +210,7 @@ void SessionTest::test_streamData()
         }
         catch (const QString& error)
         {
-            CPPUNIT_ASSERT(error.contains("data requested not supported by server"));
+            CPPUNIT_ASSERT(error.contains("Data requested not supported by server"));
         }
     }
 

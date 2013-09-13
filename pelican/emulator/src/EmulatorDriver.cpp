@@ -33,9 +33,13 @@
 #include <QtCore/QCoreApplication>
 #include <QtNetwork/QAbstractSocket>
 #include <QtNetwork/QTcpSocket>
+#include <QtCore/QTime>
 
 #include <typeinfo>
 #include <iostream>
+#include <unistd.h>
+
+using namespace std;
 
 namespace pelican {
 
@@ -43,13 +47,10 @@ namespace pelican {
  * @details
  * Constructs the emulator driver and starts its thread.
  */
-EmulatorDriver::EmulatorDriver(AbstractEmulator* emulator) : QThread()
+EmulatorDriver::EmulatorDriver(AbstractEmulator* emulator)
+: QThread(), _abort(false), _device(0), _emulator(emulator),
+  _dataCount(0), _packetCount(0)
 {
-    _abort = false;
-    _emulator = emulator;
-    _dataCount = 0;
-    _device = 0;
-
     // Start the thread if required.
     if (_emulator->autoStart())
         start(QThread::LowPriority);
@@ -62,11 +63,12 @@ EmulatorDriver::EmulatorDriver(AbstractEmulator* emulator) : QThread()
 EmulatorDriver::~EmulatorDriver()
 {
     // Wait for the thread to finish.
-    _abort = true;
     wait();
 
     // Delete the emulator.
-    delete _emulator;
+    if (_emulator) {
+        delete _emulator;
+    }
 }
 
 /**
@@ -75,6 +77,7 @@ EmulatorDriver::~EmulatorDriver()
  */
 void EmulatorDriver::run()
 {
+//    QTime correctionTimer;
     try {
         // Create the device.
         _device = _emulator->createDevice();
@@ -83,14 +86,14 @@ void EmulatorDriver::run()
 
         // Set up loop conditions.
         bool continuous = _emulator->nPackets() < 0;
-        long int packetCounter = 0;
+        _packetCount = 0;
         _dataCount = 0;
 
-        bool isTcpSocket = (typeid(*_device) == typeid(QTcpSocket));
-
         // Enter loop.
-        while (!_abort && (packetCounter < _emulator->nPackets() || continuous))
+        while (!_abort && (_packetCount < _emulator->nPackets() || continuous))
         {
+//            correctionTimer.restart();
+
             // Get the data.
             char* ptr = 0;
             unsigned long size = 0;
@@ -101,16 +104,18 @@ void EmulatorDriver::run()
             _dataCount += size;
 
             // Write to the device.
+//            std::cout << "Emulator driver write START. " << _device->bytesAvailable() << " size=" << size << std::endl;
             _device->write(ptr, size);
 
-            // Block until data has been written to the device.
-
-            if (isTcpSocket) {
-                // On TcpSockets exit if the socket disconnects.
-                QAbstractSocket* s = static_cast<QAbstractSocket*>(_device);
+            // Block until all data has been written to the device.
+            if (typeid(*_device) == typeid(QTcpSocket)) {
                 while (_device->bytesToWrite() > 0) {
-                    if (isTcpSocket && s->state() == QAbstractSocket::UnconnectedState)
+                    if (static_cast<QAbstractSocket*>(_device)->state()
+                            == QAbstractSocket::UnconnectedState) {
+                        cerr << "Server disconnected, aborting emulator" << endl;
+                        _abort = true;
                         break;
+                    }
                     _device->waitForBytesWritten(-1);
                 }
             }
@@ -119,10 +124,20 @@ void EmulatorDriver::run()
                     _device->waitForBytesWritten(-1);
             }
 
-            // Sleep.
+            // Sleep for the specified interval, correcting for time taken
+            // in creating and sending the data.
             unsigned long interval = _emulator->interval();
-            if (interval != 0) usleep(interval);
-            ++packetCounter;
+            if (interval != 0) {
+                // Correct interval for time taken in sending the data.
+//                int correction = correctionTimer.elapsed()*1000;
+//                usleep(interval - correction);
+                usleep(interval);
+            }
+            ++_packetCount;
+
+            //std::cout << "Emulator driver write DONE. " << _device->bytesAvailable() << std::endl;
+
+
 #if QT_VERSION >= 0x040300
             yieldCurrentThread();
 #endif
@@ -132,7 +147,9 @@ void EmulatorDriver::run()
     }
     catch( QString& e )
     {
-        std::cerr << "EmulaterDriver: Caught error " << e.toStdString() << std::endl;
+        std::cerr << std::endl;
+        std::cerr << "ERROR: EmulatorDriver::run() Caught exception.";
+        std::cerr << "ERROR: " << e.toStdString() << std::endl;
         exit(1);
     }
 }

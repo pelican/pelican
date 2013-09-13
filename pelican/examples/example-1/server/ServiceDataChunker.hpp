@@ -26,8 +26,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef SERVICE_DATA_CHUNKER_HPP_
-#define SERVICE_DATA_CHUNKER_HPP_
+#ifndef EXAMPLE_1_SERVICE_DATA_CHUNKER_HPP_
+#define EXAMPLE_1_SERVICE_DATA_CHUNKER_HPP_
 
 #include <pelican/server/AbstractChunker.h>
 
@@ -51,4 +51,4 @@ class ServiceDataChunker : public pelican::AbstractChunker
 
 PELICAN_DECLARE_CHUNKER(ServiceDataChunker)
 
-#endif /* SERVICE_DATA_CHUNKER_HPP_ */
+#endif /* EXAMPLE_1_SERVICE_DATA_CHUNKER_HPP_ */

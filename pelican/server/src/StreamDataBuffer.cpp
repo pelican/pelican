@@ -43,21 +43,20 @@ namespace pelican {
  * Constructs the stream data buffer.
  *
  * @param type         A string containing the type of data held in the buffer.
- * @param max          The maximum size of the buffer in bytes.
- * @param maxChunkSize The maximum chunk size in bytes.
- * @param parent       (Optional.) Pointer to the object's parent.
+ * @param max          The maximum size of the buffer. in bytes.
+ * @param maxChunkSize The maximum allowed chunk size, in bytes.
+ * @param parent       (Optional) Pointer to the object's parent.
  */
-StreamDataBuffer::StreamDataBuffer(const QString& type,
-        const size_t max, const size_t maxChunkSize, QObject* parent) :
-        AbstractDataBuffer(type, parent)
+StreamDataBuffer::StreamDataBuffer(const QString& type, size_t max,
+        size_t maxChunkSize, QObject* parent)
+: AbstractDataBuffer(type, parent), _max(max), _maxChunkSize(maxChunkSize),
+  _space(max), _dataManager(0)
 {
-    _max = max;
-    _maxChunkSize = maxChunkSize;
-    if( _maxChunkSize == 0 ) {
+    Q_ASSERT(max > 0);
+
+    // If the max chunkSize is set to zero, set it to the size of the buffer.
+    if (maxChunkSize == 0)
         _maxChunkSize = max;
-    }
-    _space = _max; // Buffer initially empty so space = max size.
-    _manager = 0;
 }
 
 
@@ -67,9 +66,10 @@ StreamDataBuffer::StreamDataBuffer(const QString& type,
  */
 StreamDataBuffer::~StreamDataBuffer()
 {
-    foreach (LockableStreamData* data, _data) {
-        free(data->data()->data());
-        delete data;
+    foreach (LockableStreamData* lockedData, _allChunks) {
+        // Must use free() as allocated with calloc()
+        free(lockedData->dataChunk()->data());
+        delete lockedData;
     }
 }
 
@@ -95,21 +95,24 @@ void StreamDataBuffer::getNext(LockedData& lockedData)
 
 /**
  * @details
- * Gets a writable data object of the given size and returns it.
+ * Gets a writable data object/chunk of the given size and returns it.
  *
- * @param[in] size The size of the writable data to return.
+ * @param[in] requestedSize The size of the writable data to return.
+ *
+ * @return
  */
-WritableData StreamDataBuffer::getWritable(size_t size)
+WritableData StreamDataBuffer::getWritable(size_t requestedSize)
 {
     QMutexLocker locker(&_writeMutex);
-    LockableStreamData* lockableStreamData = _getWritable(size);
+    LockableStreamData* lockableStreamData = _getWritable(requestedSize);
 
     // Prepare the object for use by adding Service Data info.
-    if (lockableStreamData) {
-        lockableStreamData->reset( size );
-        if (!_manager)
+    if (lockableStreamData)
+    {
+        lockableStreamData->reset(requestedSize);
+        if (!_dataManager)
             throw QString("StreamDataBuffer::getWritable(): No data manager.");
-        _manager->associateServiceData(lockableStreamData);
+        _dataManager->associateServiceData(lockableStreamData);
     }
 
     return WritableData(lockableStreamData);
@@ -122,51 +125,63 @@ WritableData StreamDataBuffer::getWritable(size_t size)
  *
  * @return Returns a pointer to the LockableStreamData object to use.
  *
- * @param[in] size The size in bytes of the requested block of writable memory.
+ * @param[in] requestedSize The size in bytes of the requested block of writable memory.
  */
-LockableStreamData* StreamDataBuffer::_getWritable(size_t size)
+LockableStreamData* StreamDataBuffer::_getWritable(size_t requestedSize)
 {
     // Return a pre-allocated block from the empty queue, if one exists.
-    for (int i = 0; i < _emptyQueue.size(); ++i) {
+    for (int i = 0; i < _emptyQueue.size(); ++i)
+    {
         LockableStreamData* lockableData = _emptyQueue[i];
 
-        if( lockableData->maxSize() >= size ) {
-            // We found one, so our work is done.
+        // We found one, so our work is done.
+        if (lockableData->maxSize() >= requestedSize)
+        {
             _emptyQueue.removeAt(i);
             return lockableData;
         }
     }
 
-    // There are no empty containers already available, so we
-    // create a new data object if we have enough space.
-    if (size <= _space && size <= _maxChunkSize)
+    // If there are no empty containers already available, create a new
+    // data object (chunk) if we have enough space and the requested size
+    // is less than the allowed maximum chunk size.
+    if (requestedSize <= _space && requestedSize <= _maxChunkSize)
     {
-        void* memory = calloc(size, sizeof(char)); // Released in destructor.
-        if (memory) {
-            _space -= size;
-            LockableStreamData* lockableData = new LockableStreamData(_type, memory, size);
-            _data.append(lockableData); // Add to the list of known data.
+        // Note: Memory for the chunk is released in destructor.
+        void* memory = calloc(requestedSize, sizeof(char));
+        if (memory)
+        {
+            _space -= requestedSize;
+            LockableStreamData* lockableData =
+                    new LockableStreamData(_type, memory, requestedSize);
+
+            // Add to the list of all data chunks
+            _allChunks.append(lockableData);
+
+            // Connect signals to the created data chunk.
             connect(lockableData, SIGNAL(unlockedWrite()), SLOT(activateData()));
             connect(lockableData, SIGNAL(unlocked()), SLOT(deactivateData()));
+
             return lockableData;
         }
     }
 
-    // No free containers and no space left, so remove the oldest waiting data
-    // that fits the size requirements
+    // If there are no free containers and no space left, remove the oldest
+    // waiting data that fits the size requirements
     {
-        // lock down the server queue in this context
+        // Lock down the server queue while we are looping over it.
         QMutexLocker locker(&_mutex);
-        for (int i = 0; i < _serveQueue.size(); ++i) {
+        for (int i = 0; i < _serveQueue.size(); ++i)
+        {
             LockableStreamData* d = _serveQueue[i];
-            if( d->maxSize() >= size ) {
+            if (d->maxSize() >= requestedSize) {
                 _serveQueue.removeAt(i);
                 return d;
             }
         }
     }
 
-    // All else fails so we return an invalid pointer.
+    // All else fails so we return an invalid (null) pointer.
     return 0;
 }
 
@@ -175,7 +190,7 @@ LockableStreamData* StreamDataBuffer::_getWritable(size_t size)
  * @details
  * This protected slot is called when the lockable data object
  * emits the unlockedWrite() signal. It calls the method to activate the data
- * chunk that emitted the signal by putting it onto the serve queue.
+ * chunk that emitted the signal, putting it onto the serve queue.
  */
 void StreamDataBuffer::activateData()
 {
@@ -187,7 +202,7 @@ void StreamDataBuffer::activateData()
  * @details
  * This protected slot is called when the lockable data object
  * emits the unlocked() signal. It calls the method to deactivate the data
- * chunk that emitted the signal by putting it onto the empty queue.
+ * chunk that emitted the signal, putting it onto the empty queue.
  */
 void StreamDataBuffer::deactivateData()
 {
@@ -203,18 +218,23 @@ void StreamDataBuffer::deactivateData()
 void StreamDataBuffer::deactivateData(LockableStreamData* data)
 {
     {
-        // server queue mutex context - be sure to release
-        // before attempting to get writeMutex
-        // otherwise it can lock-up
+        // Note: Make sure to release the following serveQueue mutex before
+        // attempting to get the write mutex otherwise the data buffer
+        // can become locked.
         QMutexLocker locker(&_mutex);
         if (!data->served()) {
+            // Inserts data at the beginning of the list.
             _serveQueue.prepend(data);
             return;
         }
-        data->reset(0);
-        if( _serveQueue.empty() )  {  _manager->emptiedBuffer(this); }
+        data->reset(0); // FIXME is there any case where the size argument here
+                        // isnt == 0 ?!
+        if (_serveQueue.empty()) {
+            _dataManager->emptiedBuffer(this);
+        }
     }
 
+    // Obtain a write locker and put the data onto the empty queue.
     QMutexLocker writeLocker(&_writeMutex);
     _emptyQueue.push_back(data);
 }
@@ -226,11 +246,14 @@ void StreamDataBuffer::deactivateData(LockableStreamData* data)
  */
 void StreamDataBuffer::activateData(LockableStreamData* data)
 {
+    // If the data is valid place it on the serve queue.
     if (data->isValid()) {
         verbose("activating data", 2);
         QMutexLocker locker(&_mutex);
         _serveQueue.enqueue(data);
     }
+    // Otherwise place it on the empty queue
+    // FIXME is this else action the correct behaviour?
     else {
         verbose("not activating data - invalid", 2);
         QMutexLocker writeLocker(&_writeMutex);
@@ -238,8 +261,78 @@ void StreamDataBuffer::activateData(LockableStreamData* data)
     }
 }
 
+/// DEPRECATED in buffer status function re-write
 int StreamDataBuffer::numberOfActiveChunks() const
 {
     return _serveQueue.size();
 }
+
+/// DEPRECATED in buffer status function re-write
+size_t StreamDataBuffer::numberOfEmptyChunks() const
+{
+    return (size_t)_emptyQueue.size();
+}
+
+/// DEPRECATED in buffer status function re-write
+size_t StreamDataBuffer::allocatedBytes() const
+{
+#if 0
+    size_t total = 0;
+    for (int i = 0; i < _allChunks.size(); ++i) {
+        total += _allChunks[i]->dataChunk().get()->size();
+    }
+    return total;
+#endif
+    return _max - _space;
+}
+
+/// DEPRECATED in buffer status function re-write
+size_t StreamDataBuffer::usableSize(size_t chunkSize)
+{
+    // Number of chunks that fit in the remaining space
+    size_t total = chunkSize > 0 ? (_space/chunkSize)*chunkSize : _space;
+
+    QMutexLocker writeLocker(&_writeMutex);
+    foreach (const LockableStreamData* s, _emptyQueue) {
+        size_t dataSize = s->maxSize();
+        if (dataSize >= chunkSize) {
+            // Yes, I'm adding chunk size here if the chunkSize > 0
+            // as the usable space in the empty chunk, is the requested chunk size
+            // not the total size of the empty chunk.
+            total += chunkSize > 0 ? chunkSize : dataSize;
+        }
+    }
+    return total;
+}
+
+/// DEPRECATED in buffer status function re-write
+size_t StreamDataBuffer::usedSize()
+{
+    size_t total = 0;
+    QMutexLocker writeLocker(&_writeMutex);
+    foreach (const LockableStreamData* s, _serveQueue) {
+        total += s->dataChunk().get()->size();
+    }
+    return total;
+}
+
+/// DEPRECATED in buffer status function re-write
+int StreamDataBuffer::numChunks() const
+{
+    return _allChunks.size();
+}
+
+/// DEPRECATED in buffer status function re-write
+int StreamDataBuffer::numUsableChunks(size_t chunkSize)
+{
+    Q_ASSERT(chunkSize > 0);
+    int num = _space/chunkSize;
+    QMutexLocker writeLocker(&_writeMutex);
+    foreach (const LockableStreamData* s, _emptyQueue) {
+        if (s->maxSize() >= chunkSize)
+            ++num;
+    }
+    return num;
+}
+
 } // namespace pelican

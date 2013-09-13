@@ -26,8 +26,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef SERVICE_DATA_HPP_
-#define SERVICE_DATA_HPP_
+#ifndef EXAMPLE_1_SERVICE_DATA_HPP_
+#define EXAMPLE_1_SERVICE_DATA_HPP_
 
 #include "pelican/data/DataBlob.h"
 #include <QtCore/QVector>
@@ -50,4 +50,4 @@ class ServiceData : public pelican::DataBlob
 
 PELICAN_DECLARE_DATABLOB(ServiceData)
 
-#endif /* SERVICE_DATA_HPP_ */
+#endif /* EXAMPLE_1_SERVICE_DATA_HPP_ */

@@ -29,10 +29,12 @@
 #include "Pipeline.hpp"
 #include "StreamData.hpp"
 #include <iostream>
+#include <unistd.h>
 
 using namespace std;
 
-Pipeline::Pipeline() : AbstractPipeline(), counter_(0)
+Pipeline::Pipeline() : AbstractPipeline(), runCounter_(0), reportCounter_(0),
+        randDelay_(0)
 {
 }
 
@@ -43,37 +45,56 @@ void Pipeline::init()
 
 void Pipeline::run(QHash<QString, pelican::DataBlob*>& data)
 {
-    if (counter_ == 0)
+    if (runCounter_ == 0)
         timer_.start();
 
     StreamData* stream = (StreamData*) data["StreamData"];
 
-//    quint32 timeStamp  = stream->timeStamp();
-//    quint32 packetId   = stream->packetId();
-//    quint32 numPackets = stream->totalPackets();
     quint32 packetSize = stream->packetSize();
+    qint32 reportInterval = stream->reportInteval();
 
-    quint32 reportInterval = 50;
-    if (counter_%reportInterval == 0 && counter_ > 0)
+    ++runCounter_;
+
+    // Report performance
+    if (runCounter_%reportInterval == 0)
     {
-        float elapsed = timer_.elapsed() / 1.0e3;
-        float MiB = (packetSize * reportInterval) / (1024.0 * 1024.0);
-        cout << endl;
-        cout << string(80, '*') << endl;
-        cout << __PRETTY_FUNCTION__ << endl;
-        cout << std::string(80, '-') << endl;
-        cout << "-- counter     = " << counter_ << endl;
-        cout << "-- no. packets = " << reportInterval << endl;
-        cout << "-- packet size = " << packetSize << " bytes" << endl;
-        cout << "-- packet size = " << packetSize/(1024.0*1024.0) << " MiB" << endl;
-        cout << "-- time taken  = " << elapsed << " seconds." << endl;
-        cout << "-- MiB (sent)  = " << MiB << std::endl;
-        cout << "-- MiB/s       = " << MiB/elapsed  << endl;
-        cout << std::string(80, '*') << endl;
-        cout << endl;
+        // Add a random delay to simulate some processing variation
+        // TODO make this configurable though the emulation packet.
+        int minDelay = 0;
+        int maxDelay = randDelay_ < 20000 ? 40000 : 100;
+        // random number in range from a to b (in microseconds)
+        randDelay_ = rand() % maxDelay + minDelay;
+        usleep(randDelay_);
+
+        int elapsed = timer_.elapsed();
+        size_t dataReceived = packetSize * reportInterval;
+        const double B2MiB = 1.0/(1024.0*1024.0);
+        char prefix[10];
+        int l = (reportCounter_ < 10) ? 2 : ((reportCounter_ < 100) ? 1 : 0);
+        sprintf(prefix, "P[%s%d] ", string(l, '-').c_str(), reportCounter_);
+
+        printf("%s\n", string(80,'*').c_str());
+        printf("%sTotal run count  = %i\n", prefix, runCounter_);
+        printf("%sData blob size   = %-7.3f MiB [%i B]\n", prefix,
+                packetSize*B2MiB, packetSize);
+        printf("%sTotal data processed = %.1f MiB\n", prefix,
+                (quint64)runCounter_*(quint64)packetSize*B2MiB);
+        printf("%s\n", prefix);
+        printf("%sReport Interval:\n", prefix);
+        printf("%s* Pipeline runs  = %i\n", prefix, reportInterval);
+        printf("%s* Data received  = %-7.3f MiB [%lu B]\n", prefix,
+                dataReceived*B2MiB, dataReceived);
+        printf("%s* Time taken     = %.3f s\n", prefix, elapsed*1.0e-3);
+        printf("%s* Random delay   = %.6f s\n", prefix, randDelay_*1.0e-6);
+        printf("%s* Data rate      = ", prefix);
+        if (elapsed > 0)
+            printf("%-7.3f MiB/s\n", dataReceived*B2MiB/(elapsed*1.0e-3));
+        else
+            printf("---     MiB/s\n");
+        printf("%s\n\n", string(80,'*').c_str());
+        fflush(stdout);
+        ++reportCounter_;
         timer_.restart();
     }
-
-    ++counter_;
 }
 

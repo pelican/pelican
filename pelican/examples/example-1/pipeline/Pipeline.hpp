@@ -26,8 +26,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef PIPELINE_HPP_
-#define PIPELINE_HPP_
+#ifndef EXAMPLE_1_PIPELINE_HPP_
+#define EXAMPLE_1_PIPELINE_HPP_
 
 #include <pelican/core/AbstractPipeline.h>
 
@@ -45,4 +45,4 @@ class Pipeline : public pelican::AbstractPipeline
         quint32 count_;
 };
 
-#endif /* PIPELINE_HPP_ */
+#endif /* EXAMPLE_1_PIPELINE_HPP_ */

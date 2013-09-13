@@ -43,6 +43,9 @@
 #include <QtCore/QString>
 #include <QtNetwork/QTcpSocket>
 
+#include <unistd.h>
+#include <iostream>
+
 namespace pelican {
 
 using test::TestDataBlob;
@@ -54,54 +57,34 @@ CPPUNIT_TEST_SUITE_REGISTRATION( PelicanTCPBlobServerTest );
  * Constructor
  */
 PelicanTCPBlobServerTest::PelicanTCPBlobServerTest()
-    : CppUnit::TestFixture()
-{ }
+: CppUnit::TestFixture()
+{
+}
 
 /**
  * @details
  * Desctructor
  */
 PelicanTCPBlobServerTest::~PelicanTCPBlobServerTest()
-{ }
-
-/**
- * @details
- * Sets up environment/objects for test class
- */
-void PelicanTCPBlobServerTest::setUp()
 {
 }
 
-/**
- * @details
- * Destroys objects and reset environment
- */
-void PelicanTCPBlobServerTest::tearDown()
-{
-}
-
-/**
- * @details
- */
 void PelicanTCPBlobServerTest::test_connection()
 {
-    // Use Case:
-    // ?????? TODO
-    // Expect: TODO
-    //
     // Create and configure TCP server
     QString xml = "<PelicanTCPBlobServer>"
-                  "   <connection port=\"0\"/>"  // 0 = find unused system port
-                  "</PelicanTCPBlobServer>";
+            "   <connection port=\"0\"/>"  // 0 = find unused system port
+            "</PelicanTCPBlobServer>";
     ConfigNode config(xml);
     PelicanTCPBlobServer server(config);
-    sleep(1);
 
     // Create a client and connect it to the server
     QTcpSocket tcpSocket;
-    tcpSocket.connectToHost( QHostAddress::LocalHost, server.serverPort() );
-    if (!tcpSocket.waitForConnected(5000) || tcpSocket.state() == QAbstractSocket::UnconnectedState)
+    tcpSocket.connectToHost(QHostAddress::LocalHost, server.serverPort());
+    if (!tcpSocket.waitForConnected(1000) ||
+            tcpSocket.state() == QAbstractSocket::UnconnectedState) {
         CPPUNIT_FAIL("Client could not connect to server");
+    }
 
     // Define the data type which the client will except and send request
     StreamDataRequest req;
@@ -112,29 +95,34 @@ void PelicanTCPBlobServerTest::test_connection()
     PelicanClientProtocol clientProtocol;
     QByteArray data = clientProtocol.serialise(req);
     tcpSocket.write(data);
+    CPPUNIT_ASSERT(tcpSocket.flush());
     while (tcpSocket.bytesToWrite() > 0)
         tcpSocket.waitForBytesWritten(-1);
-//    tcpSocket.waitForBytesWritten(data.size());
-//    tcpSocket.flush();
 
-    /// ensure we are registered before continuing
-    while( server.clientsForStream("testData") == 0 )
-    {
-        sleep(1);
+    // Ensure we are registered before continuing
+    while (server.clientsForStream("testData") == 0) {
+        usleep(1000);
     }
 
     {
         // Test Server send
         TestDataBlob blob;
         blob.setData("Testing TCPServer");
+        // send(streamName, dataBlob)
+        // server = ThreadedBlobServer
+        // send -> calls TCPConnectionManager::send()
+        //   which calls PelicanProtocol::send(QIODevice, streamName, blob)
         server.send("testData", &blob);
 
-        // Evaluate the response from the server
+        // Evaluate the response from the server.
         tcpSocket.waitForReadyRead();
+
         boost::shared_ptr<ServerResponse> r = clientProtocol.receive(tcpSocket);
-        CPPUNIT_ASSERT( r->type() == ServerResponse::Blob );
+        CPPUNIT_ASSERT(r->type() == ServerResponse::Blob);
+
         TestDataBlob blobResult;
         blobResult.deserialise(tcpSocket, ((DataBlobResponse*)r.get())->byteOrder());
+
         CPPUNIT_ASSERT(blobResult == blob);
     }
 
@@ -157,11 +145,11 @@ void PelicanTCPBlobServerTest::test_connection()
 void PelicanTCPBlobServerTest::test_portConfig()
 {
     QString xml = "<PelicanTCPBlobServer>"
-                  "   <connection port=\"8899\"/>"  // 0 = find unused system port
-                  "</PelicanTCPBlobServer>";
+            "   <connection port=\"8899\"/>"  // 0 = find unused system port
+            "</PelicanTCPBlobServer>";
     ConfigNode config(xml);
     PelicanTCPBlobServer server(config);
-    sleep(1);
-    CPPUNIT_ASSERT_EQUAL( (unsigned int)server.serverPort(),  (unsigned int)8899 );
+    usleep(10);
+    CPPUNIT_ASSERT_EQUAL( (unsigned int)server.serverPort(), (unsigned int)8899);
 }
 } // namespace pelican

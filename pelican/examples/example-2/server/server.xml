@@ -3,19 +3,25 @@
 
 <configuration version="1.0">
     <server>
-        <buffers>
-            <StreamData>
-                <!-- max chunk size of 200MiB, max size of 4000MiB -->
-                <buffer maxSize="4194304000" maxChunkSize="209715200" />
-            </StreamData>
-        </buffers>
 
         <chunkers>
             <StreamChunker>
-                <!-- packet of n floats + 32 byte header -->
-                <data type="StreamData" packetSize="4032" packets="1" />
+                <!-- Write chunks into the StreamData buffer. -->
+                <data type="StreamData" />
+                <!-- Incoming data is read from the TCP socket with the --> 
+                <!-- address. -->
                 <connection host="127.0.0.1" port="2001" />
             </StreamChunker>
         </chunkers>
+
+        <buffers>
+            <!-- Specify a 500MiB buffer called StreamData. -->  
+            <!-- If maxChunkSize is not set, as below, -->
+            <!--    maxChunkSize == maxSize -->
+            <StreamData>
+                <buffer maxSize="524288000" />
+            </StreamData>
+        </buffers>
+
     </server>
 </configuration>

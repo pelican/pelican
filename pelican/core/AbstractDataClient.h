@@ -125,7 +125,7 @@ class AbstractDataClient
         /// Returns a pointer to the configuration node.
         const ConfigNode& configNode() const {return _configNode;}
 
-/*
+#if 0
         /// Adapts (de-serialises) stream data.
         DataBlobHash adaptStream(QIODevice& device, const StreamData* d,
                 DataBlobHash& dataHash);
@@ -142,7 +142,7 @@ class AbstractDataClient
         /// Returns the adapter for stream data of the required type.
         AbstractStreamAdapter* streamAdapter(const QString& type) const
         { return _dataReqs.streamAdapter(type); }
-*/
+#endif
 
     protected:
         ConfigNode _configNode; ///< The configuration node for the data client.

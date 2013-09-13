@@ -51,16 +51,16 @@ void TestProtocol::send( QIODevice& device, const QString& message)
 
 void TestProtocol::send(QIODevice& device, const AbstractProtocol::StreamData_t& d)
 {
-    std::cout << "TestProtocol::send(): List length: " << d.size() << std::endl;
+    //std::cout << "TestProtocol::send(): List length: " << d.size() << std::endl;
     Q_ASSERT(d.size() > 0);
     _last.clear();
     char* data = static_cast<char*>(d[0]->ptr());
-    size_t size = d[0]->size() / sizeof(double);
-    std::cout << "TestProtocol::send(): data length: " << d[0]->size() << "\n";
-    for (unsigned i = 0; i < size; i++) {
-        std::cout << reinterpret_cast<double*>(data)[i];
-    }
-    std::cout << std::endl;
+//    size_t size = d[0]->size() / sizeof(double);
+//    std::cout << "TestProtocol::send(): data length: " << d[0]->size() << "\n";
+//    for (unsigned i = 0; i < size; i++) {
+//        std::cout << reinterpret_cast<double*>(data)[i];
+//    }
+//    std::cout << std::endl;
     _last.append(data);
     // make a copy of the DataChunk info
     _clearLast();
@@ -70,7 +70,7 @@ void TestProtocol::send(QIODevice& device, const AbstractProtocol::StreamData_t&
     QDataStream stream(&device);
     stream.setVersion(QDataStream::Qt_4_0);
     stream << (quint16)_request;
-    std::cout << "Sending request type " << (qint16)_request << std::endl;
+    //std::cout << "Sending request type " << (qint16)_request << std::endl;
     stream << _last.data();
 }
 

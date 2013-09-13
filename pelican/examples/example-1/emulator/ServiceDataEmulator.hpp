@@ -26,8 +26,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef SERVICE_DATA_EMULATOR_HPP_
-#define SERVICE_DATA_EMULATOR_HPP_
+#ifndef EXAMPLE_1_SERVICE_DATA_EMULATOR_HPP_
+#define EXAMPLE_1_SERVICE_DATA_EMULATOR_HPP_
 
 #include <pelican/emulator/AbstractUdpEmulator.h>
 #include <QtCore/QByteArray>
@@ -51,4 +51,4 @@ class ServiceDataEmulator : public pelican::AbstractUdpEmulator
         int dataPeriod_;
 };
 
-#endif // SERVICE_DATA_EMULATOR_HPP_
+#endif // EXAMPLE_1_SERVICE_DATA_EMULATOR_HPP_

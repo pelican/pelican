@@ -56,7 +56,7 @@ void LockableStreamData::addAssociatedData(const LockedData& data)
     _serviceDataTypes.insert(data.name());
     _serviceData.append(data);
     LockableServiceData* lockable = static_cast<LockableServiceData*>(data.object());
-    boost::shared_ptr<DataChunk> dataPtr( lockable->data() );
+    boost::shared_ptr<DataChunk> dataPtr( lockable->dataChunk() );
     streamData()->addAssociatedData( dataPtr );
 }
 
@@ -75,8 +75,8 @@ bool LockableStreamData::isValid() const
 
 bool LockableStreamData::isValid(const QSet<QString>& associates) const
 {
-    Q_ASSERT( data() != 0 );
-    bool rv = data()->isValid();
+    Q_ASSERT( dataChunk() != 0 );
+    bool rv = dataChunk()->isValid();
     foreach(const QString& assoc, associates )
     {
         foreach(LockedData data, _serviceData )

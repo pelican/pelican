@@ -26,8 +26,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef STREAMEMULATOR_HPP_
-#define STREAMEMULATOR_HPP_
+#ifndef EXAMPLE_2_STREAM_EMULATOR_HPP_
+#define EXAMPLE_2_STREAM_EMULATOR_HPP_
 
 #include <pelican/emulator/AbstractEmulator.h>
 #include <pelican/utility/ConfigNode.h>
@@ -41,7 +41,6 @@ class StreamEmulator : public pelican::AbstractEmulator
 public:
     StreamEmulator(const pelican::ConfigNode& config);
     ~StreamEmulator();
-
     void getPacketData(char*& data, unsigned long& bytes);
     unsigned long interval();
     int nPackets();
@@ -49,19 +48,22 @@ public:
 private:
     void emulationFinished();
     QIODevice* createDevice();
+    void printReport();
 
     QHostAddress host_;
     quint16 port_;
     qint32 numPackets_;
-    size_t  numSamples_;
-    size_t  packetSize_;
+    size_t numSamples_;
+    size_t packetSize_;
+    size_t headerSize_;
     quint32 packetInterval_;
     quint32 packetCounter_;
+    qint32 reportInterval_;
+    quint32 reportCounter_;
 
     QByteArray packet_; // Note this is the serialised packet.
 
     QTime timer_;
 };
 
-
-#endif /* STREAMEMULATOR_HPP_ */
+#endif /* EXAMPLE_2_STREAM_EMULATOR_HPP_ */

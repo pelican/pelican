@@ -3,22 +3,20 @@
 
 <configuration version="1.0">
     <pipeline>
+
         <clients>
             <PelicanServerClient>
+                <!-- Receive data from the server on the following address --> 
                 <server host="127.0.0.1" port="2000" />
-                <data type="StreamData" adapter="StreamDataAdapter" />
+                <!--  Receive StreamData chunks using the StreamDataAdpater -->
+                <data type="StreamData" adapter="StreamDataAdapter"/>
             </PelicanServerClient>
         </clients>
 
         <adapters>
-            <StreamDataAdapter></StreamDataAdapter>
+            <!-- The StreamDataAdapter takes no XML configuration -->
+            <StreamDataAdapter/>
         </adapters>
-
-        <modules>
-        </modules>
-
-        <output>
-        </output>
 
     </pipeline>
 </configuration>

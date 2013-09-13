@@ -3,6 +3,7 @@
 #include "server/DataManager.h"
 #include "comms/StreamData.h"
 #include "server/StreamDataBuffer.h"
+#include "server/ServiceDataBuffer.h"
 #include "server/WritableData.h"
 #include "server/LockedData.h"
 #include "server/LockableStreamData.h"
@@ -122,8 +123,9 @@ void StreamDataBufferTest::test_getWritable()
 void StreamDataBufferTest::test_getWritableStreams()
 {
     using namespace std;
-    cout << endl;
     bool verbose = false;
+    if (verbose)
+        cout << endl;
     // Use case:
     // Multiple calls to getWritable() simulating filling of a stream buffer.
     // Expect: unique data pointers to be returned.
@@ -133,7 +135,7 @@ void StreamDataBufferTest::test_getWritableStreams()
         buffer.setDataManager(_dataManager);
         {
             WritableData dataChunk = buffer.getWritable(dataSize);
-            void* dataPtr =  dataChunk.data()->data()->ptr();
+            void* dataPtr =  dataChunk.data()->dataChunk()->ptr();
             double value = 1;
             dataChunk.write(&value, 8, 0);
             if (verbose)
@@ -142,7 +144,7 @@ void StreamDataBufferTest::test_getWritableStreams()
         CPPUNIT_ASSERT_EQUAL(1, buffer._serveQueue.size());
         {
             WritableData dataChunk = buffer.getWritable(dataSize);
-            void* dataPtr =  dataChunk.data()->data()->ptr();
+            void* dataPtr =  dataChunk.data()->dataChunk()->ptr();
             double value = 2;
             dataChunk.write(&value, 8, 0);
             if (verbose)
@@ -151,7 +153,7 @@ void StreamDataBufferTest::test_getWritableStreams()
         CPPUNIT_ASSERT_EQUAL(2, buffer._serveQueue.size());
         {
             WritableData dataChunk = buffer.getWritable(dataSize);
-            void* dataPtr =  dataChunk.data()->data()->ptr();
+            void* dataPtr =  dataChunk.data()->dataChunk()->ptr();
             double value = 3;
             dataChunk.write(&value, 8, 0);
             if (verbose)
@@ -184,7 +186,7 @@ void StreamDataBufferTest::test_getWritableStreams()
         CPPUNIT_ASSERT_EQUAL(3, buffer._emptyQueue.size());
         {
             WritableData dataChunk = buffer.getWritable(dataSize);
-            void* dataPtr =  dataChunk.data()->data()->ptr();
+            void* dataPtr =  dataChunk.data()->dataChunk()->ptr();
             double value = 4;
             dataChunk.write(&value, 8, 0);
             if (verbose)

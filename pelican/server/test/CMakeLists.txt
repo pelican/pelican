@@ -62,3 +62,20 @@ if (CPPUNIT_FOUND)
     )
     add_test(serverTestMT serverTestMT)
 endif (CPPUNIT_FOUND)
+
+
+# Google testing framework unit tests.
+include_directories(${PROJECT_SOURCE_DIR}/extern/gtest-1.6.0/include)
+set(name server_test)
+set(${name}_SRC
+    src/Test_StreamDataBuffer.cpp
+)
+add_executable(${name} ${${name}_SRC})
+target_link_libraries(${name} 
+    ${${module}_LIBRARY} 
+    gtest_main)
+### add_test(${name} ${name}) ### 
+
+
+
+

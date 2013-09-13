@@ -54,7 +54,7 @@ ThreadedBlobServer::~ThreadedBlobServer()
 {
     do { quit(); } while( ! wait(10) ); }
 
-qint16 ThreadedBlobServer::serverPort() const
+quint16 ThreadedBlobServer::serverPort() const
 {
     return _manager->serverPort();
 }

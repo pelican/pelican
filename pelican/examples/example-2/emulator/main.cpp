@@ -31,13 +31,41 @@
 #include <QtCore/QCoreApplication>
 #include <QtCore/QString>
 #include "StreamEmulator.hpp"
+
 #include <iostream>
 #include <cstdio>
+#include <unistd.h>
 #include <cstdlib>
 
 using namespace std;
 using namespace pelican;
 
+// Re-implementing QApplication::notify() allows capturing of
+// exceptions thrown from within an event handler.
+// Note: needs an event loop.
+class MyApp : public QCoreApplication
+{
+public:
+    MyApp(int argc, char** argv) : QCoreApplication(argc, argv) {}
+    virtual ~MyApp() {}
+    virtual bool notify(QObject* rec, QEvent* ev) {
+        try {
+            return QCoreApplication::notify(rec, ev);
+        }
+        catch (const QString& e)
+        {
+            cerr << "ERROR: " << e.toStdString() << endl;
+            abort();
+        }
+        catch (...) {
+            cerr << "ERROR: Unknown exception!" << endl;
+            abort();
+        }
+        return false;
+    }
+};
+
+// Prints usage message for running the emulator binary.
 void usage(const char* msg = 0)
 {
     if (msg) {
@@ -52,7 +80,7 @@ void usage(const char* msg = 0)
 
 int main(int argc, char** argv)
 {
-    QCoreApplication app(argc, argv);
+    MyApp app(argc, argv);
 
     if (argc < 2 || argc > 3) {
         usage("Please specify an XML configuration file.");
@@ -61,10 +89,10 @@ int main(int argc, char** argv)
 
     try {
         const char* configFile = argv[1];
-        const char* nodeName = (argc == 3) ? argv[2] : "opt1";
+        const char* nodeName = (argc == 3) ? argv[2] : "1";
         cout << "Running emulator ..." << endl;
-        cout << " * Config. file  = " << configFile << endl;
-        cout << " * Settings name = " << nodeName << endl;
+        cout << " * Configuration file  = " << configFile << endl;
+        cout << " * Settings name ..... = " << nodeName << endl;
         cout << endl;
         Config config(configFile);
         Config::TreeAddress address;
@@ -75,15 +103,25 @@ int main(int argc, char** argv)
             settings = config.get(address);
         }
         else {
-            usage("Unable to find valid XML config. node in the specified XML file.");
+            usage("Unable to find valid configuration tags in the specified "
+                   "XML file.");
             return EXIT_FAILURE;
         }
-        EmulatorDriver emulatorDriver(new StreamEmulator(settings));
-        return app.exec();
+        AbstractEmulator* emulator = new StreamEmulator(settings);
+        EmulatorDriver emulatorDriver(emulator);
+        emulatorDriver.start();
+        while (emulatorDriver.isRunning()) {
+            usleep(10);
+            MyApp::processEvents();
+        }
     }
     catch (const QString& err)
     {
         cerr << "ERROR: " << err.toStdString() << endl;
+        usage();
+    }
+    catch (...) {
+        cerr << "ERROR: unknown exception." << endl;
         usage();
     }
     return EXIT_SUCCESS;

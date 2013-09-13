@@ -26,8 +26,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef STREAM_DATA_HPP_
-#define STREAM_DATA_HPP_
+#ifndef EXAMPLE_1_STREAM_DATA_HPP_
+#define EXAMPLE_1_STREAM_DATA_HPP_
 
 #include "pelican/data/DataBlob.h"
 #include <QtCore/QVector>
@@ -49,4 +49,4 @@ class StreamData : public pelican::DataBlob
 
 PELICAN_DECLARE_DATABLOB(StreamData)
 
-#endif /* STREAM_DATA_HPP_ */
+#endif /* EXAMPLE_1_STREAM_DATA_HPP_ */

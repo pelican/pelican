@@ -26,8 +26,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef STREAM_DATA_ADAPTER_HPP_
-#define STREAM_DATA_ADAPTER_HPP_
+#ifndef EXAMPLE_1_STREAM_DATA_ADAPTER_HPP_
+#define EXAMPLE_1_STREAM_DATA_ADAPTER_HPP_
 
 #include <core/AbstractStreamAdapter.h>
 
@@ -45,4 +45,4 @@ class StreamDataAdapter : public pelican::AbstractStreamAdapter
 
 PELICAN_DECLARE_ADAPTER(StreamDataAdapter)
 
-#endif /* STREAM_DATA_ADAPTER_HPP_ */
+#endif /* EXAMPLE_1_STREAM_DATA_ADAPTER_HPP_ */

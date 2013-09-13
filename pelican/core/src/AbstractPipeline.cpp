@@ -41,11 +41,8 @@ namespace pelican {
  * AbstractPipeline constructor.
  */
 AbstractPipeline::AbstractPipeline()
+: _blobFactory(0), _moduleFactory(0), _pipelineDriver(0), _osmanager(0)
 {
-    // Initialise members.
-    _blobFactory = NULL;
-    _moduleFactory = NULL;
-    _pipelineDriver = NULL;
 }
 
 /**

@@ -19,24 +19,11 @@ using test::PelicanTestClient;
 
 CPPUNIT_TEST_SUITE_REGISTRATION( PelicanServerTest );
 
-// class PelicanServerTest
-PelicanServerTest::PelicanServerTest()
-    : CppUnit::TestFixture()
+PelicanServerTest::PelicanServerTest() : CppUnit::TestFixture()
 {
-//    int ac = 0;
-//    _app = new QCoreApplication(ac, NULL);
 }
 
 PelicanServerTest::~PelicanServerTest()
-{
-//    delete _app;
-}
-
-void PelicanServerTest::setUp()
-{
-}
-
-void PelicanServerTest::tearDown()
 {
 }
 
@@ -48,7 +35,7 @@ void PelicanServerTest::test_singleProtocolAcknowledge()
     try {
         Config config;
         PelicanServer server(&config);
-        quint16 port = 2000;
+        quint16 port = 3000;
         server.addProtocol(new TestProtocol(""), port);
         server.start();
         while (!server.isReady()) {}
@@ -80,7 +67,7 @@ void PelicanServerTest::test_singleProtocolStream()
         // Set up the server.
         PelicanServer server(&config);
         //server.setVerbosity(10000);
-        quint16 port = 2000;
+        quint16 port = 3000;
         server.addProtocol(new TestProtocol("", ServerRequest::StreamData), port);
         server.addStreamChunker("TestChunker");
         server.start();
@@ -106,7 +93,7 @@ void PelicanServerTest::test_multiProtocol()
     {
         Config config;
         PelicanServer server(&config);
-        quint16 port = 20000;
+        quint16 port = 30000;
         CPPUNIT_ASSERT_NO_THROW(server.addProtocol(new TestProtocol(id1), port));
         CPPUNIT_ASSERT_THROW(server.addProtocol(new TestProtocol(id2), port), QString);
     }
@@ -119,8 +106,8 @@ void PelicanServerTest::test_multiProtocol()
         try {
             Config config;
             PelicanServer server(&config);
-            quint16 porta = 20000;
-            quint16 portb = 20001;
+            quint16 porta = 30000;
+            quint16 portb = 30001;
             server.addProtocol(new TestProtocol(id1), porta);
             server.addProtocol(new TestProtocol(id2), portb);
             server.start();
@@ -133,8 +120,6 @@ void PelicanServerTest::test_multiProtocol()
         catch (const QString& e) {
             CPPUNIT_FAIL("Unexpected exception: " +  e.toStdString());
         }
-//        CPPUNIT_ASSERT_EQUAL(id1.toStdString(), client1.processAcknowledgement().toStdString());
-//        CPPUNIT_ASSERT_EQUAL(id2.toStdString(), client2.processAcknowledgement().toStdString());
     }
 }
 

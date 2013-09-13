@@ -30,6 +30,8 @@
 #include "utility/ConfigNode.h"
 
 #include <QtNetwork/QUdpSocket>
+//#include <iostream>
+//#include <unistd.h>
 
 namespace pelican {
 
@@ -50,8 +52,12 @@ AbstractUdpEmulator::AbstractUdpEmulator(const ConfigNode& configNode)
  */
 QIODevice* AbstractUdpEmulator::createDevice()
 {
+    //std::cout << "AbstractUdpEmulator::createDevice()" << std::endl;
     QUdpSocket* socket = new QUdpSocket;
+    //while (!socket->bind(_host, _port)) { usleep(100); }
     socket->connectToHost(_host, _port);
+//    socket->waitForConnected(-1);
+    //std::cout << "AbstractUdpEmulator::createDevice() Connected!" << std::endl;
     return socket;
 }
 

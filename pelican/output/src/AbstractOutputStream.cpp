@@ -41,9 +41,11 @@ namespace pelican {
 AbstractOutputStream::AbstractOutputStream( const ConfigNode& c )
     : _verbose(0)
 {
-    if( c.hasAttribute("verbose") )
+    if( c.hasAttribute("verbose") ) {
         _verbose = c.getAttribute("verbose").toInt();
+    }
 }
+
 
 /**
  *@details

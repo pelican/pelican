@@ -89,7 +89,7 @@ class LockableStreamData : public AbstractLockableData
         const QSet<QString>& associateDataTypes() const { return _serviceDataTypes;}
 
         /// Reset the object's data and mark it of a suitable size
-        void reset( size_t size );
+        void reset(size_t size);
 
     private:
         /// Disable copy constructor.

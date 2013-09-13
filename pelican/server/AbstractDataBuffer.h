@@ -70,8 +70,12 @@ class AbstractDataBuffer : public QObject
         /// Returns a WritableData object of the specified size from the buffer.
         virtual WritableData getWritable(size_t size) = 0;
 
+        /// Returns the data type assocated with the buffer.
+        const QString& type() const { return _type; }
+
         /// set verbose levels
         void setVerbosity(int level) { _verboseLevel = level; }
+
         void verbose(const QString& msg, int level = 1);
 
     protected:
