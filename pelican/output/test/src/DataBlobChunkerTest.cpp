@@ -75,7 +75,9 @@ void DataBlobChunkerTest::test_method()
         xml += "</DataBlobChunker>";
         CPPUNIT_ASSERT_EQUAL(0, server.clientsForStream(_blob.type()));
 
+        usleep(1000); // FIXME sleep needed?
         ChunkerTester tester("DataBlobChunker", 10*_blob.size(), xml);
+        // FIXME this assert fails occasionally
         CPPUNIT_ASSERT_EQUAL(1, server.clientsForStream(_blob.type()));
 
         server.send(&_blob);
