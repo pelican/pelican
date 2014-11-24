@@ -159,6 +159,16 @@ void FileDataClient::_getConfig()
 {
     // Get all the filenames for each data type.
     _fileNames = configNode().getOptionHash("data", "type", "file");
+    foreach (ConfigNode const & node, configNode().getNodes("data")) {
+        QString type=node.getAttribute("type");
+        if( type == "" ) throw QString("type attribute must be specified for every data tag"); // shouldn't throw a string
+        if(node.hasAttribute("service") && node.getAttribute("service") == "true") {
+            _dataSpec.addServiceData(type);
+        }
+        else {
+            _dataSpec.addStreamData(type);
+        }
+    }
 }
 
 } // namespace pelican
