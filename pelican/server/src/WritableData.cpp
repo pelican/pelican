@@ -59,11 +59,9 @@ WritableData& WritableData::operator=(const WritableData& other)
 {
     // Protect against invalid self-assignment.
     if (this != &other) {
-        if (other.data()) {
-            if (_data) _data->writeUnlock();
-            _data = other.data();
-            _data->writeLock();
-        }
+        if (_data) _data->writeUnlock();
+        _data = other.data();
+        if (_data) _data->writeLock();
     }
     return *this;
 }
