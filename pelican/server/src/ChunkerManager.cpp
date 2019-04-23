@@ -76,6 +76,11 @@ ChunkerManager::~ChunkerManager()
         delete receiver;
     }
 
+    // Delete all the chunkers
+    foreach (AbstractChunker* chunker, _chunkers ) {
+        delete chunker;
+    }
+
     // Delete the chunker factory.
     delete _factory;
 }
